@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlashCards
+namespace FlashCards;
+public class Menus
 {
-    internal class Class1
+    public static void Main()
     {
+
     }
 }
