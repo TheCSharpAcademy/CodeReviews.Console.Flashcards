@@ -1,2 +1,1 @@
-﻿// See https://aka.ms/new-console-template for more information
-FlashCards.Menus.Main();
+﻿FlashCards.Menus.Begin();
