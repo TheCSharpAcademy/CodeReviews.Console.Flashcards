@@ -1,2 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, FlashCard App!");
+﻿
+using Lonchanick9427.FlashCard;
+
+Console.WriteLine("Pause: Leraning SQL server xD! ");
