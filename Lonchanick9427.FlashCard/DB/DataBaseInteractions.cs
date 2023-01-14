@@ -36,7 +36,7 @@ public class DataBaseInteractions
         }
     */
 
-    public static void Add(Deck p)
+    public static void Add(Stack p)
     {
         string query = "insert into deck values(@name,@descrption);";
         using (var connection = new SqlConnection(connectionString))

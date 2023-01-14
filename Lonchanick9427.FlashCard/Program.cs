@@ -1,117 +1,10 @@
-﻿using Lonchanick9427.FlashCard;
-using Lonchanick9427.FlashCard.DB;
-
-void NewStack()
-{
-    Console.Clear();
-    Console.WriteLine();
-    showStacks();
-    Console.WriteLine("Creating a new Stack");
-    Deck aux = new Deck();
-    aux.Name = ToolBox.GetStringInput("Nombre");
-    aux.Description = ToolBox.GetStringInput("Descripcion");
-    DeckDB.Add(aux); 
-    Console.Clear() ;
-    Console.WriteLine("Done!");
-    showStacks();
-    Console.ReadLine();
-}
-List<Deck> showStacks()
-{
-    List<Deck> l = DeckDB.Get();
-    ToolBox.DeckPrettyTable(l);
-    return l;
-}
-void DeleteStack()
-{
-    List<int> i = GetStackIdList(showStacks());
-    Console.WriteLine("Pick any Stack (Id) From the list");
-    int aux = ToolBox.GetIntInput("Deck Id");
-
-    while (!(i.IndexOf(aux) >= 0))
-    {
-        Console.WriteLine("The Stack Id provided does not exist! ");
-        aux = ToolBox.GetIntInput("Deck-Id");
-    }
-    DeckDB.Delete(aux);
-    Console.Clear();
-    Console.WriteLine("Done! Here the new list!");
-    showStacks();
-    Console.ReadLine();
-}
-List<int> GetStackIdList(List<Deck> param)
-{
-    List<int> i = new();
-    foreach (var x in param)
-        i.Add(x.Id);
-
-    return i;
-}
-List<int> GetCardIdList(List<FlashCard> param)
-{
-    List<int> i = new();
-    foreach (var x in param)
-        i.Add(x.Id);
-
-    return i;
-}
-void NewCard()
-{
-    Console.Clear();
-    
-    List<int> i = GetStackIdList(showStacks());
-
-    Console.WriteLine("Creating a new Card ");
-    FlashCard aux = new();
-    aux.Front = ToolBox.GetStringInput("Front-Face");
-    aux.Back = ToolBox.GetStringInput("Back-Face");
-    aux.Fk = ToolBox.GetIntInput("Deck-Id");
-
-    while (!(i.IndexOf(aux.Fk) >= 0))
-    {
-        Console.WriteLine("The Stack Id provided does not exist! ");
-        aux.Fk = ToolBox.GetIntInput("Deck-Id");
-    }
-
-    CardDB.Add(aux);
-    Console.WriteLine("Done!");
-    Console.ReadLine();
-}
-
-void DeleteCard()
-{
-    Console.Clear();
-
-    List<int> i = GetStackIdList(showStacks());
-    Console.WriteLine("Pick any Stack (Id) From the list");
-    int id = ToolBox.GetIntInput("Stack Id");
-    while (!(i.IndexOf(id) >= 0))
-    {
-        Console.WriteLine("The Stack Id provided does not exist! ");
-        id = ToolBox.GetIntInput("Deck-Id");
-    }
-    Console.Clear();
-    Console.WriteLine($"This cards belong to Stack Id: {id}");
-    List<FlashCard> list = CardDB.CardsByStackId(id);
-    ToolBox.CardPrettyTable(list);
-    Console.Write("Type an Falsh Card Id to delete. ");
-    int id2 = ToolBox.GetIntInput("");
-    List<int> idList = GetCardIdList(list);
-    while (!(idList.IndexOf(id2) >= 0))
-    {
-        Console.WriteLine("The Card Id provided does not exist! ");
-        id2 = ToolBox.GetIntInput("Card-Id");
-    }
-    if (CardDB.Delete(id2))
-        Console.Write("done!");
-
-    Console.ReadLine();
-}
+﻿
+using Lonchanick9427.FlashCard.ExcutionFolder;
 
 while (true)
 {
     Console.Clear();
-    Console.WriteLine("--- Main Menu ---");
+    Console.WriteLine("\t--- Main Menu ---");
     Console.WriteLine("\t STACK MENU");
     Console.WriteLine("1. Create a new Stack");
     Console.WriteLine("2. Show Stacks");
@@ -136,25 +29,25 @@ while (true)
     {
         case "1":
             Console.Clear();
-            NewStack();
+            StackOperations.NewStack();
             break;
         case "2":
             Console.Clear();
-            showStacks();
+            StackOperations.showStacks();
             Console.ReadLine();
             break;
         case "3":
             Console.Clear();
-            DeleteStack();
+            StackOperations.DeleteStack();
             break;
         case "4":
             Console.WriteLine("Update-stack PENDIENTE");
             break;
         case "5":
-            NewCard();
+            CardOperations.NewCard();
             break;
         case "6":
-            DeleteCard();
+            CardOperations.DeleteCard();
             //DELETE CARD
             break;
         case "7":

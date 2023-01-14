@@ -1,15 +1,13 @@
 ﻿using System.Data.SqlClient;
-using System.Xml.Linq;
 
 namespace Lonchanick9427.FlashCard.DB;
-
 public static class DeckDB
 {
     private static string connectionString = "Data Source = localhost;" +
             "Initial Catalog = FlashCards;" +
             "User = sa;" +
             "Password = 091230;";
-    public static void Add(Deck p)
+    public static void Add(Stack p)
     {
         string query = "insert into deck values(@name,@descrption);";
         using (var connection = new SqlConnection(connectionString))
@@ -23,10 +21,10 @@ public static class DeckDB
             connection.Close();
         }
     }
-    public static List<Deck> Get()
+    public static List<Stack> Get()
     {
         string query = "select Id, Name_, Description from deck;";
-        List<Deck> personas = new List<Deck>();
+        List<Stack> personas = new List<Stack>();
 
         using (SqlConnection connection = new SqlConnection(connectionString))
         {
@@ -38,7 +36,7 @@ public static class DeckDB
                 int id = reader.GetInt32(0);
                 string name = reader.GetString(1);
                 string description = reader.GetString(2);
-                Deck p = new Deck(id, name, description);
+                Stack p = new Stack(id, name, description);
                 personas.Add(p);
             }
             reader.Close();

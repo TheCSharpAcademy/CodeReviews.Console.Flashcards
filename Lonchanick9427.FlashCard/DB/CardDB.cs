@@ -2,14 +2,13 @@
 using System.Data.SqlClient;
 
 namespace Lonchanick9427.FlashCard.DB;
-
 public static class CardDB
 {
     private static string connectionString = "Data Source = localhost;" +
             "Initial Catalog = FlashCards;" +
             "User = sa;" +
             "Password = 091230;";
-    public static void Add(FlashCard p)
+    public static void Add(Card p)
     {
         string query = "insert into cards values(@front,@back,@fk);";
         using (var connection = new SqlConnection(connectionString))
@@ -37,10 +36,10 @@ public static class CardDB
             return true;
         }
     }
-    public static List<FlashCard> CardsByStackId(int Id)
+    public static List<Card> CardsByStackId(int Id)
     {
         string query = $"select * FROM cards WHERE DeckFk = {Id};";
-        List<FlashCard> FcList = new List<FlashCard>();
+        List<Card> FcList = new List<Card>();
 
         using (SqlConnection connection = new SqlConnection(connectionString))
         {
@@ -53,7 +52,7 @@ public static class CardDB
                 string front = reader.GetString(1);
                 string back = reader.GetString(2);
                 int fk = reader.GetInt32(3);
-                FlashCard fc = new FlashCard(id, front, back,fk);
+                Card fc = new Card(id, front, back,fk);
                 FcList.Add(fc);
             }
             reader.Close();
