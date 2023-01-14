@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lonchanick9427.FlashCard;
-
-internal class DataBaseInteractions
+namespace Lonchanick9427.FlashCard.DB
 {
+    internal class StudySessionDB
+    {
+    }
 }
