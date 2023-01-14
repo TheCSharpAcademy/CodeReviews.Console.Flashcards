@@ -14,20 +14,21 @@ public static class CardOperations
     public static void NewCard()
     {
         Console.Clear();
-
         List<int> i = StackOperations.GetStackIdList(StackOperations.showStacks());
+        Console.WriteLine("Pick any Stack (Id) From the list");
+        int stackId = ToolBox.GetIntInput("Deck Id");
 
-        Console.WriteLine("Creating a new Card ");
+        while (!(i.IndexOf(stackId) >= 0))
+        {
+            Console.WriteLine("The Stack Id provided does not exist! ");
+            stackId = ToolBox.GetIntInput("Deck-Id");
+        }
+
+        Console.WriteLine($"Creating a new Card For stack Id: {stackId}");
         Card aux = new();
         aux.Front = ToolBox.GetStringInput("Front-Face");
         aux.Back = ToolBox.GetStringInput("Back-Face");
-        aux.Fk = ToolBox.GetIntInput("Deck-Id");
-
-        while (!(i.IndexOf(aux.Fk) >= 0))
-        {
-            Console.WriteLine("The Stack Id provided does not exist! ");
-            aux.Fk = ToolBox.GetIntInput("Deck-Id");
-        }
+        aux.Fk = stackId;
 
         CardDB.Add(aux);
         Console.WriteLine("Done!");

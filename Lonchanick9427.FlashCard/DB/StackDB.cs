@@ -1,7 +1,7 @@
 ﻿using System.Data.SqlClient;
 
 namespace Lonchanick9427.FlashCard.DB;
-public static class DeckDB
+public static class StackDB
 {
     private static string connectionString = "Data Source = localhost;" +
             "Initial Catalog = FlashCards;" +
@@ -59,5 +59,32 @@ public static class DeckDB
             command.ExecuteNonQuery();
             connection.Close();
         }
+    }
+    public static bool Update(Stack p)
+    {
+        var query = "UPDATE deck  SET Name_ = @nombre, Description = @description " +
+                    "WHERE id = @Id;";
+
+        try
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@nombre", p.Name);
+                command.Parameters.AddWithValue("@Description", p.Description);
+                command.Parameters.AddWithValue("@Id", p.Id);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+                return true;
+            }
+        }catch(Exception ex) 
+        { 
+            Console.WriteLine("Something happend: ");
+            Console.WriteLine(ex.Message.ToString());
+            return false;
+        }
+        
     }
 }
