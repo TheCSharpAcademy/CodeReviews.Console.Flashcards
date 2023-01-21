@@ -17,9 +17,10 @@
         {
             while (true)
             {
-                if (Int32.TryParse(Console.ReadLine(), out int result))
+                int result;
+                if (Validator.IsInteger(out result))
                 {
-                    if ((result > 0 && result <= list.Count) || result == -1)
+                    if (Validator.IsIntegerInListOrExit(list, result))
                     {
                         return result;
                     }
