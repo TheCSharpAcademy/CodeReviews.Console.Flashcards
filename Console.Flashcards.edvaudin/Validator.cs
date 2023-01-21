@@ -36,5 +36,15 @@ namespace Flashcards
             }
             return false;
         }
+
+        public static bool IsIntegerInListOrExit<T>(List<T> list, int result)
+        {
+            return (result > 0 && result <= list.Count) || result == -1;
+        }
+
+        public static bool IsInteger(out int result)
+        {
+            return Int32.TryParse(Console.ReadLine(), out result);
+        }
     }
 }
