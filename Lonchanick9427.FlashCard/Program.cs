@@ -58,10 +58,10 @@ public static class Program
                     CardOperations.UpdateCard();
                     break;
                 case "8":
-                    //START A NEW SESSION STUDY
+                    SessionOperations.New();
                     break;
                 case "9":
-                    //SHOW SESSION STUDY
+                    SessionOperations.ShowAll();
                     break;
                 case "10":
                     //DELETE SESSION STUDY

@@ -17,10 +17,11 @@ DeckFk INT not null,
 foreign key (DeckFk) references deck(Id) on delete cascade);
 
 
-create table studySessions(
+create table studySession(
 Id INT PRIMARY KEY NOT NULL IDENTITY,
-Name_ VARCHAR(100),
-Init_ Date,
-Fin Date,
-DeckFk INT NOT NULL,
-foreign key (DeckFk) references deck(Id) on delete cascade);
+User_ VARCHAR(100),
+Init_ dateTime,
+Fin dateTime,
+Score INT,
+StackFk INT NOT NULL,
+foreign key (StackFk) references deck(Id) on delete cascade);

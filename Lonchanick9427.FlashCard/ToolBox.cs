@@ -47,4 +47,12 @@ public class ToolBox
         Console.WriteLine("\t Cards-List");
         table.Write(ConsoleTables.Format.MarkDown);
     }
+    public static void SessionStudyPrettyTable(List<StudySession> records)
+    {
+        var table = new ConsoleTable("Session Id", "User Name", "Time Init", "Time Fin", "Score","Stack Id");
+        foreach (var item in records)
+            table.AddRow(item.Id, item.User_, item.Init, item.Fin, item.Score, item.StackFk);
+        Console.WriteLine("\t Study Sessions List");
+        table.Write(ConsoleTables.Format.MarkDown);
+    }
 }
