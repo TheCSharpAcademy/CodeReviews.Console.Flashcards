@@ -18,8 +18,8 @@ public static class Program
             Console.WriteLine("4. Update an Stack\n");/*READY*/
 
             Console.WriteLine("\t CARDS MENU");
-            Console.WriteLine("5. Create a new Card");
-            Console.WriteLine("6. Delete a card");
+            Console.WriteLine("5. Create a new Card");/*READY*/
+            Console.WriteLine("6. Delete a card");/*READY*/
             Console.WriteLine("7. Update a Card\n");
 
             Console.WriteLine("\t STUDY SESSIONS MENU");
@@ -55,7 +55,7 @@ public static class Program
                     CardOperations.DeleteCard();
                     break;
                 case "7":
-                    //UPDATE
+                    CardOperations.UpdateCard();
                     break;
                 case "8":
                     //START A NEW SESSION STUDY

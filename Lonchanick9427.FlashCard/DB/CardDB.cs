@@ -36,6 +36,23 @@ public static class CardDB
             return true;
         }
     }
+    public static bool Update(int Id, Card param)
+    {
+        string front = param.Front;
+        string back = param.Back;
+        var query = $"UPDATE cards SET Front = '{front}', Back = '{back}' WHERE Id = {Id};";
+        using (var connection = new SqlConnection(connectionString))
+        {
+            var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Front", front);
+            command.Parameters.AddWithValue("@Back", back);
+            command.Parameters.AddWithValue("@Id", Id);
+            connection.Open();
+            command.ExecuteNonQuery();
+            connection.Close();
+            return true;
+        }
+    }
     public static List<Card> CardsByStackId(int Id)
     {
         string query = $"select * FROM cards WHERE DeckFk = {Id};";
