@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lonchanick9427.FlashCard.DB;
 
@@ -65,6 +61,21 @@ public static class StudySessionDB
 
         }
         return sessions;
+    }
+
+    public static void Delete(int Id)
+    {
+        var query = "DELETE FROM studySession " +
+                    "WHERE id = @Id;";
+        using (var connection = new SqlConnection(connectionString))
+        {
+            var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Id", Id);
+
+            connection.Open();
+            command.ExecuteNonQuery();
+            connection.Close();
+        }
     }
 
 }

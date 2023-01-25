@@ -64,7 +64,7 @@ public static class Program
                     SessionOperations.ShowAll();
                     break;
                 case "10":
-                    //DELETE SESSION STUDY
+                    SessionOperations.Delete();
                     break;
                 case "0":
                     return;

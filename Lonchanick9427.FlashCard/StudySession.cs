@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace Lonchanick9427.FlashCard;
 
@@ -18,11 +14,11 @@ public class StudySession
 
     public void Print()
     {
-        Console.WriteLine(Id);
-        Console.WriteLine(User_);
-        Console.WriteLine(Init);
-        Console.WriteLine(Fin);
-        Console.WriteLine(Score);
+        Console.WriteLine("Id Session: "+Id);
+        Console.WriteLine("User: " + User_);
+        Console.WriteLine("Init: " + Init);
+        Console.WriteLine("End: " + Fin);
+        Console.WriteLine("Scores: " + Score);
     }
 
 }

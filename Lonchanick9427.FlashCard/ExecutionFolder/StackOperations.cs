@@ -1,5 +1,4 @@
 ﻿using Lonchanick9427.FlashCard.DB;
-using System.Data.SqlClient;
 
 namespace Lonchanick9427.FlashCard.ExcutionFolder;
 public static class StackOperations

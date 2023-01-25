@@ -3,6 +3,11 @@ namespace Lonchanick9427.FlashCard;
 
 public class ToolBox
 {
+    public static string RemoveWhitespace(string str)
+    {
+        return string.Join("", str.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries));
+    }
+
     public static string GetStringInput(string param)
     {
         Console.Write($"{param}: ");

@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Collections.Specialized.BitVector32;
-
-namespace Lonchanick9427.FlashCard.ExcutionFolder;
+﻿namespace Lonchanick9427.FlashCard.ExcutionFolder;
 
 public static class SessionOperations
 {
@@ -25,25 +17,52 @@ public static class SessionOperations
         StudySession session = new();
         session.User_ = ToolBox.GetStringInput("Enter ur User Name");
         
+        Console.Clear() ;
         
+
         session.Init = DateTime.Now;
-        Console.WriteLine($"Study Session starts at {session.Init}");
-
+        //Console.WriteLine($"Study Session starts at {session.Init}");
+        
         List<Card> cards = DB.CardDB.CardsByStackId(stackId);
-
-        foreach(var x in cards)
+        int size = cards.Count();
+        if (size > 0 )
         {
-            Console.WriteLine("\t"+x.Front);
+            string back;
+            string backCard;
+            int score=0;
+            foreach (var x in cards)
+            {
+                Console.WriteLine($"STUDY SESSION");
+                Console.WriteLine($"User: {session.User_}\n\n");
+                Console.WriteLine($"Score: {score}/{size}\n\n");
+                Console.WriteLine("\tFront: " + x.Front);
+                back = ToolBox.GetStringInput("\tBack");
+                //Console.Write("\t" + x.Back+" ");
+                
+                backCard = x.Back.ToLower();
+                back = back.ToLower();
+                if (backCard == back)
+                {
+                    Console.WriteLine("Right!");
+                    score++;
+                    Console.ReadLine();
+                }
+                else
+                {
+                    Console.WriteLine("Wrong!");
+                    Console.ReadLine();
+                }
+                Console.Clear();
+            }
+            session.Fin = DateTime.Now;
+            session.Score = score;
+            session.StackFk = stackId;
+            DB.StudySessionDB.Add(session);
+            Console.WriteLine($"\tStudy Session Ended");
+            Console.WriteLine($"Results");
+            session.Print();
             Console.ReadLine();
-            Console.WriteLine("\t" + x.Back);
         }
-
-        session.Fin = DateTime.Now;
-        session.Score = 31415;
-        session.StackFk = stackId;
-        DB.StudySessionDB.Add(session);
-        Console.WriteLine($"Study Session Ends at {session.Fin}");
-        Console.ReadLine();
     }
 
     public static void ShowAll()
@@ -53,6 +72,36 @@ public static class SessionOperations
         ToolBox.SessionStudyPrettyTable(aux);
         Console.ReadLine();
     }
+    public static List<int> GetStudySessionIdList(List<StudySession> param)
+    {
+        List<int> i = new();
+        foreach (var x in param)
+            i.Add(x.Id);
 
+        return i;
+    }
+    public static void Delete()
+    {
+        Console.Clear();
+        var aux = DB.StudySessionDB.ShowAll();
+        ToolBox.SessionStudyPrettyTable(aux);
+        var i = GetStudySessionIdList(aux);
+        Console.WriteLine("Pick any Study Session from the list");
+        int sessionId = ToolBox.GetIntInput("Study Session Id");
+
+        while (!(i.IndexOf(sessionId) >= 0))
+        {
+            Console.WriteLine("The Study Session Id provided does not exist! ");
+            sessionId = ToolBox.GetIntInput("Study Session-Id");
+        }
+        try
+        { 
+            DB.StudySessionDB.Delete(sessionId);
+            Console.WriteLine("Done!");Console.ReadLine();
+        }catch
+        {
+            Console.WriteLine("Error de algun tipo");
+        }
+    }
 
 }
