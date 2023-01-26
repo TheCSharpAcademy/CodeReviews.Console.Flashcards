@@ -77,4 +77,28 @@ public static class CardDB
         }
         return FcList;
     }
+
+    public static List<Card> Cards()
+    {
+        string query = $"select * FROM cards";
+        List<Card> FcList = new List<Card>();
+
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            SqlCommand command = new SqlCommand(query, connection);
+            connection.Open();
+            SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                int id = reader.GetInt32(0);
+                string front = reader.GetString(1);
+                string back = reader.GetString(2);
+                Card fc = new Card(id, front, back, 0);
+                FcList.Add(fc);
+            }
+            reader.Close();
+            connection.Close();
+        }
+        return FcList;
+    }
 }

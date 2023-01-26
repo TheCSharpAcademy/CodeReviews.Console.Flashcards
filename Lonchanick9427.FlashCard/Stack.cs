@@ -1,4 +1,4 @@
-﻿
+﻿using System.Collections.Generic;
 
 namespace Lonchanick9427.FlashCard;
 
@@ -14,4 +14,6 @@ public class Stack
         Name = nombre;
         Description = desciption;
     }
+
+    //Dictionary<int, int> Index;
 }

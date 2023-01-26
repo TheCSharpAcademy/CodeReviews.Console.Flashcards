@@ -3,20 +3,51 @@
 namespace Lonchanick9427.FlashCard.ExcutionFolder;
 public static class StackOperations
 {
+    public static List<Stack> showStacks2()
+    {
+        Dictionary<int, int> index;
+        List<Stack> l = StackDB.Get(out index);
+        ToolBox.DeckPrettyTable2(l);
+        return l;
+    }
+    public static List<Stack> showStacks()
+    {
+        Dictionary<int, int> index = new();
+        List<Stack> l = StackDB.Get(out index);
+        ToolBox.DeckPrettyTable(l);
+        return l;
+    }
+    public static List<int> GetStackIdList(List<Stack> param)
+    {
+        List<int> i = new();
+        foreach (var x in param)
+            i.Add(x.Id);
+
+        return i;
+    }
     public static void NewStack()
     {
         Console.Clear();
         Console.WriteLine();
-        showStacks();
+        showStacks2();
         Console.WriteLine("Creating a new Stack");
         Stack aux = new Stack();
         aux.Name = ToolBox.GetStringInput("Nombre");
         aux.Description = ToolBox.GetStringInput("Descripcion");
-        StackDB.Add(aux);
-        Console.Clear();
-        Console.WriteLine("Done!");
-        showStacks();
-        Console.ReadLine();
+        try
+        {
+            StackDB.Add(aux);
+            Console.Clear();
+            Console.WriteLine("Done!");
+            showStacks2();
+            Console.ReadLine();
+        }
+        catch (Exception ex) 
+        {
+            Console.WriteLine("The stack already exist. Try another name");
+            Console.ReadLine();
+        }
+        
     }
 
     public static void DeleteStack()
@@ -62,14 +93,7 @@ public static class StackOperations
         Console.ReadLine();
     }
     
-    public static List<int> GetStackIdList(List<Stack> param)
-    {
-        List<int> i = new();
-        foreach (var x in param)
-            i.Add(x.Id);
-
-        return i;
-    }
+    
     public static void ShowStackContent()
     {
         Console.Clear();
@@ -92,10 +116,5 @@ public static class StackOperations
             Console.Write("Type> ! to quit or enter to go back "); op = Console.ReadLine();
         }
     }
-    public static List<Stack> showStacks()
-    {
-        List<Stack> l = StackDB.Get();
-        ToolBox.DeckPrettyTable(l);
-        return l;
-    }
+    
 }

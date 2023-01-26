@@ -100,4 +100,12 @@ public static class CardOperations
         Console.ReadLine();
     }
 
+    public static void Cards()
+    {
+        Console.Clear();
+        var cards = DB.CardDB.Cards();
+        ToolBox.CardPrettyTable(cards);
+        Console.ReadLine();
+    }
+
 }

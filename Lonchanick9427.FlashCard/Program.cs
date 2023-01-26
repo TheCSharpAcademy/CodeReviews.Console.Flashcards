@@ -18,14 +18,15 @@ public static class Program
             Console.WriteLine("4. Update an Stack\n");/*READY*/
 
             Console.WriteLine("\t CARDS MENU");
+            Console.WriteLine("11. Show current cards");/*READY*/
             Console.WriteLine("5. Create a new Card");/*READY*/
             Console.WriteLine("6. Delete a card");/*READY*/
-            Console.WriteLine("7. Update a Card\n");
+            Console.WriteLine("7. Update a Card\n");/*READY*/
 
             Console.WriteLine("\t STUDY SESSIONS MENU");
-            Console.WriteLine("8. Start a New Study Session");
-            Console.WriteLine("9. Show all Study Sessions");
-            Console.WriteLine("10. Delete a Study Session");
+            Console.WriteLine("8. Start a New Study Session");/*READY*/
+            Console.WriteLine("9. Show all Study Sessions");/*READY*/
+            Console.WriteLine("10. Delete a Study Session");/*READY*/
             Console.WriteLine("0. Exit\n");
             Console.Write("Enter your choice: ");
 
@@ -65,6 +66,9 @@ public static class Program
                     break;
                 case "10":
                     SessionOperations.Delete();
+                    break;
+                case "11":
+                    CardOperations.Cards();
                     break;
                 case "0":
                     return;

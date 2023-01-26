@@ -1,4 +1,5 @@
-﻿using System.Data.SqlClient;
+﻿using System.Collections.Generic;
+using System.Data.SqlClient;
 
 namespace Lonchanick9427.FlashCard.DB;
 public static class StackDB
@@ -10,22 +11,24 @@ public static class StackDB
     public static void Add(Stack p)
     {
         string query = "insert into deck values(@name,@descrption);";
+
+
         using (var connection = new SqlConnection(connectionString))
         {
             var command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@name", p.Name);
             command.Parameters.AddWithValue("@descrption", p.Description);
-
             connection.Open();
             command.ExecuteNonQuery();
             connection.Close();
         }
     }
-    public static List<Stack> Get()
+    public static List<Stack> Get(out Dictionary<int, int> index)
     {
+        index = new Dictionary<int, int>();
         string query = "select Id, Name_, Description from deck;";
         List<Stack> personas = new List<Stack>();
-
+        int iindex = 1;
         using (SqlConnection connection = new SqlConnection(connectionString))
         {
             SqlCommand command = new SqlCommand(query, connection);
@@ -38,6 +41,8 @@ public static class StackDB
                 string description = reader.GetString(2);
                 Stack p = new Stack(id, name, description);
                 personas.Add(p);
+                index.Add(iindex, id);
+                iindex++;
             }
             reader.Close();
             connection.Close();

@@ -40,6 +40,18 @@ public class ToolBox
         var table = new ConsoleTable("Id", "Name", "Description");
         foreach (var item in records)
             table.AddRow(item.Id, item.Name, item.Description);
+        
+        Console.WriteLine("\t DECK-LIST");
+        table.Write(ConsoleTables.Format.MarkDown);
+    }
+
+    public static void DeckPrettyTable2(List<Stack> records/*, Dictionary<int,int> i*/)
+    {
+        int aux = 1;
+        var table = new ConsoleTable("Id", "Name", "Description");
+        foreach (var item in records)
+        { table.AddRow(aux, item.Name, item.Description); aux++; }
+        
         Console.WriteLine("\t DECK-LIST");
         table.Write(ConsoleTables.Format.MarkDown);
     }
