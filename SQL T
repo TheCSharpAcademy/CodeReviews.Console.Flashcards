@@ -6,7 +6,7 @@
 
 create table deck(
 Id INT PRIMARY KEY NOT NULL IDENTITY,
-Name_ VARCHAR (100) NOT NULL,
+Name_ VARCHAR (100) NOT NULL UNIQUE,
 Description VARCHAR (255));
 
 create table cards(
