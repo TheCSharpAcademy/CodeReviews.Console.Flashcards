@@ -3,14 +3,14 @@
 namespace Lonchanick9427.FlashCard.ExcutionFolder;
 public static class StackOperations
 {
-    public static List<Stack> showStacks2()
+    public static List<Stack> ShowStacks2()
     {
         Dictionary<int, int> index;
         List<Stack> l = StackDB.Get(out index);
         ToolBox.DeckPrettyTable2(l);
         return l;
     }
-    public static List<Stack> showStacks()
+    public static List<Stack> ShowStacks()
     {
         Dictionary<int, int> index = new();
         List<Stack> l = StackDB.Get(out index);
@@ -29,7 +29,7 @@ public static class StackOperations
     {
         Console.Clear();
         Console.WriteLine();
-        showStacks2();
+        ShowStacks2();
         Console.WriteLine("Creating a new Stack");
         Stack aux = new Stack();
         aux.Name = ToolBox.GetStringInput("Nombre");
@@ -39,7 +39,7 @@ public static class StackOperations
             StackDB.Add(aux);
             Console.Clear();
             Console.WriteLine("Done!");
-            showStacks2();
+            ShowStacks2();
             Console.ReadLine();
         }
         catch (Exception ex) 
@@ -52,7 +52,7 @@ public static class StackOperations
 
     public static void DeleteStack()
     {
-        List<int> i = GetStackIdList(showStacks());
+        List<int> i = GetStackIdList(ShowStacks());
         Console.WriteLine("Pick any Stack (Id) From the list");
         int aux = ToolBox.GetIntInput("Deck Id");
 
@@ -64,14 +64,14 @@ public static class StackOperations
         StackDB.Delete(aux);
         Console.Clear();
         Console.WriteLine("Done! Here the new list!");
-        showStacks();
+        ShowStacks();
         Console.ReadLine();
     }
 
     public static void UpdateStack()
     {
         Console.Clear();
-        List<int> i = GetStackIdList(showStacks());
+        List<int> i = GetStackIdList(ShowStacks());
         Console.WriteLine("Pick any Stack (Id) From the list");
         int aux = ToolBox.GetIntInput("Stack Id");
 
@@ -101,7 +101,7 @@ public static class StackOperations
         while(op!="!")
         {
             Console.Clear();
-            List<int> i = GetStackIdList(showStacks());
+            List<int> i = GetStackIdList(ShowStacks());
             Console.WriteLine("Pick any Stack (Id) From the list");
             int aux = ToolBox.GetIntInput("Stack Id");
 
