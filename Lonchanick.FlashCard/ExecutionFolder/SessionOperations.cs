@@ -7,7 +7,6 @@ public static class SessionOperations
         Console.Clear();
         Console.WriteLine("Pick up an Stack to Start a new Study Session (Trype ! to exit)");
         List<int> i = StackOperations.GetStackIdList(StackOperations.showStacks());
-        //Console.WriteLine("Pick any Stack (Id) From the list");
         int stackId = ToolBox.GetIntInput("Stack Id");
         while (!(i.IndexOf(stackId) >= 0))
         {
@@ -21,7 +20,6 @@ public static class SessionOperations
         
 
         session.Init = DateTime.Now;
-        //Console.WriteLine($"Study Session starts at {session.Init}");
         
         List<Card> cards = DB.CardDB.CardsByStackId(stackId);
         int size = cards.Count();
@@ -37,7 +35,6 @@ public static class SessionOperations
                 Console.WriteLine($"Score: {score}/{size}\n\n");
                 Console.WriteLine("\tFront: " + x.Front);
                 back = ToolBox.GetStringInput("\tBack");
-                //Console.Write("\t" + x.Back+" ");
                 
                 backCard = x.Back.ToLower();
                 back = back.ToLower();

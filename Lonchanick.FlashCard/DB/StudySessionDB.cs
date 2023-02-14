@@ -54,7 +54,6 @@ public static class StudySessionDB
                     Fin= fin,
                 };
                 sessions.Add(aux);
-                //aux.Print();
             }
             reader.Close();
             connection.Close();
