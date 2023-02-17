@@ -1,6 +1,4 @@
-﻿
-
-namespace Lonchanick9427.FlashCard;
+﻿namespace Lonchanick9427.FlashCard;
 
 public class Card
 {

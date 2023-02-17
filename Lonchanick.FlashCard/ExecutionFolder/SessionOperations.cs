@@ -6,7 +6,7 @@ public static class SessionOperations
     {
         Console.Clear();
         Console.WriteLine("Pick up an Stack to Start a new Study Session (Trype ! to exit)");
-        List<int> i = StackOperations.GetStackIdList(StackOperations.showStacks());
+        List<int> i = StackOperations.GetStackIdList(StackOperations.ShowStacks());
         int stackId = ToolBox.GetIntInput("Stack Id");
         while (!(i.IndexOf(stackId) >= 0))
         {
@@ -14,11 +14,10 @@ public static class SessionOperations
             stackId = ToolBox.GetIntInput("Stack-Id");
         }
         StudySession session = new();
-        session.User_ = ToolBox.GetStringInput("Enter ur User Name");
+        session.Usr_ = ToolBox.GetStringInput("Enter ur User Name");
         
         Console.Clear() ;
         
-
         session.Init = DateTime.Now;
         
         List<Card> cards = DB.CardDB.CardsByStackId(stackId);
@@ -31,7 +30,7 @@ public static class SessionOperations
             foreach (var x in cards)
             {
                 Console.WriteLine($"STUDY SESSION");
-                Console.WriteLine($"User: {session.User_}\n\n");
+                Console.WriteLine($"User: {session.Usr_}\n\n");
                 Console.WriteLine($"Score: {score}/{size}\n\n");
                 Console.WriteLine("\tFront: " + x.Front);
                 back = ToolBox.GetStringInput("\tBack");
@@ -69,6 +68,7 @@ public static class SessionOperations
         ToolBox.SessionStudyPrettyTable(aux);
         Console.ReadLine();
     }
+
     public static List<int> GetStudySessionIdList(List<StudySession> param)
     {
         List<int> i = new();
@@ -77,6 +77,7 @@ public static class SessionOperations
 
         return i;
     }
+
     public static void Delete()
     {
         Console.Clear();
@@ -100,5 +101,4 @@ public static class SessionOperations
             Console.WriteLine("Error de algun tipo");
         }
     }
-
 }
