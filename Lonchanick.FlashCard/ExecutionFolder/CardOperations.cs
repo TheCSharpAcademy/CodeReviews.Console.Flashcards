@@ -1,6 +1,7 @@
 ﻿using Lonchanick9427.FlashCard.DB;
 
 namespace Lonchanick9427.FlashCard.ExcutionFolder;
+
 public static class CardOperations
 {
     public static List<int> GetCardIdList(List<Card> param)
@@ -11,10 +12,11 @@ public static class CardOperations
 
         return i;
     }
+
     public static void NewCard()
     {
         Console.Clear();
-        List<int> i = StackOperations.GetStackIdList(StackOperations.showStacks());
+        List<int> i = StackOperations.GetStackIdList(StackOperations.ShowStacks());
         Console.WriteLine("Pick any Stack (Id) From the list");
         int stackId = ToolBox.GetIntInput("Deck Id");
 
@@ -39,7 +41,7 @@ public static class CardOperations
     {
         Console.Clear();
 
-        List<int> i = StackOperations.GetStackIdList(StackOperations.showStacks());
+        List<int> i = StackOperations.GetStackIdList(StackOperations.ShowStacks());
         Console.WriteLine("Pick any Stack (Id) From the list");
         int id = ToolBox.GetIntInput("Stack Id");
         while (!(i.IndexOf(id) >= 0))
@@ -68,7 +70,7 @@ public static class CardOperations
     public static void UpdateCard()
     {
         Console.Clear();
-        List<int> i = StackOperations.GetStackIdList(StackOperations.showStacks());
+        List<int> i = StackOperations.GetStackIdList(StackOperations.ShowStacks());
         Console.WriteLine("Pick any Stack (Id) From the list");
         int id = ToolBox.GetIntInput("Stack Id");
 
@@ -103,9 +105,8 @@ public static class CardOperations
     public static void Cards()
     {
         Console.Clear();
-        var cards = DB.CardDB.Cards();
+        var cards = CardDB.Cards();
         ToolBox.CardPrettyTable(cards);
         Console.ReadLine();
     }
-
 }

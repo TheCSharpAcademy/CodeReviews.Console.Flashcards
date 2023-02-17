@@ -1,5 +1,4 @@
-﻿
-using Lonchanick9427.FlashCard.ExcutionFolder;
+﻿using Lonchanick9427.FlashCard.ExcutionFolder;
 
 namespace Lonchanick9427;
 
@@ -80,7 +79,5 @@ public static class Program
                     break;
             }
         }
-
-
     }
 }

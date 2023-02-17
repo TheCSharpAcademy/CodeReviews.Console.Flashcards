@@ -1,4 +1,5 @@
 ﻿using ConsoleTables;
+
 namespace Lonchanick9427.FlashCard;
 
 public class ToolBox
@@ -47,7 +48,7 @@ public class ToolBox
         { table.AddRow(aux, item.Name, item.Description); aux++; }
         
         Console.WriteLine("\t DECK-LIST");
-        table.Write(ConsoleTables.Format.MarkDown);
+        table.Write(Format.MarkDown);
     }
 
     public static void CardPrettyTable(List<Card> records)
@@ -58,11 +59,12 @@ public class ToolBox
         Console.WriteLine("\t Cards-List");
         table.Write(ConsoleTables.Format.MarkDown);
     }
+
     public static void SessionStudyPrettyTable(List<StudySession> records)
     {
         var table = new ConsoleTable("Session Id", "User Name", "Time Init", "Time Fin", "Score","Stack Id");
         foreach (var item in records)
-            table.AddRow(item.Id, item.User_, item.Init, item.Fin, item.Score, item.StackFk);
+            table.AddRow(item.Id, item.Usr_, item.Init, item.Fin, item.Score, item.StackFk);
         Console.WriteLine("\t Study Sessions List");
         table.Write(ConsoleTables.Format.MarkDown);
     }

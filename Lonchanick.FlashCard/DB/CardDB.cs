@@ -1,13 +1,11 @@
-﻿
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 
 namespace Lonchanick9427.FlashCard.DB;
+
 public static class CardDB
 {
-    private static string connectionString = "Data Source = localhost;" +
-            "Initial Catalog = FlashCards;" +
-            "User = sa;" +
-            "Password = 091230;";
+    private static string connectionString = "Server=(localdb)\\MSSQLLocalDB;Initial Catalog=fc; Integrated Security=true;";
+
     public static void Add(Card p)
     {
         string query = "insert into cards values(@front,@back,@fk);";
@@ -23,6 +21,7 @@ public static class CardDB
             connection.Close();
         }
     }
+
     public static bool Delete(int Id)
     {
         var query = $"DELETE FROM cards WHERE id = {Id};";
@@ -36,6 +35,7 @@ public static class CardDB
             return true;
         }
     }
+
     public static bool Update(int Id, Card param)
     {
         string front = param.Front;
@@ -53,6 +53,7 @@ public static class CardDB
             return true;
         }
     }
+
     public static List<Card> CardsByStackId(int Id)
     {
         string query = $"select * FROM cards WHERE DeckFk = {Id};";

@@ -1,13 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 
 namespace Lonchanick9427.FlashCard.DB;
 public static class StackDB
 {
-    private static string connectionString = "Data Source = localhost;" +
-            "Initial Catalog = FlashCards;" +
-            "User = sa;" +
-            "Password = 091230;";
+    private static string connectionString = "Server=(localdb)\\MSSQLLocalDB;Initial Catalog=fc; Integrated Security=true;";
     public static void Add(Stack p)
     {
         string query = "insert into deck values(@name,@descrption);";
@@ -26,7 +22,7 @@ public static class StackDB
     public static List<Stack> Get(out Dictionary<int, int> index)
     {
         index = new Dictionary<int, int>();
-        string query = "select Id, Name_, Description from deck;";
+        string query = "select Id, Name, Description from deck;";
         List<Stack> personas = new List<Stack>();
         int iindex = 1;
         using (SqlConnection connection = new SqlConnection(connectionString))
@@ -65,6 +61,7 @@ public static class StackDB
             connection.Close();
         }
     }
+
     public static bool Update(Stack p)
     {
         var query = "UPDATE deck  SET Name_ = @nombre, Description = @description " +
@@ -89,7 +86,6 @@ public static class StackDB
             Console.WriteLine("Something happend: ");
             Console.WriteLine(ex.Message.ToString());
             return false;
-        }
-        
+        }  
     }
 }
