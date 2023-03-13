@@ -2,6 +2,6 @@
 
 public class Card
 {
-    public int Id, StackId;
+    public int Id, ViewId,StackId;
     public string StackName, Prompt, Answer;
 }

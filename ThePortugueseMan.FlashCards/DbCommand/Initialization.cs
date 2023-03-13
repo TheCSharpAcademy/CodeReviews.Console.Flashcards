@@ -42,6 +42,7 @@ public class Initialization
                 String sql =
                 $"CREATE TABLE {this.stacksTableName} (" +
                     "Id INTEGER NOT NULL IDENTITY PRIMARY KEY," +
+                    "ViewId INTEGER NOT NULL," +
                     $"Name VARCHAR({this.stackNameLimit}) NOT NULL,)";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
@@ -69,6 +70,7 @@ public class Initialization
                 String sql =
                     $"CREATE TABLE {this.cardsTableName} (" +
                         "Id INTEGER NOT NULL IDENTITY PRIMARY KEY," +
+                        "ViewId INTEGER NOT NULL," +
                         $"Prompt VARCHAR({this.cardPromptLimit})," +
                         $"Answer VARCHAR({this.cardAnswerLimit})," +
                         $"StackId INTEGER NOT NULL FOREIGN KEY REFERENCES {this.stacksTableName}(Id)" +

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using ObjectsLibrary;
+using System;
 
 namespace DbCommandsLibrary;
 
@@ -45,9 +46,10 @@ public class Returning
                             new Card
                             {
                                 Id = reader.GetInt32(0),
-                                Prompt = reader.GetString(1),
-                                Answer= reader.GetString(2),
-                                StackId= reader.GetInt32(3)
+                                ViewId = reader.GetInt32(1),
+                                Prompt = reader.GetString(2),
+                                Answer= reader.GetString(3),
+                                StackId= reader.GetInt32(4)
                             });
                     }
                     connection.Close();
@@ -90,7 +92,8 @@ public class Returning
                             new Stack
                             {
                                 Id = reader.GetInt32(0),
-                                Name = reader.GetString(1)
+                                ViewId = reader.GetInt32(1),
+                                Name = reader.GetString(2)
                             });
                     }
                     connection.Close();
@@ -133,8 +136,10 @@ public class Returning
                             new Card
                             {
                                 Id = reader.GetInt32(0),
-                                Prompt = reader.GetString(1),
-                                Answer = reader.GetString(2)
+                                ViewId = reader.GetInt32(1),
+                                Prompt = reader.GetString(2),
+                                Answer = reader.GetString(3),
+                                StackId = reader.GetInt32(4)
                             };
                     }
                     connection.Close();
@@ -177,7 +182,8 @@ public class Returning
                             new Stack
                             {
                                 Id = reader.GetInt32(0),
-                                Name = reader.GetString(1)
+                                ViewId = reader.GetInt32(1),
+                                Name = reader.GetString(2)
                             };
                     }
                     connection.Close();
@@ -187,5 +193,84 @@ public class Returning
             }
         }
         catch (SqlException) { return null; }
+    }
+
+    public int ViewIdFromId(string table, int id)
+    {
+        if (table == "Stacks") return StackByIndex(id).ViewId;
+        else if (table == "Cards") return CardByIndex(id).ViewId;
+        else throw new Exception("Invalid mode for ViewIdFromId");
+    }
+
+    public int IdFromViewId(string tableName, int viewId)
+    {
+        try
+        {
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+
+            builder.ConnectionString = connectionString;
+
+            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            {
+
+                connection.Open();
+
+                String sql =
+                $"SELECT * FROM {tableName} WHERE ViewId={viewId}";
+
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            int id = reader.GetInt32(0);
+                            connection.Close();
+                            return id;
+                        }
+                        else return 0;
+                    }
+                }
+            }
+        }
+        catch (SqlException) { return 0; }
+    }
+
+    public int LastViewId(string tableName)
+    {
+
+        try
+        {
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+
+            builder.ConnectionString = connectionString;
+
+            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            {
+
+                connection.Open();
+
+                String sql =
+                $"SELECT TOP (1) * FROM Stacks ORDER BY [ViewId] DESC";
+                    //$"SELECT TOP (1) ViewId FROM {tableName} ORDER BY ViewId DESC";
+
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            int viewId = reader.GetInt32(1);
+                            connection.Close();
+                            return viewId;
+                        }
+                        else return 0;
+                    }
+                }
+            }
+        }
+        catch (SqlException) { return -1; }
     }
 }
