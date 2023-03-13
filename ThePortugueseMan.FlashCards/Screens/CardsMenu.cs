@@ -98,7 +98,7 @@ internal class CardsMenu
         {
             cardIndex = askInput.PositiveNumber("Write the index of the card you want to update, or 0 to return");
         }
-        while ((cardIndex != 0) && (dbCmd.Return.CardByIndex(cardIndex) == null));
+        while ((cardIndex != 0) && !dbCmd.Check.CardByIndex(cardIndex));
         if(cardIndex == 0) return;
 
         Console.Clear();
@@ -157,7 +157,7 @@ internal class CardsMenu
                 tableDataDisplay.Add(
                     new List<object>
                     {
-                        card.Id,
+                        card.ViewId,
                         card.Prompt,
                         card.Answer,
                         dbCmd.Return.StackByIndex(card.StackId).Name

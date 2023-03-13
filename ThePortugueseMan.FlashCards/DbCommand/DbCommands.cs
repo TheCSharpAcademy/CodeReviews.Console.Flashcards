@@ -11,6 +11,7 @@ public class DbCommands
     public Returning Return;
     public Deletion Delete;
     public Updating Update;
+    public Checking Check;
 
 
 
@@ -35,5 +36,6 @@ public class DbCommands
         Return = new Returning(this.connectionString, this.cardsTableName, this.stacksTableName);
         Delete = new Deletion(this.connectionString, this.cardsTableName, this.stacksTableName);
         Update = new Updating(this.connectionString, this.cardsTableName, this.stacksTableName);
+        Check = new Checking(this.connectionString, this.cardsTableName, this.stacksTableName);
     }
 }

@@ -57,6 +57,12 @@ internal class StacksMenu
             askInput.AlphasNumbersSpecialUpToLimit(settings.stackNameCharLimit, "Write the name of the stack.");
         Stack newStack = new Stack { Name = stackName };
 
+        if (stackName == "0") return;
+        if(dbCmd.Check.StackByName(stackName)) { Console.WriteLine("Stack already exists..."); return; }
+
+        newStack.ViewId = dbCmd.Return.LastViewId(settings.stacksTableName) + 1;
+        if (newStack.ViewId == 0+1 ) newStack.ViewId = 1;
+        
         if (dbCmd.Insert.IntoTable(newStack)) Console.WriteLine("New stack added successfully!");
         else Console.WriteLine("Couldn't add stack...");
         
@@ -118,7 +124,7 @@ internal class StacksMenu
                 tableDataDisplay.Add(
                     new List<object>
                     {
-                        stack.Id,
+                        stack.ViewId,
                         stack.Name
                     });
             }

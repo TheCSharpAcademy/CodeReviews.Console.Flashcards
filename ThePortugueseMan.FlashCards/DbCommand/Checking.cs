@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using System;
 
 namespace DbCommandsLibrary;
 
@@ -15,6 +16,16 @@ public class Checking
 
     public bool StackByIndex(int index)
     {
+        return CheckByIndex(index, this.stacksTableName);
+    }
+
+    public bool CardByIndex(int index)
+    {
+        return CheckByIndex(index,this.cardsTableName);
+    }
+
+    private bool CheckByIndex(int index, string tableName) 
+    {
         try
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
@@ -23,29 +34,43 @@ public class Checking
 
             using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
             {
-
                 connection.Open();
 
                 String sql =
-                $"SELECT * FROM {this.stacksTableName} WHERE Id={index}";
+                $"SELECT * FROM {tableName} WHERE Id={index}";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
-                    command.ExecuteNonQuery();
+                    if (command.ExecuteReader().HasRows) return true;
                 }
             }
-            return true;
+            return false;
         }
         catch (SqlException) { return false; }
     }
 
-    public bool CardByIndex(int index)
-    {
-        return false;
-    }
-
     public bool StackByName(string stackName)
     {
-        return false;
+        try
+        {
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+
+            builder.ConnectionString = connectionString;
+
+            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            {
+                connection.Open();
+
+                String sql =
+                $"SELECT * FROM {this.stacksTableName} WHERE Name='{stackName}'";
+
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    if (command.ExecuteReader().HasRows) return true;
+                }
+            }
+            return false;
+        }
+        catch (SqlException) { return false; }
     }
 }

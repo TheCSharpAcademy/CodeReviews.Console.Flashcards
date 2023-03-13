@@ -29,7 +29,8 @@ public class Insertion
                 connection.Open();
 
                 String sql =
-                $"INSERT INTO {this.stacksTableName} (Name) VALUES ('{stack.Name}')";
+                $"INSERT INTO {this.stacksTableName} (ViewId,Name) " +
+                $"VALUES ({stack.ViewId},'{stack.Name}')";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {

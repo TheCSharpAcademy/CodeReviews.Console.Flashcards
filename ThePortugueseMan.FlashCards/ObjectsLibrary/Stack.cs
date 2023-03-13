@@ -2,6 +2,6 @@
 
 public class Stack
 {
-    public int Id;
+    public int Id, ViewId;
     public string Name;
 }
