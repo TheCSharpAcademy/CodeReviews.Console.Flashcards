@@ -16,15 +16,15 @@ public class Deletion
 
         returning = new(connectionString, cardsTableName, stacksTableName);
     }
-    public bool StackByIndex(int viewId)
+    public bool StackByViewId(int viewId)
     {
-        int id = returning.IdFromViewId(this.stacksTableName,viewId);
+        int index = returning.IdFromViewId(this.stacksTableName,viewId);
 
-        if(!ByIndex(this.stacksTableName, id)) return false;
+        if(!ByIndex(this.stacksTableName, index)) return false;
         else 
         {
-            if (UpdateViewIdsAfterDeletion(this.stacksTableName, viewId)) return true;
-            else throw new Exception("Corrupted table after deletion");
+            UpdateViewIdsAfterDeletion(this.stacksTableName, viewId);
+            return true;
         }
     }
 
