@@ -97,18 +97,20 @@ internal class StacksMenu
     {
         Console.Clear();
         int index;
+        int viewId;
 
         DisplayStackList(dbCmd.Return.AllStacks(), "DELETE");
 
         do
         {
-            index = askInput.PositiveNumber("Write the index of the stack you want to delete, or 0 to return");
+            viewId = askInput.PositiveNumber("Write the index of the stack you want to delete, or 0 to return");
+            index = dbCmd.Return.IdFromViewId(settings.stacksTableName, viewId);
         }
-        while((index != 0) && (dbCmd.Return.StackByIndex(index) == null));
+        while((viewId != 0) && !dbCmd.Check.StackByIndex(index));
 
         if (index == 0) return;
 
-        if (dbCmd.Delete.StackByIndex(index)) Console.WriteLine("Stack deleted successfully!");
+        if (dbCmd.Delete.StackByViewId(viewId)) Console.WriteLine("Stack deleted successfully!");
         else Console.WriteLine("Couldn't delete stack...");
         return;
     }
