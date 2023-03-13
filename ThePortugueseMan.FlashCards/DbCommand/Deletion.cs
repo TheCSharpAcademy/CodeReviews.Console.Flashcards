@@ -28,30 +28,16 @@ public class Deletion
         }
     }
 
-    public bool CardByIndex(int index)
+    public bool CardByViewId(int viewId)
     {
-        try
+        int index = returning.IdFromViewId(this.cardsTableName, viewId);
+
+        if (!ByIndex(this.cardsTableName, index)) return false;
+        else
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-
-            builder.ConnectionString = connectionString;
-
-            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
-            {
-
-                connection.Open();
-
-                String sql =
-                $"DELETE FROM {this.cardsTableName} WHERE Id={index}";
-
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    command.ExecuteNonQuery();
-                }
-            }
+            UpdateViewIdsAfterDeletion(this.cardsTableName, viewId);
             return true;
         }
-        catch (SqlException) { return false; }
     }
 
     private bool ByIndex(string tableName, int index)

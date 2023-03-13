@@ -54,7 +54,7 @@ internal class CardsMenu
     private void AddCard()
     {
         Console.Clear();
-        int index;
+        int stackViewId, stackIndex;
         Card newCard = new();
         Stack stack = new();
 
@@ -63,11 +63,12 @@ internal class CardsMenu
 
         do
         {
-            index = askInput.PositiveNumber("Choose the stack for your card, or 0 to return");
-            stack = dbCmd.Return.StackByIndex(index);
+            stackViewId = askInput.PositiveNumber("Choose the stack for your card, or 0 to return");
+            stackIndex = dbCmd.Return.IdFromViewId(settings.stacksTableName, stackViewId);
+            stack = dbCmd.Return.StackByIndex(stackIndex);
         }
-        while ((index != 0) && (stack == null));
-        if (index == 0) return;
+        while ((stackViewId != 0) && (stack == null));
+        if (stackViewId == 0) return;
 
         newCard.StackId = stack.Id;
 
@@ -78,6 +79,9 @@ internal class CardsMenu
         newCard.Answer =
              askInput.AlphasNumbersSpecialUpToLimit(settings.cardAnswerCharLimit, "Write the card's answer.");
         if (newCard.Answer == "0") return;
+
+        newCard.ViewId = dbCmd.Return.LastViewId(settings.cardsTableName) + 1;
+        if (newCard.ViewId == 0 + 1) newCard.ViewId = 1;
 
         if (dbCmd.Insert.IntoTable(newCard)) Console.WriteLine("Card added successfully!");
         else Console.WriteLine("Couldn't add card...");
@@ -129,19 +133,19 @@ internal class CardsMenu
     private void DeleteCard()
     {
         Console.Clear();
-        int index;
+        int viewId, index;
 
         DisplayCardList(dbCmd.Return.AllCards(), "DELETE");
 
         do
         {
-            index = askInput.PositiveNumber("Write the index of the card you want to delete, or 0 to return");
+            viewId = askInput.PositiveNumber("Write the index of the card you want to delete, or 0 to return");
+            index = dbCmd.Return.IdFromViewId(settings.cardsTableName, viewId);
         }
-        while ((index != 0) && (dbCmd.Return.StackByIndex(index) == null));
+        while ((viewId != 0) && (dbCmd.Check.CardByIndex(index) == null));
+        if (viewId == 0) return;
 
-        if (index == 0) return;
-
-        if (dbCmd.Delete.CardByIndex(index)) Console.WriteLine("Card deleted successfully!");
+        if (dbCmd.Delete.CardByViewId(viewId)) Console.WriteLine("Card deleted successfully!");
         else Console.WriteLine("Couldn't delete card...");
         return;
     }

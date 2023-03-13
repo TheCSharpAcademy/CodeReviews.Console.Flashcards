@@ -56,8 +56,8 @@ public class Insertion
                 connection.Open();
 
                 String sql =
-                $"INSERT INTO {this.cardsTableName} (Prompt,Answer,StackId) " +
-                $"VALUES ('{card.Prompt}','{card.Answer}',{card.StackId})";
+                $"INSERT INTO {this.cardsTableName} (ViewId,Prompt,Answer,StackId) " +
+                $"VALUES ({card.ViewId},'{card.Prompt}','{card.Answer}',{card.StackId})";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {

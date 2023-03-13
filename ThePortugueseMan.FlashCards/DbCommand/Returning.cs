@@ -252,7 +252,7 @@ public class Returning
                 connection.Open();
 
                 String sql =
-                $"SELECT TOP (1) * FROM Stacks ORDER BY [ViewId] DESC";
+                $"SELECT TOP (1) * FROM {tableName} ORDER BY [ViewId] DESC";
                     //$"SELECT TOP (1) ViewId FROM {tableName} ORDER BY ViewId DESC";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
