@@ -89,7 +89,7 @@ internal class CardsMenu
     private void UpdateCard()
     {
         Console.Clear();
-        Card oldCard = new(), updatedCard = new();
+        Card updatedCard = new();
         Stack newStack = new();
         StacksMenu stacks = new();
         int cardIndex, stackIndex;

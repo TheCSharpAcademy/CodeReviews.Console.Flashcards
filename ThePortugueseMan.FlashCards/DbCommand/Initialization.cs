@@ -52,7 +52,7 @@ public class Initialization
                 }
             }
         }
-        catch (SqlException) { }
+        catch (SqlException) { return; }
     }
 
     private void CardsTable()
@@ -82,7 +82,7 @@ public class Initialization
                 }
             }
         }
-        catch (SqlException) { }
+        catch (SqlException) { return; }
     }
 
     private void StudySessionTable()
@@ -112,6 +112,6 @@ public class Initialization
                 }
             }
         }
-        catch (SqlException) { }
+        catch (SqlException) { return; }
     }
 }
