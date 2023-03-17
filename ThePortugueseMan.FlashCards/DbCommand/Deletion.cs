@@ -65,7 +65,7 @@ public class Deletion
         catch (SqlException) { return false; }
     }
 
-    private bool UpdateViewIdsAfterDeletion(string tableName, int deletedViewId)
+    private void UpdateViewIdsAfterDeletion(string tableName, int deletedViewId)
     {
         try
         {
@@ -82,11 +82,11 @@ public class Deletion
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
-                    if (command.ExecuteNonQuery() > 0) return true;
+                    if (command.ExecuteNonQuery() > 0) return;
                 }
             }
-            return false;
+            return;
         }
-        catch (SqlException) { return false; }
+        catch (SqlException) { return; }
     }
 }

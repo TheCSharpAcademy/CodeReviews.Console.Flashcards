@@ -16,8 +16,8 @@ internal class StacksMenu
             "2 - Add new Stack",
             "3 - Update Stack",
             "4 - Delete Stack",
-            "0 - Return"};
-
+            "0 - Return"
+        };
         while (!exitMenu)
         {
             Console.Clear();
