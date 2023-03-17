@@ -1,18 +1,18 @@
 ﻿using Microsoft.Data.SqlClient;
 using ObjectsLibrary;
-using SettingsLibrary;
 
 namespace DbCommandsLibrary;
 
 public class Insertion
 {
-    string connectionString, cardsTableName, stacksTableName;
+    string connectionString, cardsTableName, stacksTableName, studySessionTableName;
 
-    public Insertion(string connectionString, string cardsTableName, string stacksTableName)
+    public Insertion(string connectionString, string cardsTableName, string stacksTableName, string studySessionTableName)
     {
+        this.connectionString = connectionString;
         this.cardsTableName = cardsTableName;
         this.stacksTableName = stacksTableName;
-        this.connectionString = connectionString;
+        this.studySessionTableName = studySessionTableName;
     }
 
     public bool IntoTable(Stack stack)
@@ -52,7 +52,6 @@ public class Insertion
 
             using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
             {
-
                 connection.Open();
 
                 String sql =
@@ -62,6 +61,33 @@ public class Insertion
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     if(command.ExecuteNonQuery() > 0) return true;
+                }
+            }
+            return false;
+        }
+        catch (SqlException) { return false; }
+    }
+
+    public bool IntoTable(StudySession session)
+    {
+        try
+        {
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+
+            builder.ConnectionString = connectionString;
+
+            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            {
+                connection.Open();
+
+                String sql =
+                $"INSERT INTO {this.studySessionTableName} (Date,Score,RoundsPlayed,StackId) " +
+                $"VALUES ('"+ session.Date.ToString("yyyyMMdd HH:mm:ss") +"'," +
+                $"{session.Score},{session.RoundsPlayed},{session.StackId})";
+
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    if (command.ExecuteNonQuery() > 0) return true;
                 }
             }
             return false;

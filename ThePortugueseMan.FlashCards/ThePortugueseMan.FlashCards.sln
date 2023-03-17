@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Screens", "Screens\Screens.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AskInputs", "AskInputs\AskInputs.csproj", "{73F0D39B-3F6D-443D-8698-A4D86A745727}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettingsLibrary", "SettingsLibrary\SettingsLibrary.csproj", "{A0C99B43-B1FC-432C-B396-0420BD1FA96F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SettingsLibrary", "SettingsLibrary\SettingsLibrary.csproj", "{A0C99B43-B1FC-432C-B396-0420BD1FA96F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectsLibrary", "ObjectsLibrary\ObjectsLibrary.csproj", "{63CD0EA7-CEDE-4BB1-839E-ED12F103A208}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectsLibrary", "ObjectsLibrary\ObjectsLibrary.csproj", "{63CD0EA7-CEDE-4BB1-839E-ED12F103A208}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

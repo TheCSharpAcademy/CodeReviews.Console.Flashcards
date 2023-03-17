@@ -1,19 +1,18 @@
 ﻿using Microsoft.Data.SqlClient;
 using ObjectsLibrary;
-using System;
 
 namespace DbCommandsLibrary;
 
 public class Returning
 {
-    string connectionString, cardsTableName, stacksTableName;
+    string connectionString, cardsTableName, stacksTableName, studySessionsTableName;
 
-    public Returning(string connectionString, string cardsTableName ,string stacksTableName )
+    public Returning(string connectionString, string cardsTableName ,string stacksTableName, string studySessionsTableName )
     {
+        this.connectionString = connectionString;
         this.cardsTableName = cardsTableName;
         this.stacksTableName = stacksTableName;
-        this.connectionString = connectionString;
-
+        this.studySessionsTableName = studySessionsTableName;
     }
     public List<Card> AllCards()
     {
@@ -25,7 +24,6 @@ public class Returning
 
             using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
             {
-
                 connection.Open();
 
                 String sql =
@@ -36,7 +34,6 @@ public class Returning
                 {
                     reader = command.ExecuteReader();
                 }
-
                 if (reader.HasRows)
                 {
                     var returnList = new List<Card>();
@@ -61,6 +58,50 @@ public class Returning
         catch (SqlException) { return null; }
     }
 
+    public List<Card> CardsByStackId(int stackId)
+    {
+        try
+        {
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+
+            builder.ConnectionString = connectionString;
+
+            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            {
+                connection.Open();
+
+                String sql =
+                $"SELECT * FROM {this.cardsTableName} WHERE StackID = {stackId}";
+
+                SqlDataReader reader;
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    reader = command.ExecuteReader();
+                }
+                if (reader.HasRows)
+                {
+                    var returnList = new List<Card>();
+                    while (reader.Read())
+                    {
+                        returnList.Add(
+                            new Card
+                            {
+                                Id = reader.GetInt32(0),
+                                ViewId = reader.GetInt32(1),
+                                Prompt = reader.GetString(2),
+                                Answer = reader.GetString(3),
+                                StackId = reader.GetInt32(4)
+                            });
+                    }
+                    connection.Close();
+                    return returnList;
+                }
+                else return null;
+            }
+        }
+        catch (SqlException) { return null; }
+    }
+
     public List<Stack> AllStacks()
     {
         try
@@ -71,7 +112,6 @@ public class Returning
 
             using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
             {
-
                 connection.Open();
 
                 String sql =
@@ -82,7 +122,6 @@ public class Returning
                 {
                     reader = command.ExecuteReader();
                 }
-
                 if (reader.HasRows)
                 {
                     var returnList = new List<Stack>();
@@ -105,6 +144,50 @@ public class Returning
         catch (SqlException) { return null; }
     }
 
+    public List<StudySession> AllSessions()
+    {
+        try
+        {
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+
+            builder.ConnectionString = connectionString;
+
+            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            {
+                connection.Open();
+
+                String sql =
+                $"SELECT * FROM {this.studySessionsTableName}";
+
+                SqlDataReader reader;
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    reader = command.ExecuteReader();
+                }
+                if (reader.HasRows)
+                {
+                    var returnList = new List<StudySession>();
+                    while (reader.Read())
+                    {
+                        returnList.Add(
+                            new StudySession
+                            {
+                                Id = reader.GetInt32(0),
+                                Date = reader.GetDateTime(1),
+                                Score = reader.GetInt32(2),
+                                RoundsPlayed = reader.GetInt32(3),
+                                StackId= reader.GetInt32(4),
+                            });
+                    }
+                    connection.Close();
+                    return returnList;
+                }
+                else return null;
+            }
+        }
+        catch (SqlException) { return null; }
+    }
+
     public Card CardByIndex(int index) 
     {
         try
@@ -115,7 +198,6 @@ public class Returning
 
             using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
             {
-
                 connection.Open();
 
                 String sql =
@@ -126,7 +208,6 @@ public class Returning
                 {
                     reader = command.ExecuteReader();
                 }
-
                 if (reader.HasRows)
                 {
                     Card returnCard = new();
@@ -161,7 +242,6 @@ public class Returning
 
             using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
             {
-
                 connection.Open();
 
                 String sql =
@@ -172,7 +252,6 @@ public class Returning
                 {
                     reader = command.ExecuteReader();
                 }
-
                 if (reader.HasRows)
                 {
                     Stack returnStack = new();
@@ -195,6 +274,7 @@ public class Returning
         catch (SqlException) { return null; }
     }
 
+
     public int ViewIdFromId(string table, int id)
     {
         if (table == "Stacks") return StackByIndex(id).ViewId;
@@ -212,7 +292,6 @@ public class Returning
 
             using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
             {
-
                 connection.Open();
 
                 String sql =
@@ -239,7 +318,6 @@ public class Returning
 
     public int LastViewId(string tableName)
     {
-
         try
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
@@ -248,7 +326,6 @@ public class Returning
 
             using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
             {
-
                 connection.Open();
 
                 String sql =
