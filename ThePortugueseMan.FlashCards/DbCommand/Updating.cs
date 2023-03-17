@@ -12,7 +12,6 @@ public class Updating
         this.cardsTableName = cardsTableName;
         this.stacksTableName = stacksTableName;
         this.connectionString = connectionString;
-
     }
 
     public bool StackByIndex(int index, Stack updatedStack)
@@ -25,7 +24,6 @@ public class Updating
 
             using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
             {
-
                 connection.Open();
 
                 String sql =

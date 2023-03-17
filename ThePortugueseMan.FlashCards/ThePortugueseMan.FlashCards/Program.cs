@@ -8,7 +8,11 @@ public class Program
         var dbCmds = new DbCommands();
         dbCmds.Initialize.AllTables();
 
-        var screen = new Screen();
-        screen.MainMenu.View();
+        var mainMenu = new MainMenu();
+        mainMenu.View();
+
+        Console.Clear();
+        Console.WriteLine("Goodbye!");
+        Environment.Exit(0);
     }
 }

@@ -9,10 +9,11 @@ public class MainMenu
     {
         StacksMenu stacksMenu = new();
         CardsMenu cardsMenu = new();
+        StudySessionMenu studySessionMenu = new();
 
         bool exitMenu = false;
         List<object> optionsString = new List<object> {
-            "1 - New Session",
+            "1 - Study Sessions",
             "2 - Stacks",
             "3 - Cards",
             "0 - Exit App"};
@@ -28,12 +29,9 @@ public class MainMenu
             switch (askInput.PositiveNumber("Please select a valid option"))
             {
                 case 0: exitMenu = true; break;
-                case 1: break;
+                case 1: studySessionMenu.View(); break;
                 case 2: stacksMenu.View(); break;
                 case 3: cardsMenu.View(); break;
-                case 4: break;
-                case 5: break;
-                case 6:  break;
                 default: break;
             }
         }

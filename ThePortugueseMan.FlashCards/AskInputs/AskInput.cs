@@ -75,4 +75,24 @@ public class AskInput
 
         return returnString.Trim();
     }
+
+    public bool IsRightArrow_FromLeftOrRight(string message)
+    {
+        bool isRight = false;
+        ConsoleKeyInfo input;
+
+        Console.WriteLine(message);
+        do
+        {
+            while(!Console.KeyAvailable)
+            {
+
+            }
+            input = Console.ReadKey();
+        }
+        while (input.Key != ConsoleKey.RightArrow && input.Key != ConsoleKey.LeftArrow);
+
+        if(input.Key == ConsoleKey.RightArrow) { isRight = true; }
+        return isRight;
+    }
 }

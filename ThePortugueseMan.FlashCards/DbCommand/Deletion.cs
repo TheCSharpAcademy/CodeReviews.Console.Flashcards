@@ -1,20 +1,20 @@
 ﻿using Microsoft.Data.SqlClient;
-using System;
 
 namespace DbCommandsLibrary; 
 
 public class Deletion 
 {
-    string connectionString, cardsTableName, stacksTableName;
+    string connectionString, cardsTableName, stacksTableName, studySessionsTableName;
     Returning returning;
 
-    public Deletion(string connectionString, string cardsTableName, string stacksTableName)
+    public Deletion(string connectionString, string cardsTableName, string stacksTableName, string studySessionsTableName)
     {
+        this.connectionString = connectionString;
         this.cardsTableName = cardsTableName;
         this.stacksTableName = stacksTableName;
-        this.connectionString = connectionString;
+        this.studySessionsTableName = studySessionsTableName;
 
-        returning = new(connectionString, cardsTableName, stacksTableName);
+        returning = new(connectionString, cardsTableName, stacksTableName, studySessionsTableName);
     }
     public bool StackByViewId(int viewId)
     {
@@ -50,7 +50,6 @@ public class Deletion
 
             using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
             {
-
                 connection.Open();
 
                 String sql =
@@ -76,7 +75,6 @@ public class Deletion
 
             using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
             {
-
                 connection.Open();
 
                 String sql =
