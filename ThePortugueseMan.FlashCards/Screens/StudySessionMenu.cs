@@ -69,6 +69,12 @@ internal class StudySessionMenu
         List<Card> cardsToShow = dbCmd.Return.CardsByStackId(session.StackId);
         session.Date = DateTime.Now;
 
+        if(cardsToShow== null) 
+        {
+            Console.WriteLine("Stack has no cards...");
+            askInput.AnyKeyToContinue();
+            return;
+        }
         foreach (Card card in cardsToShow) 
         {
             session.RoundsPlayed += 1;
@@ -82,7 +88,6 @@ internal class StudySessionMenu
         };
         Console.Clear();
         DisplaySessions(displaySessionList, "Session end");
-
     }
 
     public void ViewAllSessions()
