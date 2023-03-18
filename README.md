@@ -39,7 +39,7 @@ A CRUD based console application that allows the user to study with flashcards. 
 - Make better use of KanBan boards. They're a powerfull tool for organization, but I end up forgetting I have one set up, so I don't use as much as I would like.
 
 ## Resources
-- The [C#Academy project](https://www.thecsharpacademy.com/project/14) was the project guide.
+- The [C#Academy Flashcard's project](https://www.thecsharpacademy.com/project/14) was the project guide.
 - I reused a lot of code from my [previous project](https://github.com/ThePortugueseMan/ThePortugueseMan.CodingTracker).
 - The [C#Academy discord community](https://discord.com/invite/JVnwYdM79C) that are always ready to help, and came in clutch with my SQL Server troubles (shout out to ghoulam!)
 - The [C#Academy coding coventions](https://thecsharpacademy.com/article/58) to help clean up the code and stick to the coding conventions.
