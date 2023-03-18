@@ -84,10 +84,8 @@ public class AskInput
         Console.WriteLine(message);
         do
         {
-            while(!Console.KeyAvailable)
-            {
+            while (!Console.KeyAvailable) { }
 
-            }
             input = Console.ReadKey();
         }
         while (input.Key != ConsoleKey.RightArrow && input.Key != ConsoleKey.LeftArrow);
