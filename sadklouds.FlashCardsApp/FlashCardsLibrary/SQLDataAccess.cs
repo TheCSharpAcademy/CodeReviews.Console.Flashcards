@@ -9,6 +9,7 @@ using System.Configuration;
 using System.Collections.Specialized;
 using Microsoft.IdentityModel.Protocols;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace FlashCardsLibrary;
 
@@ -39,7 +40,7 @@ public class SQLDataAccess
 
             } catch (Exception ex)
             {
-                Console.WriteLine("Failed to get stacks");
+                Console.WriteLine("Error occured while searching stacks!");
             }
             return output;
         }
@@ -67,7 +68,7 @@ public class SQLDataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"stack id from {stackName} could not be found");
+                Console.WriteLine($"Error occured while searching stack name {stackName}");
             }
             return output;
         }
@@ -182,7 +183,6 @@ public class SQLDataAccess
             }
         }
     }
-
     public void UpdateFlashCardRecord(int id, string front, string back)
     {
         using (SqlConnection connection = new SqlConnection(connectionString))
@@ -236,4 +236,112 @@ public class SQLDataAccess
         }
     }
 
+    public void CreateStudySession(string stackName, DateTime date, int score)
+    {
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            int stackId = GetStackId(stackName);
+            if (stackId != 0)
+            {
+                string sql = @"insert into StudySessions (Date, Score, StackId) values (@Date, @Score, @StackId);";
+                SqlCommand cmd = new SqlCommand(sql, connection);
+                cmd.Parameters.AddWithValue("@Date", date);
+                cmd.Parameters.AddWithValue("@Score", score);
+                cmd.Parameters.AddWithValue("@StackId", stackId);
+                try
+                {
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Record could not be inserted");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Study session could not be created stack Id not found");
+            }
+        }
+    }
+
+    public List<StudySessionModel> GetAllStudySessions()
+    {
+        using (SqlConnection connection = new(connectionString))
+        {
+            List<StudySessionModel> output = new();
+            string sql = @"select x.id, Date, Score, StackId, s.StackName
+                            from dbo.StudySessions x
+                            inner join dbo.Stacks s on s.id = x.StackId";
+
+            SqlCommand cmd = new(sql, connection);
+            try
+            {
+                connection.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        int id = reader.GetInt32(0);
+                        DateTime date = reader.GetDateTime(1);
+                        int score = reader.GetInt32(2);
+                        int stackId = reader.GetInt32(3);
+                        string stackName = reader.GetString(4);
+                        output.Add(new StudySessionModel { Id = id, Date = date, Score = score, StackId = stackId, StackName = stackName});
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Study sessions could not be retrieved");
+            }
+            return output;
+        }
+
+    }
+
+    public void CreateStack(string stackName)
+    {
+        using (SqlConnection connection = new(connectionString))
+        {
+            string sql = @"insert into Stacks (StackName) values (@StackName);";
+            SqlCommand cmd = new(sql, connection);
+            cmd.Parameters.AddWithValue("@StackName", stackName);
+            try
+            {
+                connection.Open();
+                cmd.ExecuteNonQuery();
+
+            }catch( Exception ex)
+            {
+                Console.WriteLine("Stack could not be crated");
+            }
+        }
+        
+    }
+
+    public void DeleteStack(string stackName)
+    {
+        using(SqlConnection connection = new(connectionString))
+        {
+            string sql = @"delete from Stacks where StackName = @StackName;";
+            SqlCommand cmd = new(sql, connection);
+            cmd.Parameters.AddWithValue("@StackName", stackName);
+            try
+            {
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                Console.WriteLine("\nStack has been deleted\n");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(" Stack {stackName} could not be deleted");
+            }
+        }
+    }
+        
 }
+    
+
+
