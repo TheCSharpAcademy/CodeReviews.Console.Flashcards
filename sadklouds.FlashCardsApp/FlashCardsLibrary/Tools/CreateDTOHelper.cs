@@ -52,5 +52,26 @@ namespace FlashCardsLibrary.Tools
             }
             return output;
         }
+
+        public static List<StackDTO> CreateStackDTO(List<StackModel> stacks)
+        {
+            int id = 1;
+            List<StackDTO> output = new();
+            if (stacks != null)
+            {
+                foreach (StackModel stack in stacks)
+                {
+
+                    StackDTO stackDTO = new StackDTO { StackName = stack.StackName };
+                    output.Add(stackDTO);
+                    id++;
+                }
+            }
+            else
+            {
+                Console.WriteLine("No records contained");
+            }
+            return output;
+        }
     }
 }

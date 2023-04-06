@@ -1,5 +1,6 @@
 ﻿using ConsoleTableExt;
 using FlashCardsLibrary;
+using FlashCardsLibrary.Tools;
 using sadklouds.FlashCards.Helpers;
 using System;
 using System.Collections.Generic;
@@ -19,8 +20,9 @@ namespace sadklouds.FlashCards.Controllers
             bool popluatedCheck = stacks.Count == 0;
             if (popluatedCheck == false)
             {
+                var stackDTO = CreateDTOHelper.CreateStackDTO(stacks);
                 ConsoleTableBuilder
-               .From(stacks)
+               .From(stackDTO)
                .ExportAndWriteLine();
             }
             else
