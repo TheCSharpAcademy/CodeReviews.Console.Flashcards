@@ -31,5 +31,26 @@ namespace FlashCardsLibrary.Tools
             }
             return output;
         }
+
+        public static List<StudySessionDTO> CreateStudySessionDTO(List<StudySessionModel> studySessions)
+        {
+            int id = 1;
+            List<StudySessionDTO> output = new();
+            if (studySessions != null)
+            {
+                foreach (StudySessionModel session in studySessions)
+                {
+
+                    StudySessionDTO studySessionDTO = new StudySessionDTO{ Id = id, Date = session.Date, Score = session.Score , StackName = session.StackName};
+                    output.Add(studySessionDTO);
+                    id++;
+                }
+            }
+            else
+            {
+                Console.WriteLine("No records contained");
+            }
+            return output;
+        }
     }
 }

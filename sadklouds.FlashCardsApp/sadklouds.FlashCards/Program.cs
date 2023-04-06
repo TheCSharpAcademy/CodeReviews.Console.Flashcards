@@ -3,20 +3,17 @@
 using ConsoleTableExt;
 using FlashCardsLibrary;
 using FlashCardsLibrary.Tools;
-using sadklouds.FlashCards;
+using sadklouds.FlashCards.Controllers;
 using sadklouds.FlashCards.Helpers;
 using System.Security.Cryptography;
 
 SQLDataAccess db = new SQLDataAccess();
-CRUD controller = new(db);
-//Menus menus = new(controller);
-
+ControllerStudySession studySession = new();
+ControllerFlashCards controllerCards = new(db);
+ControllerStacks controllerStacks = new();
 
 
 MainMenu();
-
-
-
 
 
 void MainMenu()
@@ -24,15 +21,26 @@ void MainMenu()
     bool exit = false;
     while (exit == false)
     {
-        MenuHelper.MainMenu();
+        Console.WriteLine("---------Main Menu--------");
+        Console.WriteLine("C) Create New Stack");
+        Console.WriteLine("M) Manage Stacks");
+        Console.WriteLine("S) Study");
+        Console.WriteLine("V) View Study Data");
+        Console.WriteLine("0) Exit");
+        Console.WriteLine("----------------------");
+        Console.Write("\nPlease Select an option: ");
         string input = UserInputHelper.GetUserStringInput("");
         switch (input.ToLower())
         {
+            case "c":
+                controllerStacks.GetStacks();
+                controllerStacks.AddStack();
+                break;
             case "m":
 
-                controller.GetStacks();
+                controllerStacks.GetStacks();
                 string stackName = UserInputHelper.GetUserStringInput("Choose a stack to manage: ");
-                bool stackNameFound = controller.checkStackName(stackName);
+                bool stackNameFound = controllerStacks.checkStackName(stackName);
                 if (stackNameFound == true)
                 {
                     ManageStackMenu(stackName);
@@ -40,8 +48,11 @@ void MainMenu()
                 else Console.WriteLine("Stack not found");
                 break;
             case "s":
-                //int stackId = db.GetStackId("spanish");
-                //Console.WriteLine(stackId);
+                controllerStacks.GetStacks();
+                studySession.Study();
+                break;
+            case "v":
+                studySession.ViewStudySessions();
                 break;
             case "0":
                 exit = true;
@@ -59,11 +70,11 @@ void ManageStackMenu(string stackName)
     while (exit == false)
     {
         Console.WriteLine($"\n---------{stackName}---------");
-        Console.WriteLine("X) Change current stack");
         Console.WriteLine("V) view all flash cards");
         Console.WriteLine("C) Create Flash Card in stack");
         Console.WriteLine("E) Edit Flash Card");
         Console.WriteLine("D) Delete FlashCard");
+        Console.WriteLine("R) Remove Stack");
         Console.WriteLine("0) return to main menu");
         Console.WriteLine("--------------------------------");
         Console.Write("\nPlease Select an option: ");
@@ -73,18 +84,26 @@ void ManageStackMenu(string stackName)
         switch (input.ToLower())
         {
             case "v":
-                controller.GetFlashCards(flashcards);
+                controllerCards.GetFlashCards(flashcards);
                 break;
             case "c":
-                controller.CreateFlashCard(stackName);
+                controllerCards.CreateFlashCard(stackName);
                 break;
             case "e":
-                controller.GetFlashCards(flashcards);
-                controller.UpdateFlashCard(flashcards);
+                controllerCards.GetFlashCards(flashcards);
+                controllerCards.UpdateFlashCard(flashcards);
                 break;
             case "d":
-                controller.GetFlashCards(flashcards);
-                controller.DeleteFlashCard(flashcards);
+                controllerCards.GetFlashCards(flashcards);
+                controllerCards.DeleteFlashCard(flashcards);
+                break;
+            case "r":
+                string prompt = UserInputHelper.GetUserStringInput("Are you sure you want to delete stack (y/N) ");
+                if(prompt == "y") 
+                { 
+                    controllerStacks.RemoveStack(stackName);
+                    return;
+                }
                 break;
             case "0":
                 exit = true;
