@@ -16,7 +16,9 @@ namespace FlashCardsLibrary;
 public class SQLDataAccess
 {
     private readonly string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=FlashCardsDB";
-    //private readonly string connectionString = ConfigurationManager.ConnectionStrings["Default"].ConnectionString;
+
+    //congifuration manager not working for some reason return null.
+    //private readonly string connectionString = ConfigurationManager.ConnectionStrings["flashcardsDB"].ConnectionString;
     public List<StackModel> LoadStacks()
     {
         string sql = "select * from dbo.Stacks;";

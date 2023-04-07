@@ -29,7 +29,7 @@ namespace sadklouds.FlashCards.Controllers
             if (id < flashcards.Count && id >= 0)
             {
 
-                int flashcardsId = flashcards[id - 1].Id;
+                int flashcardsId = flashcards[id].Id;
                 string front = UserInputHelper.GetUserStringInput("Enter changes for front: ");
                 string back = UserInputHelper.GetUserStringInput("Enter changes for back: ");
                 _db.UpdateFlashCardRecord(flashcardsId, front, back);
