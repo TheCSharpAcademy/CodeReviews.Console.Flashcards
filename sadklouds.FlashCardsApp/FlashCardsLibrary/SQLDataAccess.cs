@@ -1,15 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FlashCardsLibrary.Models;
+﻿using FlashCardsLibrary.Models;
 using Microsoft.Data.SqlClient;
-using System.Configuration;
-using System.Collections.Specialized;
-using Microsoft.IdentityModel.Protocols;
-using System.Diagnostics;
-using System.Drawing;
 
 namespace FlashCardsLibrary;
 
@@ -40,7 +30,8 @@ public class SQLDataAccess
                     }
                 }
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine("Error occured while searching stacks!");
             }
@@ -290,7 +281,7 @@ public class SQLDataAccess
                         int score = reader.GetInt32(2);
                         int stackId = reader.GetInt32(3);
                         string stackName = reader.GetString(4);
-                        output.Add(new StudySessionModel { Id = id, Date = date, Score = score, StackId = stackId, StackName = stackName});
+                        output.Add(new StudySessionModel { Id = id, Date = date, Score = score, StackId = stackId, StackName = stackName });
                     }
                 }
             }
@@ -315,17 +306,18 @@ public class SQLDataAccess
                 connection.Open();
                 cmd.ExecuteNonQuery();
 
-            }catch( Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine("Stack could not be crated");
             }
         }
-        
+
     }
 
     public void DeleteStack(string stackName)
     {
-        using(SqlConnection connection = new(connectionString))
+        using (SqlConnection connection = new(connectionString))
         {
             string sql = @"delete from Stacks where StackName = @StackName;";
             SqlCommand cmd = new(sql, connection);
@@ -342,8 +334,8 @@ public class SQLDataAccess
             }
         }
     }
-        
+
 }
-    
+
 
 

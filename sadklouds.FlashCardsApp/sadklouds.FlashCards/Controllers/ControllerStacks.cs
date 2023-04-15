@@ -2,11 +2,6 @@
 using FlashCardsLibrary;
 using FlashCardsLibrary.Tools;
 using sadklouds.FlashCards.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace sadklouds.FlashCards.Controllers
 {
