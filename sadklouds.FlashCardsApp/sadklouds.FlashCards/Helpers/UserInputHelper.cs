@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace sadklouds.FlashCards.Helpers
+﻿namespace sadklouds.FlashCards.Helpers
 {
     internal static class UserInputHelper
     {
-        public static string GetUserStringInput(string message) 
+        public static string GetUserStringInput(string message)
         {
             Console.Write(message);
             string output = Console.ReadLine();

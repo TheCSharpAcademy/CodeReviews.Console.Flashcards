@@ -1,11 +1,6 @@
-﻿
-
-using ConsoleTableExt;
-using FlashCardsLibrary;
-using FlashCardsLibrary.Tools;
+﻿using FlashCardsLibrary;
 using sadklouds.FlashCards.Controllers;
 using sadklouds.FlashCards.Helpers;
-using System.Security.Cryptography;
 
 SQLDataAccess db = new SQLDataAccess();
 ControllerStudySession studySession = new();
@@ -99,8 +94,8 @@ void ManageStackMenu(string stackName)
                 break;
             case "r":
                 string prompt = UserInputHelper.GetUserStringInput("Are you sure you want to delete stack (y/N) ");
-                if(prompt == "y") 
-                { 
+                if (prompt == "y")
+                {
                     controllerStacks.RemoveStack(stackName);
                     return;
                 }
