@@ -1,16 +1,16 @@
-﻿using System.Configuration;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
 using static FlashCards.Helpers;
 using FlashCards.Models;
+
 
 namespace FlashCards;
 
 public static class DataAccess
 {
-    static string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
-    static string dbFilePath = ConfigurationManager.AppSettings.Get("DbFilePath");
-    static string dbName = ConfigurationManager.AppSettings.Get("DbName");
+    static string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString");
+    static string dbFilePath = System.Configuration.ConfigurationManager.AppSettings.Get("DbFilePath");
+    static string dbName = System.Configuration.ConfigurationManager.AppSettings.Get("DbName");
 
     public static void InitializeDatabase()
     {
@@ -157,11 +157,11 @@ public static class DataAccess
         return stacks;
     }
 
-    public static StackCardsDTO GetStack(int stackId)
+    public static StackCardsDto GetStack(int stackId)
     {
-        StackCardsDTO stackCards = new StackCardsDTO();
+        StackCardsDto stackCards = new StackCardsDto();
 
-        List<CardDTO> cardsDTO = new List<CardDTO>();
+        List<CardDto> cardsDTO = new List<CardDto>();
 
         SqlConnection connection = new SqlConnection(connectionString);
 
@@ -178,7 +178,7 @@ public static class DataAccess
 
             while (reader.Read())
             {
-                cardsDTO.Add(new CardDTO
+                cardsDTO.Add(new CardDto
                 {
                     Id = reader.GetInt32(0),
                     Question = reader.GetString(1),
@@ -244,9 +244,9 @@ public static class DataAccess
         return card;
     }
 
-    public static List<StudySessionDTO> GetStudySessions()
+    public static List<StudySessionDto> GetStudySessions()
     {
-        List<StudySessionDTO> studySessionDTOs = new List<StudySessionDTO>();
+        List<StudySessionDto> studySessionDTOs = new List<StudySessionDto>();
 
         SqlConnection connection = new SqlConnection(connectionString);
 
@@ -263,7 +263,7 @@ public static class DataAccess
 
             while (reader.Read())
             {
-                studySessionDTOs.Add(new StudySessionDTO
+                studySessionDTOs.Add(new StudySessionDto
                 {
                     Date = DateTime.Parse(reader.GetString(1)),
                     Score = reader.GetString(2),
@@ -757,7 +757,7 @@ public static class DataAccess
         int cardRealId = 0;
         int sequenceId = 1;
 
-        List<CardDTO> cards = GetStack(stackId).CardsDTO;
+        List<CardDto> cards = GetStack(stackId).CardsDTO;
 
         foreach (var card in cards)
         {

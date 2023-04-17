@@ -322,20 +322,20 @@ public static class Menus
             sequenceId++;
         }
 
-        StackCardsDTO stackCards = GetStack(GetStackId(chosenStackTheme));
+        StackCardsDto stackCards = GetStack(GetStackId(chosenStackTheme));
 
         Console.Clear();
 
         Console.WriteLine($"\n{stackCards.Theme.ToUpper()}\n");
 
-        List<CardDTO> cards = stackCards.CardsDTO;
-        List<CardDTO> cardsWithId = new List<CardDTO>();
+        List<CardDto> cards = stackCards.CardsDTO;
+        List<CardDto> cardsWithId = new List<CardDto>();
 
         sequenceId = 1;
 
         foreach (var card in cards)
         {
-            cardsWithId.Add(new CardDTO
+            cardsWithId.Add(new CardDto
             {
                 Id = sequenceId,
                 Question = card.Question,
@@ -390,7 +390,7 @@ public static class Menus
     {
         Console.Clear();
 
-        List<StudySessionDTO> studySessions = GetStudySessions();
+        List<StudySessionDto> studySessions = GetStudySessions();
 
         ConsoleTableBuilder.From(studySessions)
            .ExportAndWriteLine();
@@ -422,7 +422,7 @@ public static class Menus
     {
         int score = 0;
 
-        List<CardDTO> cards = GetStack(stackId).CardsDTO;
+        List<CardDto> cards = GetStack(stackId).CardsDTO;
 
         for (int q = 0; q < GetNumberOfCards(stackId); q++)
         {
