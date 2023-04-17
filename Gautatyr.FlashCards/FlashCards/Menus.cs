@@ -328,7 +328,7 @@ public static class Menus
 
         Console.WriteLine($"\n{stackCards.Theme.ToUpper()}\n");
 
-        List<CardDto> cards = stackCards.CardsDTO;
+        List<CardDto> cards = stackCards.CardsDto;
         List<CardDto> cardsWithId = new List<CardDto>();
 
         sequenceId = 1;
@@ -422,7 +422,7 @@ public static class Menus
     {
         int score = 0;
 
-        List<CardDto> cards = GetStack(stackId).CardsDTO;
+        List<CardDto> cards = GetStack(stackId).CardsDto;
 
         for (int q = 0; q < GetNumberOfCards(stackId); q++)
         {

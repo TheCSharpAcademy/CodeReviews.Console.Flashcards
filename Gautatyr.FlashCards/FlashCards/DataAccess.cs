@@ -200,7 +200,7 @@ public static class DataAccess
         }
 
         stackCards.Theme = GetStackTheme(stackId);
-        stackCards.CardsDTO = cardsDTO;
+        stackCards.CardsDto = cardsDTO;
 
         return stackCards;
     }
@@ -757,7 +757,7 @@ public static class DataAccess
         int cardRealId = 0;
         int sequenceId = 1;
 
-        List<CardDto> cards = GetStack(stackId).CardsDTO;
+        List<CardDto> cards = GetStack(stackId).CardsDto;
 
         foreach (var card in cards)
         {
