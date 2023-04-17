@@ -8,7 +8,7 @@ public class Card
     public int StackId { get; set; }
 }
 
-public class CardDTO
+public class CardDto
 {
     public int Id { get; set; }
     public string Question { get; set; }

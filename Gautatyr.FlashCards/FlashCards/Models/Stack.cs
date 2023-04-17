@@ -6,10 +6,10 @@ public class Stack
     public string Theme { get; set; }
 }
 
-public class StackCardsDTO
+public class StackCardsDto
 {
     public string Theme { get; set; }
-    public List<CardDTO> CardsDTO { get; set; }
+    public List<CardDto> CardsDTO { get; set; }
 }
 
 public class StackCardsWithId
