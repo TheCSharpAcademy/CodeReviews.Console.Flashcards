@@ -9,7 +9,7 @@ public class Stack
 public class StackCardsDto
 {
     public string Theme { get; set; }
-    public List<CardDto> CardsDTO { get; set; }
+    public List<CardDto> CardsDto { get; set; }
 }
 
 public class StackCardsWithId
