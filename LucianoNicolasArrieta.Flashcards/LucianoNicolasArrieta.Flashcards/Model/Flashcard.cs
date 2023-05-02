@@ -2,6 +2,7 @@
 {
     public class Flashcard
     {
+        public int Id { get; set; }
         private Stack Stack { get; set; }
         private string Question { get; set; }
         private string Answer { get; set; }
