@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LucianoNicolasArrieta.Flashcards
+﻿namespace LucianoNicolasArrieta.Flashcards
 {
     public class InputValidator
     {
@@ -16,15 +10,15 @@ namespace LucianoNicolasArrieta.Flashcards
 
             input = Console.ReadLine();
 
-            while (String.IsNullOrEmpty(input) || input != "0")
+            while (String.IsNullOrEmpty(input))
             {
-                Console.WriteLine("The subject can't be empty. Try again.");
+                Console.WriteLine("The input can't be empty. Try again.");
                 input = Console.ReadLine();
             }
             if (input == "0")
             {
                 Console.Clear();
-                menu.RunMain();
+                menu.RunMainMenu();
             }
 
             return input;
@@ -45,7 +39,7 @@ namespace LucianoNicolasArrieta.Flashcards
             if (input == 0)
             {
                 Console.Clear();
-                menu.RunMain();
+                menu.RunMainMenu();
             }
 
             return input;
