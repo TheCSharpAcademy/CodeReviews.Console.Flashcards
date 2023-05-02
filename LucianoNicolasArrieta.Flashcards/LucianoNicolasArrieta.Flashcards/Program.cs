@@ -11,6 +11,6 @@ public class Program
         dbManager.DBInit();
 
         Menu menu = new Menu();
-        menu.RunMain();
+        menu.RunMainMenu();
     }
 }

@@ -1,31 +1,25 @@
 ﻿using LucianoNicolasArrieta.Flashcards.Model;
 using LucianoNicolasArrieta.Flashcards.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace LucianoNicolasArrieta.Flashcards
 {
     public class Menu
     {
-
         private void PrintMainMenu()
         {
-            Console.WriteLine("\n---------------Main Menu---------------");
+            Console.WriteLine("\n--------------- Main Menu ---------------");
             Console.WriteLine(@"Choose an option:
 1. Manage Stacks
-2. Manage Flashcards
-3. Study
-4. View previous Study Sessions
+2. Study
+3. View previous Study Sessions
 0. Exit
 ----------------------------------");
         }
 
         private void PrintStacksManagementMenu()
         {
-            Console.WriteLine("\n---------------Stacks Menu---------------");
+            Console.WriteLine("\n--------------- Stacks Menu ---------------");
             Console.WriteLine(@"Choose an option:
 1. Select a Stack
 2. Create a Stack
@@ -34,21 +28,25 @@ namespace LucianoNicolasArrieta.Flashcards
 ----------------------------------");
         }
 
-        private void PrintFlashcardsManagementMenu()
+        private void PrintStackMenu(string subject)
         {
-            Console.WriteLine("\n---------------Flashcards Menu---------------");
+            Console.WriteLine($"\n--------------- {subject} ---------------");
             Console.WriteLine(@"Choose an option:
-1. View Flashcards
-2. Delete a Flashcard
+1. Change the current Stack
+2. View all Flashcards in the Stack
+3. View X amount of Flashcards in the Stack
+4. Create Flashcard in the current Stack
+5. Edit a Flashcard
+6. Delete a Flashcard
 0. Return back to main menu
 ----------------------------------");
         }
 
-        public void RunMain()
+        public void RunMainMenu()
         {
             bool closeApp = false;
             string user_opt;
-            //UserInput userInput = new UserInput();
+
             while (!closeApp)
             {
                 PrintMainMenu();
@@ -67,14 +65,9 @@ namespace LucianoNicolasArrieta.Flashcards
                         ManageStacks();
                         break;
                     case "2":
-                        // Manage Flashcards
-                        Console.Clear();
-                        ManageFlashcards();
-                        break;
-                    case "3":
                         // Study
                         break;
-                    case "4":
+                    case "3":
                         // View study sessions data
                         break;
                     default:
@@ -85,12 +78,13 @@ namespace LucianoNicolasArrieta.Flashcards
             }
         }
 
-        private void ManageStacks()
+        public void ManageStacks()
         {
             bool returnBack = false;
             string user_opt;
             StackRepository stackRepo = new StackRepository();
             InputValidator validator = new InputValidator();
+
             while (!returnBack)
             {
                 PrintStacksManagementMenu();
@@ -105,13 +99,12 @@ namespace LucianoNicolasArrieta.Flashcards
                         break;
                     case "1":
                         // Select a stack
-                        // Print stacks, select one of them
-                        // TODO: Menu of the stack selected
                         stackRepo.PrintAll();
                         Console.WriteLine("Enter the id of the stack you want to select or 0 to cancel the operation:");
                         int selected_id = validator.IdInput();
-                        Stack selected = stackRepo.SelectStack(selected_id);
-                        Console.WriteLine($"You selected {selected.Subject}!");
+                        Stack selected = stackRepo.GetStack(selected_id);
+                        Console.Clear();
+                        RunStackMenu(selected);
                         break;
                     case "2":
                         // Create a stack
@@ -135,14 +128,17 @@ namespace LucianoNicolasArrieta.Flashcards
             }
         }
 
-        private void ManageFlashcards()
+        public void RunStackMenu(Stack stack)
         {
             bool returnBack = false;
             string user_opt;
+            StackRepository stackRepo = new StackRepository();
+            FlashcardRepository flashcardRepo = new FlashcardRepository();
+            InputValidator validator = new InputValidator();
 
             while (!returnBack)
             {
-                PrintFlashcardsManagementMenu();
+                PrintStackMenu(stack.Subject);
                 user_opt = Console.ReadLine().Trim();
 
                 switch (user_opt)
@@ -150,14 +146,59 @@ namespace LucianoNicolasArrieta.Flashcards
                     case "0":
                         returnBack = true;
                         Console.Clear();
+                        RunMainMenu();
                         break;
                     case "1":
-                        // View flashcards
-                        // Print flashcards
+                        // Change the current Stack
+                        stackRepo.PrintAll();
+                        Console.WriteLine("Enter the id of the stack you want to select or 0 to cancel the operation:");
+                        int selected_id = validator.IdInput();
+                        Stack selected = stackRepo.GetStack(selected_id);
+                        Console.Clear();
+                        RunStackMenu(selected);
                         break;
                     case "2":
+                        // View all flashcards
+                        flashcardRepo.PrintAllFromStack(stack.Id);
+                        Console.WriteLine("Press any key to continue.");
+                        Console.ReadKey();
+                        Console.Clear();
+                        break;
+                    case "3":
+                        // View X amount flashcards
+                        Console.WriteLine("Enter the amount of Flashcards you want to see:");
+                        int amount = validator.IdInput();
+                        flashcardRepo.PrintXAmount(amount, stack.Id);
+                        Console.WriteLine("Press any key to continue.");
+                        Console.ReadKey();
+                        Console.Clear();
+                        break;
+                    case "4":
+                        // Create a flashcard
+                        Console.WriteLine("Enter the Question of the card or 0 to cancel the operation:");
+                        string question = validator.StringInput();
+                        Console.WriteLine("Enter the Answer of the card or 0 to cancel the operation:");
+                        string answer = validator.StringInput();
+                        Flashcard newFlashcard = new Flashcard(question, answer);
+                        flashcardRepo.Insert(newFlashcard, stack.Id);
+                        break;
+                    case "5":
+                        // Edit a flashcard
+                        flashcardRepo.PrintAllFromStack(stack.Id);
+                        Console.WriteLine("Enter the id of the Flashcard you want to update or 0 to cancel the operation:");
+                        int id_to_update = validator.IdInput();
+                        Console.WriteLine("Enter the new Question of the card or 0 to cancel the operation:");
+                        string new_question = validator.StringInput();
+                        Console.WriteLine("Enter the new Answer of the card or 0 to cancel the operation:");
+                        string new_answer = validator.StringInput();
+                        flashcardRepo.Update(id_to_update, new_question, new_answer);
+                        break;
+                    case "6":
                         // Delete a flashcard
-                        // Print flashcards, Select one of them
+                        flashcardRepo.PrintAllFromStack(stack.Id);
+                        Console.WriteLine("Enter the id of the Flashcard you want to delete or 0 to cancel the operation:");
+                        int id_to_delete = validator.IdInput();
+                        flashcardRepo.Delete(id_to_delete);
                         break;
                     default:
                         Console.Clear();

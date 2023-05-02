@@ -4,8 +4,8 @@
     {
         public int Id { get; set; }
         private Stack Stack { get; set; }
-        private string Question { get; set; }
-        private string Answer { get; set; }
+        public string Question { get; set; }
+        public string Answer { get; set; }
 
         public Flashcard(string question, string answer)
         {
