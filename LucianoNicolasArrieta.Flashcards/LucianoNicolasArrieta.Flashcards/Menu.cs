@@ -89,7 +89,8 @@ namespace LucianoNicolasArrieta.Flashcards
         {
             bool returnBack = false;
             string user_opt;
-            StackRepository stackrepo = new StackRepository();
+            StackRepository stackRepo = new StackRepository();
+            InputValidator validator = new InputValidator();
             while (!returnBack)
             {
                 PrintStacksManagementMenu();
@@ -98,23 +99,33 @@ namespace LucianoNicolasArrieta.Flashcards
                 switch (user_opt)
                 {
                     case "0":
+                        // Go back
                         returnBack = true;
                         Console.Clear();
                         break;
                     case "1":
                         // Select a stack
                         // Print stacks, select one of them
+                        // TODO: Menu of the stack selected
+                        stackRepo.PrintAll();
+                        Console.WriteLine("Enter the id of the stack you want to select or 0 to cancel the operation:");
+                        int selected_id = validator.IdInput();
+                        Stack selected = stackRepo.SelectStack(selected_id);
+                        Console.WriteLine($"You selected {selected.Subject}!");
                         break;
                     case "2":
                         // Create a stack
-                        Console.WriteLine("Please enter the subject of the new Stack:");
-                        string stackSubject = Console.ReadLine();
+                        Console.WriteLine("Enter the subject of the new Stack or 0 to cancel the operation:");
+                        string stackSubject = validator.StringInput();
                         Stack newStack = new Stack(stackSubject);
-                        stackrepo.Insert(newStack);
+                        stackRepo.Insert(newStack);
                         break;
                     case "3":
                         // Delete a stack
-                        // Print stacks, select one of them
+                        stackRepo.PrintAll();
+                        Console.WriteLine("Enter the id of the Stack you want to delete or 0 to cancel the operation:");
+                        int id_to_delete = validator.IdInput();
+                        stackRepo.Delete(id_to_delete);
                         break;
                     default:
                         Console.Clear();
