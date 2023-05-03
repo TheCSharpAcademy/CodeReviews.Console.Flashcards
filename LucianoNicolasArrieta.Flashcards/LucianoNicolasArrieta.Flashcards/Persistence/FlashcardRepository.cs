@@ -72,11 +72,11 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
             }
         }
 
-        public Flashcard GetFlashcard(int id)
+        public Flashcard GetFlashcard(int id, int stack_id)
         {
             using (SqlConnection myConnection = new SqlConnection(connectionString))
             {
-                string query = "SELECT * FROM Flashcard";
+                string query = $"SELECT * FROM Flashcard WHERE StackId='{stack_id}'";
                 SqlCommand command = new SqlCommand(query, myConnection);
 
                 myConnection.Open();
@@ -105,9 +105,9 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
             }
         }
 
-        public void Delete(int id)
+        public void Delete(int id, int stack_id)
         {
-            Flashcard flashcard = GetFlashcard(id);
+            Flashcard flashcard = GetFlashcard(id, stack_id);
 
             using (SqlConnection myConnection = new SqlConnection(connectionString))
             {
@@ -167,9 +167,10 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
             }
         }
 
-        public void Update(int id, string question, string answer)
+        public void Update(int id, int stack_id, string question, string answer)
         {
-            Flashcard flashcard = GetFlashcard(id);
+            Flashcard flashcard = GetFlashcard(id, stack_id);
+            Console.WriteLine($"{flashcard.Id}, {flashcard.Stack.Subject}, {flashcard.Question}, {flashcard.Answer}");
 
             using (SqlConnection myConnection = new SqlConnection(connectionString))
             {
