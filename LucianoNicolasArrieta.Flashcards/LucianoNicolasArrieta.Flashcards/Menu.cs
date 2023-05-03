@@ -205,14 +205,14 @@ namespace LucianoNicolasArrieta.Flashcards
                         string new_question = validator.StringInput();
                         Console.WriteLine("Enter the new Answer of the card or 0 to cancel the operation:");
                         string new_answer = validator.StringInput();
-                        flashcardRepo.Update(id_to_update, new_question, new_answer);
+                        flashcardRepo.Update(id_to_update, stack.Id, new_question, new_answer);
                         break;
                     case "6":
                         // Delete a flashcard
                         flashcardRepo.PrintAllFromStack(stack.Id);
                         Console.WriteLine("Enter the id of the Flashcard you want to delete or 0 to cancel the operation:");
                         int id_to_delete = validator.IdInput();
-                        flashcardRepo.Delete(id_to_delete);
+                        flashcardRepo.Delete(id_to_delete, stack.Id);
                         break;
                     default:
                         Console.Clear();
