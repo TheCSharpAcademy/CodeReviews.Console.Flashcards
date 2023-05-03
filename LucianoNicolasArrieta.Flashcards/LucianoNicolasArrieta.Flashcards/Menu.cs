@@ -133,7 +133,6 @@ namespace LucianoNicolasArrieta.Flashcards
                         Console.WriteLine("Enter the id of the Stack you want to delete or 0 to cancel the operation.");
                         Console.WriteLine("Remember: All the flashcards inside that stack will be deleted too.");
                         int id_to_delete = validator.IdInput();
-                        FlashcardRepository flashcardRepo = new FlashcardRepository();
                         stackRepo.Delete(id_to_delete);
                         break;
                     default:
