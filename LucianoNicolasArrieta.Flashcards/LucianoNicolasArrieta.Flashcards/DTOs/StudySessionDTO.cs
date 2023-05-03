@@ -1,6 +1,7 @@
 ﻿namespace LucianoNicolasArrieta.Flashcards.DTOs
 {
-    public class StudySessionDTO
+    public class StudySessionDto
+
     {
         public string Date { get; set; }
         public int CorrectAnswers { get; set; }

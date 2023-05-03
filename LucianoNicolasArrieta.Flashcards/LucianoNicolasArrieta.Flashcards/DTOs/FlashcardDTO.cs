@@ -1,6 +1,6 @@
 ﻿namespace LucianoNicolasArrieta.Flashcards.DTOs
 {
-    public class FlashcardDTO
+    public class FlashcardDto
     {
         public int Id { get; set; }
         public string Question { get; set; }
