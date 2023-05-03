@@ -1,13 +1,12 @@
-﻿using System.Configuration;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 
 namespace LucianoNicolasArrieta.Flashcards.Persistence
 {
     public class DBManager
     {
-        private string pathDB = ConfigurationManager.AppSettings.Get("DbFilePath");
-        private string DBName = ConfigurationManager.AppSettings.Get("DbName");
-        private string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+        private string pathDB = System.Configuration.ConfigurationManager.AppSettings.Get("DbFilePath");
+        private string DBName = System.Configuration.ConfigurationManager.AppSettings.Get("DbName");
+        private string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString");
 
         public void DBInit()
         {
