@@ -66,9 +66,23 @@ namespace LucianoNicolasArrieta.Flashcards
                         break;
                     case "2":
                         // Study
+                        StackRepository stackRepo = new StackRepository();
+                        InputValidator validator = new InputValidator();
+                        stackRepo.PrintAll();
+                        Console.WriteLine("Enter the id of the stack you want to study or 0 to cancel the operation:");
+                        int selected_id = validator.IdInput();
+                        Stack selected = stackRepo.GetUIStack(selected_id);
+                        Console.Clear();
+                        StudySession session = new StudySession();
+                        session.RunSession(selected);
                         break;
                     case "3":
                         // View study sessions data
+                        StudySessionRepository studySessionRepo = new StudySessionRepository();
+                        studySessionRepo.PrintAll();
+                        Console.WriteLine("Press any key to continue.");
+                        Console.ReadKey();
+                        Console.Clear();
                         break;
                     default:
                         Console.Clear();
@@ -102,7 +116,7 @@ namespace LucianoNicolasArrieta.Flashcards
                         stackRepo.PrintAll();
                         Console.WriteLine("Enter the id of the stack you want to select or 0 to cancel the operation:");
                         int selected_id = validator.IdInput();
-                        Stack selected = stackRepo.GetStack(selected_id);
+                        Stack selected = stackRepo.GetUIStack(selected_id);
                         Console.Clear();
                         RunStackMenu(selected);
                         break;
@@ -153,7 +167,7 @@ namespace LucianoNicolasArrieta.Flashcards
                         stackRepo.PrintAll();
                         Console.WriteLine("Enter the id of the stack you want to select or 0 to cancel the operation:");
                         int selected_id = validator.IdInput();
-                        Stack selected = stackRepo.GetStack(selected_id);
+                        Stack selected = stackRepo.GetUIStack(selected_id);
                         Console.Clear();
                         RunStackMenu(selected);
                         break;

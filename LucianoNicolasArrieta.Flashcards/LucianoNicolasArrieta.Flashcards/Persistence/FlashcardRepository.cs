@@ -40,24 +40,18 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
                 SqlDataReader reader = command.ExecuteReader();
 
                 List<FlashcardDTO> flashcards = new List<FlashcardDTO>();
-                var tableData = new List<List<object>>();
                 int i = 1;
                 while (reader.Read())
                 {
                     FlashcardDTO aux = new FlashcardDTO();
-                    aux.Id = Convert.ToInt32(reader[0]);
+                    aux.Id = i;
                     aux.Question = reader[2].ToString();
                     aux.Answer = reader[3].ToString();
-
-                    // TODO: This can may not be neccesary, check later
                     flashcards.Add(aux);
-
-                    List<object> row = new List<object> { $"{i}", aux.Question, aux.Answer };
-                    tableData.Add(row);
                     i++;
                 }
 
-                ConsoleTableBuilder.From(tableData)
+                ConsoleTableBuilder.From(flashcards)
                     .WithCharMapDefinition(
                         CharMapDefinition.FramePipDefinition,
                         new Dictionary<HeaderCharMapPositions, char> {
@@ -78,7 +72,7 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
             }
         }
 
-        public FlashcardDTO GetFlashcard(int id)
+        public Flashcard GetFlashcard(int id)
         {
             using (SqlConnection myConnection = new SqlConnection(connectionString))
             {
@@ -88,13 +82,13 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
                 myConnection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
-                List<FlashcardDTO> flashcards = new List<FlashcardDTO>();
+                List<Flashcard> flashcards = new List<Flashcard>();
+                StackRepository stackRepository = new StackRepository();
                 while (reader.Read())
                 {
-                    FlashcardDTO aux = new FlashcardDTO();
+                    Flashcard aux = new Flashcard(reader[2].ToString(), reader[3].ToString());
                     aux.Id = Convert.ToInt32(reader[0]);
-                    aux.Question = reader[2].ToString();
-                    aux.Answer = reader[3].ToString();
+                    aux.Stack = stackRepository.GetStack(Convert.ToInt32(reader[1]));
 
                     flashcards.Add(aux);
                 }
@@ -113,7 +107,7 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
 
         public void Delete(int id)
         {
-            FlashcardDTO flashcard = GetFlashcard(id);
+            Flashcard flashcard = GetFlashcard(id);
 
             using (SqlConnection myConnection = new SqlConnection(connectionString))
             {
@@ -147,12 +141,8 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
                     FlashcardDTO aux = new FlashcardDTO();
                     aux.Question = reader[0].ToString();
                     aux.Answer = reader[1].ToString();
-
-                    // TODO: This can may not be neccesary, check later
                     flashcards.Add(aux);
 
-                    List<object> row = new List<object> { aux.Question, aux.Answer };
-                    tableData.Add(row);
                     i++;
                 }
 
@@ -179,7 +169,7 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
 
         public void Update(int id, string question, string answer)
         {
-            FlashcardDTO flashcard = GetFlashcard(id);
+            Flashcard flashcard = GetFlashcard(id);
 
             using (SqlConnection myConnection = new SqlConnection(connectionString))
             {
@@ -194,24 +184,31 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
             Console.Clear();
             Console.WriteLine("Flashcard updated successfully!");
         }
-        /*
-                private bool CheckIdExists(int id)
+
+        public List<Flashcard> GetAllFromStack(int stack_id)
+        {
+            using (SqlConnection myConnection = new SqlConnection(connectionString))
+            {
+                string query = $"SELECT * FROM Flashcard WHERE StackId='{stack_id}'";
+                SqlCommand command = new SqlCommand(query, myConnection);
+
+                myConnection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                List<Flashcard> flashcards = new List<Flashcard>();
+                StackRepository stackRepo = new StackRepository();
+                Stack stack = stackRepo.GetStack(stack_id);
+                while (reader.Read())
                 {
-                    bool exists;
-                    using (SQLiteConnection myConnection = new SQLiteConnection(connectionString))
-                    {
-                        myConnection.Open();
+                    Flashcard aux = new Flashcard(reader[2].ToString(), reader[3].ToString());
+                    aux.Id = Convert.ToInt32(reader[0]);
+                    aux.Stack = stack;
 
-                        var cmd = myConnection.CreateCommand();
-                        cmd.CommandText = $"SELECT * FROM coding_tracker WHERE Id={id}";
-                        SQLiteDataReader reader = cmd.ExecuteReader();
-
-                        exists = reader.HasRows;
-
-                        reader.Close();
-                    }
-                    return exists;
+                    flashcards.Add(aux);
                 }
-         * */
+
+                return flashcards;
+            }
+        }
     }
 }

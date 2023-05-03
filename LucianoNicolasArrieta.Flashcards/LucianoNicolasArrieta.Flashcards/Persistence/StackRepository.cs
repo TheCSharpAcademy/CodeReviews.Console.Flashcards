@@ -72,7 +72,7 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
             }
         }
 
-        public Stack GetStack(int id)
+        public Stack GetUIStack(int id)
         {
             using (SqlConnection myConnection = new SqlConnection(connectionString))
             {
@@ -103,7 +103,7 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
 
         public void Delete(int id)
         {
-            Stack stack = GetStack(id);
+            Stack stack = GetUIStack(id);
 
             using (SqlConnection myConnection = new SqlConnection(connectionString))
             {
@@ -117,6 +117,27 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
 
             Console.Clear();
             Console.WriteLine("Stack deleted successfully!");
+        }
+
+        public Stack GetStack(int id)
+        {
+            using (SqlConnection myConnection = new SqlConnection(connectionString))
+            {
+                string query = $"SELECT * FROM Stack WHERE Id='{id}'";
+                SqlCommand command = new SqlCommand(query, myConnection);
+
+                myConnection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                Stack selected = new Stack();
+                while (reader.Read())
+                {
+                    selected.Subject = reader[1].ToString();
+                    selected.Id = Convert.ToInt32(reader[0]);
+                }
+
+                return selected;
+            }
         }
     }
 }
