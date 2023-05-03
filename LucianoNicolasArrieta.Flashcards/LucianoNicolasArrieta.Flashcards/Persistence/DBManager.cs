@@ -28,7 +28,7 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
                                                 StackId INT NOT NULL,
                                                 Question varchar(100) NOT NULL,
                                                 Answer varchar(100) NOT NULL,
-                                                FOREIGN KEY (StackId) REFERENCES Stack(Id)
+                                                FOREIGN KEY (StackId) REFERENCES Stack(Id) ON DELETE CASCADE
                                             )";
 
             string strSessionsTable = $@"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='StudySession' and xtype='U')

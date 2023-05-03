@@ -38,11 +38,11 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
                 myConnection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
-                List<FlashcardDTO> flashcards = new List<FlashcardDTO>();
+                List<FlashcardDto> flashcards = new List<FlashcardDto>();
                 int i = 1;
                 while (reader.Read())
                 {
-                    FlashcardDTO aux = new FlashcardDTO();
+                    FlashcardDto aux = new FlashcardDto();
                     aux.Id = i;
                     aux.Question = reader[2].ToString();
                     aux.Answer = reader[3].ToString();
@@ -132,12 +132,12 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
                 myConnection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
-                List<FlashcardDTO> flashcards = new List<FlashcardDTO>();
+                List<FlashcardDto> flashcards = new List<FlashcardDto>();
                 var tableData = new List<List<object>>();
                 int i = 1;
                 while (reader.Read())
                 {
-                    FlashcardDTO aux = new FlashcardDTO();
+                    FlashcardDto aux = new FlashcardDto();
                     aux.Question = reader[0].ToString();
                     aux.Answer = reader[1].ToString();
                     flashcards.Add(aux);

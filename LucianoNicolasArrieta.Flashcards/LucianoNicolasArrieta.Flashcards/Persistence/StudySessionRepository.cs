@@ -40,11 +40,11 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
                 myConnection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
-                List<StudySessionDTO> flashcards = new List<StudySessionDTO>();
+                List<StudySessionDto> flashcards = new List<StudySessionDto>();
                 StackRepository stackRepository = new StackRepository();
                 while (reader.Read())
                 {
-                    StudySessionDTO aux = new StudySessionDTO();
+                    StudySessionDto aux = new StudySessionDto();
 
                     Stack auxStack = stackRepository.GetStack(reader.GetInt32(1));
                     aux.Subject = auxStack.Subject;
