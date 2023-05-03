@@ -1,14 +1,13 @@
 ﻿using ConsoleTableExt;
 using LucianoNicolasArrieta.Flashcards.DTOs;
 using LucianoNicolasArrieta.Flashcards.Model;
-using System.Configuration;
 using System.Data.SqlClient;
 
 namespace LucianoNicolasArrieta.Flashcards.Persistence
 {
     public class FlashcardRepository
     {
-        private string connectionString = ConfigurationManager.AppSettings.Get("connectionString");
+        private string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("connectionString");
 
         public void Insert(Flashcard flashcard, int stackId)
         {

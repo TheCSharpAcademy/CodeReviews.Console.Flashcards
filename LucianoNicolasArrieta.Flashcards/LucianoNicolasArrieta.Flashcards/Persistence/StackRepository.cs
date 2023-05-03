@@ -1,5 +1,4 @@
 ﻿using ConsoleTableExt;
-using System.Configuration;
 using System.Data.SqlClient;
 using Stack = LucianoNicolasArrieta.Flashcards.Model.Stack;
 
@@ -7,7 +6,7 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
 {
     public class StackRepository
     {
-        private string connectionString = ConfigurationManager.AppSettings.Get("connectionString");
+        private string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("connectionString");
 
         public void Insert(Stack stack)
         {
@@ -36,15 +35,12 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
                 myConnection.Open();
                 SqlDataReader reader = command.ExecuteReader();
                 
-                List<Stack> stacks = new List<Stack>();
                 var tableData = new List<List<object>>();
                 int i = 1;
                 while (reader.Read())
                 {
                     Stack aux = new Stack(reader[1].ToString());
                     aux.Id = Convert.ToInt32(reader[0]);
-                    // TODO: This can may not be neccesary, check later
-                    stacks.Add(aux);
 
                     List<object> row = new List<object> { $"{i}", reader[1].ToString() };
                     tableData.Add(row);

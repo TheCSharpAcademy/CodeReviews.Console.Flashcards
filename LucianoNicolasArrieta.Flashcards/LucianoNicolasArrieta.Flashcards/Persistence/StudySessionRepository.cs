@@ -1,22 +1,14 @@
 ﻿using ConsoleTableExt;
 using LucianoNicolasArrieta.Flashcards.DTOs;
 using LucianoNicolasArrieta.Flashcards.Model;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Data.SqlClient;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Stack = LucianoNicolasArrieta.Flashcards.Model.Stack;
 
 namespace LucianoNicolasArrieta.Flashcards.Persistence
 {
     public class StudySessionRepository
     {
-        private string connectionString = ConfigurationManager.AppSettings.Get("connectionString");
+        private string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("connectionString");
 
         public void Insert(StudySession studySession)
         {
