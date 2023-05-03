@@ -10,5 +10,7 @@
         {
             Subject = subject;
         }
+
+        public Stack() { }
     }
 }

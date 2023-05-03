@@ -17,7 +17,7 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
 
         private void CreateTables()
         {
-            string strStackTable = $@"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Stack' and xtype='U')
+            string strStacksTable = $@"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Stack' and xtype='U')
                                         CREATE TABLE Stack (
                                             Id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
                                             Subject varchar(100) NOT NULL
@@ -32,14 +32,26 @@ namespace LucianoNicolasArrieta.Flashcards.Persistence
                                                 FOREIGN KEY (StackId) REFERENCES Stack(Id)
                                             )";
 
+            string strSessionsTable = $@"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='StudySession' and xtype='U')
+                                            CREATE TABLE StudySession (
+                                                Id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+                                                StackId INT NOT NULL,
+                                                SessionDate DATE NOT NULL,
+                                                Questions int NOT NULL,
+                                                CorrectAnswers int NOT NULL,
+                                                FOREIGN KEY (StackId) REFERENCES Stack(Id)
+                                            )";
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                SqlCommand cmd1 = new SqlCommand(strStackTable, connection);
+                SqlCommand cmd1 = new SqlCommand(strStacksTable, connection);
                 SqlCommand cmd2 = new SqlCommand(strFlashcardsTable, connection);
+                SqlCommand cmd3 = new SqlCommand(strSessionsTable, connection);
 
                 connection.Open();
                 cmd1.ExecuteNonQuery();
                 cmd2.ExecuteNonQuery();
+                cmd3.ExecuteNonQuery();
             }
         }
 
