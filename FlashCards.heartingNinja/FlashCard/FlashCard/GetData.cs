@@ -11,7 +11,6 @@ internal class GetData
 
     internal static void SetStudySessionDto()
     {
-        Console.Clear();
         using (var connection = new SqlConnection(connectionString))
         {
             connection.Open();

@@ -35,10 +35,10 @@ internal class UserInput
                     ChooseStack();
                     break;
                 case "2":
+                    GetData.SetStudySessionDto();
                     GetAllRecords();
                     break;
                 case "3":
-                    //ShowStacks();
                     deleteStack = true;
                     ChooseStack();
                     break;
@@ -199,7 +199,15 @@ internal class UserInput
     static void GetAllRecords()
     {
         Console.Clear();
-        var tableData = GetData.sessionDtos.Select(x => new { x.SessionId, x.Name, x.Date, x.Score }).ToList();
+        var tableData = GetData.sessionDtos
+        .Select((x, index) => new
+        {
+            SessionId = index + 1,
+            x.Name,
+            x.Date,
+            x.Score
+        })
+        .ToList();
 
         if (tableData.Any())
         {
@@ -216,6 +224,7 @@ internal class UserInput
 
     static void WriteNewRecord(int score, string stackName)
     {
+        GetData.SetStudySessionDto();
         DateTime endTime = DateTime.Now;
         int sessionId = GetData.sessionDtos.Count > 0 ? GetData.sessionDtos.Max(s => s.SessionId) + 1 : 1;
 
@@ -261,7 +270,6 @@ internal class UserInput
                 Console.WriteLine($"Deleted {rowsAffected} rows.");
             }
         }
-        GetData.SetStudySessionDto();
         deleteStack = false;
     }
 }
