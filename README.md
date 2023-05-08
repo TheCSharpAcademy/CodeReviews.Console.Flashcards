@@ -1,6 +1,6 @@
-## FlashCardApp
+## FlashCard
 
-FlashCardApp is a console application that allows users to select a continent and a stack of flashcards to study. Users can also view the results of past study sessions, and delete stacks of flashcards and their associated study sessions.
+FlashCard is a console application that allows users to select a continent and a stack of flashcards to study. Users can also view the results of past study sessions, and delete stacks of flashcards and their associated study sessions.
 
 ### Usage
 
