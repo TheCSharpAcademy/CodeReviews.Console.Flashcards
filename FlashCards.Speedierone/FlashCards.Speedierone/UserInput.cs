@@ -110,7 +110,6 @@ internal class UserInput
     {
         Console.Clear();
         ViewStacks();
-        Console.Clear();
         var connectionString = ConfigurationManager.AppSettings.Get("connectionString");
 
         Console.WriteLine("Please enter subject you would like to add a card to.");
@@ -223,7 +222,7 @@ internal class UserInput
                     {
                         Date = reader.GetDateTime(0),
                         Subject = reader.GetString(1),
-                        GameScore = reader.GetInt32(2),
+                        GameScore = reader.GetDouble(2),
                         GameAmount = reader.GetInt32(3),
                     });
                 }
