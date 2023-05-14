@@ -53,9 +53,9 @@ internal class TableLayout
         Console.WriteLine("\nPress any button to continue.");
         Console.ReadLine();
     }
-    public static void DisplayAverageScore(DataTable sessions)
+    public static void DisplayAverageScore(DataTable score)
     {
-        ConsoleTableBuilder.From(sessions).ExportAndWriteLine();
+        ConsoleTableBuilder.From(score).ExportAndWriteLine();
         Console.WriteLine("\nPress any button to continue.");
         Console.ReadLine();
     }
