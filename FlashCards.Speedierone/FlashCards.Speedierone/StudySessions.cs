@@ -8,6 +8,6 @@ internal class StudySessions
     public string FrontCard { get; set;}
     public string BackCard { get; set;}
     public DateTime Date { get; set;}
-    public int GameScore { get; set;}
+    public double GameScore { get; set;}
     public int GameAmount { get; set;}
 }
