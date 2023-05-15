@@ -52,6 +52,25 @@ internal class Helpers
             }
         }
     }
+    internal static void CheckSubjectDuplicate(string @subject)
+    {
+        var connectionString = ConfigurationManager.AppSettings.Get("connectionString");
+        using (var connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            var tableCmd = connection.CreateCommand();
+            tableCmd.Parameters.AddWithValue("@subject", subject);
+            tableCmd.CommandText =
+                $"SELECT COUNT (*) FROM Stack WHERE Subject = @subject";
+            int count = (int)tableCmd.ExecuteScalar();
+            if (count == 1)
+            {
+                Console.WriteLine("Subject already exists. Press any button to return to main menu.");
+                Console.ReadLine();
+                MainMenu.ShowMenu();
+            }
+        }
+    }
     internal static int CreateCustomId()
     {
         int nextID = 1;
