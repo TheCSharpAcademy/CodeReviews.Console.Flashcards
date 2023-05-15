@@ -83,6 +83,7 @@ internal class UserInput
         Console.Clear();
         Console.WriteLine("What would you like to call the new subject?");
         var subject = Console.ReadLine();
+        Helpers.CheckSubjectDuplicate(subject);
         try
         {
             var connectionString = ConfigurationManager.AppSettings.Get("connectionString");
@@ -92,16 +93,15 @@ internal class UserInput
                 var tableCmd = connection.CreateCommand();
                 tableCmd.CommandText =
                    $"INSERT INTO Stack (Subject) Values ('{subject}')";
-
-                tableCmd.ExecuteNonQuery();
+                tableCmd.ExecuteNonQuery();            
                 connection.Close();
             }
             Console.WriteLine($"{subject} added. Press any key to return to Main Menu.");
             Console.ReadLine();
         }
-        catch (SqlException)
+        catch (SqlException ex)
         {
-            Console.WriteLine($"{subject} already exists. Press any key to continue and try again.");
+            Console.WriteLine($"{ex.Message} Press any button to continue.");
             Console.ReadLine();
             AddStack();
         }
