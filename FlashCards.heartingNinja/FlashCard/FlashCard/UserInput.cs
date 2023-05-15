@@ -6,8 +6,13 @@ namespace FlashCardApp;
 
 internal class UserInput
 {
-    internal static int stackID;
+    static int stackID;
     static bool deleteStack;
+    static bool editStack;
+
+    static bool addFlashCard;
+    static bool editFlashCard;
+    static bool deleteFlashCard;
     internal static void GetUserInput()
     {
         Console.Clear();
@@ -21,6 +26,12 @@ internal class UserInput
             Console.WriteLine("Type 1 to Choose Continent and Study.");
             Console.WriteLine("Type 2 to Show Past Study Sessions.");
             Console.WriteLine("Type 3 to Delete Stack and flashcards and Study Sessions with same ID");
+            Console.WriteLine($"\n\nChanges to have all the adds/edits/deletes");
+            Console.WriteLine("Type 4 to add a Flashcard");
+            Console.WriteLine("Type 5 to edit a Flashcard");
+            Console.WriteLine("Type 6 to delete a Flashcard");
+            Console.WriteLine("Type 7 to add a Stack");
+            Console.WriteLine("Type 8 to edit a Stack");
             Console.WriteLine("------------------------------------------\n");
             string command = Console.ReadLine();
 
@@ -40,6 +51,25 @@ internal class UserInput
                     break;
                 case "3":
                     deleteStack = true;
+                    ChooseStack();
+                    break;
+                case "4":
+                    addFlashCard = true;
+                    ChooseStack();
+                    break;
+                case "5":
+                    editFlashCard = true;
+                    ChooseStack();
+                    break;
+                case "6":
+                    deleteFlashCard = true;
+                    ChooseStack();
+                    break;
+                case "7":
+                    AddStack();
+                    break;
+                case "8":
+                    editStack = true;
                     ChooseStack();
                     break;
 
@@ -80,21 +110,61 @@ internal class UserInput
                         counter++;
                     }
 
-                    if (!deleteStack)
+                    if (!deleteStack && !addFlashCard && !editFlashCard && !deleteFlashCard && !editStack)
                     {
                         Console.WriteLine("Choose Continent to Study");
                     }
-                    else
+
+                    if(deleteStack)
                     {
                         Console.WriteLine("Choose Continent to Delete");
                     }
 
-                    int stackNumber = int.Parse(Console.ReadLine());
-
-                    if (!stackNumberToIdMap.TryGetValue(stackNumber, out stackID))
+                    if(addFlashCard)
                     {
-                        Console.WriteLine($"Invalid stack number: {stackNumber}");
-                        return;
+                        Console.WriteLine("Choose Stack to add Flashcards");
+                    }
+
+                    if(editFlashCard)
+                    {
+                        Console.WriteLine("Edit Flashcard");
+                    }
+
+                    if(deleteFlashCard)
+                    {
+                        Console.WriteLine("Delete Flashcard");
+                    }
+                    
+                    if(editStack)
+                    {
+                        Console.WriteLine("Edit Stack");
+                    }
+
+                    int stackNumber;
+                    while (true)
+                    {
+                        Console.WriteLine("Enter the stack number or 'b' to go back:");
+                        string input = Console.ReadLine();
+
+                        if (input.ToLower() == "b")
+                        {
+                            Console.WriteLine("Returning to previous menu...");
+                            return;
+                        }
+
+                        if (!int.TryParse(input, out stackNumber) || stackNumber < 1 || stackNumber > stackNumberToIdMap.Count)
+                        {
+                            Console.WriteLine("Invalid stack number. Please enter a valid number or 'b' to go back.");
+                            continue;
+                        }
+
+                        if (!stackNumberToIdMap.TryGetValue(stackNumber, out stackID))
+                        {
+                            Console.WriteLine($"Invalid stack number: {stackNumber}");
+                            return;
+                        }
+
+                        break;
                     }
                 }
                 connection.Close();
@@ -106,14 +176,26 @@ internal class UserInput
                 stackName = stackNameCommand.ExecuteScalar().ToString();
             }
 
-            if (!deleteStack)
+            if (!deleteStack && !addFlashCard && !editStack|| editFlashCard || deleteFlashCard)
             {
                 GetFlashCards(flashcardQuery, connection, stackID, stackName);
             }
-            else
+
+            if(deleteStack)
             {
                 DeleteStack(stackID);
             }
+
+            if(addFlashCard)
+            {
+                AddFlashcard(stackID);
+            }
+
+            if(editFlashCard)
+            {
+                EditStack(stackID);
+            }
+
         }
         Console.ReadLine();
     }
@@ -132,11 +214,13 @@ internal class UserInput
 
                 while (reader.Read())
                 {
+                    int flashcardId = reader.GetInt32(reader.GetOrdinal("FlashcardId"));
                     string question = reader.GetString(reader.GetOrdinal("Question"));
                     string answer = reader.GetString(reader.GetOrdinal("Answer"));
 
                     FlashcardDto flashcard = new FlashcardDto
                     {
+                        FlashcardId = flashcardId,
                         Question = question,
                         Answer = answer
                     };
@@ -144,7 +228,24 @@ internal class UserInput
                 }
             }
         }
-        FlashCardQuestions(flashcards, stackName);
+
+
+
+        if(editFlashCard)
+        {
+            EditFlashcard(flashcards);
+        }
+       
+        if(!editFlashCard && !deleteFlashCard)
+        {
+            FlashCardQuestions(flashcards, stackName);
+        }
+
+        if(deleteFlashCard)
+        {
+            DeleteFlashCard(flashcards);
+        }
+        
     }
 
     static void FlashCardQuestions(List<FlashcardDto> flashcards, string stackName)
@@ -256,6 +357,7 @@ internal class UserInput
 
     static void DeleteStack(int stackId)
     {
+        deleteStack = false;
 
         using (SqlConnection connection = new SqlConnection(GetData.connectionString))
         {
@@ -270,7 +372,202 @@ internal class UserInput
                 Console.WriteLine($"Deleted {rowsAffected} rows.");
             }
         }
-        deleteStack = false;
+
+        Console.WriteLine("Hit enter to continue");
+        Console.ReadLine();
+        GetUserInput();
     }
+
+    static void AddStack()
+    {
+        Console.WriteLine("Enter the name of the new stack:");
+        string stackName = Console.ReadLine();
+
+        using (SqlConnection connection = new SqlConnection(GetData.connectionString))
+        {
+            connection.Open();
+            string sql = "INSERT INTO Stacks (StackName) VALUES (@StackName);";
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@StackName", stackName);
+                int rowsAffected = command.ExecuteNonQuery();
+                Console.WriteLine($"Added {rowsAffected} stack hit enter to restart.");
+            }
+        }
+
+        Console.WriteLine($"new stack named {stackName} created");
+        Console.ReadLine();
+        GetUserInput();
+    }
+
+    static void AddFlashcard(int stackId)
+    {
+        addFlashCard = false;
+        Console.WriteLine("Enter the question:");
+        string question = Console.ReadLine();
+
+        Console.WriteLine("Enter the answer:");
+        string answer = Console.ReadLine();
+
+        using (SqlConnection connection = new SqlConnection(GetData.connectionString))
+        {
+            connection.Open();
+            string sql = "INSERT INTO Flashcards (StackId, Question, Answer) VALUES (@StackId, @Question, @Answer);";
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@StackId", stackId);
+                command.Parameters.AddWithValue("@Question", question);
+                command.Parameters.AddWithValue("@Answer", answer);
+                int rowsAffected = command.ExecuteNonQuery();
+                Console.WriteLine($"Added {rowsAffected} flashcard.");
+            }
+        }
+
+        Console.WriteLine($"{question} flashcard added, Hit enter to return.");
+        GetUserInput();
+    }
+
+    static void EditFlashcard(List<FlashcardDto> flashcards)
+    {
+        editFlashCard = false;
+        if (flashcards.Count == 0)
+        {
+            Console.WriteLine("No flashcards found.");
+            return;
+        }
+
+        var tableData = new List<object[]>();
+        for (int i = 0; i < flashcards.Count; i++)
+        {
+            FlashcardDto flashcard = flashcards[i];
+            tableData.Add(new object[] { i + 1, flashcard.Question, flashcard.Answer });
+        }
+
+        ConsoleTableBuilder
+            .From(tableData)
+            .WithColumn("Number", "Question", "Answer")
+            .WithFormat(ConsoleTableBuilderFormat.Alternative)
+            .ExportAndWriteLine(TableAligntment.Center);
+
+        Console.WriteLine("Enter the number of the flashcard to edit:");
+        int flashcardNumber;
+        while (!int.TryParse(Console.ReadLine(), out flashcardNumber) || flashcardNumber < 1 || flashcardNumber > flashcards.Count)
+        {
+            Console.WriteLine("Invalid flashcard number. Please enter a valid number:");
+        }
+
+        FlashcardDto selectedFlashcard = flashcards[flashcardNumber - 1];
+
+        Console.WriteLine("Enter the new question:");
+        string newQuestion = Console.ReadLine();
+
+        Console.WriteLine("Enter the new answer:");
+        string newAnswer = Console.ReadLine();
+
+        selectedFlashcard.Question = newQuestion;
+        selectedFlashcard.Answer = newAnswer;
+        
+
+        Console.WriteLine($"{selectedFlashcard.FlashcardId} is current flashcardID");
+
+        using (SqlConnection connection = new SqlConnection(GetData.connectionString))
+        {
+            connection.Open();
+
+            string sql = "UPDATE Flashcards SET Question = @Question, Answer = @Answer WHERE FlashcardId = @FlashcardId;";
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@Question", newQuestion);
+                command.Parameters.AddWithValue("@Answer", newAnswer);
+                command.Parameters.AddWithValue("@FlashcardId", selectedFlashcard.FlashcardId);
+
+                int rowsAffected = command.ExecuteNonQuery();
+                Console.WriteLine($"Flashcard updated. Rows affected: {rowsAffected}");
+            }
+        }
+
+        Console.WriteLine("Flashcard updated successfully");
+        Console.ReadLine();
+        GetUserInput();
+    }
+
+    static void DeleteFlashCard(List<FlashcardDto> flashcards)
+    {
+        Console.WriteLine("Choose flashcard to delete");
+        deleteFlashCard = false;
+        if (flashcards.Count == 0)
+        {
+            Console.WriteLine("No flashcards found.");
+            return;
+        }
+
+        var tableData = new List<object[]>();
+        for (int i = 0; i < flashcards.Count; i++)
+        {
+            FlashcardDto flashcard = flashcards[i];
+            tableData.Add(new object[] { i + 1, flashcard.Question, flashcard.Answer });
+        }
+
+        ConsoleTableBuilder
+            .From(tableData)
+            .WithColumn("Number", "Question", "Answer")
+            .WithFormat(ConsoleTableBuilderFormat.Alternative)
+            .ExportAndWriteLine(TableAligntment.Center);
+
+        Console.WriteLine("Enter the number of the flashcard to delete:");
+        int flashcardNumber;
+        while (!int.TryParse(Console.ReadLine(), out flashcardNumber) || flashcardNumber < 1 || flashcardNumber > flashcards.Count)
+        {
+            Console.WriteLine("Invalid flashcard number. Please enter a valid number:");
+        }
+
+        FlashcardDto selectedFlashcard = flashcards[flashcardNumber - 1];
+
+        using (SqlConnection connection = new SqlConnection(GetData.connectionString))
+        {
+            connection.Open();
+
+            string sql = "DELETE FROM Flashcards WHERE FlashcardId = @FlashcardId;";
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@FlashcardId", selectedFlashcard.FlashcardId);
+
+                int rowsAffected = command.ExecuteNonQuery();
+                Console.WriteLine($"Flashcard deleted. Rows affected: {rowsAffected}");
+            }
+        }
+
+        Console.WriteLine("Flashcard deleted successfully, Hit enter to return.");
+        Console.ReadLine();
+        GetUserInput();
+    }
+
+    static void EditStack(int stackId)
+    {
+        editStack = false;
+        Console.WriteLine("Enter the new stack name:");
+        string newStackName = Console.ReadLine();
+
+        using (SqlConnection connection = new SqlConnection(GetData.connectionString))
+        {
+            connection.Open();
+
+            string sql = "UPDATE Stacks SET StackName = @StackName WHERE StackId = @StackId;";
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@StackName", newStackName);
+                command.Parameters.AddWithValue("@StackId", stackId);
+
+                int rowsAffected = command.ExecuteNonQuery();
+                Console.WriteLine($"Stack updated. Rows affected: {rowsAffected}");
+            }
+        }
+
+        Console.WriteLine("Stack updated successfully.");
+        Console.WriteLine("Hit enter to continue");
+        Console.ReadLine();
+        GetUserInput();
+    }
+
 }
 

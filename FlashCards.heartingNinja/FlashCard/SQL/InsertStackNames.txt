@@ -1,0 +1,6 @@
+-- Insert stack names into Stacks table
+INSERT INTO [dbo].[Stacks] ([StackId], [StackName]) VALUES (8, 'Africa');
+INSERT INTO [dbo].[Stacks] ([StackId], [StackName]) VALUES (7, 'Asia');
+INSERT INTO [dbo].[Stacks] ([StackId], [StackName]) VALUES (5, 'Europe');
+INSERT INTO [dbo].[Stacks] ([StackId], [StackName]) VALUES (11, 'North America');
+INSERT INTO [dbo].[Stacks] ([StackId], [StackName]) VALUES (17, 'South America');

@@ -1,0 +1,16 @@
+-- Create Stacks table
+CREATE TABLE [dbo].[Stacks]
+(
+    [StackId] INT PRIMARY KEY,
+    [StackName] VARCHAR(255)
+);
+
+-- Create Flashcards table
+CREATE TABLE [dbo].[Flashcards]
+(
+    [FlashcardId] INT PRIMARY KEY,
+    [StackId] INT,
+    [Question] VARCHAR(255),
+    [Answer] VARCHAR(255),
+    FOREIGN KEY ([StackId]) REFERENCES [dbo].[Stacks]([StackId])
+);
