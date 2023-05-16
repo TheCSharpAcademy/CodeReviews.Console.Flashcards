@@ -40,4 +40,45 @@ internal class FlashcardDisplay
         Write(Tab(2, DisplayWidth));
         ConsoleDisplay.PromptUser();
     }
+
+    internal void FlashCard(string cardFace)
+    {
+        WriteLine(Tab(1, DisplayWidth) + CardConstructor("+", "-"));
+        WriteLine(Tab(1, DisplayWidth) + CardConstructor("|", " "));
+        WriteLine(Tab(1, DisplayWidth) + CardConstructor("|", " ", cardFace));
+        WriteLine(Tab(1, DisplayWidth) + CardConstructor("|", " "));
+        WriteLine(Tab(1, DisplayWidth) + CardConstructor("+", "-"));
+    }
+
+    private string CardConstructor(string border, string fill)
+    {
+        string cardLine = border;
+        for (int i = 0; i < (DisplayWidth - 16); i++)
+        {
+            cardLine += fill;
+        }
+        cardLine += border;
+
+        return cardLine;
+    }
+
+    private string CardConstructor(string border, string fill, string face)
+    {
+        int whiteSpace = DisplayWidth - 16 - (face.Length);
+
+        string cardLine = border;
+        for (int i = 0; i < whiteSpace / 2; i++)
+        {
+            cardLine += fill;
+        }
+        cardLine += face;
+        for (int i = 0; i < whiteSpace / 2; i++)
+        {
+            cardLine += " ";
+        }
+        cardLine += border;
+
+        return cardLine;
+    }
+
 }
