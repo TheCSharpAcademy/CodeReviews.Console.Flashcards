@@ -4,14 +4,14 @@ using static Flashcards.CoreyJordan.ConsoleDisplay;
 namespace Flashcards.CoreyJordan;
 internal class FlashcardDisplay
 {
-    public int DisplayWidth { get; set; }
+    private int DisplayWidth { get; set; }
 
-    public FlashcardDisplay(int width)
+    internal FlashcardDisplay(int width)
     {
         DisplayWidth = width;
     }
 
-    public void WelcomeScreen()
+    internal void WelcomeScreen()
     {
         WriteLine(Bar(DisplayWidth));
         WriteCenter("Welcome to Flash Card Study", DisplayWidth, 1);
@@ -20,8 +20,9 @@ internal class FlashcardDisplay
         WriteLine(Bar(DisplayWidth));
     }
 
-    public void MainMenu()
+    internal void MainMenu()
     {
+        Clear();
         WriteCenter(Bar(DisplayWidth), DisplayWidth);
         WriteCenter("MAIN MENU", DisplayWidth, 1);
         WriteCenter(Bar(DisplayWidth), DisplayWidth);

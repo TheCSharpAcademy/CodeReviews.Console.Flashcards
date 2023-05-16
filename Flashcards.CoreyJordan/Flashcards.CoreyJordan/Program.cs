@@ -5,7 +5,6 @@ FlashcardDisplay display = new(width);
 
 display.WelcomeScreen();
 display.PromptUser("");
-Console.Clear();
 display.MainMenu();
 
 bool exitApp = false;
@@ -31,7 +30,6 @@ while (exitApp == false)
 			break;
         default:
 			display.PromptUser("Invalid choice, try again");
-			Console.Clear();
 			display.MainMenu();
 			exitApp = false;
 			break;
