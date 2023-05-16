@@ -1,15 +1,12 @@
 ﻿using static System.Console;
 
 namespace Flashcards.CoreyJordan;
-internal class ConsoleDisplay
+internal static class ConsoleDisplay
 {
-
-    public int ConsoleWidth { get; set; } = 80;
-
-    public string Bar()
+    public static string Bar(int width)
     {
         string bar = String.Empty;
-        for (int i = 0; i < ConsoleWidth; i++)
+        for (int i = 0; i < width; i++)
         {
             bar += "-";
         }
@@ -17,11 +14,24 @@ internal class ConsoleDisplay
         return bar;
     }
 
-    public void WriteCenter(string message)
+    public static string Tab(int tabs, int consoleWidth)
+    {
+        string tab = String.Empty;
+        for (int i = 0; i < tabs; i++)
+        {
+            for (int j = 0; j < consoleWidth / 8; j++)
+            {
+                tab += " ";
+            }
+        }
+        return tab;
+    }
+
+    public static void WriteCenter(string message, int consoleWidth)
     {
         int stringLength = message.Length;
         string centered = string.Empty;
-        for (int i = 0; i < (ConsoleWidth - stringLength) / 2; i++)
+        for (int i = 0; i < (consoleWidth - stringLength) / 2; i++)
         {
             centered += " ";
         }
@@ -30,9 +40,9 @@ internal class ConsoleDisplay
         Write(centered);
     }
 
-    public void WriteCenter(string message, int carriageReturns)
+    public static void WriteCenter(string message, int consoleWidth, int carriageReturns)
     {
-        WriteCenter(message);
+        WriteCenter(message, consoleWidth);
 
         for (int i = 0; i < carriageReturns; i++)
         {
@@ -40,11 +50,10 @@ internal class ConsoleDisplay
         }
     }
 
-    public void WelcomeMenu()
+    public static void PromptUser()
     {
-        WriteLine(Bar());
-        WriteCenter("Welcome to Flash Card Study", 1);
-        WriteCenter("Written by Corey Jordan", 2);
-        WriteLine(Bar());
+        WriteLine("Press any key to continue...");
+        ReadKey();
     }
+    
 }

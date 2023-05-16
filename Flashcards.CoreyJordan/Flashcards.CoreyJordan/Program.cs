@@ -1,6 +1,39 @@
 ﻿using Flashcards.CoreyJordan;
 
-ConsoleDisplay display = new();
-display.WelcomeMenu();
+int width = 60;
+FlashcardDisplay display = new(width);
 
-Console.ReadLine();
+display.WelcomeScreen();
+display.PromptUser("");
+Console.Clear();
+display.MainMenu();
+
+bool exitApp = false;
+while (exitApp == false)
+{
+    string selection = Console.ReadLine()!;
+	switch (selection.ToUpper())
+	{
+		case "N":
+            exitApp = false;
+			break;
+		case "D":
+			exitApp = false;
+			break;
+		case "R":
+			exitApp = false;
+            break;
+		case "F":
+			exitApp = false;
+            break;
+		case "Q":
+			exitApp = true;
+			break;
+        default:
+			display.PromptUser("Invalid choice, try again");
+			Console.Clear();
+			display.MainMenu();
+			exitApp = false;
+			break;
+	}
+}
