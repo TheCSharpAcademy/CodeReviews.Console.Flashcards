@@ -65,14 +65,16 @@ internal class FlashcardDisplay
     private string CardConstructor(string border, string fill, string face)
     {
         int whiteSpace = DisplayWidth - 16 - (face.Length);
+        int left = whiteSpace / 2;
+        int right = whiteSpace - left;
 
         string cardLine = border;
-        for (int i = 0; i < whiteSpace / 2; i++)
+        for (int i = 0; i < left; i++)
         {
             cardLine += fill;
         }
         cardLine += face;
-        for (int i = 0; i < whiteSpace / 2; i++)
+        for (int i = 0; i < right; i++)
         {
             cardLine += " ";
         }
