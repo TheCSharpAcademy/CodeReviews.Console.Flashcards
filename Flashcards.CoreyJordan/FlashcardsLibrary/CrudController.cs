@@ -5,6 +5,13 @@ using System.Data.SqlClient;
 namespace FlashcardsLibrary;
 public static class CrudController
 {
+    private static readonly string FlashCardsDB = "FlashCardsDB";
+
+    private static string ConnectionString(string connectionString)
+    {
+        return ConfigurationManager.ConnectionStrings[connectionString].ConnectionString;
+    }
+
     public static List<DeckModel> GetAllDecks()
     {
         List<DeckModel> decks = new();
@@ -58,7 +65,8 @@ public static class CrudController
         {
             connection.Open();
             var insertDeck = connection.CreateCommand();
-            insertDeck.CommandText = $"INSERT INTO dbo.decks (name) VALUES (@Name)";
+            insertDeck.CommandText = @"INSERT INTO dbo.decks (name)
+                                    VALUES (@Name)";
             insertDeck.Parameters.AddWithValue("@Name", newDeck);
             insertDeck.ExecuteNonQuery();
         }
@@ -88,10 +96,18 @@ public static class CrudController
         return deckExists;
     }
 
-    private static readonly string FlashCardsDB = "FlashCardsDB";
-    private static string ConnectionString(string connectionString)
+    public static void UpdateDeckName(string name, int id)
     {
-        return ConfigurationManager.ConnectionStrings[connectionString].ConnectionString;
+        using (var connection = new SqlConnection(ConnectionString(FlashCardsDB)))
+        {
+            connection.Open();
+            var updateDeck = connection.CreateCommand();
+            updateDeck.CommandText = @"UPDATE dbo.decks
+                                    SET name = @Name
+                                    WHERE id = @Id;";
+            updateDeck.Parameters.AddWithValue("@Id", id);
+            updateDeck.Parameters.AddWithValue("@Name", name);
+            updateDeck.ExecuteNonQuery();
+        }
     }
-
 }

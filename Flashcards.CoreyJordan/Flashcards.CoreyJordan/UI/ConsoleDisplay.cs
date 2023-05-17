@@ -65,6 +65,7 @@ internal class ConsoleDisplay
 
     public void TitleBar(string title)
     {
+        Console.Clear();
         Write(Bar());
         WriteCenter(title, 1);
         Write(Bar());

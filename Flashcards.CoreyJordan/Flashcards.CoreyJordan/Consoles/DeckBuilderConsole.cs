@@ -2,6 +2,7 @@
 using FlashcardsLibrary;
 using FlashcardsLibrary.Models;
 using System.Data.SqlClient;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Flashcards.CoreyJordan.Consoles;
 internal class DeckBuilderConsole
@@ -26,31 +27,62 @@ internal class DeckBuilderConsole
         bool returnToMain = false;
         while (returnToMain == false)
         {
-            Console.Clear();
-            ConDisplay.TitleBar("Deck Builder");
+            ConDisplay.TitleBar("DECK BUILDER");
             FlashDisplay.DeckBuilderMenu();
             Console.WriteLine();
-
-            switch (UserInput.GetString($"{ConDisplay.Tab(1)}What would you like to do? ").ToUpper())
+            try
             {
-                case "N":
-                    CreateDeck();
-                    EditDeck();
-                    break;
-                case "E":
-                    EditDeck();
-                    break;
-                case "D":
-                    DeleteDeck();
-                    break;
-                case "X":
-                    returnToMain = true;
-                    break;
-                default:
-                    FlashDisplay.PromptUser("Invalid choice, try again");
-                    break;
+                switch (UserInput.GetString($"{ConDisplay.Tab(1)}What would you like to do? ").ToUpper())
+                {
+                    case "N":
+                        CreateDeck();
+                        EditDeck();
+                        break;
+                    case "E":
+                        EditDeck();
+                        break;
+                    case "R":
+                        RenameDeck();
+                        break;
+                    case "D":
+                        DeleteDeck();
+                        break;
+                    case "X":
+                        returnToMain = true;
+                        break;
+                    default:
+                        FlashDisplay.PromptUser("Invalid choice, try again");
+                        break;
+                }
+            }
+            catch (SqlException ex)
+            {
+                FlashDisplay.PromptUser(ex.Message);
             }
         }
+    }
+
+    private void RenameDeck()
+    {
+        ConDisplay.TitleBar("RENAME DECK");
+
+        List<DeckModel> decks = CrudController.GetAllDecks();
+        FlashDisplay.DisplayDecks(decks);
+
+        int deckChoice = UserInput.GetInt($"{ConDisplay.Tab(1)}Select a deck: ");
+        while (decks.Any(x => x.Id == deckChoice) == false)
+        {
+            FlashDisplay.PromptUser("Invalid selection. Try again.");
+            ConDisplay.TitleBar("RENAME DECK");
+            FlashDisplay.DisplayDecks(decks);
+            deckChoice = UserInput.GetInt($"{ConDisplay.Tab(1)}Select a deck: ");
+        }
+
+        ConDisplay.TitleBar("RENAME DECK");
+        string deckName = NameDeck("RENAME DECK");
+
+        CrudController.UpdateDeckName(deckName, deckChoice);
+        FlashDisplay.PromptUser("Deck updated successfully");
     }
 
     private void DeleteDeck()
@@ -65,21 +97,23 @@ internal class DeckBuilderConsole
 
     private void CreateDeck()
     {
-        string deckName = UserInput.GetString("Enter a name for this deck");
-        try
-        {
-            while (CrudController.DeckExists(deckName) == true)
-            {
-                FlashDisplay.PromptUser("Deck name exists. Please try again.");
-                deckName = UserInput.GetString("Enter a name for this deck");
-            }
+        ConDisplay.TitleBar("DECK NAME");
+        string deckName = NameDeck("DECK NAME");
         
-            CrudController.InsertDeck(deckName);
-            ConDisplay.WriteCenter("Deck created successfully");
-        }
-        catch (SqlException ex)
+        CrudController.InsertDeck(deckName);
+        FlashDisplay.PromptUser("Deck created successfully");
+    }
+
+    private string NameDeck(string titleBar)
+    {
+        string deckName = UserInput.GetString($"{ConDisplay.Tab(1)}Enter a name for this deck: ");
+        while (CrudController.DeckExists(deckName) == true)
         {
-            FlashDisplay.PromptUser(ex.Message);
+            FlashDisplay.PromptUser("Deck name exists. Please try again.");
+            Console.Clear();
+            ConDisplay.TitleBar(titleBar);
+            deckName = UserInput.GetString($"{ConDisplay.Tab(1)}Enter a name for this deck: ");
         }
+        return deckName;
     }
 }

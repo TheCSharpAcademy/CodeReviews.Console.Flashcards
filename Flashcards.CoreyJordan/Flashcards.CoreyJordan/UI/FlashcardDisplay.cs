@@ -1,4 +1,5 @@
 ﻿using Flashcards.CoreyJordan.UI;
+using FlashcardsLibrary.Models;
 using static System.Console;
 
 namespace Flashcards.CoreyJordan;
@@ -38,6 +39,7 @@ internal class FlashcardDisplay
     {
         WriteLine($"{Display.Tab(1)}N: New Study Deck");
         WriteLine($"{Display.Tab(1)}E: Edit Existing Deck");
+        WriteLine($"{Display.Tab(1)}R: Rename Existing Deck");
         WriteLine($"{Display.Tab(1)}D: Delete Existing Deck");
         WriteLine($"{Display.Tab(1)}X: Return to Main Menu");
     }
@@ -91,4 +93,11 @@ internal class FlashcardDisplay
         return cardLine;
     }
 
+    public void DisplayDecks(List<DeckModel> decks)
+    {
+        foreach (DeckModel deck in decks)
+        {
+            Console.WriteLine($"{Display.Tab(1)}{deck.Id}: {deck.Name}");
+        }
+    }
 }
