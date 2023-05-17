@@ -13,7 +13,7 @@ public static class CrudController
             connection.Open();
             var getAll = connection.CreateCommand();
             getAll.CommandText =
-                "Select * FROM decks";
+                "Select * FROM dbo.decks";
 
             SqlDataReader reader = getAll.ExecuteReader();
             while (reader.Read())
@@ -35,7 +35,7 @@ public static class CrudController
         {
             connection.Open();
             var getAll = connection.CreateCommand();
-            getAll.CommandText = "SELECT * FROM cards";
+            getAll.CommandText = "SELECT * FROM dbo.cards";
 
             SqlDataReader reader = getAll.ExecuteReader();
             while (reader.Read())
@@ -58,14 +58,34 @@ public static class CrudController
         {
             connection.Open();
             var insertDeck = connection.CreateCommand();
-            insertDeck.CommandText = $"INSERT INTO decks (name) VALUES (@Name)";
+            insertDeck.CommandText = $"INSERT INTO dbo.decks (name) VALUES (@Name)";
             insertDeck.Parameters.AddWithValue("@Name", newDeck);
             insertDeck.ExecuteNonQuery();
         }
     }
     public static bool DeckExists(string name)
     {
-        throw new NotImplementedException();
+        bool deckExists = true;
+        int checkQuery;
+
+        using (var connection = new SqlConnection(ConnectionString(FlashCardsDB)))
+        {
+            connection.Open();
+            var checkName = connection.CreateCommand();
+            checkName.CommandText = @"SELECT 1 FROM dbo.decks
+                                    WHERE EXISTS (
+                                    SELECT 1 WHERE name = @Name
+                                    );";
+            checkName.Parameters.AddWithValue("@Name", name);
+            checkQuery = Convert.ToInt32(checkName.ExecuteScalar());
+        }
+
+        if (checkQuery == 0)
+        {
+            deckExists = false;
+        }
+
+        return deckExists;
     }
 
     private static readonly string FlashCardsDB = "FlashCardsDB";

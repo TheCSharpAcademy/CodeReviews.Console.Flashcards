@@ -1,7 +1,7 @@
 ﻿using Flashcards.CoreyJordan.UI;
 using FlashcardsLibrary;
 using FlashcardsLibrary.Models;
-using System.ComponentModel.DataAnnotations;
+using System.Data.SqlClient;
 
 namespace Flashcards.CoreyJordan.Consoles;
 internal class DeckBuilderConsole
@@ -68,7 +68,7 @@ internal class DeckBuilderConsole
         string deckName = UserInput.GetString("Enter a name for this deck");
         try
         {
-            while (DataValidation.IsUniqueDeckName(deckName) == false)
+            while (CrudController.DeckExists(deckName) == true)
             {
                 FlashDisplay.PromptUser("Deck name exists. Please try again.");
                 deckName = UserInput.GetString("Enter a name for this deck");
@@ -77,7 +77,7 @@ internal class DeckBuilderConsole
             CrudController.InsertDeck(deckName);
             ConDisplay.WriteCenter("Deck created successfully");
         }
-        catch (Exception ex)
+        catch (SqlException ex)
         {
             FlashDisplay.PromptUser(ex.Message);
         }
