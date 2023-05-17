@@ -1,37 +1,38 @@
 ﻿using Flashcards.CoreyJordan;
+using Flashcards.CoreyJordan.Consoles;
 
 int width = 60;
 FlashcardDisplay display = new(width);
 
 display.WelcomeScreen();
 display.PromptUser("");
-display.MainMenu();
 
 bool exitApp = false;
 while (exitApp == false)
 {
+	display.MainMenu();
     string selection = Console.ReadLine()!;
 	switch (selection.ToUpper())
 	{
 		case "N":
-            exitApp = false;
+			StudySessionConsole session = new(width);
+			session.Study();
 			break;
 		case "D":
-			exitApp = false;
+			DeckBuilderConsole deck = new(width);
+			deck.ManageDecks();
 			break;
-		case "R":
-			exitApp = false;
-            break;
 		case "F":
-			exitApp = false;
+			FlashCardBuilderConsole card = new(width);
+			card.ManageCards();
+            break;
+		case "R":
             break;
 		case "Q":
 			exitApp = true;
 			break;
         default:
 			display.PromptUser("Invalid choice, try again");
-			display.MainMenu();
-			exitApp = false;
 			break;
 	}
 }
