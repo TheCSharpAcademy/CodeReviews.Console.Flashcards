@@ -44,8 +44,8 @@ internal class FlashcardDisplay
 
     internal void PromptUser(string message)
     {
-        WriteLine($"\n{Display.Tab(2)}{message}");
-        Write(Display.Tab(2));
+        WriteLine();
+        Display.WriteCenter(message, 1);
         Display.PromptUser();
     }
 

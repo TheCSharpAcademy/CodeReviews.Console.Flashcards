@@ -59,7 +59,7 @@ internal class ConsoleDisplay
 
     public void PromptUser()
     {
-        WriteLine("Press any key to continue...");
+        WriteCenter("Press any key to continue...");
         ReadKey();
     }
 

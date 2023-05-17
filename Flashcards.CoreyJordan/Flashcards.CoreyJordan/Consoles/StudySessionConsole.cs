@@ -5,7 +5,7 @@ internal class StudySessionConsole
 {
     public int ConsoleWidth { get; set; }
     public string UserName { get; set; }
-    public StackModel Deck { get; set; }
+    public DeckModel Deck { get; set; }
     public int CorrectAnswers { get; set; }
     public List<FlashCardModel> Correct { get; set; } = new();
     public List<FlashCardModel> Wrong { get; set; } = new();

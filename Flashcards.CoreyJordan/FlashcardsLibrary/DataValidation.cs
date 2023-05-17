@@ -3,6 +3,17 @@ public static class DataValidation
 {
     public static bool IsUniqueDeckName(string name)
     {
-        throw new NotImplementedException();
+        bool isUniqueDeckName = false;
+
+		try
+		{
+			isUniqueDeckName = CrudController.DeckExists(name);
+		}
+		catch (Exception)
+		{
+			throw;
+		}
+
+        return isUniqueDeckName;
     }
 }

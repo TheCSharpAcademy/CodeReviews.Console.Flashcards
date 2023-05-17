@@ -1,7 +1,9 @@
 ﻿namespace FlashcardsLibrary.Models;
 public class FlashCardModel
 {
-    public string Name { get; set; }
-    public string Front { get; set; }
-    public string Back { get; set; }
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Front { get; set; } = string.Empty;
+    public string Back { get; set; } = string.Empty;
+    public int DeckId { get; set; }
 }
