@@ -41,6 +41,7 @@ internal class FlashcardDisplay
         WriteLine($"{Display.Tab(1)}E: Edit Existing Deck");
         WriteLine($"{Display.Tab(1)}R: Rename Existing Deck");
         WriteLine($"{Display.Tab(1)}D: Delete Existing Deck");
+        WriteLine($"{Display.Tab(1)}H: Help");
         WriteLine($"{Display.Tab(1)}X: Return to Main Menu");
     }
 
@@ -97,7 +98,31 @@ internal class FlashcardDisplay
     {
         foreach (DeckModel deck in decks)
         {
-            Console.WriteLine($"{Display.Tab(1)}{deck.Id}: {deck.Name}");
+            WriteLine($"{Display.Tab(1)}{deck.Id}: {deck.Name}");
         }
+    }
+
+    internal void DeckBuilderHelp()
+    {
+        Display.TitleBar("HELP");
+
+        WriteLine("New Study Deck\n");
+        WriteLine("\tCreate a new deck and give it a unique name. The");
+        WriteLine("\t\tname cannot be left blank.\n");
+
+        WriteLine("Edit Existing Deck\n");
+        WriteLine("\tAdd or remove flashcards from deck lists. Each card");
+        WriteLine("\t\tcan belong to only one deck at a time.\n");
+            
+        WriteLine("Rename Existing Deck\n");
+        WriteLine("\tSelect a deck and enter a new unique name.\n");
+
+        WriteLine("Delete Existing Deck\n");
+        WriteLine("\tSelect a deck and remove it from the program.\n");
+        WriteLine("\t *** THIS WILL DELETE ALL DECK CONTENTS ***");
+        WriteLine("\t *** THIS ACTION CANNOT BE UNDONE ***\n");
+        WriteLine("\tRemove cards from deck before deleting\n");
+
+        Display.PromptUser();
     }
 }

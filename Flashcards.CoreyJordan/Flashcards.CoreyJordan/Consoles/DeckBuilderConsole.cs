@@ -1,6 +1,7 @@
 ﻿using Flashcards.CoreyJordan.UI;
 using FlashcardsLibrary;
 using FlashcardsLibrary.Models;
+using System.ComponentModel.Design;
 using System.Data.SqlClient;
 using System.Security.Cryptography.X509Certificates;
 
@@ -36,7 +37,6 @@ internal class DeckBuilderConsole
                 {
                     case "N":
                         CreateDeck();
-                        EditDeck();
                         break;
                     case "E":
                         EditDeck();
@@ -46,6 +46,9 @@ internal class DeckBuilderConsole
                         break;
                     case "D":
                         DeleteDeck();
+                        break;
+                    case "H":
+                        FlashDisplay.DeckBuilderHelp();
                         break;
                     case "X":
                         returnToMain = true;
