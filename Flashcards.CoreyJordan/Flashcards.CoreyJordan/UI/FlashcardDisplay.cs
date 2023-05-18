@@ -3,62 +3,59 @@ using FlashcardsLibrary.Models;
 using static System.Console;
 
 namespace Flashcards.CoreyJordan;
-internal class FlashcardDisplay
+internal class FlashcardDisplay : ConsoleDisplay
 {
-    public int DisplayWidth { get; set; }
-    public ConsoleDisplay Display { get; set; }
-
-    internal FlashcardDisplay(int width)
+    public FlashcardDisplay(int consoleWidth) : base(consoleWidth)
     {
-        DisplayWidth = width;
-        Display = new(DisplayWidth);
     }
+
+    public int DisplayWidth { get; set; }
 
     internal void WelcomeScreen()
     {
-        WriteLine(Display.Bar());
-        Display.WriteCenter("Welcome to Flash Card Study", 1);
-        Display.WriteCenter("Written by Corey Jordan", 2);
-        Display.WriteCenter("Developed for the C# Academy", 2);
-        WriteLine(Display.Bar());
+        WriteLine(Bar());
+        WriteCenter("Welcome to Flash Card Study", 1);
+        WriteCenter("Written by Corey Jordan", 2);
+        WriteCenter("Developed for the C# Academy", 2);
+        WriteLine(Bar());
     }
 
     internal void MainMenu()
     {
         Clear();
-        Display.TitleBar("MAIN MENU");
-        WriteLine($"{Display.Tab(2)}N: New Study Session");
-        WriteLine($"{Display.Tab(2)}D: Decks Menu");
-        WriteLine($"{Display.Tab(2)}F: Flashcards Menu");
-        WriteLine($"{Display.Tab(2)}R: Study Report");
-        WriteLine($"{Display.Tab(2)}Q: Quit");
-        Write($"\n{Display.Tab(2)}Select an option: ");
+        TitleBar("MAIN MENU");
+        WriteLine($"{Tab(2)}N: New Study Session");
+        WriteLine($"{Tab(2)}D: Decks Menu");
+        WriteLine($"{Tab(2)}F: Flashcards Menu");
+        WriteLine($"{Tab(2)}R: Study Report");
+        WriteLine($"{Tab(2)}Q: Quit");
+        Write($"\n{Tab(2)}Select an option: ");
     }
 
     public void DeckBuilderMenu()
     {
-        WriteLine($"{Display.Tab(1)}N: New Study Deck");
-        WriteLine($"{Display.Tab(1)}E: Edit Existing Deck");
-        WriteLine($"{Display.Tab(1)}R: Rename Existing Deck");
-        WriteLine($"{Display.Tab(1)}D: Delete Existing Deck");
-        WriteLine($"{Display.Tab(1)}H: Help");
-        WriteLine($"{Display.Tab(1)}X: Return to Main Menu");
+        WriteLine($"{Tab(1)}N: New Study Deck");
+        WriteLine($"{Tab(1)}E: Edit Existing Deck");
+        WriteLine($"{Tab(1)}R: Rename Existing Deck");
+        WriteLine($"{Tab(1)}D: Delete Existing Deck");
+        WriteLine($"{Tab(1)}H: Help");
+        WriteLine($"{Tab(1)}X: Return to Main Menu");
     }
 
     internal void PromptUser(string message)
     {
         WriteLine();
-        Display.WriteCenter(message, 1);
-        Display.PromptUser();
+        WriteCenter(message, 1);
+        PromptUser();
     }
 
     internal void FlashCard(string cardFace)
     {
-        WriteLine(Display.Tab(1) + CardConstructor("+", "-"));
-        WriteLine(Display.Tab(1) + CardConstructor("|", " "));
-        WriteLine(Display.Tab(1) + CardConstructor("|", " ", cardFace));
-        WriteLine(Display.Tab(1) + CardConstructor("|", " "));
-        WriteLine(Display.Tab(1) + CardConstructor("+", "-"));
+        WriteLine(Tab(1) + CardConstructor("+", "-"));
+        WriteLine(Tab(1) + CardConstructor("|", " "));
+        WriteLine(Tab(1) + CardConstructor("|", " ", cardFace));
+        WriteLine(Tab(1) + CardConstructor("|", " "));
+        WriteLine(Tab(1) + CardConstructor("+", "-"));
     }
 
     private string CardConstructor(string border, string fill)
@@ -98,13 +95,13 @@ internal class FlashcardDisplay
     {
         foreach (DeckModel deck in decks)
         {
-            WriteLine($"{Display.Tab(1)}{deck.Id}: {deck.Name}");
+            WriteLine($"{Tab(1)}{deck.Id}: {deck.Name}");
         }
     }
 
     internal void DeckBuilderHelp()
     {
-        Display.TitleBar("HELP");
+        TitleBar("HELP");
 
         WriteLine("New Study Deck\n");
         WriteLine("\tCreate a new deck and give it a unique name. The");
@@ -121,8 +118,16 @@ internal class FlashcardDisplay
         WriteLine("\tSelect a deck and remove it from the program.\n");
         WriteLine("\t *** THIS WILL DELETE ALL DECK CONTENTS ***");
         WriteLine("\t *** THIS ACTION CANNOT BE UNDONE ***\n");
-        WriteLine("\tRemove cards from deck before deleting\n");
 
-        Display.PromptUser();
+        PromptUser();
+    }
+
+    internal void DeckEditMenu()
+    {
+        WriteLine($"{Tab(1)}N: Create New Card");
+        WriteLine($"{Tab(1)}E: Edit Existing Card");
+        WriteLine($"{Tab(1)}D: Delete Card");
+        WriteLine($"{Tab(1)}H: Help");
+        WriteLine($"{Tab(1)}X: Return to Main Menu");
     }
 }

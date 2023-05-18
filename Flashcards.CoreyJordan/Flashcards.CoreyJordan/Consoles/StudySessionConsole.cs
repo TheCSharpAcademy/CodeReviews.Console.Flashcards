@@ -18,7 +18,6 @@ internal class StudySessionConsole
 
     internal void Study()
     {
-        // TODO Check if decks exist
         throw new NotImplementedException();
     }
 }

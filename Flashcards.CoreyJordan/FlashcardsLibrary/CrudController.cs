@@ -15,10 +15,10 @@ public static class CrudController
     public static List<DeckModel> GetAllDecks()
     {
         List<DeckModel> decks = new();
-        using (var connection = new SqlConnection(ConnectionString(FlashCardsDB)))
+        using (SqlConnection connection = new(ConnectionString(FlashCardsDB)))
         {
             connection.Open();
-            var getAll = connection.CreateCommand();
+            SqlCommand getAll = connection.CreateCommand();
             getAll.CommandText =
                 "Select * FROM dbo.decks";
 
@@ -38,51 +38,55 @@ public static class CrudController
     public static List<FlashCardModel> GetAllCards()
     {
         List<FlashCardModel> cards = new();
-        using (var connection = new SqlConnection(ConnectionString(FlashCardsDB)))
+
+        using (SqlConnection connection = new(ConnectionString(FlashCardsDB)))
         {
             connection.Open();
-            var getAll = connection.CreateCommand();
-            getAll.CommandText = "SELECT * FROM dbo.cards";
+            SqlCommand getAll = connection.CreateCommand();
+            getAll.CommandText = @"SELECT * 
+                                FROM dbo.cards;";
 
             SqlDataReader reader = getAll.ExecuteReader();
             while (reader.Read())
             {
                 cards.Add(new FlashCardModel()
                 {
-                    Id = reader.GetInt32(0),
-                    Name = reader.GetString(1),
-                    Front = reader.GetString(2),
-                    Back = reader.GetString(3),
-                    DeckId = reader.GetInt32(4)
+                    Front = reader.GetString(0),
+                    Back = reader.GetString(1),
+                    DeckId = reader.GetInt32(2)
                 });
             }
         }
         return cards;
     }
-    public static void InsertDeck(string newDeck)
+    public static int InsertDeck(string newDeck)
     {
-        using (var connection = new SqlConnection(ConnectionString(FlashCardsDB)))
+        int success;
+        using (SqlConnection connection = new(ConnectionString(FlashCardsDB)))
         {
             connection.Open();
-            var insertDeck = connection.CreateCommand();
+            SqlCommand insertDeck = connection.CreateCommand();
             insertDeck.CommandText = @"INSERT INTO dbo.decks (name)
-                                    VALUES (@Name)";
+                                    VALUES (@Name);";
             insertDeck.Parameters.AddWithValue("@Name", newDeck);
-            insertDeck.ExecuteNonQuery();
+            success = insertDeck.ExecuteNonQuery();
         }
+        return success;
     }
     public static bool DeckExists(string name)
     {
         bool deckExists = true;
         int checkQuery;
 
-        using (var connection = new SqlConnection(ConnectionString(FlashCardsDB)))
+        using (SqlConnection connection = new(ConnectionString(FlashCardsDB)))
         {
             connection.Open();
-            var checkName = connection.CreateCommand();
-            checkName.CommandText = @"SELECT 1 FROM dbo.decks
+            SqlCommand checkName = connection.CreateCommand();
+            checkName.CommandText = @"SELECT 1 
+                                    FROM dbo.decks
                                     WHERE EXISTS (
-                                    SELECT 1 WHERE name = @Name
+                                    SELECT 1 
+                                    WHERE name = @Name
                                     );";
             checkName.Parameters.AddWithValue("@Name", name);
             checkQuery = Convert.ToInt32(checkName.ExecuteScalar());
@@ -98,10 +102,10 @@ public static class CrudController
 
     public static void UpdateDeckName(string name, int id)
     {
-        using (var connection = new SqlConnection(ConnectionString(FlashCardsDB)))
+        using (SqlConnection connection = new(ConnectionString(FlashCardsDB)))
         {
             connection.Open();
-            var updateDeck = connection.CreateCommand();
+            SqlCommand updateDeck = connection.CreateCommand();
             updateDeck.CommandText = @"UPDATE dbo.decks
                                     SET name = @Name
                                     WHERE id = @Id;";
@@ -109,5 +113,78 @@ public static class CrudController
             updateDeck.Parameters.AddWithValue("@Name", name);
             updateDeck.ExecuteNonQuery();
         }
+    }
+
+    public static DeckModel GetDeck(string deckName)
+    {
+        DeckModel deck = new();
+
+        using (SqlConnection connection = new(ConnectionString(FlashCardsDB)))
+        {
+            connection.Open();
+            SqlCommand getDeckByName = connection.CreateCommand();
+            getDeckByName.CommandText = @"SELECT * 
+                                        FROM dbo.decks
+                                        WHERE name = @Name;";
+            getDeckByName.Parameters.AddWithValue("@Name", deckName);
+            SqlDataReader reader = getDeckByName.ExecuteReader();
+            while (reader.Read())
+            {
+                deck.Id = reader.GetInt32(0);
+                deck.Name = reader.GetString(1);
+                deck.Deck = GetContents(deck);
+            }
+        }
+        return deck;
+    }
+
+    public static DeckModel GetDeck(int deckId)
+    {
+        DeckModel deck = new();
+
+        using (SqlConnection connection = new(ConnectionString(FlashCardsDB)))
+        {
+            connection.Open();
+            SqlCommand getDeckByName = connection.CreateCommand();
+            getDeckByName.CommandText = @"SELECT * 
+                                        FROM dbo.decks
+                                        WHERE id = @ID;";
+            getDeckByName.Parameters.AddWithValue("@ID", deckId);
+            SqlDataReader reader = getDeckByName.ExecuteReader();
+            while (reader.Read())
+            {
+                deck.Id = reader.GetInt32(0);
+                deck.Name = reader.GetString(1);
+                deck.Deck = GetContents(deck);
+            }
+        }
+        return deck;
+    }
+
+    private static List<FlashCardModel> GetContents(DeckModel deck)
+    {
+        List<FlashCardModel> deckContents = new();
+
+        using (SqlConnection connection = new(ConnectionString(FlashCardsDB)))
+        {
+            connection.Open();
+            SqlCommand getContents = connection.CreateCommand();
+            getContents.CommandText = @"SELECT *
+                                    FROM flashcards
+                                    WHERE deck_Id = @DeckId;";
+            getContents.Parameters.AddWithValue("@DeckId", deck.Id);
+            SqlDataReader reader = getContents.ExecuteReader();
+            while (reader.Read())
+            {
+                deckContents.Add(new FlashCardModel
+                {
+                    Front = reader.GetString(0),
+                    Back = reader.GetString(1),
+                    DeckId = deck.Id,
+                });
+            }
+        }
+
+        return deckContents;
     }
 }
