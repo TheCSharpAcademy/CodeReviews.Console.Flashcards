@@ -122,6 +122,11 @@ internal class FlashcardDisplay : ConsoleDisplay
         PromptUser();
     }
 
+    internal void CardHelp()
+    {
+
+    }
+
     internal void DeckEditMenu()
     {
         WriteLine($"{Tab(1)}N: Create New Card");

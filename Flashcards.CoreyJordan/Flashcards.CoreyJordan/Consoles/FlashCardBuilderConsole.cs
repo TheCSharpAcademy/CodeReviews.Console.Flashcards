@@ -4,12 +4,12 @@ using FlashcardsLibrary.DTOs;
 using FlashcardsLibrary.Models;
 
 namespace Flashcards.CoreyJordan.Consoles;
-internal class FlashCardBuilderConsole
+internal class FlashCardBuilderConsole : FlashcardDisplay
 {
     public int ConsoleWidth { get; set; }
     public  List<FlashCardModel> FlashCards { get; set; }
 
-    public FlashCardBuilderConsole(int consoleWidth)
+    public FlashCardBuilderConsole(int consoleWidth) : base(consoleWidth)
     {
         ConsoleWidth = consoleWidth;
         FlashCards = new List<FlashCardModel>();
@@ -22,13 +22,10 @@ internal class FlashCardBuilderConsole
 
     internal void ManageCards(DeckModel deck)
     {
-        ConsoleDisplay conDisplay = new(ConsoleWidth);
-        FlashcardDisplay display = new(ConsoleWidth);
-
-        bool returnToEdit = false;
-        while (returnToEdit == false)
+        bool returnToPrevious = false;
+        while (returnToPrevious == false)
         {
-            ConDisplay.TitleBar($"EDIT DECK: {deck.Name.ToUpper()}");
+            TitleBar($"EDIT DECK: {deck.Name.ToUpper()}");
 
             DeckDataObject deckDto = new(deck.Name, deck.Deck);
             ConsoleTableBuilder
@@ -36,28 +33,42 @@ internal class FlashCardBuilderConsole
                 .WithColumn("", "Front", "Back")
                 .ExportAndWriteLine();
 
-            FlashDisplay.DeckEditMenu();
-            switch (UserInput.GetString("\tSelect an option: "))
+            DeckEditMenu();
+            switch (UserInput.GetString("\tSelect an option: ").ToUpper())
             {
                 case "N":
-                    FlashCardBuilderConsole newCard = new(ConsoleWidth);
-                    newCard.DeleteCard();
+                    CreateCard();
                     break;
-                case "R":
-                    FlashCardBuilderConsole deleteCard = new(ConsoleWidth);
-                    deleteCard.DeleteCard();
+                case "E":
+                    EditCard();
+                    break;
+                case "D":
+                    DeleteCard();
+                    break;
+                case "H":
+                    CardHelp();
                     break;
                 case "X":
-                    returnToEdit = true;
+                    returnToPrevious = true;
                     break;
                 default:
-                    FlashDisplay.PromptUser("Invalid selection. Try Again: ");
+                    PromptUser("Invalid selection. Try Again: ");
                     break;
             }
         }
     }
 
-    internal void DeleteCard()
+    private void CreateCard()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void EditCard()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void DeleteCard()
     {
         throw new NotImplementedException();
     }

@@ -1,37 +1,35 @@
-﻿using ConsoleTableExt;
-using Flashcards.CoreyJordan.UI;
+﻿using Flashcards.CoreyJordan.UI;
 using FlashcardsLibrary;
-using FlashcardsLibrary.DTOs;
 using FlashcardsLibrary.Models;
 using System.Data.SqlClient;
 
 namespace Flashcards.CoreyJordan.Consoles;
 internal class DeckBuilderConsole : FlashcardDisplay
 {
-    public int ConsoleWidth { get; set; }
-    public ConsoleDisplay ConDisplay { get; set; }
-    public List<DeckModel> Decks { get; set; }
-    public  List<FlashCardModel> Cards{ get; set; }
-
-    public DeckBuilderConsole(int consoleWidth)
+    public DeckBuilderConsole(int consoleWidth) : base(consoleWidth)
     {
         ConsoleWidth = consoleWidth;
         Decks = new List<DeckModel>();
         Cards = new List<FlashCardModel>();
-        ConDisplay = new(consoleWidth);
     }
+
+    public int ConsoleWidth { get; set; }
+    public List<DeckModel> Decks { get; set; }
+    public  List<FlashCardModel> Cards{ get; set; }
+
+    
 
     public void ManageDecks()
     {
         bool returnToMain = false;
         while (returnToMain == false)
         {
-            ConDisplay.TitleBar("DECK BUILDER");
+            TitleBar("DECK BUILDER");
             DeckBuilderMenu();
             Console.WriteLine();
             try
             {
-                switch (UserInput.GetString($"{ConDisplay.Tab(1)}What would you like to do? ").ToUpper())
+                switch (UserInput.GetString($"{Tab(1)}What would you like to do? ").ToUpper())
                 {
                     case "N":
                         CreateDeck();
@@ -72,8 +70,6 @@ internal class DeckBuilderConsole : FlashcardDisplay
         PromptUser($"{deckName} renamed successfully");
     }
 
-    
-
     private void DeleteDeck()
     {
         // Get a list of decks
@@ -96,22 +92,11 @@ internal class DeckBuilderConsole : FlashcardDisplay
     {
         FlashCardBuilderConsole editDeck = new(ConsoleWidth);
         editDeck.ManageCards(deck);
-
-        
-
-        // ADD NEW
-        // Execute FlashCardBuilder
-
-        // Remove
-        // Get user choice
-        // Remove from deck
-        // Prompt remove another?
-        Console.ReadLine();
     }
 
     private void CreateDeck()
     {
-        ConDisplay.TitleBar("DECK NAME");
+        TitleBar("DECK NAME");
         string deckName = NameDeck("DECK NAME");
         
         int success = CrudController.InsertDeck(deckName);
@@ -126,15 +111,15 @@ internal class DeckBuilderConsole : FlashcardDisplay
 
     private string NameDeck(string titleBar)
     {
-        ConDisplay.TitleBar(titleBar);
+        TitleBar(titleBar);
 
-        string deckName = UserInput.GetString($"{ConDisplay.Tab(1)}Enter a name for this deck: ");
+        string deckName = UserInput.GetString($"{Tab(1)}Enter a name for this deck: ");
         while (CrudController.DeckExists(deckName) == true)
         {
             PromptUser("Deck name exists. Please try again.");
             Console.Clear();
-            ConDisplay.TitleBar(titleBar);
-            deckName = UserInput.GetString($"{ConDisplay.Tab(1)}Enter a name for this deck: ");
+            TitleBar(titleBar);
+            deckName = UserInput.GetString($"{Tab(1)}Enter a name for this deck: ");
         }
 
         return deckName;
@@ -142,18 +127,18 @@ internal class DeckBuilderConsole : FlashcardDisplay
     
     private int SelectDeck(string titleBar)
     {
-        ConDisplay.TitleBar(titleBar);
+        TitleBar(titleBar);
 
         List<DeckModel> decks = CrudController.GetAllDecks();
         DisplayDecks(decks);
 
-        int deckChoice = UserInput.GetInt($"{ConDisplay.Tab(1)}Select a deck: ");
+        int deckChoice = UserInput.GetInt($"{Tab(1)}Select a deck: ");
         while (decks.Any(x => x.Id == deckChoice) == false)
         {
             PromptUser("Invalid selection. Try again.");
-            ConDisplay.TitleBar(titleBar);
+            TitleBar(titleBar);
             DisplayDecks(decks);
-            deckChoice = UserInput.GetInt($"{ConDisplay.Tab(1)}Select a deck: ");
+            deckChoice = UserInput.GetInt($"{Tab(1)}Select a deck: ");
         }
 
         return deckChoice;
