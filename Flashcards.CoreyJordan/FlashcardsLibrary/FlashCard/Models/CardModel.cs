@@ -1,4 +1,4 @@
-﻿namespace FlashcardsLibrary.FlashCard;
+﻿namespace FlashcardsLibrary.FlashCard.Models;
 public class CardModel
 {
     public int Id { get; set; }
