@@ -72,12 +72,21 @@ internal class DeckBuilderConsole : FlashcardDisplay
 
     private void DeleteDeck()
     {
-        // Get a list of decks
-        // Display the list
-        // Get user choice
-        // Confirm delete
-        // Delete deck
-        throw new NotImplementedException();
+        int deckChoice = SelectDeck("EDIT DECK");
+        string confirm = UserInput.GetString("\tDo you really want to delete this deck? Y/n: ");
+
+        if ( confirm.ToUpper() == "Y")
+        {
+            int success = CrudController.DeleteDeck(deckChoice);
+            if (success != 0)
+            {
+                PromptUser("Deck deleted successfully");
+            }
+        }
+        else
+        {
+            PromptUser("Canceled");
+        }
     }
 
     private void EditDeck()

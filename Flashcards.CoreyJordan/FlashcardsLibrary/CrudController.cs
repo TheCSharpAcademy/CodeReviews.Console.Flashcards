@@ -187,4 +187,21 @@ public static class CrudController
 
         return deckContents;
     }
+
+    public static int DeleteDeck(int deckId)
+    {
+        int rowsDeleted;
+
+        using (SqlConnection connection = new(ConnectionString(FlashCardsDB)))
+        {
+            connection.Open();
+            SqlCommand deleteDeck = connection.CreateCommand();
+            deleteDeck.CommandText = @"DELETE FROM decks
+                                    WHERE id = @Id;";
+            deleteDeck.Parameters.AddWithValue("@Id", deckId);
+            rowsDeleted = deleteDeck.ExecuteNonQuery();
+        }
+
+        return rowsDeleted;
+    }
 }
