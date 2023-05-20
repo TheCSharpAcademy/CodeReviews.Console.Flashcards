@@ -1,9 +1,9 @@
 ﻿using System.Configuration;
 
 namespace FlashcardsLibrary.FlashCard.Data;
-internal class ConnectionManager
+internal class ConnManager
 {
-    internal string FlashCardDb { get; } = "FlashCardDb";
+    internal static string FlashCardDb { get; } = "FlashCardDb";
 
     internal static string GetConnectionString(string dbName) 
     { 
