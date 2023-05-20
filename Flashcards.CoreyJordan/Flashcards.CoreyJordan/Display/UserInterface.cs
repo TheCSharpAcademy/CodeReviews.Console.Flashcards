@@ -1,4 +1,4 @@
-﻿namespace FlashcardsLibrary.Display;
+﻿namespace Flashcards.CoreyJordan.Display;
 internal class UserInterface
 
 {

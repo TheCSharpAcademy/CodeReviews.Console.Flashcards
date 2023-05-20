@@ -1,6 +1,6 @@
-﻿using FlashcardsLibrary.Display;
+﻿using Flashcards.CoreyJordan.Display;
 
-namespace FlashcardsLibrary.Controller;
+namespace Flashcards.CoreyJordan.Controller;
 public class MainPage
 {
     private UserInterface UI { get; set; } = new();

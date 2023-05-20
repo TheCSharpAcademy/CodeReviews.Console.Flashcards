@@ -1,4 +1,5 @@
-﻿namespace FlashcardsLibrary.Controller;
+﻿namespace Flashcards.CoreyJordan.Controller;
+
 internal class CardManager
 {
     internal void ManageCards()

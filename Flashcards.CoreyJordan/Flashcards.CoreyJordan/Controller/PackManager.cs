@@ -1,14 +1,14 @@
-﻿using FlashcardsLibrary.Display;
-using FlashcardsLibrary.FlashCard.Data;
-using FlashcardsLibrary.FlashCard.Models;
+﻿using Flashcards.CoreyJordan.Display;
+using FlashcardsLibrary.Data;
+using FlashcardsLibrary.DTOs;
 using System.Data.SqlClient;
 
-namespace FlashcardsLibrary.Controller;
+namespace Flashcards.CoreyJordan.Controller;
 internal class PackManager
 {
     private UserInterface UI { get; set; } = new();
     private InputModel User { get; set; } = new();
-    private PackDisplay Pack { get; set; } = new();
+    private PackDisplay PackDisplay { get; set; } = new();
 
     internal void ManagePacks()
     {
@@ -17,17 +17,19 @@ internal class PackManager
         bool exitPackManager = false;
         while (exitPackManager == false)
         {
-            Pack.DisplayMenu();
+            PackDisplay.DisplayMenu();
             string menuChoice = User.GetMenuChoice();
             try
             {
                 switch (menuChoice.ToUpper())
                 {
                     case "N":
-                        string packName = Pack.CreatePack();
+                        string packName = PackDisplay.NamePack();
                         PackGateway.InsertPack(packName);
                         break;
                     case "E":
+                        List<PackOverviewDTO> allPacks = PackGateway.GetAllPacks();
+                        PackDisplay.DisplayDecks(allPacks);
                         break;
                     case "R":
                         break;
