@@ -1,9 +1,9 @@
 ﻿namespace FlashcardsLibrary.Display;
 internal class InputModel
 {
-    internal string GetStringInput(string prompt)
+    internal string GetMenuChoice()
     {
-        Console.Write(prompt);
+        Console.Write("\tSelect an option: ");
         string input = Console.ReadLine()!;
         return input;
     }

@@ -3,53 +3,17 @@
 namespace FlashcardsLibrary.Controller;
 public class MainPage
 {
-    internal UserInterface UI { get; set; } = new();
-    internal InputModel User { get; set; } = new();
-    private string[] MainMenu { get; } =
-    {
-        "N: New Study Session",
-        "P: Pack Menu",
-        "C: Card Menu",
-        "R: Report Card",
-        "Q: Quit"
-    };
-    private string[] SplashScreen { get; } =
-    {
-        "Welcome to Flash Card Study",
-        "Written by Corey Jordan",
-        "Developed for the C# Academy"
-    };
+    private UserInterface UI { get; set; } = new();
+    private InputModel User { get; set; } = new();
+    private MainPageDisplay Page { get; set; } = new();
 
-    public void DisplayMainMenu()
-    {
-        UI.TitleBar("MAIN MENU");
-
-        foreach (string s in MainMenu)
-        {
-            Console.WriteLine($"\t{s}");
-        }
-        Console.WriteLine();
-    }
-
-    public void DisplaySplashScreen()
-    {
-        UI.Seperator();
-
-        foreach (string s in SplashScreen)
-        {
-            UI.WriteCenterLine(s);
-        }
-        Console.WriteLine();
-
-        UI.Seperator();
-
-        UI.Prompt();
-    }
 
     public bool RunMainMenu()
     {
+        Page.DisplayMainMenu();
+
         bool quit = false;
-        string choice = User.GetStringInput("\tSelect an option: ");
+        string choice = User.GetMenuChoice();
         
         switch (choice.ToUpper())
         {
@@ -78,5 +42,10 @@ public class MainPage
         }
 
         return quit;
+    }
+
+    public void DisplaySplashScreen()
+    {
+        Page.DisplaySplashScreen();
     }
 }
