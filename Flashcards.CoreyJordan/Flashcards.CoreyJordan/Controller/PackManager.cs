@@ -8,9 +8,6 @@ internal class PackManager : Controller
 {
     internal void ManagePacks()
     {
-        // TODO test UI for title placement
-        UIConsole.TitleBar("PACK MANAGER");
-
         bool exitPackManager = false;
         while (exitPackManager == false)
         {
@@ -62,7 +59,6 @@ internal class PackManager : Controller
         }
 
         UIConsole.Prompt("Pack deleted successfully.");
-        return;
     }
 
     private void RenamePack()

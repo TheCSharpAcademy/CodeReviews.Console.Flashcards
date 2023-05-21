@@ -20,7 +20,8 @@ internal class CardUI
 
         ConsoleTableBuilder
             .From(cards)
-            .WithColumn("FRONT", "BACK")
+            .WithColumn("#","FRONT", "BACK")
+            .WithFormat(ConsoleTableBuilderFormat.MarkDown)
             .ExportAndWriteLine(TableAligntment.Center);
         Console.WriteLine();
     }
@@ -29,6 +30,8 @@ internal class CardUI
     {
         ConsoleTableBuilder
             .From(EditListMenu)
+            .WithColumn("")
+            .WithFormat(ConsoleTableBuilderFormat.MarkDown)
             .ExportAndWriteLine(TableAligntment.Center);
         Console.WriteLine();
     }

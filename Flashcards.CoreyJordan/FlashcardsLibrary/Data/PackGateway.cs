@@ -56,7 +56,6 @@ public static class PackGateway
 
     public static int DeletePack(string choiceName)
     {
-        // TODO test query, multiple deletes
         int rowsDeleted;
         using (SqlConnection connection = new(ConnManager.GetConnectionString(ConnManager.FlashCardDb)))
         {

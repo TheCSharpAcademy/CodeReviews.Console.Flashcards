@@ -1,4 +1,5 @@
 ﻿using FlashcardsLibrary.Models;
+using System.Data.SqlClient;
 
 namespace FlashcardsLibrary.Data;
 public static class CardGateway
@@ -10,6 +11,30 @@ public static class CardGateway
 
     public static List<CardModel> GetPackContents(string packChoice)
     {
-        throw new NotImplementedException();
+        List<CardModel> cards = new();
+
+        using (SqlConnection connection = new(ConnManager.GetConnectionString(ConnManager.FlashCardDb)))
+        {
+            connection.Open();
+            SqlCommand getContents = connection.CreateCommand();
+            getContents.CommandText = @"SELECT * FROM dbo.flashcards
+                                        WHERE deck_id IN (
+                                        SELECT id FROM dbo.decks
+                                        WHERE name = @Name);";
+            getContents.Parameters.AddWithValue("@Name", packChoice);
+            SqlDataReader reader = getContents.ExecuteReader();
+            while (reader.Read())
+            {
+                cards.Add(new CardModel()
+                {
+                    Id = reader.GetInt32(0),
+                    Question = reader.GetString(1),
+                    Answer = reader.GetString(2),
+                    DeckId = reader.GetInt32(3),
+                    DeckName = packChoice
+                });
+            }
+        }
+        return cards;
     }
 }

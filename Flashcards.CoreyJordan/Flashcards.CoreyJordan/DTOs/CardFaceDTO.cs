@@ -3,11 +3,13 @@
 namespace Flashcards.CoreyJordan.DTOs;
 internal class CardFaceDTO
 {
+    public int CardNumber { get; set; }
     public string Question { get; set; }
     public string Answer { get; set; }
 
-    public CardFaceDTO(string question, string answer)
+    public CardFaceDTO(int number, string question, string answer)
     {
+        CardNumber = number;
         Question = question;
         Answer = answer;
     }
@@ -17,7 +19,7 @@ internal class CardFaceDTO
         List<CardFaceDTO> cards = new();
         for (int i = 0; i < cardModels.Count; i++)
         {
-            cards.Add(new CardFaceDTO(cardModels[i].Question, cardModels[i].Answer));
+            cards.Add(new CardFaceDTO(i + 1, cardModels[i].Question, cardModels[i].Answer));
         }
         return cards;
     }

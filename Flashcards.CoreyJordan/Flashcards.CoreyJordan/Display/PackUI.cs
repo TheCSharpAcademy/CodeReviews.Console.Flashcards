@@ -58,7 +58,7 @@ internal class PackUI
 
     internal void DisplayPacks(List<PackNamesDTO> packs)
     {
-        UIConsole.TitleBar("PACKS");
+        UIConsole.TitleBar("PACK LIST");
 
         ConsoleTableBuilder
             .From(packs)

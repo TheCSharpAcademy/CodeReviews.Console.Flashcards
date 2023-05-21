@@ -13,9 +13,6 @@ internal class CardManager : Controller
 
     internal void EditPack()
     {
-        // TODO test UI for title placement
-        UIConsole.TitleBar("PACK EDITOR");
-
         string packChoice = ChoosePack(PackGateway.GetPacks());
 
         bool exitPackEditor = false;
@@ -67,8 +64,7 @@ internal class CardManager : Controller
         string cardFront = UICard.GetCardFace("NEW CARD");
         string cardBack = UICard.GetCardFace("NEW CARD");
 
-        // Insert card into database (front, back, deckId? from deck name)
         CardGateway.CreateCard(cardFront, cardBack, packName);
-        throw new NotImplementedException();
+        UIConsole.Prompt("Card added successfully");
     }
 }
