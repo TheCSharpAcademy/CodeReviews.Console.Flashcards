@@ -39,6 +39,7 @@ public static class PackGateway
 
     public static int UpdatePackName(string currentName, string newName)
     {
+        int rowsUpdated;
         using (SqlConnection connection = new(ConnManager.GetConnectionString(ConnManager.FlashCardDb)))
         {
             connection.Open();
@@ -48,12 +49,29 @@ public static class PackGateway
                                 WHERE name = @Name;";
             rename.Parameters.AddWithValue("@NewName", newName);
             rename.Parameters.AddWithValue("@Name", currentName);
-            rename.ExecuteNonQuery();
+            rowsUpdated = rename.ExecuteNonQuery();
         }
+        return rowsUpdated;
     }
 
     public static int DeletePack(string choiceName)
     {
-        throw new NotImplementedException();
+        // TODO test query, multiple deletes
+        int rowsDeleted;
+        using (SqlConnection connection = new(ConnManager.GetConnectionString(ConnManager.FlashCardDb)))
+        {
+            connection.Open();
+            SqlCommand delete = connection.CreateCommand();
+            delete.CommandText = @"DELETE * FROM dbo.cards
+                                WHERE deck_id IN
+                                (SELECT id FROM dbo.decks
+                                WHERE name = @Name);
+
+                                DELETE * FROM dbo.decks
+                                WHERE name = @Name;";
+            delete.Parameters.AddWithValue("@Name", choiceName);
+            rowsDeleted = delete.ExecuteNonQuery();
+        }
+        return rowsDeleted;
     }
 }

@@ -75,16 +75,14 @@ internal class PackManager : Controller
         string choiceName = UIPack.ChoosePack(allPacks);
         string newName = UIPack.NamePack("RENAME PACK");
 
-        int success = PackGateway.UpdatePackName(choiceName, newName);
-        switch (success)
+        if(PackGateway.UpdatePackName(choiceName, newName) == 0)
         {
-            case 0:
-                UIConsole.Prompt("There was an error renaming the pack.");
-                break;
-            default:
-                UIConsole.Prompt("Pack renamed successfully.");
-                break;
+            UIConsole.Prompt("There was an error renaming the pack.");
+            return;
         }
+
+        UIConsole.Prompt("Pack renamed successfully.");
+        return;
     }
 
     private static void EditPack()
