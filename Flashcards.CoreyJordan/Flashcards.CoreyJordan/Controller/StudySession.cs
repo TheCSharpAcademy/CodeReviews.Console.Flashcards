@@ -1,5 +1,5 @@
 ﻿namespace Flashcards.CoreyJordan.Controller;
-internal class StudySession
+internal class StudySession : Controller
 {
     internal void StartNew()
     {

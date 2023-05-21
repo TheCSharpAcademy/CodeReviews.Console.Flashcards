@@ -1,19 +1,16 @@
 ﻿using Flashcards.CoreyJordan.Display;
 
 namespace Flashcards.CoreyJordan.Controller;
-public class MainPage
+internal class MainPage : Controller
 {
-    private ConsoleUI UI { get; set; } = new();
-    private InputModel User { get; set; } = new();
     private MainUI Page { get; set; } = new();
-
 
     public bool RunMainMenu()
     {
         Page.DisplayMainMenu();
 
         bool quit = false;
-        string choice = User.GetString("Select an option: ");
+        string choice = UserInput.GetString("Select an option: ");
         
         switch (choice.ToUpper())
         {
@@ -37,7 +34,7 @@ public class MainPage
                 quit = true;
                 break;
             default:
-                UI.Prompt("Invalid Selection. Please try again.");
+                UIConsole.Prompt("Invalid Selection. Please try again.");
                 break;
         }
 

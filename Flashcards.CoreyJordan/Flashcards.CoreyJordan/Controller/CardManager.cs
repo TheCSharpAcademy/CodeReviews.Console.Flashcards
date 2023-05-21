@@ -4,12 +4,8 @@ using FlashcardsLibrary.Data;
 
 namespace Flashcards.CoreyJordan.Controller;
 
-internal class CardManager
+internal class CardManager : Controller
 {
-    private ConsoleUI UIConsole { get; set; } = new();
-    private InputModel UserInput { get; set; } = new();
-    private PackUI UIPack { get; set; } = new();
-
     internal void EditPack()
     {
         List<PackNamesDTO> allPacks = PackNamesDTO.GetPacksDTO(PackGateway.GetPacksList());

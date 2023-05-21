@@ -1,5 +1,5 @@
 ﻿namespace Flashcards.CoreyJordan.Controller;
-internal class ReportManager
+internal class ReportManager : Controller
 {
     internal void ManageReports()
     {
