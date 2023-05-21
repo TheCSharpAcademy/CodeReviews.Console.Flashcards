@@ -47,17 +47,14 @@ internal class PackManager : Controller
 
     private void DeletePack()
     {
-        List<PackNamesDTO> allPacks = PackNamesDTO.GetPacksDTO(PackGateway.GetPacksList());
-        UIPack.DisplayPacks(allPacks);
-
-        string choiceName = UIPack.ChoosePack(allPacks);
+        string packChoice = PackMenu(PackGateway.GetPacksList());
         if (UserInput.Confirm("Are you sure you wish to delete this pack? ") == false)
         {
             UIConsole.Prompt("Delete canceled");
             return;
         }
 
-        if (PackGateway.DeletePack(choiceName) == 0)
+        if (PackGateway.DeletePack(packChoice) == 0)
         {
             UIConsole.Prompt("There was an error deleting the pack.");
             return;
@@ -69,13 +66,10 @@ internal class PackManager : Controller
 
     private void RenamePack()
     {
-        List<PackNamesDTO> allPacks = PackNamesDTO.GetPacksDTO(PackGateway.GetPacksList());
-        UIPack.DisplayPacks(allPacks);
-
-        string choiceName = UIPack.ChoosePack(allPacks);
+        string packChoice = PackMenu(PackGateway.GetPacksList());
         string newName = UIPack.NamePack("RENAME PACK");
 
-        if(PackGateway.UpdatePackName(choiceName, newName) == 0)
+        if(PackGateway.UpdatePackName(packChoice, newName) == 0)
         {
             UIConsole.Prompt("There was an error renaming the pack.");
             return;

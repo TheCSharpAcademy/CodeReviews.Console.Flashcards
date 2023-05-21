@@ -18,7 +18,9 @@ internal class PackUI
     internal string NamePack(string title)
     {
         string name = "";
-        while (string.IsNullOrEmpty(name) || name.Contains(' '))
+        bool notValid = true;
+
+        while (notValid)
         {
             UIConsole.TitleBar(title);
             name = UserInput.GetString("Enter a name for this deck: ");
@@ -30,6 +32,10 @@ internal class PackUI
             else if (name.Contains(' '))
             {
                 UIConsole.Prompt("Name cannot conatins spaces.");
+            }
+            else
+            {
+                notValid = false;
             }
         }
         return name;
@@ -58,18 +64,21 @@ internal class PackUI
     internal string ChoosePack(List<PackNamesDTO> packs)
     {
         int index = 0;
+        bool inRange = false;
 
-        while (packs.Any(x => x.Number == index) == false)
+        while (inRange == false)
         {
             index = UserInput.GetInt("Select a pack number: ");
-            if (packs.Any(x => x.Number == index) == false)
+            inRange = packs.Any(x => x.Number == index);
+
+            if (inRange == false)
             {
                 UIConsole.Prompt("Pack number not listed. Please try again.");
                 DisplayPacks(packs);
             }
         }
 
-        var name = packs.Where(x => x.Number == index).ToList();
-        return name[0].Name;
+        List<PackNamesDTO> names = packs.Where(x => x.Number == index).ToList();
+        return names[0].Name;
     }
 }

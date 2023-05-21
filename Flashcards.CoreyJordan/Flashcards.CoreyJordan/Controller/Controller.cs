@@ -1,9 +1,19 @@
 ﻿using Flashcards.CoreyJordan.Display;
+using Flashcards.CoreyJordan.DTOs;
+using FlashcardsLibrary.Models;
 
 namespace Flashcards.CoreyJordan.Controller;
 internal abstract class Controller
 {
-    public ConsoleUI UIConsole { get; } = new();
-    public PackUI UIPack { get; } = new();
-    public InputModel UserInput { get; } = new();
+    internal ConsoleUI UIConsole { get; } = new();
+    internal PackUI UIPack { get; } = new();
+    internal InputModel UserInput { get; } = new();
+
+    internal string PackMenu(List<PackModel> packs)
+    {
+        List<PackNamesDTO> allPacks = PackNamesDTO.GetPacksDTO(packs);
+        UIPack.DisplayPacks(allPacks);
+
+        return UIPack.ChoosePack(allPacks);
+    }
 }
