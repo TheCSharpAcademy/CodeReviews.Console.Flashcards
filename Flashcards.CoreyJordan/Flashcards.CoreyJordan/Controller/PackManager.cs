@@ -51,7 +51,20 @@ internal class PackManager : Controller
         UIPack.DisplayPacks(allPacks);
 
         string choiceName = UIPack.ChoosePack(allPacks);
-        throw new NotImplementedException();
+        if (UserInput.Confirm("Are you sure you wish to delete this pack? ") == false)
+        {
+            UIConsole.Prompt("Delete canceled");
+            return;
+        }
+
+        if (PackGateway.DeletePack(choiceName) == 0)
+        {
+            UIConsole.Prompt("There was an error deleting the pack.");
+            return;
+        }
+
+        UIConsole.Prompt("Pack deleted successfully.");
+        return;
     }
 
     private void RenamePack()
@@ -62,8 +75,16 @@ internal class PackManager : Controller
         string choiceName = UIPack.ChoosePack(allPacks);
         string newName = UIPack.NamePack("RENAME PACK");
 
-        PackGateway.UpdatePackName(choiceName, newName);
-        UIConsole.Prompt("Pack renamed successfully.");
+        int success = PackGateway.UpdatePackName(choiceName, newName);
+        switch (success)
+        {
+            case 0:
+                UIConsole.Prompt("There was an error renaming the pack.");
+                break;
+            default:
+                UIConsole.Prompt("Pack renamed successfully.");
+                break;
+        }
     }
 
     private static void EditPack()

@@ -37,7 +37,7 @@ public static class PackGateway
         return packs;
     }
 
-    public static void UpdatePackName(string currentName, string newName)
+    public static int UpdatePackName(string currentName, string newName)
     {
         using (SqlConnection connection = new(ConnManager.GetConnectionString(ConnManager.FlashCardDb)))
         {
@@ -50,5 +50,10 @@ public static class PackGateway
             rename.Parameters.AddWithValue("@Name", currentName);
             rename.ExecuteNonQuery();
         }
+    }
+
+    public static int DeletePack(string choiceName)
+    {
+        throw new NotImplementedException();
     }
 }

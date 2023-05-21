@@ -3,6 +3,16 @@ internal class InputModel
 {
     public ConsoleUI UIConsole { get; set; } = new();
 
+    internal bool Confirm(string prompt)
+    {
+        bool confirmed = false;
+        if (GetString($"{prompt}(Y/n): ").ToUpper() == "Y")
+        {
+            confirmed = true;
+        }
+        return confirmed;
+    }
+
     internal int GetInt(string prompt)
     {
         int output;
