@@ -1,5 +1,4 @@
-﻿using Flashcards.CoreyJordan.DTOs;
-using FlashcardsLibrary.Data;
+﻿using FlashcardsLibrary.Data;
 using System.Data.SqlClient;
 
 namespace Flashcards.CoreyJordan.Controller;
@@ -7,16 +6,16 @@ internal class PackManager : Controller
 {
     internal void ManagePacks()
     {
+        // TODO test UI for title placement
         UIConsole.TitleBar("PACK MANAGER");
 
         bool exitPackManager = false;
         while (exitPackManager == false)
         {
             UIPack.DisplayMenu();
-            string menuChoice = UserInput.GetString("Select an option: ");
             try
             {
-                switch (menuChoice.ToUpper())
+                switch (UserInput.GetString("Select an option: ").ToUpper())
                 {
                     case "1":
                         CreatePack();
@@ -47,7 +46,7 @@ internal class PackManager : Controller
 
     private void DeletePack()
     {
-        string packChoice = PackMenu(PackGateway.GetPacksList());
+        string packChoice = ChoosePack(PackGateway.GetPacks());
         if (UserInput.Confirm("Are you sure you wish to delete this pack? ") == false)
         {
             UIConsole.Prompt("Delete canceled");
@@ -66,7 +65,7 @@ internal class PackManager : Controller
 
     private void RenamePack()
     {
-        string packChoice = PackMenu(PackGateway.GetPacksList());
+        string packChoice = ChoosePack(PackGateway.GetPacks());
         string newName = UIPack.NamePack("RENAME PACK");
 
         if(PackGateway.UpdatePackName(packChoice, newName) == 0)

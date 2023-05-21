@@ -17,7 +17,7 @@ public static class PackGateway
         }
     }
 
-    public static List<PackModel> GetPacksList()
+    public static List<PackModel> GetPacks()
     {
         List<PackModel> packs = new();
         using (SqlConnection connection = new(ConnManager.GetConnectionString(ConnManager.FlashCardDb)))

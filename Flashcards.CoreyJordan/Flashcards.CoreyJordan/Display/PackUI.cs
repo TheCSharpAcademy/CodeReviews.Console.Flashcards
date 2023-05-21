@@ -5,8 +5,8 @@ namespace Flashcards.CoreyJordan.Display;
 internal class PackUI
 {
     private ConsoleUI UIConsole { get; set; } = new();
-    public InputModel UserInput { get; set; } = new();
-    public List<MenuModel> PackMenu { get; } = new()
+    private InputModel UserInput { get; set; } = new();
+    private List<MenuModel> PackMenu { get; } = new()
     {
         new MenuModel("1", "New Study Deck"),
         new MenuModel("2", "Edit Pack Contents"),
@@ -61,7 +61,7 @@ internal class PackUI
         Console.WriteLine();
     }
 
-    internal string ChoosePack(List<PackNamesDTO> packs)
+    internal string GetPackChoice(List<PackNamesDTO> packs)
     {
         int index = 0;
         bool inRange = false;
