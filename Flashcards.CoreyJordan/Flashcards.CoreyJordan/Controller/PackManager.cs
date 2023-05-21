@@ -1,4 +1,5 @@
 ﻿using FlashcardsLibrary.Data;
+using FlashcardsLibrary.Models;
 using System.Data.SqlClient;
 
 namespace Flashcards.CoreyJordan.Controller;
@@ -86,7 +87,22 @@ internal class PackManager : Controller
 
     private void CreatePack()
     {
-        string packName = UIPack.NamePack("NEW PACK");
+        string packName = "Default";
+        bool isUnique = false;
+
+        List<PackModel> packs = PackGateway.GetPacks();
+
+        while (isUnique == false)
+        {
+            packName = UIPack.NamePack("NEW PACK");
+
+            if (packs.Any(x => x.Name == packName) == false)
+            {
+                isUnique = true;
+                break;
+            }
+            UIConsole.PromptAndReset("Name already exists");
+        }
 
         PackGateway.InsertPack(packName);
         UIConsole.Prompt("Pack created successfully.");

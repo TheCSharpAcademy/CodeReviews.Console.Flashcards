@@ -17,7 +17,7 @@ internal class InputModel
     {
         int output;
 
-        Console.Write(prompt);
+        UIConsole.WriteCenter(prompt);
         string input = Console.ReadLine()!;
 
         while (int.TryParse(input, out output) == false)

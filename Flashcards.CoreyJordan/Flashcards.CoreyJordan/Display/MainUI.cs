@@ -32,6 +32,8 @@ internal class MainUI
 
         ConsoleTableBuilder
             .From(MainMenu)
+            .WithColumn("", "")
+            .WithFormat(ConsoleTableBuilderFormat.MarkDown)
             .ExportAndWriteLine(TableAligntment.Center);
     }
 

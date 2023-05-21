@@ -47,6 +47,8 @@ internal class PackUI
 
         ConsoleTableBuilder
             .From(PackMenu)
+            .WithColumn("","")
+            .WithFormat(ConsoleTableBuilderFormat.MarkDown)
             .ExportAndWriteLine(TableAligntment.Center);
     }
 
