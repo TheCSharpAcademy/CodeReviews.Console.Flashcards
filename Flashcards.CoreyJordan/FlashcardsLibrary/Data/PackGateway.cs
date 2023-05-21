@@ -62,12 +62,12 @@ public static class PackGateway
         {
             connection.Open();
             SqlCommand delete = connection.CreateCommand();
-            delete.CommandText = @"DELETE * FROM dbo.cards
+            delete.CommandText = @"DELETE FROM dbo.flashcards
                                 WHERE deck_id IN
                                 (SELECT id FROM dbo.decks
                                 WHERE name = @Name);
 
-                                DELETE * FROM dbo.decks
+                                DELETE FROM dbo.decks
                                 WHERE name = @Name;";
             delete.Parameters.AddWithValue("@Name", choiceName);
             rowsDeleted = delete.ExecuteNonQuery();

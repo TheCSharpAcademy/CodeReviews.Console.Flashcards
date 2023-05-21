@@ -1,4 +1,5 @@
-﻿using FlashcardsLibrary.Data;
+﻿using Flashcards.CoreyJordan.Display;
+using FlashcardsLibrary.Data;
 using FlashcardsLibrary.Models;
 using System.Data.SqlClient;
 
@@ -67,9 +68,25 @@ internal class PackManager : Controller
     private void RenamePack()
     {
         string packChoice = ChoosePack(PackGateway.GetPacks());
-        string newName = UIPack.NamePack("RENAME PACK");
+        string newName = "Default";
+        bool isUnique = false;
 
-        if(PackGateway.UpdatePackName(packChoice, newName) == 0)
+        List<PackModel> packs = PackGateway.GetPacks();
+
+        while (isUnique == false)
+        {
+            isUnique = true;
+            newName = UIPack.NamePack("RENAME PACK");
+
+            if (packs.Any(x => x.Name == newName) == true)
+            {
+                UIConsole.PromptAndReset("Name already exists");
+                isUnique = false;
+            }
+        }
+
+
+        if (PackGateway.UpdatePackName(packChoice, newName) == 0)
         {
             UIConsole.Prompt("There was an error renaming the pack.");
             return;
