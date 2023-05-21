@@ -1,4 +1,4 @@
-﻿using FlashcardsLibrary.DTOs;
+﻿using FlashcardsLibrary.Models;
 using System.Data.SqlClient;
 
 namespace FlashcardsLibrary.Data;
@@ -17,24 +17,38 @@ public static class PackGateway
         }
     }
 
-    public static List<PackOverviewDTO> GetAllPacks()
+    public static List<PackModel> GetPacksList()
     {
-        List<PackOverviewDTO> packs = new();
+        List<PackModel> packs = new();
         using (SqlConnection connection = new(ConnManager.GetConnectionString(ConnManager.FlashCardDb)))
         {
             connection.Open();
             SqlCommand getPacks = connection.CreateCommand();
-            getPacks.CommandText = @"SELECT * FROM dbo.decks;";
+            getPacks.CommandText = @"SELECT name FROM dbo.decks;";
             SqlDataReader reader = getPacks.ExecuteReader();
             while (reader.Read())
             {
-                packs.Add(new PackOverviewDTO
+                packs.Add(new PackModel
                 (
-                    reader.GetInt32(0),
-                    reader.GetString(1)
+                    reader.GetString(0)
                 ));
             }
         }
         return packs;
+    }
+
+    public static void UpdatePackName(string currentName, string newName)
+    {
+        using (SqlConnection connection = new(ConnManager.GetConnectionString(ConnManager.FlashCardDb)))
+        {
+            connection.Open();
+            SqlCommand rename = connection.CreateCommand();
+            rename.CommandText = @"UPDATE dbo.decks
+                                SET name = @NewName
+                                WHERE name = @Name;";
+            rename.Parameters.AddWithValue("@NewName", newName);
+            rename.Parameters.AddWithValue("@Name", currentName);
+            rename.ExecuteNonQuery();
+        }
     }
 }

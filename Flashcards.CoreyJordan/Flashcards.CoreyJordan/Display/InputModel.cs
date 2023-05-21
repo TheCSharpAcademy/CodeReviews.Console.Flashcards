@@ -1,15 +1,28 @@
 ﻿namespace Flashcards.CoreyJordan.Display;
 internal class InputModel
 {
-    internal string GetMenuChoice()
+    public ConsoleUI UIConsole { get; set; } = new();
+
+    internal int GetInt(string prompt)
     {
-        Console.Write("\tSelect an option: ");
+        int output;
+
+        Console.Write(prompt);
         string input = Console.ReadLine()!;
-        return input;
+
+        while (int.TryParse(input, out output) == false)
+        {
+            UIConsole.PromptAndReset("Must be an integer. Try again.");
+            
+            UIConsole.WriteCenter(prompt);
+            input = Console.ReadLine()!;
+        }
+        return output;
     }
 
-    internal string GetString(string v)
+    internal string GetString(string prompt)
     {
-        throw new NotImplementedException();
+        UIConsole.WriteCenter(prompt);
+        return Console.ReadLine()!;
     }
 }

@@ -3,7 +3,7 @@
 namespace FlashcardsLibrary.Data;
 internal class ConnManager
 {
-    internal static string FlashCardDb { get; } = "FlashCardDb";
+    internal static string FlashCardDb { get; } = "FlashCardsDB";
 
     internal static string GetConnectionString(string dbName)
     {

@@ -1,53 +1,87 @@
 ﻿using Flashcards.CoreyJordan.Display;
+using Flashcards.CoreyJordan.DTOs;
 using FlashcardsLibrary.Data;
-using FlashcardsLibrary.DTOs;
 using System.Data.SqlClient;
 
 namespace Flashcards.CoreyJordan.Controller;
 internal class PackManager
 {
-    private UserInterface UI { get; set; } = new();
-    private InputModel User { get; set; } = new();
-    private PackDisplay PackDisplay { get; set; } = new();
+    private ConsoleUI UIConsole { get; set; } = new();
+    private InputModel UserInput { get; set; } = new();
+    private PackUI UIPack { get; set; } = new();
 
     internal void ManagePacks()
     {
-        UI.TitleBar("PACK MANAGER");
+        UIConsole.TitleBar("PACK MANAGER");
 
         bool exitPackManager = false;
         while (exitPackManager == false)
         {
-            PackDisplay.DisplayMenu();
-            string menuChoice = User.GetMenuChoice();
+            UIPack.DisplayMenu();
+            string menuChoice = UserInput.GetString("Select an option: ");
             try
             {
                 switch (menuChoice.ToUpper())
                 {
-                    case "N":
-                        string packName = PackDisplay.NamePack();
-                        PackGateway.InsertPack(packName);
+                    case "1":
+                        CreatePack();
                         break;
-                    case "E":
-                        List<PackOverviewDTO> allPacks = PackGateway.GetAllPacks();
-                        PackDisplay.DisplayDecks(allPacks);
+                    case "2":
+                        EditPack();
                         break;
-                    case "R":
+                    case "3":
+                        RenamePack();
                         break;
-                    case "D":
+                    case "4":
+                        DeletePack();
                         break;
                     case "X":
                         exitPackManager = true;
                         break;
                     default:
-                        UI.Prompt("Invalid Selection. Please try again.");
+                        UIConsole.Prompt("Invalid Selection. Please try again.");
                         break;
                 }
             }
             catch (SqlException ex)
             {
-                UI.Prompt(ex.Message);
+                UIConsole.Prompt(ex.Message);
             }
         }
+    }
+
+    private void DeletePack()
+    {
+        List<PackNamesDTO> allPacks = PackNamesDTO.GetPacksDTO(PackGateway.GetPacksList());
+        UIPack.DisplayPacks(allPacks);
+
+        string choiceName = UIPack.ChoosePack(allPacks);
         throw new NotImplementedException();
+    }
+
+    private void RenamePack()
+    {
+        List<PackNamesDTO> allPacks = PackNamesDTO.GetPacksDTO(PackGateway.GetPacksList());
+        UIPack.DisplayPacks(allPacks);
+
+        string choiceName = UIPack.ChoosePack(allPacks);
+        string newName = UIPack.NamePack("RENAME PACK");
+
+        PackGateway.UpdatePackName(choiceName, newName);
+        UIConsole.Prompt("Pack renamed successfully.");
+    }
+
+    private static void EditPack()
+    {
+        CardManager cardManager = new();
+        cardManager.EditPack();
+    }
+
+    private void CreatePack()
+    {
+        string packName = UIPack.NamePack("NEW PACK");
+
+        PackGateway.InsertPack(packName);
+        UIConsole.Prompt("Pack created successfully.");
     }
 }

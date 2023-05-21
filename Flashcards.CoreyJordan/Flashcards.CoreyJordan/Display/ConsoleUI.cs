@@ -1,10 +1,10 @@
 ﻿namespace Flashcards.CoreyJordan.Display;
-internal class UserInterface
+internal class ConsoleUI
 
 {
     public int Width { private get; set; }
 
-    public UserInterface()
+    public ConsoleUI()
     {
         Width = Console.WindowWidth;
     }
@@ -45,14 +45,14 @@ internal class UserInterface
     internal void Prompt()
     {
         Console.WriteLine();
-        Console.Write("Press any key to continue...");
+        WriteCenter("Press any key to continue...");
         Console.ReadKey();
     }
 
     internal void Prompt(string message)
     {
         Console.WriteLine();
-        Console.WriteLine(message);
+        WriteCenterLine(message);
         Prompt();
     }
 
@@ -63,5 +63,19 @@ internal class UserInterface
         WriteCenterLine(message);
         Console.WriteLine();
         Seperator();
+    }
+
+    internal void PromptAndReset(string message)
+    {
+        int prompts = 4;
+        Prompt(message);
+
+        Console.SetCursorPosition(0, Console.GetCursorPosition().Top - prompts);
+        for (int i = 0;i < prompts; i++)
+        {
+            Console.WriteLine(new string(' ', Console.WindowWidth));
+        }
+        Console.Write(new string(' ', Console.WindowWidth));
+        Console.SetCursorPosition(0, Console.GetCursorPosition().Top - prompts);
     }
 }

@@ -1,4 +1,4 @@
-﻿using FlashcardsLibrary.Controller;
+﻿using Flashcards.CoreyJordan.Controller;
 
 MainPage mainPage = new();
 mainPage.DisplaySplashScreen();

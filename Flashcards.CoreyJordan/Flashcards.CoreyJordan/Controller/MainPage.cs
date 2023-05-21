@@ -3,9 +3,9 @@
 namespace Flashcards.CoreyJordan.Controller;
 public class MainPage
 {
-    private UserInterface UI { get; set; } = new();
+    private ConsoleUI UI { get; set; } = new();
     private InputModel User { get; set; } = new();
-    private MainPageDisplay Page { get; set; } = new();
+    private MainUI Page { get; set; } = new();
 
 
     public bool RunMainMenu()
@@ -13,23 +13,23 @@ public class MainPage
         Page.DisplayMainMenu();
 
         bool quit = false;
-        string choice = User.GetMenuChoice();
+        string choice = User.GetString("Select an option: ");
         
         switch (choice.ToUpper())
         {
-            case "N":
+            case "1":
                 StudySession session = new();
                 session.StartNew();
                 break;
-            case "P":
+            case "2":
                 PackManager packManager = new();
                 packManager.ManagePacks();
                 break;
-            case "C":
+            case "3":
                 CardManager cardManager = new();
                 cardManager.ManageCards();
                 break;
-            case "R":
+            case "4":
                 ReportManager reportManager = new();
                 reportManager.ManageReports();
                 break;
