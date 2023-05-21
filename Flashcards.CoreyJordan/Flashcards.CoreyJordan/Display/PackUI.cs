@@ -33,6 +33,10 @@ internal class PackUI
             {
                 UIConsole.Prompt("Name cannot conatins spaces.");
             }
+            else if (name.Any(x => char.IsLetterOrDigit(x)) == false)
+            {
+                UIConsole.Prompt("Name cannot contain symbols.");
+            }
             else
             {
                 notValid = false;
