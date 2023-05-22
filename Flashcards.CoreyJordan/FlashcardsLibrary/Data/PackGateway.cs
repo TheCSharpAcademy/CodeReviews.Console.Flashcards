@@ -2,11 +2,11 @@
 using System.Data.SqlClient;
 
 namespace FlashcardsLibrary.Data;
-public static class PackGateway
+public class PackGateway : ConnManager
 {
     public static void InsertPack(string name)
     {
-        using (SqlConnection connection = new(ConnManager.GetConnectionString(ConnManager.FlashCardDb)))
+        using (SqlConnection connection = new(FlashCardDb))
         {
             connection.Open();
             SqlCommand insert = connection.CreateCommand();
@@ -20,7 +20,7 @@ public static class PackGateway
     public static List<PackModel> GetPacks()
     {
         List<PackModel> packs = new();
-        using (SqlConnection connection = new(ConnManager.GetConnectionString(ConnManager.FlashCardDb)))
+        using (SqlConnection connection = new(FlashCardDb))
         {
             connection.Open();
             SqlCommand getPacks = connection.CreateCommand();
@@ -40,7 +40,7 @@ public static class PackGateway
     public static int UpdatePackName(string currentName, string newName)
     {
         int rowsUpdated;
-        using (SqlConnection connection = new(ConnManager.GetConnectionString(ConnManager.FlashCardDb)))
+        using (SqlConnection connection = new(FlashCardDb))
         {
             connection.Open();
             SqlCommand rename = connection.CreateCommand();
@@ -57,7 +57,7 @@ public static class PackGateway
     public static int DeletePack(string choiceName)
     {
         int rowsDeleted;
-        using (SqlConnection connection = new(ConnManager.GetConnectionString(ConnManager.FlashCardDb)))
+        using (SqlConnection connection = new(FlashCardDb))
         {
             connection.Open();
             SqlCommand delete = connection.CreateCommand();

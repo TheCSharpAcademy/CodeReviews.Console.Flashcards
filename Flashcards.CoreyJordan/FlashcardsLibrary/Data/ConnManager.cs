@@ -1,11 +1,11 @@
 ﻿using System.Configuration;
 
 namespace FlashcardsLibrary.Data;
-internal class ConnManager
+public abstract class ConnManager
 {
-    internal static string FlashCardDb { get; } = "FlashCardsDB";
+    public static string FlashCardDb { get; } = GetConnectionString("FlashCardsDB");
 
-    internal static string GetConnectionString(string dbName)
+    public static string GetConnectionString(string dbName)
     {
         return ConfigurationManager.ConnectionStrings[dbName].ConnectionString;
     }

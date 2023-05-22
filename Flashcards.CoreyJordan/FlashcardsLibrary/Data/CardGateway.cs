@@ -2,7 +2,7 @@
 using System.Data.SqlClient;
 
 namespace FlashcardsLibrary.Data;
-public static class CardGateway
+public class CardGateway : ConnManager
 {
     public static void CreateCard(string cardFront, string cardBack, string packName)
     {
@@ -13,7 +13,7 @@ public static class CardGateway
     {
         List<CardModel> cards = new();
 
-        using (SqlConnection connection = new(ConnManager.GetConnectionString(ConnManager.FlashCardDb)))
+        using (SqlConnection connection = new(FlashCardDb))
         {
             connection.Open();
             SqlCommand getContents = connection.CreateCommand();
