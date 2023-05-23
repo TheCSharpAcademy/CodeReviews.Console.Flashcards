@@ -14,6 +14,11 @@ internal class CardUI
         new MenuModel("X", "Exit List Editor"),
     };
 
+    internal string ChooseCard(List<CardFaceDTO> cards)
+    {
+        throw new NotImplementedException();
+    }
+
     internal void DisplayCards(List<CardFaceDTO> cards)
     {
         UIConsole.TitleBar("PACKS");

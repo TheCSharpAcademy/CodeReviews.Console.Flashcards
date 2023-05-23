@@ -30,7 +30,8 @@ internal class CardManager : Controller
                     NewCard(packChoice);
                     break;
                 case "2":
-                    DeleteCard(packChoice);
+                    string card = UICard.ChooseCard(cardList);
+                    DeleteCard(card);
                     break;
                 case "X":
                     exitPackEditor = true;
@@ -44,11 +45,13 @@ internal class CardManager : Controller
 
     private void DeleteCard()
     {
-        string pack = ChoosePack(PackGateway.GetPacks());
-        DeleteCard(pack);
+        string packChoice = ChoosePack(PackGateway.GetPacks());
+        List<CardModel> cards = CardGateway.GetPackContents(packChoice);
+        string card = ChooseCard(cards);
+        DeleteCard(card);
     }
 
-    private void DeleteCard(string packChoice)
+    private void DeleteCard(string card)
     {
         throw new NotImplementedException();
     }

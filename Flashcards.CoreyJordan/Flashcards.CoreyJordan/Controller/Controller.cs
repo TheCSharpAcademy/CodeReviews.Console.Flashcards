@@ -1,5 +1,6 @@
 ﻿using Flashcards.CoreyJordan.Display;
 using Flashcards.CoreyJordan.DTOs;
+using FlashcardsLibrary.Data;
 using FlashcardsLibrary.Models;
 
 namespace Flashcards.CoreyJordan.Controller;
@@ -16,5 +17,13 @@ internal abstract class Controller
         UIPack.DisplayPacks(allPacks);
 
         return UIPack.GetPackChoice(allPacks);
+    }
+
+    internal string ChooseCard(List<CardModel> cards)
+    {
+        List<CardFaceDTO> cardList = CardFaceDTO.GetCardsDTO(cards);
+        UICard.DisplayCards(cardList);
+
+        return UICard.ChooseCard(cardList);
     }
 }
