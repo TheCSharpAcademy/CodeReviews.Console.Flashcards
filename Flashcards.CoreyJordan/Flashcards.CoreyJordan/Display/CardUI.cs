@@ -1,6 +1,5 @@
 ﻿using ConsoleTableExt;
 using Flashcards.CoreyJordan.DTOs;
-using System.Xml.Linq;
 
 namespace Flashcards.CoreyJordan.Display;
 internal class CardUI
@@ -13,11 +12,6 @@ internal class CardUI
         new MenuModel("2", "Delete Card"),
         new MenuModel("X", "Exit List Editor"),
     };
-
-    internal string ChooseCard(List<CardFaceDTO> cards)
-    {
-        throw new NotImplementedException();
-    }
 
     internal void DisplayCards(List<CardFaceDTO> cards)
     {
@@ -39,6 +33,27 @@ internal class CardUI
             .WithFormat(ConsoleTableBuilderFormat.MarkDown)
             .ExportAndWriteLine(TableAligntment.Center);
         Console.WriteLine();
+    }
+
+    internal string GetCardChoice(List<CardFaceDTO> cards)
+    {
+        int index = 0;
+        bool inRange = false;
+
+        while (inRange == false)
+        {
+            index = UserInput.GetInt("Select a pack number: ");
+            inRange = cards.Any(x => x.CardNumber == index);
+
+            if (inRange == false)
+            {
+                UIConsole.Prompt("Pack number not listed. Please try again.");
+                DisplayCards(cards);
+            }
+        }
+
+        List<CardFaceDTO> questions = cards.Where(x => x.CardNumber == index).ToList();
+        return questions[0].Question;
     }
 
     internal string GetCardFace(string title)

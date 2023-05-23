@@ -13,7 +13,8 @@ internal class CardManager : Controller
 
     internal void EditPack()
     {
-        string packChoice = ChoosePack(PackGateway.GetPacks());
+        List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
+        string packChoice = UIPack.GetPackChoice(packs);
 
         bool exitPackEditor = false;
         while (exitPackEditor == false)
@@ -30,8 +31,8 @@ internal class CardManager : Controller
                     NewCard(packChoice);
                     break;
                 case "2":
-                    string card = UICard.ChooseCard(cardList);
-                    DeleteCard(card);
+                    string cardChoice = UICard.GetCardChoice(cardList);
+                    DeleteCard(cardChoice);
                     break;
                 case "X":
                     exitPackEditor = true;
@@ -45,21 +46,34 @@ internal class CardManager : Controller
 
     private void DeleteCard()
     {
-        string packChoice = ChoosePack(PackGateway.GetPacks());
-        List<CardModel> cards = CardGateway.GetPackContents(packChoice);
-        string card = ChooseCard(cards);
-        DeleteCard(card);
+        List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
+        string packChoice = UIPack.GetPackChoice(packs);
+
+        List<CardFaceDTO> cards = DisplayCardList(CardGateway.GetPackContents(packChoice));
+        string cardChoice = UICard.GetCardChoice(cards);
+
+        DeleteCard(cardChoice);
     }
 
     private void DeleteCard(string card)
     {
-        throw new NotImplementedException();
+        int successfulDelete = CardGateway.DeleteCard(card);
+        if (successfulDelete != 0)
+        {
+            UIConsole.Prompt("Card deleted successfully");
+        }
+        else
+        {
+            UIConsole.Prompt("Card not found");
+        }
     }
 
     private void CreateCard()
     {
-        string pack = ChoosePack(PackGateway.GetPacks());
-        NewCard(pack);
+        List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
+        string packChoice = UIPack.GetPackChoice(packs);
+
+        NewCard(packChoice);
     }
 
     private void NewCard(string packName)

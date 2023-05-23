@@ -46,29 +46,31 @@ internal class PackManager : Controller
 
     private void DeletePack()
     {
-        string packChoice = ChoosePack(PackGateway.GetPacks());
+        List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
+        string packChoice = UIPack.GetPackChoice(packs);
         if (UserInput.Confirm("Are you sure you wish to delete this pack? ") == false)
         {
             UIConsole.Prompt("Delete canceled");
             return;
         }
 
-        if (PackGateway.DeletePack(packChoice) == 0)
+        if (PackGateway.DeletePack(packChoice) != 0)
         {
-            UIConsole.Prompt("There was an error deleting the pack.");
-            return;
+            UIConsole.Prompt("Pack deleted successfully.");
+        }
+        else
+        {
+            UIConsole.Prompt("Pack not found.");
         }
 
-        UIConsole.Prompt("Pack deleted successfully.");
     }
 
     private void RenamePack()
     {
-        string packChoice = ChoosePack(PackGateway.GetPacks());
+        List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
+        string packChoice = UIPack.GetPackChoice(packs);
         string newName = "Default";
         bool isUnique = false;
-
-        List<PackModel> packs = PackGateway.GetPacks();
 
         while (isUnique == false)
         {

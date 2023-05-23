@@ -22,6 +22,21 @@ public class CardGateway : ConnManager
         }
     }
 
+    public static int DeleteCard(string cardFace)
+    {
+        int passFail;
+        using (SqlConnection connection = new(FlashCardDb))
+        {
+            connection.Open();
+            SqlCommand deleteCard = connection.CreateCommand();
+            deleteCard.CommandText = @"DELETE FROM dbo.flashcards
+                                    WHERE front = @Front;";
+            deleteCard.Parameters.AddWithValue("@Front", cardFace);
+            passFail = deleteCard.ExecuteNonQuery();
+        }
+        return passFail;
+    }
+
     public static List<CardModel> GetPackContents(string packChoice)
     {
         List<CardModel> cards = new();
