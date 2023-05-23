@@ -6,7 +6,20 @@ public class CardGateway : ConnManager
 {
     public static void CreateCard(string cardFront, string cardBack, string packName)
     {
-        throw new NotImplementedException();
+        using (SqlConnection connection = new(FlashCardDb))
+        {
+            connection.Open();
+            SqlCommand createCard = connection.CreateCommand();
+            createCard.CommandText = @"INSERT INTO flashcards
+                                    (front, back, deck_id)
+                                    VALUES (@Front, @Back, (SELECT id
+                                    FROM dbo.decks
+                                    WHERE name = @Name));";
+            createCard.Parameters.AddWithValue("@Front", cardFront);
+            createCard.Parameters.AddWithValue("@Back", cardBack);
+            createCard.Parameters.AddWithValue("@Name", packName);
+            createCard.ExecuteNonQuery();
+        }
     }
 
     public static List<CardModel> GetPackContents(string packChoice)
