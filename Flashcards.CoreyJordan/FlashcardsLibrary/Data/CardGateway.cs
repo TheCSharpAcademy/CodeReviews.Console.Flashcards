@@ -37,6 +37,31 @@ public class CardGateway : ConnManager
         return passFail;
     }
 
+    public static List<CardModel> GetAllCards()
+    {
+        List<CardModel> cards = new();
+        using (SqlConnection connection = new(FlashCardDb))
+        {
+            connection.Open();
+            SqlCommand getAllCards = connection.CreateCommand();
+            getAllCards.CommandText = @"SELECT flashcards.front, flashcards.back, decks.name
+                                    FROM flashcards
+                                    INNER JOIN decks ON flashcards.deck_id = decks.id
+                                    ORDER BY decks.name ASC;";
+            SqlDataReader reader = getAllCards.ExecuteReader();
+            while (reader.Read())
+            {
+                cards.Add(new CardModel()
+                {
+                    Question = reader.GetString(0),
+                    Answer = reader.GetString(1),
+                    DeckName = reader.GetString(2)
+                });
+            }
+        }
+        return cards;
+    }
+
     public static List<CardModel> GetPackContents(string packChoice)
     {
         List<CardModel> cards = new();

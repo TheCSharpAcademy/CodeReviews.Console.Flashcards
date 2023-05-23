@@ -8,7 +8,35 @@ internal class CardManager : Controller
 {
     internal void ManageCards()
     {
-        throw new NotImplementedException();
+        bool exitCardManager = false;
+        while (exitCardManager == false)
+        {
+            UIConsole.TitleBar("CARD MANAGER");
+            UICard.Menu(UICard.CardManagerMenu);
+
+            repeat:
+            switch (UserInput.GetString("Select an option: ").ToUpper())
+            {
+                case "1":
+                    NewCard();
+                    break;
+                case "2":;
+                    DeleteCard();
+                    break;
+                case "3":
+                    List<CardModel> cards = CardGateway.GetAllCards();
+                    List<CardDTO> list = CardDTO.GetListDTO(cards);
+                    UICard.DisplayCards(list);
+                    UIConsole.Prompt();
+                    break;
+                case "X":
+                    exitCardManager = true;
+                    break;
+                default:
+                    UIConsole.PromptAndReset("Invalid selection. Try again.");
+                    goto repeat;
+            }
+        }
     }
 
     internal void EditPack()
@@ -22,7 +50,7 @@ internal class CardManager : Controller
             List<CardModel> cards = CardGateway.GetPackContents(packChoice);
             List<CardFaceDTO> cardList = CardFaceDTO.GetCardsDTO(cards);
             UICard.DisplayCards(cardList);
-            UICard.DisplayEditListMenu();
+            UICard.Menu(UICard.EditListMenu);
 
             repeat:
             switch (UserInput.GetString("Select an option: ").ToUpper())
@@ -68,7 +96,7 @@ internal class CardManager : Controller
         }
     }
 
-    private void CreateCard()
+    private void NewCard()
     {
         List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
         string packChoice = UIPack.GetPackChoice(packs);

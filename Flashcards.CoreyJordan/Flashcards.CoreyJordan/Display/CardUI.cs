@@ -4,18 +4,25 @@ using Flashcards.CoreyJordan.DTOs;
 namespace Flashcards.CoreyJordan.Display;
 internal class CardUI
 {
-    private ConsoleUI UIConsole { get; set; } = new();
-    private InputModel UserInput { get; set; } = new();
-    private List<MenuModel> EditListMenu { get; } = new()
+    internal List<MenuModel> EditListMenu { get; } = new()
     {
         new MenuModel("1", "Add New Card"),
         new MenuModel("2", "Delete Card"),
-        new MenuModel("X", "Exit List Editor"),
+        new MenuModel("X", "Exit Pack Editor"),
     };
+    internal List<MenuModel> CardManagerMenu { get; } = new()
+    {
+        new MenuModel("1", "Add New Card"),
+        new MenuModel("2", "Delete Card"),
+        new MenuModel("3", "View All Cards"),
+        new MenuModel("X", "Exit Card Manager"),
+    };
+    private ConsoleUI UIConsole { get; set; } = new();
+    private InputModel UserInput { get; set; } = new();
 
     internal void DisplayCards(List<CardFaceDTO> cards)
     {
-        UIConsole.TitleBar("PACKS");
+        UIConsole.TitleBar("CARDS");
 
         ConsoleTableBuilder
             .From(cards)
@@ -25,10 +32,22 @@ internal class CardUI
         Console.WriteLine();
     }
 
-    internal void DisplayEditListMenu()
+    internal void DisplayCards(List<CardDTO> cards)
+    {
+        UIConsole.TitleBar("CARDS");
+
+        ConsoleTableBuilder
+            .From(cards)
+            .WithColumn("#", "FRONT", "BACK", "DECK")
+            .WithFormat(ConsoleTableBuilderFormat.MarkDown)
+            .ExportAndWriteLine(TableAligntment.Center);
+        Console.WriteLine();
+    }
+
+    internal void Menu(List<MenuModel> menu)
     {
         ConsoleTableBuilder
-            .From(EditListMenu)
+            .From(menu)
             .WithColumn("")
             .WithFormat(ConsoleTableBuilderFormat.MarkDown)
             .ExportAndWriteLine(TableAligntment.Center);
