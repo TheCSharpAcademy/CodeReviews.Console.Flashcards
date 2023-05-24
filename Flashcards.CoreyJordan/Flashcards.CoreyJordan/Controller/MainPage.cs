@@ -15,7 +15,7 @@ internal class MainPage : Controller
         switch (choice.ToUpper())
         {
             case "1":
-                StudySession session = new();
+                SessionManager session = new();
                 session.StartNew();
                 break;
             case "2":
