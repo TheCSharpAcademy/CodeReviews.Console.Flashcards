@@ -1,5 +1,6 @@
 ﻿using ConsoleTableExt;
 using Flashcards.CoreyJordan.DTOs;
+using FlashcardsLibrary;
 
 namespace Flashcards.CoreyJordan.Display;
 internal class CardUI
@@ -79,5 +80,10 @@ internal class CardUI
     {
         UIConsole.TitleBar(title);
         return UserInput.GetString("Enter a question for this card: ");
+    }
+
+    internal void DisplayFlashCard(CardFaceDTO cardFaceDTO, Face front)
+    {
+        throw new NotImplementedException();
     }
 }
