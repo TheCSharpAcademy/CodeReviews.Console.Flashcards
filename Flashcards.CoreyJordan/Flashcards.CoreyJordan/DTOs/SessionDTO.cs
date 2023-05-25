@@ -3,18 +3,32 @@
 namespace Flashcards.CoreyJordan.DTOs;
 internal class SessionDTO
 {
-    public string Player { get; set; }
-    public string Pack { get; set; }
-    public int PackSize { get; set; }
-    public DateTime Date { get; set; }
-    public int Cycles { get; set; }
+    public int Number { get; private set; }
+    public string Player { get; }
+    public string Pack { get; }
+    public int PackSize { get; }
+    public DateTime Date { get; }
+    public int Cycles { get; }
+    public double Score { get; }
 
-    public SessionDTO(SessionModel session)
+    public SessionDTO(SessionModel session, int number = 0)
     {
         Player = session.Player;
         Pack = session.Pack;
         PackSize = session.PackSize;
         Date = session.Date;
         Cycles = session.Cycles;
+        Score = session.Score;
+        Number = number;
+    }
+
+    public static List<SessionDTO> GetCardsDTO(List<SessionModel> sessions)
+    {
+        List<SessionDTO> sessionData = new();
+        for (int i = 0; i < sessions.Count; i++)
+        {
+            sessionData.Add(new SessionDTO(sessions[i], i + 1));
+        }
+        return sessionData;
     }
 }

@@ -72,7 +72,9 @@ internal class SessionManager : Controller
             Pack = packChoice,
             PackSize = correctList.Count,
             Date = DateTime.Now,
-            Cycles = cycles
+            Cycles = cycles,
+            CardsShown = cardsShown,
+            Correct = correctList.Count
         };
 
         UISession.DisplayEndOfSession(new SessionDTO(session));

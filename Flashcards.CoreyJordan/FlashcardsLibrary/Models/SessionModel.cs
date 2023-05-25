@@ -7,5 +7,15 @@ public class SessionModel
     public int PackSize { get; set; }
     public DateTime Date { get; set; }
     public int Cycles { get; set; }
-    // TODO calculate grade
+    public int CardsShown { get; set; }
+    public int Correct { get; set; }
+    public double Score
+    {
+        get
+        {
+            double average = Correct / CardsShown * 100;
+            average -= 5 * Cycles;
+            return average;
+        }
+    }
 }
