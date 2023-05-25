@@ -82,8 +82,48 @@ internal class CardUI
         return UserInput.GetString("Enter a question for this card: ");
     }
 
-    internal void DisplayFlashCard(CardFaceDTO cardFaceDTO, Face front)
+    internal void DisplayFlashCard(CardFaceDTO cardFaceDTO, Face face)
     {
-        throw new NotImplementedException();
+        int cardWidth = 28;
+        string text = face switch
+        {
+            Face.Front => cardFaceDTO.Question,
+            Face.Back => cardFaceDTO.Answer,
+            _=> "Error"
+        };
+
+        string border = "+";
+        for (int i = 0; i < cardWidth ;i++)
+        {
+            border += "-";
+        }
+        border += "+";
+
+        string field = "|";
+        for (int i = 0; i < cardWidth; i++)
+        {
+            field += " ";
+        }
+        field += "|";
+
+        string cardText = "|";
+        for (int i = 0; i < (cardWidth - text.Length) / 2; i++)
+        {
+            cardText += " ";
+        }
+        cardText += text;
+        for (int i = 0; i < cardWidth - text.Length - (cardWidth - text.Length) / 2 ; i++)
+        {
+            cardText += " ";
+        }
+        cardText += "|";
+
+        UIConsole.WriteCenterLine(border);
+        UIConsole.WriteCenterLine(field);
+        UIConsole.WriteCenterLine(field);
+        UIConsole.WriteCenterLine(cardText);
+        UIConsole.WriteCenterLine(field);
+        UIConsole.WriteCenterLine(field);
+        UIConsole.WriteCenterLine(border);
     }
 }
