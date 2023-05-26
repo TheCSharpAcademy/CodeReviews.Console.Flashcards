@@ -41,4 +41,14 @@ public class SessionGateway : ConnManager
         }
         return users;
     }
+
+    public static List<SessionModel> GetAllSessions()
+    {
+        throw new NotImplementedException();
+    }
+
+    public static List<SessionModel> GetSessionsByUser(string userChoice)
+    {
+        throw new NotImplementedException();
+    }
 }

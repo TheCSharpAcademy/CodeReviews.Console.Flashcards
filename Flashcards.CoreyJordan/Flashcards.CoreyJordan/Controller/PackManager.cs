@@ -1,5 +1,4 @@
-﻿using Flashcards.CoreyJordan.Display;
-using Flashcards.CoreyJordan.DTOs;
+﻿using Flashcards.CoreyJordan.DTOs;
 using FlashcardsLibrary.Data;
 using FlashcardsLibrary.Models;
 using System.Data.SqlClient;

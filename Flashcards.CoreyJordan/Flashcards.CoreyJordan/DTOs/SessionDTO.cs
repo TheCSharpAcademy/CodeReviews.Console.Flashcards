@@ -20,7 +20,7 @@ internal class SessionDTO
         Number = number;
     }
 
-    public static List<SessionDTO> GetCardsDTO(List<SessionModel> sessions)
+    public static List<SessionDTO> GetSessionDtoList(List<SessionModel> sessions)
     {
         List<SessionDTO> sessionData = new();
         for (int i = 0; i < sessions.Count; i++)

@@ -39,4 +39,9 @@ internal class SessionUI
             .WithFormat(ConsoleTableBuilderFormat.MarkDown)
             .ExportAndWriteLine(TableAligntment.Center);
     }
+
+    internal void DisplaySessions(List<SessionDTO> sessions)
+    {
+        throw new NotImplementedException();
+    }
 }

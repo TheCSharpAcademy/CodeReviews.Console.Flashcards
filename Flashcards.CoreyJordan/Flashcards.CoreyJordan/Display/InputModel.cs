@@ -13,6 +13,11 @@ internal class InputModel
         return confirmed;
     }
 
+    internal DateTime GetDate(string prompt)
+    {
+        throw new NotImplementedException();
+    }
+
     internal int GetInt(string prompt)
     {
         int output;
