@@ -9,19 +9,37 @@ public class SessionGateway : ConnManager
         using (SqlConnection connection = new(FlashCardDb))
         {
             connection.Open();
-            SqlCommand command = connection.CreateCommand();
-            command.CommandText = @"INSERT INTO dbo.study_session
+            SqlCommand addSession = connection.CreateCommand();
+            addSession.CommandText = @"INSERT INTO dbo.study_session
                                     (playerName, pack_id, pack_size, date, cycles)
                                     VALUES (@PlayerName,
                                     (SELECT id FROM dbo.decks
                                     WHERE name = @Name),
                                     @PackSize, @Date, @Cycles);";
-            command.Parameters.AddWithValue("@PlayerName", sessionModel.Player);
-            command.Parameters.AddWithValue("@Name", sessionModel.Pack);
-            command.Parameters.AddWithValue("@PackSize", sessionModel.PackSize);
-            command.Parameters.AddWithValue("@Date", sessionModel.Date);
-            command.Parameters.AddWithValue("@Cycles", sessionModel.Cycles);
-            command.ExecuteNonQuery();
+            addSession.Parameters.AddWithValue("@PlayerName", sessionModel.Player);
+            addSession.Parameters.AddWithValue("@Name", sessionModel.Pack);
+            addSession.Parameters.AddWithValue("@PackSize", sessionModel.PackSize);
+            addSession.Parameters.AddWithValue("@Date", sessionModel.Date);
+            addSession.Parameters.AddWithValue("@Cycles", sessionModel.Cycles);
+            addSession.ExecuteNonQuery();
         }
+    }
+
+    public static List<string> GetAllUsers()
+    {
+        List<string> users = new();
+        using (SqlConnection connection = new(FlashCardDb))
+        {
+            connection.Open();
+            SqlCommand getAll = connection.CreateCommand();
+            getAll.CommandText = @"SELECT playerName FROM dbo.study_session;";
+            SqlDataReader reader = getAll.ExecuteReader();
+            while (reader.Read())
+            {
+                users.Add(reader.GetString(0));
+            }
+        }
+
+        return users;
     }
 }
