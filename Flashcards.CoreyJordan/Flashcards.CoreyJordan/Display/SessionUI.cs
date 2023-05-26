@@ -23,4 +23,20 @@ internal class SessionUI
             .WithFormat(ConsoleTableBuilderFormat.MarkDown)
             .ExportAndWriteLine(TableAligntment.Center); 
     }
+
+    internal void DisplayUsers(List<string> users)
+    {
+        ConsoleTableBuilder
+            .From(users)
+            .WithFormat(ConsoleTableBuilderFormat.MarkDown)
+            .ExportAndWriteLine(TableAligntment.Center);
+    }
+
+    internal void DisplayReportMenu()
+    {
+        ConsoleTableBuilder
+            .From(ReportMenu)
+            .WithFormat(ConsoleTableBuilderFormat.MarkDown)
+            .ExportAndWriteLine(TableAligntment.Center);
+    }
 }

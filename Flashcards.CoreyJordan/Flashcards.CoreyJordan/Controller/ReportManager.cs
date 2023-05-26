@@ -1,4 +1,5 @@
 ﻿using Flashcards.CoreyJordan.Display;
+using FlashcardsLibrary.Data;
 
 namespace Flashcards.CoreyJordan.Controller;
 internal class ReportManager : Controller
@@ -7,10 +8,11 @@ internal class ReportManager : Controller
 
     internal void ManageReports()
     {
-        // Get list of users
-        // Display user list
-        // Get user name or ALL
+        UISession.DisplayUsers(SessionGateway.GetAllUsers());
+        string userChoice = UserInput.GetString("Select a user or leave blank to select all");
+
         // Display Menu
+        UISession.DisplayReportMenu();
         // Get Menu Choice
         throw new NotImplementedException();
     }

@@ -39,7 +39,6 @@ public class SessionGateway : ConnManager
                 users.Add(reader.GetString(0));
             }
         }
-
         return users;
     }
 }
