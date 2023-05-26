@@ -3,6 +3,7 @@ using Flashcards.CoreyJordan.DTOs;
 using FlashcardsLibrary;
 using FlashcardsLibrary.Data;
 using FlashcardsLibrary.Models;
+using System.Data.SqlClient;
 
 namespace Flashcards.CoreyJordan.Controller;
 internal class SessionManager : Controller
@@ -11,74 +12,81 @@ internal class SessionManager : Controller
 
     internal void StartNew()
     {
-        UIConsole.TitleBar("NEW STUDY SESSION");
-        string player = UserInput.GetString("Enter a user name for this session: ");
-
-        List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
-        string packChoice = UIPack.GetPackChoice(packs);
-
-        List<CardFaceDTO> correctList = new();
-        List<CardFaceDTO> unansweredList = CardFaceDTO.GetCardsDTO(CardGateway.GetPackContents(packChoice));
-
-        int cardsShown = 0;
-        int cycles = 0;
-        Random rand = new();
-        unansweredList = unansweredList.OrderBy(x => rand.Next()).ToList();
-
-        bool quitGame = false;
-        while (quitGame == false)
+        try
         {
-            for (int i = 0; i < unansweredList.Count; i++)
+            UIConsole.TitleBar("NEW STUDY SESSION");
+            string player = UserInput.GetString("Enter a user name for this session: ");
+
+            List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
+            string packChoice = UIPack.GetPackChoice(packs);
+
+            List<CardFaceDTO> correctList = new();
+            List<CardFaceDTO> unansweredList = CardFaceDTO.GetCardsDTO(CardGateway.GetPackContents(packChoice));
+
+            int cardsShown = 0;
+            int cycles = 0;
+            Random rand = new();
+            unansweredList = unansweredList.OrderBy(x => rand.Next()).ToList();
+
+            bool quitGame = false;
+            while (quitGame == false)
             {
-                UIConsole.TitleBar($"STUDY SESSION {packChoice.ToUpper()}");
-                UIConsole.WriteCenterLine("\nEnter Q to exit game\n");
-
-                UICard.DisplayFlashCard(unansweredList[i], Face.Front);
-                cardsShown++;
-
-                string userGuess = UserInput.GetString("Answer: ");
-                if (userGuess.ToUpper() == "Q")
+                for (int i = 0; i < unansweredList.Count; i++)
                 {
-                    quitGame = true;
-                    break;
-                }
+                    UIConsole.TitleBar($"STUDY SESSION {packChoice.ToUpper()}");
+                    UIConsole.WriteCenterLine("\nEnter Q to exit game\n");
 
-                UICard.DisplayFlashCard(unansweredList[i], Face.Back);
+                    UICard.DisplayFlashCard(unansweredList[i], Face.Front);
+                    cardsShown++;
 
-                if (userGuess == unansweredList[i].Answer)
-                {
-                    correctList.Add(unansweredList[i]);
-                    unansweredList.Remove(unansweredList[i]);
-                    UIConsole.Prompt("CORRECT!!!");
-                    i--;
-                }
-                else
-                {
-                    UIConsole.Prompt("Sorry, that's not quite right. We'll try that again in a moment.");
-                }
+                    string userGuess = UserInput.GetString("Answer: ");
+                    if (userGuess.ToUpper() == "Q")
+                    {
+                        quitGame = true;
+                        break;
+                    }
 
-                if (unansweredList.Count == 0)
-                {
-                    quitGame = true;
-                    break;
+                    UICard.DisplayFlashCard(unansweredList[i], Face.Back);
+
+                    if (userGuess == unansweredList[i].Answer)
+                    {
+                        correctList.Add(unansweredList[i]);
+                        unansweredList.Remove(unansweredList[i]);
+                        UIConsole.Prompt("CORRECT!!!");
+                        i--;
+                    }
+                    else
+                    {
+                        UIConsole.Prompt("Sorry, that's not quite right. We'll try that again in a moment.");
+                    }
+
+                    if (unansweredList.Count == 0)
+                    {
+                        quitGame = true;
+                        break;
+                    }
                 }
+                cycles++;
             }
-            cycles++;
+
+            SessionModel session = new()
+            {
+                Player = player,
+                Pack = packChoice,
+                PackSize = correctList.Count,
+                Date = DateTime.Now,
+                Cycles = cycles,
+                CardsShown = cardsShown,
+                Correct = correctList.Count
+            };
+
+            UISession.DisplayEndOfSession(new SessionDTO(session));
+            SessionGateway.InsertSession(session);
+            UIConsole.Prompt();
         }
-
-        SessionModel session = new()
+        catch (SqlException ex)
         {
-            Player = player,
-            Pack = packChoice,
-            PackSize = correctList.Count,
-            Date = DateTime.Now,
-            Cycles = cycles,
-            CardsShown = cardsShown,
-            Correct = correctList.Count
-        };
-
-        UISession.DisplayEndOfSession(new SessionDTO(session));
-        UIConsole.Prompt();
-        SessionGateway.InsertSession(session);
+            UIConsole.Prompt(ex.Message);
+        }
     }
 }

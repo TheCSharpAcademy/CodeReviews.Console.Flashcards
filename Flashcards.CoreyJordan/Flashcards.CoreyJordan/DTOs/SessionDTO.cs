@@ -8,7 +8,6 @@ internal class SessionDTO
     public string Pack { get; }
     public int PackSize { get; }
     public DateTime Date { get; }
-    public int Cycles { get; }
     public double Score { get; }
 
     public SessionDTO(SessionModel session, int number = 0)
@@ -17,7 +16,6 @@ internal class SessionDTO
         Pack = session.Pack;
         PackSize = session.PackSize;
         Date = session.Date;
-        Cycles = session.Cycles;
         Score = session.Score;
         Number = number;
     }
