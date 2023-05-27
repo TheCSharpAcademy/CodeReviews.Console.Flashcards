@@ -80,6 +80,7 @@ internal class SessionManager : Controller
                 CardsShown = cardsShown
             };
 
+            Console.WriteLine();
             UISession.DisplayEndOfSession(new SessionDTO(session));
             SessionGateway.InsertSession(session);
             UIConsole.Prompt();

@@ -1,6 +1,7 @@
 ﻿using Flashcards.CoreyJordan.Display;
 using Flashcards.CoreyJordan.DTOs;
 using FlashcardsLibrary.Data;
+using FlashcardsLibrary.Models;
 using System.Data.SqlClient;
 
 namespace Flashcards.CoreyJordan.Controller;
@@ -37,11 +38,15 @@ internal class ReportManager : Controller
                         ViewReports(userChoice);
                         break;
                     case "2":
-                        ViewReports(userChoice, UserInput.GetDate("Enter start date: "), UserInput.GetDate("Enter closing date: "));
+                        DateTime startRange = UserInput.GetDate("Enter start date: ");
+                        // Add 1 day to end range to include results in the input date
+                        DateTime endRange = UserInput.GetDate("Enter closing date: ").AddMinutes(1439);
+                        ViewReports(userChoice, startRange, endRange);
                         break;
                     case "3":
                         List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
-                        ViewReports(userChoice, UIPack.GetPackChoice(packs));
+                        PackModel pack = new(UIPack.GetPackChoice(packs));
+                        ViewReports(userChoice, pack);
                         break;
                     case "X":
                         exitReportManager = true;
@@ -91,7 +96,7 @@ internal class ReportManager : Controller
             _=> SessionDTO.GetSessionDtoList(SessionGateway.GetSessions(startRange, endRange, userChoice))
         };
 
-        UIConsole.TitleBar($"REPORT CARD: {userChoice.ToUpper()} FROM {startRange} TO {endRange}");
+        UIConsole.TitleBar($"REPORT CARD: {userChoice.ToUpper()} FROM {startRange:d} TO {endRange:d}");
         if (sessions.Count == 0)
         {
             UIConsole.Prompt("No reports found");
@@ -103,8 +108,25 @@ internal class ReportManager : Controller
         UIConsole.Prompt();
     }
 
-    private void ViewReports(string userChoice, string pack)
+    private void ViewReports(string userChoice, PackModel pack)
     {
+        List<SessionDTO> sessions = userChoice switch
+        {
+            "ALL" => SessionDTO.GetSessionDtoList(SessionGateway.GetSessions(pack)),
+            _=> SessionDTO.GetSessionDtoList(SessionGateway.GetSessions(pack, userChoice))
+        };
 
+        UIConsole.TitleBar($"REPORT CARD: {userChoice.ToUpper()} FOR THE {pack.Name.ToUpper()} PACK");
+        switch (sessions.Count)
+        {
+            case 0:
+                UIConsole.Prompt("No reports found");
+                break;
+            default:
+                UISession.DisplaySessions(sessions);
+                UISession.DisplayReport(new ReportDto(sessions));
+                UIConsole.Prompt();
+                break;
+        }
     }
 }
