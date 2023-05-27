@@ -8,14 +8,11 @@ public class SessionModel
     public DateTime Date { get; set; }
     public int Cycles { get; set; }
     public int CardsShown { get; set; }
-    public int Correct { get; set; }
     public double Score
     {
         get
         {
-            double average = Correct / CardsShown * 100;
-            average -= 5 * Cycles;
-            return average;
+            return (double)PackSize / CardsShown * 100;
         }
     }
 }

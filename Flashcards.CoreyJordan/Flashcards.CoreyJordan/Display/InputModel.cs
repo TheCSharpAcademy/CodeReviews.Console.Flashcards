@@ -1,4 +1,6 @@
-﻿namespace Flashcards.CoreyJordan.Display;
+﻿using System.Globalization;
+
+namespace Flashcards.CoreyJordan.Display;
 internal class InputModel
 {
     public ConsoleUI UIConsole { get; set; } = new();
@@ -15,7 +17,21 @@ internal class InputModel
 
     internal DateTime GetDate(string prompt)
     {
-        throw new NotImplementedException();
+        DateTime date;
+
+        UIConsole.WriteCenter(prompt + " (mm/dd/yy): ");
+        string input = Console.ReadLine()!;
+
+        string format = "MM/dd/yy";
+        CultureInfo culture = new("en-US");
+        DateTimeStyles style = DateTimeStyles.None;
+        while (DateTime.TryParseExact(input, format, culture, style, out date) == false) 
+        {
+            UIConsole.PromptAndReset("Invalid date. Try again.");
+            UIConsole.WriteCenter(prompt + " (mm/dd/yy): ");
+            input = Console.ReadLine()!;
+        }
+        return date;
     }
 
     internal int GetInt(string prompt)

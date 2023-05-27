@@ -16,6 +16,7 @@ internal class SessionManager : Controller
         {
             UIConsole.TitleBar("NEW STUDY SESSION");
             string player = UserInput.GetString("Enter a user name for this session: ");
+            UsersGateway.CreateUser(player);
 
             List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
             string packChoice = UIPack.GetPackChoice(packs);
@@ -76,8 +77,7 @@ internal class SessionManager : Controller
                 PackSize = correctList.Count,
                 Date = DateTime.Now,
                 Cycles = cycles,
-                CardsShown = cardsShown,
-                Correct = correctList.Count
+                CardsShown = cardsShown
             };
 
             UISession.DisplayEndOfSession(new SessionDTO(session));

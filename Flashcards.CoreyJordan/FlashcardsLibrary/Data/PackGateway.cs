@@ -11,7 +11,8 @@ public class PackGateway : ConnManager
             connection.Open();
             SqlCommand insert = connection.CreateCommand();
             insert.CommandText = @"INSERT INTO dbo.decks (name)
-                                VALUES (@Name);";
+                                   VALUES (@Name);";
+
             insert.Parameters.AddWithValue("@Name", name);
             insert.ExecuteNonQuery();
         }
@@ -25,6 +26,7 @@ public class PackGateway : ConnManager
             connection.Open();
             SqlCommand getPacks = connection.CreateCommand();
             getPacks.CommandText = @"SELECT name FROM dbo.decks;";
+
             SqlDataReader reader = getPacks.ExecuteReader();
             while (reader.Read())
             {
@@ -45,8 +47,9 @@ public class PackGateway : ConnManager
             connection.Open();
             SqlCommand rename = connection.CreateCommand();
             rename.CommandText = @"UPDATE dbo.decks
-                                SET name = @NewName
-                                WHERE name = @Name;";
+                                   SET name = @NewName
+                                   WHERE name = @Name;";
+
             rename.Parameters.AddWithValue("@NewName", newName);
             rename.Parameters.AddWithValue("@Name", currentName);
             rowsUpdated = rename.ExecuteNonQuery();
@@ -62,12 +65,13 @@ public class PackGateway : ConnManager
             connection.Open();
             SqlCommand delete = connection.CreateCommand();
             delete.CommandText = @"DELETE FROM dbo.flashcards
-                                WHERE deck_id IN
-                                (SELECT id FROM dbo.decks
-                                WHERE name = @Name);
+                                   WHERE deck_id
+                                   IN (SELECT id FROM dbo.decks
+                                       WHERE name = @Name);
 
-                                DELETE FROM dbo.decks
-                                WHERE name = @Name;";
+                                   DELETE FROM dbo.decks
+                                   WHERE name = @Name;";
+
             delete.Parameters.AddWithValue("@Name", choiceName);
             rowsDeleted = delete.ExecuteNonQuery();
         }

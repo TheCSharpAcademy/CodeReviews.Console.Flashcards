@@ -10,44 +10,106 @@ public class SessionGateway : ConnManager
         {
             connection.Open();
             SqlCommand addSession = connection.CreateCommand();
-            addSession.CommandText = @"INSERT INTO dbo.study_session
-                                    (playerName, pack_id, pack_size, date, cycles)
-                                    VALUES (@PlayerName,
-                                    (SELECT id FROM dbo.decks
-                                    WHERE name = @Name),
-                                    @PackSize, @Date, @Cycles);";
+            addSession.CommandText = @"INSERT INTO dbo.study_session (user_id,
+                                                                      pack_id,
+                                                                      pack_size,
+                                                                      date,
+                                                                      cards_shown,
+                                                                      score)
+                                       VALUES ((SELECT id FROM dbo.users
+                                                WHERE name = @PlayerName),
+                                               (SELECT id FROM dbo.decks
+                                                WHERE name = @Name),
+                                               @PackSize,
+                                               @Date,
+                                               @Shown,
+                                               @Score);";
+
             addSession.Parameters.AddWithValue("@PlayerName", sessionModel.Player);
             addSession.Parameters.AddWithValue("@Name", sessionModel.Pack);
             addSession.Parameters.AddWithValue("@PackSize", sessionModel.PackSize);
             addSession.Parameters.AddWithValue("@Date", sessionModel.Date);
-            addSession.Parameters.AddWithValue("@Cycles", sessionModel.Cycles);
+            addSession.Parameters.AddWithValue("@Shown", sessionModel.CardsShown);
+            addSession.Parameters.AddWithValue("@Score", sessionModel.Score);
             addSession.ExecuteNonQuery();
         }
     }
 
-    public static List<string> GetAllUsers()
+    public static List<SessionModel> GetSessions()
     {
-        List<string> users = new();
+        List<SessionModel> sessions = new();
         using (SqlConnection connection = new(FlashCardDb))
         {
             connection.Open();
-            SqlCommand getAll = connection.CreateCommand();
-            getAll.CommandText = @"SELECT playerName FROM dbo.study_session;";
-            SqlDataReader reader = getAll.ExecuteReader();
+            SqlCommand getAllSessions = connection.CreateCommand();
+            getAllSessions.CommandText = @"SELECT study_session.id,
+                                                  users.name,
+                                                  decks.name,
+                                                  study_session.pack_size,
+                                                  study_session.date,
+                                                  study_session.cards_shown
+                                           FROM dbo.study_session
+                                           INNER JOIN users ON study_session.user_id = users.id
+                                           INNER JOIN decks ON study_session.pack_id = decks.id";
+
+            SqlDataReader reader = getAllSessions.ExecuteReader();
             while (reader.Read())
             {
-                users.Add(reader.GetString(0));
+                sessions.Add(new SessionModel
+                {
+                    Id = reader.GetInt32(0),
+                    Player = reader.GetString(1),
+                    Pack = reader.GetString(2),
+                    PackSize = reader.GetInt32(3),
+                    Date = reader.GetDateTime(4),
+                    CardsShown = reader.GetInt32(5)
+                });
             }
         }
-        return users;
+        return sessions;
     }
 
-    public static List<SessionModel> GetAllSessions()
+    public static List<SessionModel> GetSessions(string name)
+    {
+        List<SessionModel> sessions = new();
+        using (SqlConnection connection = new(FlashCardDb))
+        {
+            connection.Open();
+            SqlCommand getAllSessions = connection.CreateCommand();
+            getAllSessions.CommandText = @"SELECT study_session.id,
+                                                  decks.name,
+                                                  study_session.pack_size,
+                                                  study_session.date,
+                                                  study_session.cards_shown
+                                           FROM dbo.study_session
+                                           INNER JOIN users ON study_session.user_id = users.id
+                                           INNER JOIN decks ON study_session.pack_id = decks.id
+                                           WHERE users.name = @Name;";
+
+            getAllSessions.Parameters.AddWithValue("@Name", name);
+            SqlDataReader reader = getAllSessions.ExecuteReader();
+            while (reader.Read())
+            {
+                sessions.Add(new SessionModel
+                {
+                    Id = reader.GetInt32(0),
+                    Player = name,
+                    Pack = reader.GetString(1),
+                    PackSize = reader.GetInt32(2),
+                    Date = reader.GetDateTime(3),
+                    CardsShown = reader.GetInt32(4)
+                });
+            }
+        }
+        return sessions;
+    }
+
+    public static List<SessionModel> GetSessions(DateTime startRange, DateTime endRange)
     {
         throw new NotImplementedException();
     }
 
-    public static List<SessionModel> GetSessionsByUser(string userChoice)
+    public static List<SessionModel> GetSessions(DateTime startRange, DateTime endRange, string userChoice)
     {
         throw new NotImplementedException();
     }

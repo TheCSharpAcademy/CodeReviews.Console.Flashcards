@@ -10,7 +10,7 @@ internal class SessionDTO
     public DateTime Date { get; }
     public double Score { get; }
 
-    public SessionDTO(SessionModel session, int number = 0)
+    public SessionDTO(SessionModel session, int number = 1)
     {
         Player = session.Player;
         Pack = session.Pack;

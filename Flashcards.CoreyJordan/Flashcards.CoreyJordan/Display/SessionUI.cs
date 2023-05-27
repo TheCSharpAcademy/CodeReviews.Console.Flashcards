@@ -20,6 +20,7 @@ internal class SessionUI
         };
         ConsoleTableBuilder
             .From(sessions)
+            .WithColumn("", "USER", "PACK", "CARDS", "DATE", "SCORE")
             .WithFormat(ConsoleTableBuilderFormat.MarkDown)
             .ExportAndWriteLine(TableAligntment.Center); 
     }
@@ -42,6 +43,23 @@ internal class SessionUI
 
     internal void DisplaySessions(List<SessionDTO> sessions)
     {
-        throw new NotImplementedException();
+        ConsoleTableBuilder
+            .From(sessions)
+            .WithFormat(ConsoleTableBuilderFormat.MarkDown)
+            .ExportAndWriteLine(TableAligntment.Center);
+    }
+
+    internal void DisplayReport(ReportDto report)
+    {
+        List<ReportDto> reports = new()
+        {
+            report
+        };
+
+        Console.WriteLine();
+        ConsoleTableBuilder
+            .From(reports)
+            .WithFormat(ConsoleTableBuilderFormat.MarkDown)
+            .ExportAndWriteLine(TableAligntment.Center);
     }
 }
