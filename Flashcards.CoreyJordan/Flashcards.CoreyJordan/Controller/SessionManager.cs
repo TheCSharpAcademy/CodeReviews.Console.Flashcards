@@ -21,6 +21,12 @@ internal class SessionManager : Controller
             List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
             string packChoice = UIPack.GetPackChoice(packs);
 
+            while (CardGateway.GetPackContents(packChoice).Count == 0)
+            {
+                UIConsole.PromptAndReset("Pack contains no flashcards. Select another.");
+                packChoice = UIPack.GetPackChoice(packs);
+            }
+
             List<CardFaceDTO> correctList = new();
             List<CardFaceDTO> unansweredList = CardFaceDTO.GetCardsDTO(CardGateway.GetPackContents(packChoice));
 

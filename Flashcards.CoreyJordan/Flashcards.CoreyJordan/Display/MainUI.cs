@@ -21,7 +21,7 @@ internal class MainUI
         "Create packs of flashcards and use them to",
         "carry out study sessions.",
         "Flash Card Study will track and report each",
-        "session and generate reports to track prtogress.",
+        "session and generate reports to track progress.",
         "",
         "Enjoy!"
     };
