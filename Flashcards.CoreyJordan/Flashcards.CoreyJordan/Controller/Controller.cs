@@ -11,17 +11,17 @@ internal abstract class Controller
     internal InputModel UserInput { get; } = new();
     internal CardUI UICard { get; } = new();
 
-    internal List<PackNamesDTO> DisplayPacksList(List<PackModel> packs)
+    internal List<PackNamesDto> DisplayPacksList(List<PackModel> packs)
     {
-        List<PackNamesDTO> allPacks = PackNamesDTO.GetPacksDTO(packs);
+        List<PackNamesDto> allPacks = PackNamesDto.GetPacksDto(packs);
         UIPack.DisplayPacks(allPacks);
 
         return allPacks;
     }
 
-    internal List<CardFaceDTO> DisplayCardList(List<CardModel> cards)
+    internal List<CardFaceDto> DisplayCardList(List<CardModel> cards)
     {
-        List<CardFaceDTO> allCards = CardFaceDTO.GetCardsDTO(cards);
+        List<CardFaceDto> allCards = CardFaceDto.GetCardsDto(cards);
         UICard.DisplayCards(allCards);
 
         return allCards;

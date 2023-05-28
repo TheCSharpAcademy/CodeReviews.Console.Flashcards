@@ -23,7 +23,7 @@ internal class SessionManager : Controller
             }
             UsersGateway.CreateUser(player);
 
-            List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
+            List<PackNamesDto> packs = DisplayPacksList(PackGateway.GetPacks());
             string packChoice = UIPack.GetPackChoice(packs);
 
             while (CardGateway.GetPackContents(packChoice).Count == 0)
@@ -32,8 +32,8 @@ internal class SessionManager : Controller
                 packChoice = UIPack.GetPackChoice(packs);
             }
 
-            List<CardFaceDTO> correctList = new();
-            List<CardFaceDTO> unansweredList = CardFaceDTO.GetCardsDTO(CardGateway.GetPackContents(packChoice));
+            List<CardFaceDto> correctList = new();
+            List<CardFaceDto> unansweredList = CardFaceDto.GetCardsDto(CardGateway.GetPackContents(packChoice));
 
             int cardsShown = 0;
             int cycles = 0;
@@ -92,7 +92,7 @@ internal class SessionManager : Controller
             };
 
             Console.WriteLine();
-            UISession.DisplayEndOfSession(new SessionDTO(session));
+            UISession.DisplayEndOfSession(new SessionDto(session));
             SessionGateway.InsertSession(session);
             UIConsole.Prompt();
         }

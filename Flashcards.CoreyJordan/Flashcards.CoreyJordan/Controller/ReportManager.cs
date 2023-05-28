@@ -43,7 +43,7 @@ internal class ReportManager : Controller
                         ViewReports(userChoice, startRange, endRange);
                         break;
                     case "3":
-                        List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
+                        List<PackNamesDto> packs = DisplayPacksList(PackGateway.GetPacks());
                         PackModel pack = new(UIPack.GetPackChoice(packs));
                         ViewReports(userChoice, pack);
                         break;
@@ -53,7 +53,7 @@ internal class ReportManager : Controller
                     default:
                         UIConsole.Prompt("Invalid selection. Please try again.");
                         break;
-                };
+                }
             }
         }
         catch (Exception ex)
@@ -64,14 +64,14 @@ internal class ReportManager : Controller
 
     private void ViewReports(string userChoice)
     {
-        List<SessionDTO> sessions;
+        List<SessionDto> sessions;
         if (userChoice.ToUpper() == "ALL")
         {
-            sessions = SessionDTO.GetSessionDtoList(SessionGateway.GetSessions());
+            sessions = SessionDto.GetSessionDtoList(SessionGateway.GetSessions());
         }
         else
         {
-            sessions = SessionDTO.GetSessionDtoList(SessionGateway.GetSessions(userChoice));
+            sessions = SessionDto.GetSessionDtoList(SessionGateway.GetSessions(userChoice));
         }
 
         UIConsole.TitleBar($"REPORT CARD: {userChoice.ToUpper()}");
@@ -89,10 +89,10 @@ internal class ReportManager : Controller
 
     private void ViewReports(string userChoice, DateTime startRange, DateTime endRange)
     {
-        List<SessionDTO> sessions = userChoice switch 
+        List<SessionDto> sessions = userChoice switch 
         {
-            "ALL" => SessionDTO.GetSessionDtoList(SessionGateway.GetSessions(startRange, endRange)),
-            _=> SessionDTO.GetSessionDtoList(SessionGateway.GetSessions(startRange, endRange, userChoice))
+            "ALL" => SessionDto.GetSessionDtoList(SessionGateway.GetSessions(startRange, endRange)),
+            _=> SessionDto.GetSessionDtoList(SessionGateway.GetSessions(startRange, endRange, userChoice))
         };
 
         UIConsole.TitleBar($"REPORT CARD: {userChoice.ToUpper()} FROM {startRange:d} TO {endRange:d}");
@@ -109,10 +109,10 @@ internal class ReportManager : Controller
 
     private void ViewReports(string userChoice, PackModel pack)
     {
-        List<SessionDTO> sessions = userChoice switch
+        List<SessionDto> sessions = userChoice switch
         {
-            "ALL" => SessionDTO.GetSessionDtoList(SessionGateway.GetSessions(pack)),
-            _=> SessionDTO.GetSessionDtoList(SessionGateway.GetSessions(pack, userChoice))
+            "ALL" => SessionDto.GetSessionDtoList(SessionGateway.GetSessions(pack)),
+            _=> SessionDto.GetSessionDtoList(SessionGateway.GetSessions(pack, userChoice))
         };
 
         UIConsole.TitleBar($"REPORT CARD: {userChoice.ToUpper()} FOR THE {pack.Name.ToUpper()} PACK");

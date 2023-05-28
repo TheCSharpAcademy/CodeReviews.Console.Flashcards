@@ -44,7 +44,7 @@ internal class PackManager : Controller
 
     private void DeletePack()
     {
-        List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
+        List<PackNamesDto> packs = DisplayPacksList(PackGateway.GetPacks());
         string packChoice = UIPack.GetPackChoice(packs);
         if (UserInput.Confirm("Are you sure you wish to delete this pack? ") == false)
         {
@@ -65,7 +65,7 @@ internal class PackManager : Controller
 
     private void RenamePack()
     {
-        List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
+        List<PackNamesDto> packs = DisplayPacksList(PackGateway.GetPacks());
         string packChoice = UIPack.GetPackChoice(packs);
         string newName = "Default";
         bool isUnique = false;

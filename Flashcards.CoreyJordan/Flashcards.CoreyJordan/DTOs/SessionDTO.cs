@@ -1,7 +1,7 @@
 ﻿using FlashcardsLibrary.Models;
 
 namespace Flashcards.CoreyJordan.DTOs;
-internal class SessionDTO
+internal class SessionDto
 {
     public int Number { get; private set; }
     public string Player { get; }
@@ -10,7 +10,7 @@ internal class SessionDTO
     public DateTime Date { get; }
     public double Score { get; }
 
-    public SessionDTO(SessionModel session, int number = 1)
+    public SessionDto(SessionModel session, int number = 1)
     {
         Player = session.Player;
         Pack = session.Pack;
@@ -20,12 +20,12 @@ internal class SessionDTO
         Number = number;
     }
 
-    public static List<SessionDTO> GetSessionDtoList(List<SessionModel> sessions)
+    public static List<SessionDto> GetSessionDtoList(List<SessionModel> sessions)
     {
-        List<SessionDTO> sessionData = new();
+        List<SessionDto> sessionData = new();
         for (int i = 0; i < sessions.Count; i++)
         {
-            sessionData.Add(new SessionDTO(sessions[i], i + 1));
+            sessionData.Add(new SessionDto(sessions[i], i + 1));
         }
         return sessionData;
     }

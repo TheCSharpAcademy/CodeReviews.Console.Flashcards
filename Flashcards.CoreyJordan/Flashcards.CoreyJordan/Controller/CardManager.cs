@@ -12,7 +12,7 @@ internal class CardManager : Controller
         while (exitCardManager == false)
         {
             UIConsole.TitleBar("CARD MANAGER");
-            UICard.Menu(UICard.CardManagerMenu);
+            UICard.DisplayMenu(UICard.CardManagerMenu);
 
             try
             {
@@ -23,12 +23,11 @@ internal class CardManager : Controller
                         NewCard();
                         break;
                     case "2":
-                        ;
                         DeleteCard();
                         break;
                     case "3":
                         List<CardModel> cards = CardGateway.GetAllCards();
-                        List<CardDTO> list = CardDTO.GetListDTO(cards);
+                        List<CardDto> list = CardDto.GetListDto(cards);
                         UICard.DisplayCards(list);
                         UIConsole.Prompt();
                         break;
@@ -49,16 +48,16 @@ internal class CardManager : Controller
 
     internal void EditPack()
     {
-        List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
+        List<PackNamesDto> packs = DisplayPacksList(PackGateway.GetPacks());
         string packChoice = UIPack.GetPackChoice(packs);
 
         bool exitPackEditor = false;
         while (exitPackEditor == false)
         {
             List<CardModel> cards = CardGateway.GetPackContents(packChoice);
-            List<CardFaceDTO> cardList = CardFaceDTO.GetCardsDTO(cards);
+            List<CardFaceDto> cardList = CardFaceDto.GetCardsDto(cards);
             UICard.DisplayCards(cardList);
-            UICard.Menu(UICard.EditListMenu);
+            UICard.DisplayMenu(UICard.EditListMenu);
 
             repeat:
             switch (UserInput.GetString("Select an option: ").ToUpper())
@@ -82,10 +81,10 @@ internal class CardManager : Controller
 
     private void DeleteCard()
     {
-        List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
+        List<PackNamesDto> packs = DisplayPacksList(PackGateway.GetPacks());
         string packChoice = UIPack.GetPackChoice(packs);
 
-        List<CardFaceDTO> cards = DisplayCardList(CardGateway.GetPackContents(packChoice));
+        List<CardFaceDto> cards = DisplayCardList(CardGateway.GetPackContents(packChoice));
         string cardChoice = UICard.GetCardChoice(cards);
 
         DeleteCard(cardChoice);
@@ -106,7 +105,7 @@ internal class CardManager : Controller
 
     private void NewCard()
     {
-        List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
+        List<PackNamesDto> packs = DisplayPacksList(PackGateway.GetPacks());
         string packChoice = UIPack.GetPackChoice(packs);
 
         NewCard(packChoice);

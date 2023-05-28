@@ -21,7 +21,7 @@ internal class CardUI
     private ConsoleUI UIConsole { get; set; } = new();
     private InputModel UserInput { get; set; } = new();
 
-    internal void DisplayCards(List<CardFaceDTO> cards)
+    internal void DisplayCards(List<CardFaceDto> cards)
     {
         UIConsole.TitleBar("CARDS");
 
@@ -33,7 +33,7 @@ internal class CardUI
         Console.WriteLine();
     }
 
-    internal void DisplayCards(List<CardDTO> cards)
+    internal void DisplayCards(List<CardDto> cards)
     {
         UIConsole.TitleBar("CARDS");
 
@@ -45,7 +45,7 @@ internal class CardUI
         Console.WriteLine();
     }
 
-    internal void Menu(List<MenuModel> menu)
+    internal void DisplayMenu(List<MenuModel> menu)
     {
         ConsoleTableBuilder
             .From(menu)
@@ -55,7 +55,7 @@ internal class CardUI
         Console.WriteLine();
     }
 
-    internal string GetCardChoice(List<CardFaceDTO> cards)
+    internal string GetCardChoice(List<CardFaceDto> cards)
     {
         int index = 0;
         bool inRange = false;
@@ -72,7 +72,7 @@ internal class CardUI
             }
         }
 
-        List<CardFaceDTO> questions = cards.Where(x => x.CardNumber == index).ToList();
+        List<CardFaceDto> questions = cards.Where(x => x.CardNumber == index).ToList();
         return questions[0].Question;
     }
 
@@ -82,7 +82,7 @@ internal class CardUI
         return UserInput.GetString("Enter a question for this card or 'cancel': ");
     }
 
-    internal void DisplayFlashCard(CardFaceDTO cardFaceDTO, Face face)
+    internal void DisplayFlashCard(CardFaceDto cardFaceDTO, Face face)
     {
         int cardWidth = 28;
         string text = face switch

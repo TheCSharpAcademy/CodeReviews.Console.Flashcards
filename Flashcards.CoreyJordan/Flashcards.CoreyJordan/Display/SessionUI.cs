@@ -12,9 +12,9 @@ internal class SessionUI
         new MenuModel("X", "Exit Report Card")
     };
 
-    internal void DisplayEndOfSession(SessionDTO session)
+    internal void DisplayEndOfSession(SessionDto session)
     {
-        List<SessionDTO> sessions = new()
+        List<SessionDto> sessions = new()
         {
             session
         };
@@ -41,7 +41,7 @@ internal class SessionUI
             .ExportAndWriteLine(TableAligntment.Center);
     }
 
-    internal void DisplaySessions(List<SessionDTO> sessions)
+    internal void DisplaySessions(List<SessionDto> sessions)
     {
         ConsoleTableBuilder
             .From(sessions)

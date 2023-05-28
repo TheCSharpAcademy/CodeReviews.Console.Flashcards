@@ -56,7 +56,7 @@ internal class PackUI
             .ExportAndWriteLine(TableAligntment.Center);
     }
 
-    internal void DisplayPacks(List<PackNamesDTO> packs)
+    internal void DisplayPacks(List<PackNamesDto> packs)
     {
         UIConsole.TitleBar("PACK LIST");
 
@@ -68,7 +68,7 @@ internal class PackUI
         Console.WriteLine();
     }
 
-    internal string GetPackChoice(List<PackNamesDTO> packs)
+    internal string GetPackChoice(List<PackNamesDto> packs)
     {
         int index = 0;
         bool inRange = false;
@@ -85,7 +85,7 @@ internal class PackUI
             }
         }
 
-        List<PackNamesDTO> names = packs.Where(x => x.Number == index).ToList();
+        List<PackNamesDto> names = packs.Where(x => x.Number == index).ToList();
         return names[0].Name;
     }
 }
