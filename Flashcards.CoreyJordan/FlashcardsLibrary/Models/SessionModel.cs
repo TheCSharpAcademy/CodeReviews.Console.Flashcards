@@ -2,8 +2,8 @@
 public class SessionModel
 {
     public int Id { get; set; }
-    public string Player { get; set; }
-    public string Pack { get; set; }
+    public string Player { get; set; } = "Default";
+    public string Pack { get; set; } = "Default";
     public int PackSize { get; set; }
     public DateTime Date { get; set; }
     public int Cycles { get; set; }

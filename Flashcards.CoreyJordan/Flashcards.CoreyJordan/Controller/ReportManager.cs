@@ -2,7 +2,6 @@
 using Flashcards.CoreyJordan.DTOs;
 using FlashcardsLibrary.Data;
 using FlashcardsLibrary.Models;
-using System.Data.SqlClient;
 
 namespace Flashcards.CoreyJordan.Controller;
 internal class ReportManager : Controller
