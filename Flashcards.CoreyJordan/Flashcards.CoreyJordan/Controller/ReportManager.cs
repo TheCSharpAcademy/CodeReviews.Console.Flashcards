@@ -18,12 +18,12 @@ internal class ReportManager : Controller
             List<string> users = UsersGateway.GetAllUsers();
             UISession.DisplayUsers(users);
             users.Add("ALL");
-            string userChoice = UserInput.GetString("Select a user or type ALL: ");
+            string userChoice = UserInput.GetString("Select a user, type ALL, or 'cancel': ");
             
             while (users.Any(x => x == userChoice) == false)
             {
                 UIConsole.PromptAndReset("That user does not exist. Try again.");
-                userChoice = UserInput.GetString("Select a user or type ALL: ");
+                userChoice = UserInput.GetString("Select a user, type ALL, or 'cancel': ");
             }
 
             bool exitReportManager = false;
@@ -38,9 +38,9 @@ internal class ReportManager : Controller
                         ViewReports(userChoice);
                         break;
                     case "2":
-                        DateTime startRange = UserInput.GetDate("Enter start date: ");
+                        DateTime startRange = UserInput.GetDate("Enter start date or type 'cancel': ");
                         // Add 1 day to end range to include results in the input date
-                        DateTime endRange = UserInput.GetDate("Enter closing date: ").AddMinutes(1439);
+                        DateTime endRange = UserInput.GetDate("Enter closing date or type 'cancel': ").AddMinutes(1439);
                         ViewReports(userChoice, startRange, endRange);
                         break;
                     case "3":
@@ -57,7 +57,7 @@ internal class ReportManager : Controller
                 };
             }
         }
-        catch (SqlException ex)
+        catch (Exception ex)
         {
             UIConsole.Prompt(ex.Message);
         }

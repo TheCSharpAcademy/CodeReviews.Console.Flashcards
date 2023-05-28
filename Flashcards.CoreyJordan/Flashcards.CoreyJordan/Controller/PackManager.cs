@@ -1,7 +1,6 @@
 ﻿using Flashcards.CoreyJordan.DTOs;
 using FlashcardsLibrary.Data;
 using FlashcardsLibrary.Models;
-using System.Data.SqlClient;
 
 namespace Flashcards.CoreyJordan.Controller;
 internal class PackManager : Controller
@@ -36,7 +35,7 @@ internal class PackManager : Controller
                         break;
                 }
             }
-            catch (SqlException ex)
+            catch (Exception ex)
             {
                 UIConsole.Prompt(ex.Message);
             }

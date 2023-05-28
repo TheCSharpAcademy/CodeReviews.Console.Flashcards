@@ -23,7 +23,7 @@ internal class PackUI
         while (notValid)
         {
             UIConsole.TitleBar(title);
-            name = UserInput.GetString("Enter a name for this deck: ");
+            name = UserInput.GetString("Enter a name for this deck or type 'cancel': ");
 
             if (string.IsNullOrEmpty(name))
             {
@@ -75,7 +75,7 @@ internal class PackUI
 
         while (inRange == false)
         {
-            index = UserInput.GetInt("Select a pack number: ");
+            index = UserInput.GetInt("Select a pack number or type 'cancel': ");
             inRange = packs.Any(x => x.Number == index);
 
             if (inRange == false)

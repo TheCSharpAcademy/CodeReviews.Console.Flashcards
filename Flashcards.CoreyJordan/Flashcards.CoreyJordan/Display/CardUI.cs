@@ -62,7 +62,7 @@ internal class CardUI
 
         while (inRange == false)
         {
-            index = UserInput.GetInt("Select a pack number: ");
+            index = UserInput.GetInt("Select a pack number or type 'cancel': ");
             inRange = cards.Any(x => x.CardNumber == index);
 
             if (inRange == false)
@@ -79,7 +79,7 @@ internal class CardUI
     internal string GetCardFace(string title)
     {
         UIConsole.TitleBar(title);
-        return UserInput.GetString("Enter a question for this card: ");
+        return UserInput.GetString("Enter a question for this card or 'cancel': ");
     }
 
     internal void DisplayFlashCard(CardFaceDTO cardFaceDTO, Face face)

@@ -14,27 +14,35 @@ internal class CardManager : Controller
             UIConsole.TitleBar("CARD MANAGER");
             UICard.Menu(UICard.CardManagerMenu);
 
-            repeat:
-            switch (UserInput.GetString("Select an option: ").ToUpper())
+            try
             {
-                case "1":
-                    NewCard();
-                    break;
-                case "2":;
-                    DeleteCard();
-                    break;
-                case "3":
-                    List<CardModel> cards = CardGateway.GetAllCards();
-                    List<CardDTO> list = CardDTO.GetListDTO(cards);
-                    UICard.DisplayCards(list);
-                    UIConsole.Prompt();
-                    break;
-                case "X":
-                    exitCardManager = true;
-                    break;
-                default:
-                    UIConsole.PromptAndReset("Invalid selection. Try again.");
-                    goto repeat;
+            repeat:
+                switch (UserInput.GetString("Select an option: ").ToUpper())
+                {
+                    case "1":
+                        NewCard();
+                        break;
+                    case "2":
+                        ;
+                        DeleteCard();
+                        break;
+                    case "3":
+                        List<CardModel> cards = CardGateway.GetAllCards();
+                        List<CardDTO> list = CardDTO.GetListDTO(cards);
+                        UICard.DisplayCards(list);
+                        UIConsole.Prompt();
+                        break;
+                    case "X":
+                        exitCardManager = true;
+                        break;
+                    default:
+                        UIConsole.PromptAndReset("Invalid selection. Try again.");
+                        goto repeat;
+                }
+            }
+            catch (Exception ex) 
+            {
+                UIConsole.Prompt(ex.Message);
             }
         }
     }

@@ -15,7 +15,8 @@ internal class SessionManager : Controller
         try
         {
             UIConsole.TitleBar("NEW STUDY SESSION");
-            string player = UserInput.GetString("Enter a user name for this session: ");
+
+            string player = UserInput.GetString("Enter a user name for this session or 'cancel': ");
             UsersGateway.CreateUser(player);
 
             List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
@@ -91,7 +92,7 @@ internal class SessionManager : Controller
             SessionGateway.InsertSession(session);
             UIConsole.Prompt();
         }
-        catch (SqlException ex)
+        catch (Exception ex)
         {
             UIConsole.Prompt(ex.Message);
         }

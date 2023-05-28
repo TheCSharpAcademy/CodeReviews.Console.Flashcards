@@ -22,6 +22,8 @@ internal class InputModel
         UIConsole.WriteCenter(prompt + " (mm/dd/yy): ");
         string input = Console.ReadLine()!;
 
+        CheckCancelOp(input);
+
         string format = "MM/dd/yy";
         CultureInfo culture = new("en-US");
         DateTimeStyles style = DateTimeStyles.None;
@@ -30,6 +32,8 @@ internal class InputModel
             UIConsole.PromptAndReset("Invalid date. Try again.");
             UIConsole.WriteCenter(prompt + " (mm/dd/yy): ");
             input = Console.ReadLine()!;
+
+            CheckCancelOp(input);
         }
         return date;
     }
@@ -41,19 +45,35 @@ internal class InputModel
         UIConsole.WriteCenter(prompt);
         string input = Console.ReadLine()!;
 
+        CheckCancelOp(input);
+
         while (int.TryParse(input, out output) == false)
         {
             UIConsole.PromptAndReset("Must be an integer. Try again.");
-            
+
             UIConsole.WriteCenter(prompt);
             input = Console.ReadLine()!;
+
+            CheckCancelOp(input);
         }
         return output;
+    }
+
+    private static void CheckCancelOp(string input)
+    {
+        if (input.ToUpper() == "CANCEL")
+        {
+            throw new Exception("Operation canceled");
+        }
     }
 
     internal string GetString(string prompt)
     {
         UIConsole.WriteCenter(prompt);
-        return Console.ReadLine()!;
+        string input = Console.ReadLine()!;
+
+        CheckCancelOp(input);
+
+        return input;
     }
 }
