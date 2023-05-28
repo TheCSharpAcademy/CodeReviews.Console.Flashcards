@@ -17,6 +17,11 @@ internal class SessionManager : Controller
             UIConsole.TitleBar("NEW STUDY SESSION");
 
             string player = UserInput.GetString("Enter a user name for this session or 'cancel': ");
+            while (player.Length == 0)
+            {
+                UIConsole.PromptAndReset("Name cannot be left blank");
+                player = UserInput.GetString("Enter a user name for this session or 'cancel': ");
+            }
             UsersGateway.CreateUser(player);
 
             List<PackNamesDTO> packs = DisplayPacksList(PackGateway.GetPacks());
