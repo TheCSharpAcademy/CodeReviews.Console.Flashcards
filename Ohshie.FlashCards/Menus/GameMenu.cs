@@ -2,7 +2,7 @@ namespace Ohshie.FlashCards.Menus;
 
 public class GameMenu : MenuBase
 {
-    protected override string[] MenuItems { get; } = new[]
+    protected override string[] MenuItems { get; } =
     {
         "Placeholder"
     };

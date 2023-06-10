@@ -7,7 +7,7 @@ public abstract class MenuBase
     public void Initialize()
     {
         bool choosenExit = false;
-        while (choosenExit)
+        while (!choosenExit)
         {
             choosenExit = Menu();
         }
