@@ -27,14 +27,14 @@ public class DbBase
         ["createStackTable"] = "IF OBJECT_ID('dbo.Stacks', 'U') IS NULL " +
                                "CREATE TABLE Stacks " +
                                "(" +
-                                   "Id INT PRIMARY KEY, " +
+                                   "Id INT PRIMARY KEY NOT NULL IDENTITY(1,1), " +
                                    "Name NVARCHAR(50) NOT NULL, " +
                                    "Description NVARCHAR(200)" +
                                ");",
         ["createFlashcardsTable"] = "IF OBJECT_ID('dbo.FlashCards', 'U') IS NULL " +
                                     "CREATE TABLE FlashCards " +
                                     "(" +
-                                        "Id INT PRIMARY KEY, " +
+                                        "Id INT PRIMARY KEY NOT NULL IDENTITY(1,1), " +
                                         "Name NVARCHAR(100) NOT NULL, " +
                                         "Content NVARCHAR(Max)," +
                                         "StackId INT NOT NULL," +

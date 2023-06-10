@@ -2,11 +2,11 @@ namespace Ohshie.FlashCards.Menus;
 
 public class Main : MenuBase
 {
-    protected override string[] MenuItems { get; } = new[]
+    protected override string[] MenuItems { get; } =
     {
         "Solve!",
         "Show previous studies",
-        "Edit flashcards",
+        "Edit decks and flashcards",
         "Exit"
     };
 
@@ -31,7 +31,7 @@ public class Main : MenuBase
         {
             case "Solve!":
             {
-                GameMenu gameMenu = new GameMenu();
+                GameMenu gameMenu = new();
                 gameMenu.Initialize();
                 break;
             }
@@ -39,8 +39,10 @@ public class Main : MenuBase
             {
                 break;
             }
-            case "Edit flashcards":
+            case "Edit decks and flashcards":
             {
+                ContentSettingsMenu contentSettingsMenu = new();
+                contentSettingsMenu.Initialize();
                 break;
             }
             case "Exit":

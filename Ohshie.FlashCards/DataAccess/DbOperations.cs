@@ -1,5 +1,7 @@
 using System.Data.SqlClient;
+using Ohshie.FlashCards.CardsManager;
 using Ohshie.FlashCards.DataAccess;
+using Ohshie.FlashCards.StacksManager;
 
 public class DbOperations : DbBase
 {
@@ -22,7 +24,7 @@ public class DbOperations : DbBase
         }
     }
 
-    public List<Stack> FetchAllStacks()
+    public List<Deck> FetchAllStacks()
     {
         using (var connection = new SqlConnection(ConnectionString))
         {
@@ -40,12 +42,12 @@ public class DbOperations : DbBase
         }
     }
     
-    private List<Stack> ReadFromDbToStacksList(SqlDataReader reader)
+    private List<Deck> ReadFromDbToStacksList(SqlDataReader reader)
     {
-        List<Stack> stacksList = new();
+        List<Deck> stacksList = new();
         while (reader.Read())
         {
-            stacksList.Add(new Stack()
+            stacksList.Add(new Deck()
             {
                 Id = int.Parse(reader.GetString(0)),
                 Name = reader.GetString(1),
@@ -53,5 +55,38 @@ public class DbOperations : DbBase
             });
         }
         return stacksList;
+    }
+
+    public void CreateNewDeck(Deck newDeck)
+    {
+        using (var connection = new SqlConnection(ConnectionString))
+        {
+            connection.Open();
+
+            var tableCommand = connection.CreateCommand();
+
+            tableCommand.CommandText = "INSERT INTO Stacks (Name, Description) " +
+                                       "OUTPUT INSERTED.Id " +
+                                       $"VALUES ('{newDeck.Name}', '{newDeck.Description}')";
+
+            newDeck.Id = Convert.ToInt32(tableCommand.ExecuteScalar());
+            
+            connection.Close();
+        }
+    }
+
+    public void CreateNewFlashcard(FlashCard newCard)
+    {
+        using (var connection = new SqlConnection(ConnectionString))
+        {
+            connection.Open();
+
+            var tableCommand = connection.CreateCommand();
+            
+            tableCommand.CommandText = "INSERT INTO FlashCards (Name, Content, StackId) " +
+                                       $"VALUES ('{newCard.Name}', '{newCard.Content}', {newCard.DeckId})";
+
+            tableCommand.ExecuteNonQuery();
+        }
     }
 }
