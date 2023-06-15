@@ -40,11 +40,11 @@ public class DbBase
                                         "StackId INT NOT NULL," +
                                         "FOREIGN KEY (StackId) REFERENCES Stacks(Id)" +
                                     ");",
-        ["fetchAllStacks"] = "SELECT * FROM Stacks " +
-                             "INNER JOIN FlashCards " +
-                             "ON Stacks.Id = FlashCards.StackId",
+        ["fetchAllDecks"] = "SELECT * FROM Stacks " +
+                            "INNER JOIN FlashCards FC ON Stacks.Id = FC.StackId; ",
         
-        ["fetchOneStackById"] = "SELECT * FROM Stacks " +
-                                "WHERE ID = "
+        ["fetchOneDecksById"] = "SELECT * FROM Stacks " +
+                                "INNER JOIN FlashCards ON (Stacks.Id = FlashCards.StackId) " +
+                                "WHERE Stacks.Id = "
     };
 }

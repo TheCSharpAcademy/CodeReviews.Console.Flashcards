@@ -29,6 +29,7 @@ public class ContentSettingsMenu : MenuBase
             case "Edit current Deck":
             {
                 EditDecksMenu editDecksMenu = new();
+                editDecksMenu.Initialize();
                 break;
             }
             case "Go back":
