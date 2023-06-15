@@ -10,4 +10,19 @@ public class DecksService
         
         _dbOperations.CreateNewDeck(newDeck);
     }
+
+    public List<Deck> FetchAllDecksFromDb()
+    {
+        var decksList = _dbOperations.FetchAllDecks();
+        
+        return decksList;
+    }
+
+    public bool DeckExist(int id)
+    {
+        var deck = _dbOperations.FetchDeckById(id);
+        if (deck == null || deck.Id < 1) return false;
+
+        return true;
+    }
 }

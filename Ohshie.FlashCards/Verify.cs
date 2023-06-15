@@ -5,7 +5,7 @@ public static class Verify
     public static bool StackExist()
     {
         DbOperations dbOperations = new();
-        var stacks = dbOperations.FetchAllStacks();
+        var stacks = dbOperations.FetchAllDecks();
         if (!stacks.Any()) return false;
 
         return true;
