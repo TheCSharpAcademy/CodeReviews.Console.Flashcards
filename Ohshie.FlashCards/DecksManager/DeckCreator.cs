@@ -4,7 +4,7 @@ namespace Ohshie.FlashCards.StacksManager;
 
 public class DeckCreator
 {
-    private DecksService _decksService = new();
+    private readonly DecksService _decksService = new();
 
     public void Create()
     {

@@ -1,4 +1,3 @@
-using System.Data;
 using System.Data.SqlClient;
 using Ohshie.FlashCards.CardsManager;
 using Ohshie.FlashCards.DataAccess;
@@ -37,9 +36,9 @@ public class DbOperations : DbBase
 
             var reader = tableCommand.ExecuteReader();
 
-            var stacksList = ReadFromDbToDecksList(reader);
+            var deckList = ReadFromDbToDecksList(reader);
 
-            return stacksList;
+            return deckList;
         }
     }
     
@@ -50,16 +49,21 @@ public class DbOperations : DbBase
         
         while (reader.Read())
         {
-            if (!deckList.Any(d => d.Id == reader.GetInt32(0)))
+            var readedDeckId = reader.GetInt32(0);
+            if (deck == null || deck.Id != readedDeckId)
             {
-                deck = new Deck
+                deck = deckList.FirstOrDefault(d => d.Id == readedDeckId)!;
+                if (deck == null!)
                 {
-                    Id = reader.GetInt32(0),
-                    Name = reader.GetString(1),
-                    Description = reader.GetString(2),
-                    FlashCards = new List<FlashCard>()
-                };
-                deckList.Add(deck);
+                    deck = new Deck
+                    {
+                        Id = reader.GetInt32(0),
+                        Name = reader.GetString(1),
+                        Description = reader.GetString(2),
+                        FlashCards = new List<FlashCard>()
+                    };
+                    deckList.Add(deck);
+                }
             }
 
             deck.FlashCards.Add(new FlashCard
@@ -118,13 +122,13 @@ public class DbOperations : DbBase
 
             var reader = tableCommand.ExecuteReader();
 
-            var fetchedDeck = ReadToDto(reader);
+            var fetchedDeck = ReadToDeck(reader);
 
             return fetchedDeck;
         }
     }
 
-    private Deck ReadToDto(SqlDataReader reader)
+    private Deck ReadToDeck(SqlDataReader reader)
     {
         Deck deck = null;
 
@@ -151,5 +155,41 @@ public class DbOperations : DbBase
         }
         
         return deck;
+    }
+
+    public void RenameDeck(Deck deck, string newName)
+    {
+        using (var connection = new SqlConnection(ConnectionString))
+        {
+            connection.Open();
+
+            var tableCommand = connection.CreateCommand();
+
+            tableCommand.CommandText = "UPDATE Stacks " +
+                                       $"SET Name = '{newName}' " +
+                                       $"WHERE Id = {deck.Id}";
+
+            tableCommand.ExecuteNonQuery();
+            
+            connection.Close();
+        }
+    }
+    
+    public void ChangeDescription(Deck deck, string newDescription)
+    {
+        using (var connection = new SqlConnection(ConnectionString))
+        {
+            connection.Open();
+
+            var tableCommand = connection.CreateCommand();
+
+            tableCommand.CommandText = "UPDATE Stacks " +
+                                       $"SET Description = '{newDescription}' " +
+                                       $"WHERE Id = {deck.Id}";
+            
+            tableCommand.ExecuteNonQuery();
+            
+            connection.Close();
+        }
     }
 }

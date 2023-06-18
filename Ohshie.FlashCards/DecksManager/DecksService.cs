@@ -1,3 +1,5 @@
+using Ohshie.FlashCards.DataAccess;
+
 namespace Ohshie.FlashCards.StacksManager;
 
 public class DecksService
@@ -18,11 +20,37 @@ public class DecksService
         return decksList;
     }
 
-    public bool DeckExist(int id)
+    public List<DeckDto> OutputDecksToDisplay()
     {
-        var deck = _dbOperations.FetchDeckById(id);
-        if (deck == null || deck.Id < 1) return false;
+        var deckList = FetchAllDecksFromDb();
+        
+        Mapper mapper = new();
+        int counter = 0;
+        List<DeckDto> deckDtos = new();
+        
+        foreach (var deck in deckList)
+        {
+            deckDtos.Add(mapper.DeckToDtoMapper(deck,++counter));
+        }
 
-        return true;
+        return deckDtos;
+    }
+
+    public void RenameDeck(string newName, DeckDto deckDto)
+    {
+        Mapper mapper = new();
+        
+        var deck = mapper.DeckDtoToDeckMapper(deckDto);
+        
+        _dbOperations.RenameDeck(deck, newName);
+    }
+    
+    public void ChangeDescription(string newDescription, DeckDto deckDto)
+    {
+        Mapper mapper = new();
+        
+        var deck = mapper.DeckDtoToDeckMapper(deckDto);
+        
+        _dbOperations.ChangeDescription(deck, newDescription);
     }
 }
