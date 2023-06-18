@@ -28,7 +28,7 @@ public class ContentSettingsMenu : MenuBase
             }
             case "Edit current Deck":
             {
-                EditDecksMenu editDecksMenu = new();
+                ChooseDeckToEditMenu editDecksMenu = new();
                 editDecksMenu.Initialize();
                 break;
             }
