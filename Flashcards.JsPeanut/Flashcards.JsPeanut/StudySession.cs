@@ -9,10 +9,16 @@ namespace Flashcards.JsPeanut
     class StudySession
     {
         public int Id { get; set; }
-        public string Rate { get; set; }
 
-        public int RateId { get; set; }
+        public int Hits { get; set; }
 
-        public int FlashcardId { get; set; }
+        public int Misses { get; set; }
+
+        public int Score { get; set; }
+
+        public int Month { get; set; }
+
+        public int StackId { get; set; }
+        public string StackName { get; set; }
     }
 }

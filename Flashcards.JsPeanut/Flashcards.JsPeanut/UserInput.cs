@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using TestingArea;
 
 namespace Flashcards.JsPeanut
 {
@@ -13,68 +14,63 @@ namespace Flashcards.JsPeanut
         public static void GetUserInput()
         {
             bool exit = false;
-            Console.Clear();
-            Console.OutputEncoding = Encoding.UTF8;
-            Console.CursorVisible = false;
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Welcome to Flashcards app!");
-            Console.ResetColor();
-            Console.WriteLine("\nUse UP ARROW  and DOWN ARROW to navigate and press \u001b[32mEnter/Return\u001b[0m to select:");
-            (int left, int top) = Console.GetCursorPosition();
-            var option = 1;
-            var decorator = $"✅ \u001b[32m";
-            ConsoleKeyInfo key;
-            bool isSelected = false;
-
-            while (!isSelected)
-            {
-                Console.SetCursorPosition(left, top);
-
-                Console.WriteLine($"{(option == 1 ? decorator : "  ")}Create a new stack\u001b[0m");
-                Console.WriteLine($"{(option == 2 ? decorator : "  ")}Add a flashcard\u001b[0m");
-                Console.WriteLine($"{(option == 3 ? decorator : "  ")}Get into the study zone\u001b[0m");
-                Console.WriteLine($"{(option == 4 ? decorator : "  ")}Display stacks\u001b[0m");
-                Console.WriteLine($"{(option == 5 ? decorator : "  ")}Display flashcards\u001b[0m");
-
-                key = Console.ReadKey(false);
-
-                switch (key.Key)
-                {
-                    case ConsoleKey.UpArrow:
-                        option = option == 1 ? 5 : option - 1;
-                        break;
-
-                    case ConsoleKey.DownArrow:
-                        option = option == 5 ? 1 : option + 1;
-                        break;
-
-                    case ConsoleKey.Enter:
-                        isSelected = true;
-                        break;
-                }
-            }
-
-            Console.WriteLine($"\n{decorator}You selected Option {option}");
-            Console.ResetColor();
             while (exit == false)
             {
-                switch (option)
+                string[] options = { "Create a new stack", "Add a flashcard", "Get into the study zone", "Display stacks", "Display flashcards", "Display my study sessions", "Remove stacks", "Remove flashcards", "Update stacks", "Update flashcards", "Total of sessions per month", "Average score per month"};
+                List<ConsoleKey> KeysToUse = new()
                 {
-                    case 1:
+                    ConsoleKey.UpArrow,
+                    ConsoleKey.DownArrow,
+                };
+                switch (Menu.ShowMenu(KeysToUse, "Welcome to Flashcards app!", "\nUse UP ARROW  and DOWN ARROW to navigate and press \u001b[32mEnter/Return\u001b[0m to select:\n", options))
+                {
+                    case 0:
                         Console.Clear();
                         CodingController.CreateStack();
                         break;
-                    case 2:
+                    case 1:
+                        Console.Clear();
                         CodingController.CreateFlashcard();
                         break;
-                    case 3:
+                    case 2:
+                        Console.Clear();
                         CodingController.StudyZone();
                         break;
-                    case 4:
+                    case 3:
+                        Console.Clear();
                         CodingController.RetrieveStacks("display");
                         break;
+                    case 4:
+                        Console.Clear();
+                        CodingController.RetrieveFlashcards("display");
+                        break;
                     case 5:
-                        CodingController.PopulateFlashcardsList();
+                        Console.Clear();
+                        CodingController.RetrieveStudySessions("display");
+                        break;
+                    case 6:
+                        Console.Clear();
+                        CodingController.RemoveStack();
+                        break;
+                    case 7:
+                        Console.Clear();
+                        CodingController.RemoveFlashcard();
+                        break;
+                    case 8:
+                        Console.Clear();
+                        CodingController.UpdateStack();
+                        break;
+                    case 9:
+                        Console.Clear();
+                        CodingController.UpdateFlashcard();
+                        break;
+                    case 10:
+                        Console.Clear();
+                        CodingController.MonthlySessionsReport();
+                        break;
+                    case 11:
+                        Console.Clear();
+                        CodingController.AverageScorePerMonth();
                         break;
                 }
             }
@@ -131,7 +127,11 @@ namespace Flashcards.JsPeanut
 
             if (Validation.ValidateStackOrFlashcard(flashcardQ) == "invalid")
             {
-                GetFlashcardQuestion();
+                Console.WriteLine("Invalid. Try again. Type M if you want to return to the main menu!");
+
+                flashcardQ = Console.ReadLine();
+
+                if (flashcardQ == "M") GetUserInput();
             }
 
             return flashcardQ;
@@ -153,7 +153,7 @@ namespace Flashcards.JsPeanut
 
         public static int GetStackIdForStudy()
         {
-            Console.WriteLine("Type the number of the stack you want to study. Type M if you want to return to the main menu!");
+            Console.WriteLine("\nType the number of the stack you want to study. Type M if you want to return to the main menu!");
             string stackId = Console.ReadLine();
 
             if (stackId == "M") GetUserInput();
@@ -166,6 +166,57 @@ namespace Flashcards.JsPeanut
             int stackId_ = Convert.ToInt32(stackId);
 
             return stackId_;
+        }
+
+        public static int GetStackIdForCRUD(string message)
+        {
+            Console.WriteLine(message);
+
+            string stackId = Console.ReadLine();
+
+            if (stackId == "M") GetUserInput();
+
+            if (Validation.ValidateNumber(stackId) == "invalid")
+            {
+                Console.WriteLine("Invalid number. Try again or type M to return to the main menu.");
+                if (stackId == "M") GetUserInput();
+                stackId = Console.ReadLine();
+            }
+
+            int stackId_ = Convert.ToInt32(stackId);
+
+            return stackId_;
+        }
+
+        public static int GetFlashcardIdForCRUD(string message)
+        {
+            Console.WriteLine(message);
+
+            string flashcardId = Console.ReadLine();
+
+            if (flashcardId == "M") GetUserInput();
+
+            if (Validation.ValidateNumber(flashcardId) == "invalid")
+            {
+                Console.WriteLine("Invalid number. Try again or type M to return to the main menu.");
+                if (flashcardId == "M") GetUserInput();
+                flashcardId = Console.ReadLine();
+            }
+
+            int flashcardId_ = Convert.ToInt32(flashcardId);
+
+            return flashcardId_;
+        }
+
+        public static string GetFrontOfTheCard(string message)
+        {
+            Console.WriteLine(message);
+
+            string frontOfTheCard = Console.ReadLine();
+
+            if (frontOfTheCard == "M") GetUserInput();
+
+            return frontOfTheCard;
         }
     }
 }
