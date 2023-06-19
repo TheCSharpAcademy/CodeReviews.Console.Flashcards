@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TestingArea;
+using ConsoleTableExt;
 
 namespace Flashcards.JsPeanut
 {
@@ -13,7 +11,11 @@ namespace Flashcards.JsPeanut
 
         public static List<Stack> Stacks = new();
 
+        public static List<Stack> DeletedStacks = new();
+
         public static List<Flashcard> Flashcards = new();
+
+        public static List<Flashcard> DeletedFlashcards = new();
 
         public static List<StudySession> StudySessions = new();
 
@@ -31,6 +33,7 @@ namespace Flashcards.JsPeanut
                     {
                         command.ExecuteNonQuery();
                     }
+                    Console.WriteLine("You created a new stack succesfully!");
                 }
                 catch
                 {
@@ -38,14 +41,13 @@ namespace Flashcards.JsPeanut
                     UserInput.GetUserInput();
                 }
                 connection.Close();
-                Console.WriteLine("You created a new stack succesfully.");
                 UserInput.GetUserInput();
             }
         }
 
         public static void CreateFlashcard()
         {
-            bool success = true;
+            int defaultDifficulty = 0;
 
             int stackId = UserInput.GetToWhichStackItCorresponds();
 
@@ -58,20 +60,152 @@ namespace Flashcards.JsPeanut
                 connection.Open();
                 try
                 {
-                    using (SqlCommand command = new SqlCommand($"INSERT INTO dbo.flashcards(flashcard_question, flashcard_answer, stack_id) VALUES('{flashcardQuestion}', '{flashcardAnswer}', {stackId})", connection))
+                    using (SqlCommand command = new SqlCommand($"INSERT INTO dbo.flashcards(flashcard_question, flashcard_answer, difficulty, stack_id) VALUES('{flashcardQuestion}', '{flashcardAnswer}', {defaultDifficulty}, {stackId})", connection))
                     {
                         command.ExecuteNonQuery();
                     }
+                    Console.WriteLine("You have created a new flashcard succesfully!");
                 }
                 catch (Exception ex)
                 {
-                    success = false;
                     Console.WriteLine($"Error: {ex}");
                     UserInput.GetUserInput();
                 }
-                if (success == true)
+                connection.Close();
+            }
+        }
+
+        public static void RemoveStack()
+        {
+            RetrieveStacks("display");
+
+            int stackId = Convert.ToInt32(UserInput.GetStackIdForCRUD("Which stack do you want to delete?"));
+
+            foreach (var deletedStack in DeletedStacks)
+            {
+                if (stackId > deletedStack.StackId)
                 {
-                    Console.WriteLine("You have created a new flashcard succesfully!");
+                    stackId--;
+                }
+            }
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                try
+                {
+                    using (SqlCommand command = new SqlCommand($"DELETE FROM dbo.stacks WHERE stack_id = {stackId}", connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    Console.WriteLine("You have removed your stack successfully.");
+                    DeletedStacks.Add(new Stack
+                    {
+                        StackId = stackId,
+                        Name = Stacks.Where(s => s.StackId == stackId).Select(s => s.Name).First()
+                    });
+                    UserInput.GetUserInput();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex}");
+                    UserInput.GetUserInput();
+                }
+                connection.Close();
+            }
+        }
+
+        public static void UpdateStack()
+        {
+            RetrieveStacks("display");
+
+            int stackId = Convert.ToInt32(UserInput.GetStackIdForCRUD("Which stack do you want to update?"));
+
+            string stackName = UserInput.GetStackName();
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                try
+                {
+                    using (SqlCommand command = new SqlCommand($"UPDATE dbo.stacks SET stack_name = {stackName} WHERE stack_id = {stackId}", connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    Console.WriteLine("You have updated your stack successfully.");
+                    UserInput.GetUserInput();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex}");
+                    UserInput.GetUserInput();
+                }
+                connection.Close();
+            }
+        }
+
+        public static void RemoveFlashcard()
+        {
+            RetrieveStacks("display");
+
+            int stackId = Convert.ToInt32(UserInput.GetStackIdForCRUD("To which stacks does belong the flashcard you want to delete?"));
+
+            RetrieveFlashcards("display", stackId);
+
+            int IdOfTheFcToDelete = UserInput.GetFlashcardIdForCRUD("Type the Id of the flashcard you want to delete.");
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                try
+                {
+                    using (SqlCommand command = new SqlCommand($"DELETE FROM dbo.flashcards WHERE flashcard_id = {IdOfTheFcToDelete}", connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    Console.WriteLine("You have removed your stack successfully.");
+                    UserInput.GetUserInput();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex}");
+                    UserInput.GetUserInput();
+                }
+                connection.Close();
+            }
+        }
+
+        public static void UpdateFlashcard()
+        {
+            RetrieveStacks("display");
+
+            int stackId = Convert.ToInt32(UserInput.GetStackIdForCRUD("To which stacks does belong the flashcard you want to update?"));
+
+            RetrieveFlashcards("display", stackId);
+
+            int IdOfTheFcToDelete = UserInput.GetFlashcardIdForCRUD("Type the Id of the flashcard you want to update.");
+
+            string fc_question = UserInput.GetFlashcardQuestion();
+
+            string fc_answer = UserInput.GetFlashcardAnswer();
+
+            int difficulty = 0;
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                try
+                {
+                    using (SqlCommand command = new SqlCommand($"UPDATE dbo.flashcards SET flashcard_question = {fc_question}, flashcard_answer = {fc_answer}, difficulty = {difficulty} WHERE flashcard_id = {IdOfTheFcToDelete}", connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    Console.WriteLine("You have removed your stack successfully.");
+                    UserInput.GetUserInput();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex}");
                     UserInput.GetUserInput();
                 }
                 connection.Close();
@@ -80,107 +214,130 @@ namespace Flashcards.JsPeanut
 
         public static void StudyZone()
         {
-            RetrieveStacks("display");
+            Console.Clear();
+            List<ConsoleKey> KeysToUse = new()
+            {
+                ConsoleKey.LeftArrow,
+                ConsoleKey.RightArrow,
+            };
 
+            Console.ForegroundColor = ConsoleColor.Yellow;
+
+            RetrieveStacks("display");
+            Console.ForegroundColor = ConsoleColor.Cyan;
             int stackToStudy = UserInput.GetStackIdForStudy();
 
-            PopulateFlashcardsList();
+            RetrieveFlashcards("retrieve");
+            var flashcardsToStudy = Flashcards.Where(f => f.StackId == stackToStudy).OrderBy(flashcard => flashcard.Difficulty).ToList();
 
-            var flashcardsToStudy = Flashcards.Where(f => f.StackId == stackToStudy).ToList();
+            int hits = 0;
+            int misses = 0;
+            int flashcardId = 0;
+            string difficultyToAdd = "Difficulty";
+            int difficultyNumber = 0;
+            string[] difficulties = { "Hard", "Good", "Easy" };
 
             for (int i = 0; i < flashcardsToStudy.Count; i++)
             {
-                if (flashcardsToStudy[i].Rating == null)
+                string answer = UserInput.GetFrontOfTheCard($"\nFront of the card: {flashcardsToStudy[i].Question}");
+                if (answer == flashcardsToStudy[i].Answer)
                 {
-                    flashcardsToStudy[i].Rating = 0;
-                }
-            }
-
-            var sortedFlashcards = flashcardsToStudy.OrderBy(flashcard => flashcard.Rating).ToList();
-
-            for (int i = 0; i < sortedFlashcards.Count; i++)
-            {
-                Console.WriteLine($"Front of the card: {sortedFlashcards[i].Question}");
-                string answer = Console.ReadLine();
-                if (answer == sortedFlashcards[i].Answer)
-                {
-                    Console.WriteLine("Correct! \n\nHow was it?");
+                    hits++;
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("\nCorrect! \nHow was it? \n");
                 }
                 else
                 {
-                    Console.WriteLine($"Actual answer: {sortedFlashcards[i].Question}. \n\nHow was it?");
+                    misses++;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"\nActual answer: {flashcardsToStudy[i].Question}. \nHow was it?\n");
                 }
-                Console.OutputEncoding = Encoding.UTF8;
-                Console.CursorVisible = false;
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                (int left, int top) = Console.GetCursorPosition();
-                var option = 1;
-                var decorator = $"✅ \u001b[32m";
-                ConsoleKeyInfo key;
-                bool isSelected = false;
-                while (!isSelected)
+
+                if (i == flashcardsToStudy.Count)
                 {
-                    Console.SetCursorPosition(left, top);
-
-                    Console.Write($"{(option == 1 ? decorator : "  ")}Hard \u001b[0m");
-                    Console.Write($"{(option == 2 ? decorator : "  ")}Good \u001b[0m");
-                    Console.Write($"{(option == 3 ? decorator : "  ")}Easy \u001b[0m");
-
-                    key = Console.ReadKey(false);
-
-                    switch (key.Key)
+                    for (int j = 0; j < flashcardsToStudy.Count; j++)
                     {
-                        case ConsoleKey.LeftArrow:
-                            option = option == 1 ? 3 : option - 1;
-                            break;
-
-                        case ConsoleKey.RightArrow:
-                            option = option == 3 ? 1 : option + 1;
-                            break;
-
-                        case ConsoleKey.Enter:
-                            isSelected = true;
-                            break;
-                    }
-                    string rateToAdd = "Difficulty";
-                    int rateNumber = 0;
-                    string[] rates = { "Hard", "Good", "Easy" };
-                    switch (option)
-                    {
-                        case 1:
-                            rateToAdd = rates[0];
-                            rateNumber = 1;
-                            sortedFlashcards[i].Rating = rateNumber;
-                            break;
-                        case 2:
-                            rateToAdd = rates[1];
-                            rateNumber = 2;
-                            sortedFlashcards[i].Rating = rateNumber;
-                            break;
-                        case 3:
-                            rateToAdd = rates[2];
-                            rateNumber = 3;
-                            sortedFlashcards[i].Rating = rateNumber;
-                            break;
-                    }
-                    using (var connection = new SqlConnection(connectionString))
-                    {
-                        connection.Open();
-                        using (SqlCommand command = new SqlCommand($"UPDATE dbo.flashcards SET rating = {rateNumber} WHERE flashcard_id = {(sortedFlashcards[i].Rating == null ? sortedFlashcards[i].Rating = 0 : sortedFlashcards[i].Rating = sortedFlashcards[i].Rating)}", connection))
+                        using (var connection = new SqlConnection(connectionString))
                         {
-                            command.ExecuteNonQuery();
+                            connection.Open();
+                            using (SqlCommand command = new SqlCommand($"UPDATE dbo.flashcards SET difficulty = {5} WHERE flashcard_id = {flashcardsToStudy.Where(f => f.FlashcardId == flashcardsToStudy[j].FlashcardId).First().FlashcardId}", connection))
+                            {
+                                command.ExecuteNonQuery();
+                            }
+                            connection.Close();
                         }
-                        connection.Close();
                     }
                 }
-                Console.WriteLine($"\n{decorator}You selected Option {option}");
-                
-                
-                StudySession studySession = new();
-                StudySessions.Add(studySession);
-                Console.ResetColor();
             }
-            UserInput.GetUserInput();
+            //for (int i = 0; i < flashcardsToStudy.Count; i++)
+            //{
+            //    Console.ForegroundColor = ConsoleColor.Cyan;
+            //    var idOfTheFlashcard = flashcardsToStudy[i].FlashcardId;
+            //    List<int> diffInts = new();
+            //    string answer = UserInput.GetFrontOfTheCard($"\nFront of the card: {flashcardsToStudy[i].Question}");
+            //    if (answer == flashcardsToStudy[i].Answer)
+            //    {
+            //        hits++;
+            //        Console.ForegroundColor = ConsoleColor.Green;
+            //        Console.WriteLine("\nCorrect! \nHow was it? \n");
+            //    }
+            //    else
+            //    {
+            //        misses++;
+            //        Console.ForegroundColor = ConsoleColor.Red;
+            //        Console.WriteLine($"\nActual answer: {flashcardsToStudy[i].Question}. \nHow was it?\n");
+            //    }
+            //    switch (Menu.ShowMenu(KeysToUse, "", "", difficulties))
+            //    {
+            //        case 0:
+            //            difficultyToAdd = difficulties[0];
+            //            difficultyNumber = 1;
+            //            diffInts.Add(difficultyNumber);
+            //            break;
+            //        case 1:
+            //            difficultyToAdd = difficulties[1];
+            //            difficultyNumber = 2;
+            //            diffInts.Add(difficultyNumber);
+            //            break;
+            //        case 2:
+            //            difficultyToAdd = difficulties[2];
+            //            difficultyNumber = 3;
+            //            diffInts.Add(difficultyNumber);
+            //            break;
+            //    }
+            //    if (i == flashcardsToStudy.Count)
+            //    {
+            //        for (i  = 0; i < flashcardsToStudy.Count; i++)
+            //        {
+            //            using (var connection = new SqlConnection(connectionString))
+            //            {
+            //                connection.Open();
+            //                using (SqlCommand command = new SqlCommand($"UPDATE dbo.flashcards SET difficulty = {diffInts[i]} WHERE flashcard_id = {flashcardsToStudy.Where(f => f.FlashcardId == idOfTheFlashcard).First().FlashcardId}", connection))
+            //                {
+            //                    command.ExecuteNonQuery();
+            //                }
+            //                connection.Close();
+            //            }
+            //        }
+            //        flashcardsToStudy.Clear();
+            //    }
+            //}
+
+            Console.ResetColor();
+
+        var stacksWhereStackToStudy = Stacks.Where(s => s.StackId == stackToStudy).First();
+
+        var nameOfTheStackToStudy = stacksWhereStackToStudy.Name;
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand($"INSERT INTO dbo.study_sessions(Hits, Misses, Score, Month, stack_id, stack_name) VALUES({hits}, {misses}, {hits - misses}, {DateTime.Now.Month}, {stackToStudy}, '{nameOfTheStackToStudy}')", connection))
+                {
+                    command.ExecuteNonQuery();
+                    UserInput.GetUserInput();
+                }
+            }
         }
 
         public static void RetrieveStacks(string displayOrRetrieve)
@@ -188,36 +345,50 @@ namespace Flashcards.JsPeanut
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                using(SqlCommand command = new SqlCommand("SELECT * FROM dbo.stacks", connection))
+                using (SqlCommand command = new SqlCommand("SELECT * FROM dbo.stacks", connection))
                 {
                     SqlDataReader reader = command.ExecuteReader();
-                    while (reader.Read())
+                    if (reader.HasRows)
                     {
-                        Stacks.Add(new Stack
+                        Stacks.Clear();
+                        while (reader.Read())
                         {
-                            StackId = reader.GetInt32(0),
-                            Name = reader.GetString(1)
-                        });
+                            Stacks.Add(new Stack
+                            {
+                                StackId = reader.GetInt32(0),
+                                Name = reader.GetString(1)
+                            });
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No rows found.");
+                        UserInput.GetUserInput();
                     }
                 }
                 var stacksCopy = Stacks.ToList();
+
+                foreach (var stack in stacksCopy)
+                {
+                    foreach (var deletedStack in DeletedStacks)
+                    {
+                        if (stack.StackId > deletedStack.StackId)
+                        {
+                            stack.StackId--;
+                        }
+                    }
+                }
+
                 if (displayOrRetrieve == "display")
                 {
-                    foreach (var stack in stacksCopy)
-                    {
-                        Console.WriteLine($"{stack.StackId}, {stack.Name}");
-                    }
-                    stacksCopy.Clear();
-                }
-                else if (displayOrRetrieve == "retrieve")
-                {
-                    stacksCopy.Clear();
+                    Visualization.DisplayStacks(stacksCopy);
                 }
                 connection.Close();
+                stacksCopy.Clear();
             }
         }
 
-        public static void PopulateFlashcardsList()
+        public static void RetrieveFlashcards(string displayOrRetrieve, int IdOfTheStack = 0)
         {
             using (var connection = new SqlConnection(connectionString))
             {
@@ -227,68 +398,115 @@ namespace Flashcards.JsPeanut
                     SqlDataReader reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-                        //Flashcards.Add(new Flashcard
-                        //{
-                        //    FlashcardId = reader.GetInt32(0),
-                        //    Question = reader.GetString(1),
-                        //    Answer = reader.GetString(2),
-                        //    Rating = reader.GetInt32(3) == null ? Rating = 0 :,
-                        //    StackId = reader.GetInt32(4)
-                        //});
                         int flashcardId = reader.GetInt32(0);
                         string question = reader.GetString(1);
                         string answer = reader.GetString(2);
-                        int? rating = reader.IsDBNull(3) ? rating = 0 : rating = reader.GetInt32(0);
+                        int? difficulty = reader.IsDBNull(3) ? difficulty = 0 : difficulty = reader.GetInt32(0);
                         int stackId = reader.GetInt32(4);
-                        Flashcards.Add(new Flashcard() { FlashcardId = flashcardId, Question = question, Answer = answer, Rating = rating, StackId = stackId });
+                        Flashcards.Add(new Flashcard() { FlashcardId = flashcardId, Question = question, Answer = answer, Difficulty = difficulty, StackId = stackId });
                     }
+                }
+                var flashcardsCopy = Flashcards.ToList();
+                List<FlashcardDTO> flashcardsDTO = new();
+                foreach (var flashcard in Flashcards)
+                {
+                    flashcardsDTO.Add(new FlashcardDTO
+                    {
+                        FlashcardId = flashcard.FlashcardId,
+                        Question = flashcard.Question,
+                        Answer = flashcard.Answer,
+                        Difficulty = flashcard.Difficulty,
+                    });
+                }
+                if (displayOrRetrieve == "display")
+                {
+                    Visualization.DisplayFlashcards(flashcardsDTO);
+                }
+                else if (displayOrRetrieve == "display" && IdOfTheStack != 0)
+                {
+                    flashcardsCopy.RemoveAll(f => f.StackId != IdOfTheStack);
+                    Visualization.DisplayFlashcards(flashcardsDTO);
+                }
+                flashcardsCopy.Clear();
+                connection.Close();
+            }
+        }
+
+        public static void RetrieveStudySessions(string displayOrRetrieve)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT * FROM dbo.study_sessions", connection))
+                {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        int id = reader.GetInt32(0);
+                        int hits = reader.GetInt32(1);
+                        int misses = reader.GetInt32(2);
+                        int score = reader.GetInt32(3);
+                        int month = reader.GetInt32(4);
+                        int stack_id = reader.GetInt32(5);
+                        string stack_name = reader.GetString(6);
+                        StudySessions.Add(new StudySession
+                        {
+                            Id = id,
+                            Hits = hits,
+                            Misses = misses,
+                            Score = score,
+                            Month = month,
+                            StackId = stack_id,
+                            StackName = stack_name
+                        });
+                    }
+                }
+                var studySessionsCopy = StudySessions.ToList();
+                if (displayOrRetrieve == "display")
+                {
+                    Visualization.DisplayStudySessions(studySessionsCopy);
+                }
+                studySessionsCopy.Clear();
+                connection.Close();
+
+            }
+        }
+        public static void MonthlySessionsReport()
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT stack_name, [1], [2], [3], [4], [5], [6] FROM (SELECT stack_name, Month, COUNT(*) AS row_count FROM study_sessions GROUP BY stack_name, Month) AS counts PIVOT (SUM(row_count) FOR Month IN ([1], [2], [3], [4], [5], [6])) AS PivotTable", connection))
+                {
+                    command.ExecuteNonQuery();
+                    SqlDataReader reader = command.ExecuteReader();
+                    DataTable dataTable = new();
+                    dataTable.Load(reader);
+                    Console.WriteLine(ConsoleTableBuilder.From(dataTable).Export().ToString());
                 }
                 connection.Close();
             }
         }
 
-        //public static void RetrieveStudySessions()
-        //{
-        //    using (var connection = new SqlConnection(connectionString))
-        //    {
-        //        connection.Open();
-        //        using (SqlCommand command = new SqlCommand("SELECT * FROM dbo.study_sessions", connection))
-        //        {
-        //            SqlDataReader reader = command.ExecuteReader();
-        //            while (reader.Read())
-        //            {
-        //                StudySessions.Add(new StudySession
-        //                {
-        //                    Id = reader.GetInt32(0),
-        //                    Rate = reader.GetString(1),
-        //                    RateId = reader.GetInt32(2),
-        //                    FlashcardId = reader.GetInt32(3)
-        //                });
-        //            }
-        //        }
-        //        connection.Close();
-        //    }
-        //}
-        //public static void RetrieveStudySessions()
-        //{
-        //    using (var connection = new SqlConnection(connectionString))
-        //    {
-        //        connection.Open();
-        //        using (SqlCommand command = new SqlCommand("SELECT * FROM dbo.study_sessions", connection))
-        //        {
-        //            SqlDataReader reader = command.ExecuteReader();
-        //            while (reader.Read())
-        //            {
-        //                StudySessions.Add(new StudySession
-        //                {
-        //                    Id = reader.GetInt32(0),
-        //                    Rate = reader.GetString(1),
-        //                    FlashcardId = reader.GetInt32(2)
-        //                });
-        //            }
-        //        }
-        //        connection.Close();
-        //    }
-        //}
+        public static void AverageScorePerMonth()
+        {
+            List<PivotQuery> queryToPrint = new();
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using(SqlCommand command = new SqlCommand("SELECT * FROM (SELECT stack_name, Score, Month FROM study_sessions) S PIVOT (SUM(Score) FOR [Month] in ([1], [2], [3], [4], [5], [6])) P;", connection))
+                {
+                    command.ExecuteNonQuery();
+                    SqlDataReader reader = command.ExecuteReader();
+                    DataTable dataTable = new();
+                    dataTable.Load(reader);
+
+                    Console.WriteLine(ConsoleTableBuilder.From(dataTable).Export().ToString());
+
+                }
+                Visualization.DisplayPivotQuery(queryToPrint);
+                connection.Close();
+            }
+        }
     }
 }
