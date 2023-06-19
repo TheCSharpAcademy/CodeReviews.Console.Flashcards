@@ -269,60 +269,6 @@ namespace Flashcards.JsPeanut
                     }
                 }
             }
-            //for (int i = 0; i < flashcardsToStudy.Count; i++)
-            //{
-            //    Console.ForegroundColor = ConsoleColor.Cyan;
-            //    var idOfTheFlashcard = flashcardsToStudy[i].FlashcardId;
-            //    List<int> diffInts = new();
-            //    string answer = UserInput.GetFrontOfTheCard($"\nFront of the card: {flashcardsToStudy[i].Question}");
-            //    if (answer == flashcardsToStudy[i].Answer)
-            //    {
-            //        hits++;
-            //        Console.ForegroundColor = ConsoleColor.Green;
-            //        Console.WriteLine("\nCorrect! \nHow was it? \n");
-            //    }
-            //    else
-            //    {
-            //        misses++;
-            //        Console.ForegroundColor = ConsoleColor.Red;
-            //        Console.WriteLine($"\nActual answer: {flashcardsToStudy[i].Question}. \nHow was it?\n");
-            //    }
-            //    switch (Menu.ShowMenu(KeysToUse, "", "", difficulties))
-            //    {
-            //        case 0:
-            //            difficultyToAdd = difficulties[0];
-            //            difficultyNumber = 1;
-            //            diffInts.Add(difficultyNumber);
-            //            break;
-            //        case 1:
-            //            difficultyToAdd = difficulties[1];
-            //            difficultyNumber = 2;
-            //            diffInts.Add(difficultyNumber);
-            //            break;
-            //        case 2:
-            //            difficultyToAdd = difficulties[2];
-            //            difficultyNumber = 3;
-            //            diffInts.Add(difficultyNumber);
-            //            break;
-            //    }
-            //    if (i == flashcardsToStudy.Count)
-            //    {
-            //        for (i  = 0; i < flashcardsToStudy.Count; i++)
-            //        {
-            //            using (var connection = new SqlConnection(connectionString))
-            //            {
-            //                connection.Open();
-            //                using (SqlCommand command = new SqlCommand($"UPDATE dbo.flashcards SET difficulty = {diffInts[i]} WHERE flashcard_id = {flashcardsToStudy.Where(f => f.FlashcardId == idOfTheFlashcard).First().FlashcardId}", connection))
-            //                {
-            //                    command.ExecuteNonQuery();
-            //                }
-            //                connection.Close();
-            //            }
-            //        }
-            //        flashcardsToStudy.Clear();
-            //    }
-            //}
-
             Console.ResetColor();
 
         var stacksWhereStackToStudy = Stacks.Where(s => s.StackId == stackToStudy).First();
