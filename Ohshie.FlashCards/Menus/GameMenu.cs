@@ -9,7 +9,7 @@ public class GameMenu : MenuBase
 
     public new void Initialize()
     {
-        if(!Verify.StackExist()) return;
+        if(!Verify.DeckExist()) return;
         
         bool chosenExit = false;
         while (!chosenExit)

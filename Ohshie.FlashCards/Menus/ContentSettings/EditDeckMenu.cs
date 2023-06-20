@@ -5,7 +5,7 @@ namespace Ohshie.FlashCards.Menus;
 public class EditDeckMenu : MenuBase
 {
     private DeckDto DeckDto { get; set; }
-    private DeckEditor _deckEditor = new();
+    private readonly DeckEditor _deckEditor = new();
     
     public EditDeckMenu(DeckDto deckDto)
     {
@@ -20,7 +20,7 @@ public class EditDeckMenu : MenuBase
         "Delete Deck",
         "Go back"
     };
-    
+
     protected override bool Menu()
     {
         AnsiConsole.Clear();
@@ -47,7 +47,9 @@ public class EditDeckMenu : MenuBase
             }
             case "Delete Deck":
             {
-                break;
+                DecksService decksService = new();
+                decksService.DeleteDeck(DeckDto);
+                return true;
             }
             case "Go back":
             {

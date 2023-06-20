@@ -12,7 +12,7 @@ public class DbOperations : DbBase
             connection.Open();
 
             var tableCommand = connection.CreateCommand();
-            tableCommand.CommandText = SqlCommands["createStackTable"];
+            tableCommand.CommandText = SqlCommands["createDeckTable"];
 
             tableCommand.ExecuteNonQuery();
 
@@ -85,7 +85,7 @@ public class DbOperations : DbBase
 
             var tableCommand = connection.CreateCommand();
 
-            tableCommand.CommandText = "INSERT INTO Stacks (Name, Description) " +
+            tableCommand.CommandText = "INSERT INTO Decks (Name, Description) " +
                                        "OUTPUT INSERTED.Id " +
                                        $"VALUES ('{newDeck.Name}', '{newDeck.Description}')";
 
@@ -103,7 +103,7 @@ public class DbOperations : DbBase
 
             var tableCommand = connection.CreateCommand();
             
-            tableCommand.CommandText = "INSERT INTO FlashCards (Name, Content, StackId) " +
+            tableCommand.CommandText = "INSERT INTO FlashCards (Name, Content, DeckId) " +
                                        $"VALUES ('{newCard.Name}', '{newCard.Content}', {newCard.DeckId})";
 
             tableCommand.ExecuteNonQuery();
@@ -165,7 +165,7 @@ public class DbOperations : DbBase
 
             var tableCommand = connection.CreateCommand();
 
-            tableCommand.CommandText = "UPDATE Stacks " +
+            tableCommand.CommandText = "UPDATE Decks " +
                                        $"SET Name = '{newName}' " +
                                        $"WHERE Id = {deck.Id}";
 
@@ -183,8 +183,25 @@ public class DbOperations : DbBase
 
             var tableCommand = connection.CreateCommand();
 
-            tableCommand.CommandText = "UPDATE Stacks " +
+            tableCommand.CommandText = "UPDATE Decks " +
                                        $"SET Description = '{newDescription}' " +
+                                       $"WHERE Id = {deck.Id}";
+            
+            tableCommand.ExecuteNonQuery();
+            
+            connection.Close();
+        }
+    }
+
+    public void DeleteDeck(Deck deck)
+    {
+        using (var connection = new SqlConnection(ConnectionString))
+        {
+            connection.Open();
+
+            var tableCommand = connection.CreateCommand();
+
+            tableCommand.CommandText = "DELETE FROM Decks  " +
                                        $"WHERE Id = {deck.Id}";
             
             tableCommand.ExecuteNonQuery();

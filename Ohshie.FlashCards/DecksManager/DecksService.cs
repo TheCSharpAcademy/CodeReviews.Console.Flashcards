@@ -4,7 +4,8 @@ namespace Ohshie.FlashCards.StacksManager;
 
 public class DecksService
 {
-    private DbOperations _dbOperations = new();
+    private readonly DbOperations _dbOperations = new();
+    private readonly Mapper _mapper = new();
     
     public void CreateNewDeck(Deck newDeck)
     {
@@ -13,7 +14,7 @@ public class DecksService
         _dbOperations.CreateNewDeck(newDeck);
     }
 
-    public List<Deck> FetchAllDecksFromDb()
+    private List<Deck> FetchAllDecksFromDb()
     {
         var decksList = _dbOperations.FetchAllDecks();
         
@@ -38,19 +39,22 @@ public class DecksService
 
     public void RenameDeck(string newName, DeckDto deckDto)
     {
-        Mapper mapper = new();
-        
-        var deck = mapper.DeckDtoToDeckMapper(deckDto);
+        var deck = _mapper.DeckDtoToDeckMapper(deckDto);
         
         _dbOperations.RenameDeck(deck, newName);
     }
     
     public void ChangeDescription(string newDescription, DeckDto deckDto)
     {
-        Mapper mapper = new();
-        
-        var deck = mapper.DeckDtoToDeckMapper(deckDto);
+        var deck = _mapper.DeckDtoToDeckMapper(deckDto);
         
         _dbOperations.ChangeDescription(deck, newDescription);
+    }
+
+    public void DeleteDeck(DeckDto deckDto)
+    {
+        var deck = _mapper.DeckDtoToDeckMapper(deckDto);
+        
+        _dbOperations.DeleteDeck(deck);
     }
 }
