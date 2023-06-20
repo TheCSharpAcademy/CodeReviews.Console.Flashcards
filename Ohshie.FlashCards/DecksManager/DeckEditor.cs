@@ -1,10 +1,8 @@
-using Ohshie.FlashCards.DataAccess;
-
 namespace Ohshie.FlashCards.StacksManager;
 
 public class DeckEditor
 {
-    private DecksService _decksService = new();
+    private readonly DecksService _decksService = new();
 
     public string RenameDeck(DeckDto deckDto)
     {

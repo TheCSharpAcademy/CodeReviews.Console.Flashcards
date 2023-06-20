@@ -11,6 +11,9 @@ public class ChooseDeckToEditMenu
     {
         AnsiConsole.Clear();
         AnsiConsole.Write(new Rule("Settings"));
+        
+        if(!Verify.DeckExist()) return;
+        
         AnsiConsole.Write(DecksTable());
 
         var userChoice = Menu();
@@ -57,7 +60,6 @@ public class ChooseDeckToEditMenu
         return _deckDtos.FirstOrDefault(dd => dd.ViewId == Convert.ToInt32(splittedIdAndName[0]));
     }
     
-
     private Table DecksTable()
     {
         var table = new Table();

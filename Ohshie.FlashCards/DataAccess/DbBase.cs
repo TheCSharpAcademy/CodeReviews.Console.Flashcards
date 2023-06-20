@@ -24,8 +24,8 @@ public class DbBase
 
     protected readonly Dictionary<string, string> SqlCommands = new()
     {
-        ["createStackTable"] = "IF OBJECT_ID('dbo.Stacks', 'U') IS NULL " +
-                               "CREATE TABLE Stacks " +
+        ["createDeckTable"] = "IF OBJECT_ID('dbo.Decks', 'U') IS NULL " +
+                               "CREATE TABLE Decks " +
                                "(" +
                                    "Id INT PRIMARY KEY NOT NULL IDENTITY(1,1), " +
                                    "Name NVARCHAR(50) NOT NULL, " +
@@ -37,14 +37,15 @@ public class DbBase
                                         "Id INT PRIMARY KEY NOT NULL IDENTITY(1,1), " +
                                         "Name NVARCHAR(100) NOT NULL, " +
                                         "Content NVARCHAR(Max)," +
-                                        "StackId INT NOT NULL," +
-                                        "FOREIGN KEY (StackId) REFERENCES Stacks(Id)" +
+                                        "DeckId INT NOT NULL," +
+                                        "FOREIGN KEY (DeckId) REFERENCES Decks(Id) " +
+                                    "ON DELETE CASCADE" +
                                     ");",
-        ["fetchAllDecks"] = "SELECT * FROM Stacks " +
-                            "INNER JOIN FlashCards FC ON Stacks.Id = FC.StackId; ",
+        ["fetchAllDecks"] = "SELECT * FROM Decks " +
+                            "INNER JOIN FlashCards FC ON Decks.Id = FC.DeckId; ",
         
-        ["fetchOneDecksById"] = "SELECT * FROM Stacks " +
-                                "INNER JOIN FlashCards ON (Stacks.Id = FlashCards.StackId) " +
-                                "WHERE Stacks.Id = "
+        ["fetchOneDecksById"] = "SELECT * FROM Decks " +
+                                "INNER JOIN FlashCards ON (Decks.Id = FlashCards.DeckId) " +
+                                "WHERE Decks.Id = "
     };
 }
