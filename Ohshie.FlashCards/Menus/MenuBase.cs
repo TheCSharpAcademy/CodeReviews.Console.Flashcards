@@ -2,7 +2,7 @@ namespace Ohshie.FlashCards.Menus;
 
 public abstract class MenuBase
 {
-    protected abstract string[] MenuItems { get;}
+    protected abstract string[] MenuItems { get; }
 
     public void Initialize()
     {
