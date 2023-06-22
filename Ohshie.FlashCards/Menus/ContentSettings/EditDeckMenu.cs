@@ -27,22 +27,24 @@ public class EditDeckMenu : MenuBase
         AnsiConsole.Write(new Rule("Settings"));
         AnsiConsole.Write(DeckDisplay());
 
-        string userChoice = MenuBuilder(3);
+        string userChoice = MenuBuilder(5);
         
         switch (userChoice)
         {
             case "Rename Deck":
             {
-                RenameDeck();
+                _deckEditor.RenameDeck(DeckDto);
                 break;
             }
             case "Change Description":
             {
-                ChangeDescription();
+                _deckEditor.ChangeDescription(DeckDto);
                 break;
             }
             case "Edit attached FlashCards":
             {
+                ChooseFlashCardToEditMenu chooseFlashCardToEditMenu = new(DeckDto);
+                chooseFlashCardToEditMenu.Initialize();
                 break;
             }
             case "Delete Deck":
@@ -73,15 +75,5 @@ public class EditDeckMenu : MenuBase
             $"{DeckDto.AmountOfFlashcards}");
 
         return table;
-    }
-
-    private void RenameDeck()
-    {
-        DeckDto.DeckName = _deckEditor.RenameDeck(DeckDto);
-    }
-
-    private void ChangeDescription()
-    {
-        DeckDto.DeckDescription = _deckEditor.ChangeDescription(DeckDto);
     }
 }

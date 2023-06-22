@@ -1,12 +1,13 @@
+using Ohshie.FlashCards.CardsManager;
 using Ohshie.FlashCards.StacksManager;
 
 namespace Ohshie.FlashCards.DataAccess;
 
-public class Mapper
+public static class Mapper
 {
-   private DbOperations _dbOperations = new();
+   private static readonly DbOperations DbOperations = new();
    
-   public DeckDto DeckToDtoMapper(Deck deck, int counter)
+   public static DeckDto DeckToDtoMapper(Deck deck, int counter)
    {
       return new DeckDto
       {
@@ -18,8 +19,24 @@ public class Mapper
       };
    }
 
-   public Deck DeckDtoToDeckMapper(DeckDto deckDto)
+   public static Deck DeckDtoToDeckMapper(DeckDto deckDto)
    {
-      return _dbOperations.FetchDeckById(deckDto.Id);
+      return DbOperations.FetchDeckById(deckDto.Id);
+   }
+
+   public static FlashCardDto FlashcardToDtoMapper(FlashCard flashCard, int counter)
+   {
+      return new FlashCardDto()
+      {
+         DtoId = counter,
+         FlashCardId = flashCard.Id,
+         Name = flashCard.Name,
+         Content = flashCard.Content
+      };
+   }
+   
+   public static FlashCard FlashcardDtoToFlashcardMapper(FlashCardDto flashCardDto)
+   {
+      return DbOperations.FetchFlashcardById(flashCardDto.FlashCardId);
    }
 }

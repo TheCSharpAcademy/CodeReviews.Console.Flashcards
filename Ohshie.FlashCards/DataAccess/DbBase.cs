@@ -44,7 +44,7 @@ public class DbBase
         ["fetchAllDecks"] = "SELECT * FROM Decks " +
                             "INNER JOIN FlashCards FC ON Decks.Id = FC.DeckId; ",
         
-        ["fetchOneDecksById"] = "SELECT * FROM Decks " +
+        ["fetchOneDeckById"] = "SELECT * FROM Decks " +
                                 "INNER JOIN FlashCards ON (Decks.Id = FlashCards.DeckId) " +
                                 "WHERE Decks.Id = "
     };

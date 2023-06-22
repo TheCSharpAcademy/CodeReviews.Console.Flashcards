@@ -4,19 +4,21 @@ public class DeckEditor
 {
     private readonly DecksService _decksService = new();
 
-    public string RenameDeck(DeckDto deckDto)
+    public void RenameDeck(DeckDto deckDto)
     {
         var newName = AskUser.AskTextInput("Deck", what: "name");
 
         _decksService.RenameDeck(newName, deckDto);
-        return newName;
+
+        deckDto.DeckName = newName;
     }
     
-    public string ChangeDescription(DeckDto deckDto)
+    public void ChangeDescription(DeckDto deckDto)
     {
         var newDescription = AskUser.AskTextInput("Deck", what: "description");
-
+        
         _decksService.ChangeDescription(newDescription, deckDto);
-        return newDescription;
+
+        deckDto.DeckDescription = newDescription;
     }
 }
