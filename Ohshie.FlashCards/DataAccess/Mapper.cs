@@ -5,7 +5,8 @@ namespace Ohshie.FlashCards.DataAccess;
 
 public static class Mapper
 {
-   private static readonly DbOperations DbOperations = new();
+   private static readonly FlashcardsRepository FlashcardsRepository = new();
+   private static readonly DecksRepository DecksRepository = new();
    
    public static DeckDto DeckToDtoMapper(Deck deck, int counter)
    {
@@ -21,7 +22,7 @@ public static class Mapper
 
    public static Deck DeckDtoToDeckMapper(DeckDto deckDto)
    {
-      return DbOperations.FetchDeckById(deckDto.Id);
+      return DecksRepository.FetchDeckById(deckDto.Id);
    }
 
    public static FlashCardDto FlashcardToDtoMapper(FlashCard flashCard, int counter)
@@ -37,6 +38,6 @@ public static class Mapper
    
    public static FlashCard FlashcardDtoToFlashcardMapper(FlashCardDto flashCardDto)
    {
-      return DbOperations.FetchFlashcardById(flashCardDto.FlashCardId);
+      return FlashcardsRepository.FetchFlashcardById(flashCardDto.FlashCardId);
    }
 }

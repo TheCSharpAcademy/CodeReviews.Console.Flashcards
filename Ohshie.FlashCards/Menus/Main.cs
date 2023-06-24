@@ -31,7 +31,7 @@ public class Main : MenuBase
         {
             case "Solve!":
             {
-                GameMenu gameMenu = new();
+                GameInitMenu gameMenu = new();
                 gameMenu.Initialize();
                 break;
             }

@@ -19,7 +19,7 @@ public class ChooseFlashCardToEditMenu
         AnsiConsole.Clear();
         AnsiConsole.Write(new Rule("Settings"));
 
-        if (!Verify.DeckExist()) return;
+        if (!Verify.DeckExist(where: "go back")) return;
 
         AnsiConsole.Write(FlashcardsDisplay());
 
@@ -102,7 +102,7 @@ public class ChooseFlashCardToEditMenu
         table.AddColumn("Name");
         table.AddColumn("Content");
 
-        _flashCardDtos = _flashcardService.OutputFlashcardsToDisplay(_deckDto);
+        _flashCardDtos = _flashcardService.FlashCardDtoList(_deckDto);
 
         foreach (var flashCard in _flashCardDtos)
         {
