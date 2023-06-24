@@ -1,8 +1,9 @@
+using Ohshie.FlashCards.Game;
 using Ohshie.FlashCards.StacksManager;
 
 namespace Ohshie.FlashCards.Menus;
 
-public class ChooseDeckToEditMenu
+public class GameInitMenu
 {
     private readonly DecksService _decksService = new();
     private List<DeckDto> _deckDtos = new();
@@ -10,16 +11,21 @@ public class ChooseDeckToEditMenu
     public void Initialize()
     {
         AnsiConsole.Clear();
-        AnsiConsole.Write(new Rule("Settings"));
-        
-        if(!Verify.DeckExist("go back")) return;
+        AnsiConsole.Write(new Rule("Lets play!"));
+
+        if (!Verify.DeckExist("create one"))
+        {
+            DeckCreator creator = new();
+            creator.Create();
+        }
         
         AnsiConsole.Write(DecksTable());
 
         var userChoice = Menu();
+
+        GameEngine gameEngine = new GameEngine(userChoice);
         
-        EditDeckMenu editDeckMenu = new(userChoice!);
-        editDeckMenu.Initialize();
+        gameEngine.Initialize();
     }
 
     private DeckDto? Menu()
@@ -33,13 +39,13 @@ public class ChooseDeckToEditMenu
 
     private string Selector()
     {
-       return AnsiConsole.Prompt
-       (
-           new SelectionPrompt<string>()
-               .PageSize(5)
-               .Title("Select deck to edit")
-               .AddChoices(CreateDecksIdAndName())
-       );
+        return AnsiConsole.Prompt
+        (
+            new SelectionPrompt<string>()
+                .PageSize(5)
+                .Title("Select deck to solve")
+                .AddChoices(CreateDecksIdAndName())
+        );
     }
 
     private List<string> CreateDecksIdAndName()

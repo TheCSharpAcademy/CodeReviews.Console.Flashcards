@@ -5,18 +5,18 @@ namespace Ohshie.FlashCards.CardsManager;
 
 public class FlashcardService
 {
-    private readonly DbOperations _dbOperations = new();
+    private readonly FlashcardsRepository _flashcardsRepository = new();
     
     public void CreateNewFlashcard(FlashCard newCard)
     {
         if (string.IsNullOrEmpty(newCard.Name) || newCard.DeckId < 1) return;
         
-        _dbOperations.CreateNewFlashcard(newCard);
+        _flashcardsRepository.CreateNewFlashcard(newCard);
     }
 
-    public List<FlashCardDto> OutputFlashcardsToDisplay(DeckDto deck)
+    public List<FlashCardDto> FlashCardDtoList(DeckDto deck)
     {
-        var AttachedFlashcards = _dbOperations.FetchAttachedFlashcards(deck.Id);
+        var AttachedFlashcards = _flashcardsRepository.FetchAttachedFlashcards(deck.Id);
 
         int counter = 0;
         List<FlashCardDto> flashCardDtos = new();
@@ -33,6 +33,6 @@ public class FlashcardService
     {
         var flashcard = Mapper.FlashcardDtoToFlashcardMapper(flashCardDto);
         
-        _dbOperations.DeleteFlashcard(flashcard);
+        _flashcardsRepository.DeleteFlashcard(flashcard);
     }
 }

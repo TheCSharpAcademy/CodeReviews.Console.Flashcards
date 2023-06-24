@@ -41,6 +41,14 @@ public class DbBase
                                         "FOREIGN KEY (DeckId) REFERENCES Decks(Id) " +
                                     "ON DELETE CASCADE" +
                                     ");",
+        ["createStudySessionTable"] = "IF OBJECT_ID('dbo.StudySessions', 'U') IS NULL " +
+                                      "CREATE TABLE StudySessions " +
+                                      "(" + 
+                                      "Id INT PRIMARY KEY NOT NULL, " +
+                                      "DATE NVARCHAR(100) NOT NULL, " +
+                                      "DeckId INT NOT NULL, " +
+                                      "SolvedCards INT NOT NULL" +
+                                      ");",
         ["fetchAllDecks"] = "SELECT * FROM Decks " +
                             "INNER JOIN FlashCards FC ON Decks.Id = FC.DeckId; ",
         
