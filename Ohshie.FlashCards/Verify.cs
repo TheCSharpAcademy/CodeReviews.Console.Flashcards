@@ -20,4 +20,21 @@ public static class Verify
 
         return true;
     }
+
+    public static bool SessionsExist(string where)
+    {
+        StudySessionRepository sessionRepository = new();
+        var sessions = sessionRepository.FetchSessions();
+        
+        if (!sessions.Any())
+        {
+            AnsiConsole.MarkupLine("Oops, you got no [bold]studying sessions[/]. Looks like you need to study first\n" +
+                                   $"Press enter to {where}");
+            Console.ReadLine();
+
+            return false;
+        }
+
+        return true;
+    }
 }

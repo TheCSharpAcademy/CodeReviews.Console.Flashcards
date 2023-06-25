@@ -6,10 +6,10 @@ public abstract class MenuBase
 
     public void Initialize()
     {
-        bool choosenExit = false;
-        while (!choosenExit)
+        bool chosenExit = false;
+        while (!chosenExit)
         {
-            choosenExit = Menu();
+            chosenExit = Menu();
         }
     }
 

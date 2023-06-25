@@ -16,13 +16,13 @@ public static class Mapper
          ViewId = counter,
          DeckName = deck.Name,
          DeckDescription = deck.Description,
-         AmountOfFlashcards = deck.FlashCards.Count
+         AmountOfFlashcards = deck.FlashCards!.Count
       };
    }
 
    public static Deck DeckDtoToDeckMapper(DeckDto deckDto)
    {
-      return DecksRepository.FetchDeckById(deckDto.Id);
+      return DecksRepository.FetchDeckById(deckDto.Id)!;
    }
 
    public static FlashCardDto FlashcardToDtoMapper(FlashCard flashCard, int counter)
