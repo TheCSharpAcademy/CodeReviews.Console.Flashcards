@@ -19,11 +19,35 @@ public class DeckCreator
     {
         creatingDeck = new()
         {
-            Name = AskUser.AskTextInput(where:"Deck", what:"name"),
-            Description = AskUser.AskTextInput(where:"Deck", what:"description")
+            Name = GetName(),
+            Description = GetDescription()
         };
 
         _decksService.CreateNewDeck(creatingDeck);
+    }
+    
+    private string GetName()
+    {
+        string name;
+        
+        do
+        {
+            name = AskUser.AskTextInput(where:"Deck", what:"name");
+        } while (!Verify.EnteredAppropriateLength(name,50));
+
+        return name;
+    }
+    
+    private string GetDescription()
+    {
+        string description;
+        
+        do
+        {
+            description = AskUser.AskTextInput(where:"Deck", what:"description");
+        } while (!Verify.EnteredAppropriateLength(description,200));
+
+        return description;
     }
 
     private void PopulateDeckWithCards(Deck newDeck)
