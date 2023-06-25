@@ -37,4 +37,21 @@ public static class Verify
 
         return true;
     }
+
+    public static bool EnteredAppropriateLength(string userInput, int appropriateLength)
+    {
+        var length = userInput.Length;
+
+        if (length > appropriateLength)
+        {
+            AnsiConsole.MarkupLine($"Hm, it looks like {userInput} is a bit too long\n" +
+                                   $"Try to keep that under {appropriateLength} characters\n" +
+                                   $"Press enter to try again");
+            Console.ReadLine();
+
+            return false;
+        }
+
+        return true;
+    }
 }
