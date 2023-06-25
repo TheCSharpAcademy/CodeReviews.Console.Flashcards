@@ -27,7 +27,7 @@ public class DecksRepository : DbBase
     private List<Deck> ReadFromDbToDecksList(SqlDataReader reader)
     {
         List<Deck> deckList = new();
-        Deck deck = null;
+        Deck? deck = null;
         
         while (reader.Read())
         {
@@ -48,7 +48,7 @@ public class DecksRepository : DbBase
                 }
             }
 
-            deck.FlashCards.Add(new FlashCard
+            deck.FlashCards?.Add(new FlashCard
             {
                 Id = reader.GetInt32(3),
                 Name = reader.GetString(4),
@@ -77,7 +77,7 @@ public class DecksRepository : DbBase
         }
     }
     
-    public Deck FetchDeckById(int id)
+    public Deck? FetchDeckById(int id)
     {
         using (var connection = new SqlConnection(ConnectionString))
         {
@@ -95,9 +95,9 @@ public class DecksRepository : DbBase
         }
     }
     
-    private Deck ReadToDeck(SqlDataReader reader)
+    private Deck? ReadToDeck(SqlDataReader reader)
     {
-        Deck deck = null;
+        Deck? deck = null;
 
         while (reader.Read())
         {
@@ -112,7 +112,7 @@ public class DecksRepository : DbBase
                 };
             }
             
-            deck.FlashCards.Add(new FlashCard()
+            deck.FlashCards?.Add(new FlashCard()
             {
                 Id = reader.GetInt32(3),
                 Name = reader.GetString(4),

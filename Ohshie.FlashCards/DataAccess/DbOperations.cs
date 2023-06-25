@@ -1,7 +1,5 @@
 using System.Data.SqlClient;
-using Ohshie.FlashCards.CardsManager;
 using Ohshie.FlashCards.DataAccess;
-using Ohshie.FlashCards.StacksManager;
 
 public class DbOperations : DbBase
 {

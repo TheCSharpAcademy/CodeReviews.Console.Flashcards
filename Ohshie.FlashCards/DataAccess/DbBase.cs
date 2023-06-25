@@ -44,16 +44,16 @@ public class DbBase
         ["createStudySessionTable"] = "IF OBJECT_ID('dbo.StudySessions', 'U') IS NULL " +
                                       "CREATE TABLE StudySessions " +
                                       "(" + 
-                                      "Id INT PRIMARY KEY NOT NULL, " +
+                                      "Id INT PRIMARY KEY NOT NULL IDENTITY(1,1), " +
                                       "DATE NVARCHAR(100) NOT NULL, " +
-                                      "DeckId INT NOT NULL, " +
+                                      "DeckName NVARCHAR(50) NOT NULL, " +
                                       "SolvedCards INT NOT NULL" +
                                       ");",
         ["fetchAllDecks"] = "SELECT * FROM Decks " +
                             "INNER JOIN FlashCards FC ON Decks.Id = FC.DeckId; ",
-        
+
         ["fetchOneDeckById"] = "SELECT * FROM Decks " +
-                                "INNER JOIN FlashCards ON (Decks.Id = FlashCards.DeckId) " +
-                                "WHERE Decks.Id = "
+                               "INNER JOIN FlashCards ON (Decks.Id = FlashCards.DeckId) " +
+                               "WHERE Decks.Id = "
     };
 }

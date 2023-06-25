@@ -37,6 +37,8 @@ public class Main : MenuBase
             }
             case "Show previous studies":
             {
+                StudySessionsMenu sessionsMenu = new();
+                sessionsMenu.Initialize();
                 break;
             }
             case "Edit decks and flashcards":
