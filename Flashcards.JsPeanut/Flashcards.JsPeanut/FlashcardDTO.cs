@@ -1,6 +1,6 @@
 ﻿namespace Flashcards.JsPeanut
 {
-    class FlashcardDTO
+    class FlashcardDto
     {
         public int FlashcardId { get; set; }
         public string Question { get; set; }

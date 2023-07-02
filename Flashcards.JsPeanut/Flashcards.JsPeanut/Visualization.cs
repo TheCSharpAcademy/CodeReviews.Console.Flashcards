@@ -4,7 +4,7 @@ namespace Flashcards.JsPeanut
 {
     class Visualization
     {
-        public static void DisplayFlashcards(List<FlashcardDTO> list)
+        public static void DisplayFlashcards(List<FlashcardDto> list)
         {
             ConsoleTableBuilder.From(list)
                .WithFormat(ConsoleTableBuilderFormat.Alternative)
