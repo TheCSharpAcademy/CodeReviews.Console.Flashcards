@@ -20,6 +20,10 @@ class Program
             {
                 command.ExecuteNonQuery();
             }
+            using (SqlCommand command = new SqlCommand("IF OBJECT_ID('deletedFlashcards') IS NULL CREATE TABLE deletedFlashcards(flashcard_id INT PRIMARY KEY, flashcard_question VARCHAR(255), flashcard_answer VARCHAR(255), difficulty INT, stack_id INT, FOREIGN KEY(stack_id) REFERENCES stacks(stack_id))", connection))
+            {
+                command.ExecuteNonQuery();
+            }
             connection.Close();
         }
         UserInput.GetUserInput();
