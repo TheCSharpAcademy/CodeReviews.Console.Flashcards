@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using TestingArea;
 using ConsoleTableExt;
+using System.Linq;
 
 namespace Flashcards.JsPeanut
 {
@@ -79,7 +80,9 @@ namespace Flashcards.JsPeanut
         {
             RetrieveStacks("display");
 
-            int stackId = Convert.ToInt32(UserInput.GetStackIdForCRUD("Which stack do you want to delete?"));
+            int stackId = Convert.ToInt32(UserInput.GetRequiredId("Which stack do you want to delete?"));
+
+            DeletedStacks.Add(Stacks.Where(s => s.StackId == stackId).First());
 
             foreach (var deletedStack in DeletedStacks)
             {
@@ -119,7 +122,7 @@ namespace Flashcards.JsPeanut
         {
             RetrieveStacks("display");
 
-            int stackId = Convert.ToInt32(UserInput.GetStackIdForCRUD("Which stack do you want to update?"));
+            int stackId = Convert.ToInt32(UserInput.GetRequiredId("Which stack do you want to update?"));
 
             string stackName = UserInput.GetStackName();
 
@@ -144,27 +147,27 @@ namespace Flashcards.JsPeanut
             }
         }
 
-        public static void RemoveFlashcard()
+        public static void RetrieveDeletedFlashcards()
         {
-            RetrieveStacks("display");
-
-            int stackId = Convert.ToInt32(UserInput.GetStackIdForCRUD("To which stacks does belong the flashcard you want to delete?"));
-
-            RetrieveFlashcards("display", stackId);
-
-            int IdOfTheFcToDelete = UserInput.GetFlashcardIdForCRUD("Type the Id of the flashcard you want to delete.");
-
+            DeletedFlashcards.Clear();
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 try
                 {
-                    using (SqlCommand command = new SqlCommand($"DELETE FROM dbo.flashcards WHERE flashcard_id = {IdOfTheFcToDelete}", connection))
+                    using (SqlCommand command = new SqlCommand($"SELECT * FROM deletedFlashcards", connection))
                     {
-                        command.ExecuteNonQuery();
+                        SqlDataReader reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            int flashcardId = reader.GetInt32(0);
+                            string question = reader.GetString(1);
+                            string answer = reader.GetString(2);
+                            int? difficulty = reader.IsDBNull(3) ? difficulty = 0 : difficulty = reader.GetInt32(3);
+                            int stackId = reader.GetInt32(4);
+                            DeletedFlashcards.Add(new Flashcard() { FlashcardId = flashcardId, Question = question, Answer = answer, Difficulty = difficulty, StackId = stackId });
+                        }
                     }
-                    Console.WriteLine("You have removed your stack successfully.");
-                    UserInput.GetUserInput();
                 }
                 catch (Exception ex)
                 {
@@ -175,15 +178,54 @@ namespace Flashcards.JsPeanut
             }
         }
 
+        public static void RemoveFlashcard()
+        {
+            Flashcards.Clear();
+            RetrieveStacks("display");
+
+            int idOfTheStack = Convert.ToInt32(UserInput.GetRequiredId("To which stacks does belong the flashcard you want to delete?"));
+
+            RetrieveFlashcards("display", idOfTheStack);
+
+            int IdOfTheFcToDelete = UserInput.GetRequiredId("Type the Id of the flashcard you want to delete.");
+
+            var flashcardToDelete = Flashcards.Where(f => f.FlashcardId == IdOfTheFcToDelete).First();
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                try
+                {
+                    using (SqlCommand command = new SqlCommand($"DELETE FROM dbo.flashcards WHERE flashcard_id = {IdOfTheFcToDelete}", connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    using (SqlCommand command = new SqlCommand($"INSERT INTO deletedFlashcards(flashcard_id, flashcard_question, flashcard_answer, difficulty, stack_id) VALUES({flashcardToDelete.FlashcardId}, '{flashcardToDelete.Question}', '{flashcardToDelete.Answer}', {flashcardToDelete.Difficulty}, {flashcardToDelete.StackId})", connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    Console.WriteLine("You have removed your flashcard successfully.");
+                    UserInput.GetUserInput();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex}");
+                    UserInput.GetUserInput();
+                }
+                connection.Close();
+            }
+            
+            Flashcards.Clear();
+        }
+
         public static void UpdateFlashcard()
         {
             RetrieveStacks("display");
 
-            int stackId = Convert.ToInt32(UserInput.GetStackIdForCRUD("To which stacks does belong the flashcard you want to update?"));
+            int stackId = Convert.ToInt32(UserInput.GetRequiredId("To which stacks does belong the flashcard you want to update?"));
 
             RetrieveFlashcards("display", stackId);
 
-            int IdOfTheFcToDelete = UserInput.GetFlashcardIdForCRUD("Type the Id of the flashcard you want to update.");
+            int IdOfTheFcToDelete = UserInput.GetRequiredId("Type the Id of the flashcard you want to update.");
 
             string fc_question = UserInput.GetFlashcardQuestion();
 
@@ -215,30 +257,28 @@ namespace Flashcards.JsPeanut
         public static void StudyZone()
         {
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
             List<ConsoleKey> KeysToUse = new()
             {
                 ConsoleKey.LeftArrow,
                 ConsoleKey.RightArrow,
             };
 
-            Console.ForegroundColor = ConsoleColor.Yellow;
-
             RetrieveStacks("display");
             Console.ForegroundColor = ConsoleColor.Cyan;
-            int stackToStudy = UserInput.GetStackIdForStudy();
-
+            int stackToStudy = UserInput.GetRequiredId("Type the id of the stack you want to study. Type M to get back to the main menu.");
             RetrieveFlashcards("retrieve");
+
             var flashcardsToStudy = Flashcards.Where(f => f.StackId == stackToStudy).OrderBy(flashcard => flashcard.Difficulty).ToList();
 
             int hits = 0;
             int misses = 0;
-            int flashcardId = 0;
-            string difficultyToAdd = "Difficulty";
             int difficultyNumber = 0;
             string[] difficulties = { "Hard", "Good", "Easy" };
 
             for (int i = 0; i < flashcardsToStudy.Count; i++)
             {
+                Console.ForegroundColor = ConsoleColor.Magenta;
                 string answer = UserInput.GetFrontOfTheCard($"\nFront of the card: {flashcardsToStudy[i].Question}");
                 if (answer == flashcardsToStudy[i].Answer)
                 {
@@ -250,23 +290,28 @@ namespace Flashcards.JsPeanut
                 {
                     misses++;
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"\nActual answer: {flashcardsToStudy[i].Question}. \nHow was it?\n");
+                    Console.WriteLine($"\nActual answer: {flashcardsToStudy[i].Answer}. \nHow was it?\n");
                 }
-
-                if (i == flashcardsToStudy.Count)
+                switch (Menu.ShowMenu(KeysToUse, "", "", difficulties))
                 {
-                    for (int j = 0; j < flashcardsToStudy.Count; j++)
+                    case 0:
+                        difficultyNumber = 1;
+                        break;
+                    case 1:
+                        difficultyNumber = 2;
+                        break;
+                    case 2:
+                        difficultyNumber = 3;
+                        break;
+                }
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand($"UPDATE dbo.flashcards SET difficulty = {difficultyNumber} WHERE flashcard_id = {flashcardsToStudy.Where(f => f.FlashcardId == flashcardsToStudy[i].FlashcardId).First().FlashcardId}", connection))
                     {
-                        using (var connection = new SqlConnection(connectionString))
-                        {
-                            connection.Open();
-                            using (SqlCommand command = new SqlCommand($"UPDATE dbo.flashcards SET difficulty = {5} WHERE flashcard_id = {flashcardsToStudy.Where(f => f.FlashcardId == flashcardsToStudy[j].FlashcardId).First().FlashcardId}", connection))
-                            {
-                                command.ExecuteNonQuery();
-                            }
-                            connection.Close();
-                        }
+                        command.ExecuteNonQuery();
                     }
+                    connection.Close();
                 }
             }
             Console.ResetColor();
@@ -336,6 +381,8 @@ namespace Flashcards.JsPeanut
 
         public static void RetrieveFlashcards(string displayOrRetrieve, int IdOfTheStack = 0)
         {
+            Flashcards.Clear();
+            RetrieveDeletedFlashcards();
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -347,9 +394,19 @@ namespace Flashcards.JsPeanut
                         int flashcardId = reader.GetInt32(0);
                         string question = reader.GetString(1);
                         string answer = reader.GetString(2);
-                        int? difficulty = reader.IsDBNull(3) ? difficulty = 0 : difficulty = reader.GetInt32(0);
+                        int? difficulty = reader.IsDBNull(3) ? difficulty = 0 : difficulty = reader.GetInt32(3);
                         int stackId = reader.GetInt32(4);
                         Flashcards.Add(new Flashcard() { FlashcardId = flashcardId, Question = question, Answer = answer, Difficulty = difficulty, StackId = stackId });
+                    }
+                }
+                foreach (var fc in Flashcards)
+                {
+                    foreach (var deletedFc in DeletedFlashcards)
+                    {
+                        if (fc.FlashcardId > deletedFc.FlashcardId)
+                        {
+                            fc.FlashcardId--;
+                        }
                     }
                 }
                 var flashcardsCopy = Flashcards.ToList();
@@ -375,8 +432,8 @@ namespace Flashcards.JsPeanut
                 }
                 flashcardsCopy.Clear();
                 connection.Close();
+                }
             }
-        }
 
         public static void RetrieveStudySessions(string displayOrRetrieve)
         {
@@ -422,7 +479,7 @@ namespace Flashcards.JsPeanut
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT stack_name, [1], [2], [3], [4], [5], [6] FROM (SELECT stack_name, Month, COUNT(*) AS row_count FROM study_sessions GROUP BY stack_name, Month) AS counts PIVOT (SUM(row_count) FOR Month IN ([1], [2], [3], [4], [5], [6])) AS PivotTable", connection))
+                using (SqlCommand command = new SqlCommand("SELECT stack_name, [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] FROM (SELECT stack_name, Month, COUNT(*) AS row_count FROM study_sessions GROUP BY stack_name, Month) AS counts PIVOT (SUM(row_count) FOR Month IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])) AS PivotTable", connection))
                 {
                     command.ExecuteNonQuery();
                     SqlDataReader reader = command.ExecuteReader();
@@ -440,7 +497,7 @@ namespace Flashcards.JsPeanut
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                using(SqlCommand command = new SqlCommand("SELECT * FROM (SELECT stack_name, Score, Month FROM study_sessions) S PIVOT (SUM(Score) FOR [Month] in ([1], [2], [3], [4], [5], [6])) P;", connection))
+                using(SqlCommand command = new SqlCommand("SELECT * FROM (SELECT stack_name, Score, Month FROM study_sessions) S PIVOT (SUM(Score) FOR [Month] in ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])) P;", connection))
                 {
                     command.ExecuteNonQuery();
                     SqlDataReader reader = command.ExecuteReader();

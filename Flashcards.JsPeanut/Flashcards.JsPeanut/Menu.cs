@@ -78,7 +78,7 @@ namespace TestingArea
                         break;
                 }
             }
-            Console.WriteLine($"\n{decorator}You selected Option {option}");
+            Console.WriteLine($"\n{decorator}You selected Option {option + 1}");
             Console.ResetColor();
             return option;
         }

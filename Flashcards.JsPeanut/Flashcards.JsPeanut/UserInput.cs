@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using TestingArea;
+using System.Collections;
 
 namespace Flashcards.JsPeanut
 {
@@ -83,10 +84,11 @@ namespace Flashcards.JsPeanut
 
             if (stackName == "M") GetUserInput();
 
-            if (Validation.ValidateStackOrFlashcard(stackName) == "invalid")
+            while (Validation.ValidateStackOrFlashcard(stackName) == "invalid")
             {
-                Console.WriteLine("Invalid");
-                GetStackName();
+                Console.WriteLine("Invalid text. Try again or type M to return to the main menu.");
+                if (stackName == "M") GetUserInput();
+                stackName = Console.ReadLine();
             }
 
             return stackName;
@@ -107,10 +109,11 @@ namespace Flashcards.JsPeanut
 
             if (stackId == "M") GetUserInput();
 
-            if (Validation.ValidateNumber(stackId) == "invalid")
+            while (Validation.ValidateNumber(stackId) == "invalid")
             {
-                Console.WriteLine("Invalid number. Try again");
-                GetToWhichStackItCorresponds();
+                Console.WriteLine("Invalid number. Try again or type M to return to the main menu.");
+                if (stackId == "M") GetUserInput();
+                stackId = Console.ReadLine();
             }
 
             int stackId_ = Convert.ToInt32(stackId);
@@ -125,7 +128,7 @@ namespace Flashcards.JsPeanut
 
             if (flashcardQ == "M") GetUserInput();
 
-            if (Validation.ValidateStackOrFlashcard(flashcardQ) == "invalid")
+            while (Validation.ValidateStackOrFlashcard(flashcardQ) == "invalid")
             {
                 Console.WriteLine("Invalid. Try again. Type M if you want to return to the main menu!");
 
@@ -143,40 +146,24 @@ namespace Flashcards.JsPeanut
 
             if (flashcardA == "M") GetUserInput();
 
-            if (Validation.ValidateStackOrFlashcard(flashcardA) == "invalid")
+            while (Validation.ValidateStackOrFlashcard(flashcardA) == "invalid")
             {
-                GetFlashcardAnswer();
+                Console.WriteLine("Invalid string. Try again or type M to return to the main menu.");
+                if (flashcardA == "M") GetUserInput();
+                flashcardA = Console.ReadLine();
             }
 
             return flashcardA;
         }
 
-        public static int GetStackIdForStudy()
-        {
-            Console.WriteLine("\nType the number of the stack you want to study. Type M if you want to return to the main menu!");
-            string stackId = Console.ReadLine();
-
-            if (stackId == "M") GetUserInput();
-
-            if (Validation.ValidateNumber(stackId) == "invalid")
-            {
-                GetStackIdForStudy();
-            }
-
-            int stackId_ = Convert.ToInt32(stackId);
-
-            return stackId_;
-        }
-
-        public static int GetStackIdForCRUD(string message)
+        public static int GetRequiredId(string message)
         {
             Console.WriteLine(message);
-
             string stackId = Console.ReadLine();
 
             if (stackId == "M") GetUserInput();
 
-            if (Validation.ValidateNumber(stackId) == "invalid")
+            while (Validation.ValidateNumber(stackId) == "invalid")
             {
                 Console.WriteLine("Invalid number. Try again or type M to return to the main menu.");
                 if (stackId == "M") GetUserInput();
@@ -188,31 +175,18 @@ namespace Flashcards.JsPeanut
             return stackId_;
         }
 
-        public static int GetFlashcardIdForCRUD(string message)
-        {
-            Console.WriteLine(message);
-
-            string flashcardId = Console.ReadLine();
-
-            if (flashcardId == "M") GetUserInput();
-
-            if (Validation.ValidateNumber(flashcardId) == "invalid")
-            {
-                Console.WriteLine("Invalid number. Try again or type M to return to the main menu.");
-                if (flashcardId == "M") GetUserInput();
-                flashcardId = Console.ReadLine();
-            }
-
-            int flashcardId_ = Convert.ToInt32(flashcardId);
-
-            return flashcardId_;
-        }
-
         public static string GetFrontOfTheCard(string message)
         {
             Console.WriteLine(message);
 
             string frontOfTheCard = Console.ReadLine();
+
+            while (Validation.ValidateStackOrFlashcard(frontOfTheCard) == "invalid")
+            {
+                Console.WriteLine("Invalid string. Try again or type M to return to the main menu.");
+                if (frontOfTheCard == "M") GetUserInput();
+                frontOfTheCard = Console.ReadLine();
+            }
 
             if (frontOfTheCard == "M") GetUserInput();
 
