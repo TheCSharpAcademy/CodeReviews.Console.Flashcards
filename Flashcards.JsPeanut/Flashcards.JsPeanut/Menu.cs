@@ -44,15 +44,13 @@ namespace TestingArea
 
                 for (int i = 0; i < opts.Length; i++)
                 {
+                    if (firstKey == ConsoleKey.UpArrow && secondKey == ConsoleKey.DownArrow)
                     {
-                        if (firstKey == ConsoleKey.UpArrow && secondKey == ConsoleKey.DownArrow)
-                        {
-                            Console.WriteLine($"{(option == i ? decorator : "  ")}{opts[i]}\u001b[0m");
-                        }
-                        else
-                        {
-                            Console.Write($"{(option == i ? decorator : "  ")}{opts[i]}\u001b[0m");
-                        }
+                        Console.WriteLine($"{(option == i ? decorator : "  ")}{opts[i]}\u001b[0m");
+                    }
+                    else
+                    {
+                        Console.Write($"{(option == i ? decorator : "  ")}{opts[i]}\u001b[0m");
                     }
                 }
 

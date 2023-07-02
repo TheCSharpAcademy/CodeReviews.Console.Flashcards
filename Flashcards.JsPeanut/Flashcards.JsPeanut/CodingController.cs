@@ -410,10 +410,10 @@ namespace Flashcards.JsPeanut
                     }
                 }
                 var flashcardsCopy = Flashcards.ToList();
-                List<FlashcardDTO> flashcardsDTO = new();
+                List<FlashcardDto> flashcardsDTO = new();
                 foreach (var flashcard in Flashcards)
                 {
-                    flashcardsDTO.Add(new FlashcardDTO
+                    flashcardsDTO.Add(new FlashcardDto
                     {
                         FlashcardId = flashcard.FlashcardId,
                         Question = flashcard.Question,
