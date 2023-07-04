@@ -1,13 +1,12 @@
 ﻿using Kmakai.FlashCards.Models;
 using System.Data.SqlClient;
-using System.Configuration;
 using ConsoleTableExt;
 
 namespace Kmakai.FlashCards.Controllers;
 
 public class StudySessionController
 {
-    private static string? connectionString = ConfigurationManager.AppSettings.Get("connectionString");
+    private static string? connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("connectionString");
     public static void AddSession(StudySession session)
     {
         using (SqlConnection connection = new SqlConnection(connectionString))

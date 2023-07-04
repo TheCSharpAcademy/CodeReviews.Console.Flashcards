@@ -1,6 +1,5 @@
 ﻿using Kmakai.FlashCards.Models;
 using System.Security.Cryptography.X509Certificates;
-using System.Configuration;
 
 namespace Kmakai.FlashCards.Controllers;
 
