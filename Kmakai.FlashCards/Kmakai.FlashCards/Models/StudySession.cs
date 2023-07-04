@@ -6,6 +6,6 @@ public class StudySession
 {
     public int Id { get; set; }
     public int StackId { get; set; }
-    public int Score { get; set; } = 0;
+    public int Score { get; set; }
     public DateOnly Date { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using Kmakai.FlashCards.Models;
 using System.Security.Cryptography.X509Certificates;
+using System.Configuration;
 
 namespace Kmakai.FlashCards.Controllers;
 
@@ -290,7 +291,7 @@ public class MenuController
 
     public void HandleStudyMenu()
     {
-        DisplayController.displayStacks(App.Stacks);
+        DisplayController.DisplayStacks(App.Stacks);
         Console.WriteLine("Enter the name of the stack you want to study or type X to exit");
         Console.Write("Name: ");
 

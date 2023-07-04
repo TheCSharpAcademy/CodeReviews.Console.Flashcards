@@ -41,7 +41,7 @@ public class DisplayController
 
     public static void DisplayStacksMenu(List<Stack> stacks)
     {
-        displayStacks(stacks);
+        DisplayStacks(stacks);
 
         Console.WriteLine("What would you like to do?");
         Console.WriteLine("1.Delete a stack");
@@ -49,7 +49,7 @@ public class DisplayController
         Console.WriteLine("3.Return to main menu");
     }
 
-    public static void displayStacks(List<Stack> stacks)
+    public static void DisplayStacks(List<Stack> stacks)
     {
         List<string> stackNames = new List<string>();
         foreach (var stack in stacks)
@@ -78,11 +78,11 @@ public class DisplayController
 
     public static void DisplayFlashcards(List<Flashcard> flashcards)
     {
-        List<FlashcardDTO> flashcardDTOs = new List<FlashcardDTO>();
+        List<FlashcardDto> flashcardDTOs = new List<FlashcardDto>();
        
         for (int i = 0; i < flashcards.Count; i++)
         {
-            flashcardDTOs.Add(new FlashcardDTO( i + 1, flashcards[i].Front, flashcards[i].Back));
+            flashcardDTOs.Add(new FlashcardDto( i + 1, flashcards[i].Front, flashcards[i].Back));
         }
         Console.Clear();
         Console.WriteLine("----------Flashcards------------");
