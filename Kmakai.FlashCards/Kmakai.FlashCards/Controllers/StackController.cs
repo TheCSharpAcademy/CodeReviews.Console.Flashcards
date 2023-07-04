@@ -1,12 +1,11 @@
 ﻿using Kmakai.FlashCards.Models;
 using System.Data.SqlClient;
-using System.Configuration;
 
 namespace Kmakai.FlashCards.Controllers;
 
 public class StackController
 {
-    private static readonly string? ConnectionString = ConfigurationManager.AppSettings.Get("connectionString");
+    private static readonly string? ConnectionString = System.Configuration.ConfigurationManager.AppSettings.Get("connectionString");
 
     public static void CreateStack(string name)
     {

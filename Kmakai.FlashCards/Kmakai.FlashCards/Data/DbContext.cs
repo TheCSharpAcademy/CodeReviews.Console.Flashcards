@@ -1,11 +1,10 @@
 ﻿using System.Data.SqlClient;
-using System.Configuration;
 namespace Kmakai.FlashCards.Data;
 
 public class DbContext
 {
-    private readonly string? ConnectionString = ConfigurationManager.AppSettings.Get("connectionString");
-    private readonly string? ServerConnectionString = ConfigurationManager.AppSettings.Get("serverConnectionString");
+    private readonly string? ConnectionString = System.Configuration.ConfigurationManager.AppSettings.Get("connectionString");
+    private readonly string? ServerConnectionString = System.Configuration.ConfigurationManager.AppSettings.Get("serverConnectionString");
 
     public void CreateDatabase()
     {
