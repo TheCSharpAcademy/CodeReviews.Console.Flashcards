@@ -10,7 +10,6 @@ namespace FlashCards
 		{
 			throw new NotImplementedException();
 		}
-
 		internal static void ShowStackNames(string connectionString)
 		{
 			List<StackNameDTO> stackNames = BuildStackDTO(connectionString);
@@ -18,8 +17,30 @@ namespace FlashCards
 					.From(stackNames)
 					.WithColumn("Overview Stack Names")
 					.ExportAndWriteLine();
-            }
-
+		}
+		internal static List<Stack> BuildStack(string connectionString, string command)
+		{
+			List<Stack> stack = new();
+			using var connection = new SqlConnection(connectionString);
+			{
+				connection.Open();
+				var sqlCommand = connection.CreateCommand();
+				sqlCommand.CommandText = command;
+				SqlDataReader reader = sqlCommand.ExecuteReader();
+				if (reader.HasRows)
+				{
+					while (reader.Read())
+					{
+						stack.Add(new Stack
+						{
+							StackId = reader.GetInt32(0),
+							StackName = reader.GetString(1)
+						}) ;
+					}
+				}
+			}
+			return stack;
+		}
 		internal static List<StackNameDTO> BuildStackDTO(string connectionString)
 		{
 			List<StackNameDTO> stackNames = new();
@@ -47,13 +68,10 @@ namespace FlashCards
 			}
 			return stackNames;
 	}
-
 		internal static void Stack(string connectionString)
 		{
-			Console.Clear();
 			UserInput.GetStackMenuInput(connectionString);
 		}
-
 		internal static void CreateNewStack(string connectionString)
 		{
 			Console.Clear();
@@ -69,10 +87,32 @@ namespace FlashCards
 			}
             Console.WriteLine($"New stack {stackName} created");
         }
-
+		internal static bool DoesStackExist(string connectionString, string input)
+		{
+			bool doesExist = false;
+			List<StackNameDTO> existingStacks = new List<StackNameDTO>();
+			existingStacks = BuildStackDTO(connectionString);
+			foreach (var stack in existingStacks)
+			{
+				if (input.ToLower() ==  stack.StackName.ToLower())
+				{
+					doesExist = true;
+				}
+			}
+			return doesExist;
+		}
 		internal static void DeleteStack(string connectionString)
 		{
-            Console.WriteLine("Stack deleted");
+			Console.Clear();
+			string sqlCommand = "SELECT * from dbo.Stack";
+			List<Stack> stack = BuildStack(connectionString, sqlCommand);
+			ConsoleTableBuilder
+				.From(stack)
+				.WithTitle("Stacks")
+				.ExportAndWriteLine();
+			UserInput.DeleteStack(connectionString, stack);
+			
+            Console.WriteLine("Stack succesfully deleted");
         }
 
 		internal static void UpdateStack(string connectionString)
