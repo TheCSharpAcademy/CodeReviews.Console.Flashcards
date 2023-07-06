@@ -5,15 +5,16 @@ namespace FlashCards
 	{
         internal static void GetMenuInput(string connectionString)
         {
+			Console.Clear();
 			bool closeApp = false;
 			while (!closeApp)
 			{
 				Helpers.MainMenu();
-				string menuChoice = Console.ReadLine();
-				switch (menuChoice)
+				string input = Console.ReadLine();
+				switch (input)
 				{
 					case "1":
-						DataAccess.Stacks(connectionString); Console.ReadLine(); Console.Clear();
+						DataAccess.Stack(connectionString); Console.ReadLine(); Console.Clear();
 						break;
 					case "2":
 						DataAccess.Flashcards(); Console.ReadLine(); Console.Clear();
@@ -27,9 +28,9 @@ namespace FlashCards
 						; Console.ReadLine(); Console.Clear();
 						break;
 					case "0":
-						closeApp = true;
 						Console.WriteLine("Goodbye");
 						Environment.Exit(0);
+						closeApp = true;
 						break;
 					default:
 						Console.WriteLine("Invalid input");
@@ -39,42 +40,64 @@ namespace FlashCards
 				} 
 			}
 		}
-		internal static void GetStackInput(string connectionString)
+		internal static void GetStackMenuInput(string connectionString)
 		{
-
-			while (true)
+			Helpers.StackMenu(connectionString);
+			string input = Console.ReadLine();
+			switch (input)
 			{
-				string input = Console.ReadLine();
-				bool isInputInStackNames = false;
-				string stackNameMenu = "";
-				List<StackNameDTO> stackNames = DataAccess.BuildStackDTO(connectionString);
-
-				foreach (StackNameDTO stackName in stackNames)
-				{
-					if (input.ToLower() == stackName.StackName.ToLower())
-					{
-						isInputInStackNames = true;
-						stackNameMenu = stackName.StackName;
-					}
-				}
-
-				if (isInputInStackNames)
-				{
-					Helpers.DetailedStackMenu(stackNameMenu);
+				case "1":
+					DataAccess.CreateNewStack(connectionString); Console.ReadLine();  Console.Clear();
 					break;
+				case "2":
+					DataAccess.DeleteStack(connectionString); Console.ReadLine() ; Console.Clear();
+					break;
+				case "3":
+					DataAccess.UpdateStack(connectionString); Console.ReadLine(); Console.Clear(); 
+					break;
+				case "0":
+					GetMenuInput(connectionString); 
+					break;
+			}
+		}
+		internal static void GetStackName(string connectionString)
+		{
+			string input = Console.ReadLine();
+			bool isInputInStackNames = false;
+			string stackNameMenu = "";
+			List<StackNameDTO> stackNames = DataAccess.BuildStackDTO(connectionString);
+
+			foreach (StackNameDTO stackName in stackNames)
+			{
+				if (input.ToLower() == stackName.StackName.ToLower())
+				{
+					isInputInStackNames = true;
+					stackNameMenu = stackName.StackName;
+				}
+			}
+			if (isInputInStackNames)
+			{
+				Helpers.FlashCardMenu(stackNameMenu);
+			}
+			else
+			{
+				if (input == "0")
+				{
+					Console.Clear(); GetMenuInput(connectionString);
 				}
 				else
 				{
-					if (input == "0")
-					{
-						Console.Clear(); GetMenuInput(connectionString);break;
-					}
-					else
-					{
-						Console.WriteLine("Invalid choice");
-					}
-				} 
-			}
+					Console.WriteLine("Invalid choice");
+				}
+			} 
+		}
+
+		internal static string NewStack(string connectionString)
+		{
+			Console.WriteLine("Please enter a name for the new stack: ");
+			string input = Console.ReadLine();
+			// todo: add validation on valid name and on already exists
+			return input;
 		}
 	}
 }

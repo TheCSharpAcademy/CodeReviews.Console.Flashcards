@@ -48,12 +48,36 @@ namespace FlashCards
 			return stackNames;
 	}
 
-		internal static void Stacks(string connectionString)
+		internal static void Stack(string connectionString)
 		{
 			Console.Clear();
-			Helpers.StackMenu(connectionString);
-			UserInput.GetStackInput(connectionString);
-			
+			UserInput.GetStackMenuInput(connectionString);
 		}
+
+		internal static void CreateNewStack(string connectionString)
+		{
+			Console.Clear();
+			string stackName = UserInput.NewStack(connectionString);
+			using(var connection = new SqlConnection(connectionString))
+			{ 
+				connection.Open(); 
+				var sqlCommand = connection.CreateCommand();
+				sqlCommand.CommandText = "INSERT INTO dbo.Stack (StackName) VALUES (@stackName)";
+				sqlCommand.Parameters.Add(new SqlParameter("@stackName", stackName));
+				sqlCommand.ExecuteNonQuery();
+				connection.Close();
+			}
+            Console.WriteLine($"New stack {stackName} created");
+        }
+
+		internal static void DeleteStack(string connectionString)
+		{
+            Console.WriteLine("Stack deleted");
+        }
+
+		internal static void UpdateStack(string connectionString)
+		{
+            Console.WriteLine("Stack renamed");
+        }
 	}
 }

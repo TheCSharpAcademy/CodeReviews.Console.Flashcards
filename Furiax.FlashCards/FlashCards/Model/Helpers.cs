@@ -6,23 +6,27 @@
 		{
 			Console.WriteLine("Flashcards");
 			Console.WriteLine("----------");
+			Console.WriteLine("Please make a choice by entering the corresponding number: ");
 			Console.WriteLine("1. Manage Stacks");
 			Console.WriteLine("2. Manage Flashcards");
 			Console.WriteLine("3. Study");
 			Console.WriteLine("4. View Study Data");
 			Console.WriteLine("0. Exit");
 			Console.WriteLine("--------------------");
-			Console.WriteLine("Please make a choice by entering the corresponding number: ");
+			
 		}
 		internal static void StackMenu(string connectionString) 
 		{
 			DataAccess.ShowStackNames(connectionString);
             Console.WriteLine("---------------------------");
-            Console.WriteLine("Input a current stack name");
-            Console.WriteLine("Or input 0 to exit input");
-            Console.WriteLine("---------------------------");
+			Console.WriteLine("Please make a choice by entering the corresponding number: ");
+			Console.WriteLine("1. Create a new stack");
+            Console.WriteLine("2. Delete a stack");
+            Console.WriteLine("3. Rename a stack");
+			Console.WriteLine("0. Return to main menu");
+			Console.WriteLine("---------------------------");
 		}
-		internal static void DetailedStackMenu(string stackNameMenu)
+		internal static void FlashCardMenu(string stackNameMenu)
 		{
 			Console.Clear();
 			Console.WriteLine("---------------------------");
