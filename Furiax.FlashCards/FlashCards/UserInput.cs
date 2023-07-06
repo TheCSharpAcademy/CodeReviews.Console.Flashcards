@@ -3,7 +3,14 @@ namespace FlashCards
 {
 	internal class UserInput
 	{
-        internal static void GetMenuInput(string connectionString)
+		internal static void DeleteStack(string connectionString, List<Stack> stack)
+		{
+			Console.WriteLine("Enter the StackId of the stack that you want to delete: ");
+			string idToDelete = Console.ReadLine();
+
+		}
+
+		internal static void GetMenuInput(string connectionString)
         {
 			Console.Clear();
 			bool closeApp = false;
@@ -14,7 +21,7 @@ namespace FlashCards
 				switch (input)
 				{
 					case "1":
-						DataAccess.Stack(connectionString); Console.ReadLine(); Console.Clear();
+						DataAccess.Stack(connectionString);
 						break;
 					case "2":
 						DataAccess.Flashcards(); Console.ReadLine(); Console.Clear();
@@ -42,6 +49,7 @@ namespace FlashCards
 		}
 		internal static void GetStackMenuInput(string connectionString)
 		{
+			Console.Clear();
 			Helpers.StackMenu(connectionString);
 			string input = Console.ReadLine();
 			switch (input)
@@ -91,12 +99,28 @@ namespace FlashCards
 				}
 			} 
 		}
-
 		internal static string NewStack(string connectionString)
 		{
-			Console.WriteLine("Please enter a name for the new stack: ");
-			string input = Console.ReadLine();
-			// todo: add validation on valid name and on already exists
+			bool validString = false;
+			string input = "";
+			do
+			{ 
+				Console.WriteLine("Please enter a name for the new stack or enter 0 to return: ");
+				input = Console.ReadLine();
+				if (input == "0")
+				{
+					GetStackMenuInput(connectionString);
+					break;
+				}
+				else if (input.Trim() == "")
+					Console.WriteLine("Value can't be empty");
+				else if (DataAccess.DoesStackExist(connectionString, input) == true)
+				{
+					Console.WriteLine("Can't create stack, a stack with this name already exists");
+				}
+				else
+					validString = true;
+			} while (!validString);
 			return input;
 		}
 	}
