@@ -128,6 +128,7 @@ namespace FlashCards
 					connection.Close();
 				}
 				Console.WriteLine("Stack succesfully deleted");
+				// in SSMS check 'Cascade' box on the 'INSERT and UPDATE SPECIFICATIONS' option when adding FK reference so all references in all tables are deleted
 			}
         }
 
