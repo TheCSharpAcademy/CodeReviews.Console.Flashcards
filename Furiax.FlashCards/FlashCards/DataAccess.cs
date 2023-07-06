@@ -1,6 +1,7 @@
 ﻿using ConsoleTableExt;
 using FlashCards.Model;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace FlashCards
 {
@@ -104,15 +105,30 @@ namespace FlashCards
 		internal static void DeleteStack(string connectionString)
 		{
 			Console.Clear();
-			string sqlCommand = "SELECT * from dbo.Stack";
-			List<Stack> stack = BuildStack(connectionString, sqlCommand);
+			string command = "SELECT * from dbo.Stack";
+			List<Stack> stack = BuildStack(connectionString,command);
 			ConsoleTableBuilder
 				.From(stack)
 				.WithTitle("Stacks")
 				.ExportAndWriteLine();
-			UserInput.DeleteStack(connectionString, stack);
-			
-            Console.WriteLine("Stack succesfully deleted");
+			string stackId = UserInput.DeleteStack(connectionString, stack);
+			if (stackId == "0")
+			{
+				Stack(connectionString);
+			}
+			else
+			{
+				using (var connection = new SqlConnection(connectionString))
+				{
+					connection.Open();
+					var sqlCommand = connection.CreateCommand();
+					sqlCommand.CommandText = "DELETE FROM dbo.Stack WHERE StackId = (@stackId)";
+					sqlCommand.Parameters.Add(new SqlParameter("@stackId", stackId));
+					sqlCommand.ExecuteNonQuery();
+					connection.Close();
+				}
+				Console.WriteLine("Stack succesfully deleted");
+			}
         }
 
 		internal static void UpdateStack(string connectionString)

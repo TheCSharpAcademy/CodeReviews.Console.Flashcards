@@ -4,6 +4,7 @@
 	{
 		internal static void MainMenu()
 		{
+			Console.Clear();
 			Console.WriteLine("Flashcards");
 			Console.WriteLine("----------");
 			Console.WriteLine("Please make a choice by entering the corresponding number: ");
@@ -17,6 +18,7 @@
 		}
 		internal static void StackMenu(string connectionString) 
 		{
+			Console.Clear();
 			DataAccess.ShowStackNames(connectionString);
             Console.WriteLine("---------------------------");
 			Console.WriteLine("Please make a choice by entering the corresponding number: ");
@@ -44,8 +46,18 @@
 		internal static bool ValidateId(string input)
 		{
 			if (string.IsNullOrEmpty(input) || !Int32.TryParse(input, out _)) return false;
-			if (Int32.Parse(input) <0) return false;
+			if (Int32.Parse(input) < 0) return false;
 			return true;
+		}
+		internal static bool CheckIfRecordExists(string id, List<Stack> stack)
+		{
+			bool doesExist = false;
+			foreach (Stack stackItem in stack)
+			{
+				if (stackItem.StackId == Convert.ToInt32(id))
+					doesExist = true;
+			}
+			return doesExist;
 		}
 	}
 }

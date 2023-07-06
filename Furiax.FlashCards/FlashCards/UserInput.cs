@@ -3,13 +3,20 @@ namespace FlashCards
 {
 	internal class UserInput
 	{
-		internal static void DeleteStack(string connectionString, List<Stack> stack)
+		internal static string DeleteStack(string connectionString, List<Stack> stack)
 		{
-			Console.WriteLine("Enter the StackId of the stack that you want to delete: ");
-			string idToDelete = Console.ReadLine();
-
+			while (true)
+			{
+				Console.WriteLine("Enter the StackId of the stack that you want to delete or 0 to return ");
+				string idToDelete = Console.ReadLine();
+				if (idToDelete == "0" || (Helpers.ValidateId(idToDelete) == true && Helpers.CheckIfRecordExists(idToDelete, stack) == true))
+				{
+					return idToDelete;
+				}
+				else
+					Console.WriteLine("Not a valid StackId, try again");
+            }
 		}
-
 		internal static void GetMenuInput(string connectionString)
         {
 			Console.Clear();
