@@ -7,7 +7,7 @@ namespace FlashCards
 		{
 			while (true)
 			{
-				Console.WriteLine("Enter the StackId of the stack that you want to delete or 0 to return ");
+				Console.WriteLine("Enter the stack id of the stack that you want to delete or 0 to return:");
 				string idToDelete = Console.ReadLine();
 				if (idToDelete == "0" || (Helpers.ValidateId(idToDelete) == true && Helpers.CheckIfRecordExists(idToDelete, stack) == true))
 				{
@@ -68,7 +68,7 @@ namespace FlashCards
 					DataAccess.DeleteStack(connectionString); Console.ReadLine() ; Console.Clear();
 					break;
 				case "3":
-					DataAccess.UpdateStack(connectionString); Console.ReadLine(); Console.Clear(); 
+					DataAccess.RenameStack(connectionString); Console.ReadLine(); Console.Clear(); 
 					break;
 				case "0":
 					GetMenuInput(connectionString); 
@@ -120,15 +120,47 @@ namespace FlashCards
 					break;
 				}
 				else if (input.Trim() == "")
-					Console.WriteLine("Value can't be empty");
+					Console.WriteLine("Stack name can't be empty");
 				else if (DataAccess.DoesStackExist(connectionString, input) == true)
 				{
-					Console.WriteLine("Can't create stack, a stack with this name already exists");
+					Console.WriteLine("A stack with that name already exists, please choose another one");
 				}
 				else
 					validString = true;
+				
 			} while (!validString);
 			return input;
+		}
+		internal static (string idToRename, string newName) RenameStack(string connectionString, List<Stack> stack)
+		{
+			bool validId = false;
+			bool validName = false;
+			string idToRename = "";
+			string newName = "";
+			while (validId == false)
+			{
+                Console.WriteLine("Enter the stack id of the stack that you want to rename or 0 to return:");
+				idToRename = Console.ReadLine();
+				if(idToRename == "0" || (Helpers.ValidateId(idToRename) == true && Helpers.CheckIfRecordExists(idToRename, stack) == true))
+				{
+					validId = true;
+				}
+				else
+                    Console.WriteLine("Not a valid StackId, try again");
+            }
+
+			while (validName == false)
+			{
+				Console.WriteLine("Please enter a new name for the stack:");
+				newName = Console.ReadLine();
+				if (newName.Trim() == "")
+					Console.WriteLine("Stack name can't be emty");
+				else if (DataAccess.DoesStackExist(connectionString, newName) == true)
+					Console.WriteLine("A stack with that name already exists, please choose another one");
+				else
+					validName = true;
+			}
+            return (idToRename, newName);
 		}
 	}
 }
