@@ -7,16 +7,17 @@ namespace FlashCards
 {
 	internal class DataAccess
 	{
-		internal static void Flashcards()
+		internal static void Flashcards(string connectionString)
 		{
-			throw new NotImplementedException();
+			Console.Clear();
+			UserInput.GetStackName(connectionString);
 		}
 		internal static void ShowStackNames(string connectionString)
 		{
 			List<StackNameDTO> stackNames = BuildStackDTO(connectionString);
 			ConsoleTableBuilder
 					.From(stackNames)
-					.WithColumn("Overview Stack Names")
+					.WithColumn("List of Stack Names")
 					.ExportAndWriteLine();
 		}
 		internal static List<Stack> BuildStack(string connectionString, string command)
@@ -131,7 +132,6 @@ namespace FlashCards
 				// in SSMS check 'Cascade' box at the 'INSERT and UPDATE SPECIFICATIONS' option when adding FK reference so all references in all tables are deleted
 			}
         }
-
 		internal static void RenameStack(string connectionString)
 		{
 			Console.Clear();
