@@ -1,4 +1,6 @@
-﻿namespace FlashCards.Model
+﻿using System.Collections.Immutable;
+
+namespace FlashCards.Model
 {
 	internal class Helpers
 	{
@@ -32,7 +34,7 @@
 		{
 			Console.Clear();
 			Console.WriteLine("---------------------------");
-			Console.WriteLine($"Current working stack: {stackNameMenu}");
+			Console.WriteLine($"Current selected stack: {stackNameMenu}");
             Console.WriteLine();
 			Console.WriteLine("0 to return to main menu");
             Console.WriteLine("1 to change current stack");

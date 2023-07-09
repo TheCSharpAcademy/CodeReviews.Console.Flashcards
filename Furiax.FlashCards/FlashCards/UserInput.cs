@@ -1,22 +1,11 @@
-﻿using FlashCards.Model;
+﻿using ConsoleTableExt;
+using FlashCards.Model;
+using System.Diagnostics.Eventing.Reader;
+
 namespace FlashCards
 {
 	internal class UserInput
 	{
-		internal static string DeleteStack(string connectionString, List<Stack> stack)
-		{
-			while (true)
-			{
-				Console.WriteLine("Enter the stack id of the stack that you want to delete or 0 to return:");
-				string idToDelete = Console.ReadLine();
-				if (idToDelete == "0" || (Helpers.ValidateId(idToDelete) == true && Helpers.CheckIfRecordExists(idToDelete, stack) == true))
-				{
-					return idToDelete;
-				}
-				else
-					Console.WriteLine("Not a valid StackId, try again");
-            }
-		}
 		internal static void GetMenuInput(string connectionString)
         {
 			Console.Clear();
@@ -31,14 +20,14 @@ namespace FlashCards
 						DataAccess.Stack(connectionString);
 						break;
 					case "2":
-						DataAccess.Flashcards(); Console.ReadLine(); Console.Clear();
+						DataAccess.Flashcards(connectionString);
 						break;
 					case "3":
-						/*Study()*/
+						//Study()
 						; Console.ReadLine(); Console.Clear();
 						break;
 					case "4":
-						/*ViewStudyData()*/
+						//ViewStudyData()
 						; Console.ReadLine(); Console.Clear();
 						break;
 					case "0":
@@ -75,36 +64,55 @@ namespace FlashCards
 					break;
 			}
 		}
+		internal static void GetFlashCardMenuInput(string connectionString, string stackName) 
+		{
+			Console.Clear();
+			Helpers.FlashCardMenu(stackName);
+			string input = Console.ReadLine() ;
+			switch (input) 
+			{
+				// nog verder in te vullen
+				case "0":
+					GetMenuInput (connectionString); break;
+				case "1":
+					GetStackName(connectionString); break;
+
+			}
+		}
 		internal static void GetStackName(string connectionString)
 		{
-			string input = Console.ReadLine();
-			bool isInputInStackNames = false;
-			string stackNameMenu = "";
-			List<StackNameDTO> stackNames = DataAccess.BuildStackDTO(connectionString);
+			Console.Clear();
+			string command = "SELECT * from dbo.Stack";
+			List<Stack> stack = DataAccess.BuildStack(connectionString, command);
+			ConsoleTableBuilder
+				.From(stack)
+				.WithTitle("Stacks")
+				.ExportAndWriteLine();
+			
+			while (true)
+			{
+				Console.WriteLine("Enter the id number of the stack that you want to work with or 0 to return:");
+				string input = Console.ReadLine();
 
-			foreach (StackNameDTO stackName in stackNames)
-			{
-				if (input.ToLower() == stackName.StackName.ToLower())
-				{
-					isInputInStackNames = true;
-					stackNameMenu = stackName.StackName;
-				}
-			}
-			if (isInputInStackNames)
-			{
-				Helpers.FlashCardMenu(stackNameMenu);
-			}
-			else
-			{
 				if (input == "0")
 				{
-					Console.Clear(); GetMenuInput(connectionString);
+					Console.Clear(); GetMenuInput(connectionString); break;
+				}
+				else if (Helpers.ValidateId(input) && Helpers.CheckIfRecordExists(input, stack))
+				{
+					string stackName = "";
+					foreach (Stack stackItem in stack)
+					{
+						if (stackItem.StackId == Convert.ToInt32(input))
+							stackName = stackItem.StackName;
+					}
+					UserInput.GetFlashCardMenuInput(connectionString, stackName); break;
 				}
 				else
 				{
-					Console.WriteLine("Invalid choice");
+					Console.WriteLine("This stack does not exist, please enter the correct name");
 				}
-			} 
+			}
 		}
 		internal static string NewStack(string connectionString)
 		{
@@ -130,6 +138,20 @@ namespace FlashCards
 				
 			} while (!validString);
 			return input;
+		}
+		internal static string DeleteStack(string connectionString, List<Stack> stack)
+		{
+			while (true)
+			{
+				Console.WriteLine("Enter the stack id of the stack that you want to delete or 0 to return:");
+				string idToDelete = Console.ReadLine();
+				if (idToDelete == "0" || (Helpers.ValidateId(idToDelete) == true && Helpers.CheckIfRecordExists(idToDelete, stack) == true))
+				{
+					return idToDelete;
+				}
+				else
+					Console.WriteLine("Not a valid StackId, try again");
+			}
 		}
 		internal static (string idToRename, string newName) RenameStack(string connectionString, List<Stack> stack)
 		{
