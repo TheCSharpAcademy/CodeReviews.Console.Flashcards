@@ -88,14 +88,14 @@ namespace FlashCards
 			}
             Console.WriteLine($"New stack {stackName} created");
         }
-		internal static bool DoesStackExist(string connectionString, string input)
+		internal static bool DoesStackExist(string connectionString, string inputName)
 		{
 			bool doesExist = false;
 			List<StackNameDTO> existingStacks = new List<StackNameDTO>();
 			existingStacks = BuildStackDTO(connectionString);
 			foreach (var stack in existingStacks)
 			{
-				if (input.ToLower() ==  stack.StackName.ToLower())
+				if (inputName.ToLower() ==  stack.StackName.ToLower())
 				{
 					doesExist = true;
 				}
@@ -128,13 +128,38 @@ namespace FlashCards
 					connection.Close();
 				}
 				Console.WriteLine("Stack succesfully deleted");
-				// in SSMS check 'Cascade' box on the 'INSERT and UPDATE SPECIFICATIONS' option when adding FK reference so all references in all tables are deleted
+				// in SSMS check 'Cascade' box at the 'INSERT and UPDATE SPECIFICATIONS' option when adding FK reference so all references in all tables are deleted
 			}
         }
 
-		internal static void UpdateStack(string connectionString)
+		internal static void RenameStack(string connectionString)
 		{
-            Console.WriteLine("Stack renamed");
+			Console.Clear();
+			string command = "SELECT * from dbo.Stack";
+			List<Stack> stack = BuildStack(connectionString, command);
+			ConsoleTableBuilder
+				.From(stack)
+				.WithTitle("Stacks")
+				.ExportAndWriteLine();
+			var newStackInfo = UserInput.RenameStack(connectionString, stack);
+			if (newStackInfo.idToRename == "0")
+			{
+				Stack(connectionString);
+			}
+			else
+			{
+				using (var connection = new SqlConnection(connectionString))
+				{
+					connection.Open();
+					var sqlCommand = connection.CreateCommand();
+					sqlCommand.CommandText = "UPDATE dbo.Stack SET StackName = (@stackName) WHERE StackId = (@stackId)";
+					sqlCommand.Parameters.Add(new SqlParameter("@stackId", newStackInfo.idToRename));
+					sqlCommand.Parameters.Add(new SqlParameter("@stackName", newStackInfo.newName));
+					sqlCommand.ExecuteNonQuery();
+					connection.Close();
+				}
+				Console.WriteLine("Stack succesfully renamed");
+			}
         }
 	}
 }
