@@ -278,6 +278,11 @@ namespace FlashCards
 				var insertFlashcardCommand = connection.CreateCommand();
 				insertFlashcardCommand.CommandText = "INSERT INTO Flashcard (FrontText, BackText, StackId) SELECT FrontText, BackText, StackId FROM TempFlashcard";
 				insertFlashcardCommand.ExecuteNonQuery();
+				//delete temp table
+				var deleteTempCommand = connection.CreateCommand();
+				deleteTempCommand.CommandText= "DROP table TempFlashcard";
+				deleteTempCommand.ExecuteNonQuery();
+				connection.Close();
 			}
 		}
 		internal static void CreateFlashcard(string connectionString, string stackId)
