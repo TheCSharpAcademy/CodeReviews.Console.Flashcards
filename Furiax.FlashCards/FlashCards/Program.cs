@@ -1,5 +1,4 @@
-﻿using System.Data.SqlClient;
-using System.Configuration;
+﻿using System.Configuration;
 using FlashCards;
 
 var connectionString = ConfigurationManager.ConnectionStrings["Flashcards"].ConnectionString;

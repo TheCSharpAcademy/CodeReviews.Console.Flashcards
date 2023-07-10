@@ -1,6 +1,5 @@
 ﻿using ConsoleTableExt;
 using FlashCards.Model;
-using System.Diagnostics.Eventing.Reader;
 
 namespace FlashCards
 {
@@ -69,7 +68,7 @@ namespace FlashCards
 					break;
 			}
 		}
-		internal static void GetFlashCardMenuInput(string connectionString, string stackName) 
+		internal static void GetFlashCardMenuInput(string connectionString, string stackName, string stackId) 
 		{
 			Console.Clear();
 			Helpers.FlashCardMenu(stackName);
@@ -82,11 +81,11 @@ namespace FlashCards
 				case "1":
 					GetStackName(connectionString); break;
 				case "2":
-					DataAccess.ShowAllFlashCards(connectionString); break;
+					DataAccess.ShowAllFlashCards(connectionString, stackName, stackId); Console.ReadKey(); break;
 				default:
                     Console.WriteLine("Invalid input");
 					Console.ReadKey();
-					GetFlashCardMenuInput(connectionString, stackName);
+					GetFlashCardMenuInput(connectionString, stackName, stackId);
                     break;
 			}
 		}
@@ -103,21 +102,21 @@ namespace FlashCards
 			while (true)
 			{
 				Console.WriteLine("Enter the id number of the stack that you want to work with or 0 to return:");
-				string inputStackId = Console.ReadLine();
+				string stackId = Console.ReadLine();
 
-				if (inputStackId == "0")
+				if (stackId == "0")
 				{
 					Console.Clear(); GetMenuInput(connectionString); break;
 				}
-				else if (Helpers.ValidateId(inputStackId) && Helpers.CheckIfRecordExists(inputStackId, stack))
+				else if (Helpers.ValidateId(stackId) && Helpers.CheckIfRecordExists(stackId, stack))
 				{
 					string stackName = "";
 					foreach (Stack stackItem in stack)
 					{
-						if (stackItem.StackId == Convert.ToInt32(inputStackId))
+						if (stackItem.StackId == Convert.ToInt32(stackId))
 							stackName = stackItem.StackName;
 					}
-					UserInput.GetFlashCardMenuInput(connectionString, stackName); break;
+					UserInput.GetFlashCardMenuInput(connectionString, stackName, stackId); break;
 				}
 				else
 				{
