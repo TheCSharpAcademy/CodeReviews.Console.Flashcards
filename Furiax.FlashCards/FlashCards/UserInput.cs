@@ -62,21 +62,32 @@ namespace FlashCards
 				case "0":
 					GetMenuInput(connectionString); 
 					break;
+				default:
+					Console.WriteLine("Invalid input");
+					Console.ReadKey();
+					GetStackMenuInput(connectionString);
+					break;
 			}
 		}
 		internal static void GetFlashCardMenuInput(string connectionString, string stackName) 
 		{
 			Console.Clear();
 			Helpers.FlashCardMenu(stackName);
-			string input = Console.ReadLine() ;
-			switch (input) 
+			string inputFlashCardMenu = Console.ReadLine() ;
+			switch (inputFlashCardMenu) 
 			{
 				// nog verder in te vullen
 				case "0":
 					GetMenuInput (connectionString); break;
 				case "1":
 					GetStackName(connectionString); break;
-
+				case "2":
+					DataAccess.ShowAllFlashCards(connectionString); break;
+				default:
+                    Console.WriteLine("Invalid input");
+					Console.ReadKey();
+					GetFlashCardMenuInput(connectionString, stackName);
+                    break;
 			}
 		}
 		internal static void GetStackName(string connectionString)
@@ -92,18 +103,18 @@ namespace FlashCards
 			while (true)
 			{
 				Console.WriteLine("Enter the id number of the stack that you want to work with or 0 to return:");
-				string input = Console.ReadLine();
+				string inputStackId = Console.ReadLine();
 
-				if (input == "0")
+				if (inputStackId == "0")
 				{
 					Console.Clear(); GetMenuInput(connectionString); break;
 				}
-				else if (Helpers.ValidateId(input) && Helpers.CheckIfRecordExists(input, stack))
+				else if (Helpers.ValidateId(inputStackId) && Helpers.CheckIfRecordExists(inputStackId, stack))
 				{
 					string stackName = "";
 					foreach (Stack stackItem in stack)
 					{
-						if (stackItem.StackId == Convert.ToInt32(input))
+						if (stackItem.StackId == Convert.ToInt32(inputStackId))
 							stackName = stackItem.StackName;
 					}
 					UserInput.GetFlashCardMenuInput(connectionString, stackName); break;

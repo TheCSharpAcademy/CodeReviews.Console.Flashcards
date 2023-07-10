@@ -161,5 +161,10 @@ namespace FlashCards
 				Console.WriteLine("Stack succesfully renamed");
 			}
         }
+
+		internal static void ShowAllFlashCards(string connectionString)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
