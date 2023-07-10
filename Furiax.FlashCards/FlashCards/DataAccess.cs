@@ -190,6 +190,7 @@ namespace FlashCards
 		internal static void ShowAllFlashcards(string connectionString, string stackName, string stackId)
 		{
 			Console.Clear();
+			ResetIdForFlashcard(connectionString);
 			List<FlashcardDTO> flashcards = BuildFlashcardDTO(connectionString, stackId);
 			if (flashcards.Count == 0)
 				Console.WriteLine("No flashcards found for this stack");
@@ -205,6 +206,7 @@ namespace FlashCards
 		internal static void ShowXFlashcards(string connectionString, string stackName, string stackId)
 		{
 			Console.Clear();
+			ResetIdForFlashcard(connectionString);
 			List<FlashcardDTO> flashcards = BuildFlashcardDTO(connectionString, stackId);
 			if (flashcards.Count == 0)
 				Console.WriteLine($"The stack {stackName} doesn't contain any flashcards");
@@ -255,6 +257,29 @@ namespace FlashCards
 				}
 			}
         }
+		internal static void ResetIdForFlashcard(string connectionString)
+		{
+			using(var connection = new SqlConnection(connectionString))
+			{
+				connection.Open();
+				// create temp table
+				var createTempCommand = connection.CreateCommand();
+				createTempCommand.CommandText = "CREATE TABLE TempFlashcard (FrontText nvarchar(255) NOT NULL, BackText nvarchar(255) NOT NULL, StackId int NOT NULL)";
+				createTempCommand.ExecuteNonQuery();
+				// insert data into temp table
+				var insertIntoTempCommand = connection.CreateCommand();
+				insertIntoTempCommand.CommandText = "INSERT INTO TempFlashcard SELECT FrontText, BackText, StackId FROM Flashcard";
+				insertIntoTempCommand.ExecuteNonQuery();
+				//truncate the flashcard table
+				var truncateCommand = connection.CreateCommand();
+				truncateCommand.CommandText = "TRUNCATE table Flashcard";
+				truncateCommand.ExecuteNonQuery();
+				//repopulate flashcard table
+				var insertFlashcardCommand = connection.CreateCommand();
+				insertFlashcardCommand.CommandText = "INSERT INTO Flashcard (FrontText, BackText, StackId) SELECT FrontText, BackText, StackId FROM TempFlashcard";
+				insertFlashcardCommand.ExecuteNonQuery();
+			}
+		}
 		internal static void CreateFlashcard(string connectionString, string stackId)
 		{
 			// yet to be created
