@@ -61,5 +61,10 @@ namespace FlashCards
 			}
 			return doesExist;
 		}
+
+		internal static bool IsValidInt(string? input)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
