@@ -75,7 +75,6 @@ namespace FlashCards
 			string inputFlashCardMenu = Console.ReadLine() ;
 			switch (inputFlashCardMenu) 
 			{
-				// nog verder in te vullen
 				case "0":
 					GetMenuInput (connectionString); break;
 				case "1":
@@ -83,7 +82,7 @@ namespace FlashCards
 				case "2":
 					DataAccess.ShowAllFlashcards(connectionString, stackName, stackId); Console.ReadKey(); break;
 				case "3":
-					DataAccess.ShowXFlashcards(connectionString, stackName, stackId); break;
+					DataAccess.ShowXFlashcards(connectionString, stackName, stackId); Console.ReadKey();  break;
 				case "4":
 					DataAccess.CreateFlashcard(connectionString, stackId); break;
 				case "5":
