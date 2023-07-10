@@ -1,12 +1,15 @@
 ﻿using ConsoleTableExt;
 using FlashCards.Model;
 using System.Data.SqlClient;
-using System.Diagnostics;
 
 namespace FlashCards
 {
 	internal class DataAccess
 	{
+		internal static void Stack(string connectionString)
+		{
+			UserInput.GetStackMenuInput(connectionString);
+		}
 		internal static void Flashcards(string connectionString)
 		{
 			Console.Clear();
@@ -70,10 +73,6 @@ namespace FlashCards
 			}
 			return stackNames;
 	}
-		internal static void Stack(string connectionString)
-		{
-			UserInput.GetStackMenuInput(connectionString);
-		}
 		internal static void CreateNewStack(string connectionString)
 		{
 			Console.Clear();
@@ -161,10 +160,45 @@ namespace FlashCards
 				Console.WriteLine("Stack succesfully renamed");
 			}
         }
-
-		internal static void ShowAllFlashCards(string connectionString)
+		internal static List<FlashcardDTO> BuildFlashcardDTO(string connectionString, string stackId)
 		{
-			throw new NotImplementedException();
+			List<FlashcardDTO> flashcards = new();
+			using(var connection = new SqlConnection(connectionString))
+			{
+				connection.Open();
+				var sqlCommand = connection.CreateCommand();
+				sqlCommand.CommandText = "SELECT FlashcardId, FrontText, BackText from dbo.Flashcard WHERE StackId = @stackId";
+				sqlCommand.Parameters.Add(new SqlParameter("@stackId", stackId));
+				SqlDataReader reader = sqlCommand.ExecuteReader();
+				if (reader.HasRows)
+				{
+					while (reader.Read())
+					{
+						flashcards.Add(new FlashcardDTO
+						{
+							FlashcardId = reader.GetInt32(0),
+							FrontText = reader.GetString(1),
+							BackText = reader.GetString(2)
+						});
+					}
+				}
+			}
+			return flashcards;
 		}
+		internal static void ShowAllFlashCards(string connectionString, string stackName, string stackId)
+		{
+			Console.Clear();
+			List<FlashcardDTO> flashcards = BuildFlashcardDTO(connectionString, stackId);
+			if (flashcards.Count == 0)
+				Console.WriteLine("No flashcards found for this stack");
+			else
+			{
+				ConsoleTableBuilder
+					.From(flashcards)
+					.WithTitle(stackName)
+					.WithColumn("Id", "Front", "Back")
+					.ExportAndWriteLine();
+			}
+        }
 	}
 }

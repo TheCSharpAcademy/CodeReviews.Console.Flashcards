@@ -1,6 +1,6 @@
-﻿using System.Collections.Immutable;
+﻿using FlashCards.Model;
 
-namespace FlashCards.Model
+namespace FlashCards
 {
 	internal class Helpers
 	{
@@ -16,17 +16,17 @@ namespace FlashCards.Model
 			Console.WriteLine("4. View Study Data");
 			Console.WriteLine("0. Exit");
 			Console.WriteLine("--------------------");
-			
+
 		}
-		internal static void StackMenu(string connectionString) 
+		internal static void StackMenu(string connectionString)
 		{
 			Console.Clear();
 			DataAccess.ShowStackNames(connectionString);
-            Console.WriteLine("---------------------------");
+			Console.WriteLine("---------------------------");
 			Console.WriteLine("Please make a choice by entering the corresponding number: ");
 			Console.WriteLine("1. Create a new stack");
-            Console.WriteLine("2. Delete a stack");
-            Console.WriteLine("3. Rename a stack");
+			Console.WriteLine("2. Delete a stack");
+			Console.WriteLine("3. Rename a stack");
 			Console.WriteLine("0. Return to main menu");
 			Console.WriteLine("---------------------------");
 		}
@@ -35,12 +35,12 @@ namespace FlashCards.Model
 			Console.Clear();
 			Console.WriteLine("---------------------------");
 			Console.WriteLine($"Current selected stack: {stackNameMenu}");
-            Console.WriteLine();
+			Console.WriteLine();
 			Console.WriteLine("0 to return to main menu");
-            Console.WriteLine("1 to change current stack");
-            Console.WriteLine("2 to view all Flashcards in this stack");
-            Console.WriteLine("3 to view X amount of cards in stack");
-            Console.WriteLine("4 to Create a Flashcard in current stack");
+			Console.WriteLine("1 to change current stack");
+			Console.WriteLine("2 to view all Flashcards in this stack");
+			Console.WriteLine("3 to view X amount of cards in stack");
+			Console.WriteLine("4 to Create a Flashcard in current stack");
 			Console.WriteLine("5 to Edit a Flashcard");
 			Console.WriteLine("6 to Delete a Flashcard");
 			Console.WriteLine("---------------------------");
