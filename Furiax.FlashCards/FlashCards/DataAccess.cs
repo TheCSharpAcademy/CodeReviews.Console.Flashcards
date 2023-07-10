@@ -1,6 +1,7 @@
 ﻿using ConsoleTableExt;
 using FlashCards.Model;
 using System.Data.SqlClient;
+using System.Diagnostics.Eventing.Reader;
 
 namespace FlashCards
 {
@@ -200,11 +201,29 @@ namespace FlashCards
 					.ExportAndWriteLine();
 			}
         }
-
 		internal static void ShowXFlashcards(string connectionString, string stackName, string stackId)
 		{
-			// yet to be created
-            Console.WriteLine("Not implemented yet");
+			Console.Clear();
+			List<FlashcardDTO> flashcards = BuildFlashcardDTO(connectionString, stackId);
+			if (flashcards.Count == 0)
+                Console.WriteLine($"The stack {stackName} doesn't contain any flashcards");
+            Console.WriteLine($"The stack {stackName} has {flashcards.Count} flashcards");
+			bool validInt = false;
+			while (validInt = false)
+			{
+				Console.WriteLine("How many would you like to display ?");
+				string input = Console.ReadLine();
+                if (Helpers.IsValidInt(input))
+                {
+					//string command vervangen door build list met dit commando
+					sqlcommand = "SELECT FlashcardId, FrontText, BackText from dbo.Flashcard WHERE StackId = @stackId AND FlashcardId <= @input";
+					validInt = true;
+                }
+				else
+				{
+					Console.WriteLine("Not a valid number try again");
+				}
+			}
         }
 
 		internal static void CreateFlashcard(string connectionString, string stackId)
