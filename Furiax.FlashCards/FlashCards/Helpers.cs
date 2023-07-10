@@ -61,10 +61,11 @@ namespace FlashCards
 			}
 			return doesExist;
 		}
-
 		internal static bool IsValidInt(string? input)
 		{
-			throw new NotImplementedException();
+			if (string.IsNullOrEmpty(input) || !Int32.TryParse(input, out _)) return false;
+			if (Int32.Parse(input) < 0) return false;
+			return true;
 		}
 	}
 }

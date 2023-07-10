@@ -1,5 +1,6 @@
 ﻿using ConsoleTableExt;
 using FlashCards.Model;
+using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics.Eventing.Reader;
 
@@ -206,26 +207,54 @@ namespace FlashCards
 			Console.Clear();
 			List<FlashcardDTO> flashcards = BuildFlashcardDTO(connectionString, stackId);
 			if (flashcards.Count == 0)
-                Console.WriteLine($"The stack {stackName} doesn't contain any flashcards");
-            Console.WriteLine($"The stack {stackName} has {flashcards.Count} flashcards");
-			bool validInt = false;
-			while (validInt = false)
+				Console.WriteLine($"The stack {stackName} doesn't contain any flashcards");
+			else
 			{
-				Console.WriteLine("How many would you like to display ?");
-				string input = Console.ReadLine();
-                if (Helpers.IsValidInt(input))
-                {
-					//string command vervangen door build list met dit commando
-					sqlcommand = "SELECT FlashcardId, FrontText, BackText from dbo.Flashcard WHERE StackId = @stackId AND FlashcardId <= @input";
-					validInt = true;
-                }
-				else
+				Console.WriteLine($"The stack {stackName} contains {flashcards.Count} flashcards");
+				bool validInt = false;
+				while (validInt == false)
 				{
-					Console.WriteLine("Not a valid number try again");
+					Console.WriteLine("How many would you like to display ?");
+					string input = Console.ReadLine();
+					if (Helpers.IsValidInt(input))
+					{
+						int number = int.Parse(input);
+						List<FlashcardDTO> xFlashcards = new ();
+						using (var connection = new SqlConnection(connectionString))
+						{
+							connection.Open();
+							var sqlcommand = connection.CreateCommand();
+							sqlcommand.CommandText = "SELECT TOP (@number) FlashcardId, FrontText, BackText from dbo.Flashcard WHERE StackId = @stackId";
+							sqlcommand.Parameters.Add(new SqlParameter ("@number", number));
+							sqlcommand.Parameters.Add(new SqlParameter("@stackId", stackId));
+							SqlDataReader reader = sqlcommand.ExecuteReader();
+							if(reader.HasRows)
+							{
+								while (reader.Read()) 
+								{
+									xFlashcards.Add(new FlashcardDTO
+									{
+										FlashcardId = reader.GetInt32(0),
+										FrontText = reader.GetString(1),
+										BackText = reader.GetString(2)
+									});
+								}
+							}
+						}
+						ConsoleTableBuilder
+							.From(xFlashcards)
+							.WithTitle(stackName)
+							.WithColumn("Id","Front","Back")
+							.ExportAndWriteLine();
+						validInt = true;
+					}
+					else
+					{
+						Console.WriteLine("Not a valid number try again");
+					}
 				}
 			}
         }
-
 		internal static void CreateFlashcard(string connectionString, string stackId)
 		{
 			// yet to be created
