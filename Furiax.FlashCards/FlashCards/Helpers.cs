@@ -40,9 +40,9 @@ namespace FlashCards
 			Console.WriteLine("1 to change current stack");
 			Console.WriteLine("2 to view all Flashcards in this stack");
 			Console.WriteLine("3 to view X amount of cards in stack");
-			Console.WriteLine("4 to Create a Flashcard in current stack");
-			Console.WriteLine("5 to Edit a Flashcard");
-			Console.WriteLine("6 to Delete a Flashcard");
+			Console.WriteLine("4 to create a Flashcard in current stack");
+			Console.WriteLine("5 to edit a Flashcard");
+			Console.WriteLine("6 to delete a Flashcard");
 			Console.WriteLine("---------------------------");
 		}
 		internal static bool ValidateId(string input)

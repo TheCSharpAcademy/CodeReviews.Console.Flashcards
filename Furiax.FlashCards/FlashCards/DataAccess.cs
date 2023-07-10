@@ -185,7 +185,7 @@ namespace FlashCards
 			}
 			return flashcards;
 		}
-		internal static void ShowAllFlashCards(string connectionString, string stackName, string stackId)
+		internal static void ShowAllFlashcards(string connectionString, string stackName, string stackId)
 		{
 			Console.Clear();
 			List<FlashcardDTO> flashcards = BuildFlashcardDTO(connectionString, stackId);
@@ -200,5 +200,29 @@ namespace FlashCards
 					.ExportAndWriteLine();
 			}
         }
+
+		internal static void ShowXFlashcards(string connectionString, string stackName, string stackId)
+		{
+			// yet to be created
+            Console.WriteLine("Not implemented yet");
+        }
+
+		internal static void CreateFlashcard(string connectionString, string stackId)
+		{
+			// yet to be created
+			Console.WriteLine("Not implemented yet");
+		}
+
+		internal static void ModifyFlashcard(string connectionString, string stackId)
+		{
+			// yet to be created
+			Console.WriteLine("Not implemented yet");
+		}
+
+		internal static void DeleteFlashcard(string connectionString, string stackId)
+		{
+			// yet to be created
+			Console.WriteLine("Not implemented yet");
+		}
 	}
 }
