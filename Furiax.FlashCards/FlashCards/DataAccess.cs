@@ -2,6 +2,7 @@
 using FlashCards.Model;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Reflection.Metadata;
 
 namespace FlashCards
 {
@@ -381,7 +382,47 @@ namespace FlashCards
 		}
 		internal static void TakeTest(string connectionString, string stackName, string stackId)
 		{
-			throw new NotImplementedException();
-		}
+			Console.Clear();
+			List<FlashcardDTO> flashcardList = BuildFlashcardDTO(connectionString, stackId);
+			int score = 0;
+			foreach (var item in flashcardList)
+			{
+				List<StudyFrontDTO> studyList = new();
+				studyList.Add(new StudyFrontDTO
+				{
+					Front = item.FrontText
+				});
+				ConsoleTableBuilder
+					.From(studyList)
+					.WithTitle(stackName)
+					.WithColumn("Front")
+					.ExportAndWriteLine();
+
+				string input = UserInput.GetStudyAnswer();
+				string answer = item.BackText;
+
+				if (input == "0")
+				{
+					UserInput.GetMenuInput(connectionString);
+					break;
+				}
+				else if (input.ToLower() == answer.ToLower())
+				{
+					Console.WriteLine("Your answer is correct !!");
+					score++;
+				}
+				else
+				{
+					Console.WriteLine("Your answer was wrong.");
+                    Console.WriteLine($"The correct answer was {answer}");
+                }
+				Console.ReadKey();
+				Console.Clear();
+			}
+
+            Console.WriteLine("Exiting Study session");
+			Console.WriteLine($"You got {score} right out of {flashcardList.Count}");
+			Console.ReadKey();
+        }
 	}
 }

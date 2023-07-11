@@ -255,5 +255,12 @@ namespace FlashCards
 					GetStudyMenuInput(connectionString, stackName, stackId); break;
 			}
 		}
+
+		internal static string GetStudyAnswer()
+		{
+			Console.WriteLine("Input your answer to this card or 0 to exit: ");
+			string answer = Console.ReadLine();
+			return answer;
+		}
 	}
 }
