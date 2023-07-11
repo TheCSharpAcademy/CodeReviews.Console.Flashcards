@@ -246,7 +246,7 @@ namespace FlashCards
 					Console.ReadKey();
 					break;
 				case "2":
-					DataAccess.TakeTest(connectionString, stackName, stackId);
+					DataAccess.TakeQuiz(connectionString, stackName, stackId);
 					Console.ReadKey(); 
 					break;
 				default:
@@ -255,7 +255,6 @@ namespace FlashCards
 					GetStudyMenuInput(connectionString, stackName, stackId); break;
 			}
 		}
-
 		internal static string GetStudyAnswer()
 		{
 			Console.WriteLine("Input your answer to this card or 0 to exit: ");
