@@ -1,4 +1,5 @@
 ﻿using FlashCards.Model;
+using System;
 
 namespace FlashCards
 {
@@ -44,6 +45,16 @@ namespace FlashCards
 			Console.WriteLine("5 to edit a Flashcard");
 			Console.WriteLine("6 to delete a Flashcard");
 			Console.WriteLine("---------------------------");
+		}
+		internal static void StudyMenu(string stackName)
+		{
+			Console.Clear();
+			Console.WriteLine("---------------------------");
+			Console.WriteLine($"Current selected stack: {stackName}");
+			Console.WriteLine();
+			Console.WriteLine("0 to return to main menu");
+			Console.WriteLine("1 to see all the flashcards in this stack");
+			Console.WriteLine("2 take a test for this stack");
 		}
 		internal static bool ValidateId(string input)
 		{
