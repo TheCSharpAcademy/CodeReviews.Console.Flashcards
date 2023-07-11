@@ -86,7 +86,7 @@ namespace FlashCards
 				case "4":
 					DataAccess.CreateFlashcard(connectionString, stackId); break;
 				case "5":
-					DataAccess.ModifyFlashcard(connectionString, stackId); Console.ReadKey(); break;
+					DataAccess.ModifyFlashcard(connectionString, stackId); break;
 				case "6":
 					DataAccess.DeleteFlashcard(connectionString, stackId); break;
 				default:
