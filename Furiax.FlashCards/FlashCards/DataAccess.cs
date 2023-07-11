@@ -337,11 +337,36 @@ namespace FlashCards
 					Console.WriteLine("Invalid id, try again");
             }
 		}
-
 		internal static void DeleteFlashcard(string connectionString, string stackId)
 		{
-			// yet to be created
-			Console.WriteLine("Not implemented yet");
+			Console.Clear();
+			List<FlashcardDTO> flashcards = BuildFlashcardDTO(connectionString, stackId);
+			ConsoleTableBuilder
+				.From(flashcards)
+				.WithTitle("Flashcards")
+				.WithColumn("Id", "Front", "Back")
+				.ExportAndWriteLine();
+			bool validId = false;
+			while (validId == false)
+			{
+				Console.WriteLine("Enter the id of the card you want to delete: ");
+				string flashcardId = Console.ReadLine();
+				if (Helpers.ValidateId(flashcardId) && Helpers.DoesFlashcardIdExists(flashcardId, flashcards))
+				{
+					validId = true;
+					using (var connection = new SqlConnection(connectionString))
+					{
+						connection.Open();
+						var sqlCommand = connection.CreateCommand();
+						sqlCommand.CommandText = "DELETE FROM dbo.Flashcard WHERE FlashcardId = (@flashcardId)";
+						sqlCommand.Parameters.Add(new SqlParameter("@flashcardId", flashcardId));
+						sqlCommand.ExecuteNonQuery();
+						connection.Close();
+					}
+				}
+				else
+					Console.WriteLine("A flashcard with that id does not exist, please try again");
+			}
 		}
 	}
 }
