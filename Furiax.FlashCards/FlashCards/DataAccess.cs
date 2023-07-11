@@ -167,19 +167,21 @@ namespace FlashCards
 			{
 				connection.Open();
 				var sqlCommand = connection.CreateCommand();
-				sqlCommand.CommandText = "SELECT FlashcardId, FrontText, BackText from dbo.Flashcard WHERE StackId = @stackId";
+				sqlCommand.CommandText = "SELECT FrontText, BackText from dbo.Flashcard WHERE StackId = @stackId";
 				sqlCommand.Parameters.Add(new SqlParameter("@stackId", stackId));
 				SqlDataReader reader = sqlCommand.ExecuteReader();
 				if (reader.HasRows)
 				{
+					int id = 1;
 					while (reader.Read())
 					{
 						flashcards.Add(new FlashcardDTO
 						{
-							FlashcardId = reader.GetInt32(0),
-							FrontText = reader.GetString(1),
-							BackText = reader.GetString(2)
-						});
+							Id = id,
+							FrontText = reader.GetString(0),
+							BackText = reader.GetString(1)
+						}) ;
+						id++;
 					}
 				}
 			}
@@ -217,32 +219,34 @@ namespace FlashCards
 					if (Helpers.IsValidInt(input))
 					{
 						int number = int.Parse(input);
-						List<FlashcardDTO> xFlashcards = new ();
+						List<FlashcardDTO> xFlashcards = new();
 						using (var connection = new SqlConnection(connectionString))
 						{
 							connection.Open();
 							var sqlcommand = connection.CreateCommand();
-							sqlcommand.CommandText = "SELECT TOP (@number) FlashcardId, FrontText, BackText from dbo.Flashcard WHERE StackId = @stackId";
-							sqlcommand.Parameters.Add(new SqlParameter ("@number", number));
+							sqlcommand.CommandText = "SELECT TOP (@number) FrontText, BackText from dbo.Flashcard WHERE StackId = @stackId";
+							sqlcommand.Parameters.Add(new SqlParameter("@number", number));
 							sqlcommand.Parameters.Add(new SqlParameter("@stackId", stackId));
 							SqlDataReader reader = sqlcommand.ExecuteReader();
-							if(reader.HasRows)
+							if (reader.HasRows)
 							{
-								while (reader.Read()) 
+								int id = 1;
+								while (reader.Read())
 								{
 									xFlashcards.Add(new FlashcardDTO
 									{
-										FlashcardId = reader.GetInt32(0),
-										FrontText = reader.GetString(1),
-										BackText = reader.GetString(2)
+										Id = id,
+										FrontText = reader.GetString(0),
+										BackText = reader.GetString(1)
 									});
+									id++;
 								}
 							}
 						}
 						ConsoleTableBuilder
 							.From(xFlashcards)
 							.WithTitle(stackName)
-							.WithColumn("Id","Front","Back")
+							.WithColumn("Id", "Front", "Back")
 							.ExportAndWriteLine();
 						validInt = true;
 					}
@@ -252,7 +256,7 @@ namespace FlashCards
 					}
 				}
 			}
-        }
+		}
 		internal static void ResetIdForFlashcard(string connectionString)
 		{
 			using(var connection = new SqlConnection(connectionString))

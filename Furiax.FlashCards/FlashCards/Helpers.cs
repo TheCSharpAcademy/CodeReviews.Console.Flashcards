@@ -71,7 +71,7 @@ namespace FlashCards
 		{
 			foreach (FlashcardDTO flashcard in flashcards)
 			{
-				if(flashcard.FlashcardId == Convert.ToInt32(flashcardId))
+				if (flashcard.Id == Convert.ToInt32(flashcardId))
 					return true;
 			}
 			return false;
