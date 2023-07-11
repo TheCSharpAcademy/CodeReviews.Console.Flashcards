@@ -380,7 +380,7 @@ namespace FlashCards
 			var stackInfo = UserInput.GetStackName(connectionString);
 			UserInput.GetStudyMenuInput(connectionString, stackInfo.stackName, stackInfo.stackId);
 		}
-		internal static void TakeTest(string connectionString, string stackName, string stackId)
+		internal static void TakeQuiz(string connectionString, string stackName, string stackId)
 		{
 			Console.Clear();
 			List<FlashcardDTO> flashcardList = BuildFlashcardDTO(connectionString, stackId);
@@ -420,6 +420,7 @@ namespace FlashCards
 				Console.Clear();
 			}
 
+			
             Console.WriteLine("Exiting Study session");
 			Console.WriteLine($"You got {score} right out of {flashcardList.Count}");
 			Console.ReadKey();

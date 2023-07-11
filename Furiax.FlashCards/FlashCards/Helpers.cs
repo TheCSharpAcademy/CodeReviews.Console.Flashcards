@@ -53,8 +53,8 @@ namespace FlashCards
 			Console.WriteLine($"Current selected stack: {stackName}");
 			Console.WriteLine();
 			Console.WriteLine("0 to return to main menu");
-			Console.WriteLine("1 to see all the flashcards in this stack");
-			Console.WriteLine("2 take a test for this stack");
+			Console.WriteLine("1 to study all the flashcards in this stack");
+			Console.WriteLine("2 to take a quiz for this stack");
 		}
 		internal static bool ValidateId(string input)
 		{
