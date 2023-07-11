@@ -1,8 +1,6 @@
 ﻿using ConsoleTableExt;
 using FlashCards.Model;
-using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics.Eventing.Reader;
 
 namespace FlashCards
 {
@@ -287,8 +285,22 @@ namespace FlashCards
 		}
 		internal static void CreateFlashcard(string connectionString, string stackId)
 		{
-			// yet to be created
-			Console.WriteLine("Not implemented yet");
+			Console.Clear();
+			Console.WriteLine("Create new flashcard:");
+			Console.WriteLine("---------------------");
+			string frontText = UserInput.GetFlashCardFront();
+			string backText = UserInput.GetFlashCardBack();
+			using(var connection = new SqlConnection(connectionString))
+			{ 
+				connection.Open();
+				var sqlCommand = connection.CreateCommand();
+				sqlCommand.CommandText = "INSERT INTO dbo.FlashCard (FrontText, BackText, StackId) VALUES (@frontText, @backText, @stackId)";
+				sqlCommand.Parameters.Add(new SqlParameter("@frontText", frontText));
+				sqlCommand.Parameters.Add(new SqlParameter("@backText", backText));
+				sqlCommand.Parameters.Add(new SqlParameter("@stackId", stackId));
+				sqlCommand.ExecuteNonQuery();
+				connection.Close();
+			}
 		}
 
 		internal static void ModifyFlashcard(string connectionString, string stackId)

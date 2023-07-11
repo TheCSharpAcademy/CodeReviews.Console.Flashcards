@@ -6,7 +6,7 @@ namespace FlashCards
 	internal class UserInput
 	{
 		internal static void GetMenuInput(string connectionString)
-        {
+		{
 			Console.Clear();
 			bool closeApp = false;
 			while (!closeApp)
@@ -39,7 +39,7 @@ namespace FlashCards
 						Console.ReadLine();
 						Console.Clear();
 						break;
-				} 
+				}
 			}
 		}
 		internal static void GetStackMenuInput(string connectionString)
@@ -50,16 +50,16 @@ namespace FlashCards
 			switch (input)
 			{
 				case "1":
-					DataAccess.CreateNewStack(connectionString); Console.ReadLine();  Console.Clear();
+					DataAccess.CreateNewStack(connectionString); Console.ReadLine(); Console.Clear();
 					break;
 				case "2":
-					DataAccess.DeleteStack(connectionString); Console.ReadLine() ; Console.Clear();
+					DataAccess.DeleteStack(connectionString); Console.ReadLine(); Console.Clear();
 					break;
 				case "3":
-					DataAccess.RenameStack(connectionString); Console.ReadLine(); Console.Clear(); 
+					DataAccess.RenameStack(connectionString); Console.ReadLine(); Console.Clear();
 					break;
 				case "0":
-					GetMenuInput(connectionString); 
+					GetMenuInput(connectionString);
 					break;
 				default:
 					Console.WriteLine("Invalid input");
@@ -68,21 +68,21 @@ namespace FlashCards
 					break;
 			}
 		}
-		internal static void GetFlashCardMenuInput(string connectionString, string stackName, string stackId) 
+		internal static void GetFlashCardMenuInput(string connectionString, string stackName, string stackId)
 		{
 			Console.Clear();
 			Helpers.FlashCardMenu(stackName);
-			string inputFlashCardMenu = Console.ReadLine() ;
-			switch (inputFlashCardMenu) 
+			string inputFlashCardMenu = Console.ReadLine();
+			switch (inputFlashCardMenu)
 			{
 				case "0":
-					GetMenuInput (connectionString); break;
+					GetMenuInput(connectionString); break;
 				case "1":
 					GetStackName(connectionString); break;
 				case "2":
 					DataAccess.ShowAllFlashcards(connectionString, stackName, stackId); Console.ReadKey(); break;
 				case "3":
-					DataAccess.ShowXFlashcards(connectionString, stackName, stackId); Console.ReadKey();  break;
+					DataAccess.ShowXFlashcards(connectionString, stackName, stackId); Console.ReadKey(); break;
 				case "4":
 					DataAccess.CreateFlashcard(connectionString, stackId); break;
 				case "5":
@@ -90,10 +90,10 @@ namespace FlashCards
 				case "6":
 					DataAccess.DeleteFlashcard(connectionString, stackId); break;
 				default:
-                    Console.WriteLine("Invalid input");
+					Console.WriteLine("Invalid input");
 					Console.ReadKey();
 					GetFlashCardMenuInput(connectionString, stackName, stackId);
-                    break;
+					break;
 			}
 		}
 		internal static void GetStackName(string connectionString)
@@ -105,7 +105,7 @@ namespace FlashCards
 				.From(stack)
 				.WithTitle("Stacks")
 				.ExportAndWriteLine();
-			
+
 			while (true)
 			{
 				Console.WriteLine("Enter the id number of the stack that you want to work with or 0 to return:");
@@ -136,7 +136,7 @@ namespace FlashCards
 			bool validString = false;
 			string input = "";
 			do
-			{ 
+			{
 				Console.WriteLine("Please enter a name for the new stack or enter 0 to return: ");
 				input = Console.ReadLine();
 				if (input == "0")
@@ -152,7 +152,7 @@ namespace FlashCards
 				}
 				else
 					validString = true;
-				
+
 			} while (!validString);
 			return input;
 		}
@@ -178,15 +178,15 @@ namespace FlashCards
 			string newName = "";
 			while (validId == false)
 			{
-                Console.WriteLine("Enter the stack id of the stack that you want to rename or 0 to return:");
+				Console.WriteLine("Enter the stack id of the stack that you want to rename or 0 to return:");
 				idToRename = Console.ReadLine();
-				if(idToRename == "0" || (Helpers.ValidateId(idToRename) == true && Helpers.CheckIfRecordExists(idToRename, stack) == true))
+				if (idToRename == "0" || (Helpers.ValidateId(idToRename) == true && Helpers.CheckIfRecordExists(idToRename, stack) == true))
 				{
 					validId = true;
 				}
 				else
-                    Console.WriteLine("Not a valid StackId, try again");
-            }
+					Console.WriteLine("Not a valid StackId, try again");
+			}
 
 			while (validName == false)
 			{
@@ -199,7 +199,37 @@ namespace FlashCards
 				else
 					validName = true;
 			}
-            return (idToRename, newName);
+			return (idToRename, newName);
+		}
+		internal static string GetFlashCardFront()
+		{
+			bool validFrontText = false;
+			string frontText = "";
+			while (validFrontText == false)
+			{
+				Console.WriteLine("Enter the text for the frontside: ");
+				frontText = Console.ReadLine();
+				if (!string.IsNullOrEmpty(frontText.Trim()))
+					validFrontText = true;
+				else
+					Console.WriteLine("Value can't be empty, please enter a stringvalue");
+			}
+			return frontText;
+		}
+		internal static string GetFlashCardBack()
+		{
+			bool validBackText = false;
+			string backText = "";
+			while (validBackText == false)
+			{
+				Console.WriteLine("Enter the text for the backside: ");
+				backText = Console.ReadLine();
+				if (!string.IsNullOrEmpty(backText.Trim()))
+					validBackText = true;
+				else
+					Console.WriteLine("Value can't be empty, please enter a stringvalue");
+			}
+			return backText;
 		}
 	}
 }
