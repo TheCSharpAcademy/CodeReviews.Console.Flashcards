@@ -4,6 +4,7 @@ using FlashCards;
 var connectionString = ConfigurationManager.ConnectionStrings["Flashcards"].ConnectionString;
 
 Console.Title = "Flashcards";
+//TODO: create db and tables trough code instead of manually
 UserInput.GetMenuInput(connectionString);
 
 //using (SqlConnection connection = new SqlConnection(connectionString))
