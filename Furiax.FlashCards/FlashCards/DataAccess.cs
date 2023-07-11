@@ -302,11 +302,40 @@ namespace FlashCards
 				connection.Close();
 			}
 		}
-
 		internal static void ModifyFlashcard(string connectionString, string stackId)
 		{
-			// yet to be created
-			Console.WriteLine("Not implemented yet");
+			Console.Clear();
+			List<FlashcardDTO> flashcards = BuildFlashcardDTO(connectionString, stackId);
+			ConsoleTableBuilder
+				.From(flashcards)
+				.WithTitle("Flashcards")
+				.WithColumn("Id","Front", "Back")
+				.ExportAndWriteLine();
+			bool validId = false;
+			while (validId == false)
+			{
+				Console.WriteLine("Enter the id of the card you want to edit: ");
+				string flashcardId = Console.ReadLine();
+				if (Helpers.ValidateId(flashcardId) && Helpers.DoesFlashcardIdExists(flashcardId, flashcards))
+				{
+					validId = true;
+					string frontText = UserInput.GetFlashCardFront();
+					string backText = UserInput.GetFlashCardBack();
+					using (var connection = new SqlConnection(connectionString))
+					{
+						connection.Open();
+						var sqlCommand = connection.CreateCommand();
+						sqlCommand.CommandText = "UPDATE dbo.FlashCard SET FrontText = @frontText, BackText = @backText WHERE FlashcardId = (@flashcardId)";
+						sqlCommand.Parameters.Add(new SqlParameter("@frontText", frontText));
+						sqlCommand.Parameters.Add(new SqlParameter("@backText", backText));
+						sqlCommand.Parameters.Add(new SqlParameter("@flashcardId", flashcardId));
+						sqlCommand.ExecuteNonQuery();
+						connection.Close();
+					}
+				}
+				else
+					Console.WriteLine("Invalid id, try again");
+            }
 		}
 
 		internal static void DeleteFlashcard(string connectionString, string stackId)
