@@ -25,8 +25,7 @@ namespace FlashCards
 						DataAccess.Study(connectionString);
 						break;
 					case "4":
-						//ViewStudyData()
-						; Console.ReadLine(); Console.Clear();
+						DataAccess.ViewStudyData(connectionString);
 						break;
 					case "0":
 						Console.WriteLine("Goodbye");

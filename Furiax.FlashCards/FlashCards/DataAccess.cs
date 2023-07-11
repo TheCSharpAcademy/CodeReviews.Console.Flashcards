@@ -1,8 +1,6 @@
 ﻿using ConsoleTableExt;
 using FlashCards.Model;
 using System.Data.SqlClient;
-using System.Diagnostics;
-using System.Reflection.Metadata;
 
 namespace FlashCards
 {
@@ -420,10 +418,55 @@ namespace FlashCards
 				Console.Clear();
 			}
 
-			
+			CreateStudySession(connectionString, stackId, score);
             Console.WriteLine("Exiting Study session");
 			Console.WriteLine($"You got {score} right out of {flashcardList.Count}");
 			Console.ReadKey();
         }
+		private static void CreateStudySession(string connectionString, string stackId, int score)
+		{
+			using(var connection = new SqlConnection(connectionString))
+			{
+				connection.Open();
+				var sqlCommand = connection.CreateCommand();
+				sqlCommand.CommandText = "INSERT INTO dbo.StudySession (StackId, Score) VALUES (@stackId, @score)";
+				sqlCommand.Parameters.Add(new SqlParameter("@stackId", stackId));
+				sqlCommand.Parameters.Add(new SqlParameter("@score", score));
+				sqlCommand.ExecuteNonQuery();
+				connection.Close();
+			}
+		}
+		internal static void ViewStudyData(string connectionString)
+		{
+			Console.Clear();
+			List<StudySession> sessions = new();
+			using(var connection = new SqlConnection(connectionString))
+			{
+				connection.Open();
+				var sqlCommand = connection.CreateCommand();
+				sqlCommand.CommandText = "SELECT StudySessionId, StackId, StudyDate, Score FROM dbo.StudySession";
+				SqlDataReader reader = sqlCommand.ExecuteReader();
+				if (reader.HasRows)
+				{
+					while(reader.Read())
+					{
+						sessions.Add(new StudySession
+						{
+							StudySessionId = reader.GetInt32(0),
+							StackId = reader.GetInt32(1),
+							StudyDate = reader.GetDateTime(2),
+							Score = reader.GetInt32(3),
+						}) ;
+					}
+				}
+			}
+			ConsoleTableBuilder
+				.From(sessions)
+				.WithTitle("Study Sessions")
+				.WithColumn("Id", "StackId", "Date", "Score")
+				.WithFormatter(2, f => $"{f:dd/MM/yy}")
+				.ExportAndWriteLine();
+			Console.ReadKey();
+		}
 	}
 }
