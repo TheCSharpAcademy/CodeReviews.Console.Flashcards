@@ -160,7 +160,7 @@ namespace FlashCards
 				Console.WriteLine("Stack succesfully renamed");
 			}
         }
-		internal static List<FlashcardDTO> BuildFlashcardDTO(string connectionString, string stackId)
+		internal static List<FlashcardDTO> BuildFlashcardDTOcustomId(string connectionString, string stackId)
 		{
 			List<FlashcardDTO> flashcards = new();
 			using(var connection = new SqlConnection(connectionString))
@@ -187,10 +187,35 @@ namespace FlashCards
 			}
 			return flashcards;
 		}
+		internal static List<FlashcardDTO> BuildFlashcardDTO(string connectionString, string stackId)
+		{
+			List<FlashcardDTO> flashcards = new();
+			using (var connection = new SqlConnection(connectionString))
+			{
+				connection.Open();
+				var sqlCommand = connection.CreateCommand();
+				sqlCommand.CommandText = "SELECT FlashcardId, FrontText, BackText from dbo.Flashcard WHERE StackId = @stackId";
+				sqlCommand.Parameters.Add(new SqlParameter("@stackId", stackId));
+				SqlDataReader reader = sqlCommand.ExecuteReader();
+				if (reader.HasRows)
+				{
+					while (reader.Read())
+					{
+						flashcards.Add(new FlashcardDTO
+						{
+							Id = reader.GetInt32(0),
+							FrontText = reader.GetString(1),
+							BackText = reader.GetString(2)
+						});
+					}
+				}
+			}
+			return flashcards;
+		}
 		internal static void ShowAllFlashcards(string connectionString, string stackName, string stackId)
 		{
 			Console.Clear();
-			List<FlashcardDTO> flashcards = BuildFlashcardDTO(connectionString, stackId);
+			List<FlashcardDTO> flashcards = BuildFlashcardDTOcustomId(connectionString, stackId);
 			if (flashcards.Count == 0)
 				Console.WriteLine("No flashcards found for this stack");
 			else
@@ -205,7 +230,7 @@ namespace FlashCards
 		internal static void ShowXFlashcards(string connectionString, string stackName, string stackId)
 		{
 			Console.Clear();
-			List<FlashcardDTO> flashcards = BuildFlashcardDTO(connectionString, stackId);
+			List<FlashcardDTO> flashcards = BuildFlashcardDTOcustomId(connectionString, stackId);
 			if (flashcards.Count == 0)
 				Console.WriteLine($"The stack {stackName} doesn't contain any flashcards");
 			else
@@ -316,9 +341,11 @@ namespace FlashCards
 			bool validId = false;
 			while (validId == false)
 			{
-				Console.WriteLine("Enter the id of the card you want to edit: ");
+				Console.WriteLine("Enter the id of the card you want to edit or 0 to return: ");
 				string flashcardId = Console.ReadLine();
-				if (Helpers.ValidateId(flashcardId) && Helpers.DoesFlashcardIdExists(flashcardId, flashcards))
+				if (flashcardId == "0")
+					break;
+				else if (Helpers.ValidateId(flashcardId) && Helpers.DoesFlashcardIdExists(flashcardId, flashcards))
 				{
 					validId = true;
 					string frontText = UserInput.GetFlashCardFront();
@@ -336,7 +363,7 @@ namespace FlashCards
 					}
 				}
 				else
-					Console.WriteLine("Invalid id, try again");
+					Console.WriteLine("A flashcard with this id does not exist, try again");
             }
 		}
 		internal static void DeleteFlashcard(string connectionString, string stackId)
@@ -351,9 +378,11 @@ namespace FlashCards
 			bool validId = false;
 			while (validId == false)
 			{
-				Console.WriteLine("Enter the id of the card you want to delete: ");
+				Console.WriteLine("Enter the id of the card you want to delete or 0 to return: ");
 				string flashcardId = Console.ReadLine();
-				if (Helpers.ValidateId(flashcardId) && Helpers.DoesFlashcardIdExists(flashcardId, flashcards))
+				if (flashcardId == "0")
+					break;
+				else if (Helpers.ValidateId(flashcardId) && Helpers.DoesFlashcardIdExists(flashcardId, flashcards))
 				{
 					validId = true;
 					using (var connection = new SqlConnection(connectionString))
