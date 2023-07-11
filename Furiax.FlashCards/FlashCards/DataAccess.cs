@@ -188,7 +188,6 @@ namespace FlashCards
 		internal static void ShowAllFlashcards(string connectionString, string stackName, string stackId)
 		{
 			Console.Clear();
-			ResetIdForFlashcard(connectionString);
 			List<FlashcardDTO> flashcards = BuildFlashcardDTO(connectionString, stackId);
 			if (flashcards.Count == 0)
 				Console.WriteLine("No flashcards found for this stack");
@@ -204,7 +203,6 @@ namespace FlashCards
 		internal static void ShowXFlashcards(string connectionString, string stackName, string stackId)
 		{
 			Console.Clear();
-			ResetIdForFlashcard(connectionString);
 			List<FlashcardDTO> flashcards = BuildFlashcardDTO(connectionString, stackId);
 			if (flashcards.Count == 0)
 				Console.WriteLine($"The stack {stackName} doesn't contain any flashcards");
