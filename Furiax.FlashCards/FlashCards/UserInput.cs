@@ -22,8 +22,7 @@ namespace FlashCards
 						DataAccess.Flashcards(connectionString);
 						break;
 					case "3":
-						//Study()
-						; Console.ReadLine(); Console.Clear();
+						DataAccess.Study(connectionString);
 						break;
 					case "4":
 						//ViewStudyData()
@@ -96,7 +95,7 @@ namespace FlashCards
 					break;
 			}
 		}
-		internal static void GetStackName(string connectionString)
+		internal static (string stackName, string stackId) GetStackName(string connectionString)
 		{
 			Console.Clear();
 			string command = "SELECT * from dbo.Stack";
@@ -105,11 +104,12 @@ namespace FlashCards
 				.From(stack)
 				.WithTitle("Stacks")
 				.ExportAndWriteLine();
-
+			string stackName = "";
+			string stackId = "";
 			while (true)
 			{
 				Console.WriteLine("Enter the id number of the stack that you want to work with or 0 to return:");
-				string stackId = Console.ReadLine();
+				stackId = Console.ReadLine();
 
 				if (stackId == "0")
 				{
@@ -117,19 +117,20 @@ namespace FlashCards
 				}
 				else if (Helpers.ValidateId(stackId) && Helpers.CheckIfRecordExists(stackId, stack))
 				{
-					string stackName = "";
+					stackName = "";
 					foreach (Stack stackItem in stack)
 					{
 						if (stackItem.StackId == Convert.ToInt32(stackId))
 							stackName = stackItem.StackName;
 					}
-					UserInput.GetFlashCardMenuInput(connectionString, stackName, stackId); break;
+					break;
 				}
 				else
 				{
 					Console.WriteLine("This stack does not exist, please enter the correct name");
 				}
 			}
+			return (stackName, stackId);
 		}
 		internal static string NewStack(string connectionString)
 		{
@@ -230,6 +231,29 @@ namespace FlashCards
 					Console.WriteLine("Value can't be empty, please enter a stringvalue");
 			}
 			return backText;
+		}
+		internal static void GetStudyMenuInput(string connectionString, string stackName, string stackId)
+		{
+			Console.Clear();
+			Helpers.StudyMenu(stackName);
+			string input = Console.ReadLine();
+			switch(input)
+			{
+				case "0":
+					break;
+				case "1":
+					DataAccess.ShowAllFlashcards(connectionString, stackName, stackId); 
+					Console.ReadKey();
+					break;
+				case "2":
+					DataAccess.TakeTest(connectionString, stackName, stackId);
+					Console.ReadKey(); 
+					break;
+				default:
+					Console.WriteLine("Invalid input");
+					Console.ReadKey();
+					GetStudyMenuInput(connectionString, stackName, stackId); break;
+			}
 		}
 	}
 }

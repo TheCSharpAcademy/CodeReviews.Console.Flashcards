@@ -1,6 +1,7 @@
 ﻿using ConsoleTableExt;
 using FlashCards.Model;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace FlashCards
 {
@@ -13,7 +14,8 @@ namespace FlashCards
 		internal static void Flashcards(string connectionString)
 		{
 			Console.Clear();
-			UserInput.GetStackName(connectionString);
+			var stackInfo = UserInput.GetStackName(connectionString);
+			UserInput.GetFlashCardMenuInput(connectionString, stackInfo.stackName, stackInfo.stackId);
 		}
 		internal static void ShowStackNames(string connectionString)
 		{
@@ -282,35 +284,6 @@ namespace FlashCards
 				}
 			}
 		}
-		//internal static void ResetIdForFlashcard(string connectionString)
-		//{
-		// //This did not work out like I thought it should
-		//	using(var connection = new SqlConnection(connectionString))
-		//	{
-		//		connection.Open();
-		//		// create temp table
-		//		var createTempCommand = connection.CreateCommand();
-		//		createTempCommand.CommandText = "CREATE TABLE TempFlashcard (FrontText nvarchar(255) NOT NULL, BackText nvarchar(255) NOT NULL, StackId int NOT NULL)";
-		//		createTempCommand.ExecuteNonQuery();
-		//		// insert data into temp table
-		//		var insertIntoTempCommand = connection.CreateCommand();
-		//		insertIntoTempCommand.CommandText = "INSERT INTO TempFlashcard SELECT FrontText, BackText, StackId FROM Flashcard";
-		//		insertIntoTempCommand.ExecuteNonQuery();
-		//		//truncate the flashcard table
-		//		var truncateCommand = connection.CreateCommand();
-		//		truncateCommand.CommandText = "TRUNCATE table Flashcard";
-		//		truncateCommand.ExecuteNonQuery();
-		//		//repopulate flashcard table
-		//		var insertFlashcardCommand = connection.CreateCommand();
-		//		insertFlashcardCommand.CommandText = "INSERT INTO Flashcard (FrontText, BackText, StackId) SELECT FrontText, BackText, StackId FROM TempFlashcard";
-		//		insertFlashcardCommand.ExecuteNonQuery();
-		//		//delete temp table
-		//		var deleteTempCommand = connection.CreateCommand();
-		//		deleteTempCommand.CommandText= "DROP table TempFlashcard";
-		//		deleteTempCommand.ExecuteNonQuery();
-		//		connection.Close();
-		//	}
-		//}
 		internal static void CreateFlashcard(string connectionString, string stackId)
 		{
 			Console.Clear();
@@ -399,6 +372,16 @@ namespace FlashCards
 				else
 					Console.WriteLine("A flashcard with that id does not exist, please try again");
 			}
+		}
+		internal static void Study(string connectionString)
+		{
+			Console.Clear();
+			var stackInfo = UserInput.GetStackName(connectionString);
+			UserInput.GetStudyMenuInput(connectionString, stackInfo.stackName, stackInfo.stackId);
+		}
+		internal static void TakeTest(string connectionString, string stackName, string stackId)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
