@@ -172,7 +172,7 @@ namespace FlashCards
 					Console.WriteLine("Not a valid StackId, try again");
 			}
 		}
-		internal static (string idToRename, string newName) RenameStack(string connectionString)
+		internal static (string idToRename, string newName) RenameStack(string connectionString, List<Stack>stack)
 		{
 			bool validId = false;
 			bool validName = false;
