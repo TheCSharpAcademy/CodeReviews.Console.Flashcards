@@ -176,7 +176,7 @@ namespace FlashCards
 				.From(stack)
 				.WithTitle("Stacks")
 				.ExportAndWriteLine();
-			var newStackInfo = UserInput.RenameStack(connectionString, stack);
+			var newStackInfo = UserInput.RenameStack(connectionString);
 			if (newStackInfo.idToRename == "0")
 			{
 				Stack(connectionString);
