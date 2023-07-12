@@ -6,6 +6,41 @@ namespace FlashCards
 {
 	internal class DataAccess
 	{
+		internal static void SetupDbAndTables(string connectionString)
+		{
+			using(var connection = new SqlConnection(connectionString))
+			{
+				connection.Open();
+				var sqlCommand = connection.CreateCommand();
+				sqlCommand.CommandText = "IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = 'Flashcards') CREATE DATABASE Flashcards";
+				sqlCommand.ExecuteNonQuery();
+				sqlCommand.CommandText = @"IF NOT EXISTS ( SELECT * FROM sysobjects WHERE name = 'Stack' and type = 'U')
+				CREATE TABLE Stack (StackId int NOT NULL PRIMARY KEY IDENTITY(1,1),
+								     StackName nvarchar(255) NOT NULL UNIQUE)";
+				sqlCommand.ExecuteNonQuery();
+				sqlCommand.CommandText = @"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'Flashcard' and type ='U')
+				CREATE TABLE Flashcard (FlashcardId int PRIMARY KEY NOT NULL IDENTITY(1,1),
+										FrontText nvarchar(255) NOT NULL,
+										BackText nvarchar(255) NOT NULL,
+										StackId int NOT NULL,
+										CONSTRAINT FK_StackFlashcard FOREIGN KEY (StackId)
+										REFERENCES Stack(StackId)
+										ON DELETE CASCADE
+										ON UPDATE CASCADE)";
+				sqlCommand.ExecuteNonQuery();
+				sqlCommand.CommandText = @"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'StudySession' and type ='U')
+				CREATE TABLE StudySession (StudySessionId int PRIMARY KEY NOT NULL IDENTITY(1,1),
+											StackId int NOT NULL,
+											StudyDate date NOT NULL DEFAULT getdate(),
+											Score int NOT NULL
+											CONSTRAINT FK_StackStudySession FOREIGN KEY (StackId)
+											REFERENCES Stack(StackId)
+											ON DELETE CASCADE
+											ON UPDATE CASCADE)";
+				sqlCommand.ExecuteNonQuery();
+				connection.Close();
+			}
+		}
 		internal static void Stack(string connectionString)
 		{
 			UserInput.GetStackMenuInput(connectionString);
