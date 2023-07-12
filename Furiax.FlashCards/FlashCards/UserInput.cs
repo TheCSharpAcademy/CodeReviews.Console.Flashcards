@@ -27,6 +27,8 @@ namespace FlashCards
 					case "4":
 						DataAccess.ViewStudyData(connectionString);
 						break;
+					case "5":
+						DataAccess.ShowReport(connectionString); break;
 					case "0":
 						Console.WriteLine("Goodbye");
 						Environment.Exit(0);
