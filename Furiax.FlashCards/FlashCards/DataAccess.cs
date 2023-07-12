@@ -1,5 +1,6 @@
 ﻿using ConsoleTableExt;
 using FlashCards.Model;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace FlashCards
@@ -181,7 +182,7 @@ namespace FlashCards
 				.From(stack)
 				.WithTitle("Stacks")
 				.ExportAndWriteLine();
-			var newStackInfo = UserInput.RenameStack(connectionString);
+			var newStackInfo = UserInput.RenameStack(connectionString, stack);
 			if (newStackInfo.idToRename == "0")
 			{
 				Stack(connectionString);
@@ -505,6 +506,36 @@ namespace FlashCards
 		internal static void ShowReport(string connectionString)
 		{
 			string year = UserInput.GetYearForPivot();
+			using(var connection = new SqlConnection (connectionString))
+			{
+				connection.Open();
+				var sqlCommand = connection.CreateCommand();
+				sqlCommand.CommandText = @"SELECT stackname, [January], [February], [March], [April], [May], [June], [July], [August], [September], [October], [November], [December]
+											FROM
+											(
+												SELECT Stack.StackName, DATENAME(MONTH, StudySession.StudyDate) AS StudyMonth
+												FROM Stack
+												INNER JOIN StudySession ON Stack.StackId = StudySession.StackId
+												WHERE YEAR(StudySession.StudyDate) = @year
+											) AS s
+											PIVOT
+											(
+												COUNT(StudyMonth)
+												FOR StudyMonth IN ([January], [February], [March], [April], [May], [June], [July], [August], [September], [October], [November], [December])
+											) AS pvt;
+											";
+				sqlCommand.Parameters.Add(new SqlParameter("@year", year));
+				SqlDataAdapter adapter = new SqlDataAdapter(sqlCommand);
+				DataSet ds = new DataSet();
+				adapter.Fill(ds);
+
+				ConsoleTableBuilder
+					.From(ds)
+					.ExportAndWriteLine();
+
+				connection.Close();
+			}
+			
 		}
 	}
 }
