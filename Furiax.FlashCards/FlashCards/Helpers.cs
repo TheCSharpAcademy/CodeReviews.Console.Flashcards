@@ -1,5 +1,4 @@
 ﻿using FlashCards.Model;
-using System;
 
 namespace FlashCards
 {
