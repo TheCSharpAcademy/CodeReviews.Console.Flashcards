@@ -51,6 +51,12 @@ namespace FlashCards
 			var stackInfo = UserInput.GetStackName(connectionString);
 			UserInput.GetFlashCardMenuInput(connectionString, stackInfo.stackName, stackInfo.stackId);
 		}
+		internal static void Study(string connectionString)
+		{
+			Console.Clear();
+			var stackInfo = UserInput.GetStackName(connectionString);
+			UserInput.GetStudyMenuInput(connectionString, stackInfo.stackName, stackInfo.stackId);
+		}
 		internal static void ShowStackNames(string connectionString)
 		{
 			List<StackNameDTO> stackNames = BuildStackDTO(connectionString);
@@ -164,7 +170,6 @@ namespace FlashCards
 					connection.Close();
 				}
 				Console.WriteLine("Stack succesfully deleted");
-				// in SSMS check 'Cascade' box at the 'INSERT and UPDATE SPECIFICATIONS' option when adding FK reference so all references in all tables are deleted
 			}
         }
 		internal static void RenameStack(string connectionString)
@@ -406,12 +411,6 @@ namespace FlashCards
 				else
 					Console.WriteLine("A flashcard with that id does not exist, please try again");
 			}
-		}
-		internal static void Study(string connectionString)
-		{
-			Console.Clear();
-			var stackInfo = UserInput.GetStackName(connectionString);
-			UserInput.GetStudyMenuInput(connectionString, stackInfo.stackName, stackInfo.stackId);
 		}
 		internal static void TakeQuiz(string connectionString, string stackName, string stackId)
 		{

@@ -260,5 +260,12 @@ namespace FlashCards
 			string answer = Console.ReadLine();
 			return answer;
 		}
+		internal static string GetYearForPivot()
+		{
+            Console.Write("Input a year in format YYYY: ");
+			string input = Console.ReadLine();
+			//TODO: add validation
+			return input;
+        }
 	}
 }
