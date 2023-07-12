@@ -531,6 +531,7 @@ namespace FlashCards
 
 				ConsoleTableBuilder
 					.From(ds)
+					.WithTitle("Number of Session per month for: "+year)
 					.ExportAndWriteLine();
 
 				connection.Close();
