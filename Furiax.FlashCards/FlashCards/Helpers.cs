@@ -14,6 +14,7 @@ namespace FlashCards
 			Console.WriteLine("2. Manage Flashcards");
 			Console.WriteLine("3. Study");
 			Console.WriteLine("4. View Study Data");
+			Console.WriteLine("5. Show Report");
 			Console.WriteLine("0. Exit");
 			Console.WriteLine("--------------------");
 
@@ -36,13 +37,13 @@ namespace FlashCards
 			Console.WriteLine("---------------------------");
 			Console.WriteLine($"Current selected stack: {stackNameMenu}");
 			Console.WriteLine();
-			Console.WriteLine("0 to return to main menu");
-			Console.WriteLine("1 to change current stack");
-			Console.WriteLine("2 to view all Flashcards in this stack");
-			Console.WriteLine("3 to view X amount of cards in stack");
-			Console.WriteLine("4 to create a Flashcard in current stack");
-			Console.WriteLine("5 to edit a Flashcard");
-			Console.WriteLine("6 to delete a Flashcard");
+			Console.WriteLine("0. to return to main menu");
+			Console.WriteLine("1. to change current stack");
+			Console.WriteLine("2. to view all Flashcards in this stack");
+			Console.WriteLine("3. to view X amount of cards in stack");
+			Console.WriteLine("4. to create a Flashcard in current stack");
+			Console.WriteLine("5. to edit a Flashcard");
+			Console.WriteLine("6. to delete a Flashcard");
 			Console.WriteLine("---------------------------");
 		}
 		internal static void StudyMenu(string stackName)
@@ -51,9 +52,9 @@ namespace FlashCards
 			Console.WriteLine("---------------------------");
 			Console.WriteLine($"Current selected stack: {stackName}");
 			Console.WriteLine();
-			Console.WriteLine("0 to return to main menu");
-			Console.WriteLine("1 to study all the flashcards in this stack");
-			Console.WriteLine("2 to take a quiz for this stack");
+			Console.WriteLine("0. to return to main menu");
+			Console.WriteLine("1. to study all the flashcards in this stack");
+			Console.WriteLine("2. to take a quiz for this stack");
 		}
 		internal static bool ValidateId(string input)
 		{

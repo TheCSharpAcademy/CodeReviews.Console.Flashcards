@@ -502,5 +502,9 @@ namespace FlashCards
 				.ExportAndWriteLine();
 			Console.ReadKey();
 		}
+		internal static void ShowReport(string connectionString)
+		{
+			string year = UserInput.GetYearForPivot();
+		}
 	}
 }
