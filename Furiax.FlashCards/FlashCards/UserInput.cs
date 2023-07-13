@@ -264,9 +264,17 @@ namespace FlashCards
 		}
 		internal static string GetYearForPivot()
 		{
-            Console.Write("Input a year in format YYYY: ");
-			string input = Console.ReadLine();
-			//TODO: add validation
+			bool ValidInput = false;
+			string input = "";
+			while (ValidInput == false)
+			{
+				Console.Write("Input a year in format YYYY: ");
+				input = Console.ReadLine();
+				if (Helpers.IsValidInt(input) == true && Int32.Parse(input) > 1000 && Int32.Parse(input) <= DateTime.Now.Year)
+					ValidInput = true;
+				else
+					Console.WriteLine("Not a valid value for year or year in the future");
+			}
 			return input;
         }
 	}
