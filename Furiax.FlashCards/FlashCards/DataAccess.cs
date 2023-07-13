@@ -1,8 +1,6 @@
 ﻿using ConsoleTableExt;
 using FlashCards.Model;
-using System.Data;
 using System.Data.SqlClient;
-using System.Runtime.CompilerServices;
 
 namespace FlashCards
 {
