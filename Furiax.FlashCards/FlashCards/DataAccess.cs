@@ -612,12 +612,5 @@ namespace FlashCards
 				.ExportAndWriteLine();
 			Console.ReadKey();
 		}
-		internal static int? SafeGetInt(SqlDataReader reader, int integer)
-		{
-			if(!reader.IsDBNull(integer))
-				return reader.GetInt32(integer);
-			else
-				return null;
-		}
 	}
 }
