@@ -2,6 +2,7 @@
 using FlashCards.Model;
 using System.Data;
 using System.Data.SqlClient;
+using System.Reflection.PortableExecutable;
 
 namespace FlashCards
 {
@@ -9,7 +10,7 @@ namespace FlashCards
 	{
 		internal static void SetupDbAndTables(string connectionString)
 		{
-			using(var connection = new SqlConnection(connectionString))
+			using (var connection = new SqlConnection(connectionString))
 			{
 				connection.Open();
 				var sqlCommand = connection.CreateCommand();
@@ -83,7 +84,7 @@ namespace FlashCards
 						{
 							StackId = reader.GetInt32(0),
 							StackName = reader.GetString(1)
-						}) ;
+						});
 					}
 				}
 			}
@@ -115,22 +116,22 @@ namespace FlashCards
 				connection.Close();
 			}
 			return stackNames;
-	}
+		}
 		internal static void CreateNewStack(string connectionString)
 		{
 			Console.Clear();
 			string stackName = UserInput.NewStack(connectionString);
-			using(var connection = new SqlConnection(connectionString))
-			{ 
-				connection.Open(); 
+			using (var connection = new SqlConnection(connectionString))
+			{
+				connection.Open();
 				var sqlCommand = connection.CreateCommand();
 				sqlCommand.CommandText = "INSERT INTO dbo.Stack (StackName) VALUES (@stackName)";
 				sqlCommand.Parameters.Add(new SqlParameter("@stackName", stackName));
 				sqlCommand.ExecuteNonQuery();
 				connection.Close();
 			}
-            Console.WriteLine($"New stack {stackName} created");
-        }
+			Console.WriteLine($"New stack {stackName} created");
+		}
 		internal static bool DoesStackExist(string connectionString, string inputName)
 		{
 			bool doesExist = false;
@@ -138,7 +139,7 @@ namespace FlashCards
 			existingStacks = BuildStackDTO(connectionString);
 			foreach (var stack in existingStacks)
 			{
-				if (inputName.ToLower() ==  stack.StackName.ToLower())
+				if (inputName.ToLower() == stack.StackName.ToLower())
 				{
 					doesExist = true;
 				}
@@ -149,7 +150,7 @@ namespace FlashCards
 		{
 			Console.Clear();
 			string command = "SELECT * from dbo.Stack";
-			List<Stack> stack = BuildStack(connectionString,command);
+			List<Stack> stack = BuildStack(connectionString, command);
 			ConsoleTableBuilder
 				.From(stack)
 				.WithTitle("Stacks")
@@ -172,7 +173,7 @@ namespace FlashCards
 				}
 				Console.WriteLine("Stack succesfully deleted");
 			}
-        }
+		}
 		internal static void RenameStack(string connectionString)
 		{
 			Console.Clear();
@@ -201,11 +202,11 @@ namespace FlashCards
 				}
 				Console.WriteLine("Stack succesfully renamed");
 			}
-        }
+		}
 		internal static List<FlashcardDTO> BuildFlashcardDTOcustomId(string connectionString, string stackId)
 		{
 			List<FlashcardDTO> flashcards = new();
-			using(var connection = new SqlConnection(connectionString))
+			using (var connection = new SqlConnection(connectionString))
 			{
 				connection.Open();
 				var sqlCommand = connection.CreateCommand();
@@ -222,7 +223,7 @@ namespace FlashCards
 							Id = id,
 							FrontText = reader.GetString(0),
 							BackText = reader.GetString(1)
-						}) ;
+						});
 						id++;
 					}
 				}
@@ -268,7 +269,7 @@ namespace FlashCards
 					.WithColumn("Id", "Front", "Back")
 					.ExportAndWriteLine();
 			}
-        }
+		}
 		internal static void ShowXFlashcards(string connectionString, string stackName, string stackId)
 		{
 			Console.Clear();
@@ -331,8 +332,8 @@ namespace FlashCards
 			Console.WriteLine("---------------------");
 			string frontText = UserInput.GetFlashCardFront();
 			string backText = UserInput.GetFlashCardBack();
-			using(var connection = new SqlConnection(connectionString))
-			{ 
+			using (var connection = new SqlConnection(connectionString))
+			{
 				connection.Open();
 				var sqlCommand = connection.CreateCommand();
 				sqlCommand.CommandText = "INSERT INTO dbo.FlashCard (FrontText, BackText, StackId) VALUES (@frontText, @backText, @stackId)";
@@ -350,7 +351,7 @@ namespace FlashCards
 			ConsoleTableBuilder
 				.From(flashcards)
 				.WithTitle("Flashcards")
-				.WithColumn("Id","Front", "Back")
+				.WithColumn("Id", "Front", "Back")
 				.ExportAndWriteLine();
 			bool validId = false;
 			while (validId == false)
@@ -378,7 +379,7 @@ namespace FlashCards
 				}
 				else
 					Console.WriteLine("A flashcard with this id does not exist, try again");
-            }
+			}
 		}
 		internal static void DeleteFlashcard(string connectionString, string stackId)
 		{
@@ -447,20 +448,20 @@ namespace FlashCards
 				else
 				{
 					Console.WriteLine("Your answer was wrong.");
-                    Console.WriteLine($"The correct answer was {answer}");
-                }
+					Console.WriteLine($"The correct answer was {answer}");
+				}
 				Console.ReadKey();
 				Console.Clear();
 			}
 
 			CreateStudySession(connectionString, stackId, score);
-            Console.WriteLine("Exiting Study session");
+			Console.WriteLine("Exiting Study session");
 			Console.WriteLine($"You got {score} right out of {flashcardList.Count}");
 			Console.ReadKey();
-        }
+		}
 		private static void CreateStudySession(string connectionString, string stackId, int score)
 		{
-			using(var connection = new SqlConnection(connectionString))
+			using (var connection = new SqlConnection(connectionString))
 			{
 				connection.Open();
 				var sqlCommand = connection.CreateCommand();
@@ -475,7 +476,7 @@ namespace FlashCards
 		{
 			Console.Clear();
 			List<StudySession> sessions = new();
-			using(var connection = new SqlConnection(connectionString))
+			using (var connection = new SqlConnection(connectionString))
 			{
 				connection.Open();
 				var sqlCommand = connection.CreateCommand();
@@ -483,7 +484,7 @@ namespace FlashCards
 				SqlDataReader reader = sqlCommand.ExecuteReader();
 				if (reader.HasRows)
 				{
-					while(reader.Read())
+					while (reader.Read())
 					{
 						sessions.Add(new StudySession
 						{
@@ -491,7 +492,7 @@ namespace FlashCards
 							StackId = reader.GetInt32(1),
 							StudyDate = reader.GetDateTime(2),
 							Score = reader.GetInt32(3),
-						}) ;
+						});
 					}
 				}
 			}
@@ -503,12 +504,12 @@ namespace FlashCards
 				.ExportAndWriteLine();
 			Console.ReadKey();
 		}
-		internal static void ShowReport(string connectionString)
+		internal static void ReportNumberOfSessions(string connectionString)
 		{
 			Console.Clear();
 			string year = UserInput.GetYearForPivot();
-			List<NumberOfSessionsModel> output = new();
-			using(var connection = new SqlConnection (connectionString))
+			List<NumberOfSessionsModel> numberOfSessions = new();
+			using (var connection = new SqlConnection(connectionString))
 			{
 				connection.Open();
 				var sqlCommand = connection.CreateCommand();
@@ -529,11 +530,11 @@ namespace FlashCards
 				sqlCommand.Parameters.Add(new SqlParameter("@year", year));
 				sqlCommand.ExecuteNonQuery();
 				SqlDataReader reader = sqlCommand.ExecuteReader();
-				if (reader.HasRows) 
+				if (reader.HasRows)
 				{
-					while(reader.Read())
+					while (reader.Read())
 					{
-						output.Add(new NumberOfSessionsModel
+						numberOfSessions.Add(new NumberOfSessionsModel
 						{
 							StackName = reader.GetString(0),
 							January = reader.GetInt32(1),
@@ -556,8 +557,58 @@ namespace FlashCards
 				connection.Close();
 			}
 			ConsoleTableBuilder
-				.From(output)
+				.From(numberOfSessions)
 				.WithTitle("Number of Session per month for: " + year)
+				.ExportAndWriteLine();
+			Console.ReadKey();
+		}
+		internal static void ReportAverageScore(string connectionString)
+		{
+			Console.Clear();
+			string year = UserInput.GetYearForPivot();
+			List<NumberOfSessionsModel> averageScore = new();
+			using (var connection = new SqlConnection(connectionString))
+			{
+				connection.Open();
+				var sqlCommand = connection.CreateCommand();
+				sqlCommand.CommandText = @"SELECT stackname, [January], [February], [March], [April], [May], [June], [July], [August], [September], [October], [November], [December]
+										FROM (SELECT Stack.StackName, DATENAME(MONTH, StudySession.StudyDate) AS StudyMonth, StudySession.Score As score
+										FROM Stack
+										INNER JOIN StudySession ON Stack.StackId = StudySession.StackId
+										WHERE YEAR(StudySession.StudyDate) = @year) AS s
+										PIVOT (AVG(score) FOR StudyMonth 
+										IN ([January], [February], [March], [April], [May], [June], [July], [August], [September], [October], [November], [December])) AS pvt;";
+				sqlCommand.Parameters.Add(new SqlParameter("@year", year));
+				sqlCommand.ExecuteNonQuery();
+				SqlDataReader reader = sqlCommand.ExecuteReader();
+				if (reader.HasRows)
+				{
+					while (reader.Read())
+					{
+						averageScore.Add(new NumberOfSessionsModel
+						{
+							StackName = reader.GetString(0),
+							January = reader.GetInt32(1),
+							February = reader.GetInt32(2),
+							March = reader.GetInt32(3),
+							April = reader.GetInt32(4),
+							May = reader.GetInt32(5),
+							June = reader.GetInt32(6),
+							July = reader.GetInt32(7),
+							August = reader.GetInt32(8),
+							September = reader.GetInt32(9),
+							October = reader.GetInt32(10),
+							November = reader.GetInt32(11),
+							December = reader.GetInt32(12),
+						});
+					}
+				}
+				else
+                    Console.WriteLine("No records found for that year");
+            }
+			ConsoleTableBuilder
+				.From(averageScore)
+				.WithTitle("Average score per month for: " + year)
 				.ExportAndWriteLine();
 			Console.ReadKey();
 		}

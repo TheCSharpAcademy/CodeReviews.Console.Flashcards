@@ -28,7 +28,11 @@ namespace FlashCards
 						DataAccess.ViewStudyData(connectionString);
 						break;
 					case "5":
-						DataAccess.ShowReport(connectionString); break;
+						DataAccess.ReportNumberOfSessions(connectionString);
+						break;
+					case "6":
+						DataAccess.ReportAverageScore(connectionString);
+						break;
 					case "0":
 						Console.WriteLine("Goodbye");
 						Environment.Exit(0);
