@@ -505,7 +505,9 @@ namespace FlashCards
 		}
 		internal static void ShowReport(string connectionString)
 		{
+			Console.Clear();
 			string year = UserInput.GetYearForPivot();
+			List<NumberOfSessionsModel> output = new();
 			using(var connection = new SqlConnection (connectionString))
 			{
 				connection.Open();
@@ -525,18 +527,39 @@ namespace FlashCards
 											) AS pvt;
 											";
 				sqlCommand.Parameters.Add(new SqlParameter("@year", year));
-				SqlDataAdapter adapter = new SqlDataAdapter(sqlCommand);
-				DataSet ds = new DataSet();
-				adapter.Fill(ds);
-
-				ConsoleTableBuilder
-					.From(ds)
-					.WithTitle("Number of Session per month for: "+year)
-					.ExportAndWriteLine();
-
+				sqlCommand.ExecuteNonQuery();
+				SqlDataReader reader = sqlCommand.ExecuteReader();
+				if (reader.HasRows) 
+				{
+					while(reader.Read())
+					{
+						output.Add(new NumberOfSessionsModel
+						{
+							StackName = reader.GetString(0),
+							January = reader.GetInt32(1),
+							February = reader.GetInt32(2),
+							March = reader.GetInt32(3),
+							April = reader.GetInt32(4),
+							May = reader.GetInt32(5),
+							June = reader.GetInt32(6),
+							July = reader.GetInt32(7),
+							August = reader.GetInt32(8),
+							September = reader.GetInt32(9),
+							October = reader.GetInt32(10),
+							November = reader.GetInt32(11),
+							December = reader.GetInt32(12),
+						});
+					}
+				}
+				else
+					Console.WriteLine("No records found for this year");
 				connection.Close();
 			}
-			
+			ConsoleTableBuilder
+				.From(output)
+				.WithTitle("Number of Session per month for: " + year)
+				.ExportAndWriteLine();
+			Console.ReadKey();
 		}
 	}
 }
