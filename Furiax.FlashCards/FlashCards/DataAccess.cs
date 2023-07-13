@@ -1,6 +1,9 @@
 ﻿using ConsoleTableExt;
 using FlashCards.Model;
+using System.Data;
 using System.Data.SqlClient;
+using System.Runtime.CompilerServices;
+
 namespace FlashCards
 {
 	internal class DataAccess
@@ -585,18 +588,18 @@ namespace FlashCards
 						averageScore.Add(new ReportModel
 						{
 							StackName = reader.GetString(0),
-							January = reader.GetInt32(1),
-							February = reader.GetInt32(2),
-							March = reader.GetInt32(3),
-							April = reader.GetInt32(4),
-							May = reader.GetInt32(5),
-							June = reader.GetInt32(6),
-							July = reader.GetInt32(7),
-							August = reader.GetInt32(8),
-							September = reader.GetInt32(9),
-							October = reader.GetInt32(10),
-							November = reader.GetInt32(11),
-							December = reader.GetInt32(12),
+							January = reader.IsDBNull(1) ? 0 : reader.GetInt32(1),
+							February = reader.IsDBNull(2) ? 0 : reader.GetInt32(2),
+							March = reader.IsDBNull(3) ? 0 : reader.GetInt32(3),
+							April = reader.IsDBNull(4) ? 0 : reader.GetInt32(4),
+							May = reader.IsDBNull(5) ? 0 : reader.GetInt32(5),
+							June = reader.IsDBNull(6) ? 0 : reader.GetInt32(6),
+							July = reader.IsDBNull(7) ? 0 : reader.GetInt32(7),
+							August = reader.IsDBNull(8) ? 0 : reader.GetInt32(8),
+							September = reader.IsDBNull(9) ? 0 : reader.GetInt32(9),
+							October = reader.IsDBNull(10) ? 0 : reader.GetInt32(10),
+							November = reader.IsDBNull(11) ? 0 : reader.GetInt32(11),
+							December = reader.IsDBNull(12) ? 0 : reader.GetInt32(12)
 						});
 					}
 				}
@@ -608,6 +611,13 @@ namespace FlashCards
 				.WithTitle("Average score per month for: " + year)
 				.ExportAndWriteLine();
 			Console.ReadKey();
+		}
+		internal static int? SafeGetInt(SqlDataReader reader, int integer)
+		{
+			if(!reader.IsDBNull(integer))
+				return reader.GetInt32(integer);
+			else
+				return null;
 		}
 	}
 }
