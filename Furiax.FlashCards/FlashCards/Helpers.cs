@@ -10,12 +10,13 @@ namespace FlashCards
 			Console.WriteLine("Flashcards");
 			Console.WriteLine("----------");
 			Console.WriteLine("Please make a choice by entering the corresponding number: ");
-			Console.WriteLine("1. Manage Stacks");
-			Console.WriteLine("2. Manage Flashcards");
+			Console.WriteLine("1. Manage stacks");
+			Console.WriteLine("2. Manage flashcards");
 			Console.WriteLine("3. Study");
-			Console.WriteLine("4. View Study Data");
-			Console.WriteLine("5. Show Report");
-			Console.WriteLine("0. Exit");
+			Console.WriteLine("4. View study data");
+			Console.WriteLine("5. Show report for number of sessions");
+            Console.WriteLine("6. Show report for average score");
+            Console.WriteLine("0. Exit");
 			Console.WriteLine("--------------------");
 
 		}
