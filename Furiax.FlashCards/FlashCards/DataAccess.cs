@@ -68,7 +68,7 @@ namespace FlashCards
 		internal static List<Stack> BuildStack(string connectionString, string command)
 		{
 			List<Stack> stack = new();
-			using var connection = new SqlConnection(connectionString);
+			using (var connection = new SqlConnection(connectionString))
 			{
 				connection.Open();
 				var sqlCommand = connection.CreateCommand();
