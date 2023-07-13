@@ -1,9 +1,6 @@
 ﻿using ConsoleTableExt;
 using FlashCards.Model;
-using System.Data;
 using System.Data.SqlClient;
-using System.Reflection.PortableExecutable;
-
 namespace FlashCards
 {
 	internal class DataAccess
@@ -508,7 +505,7 @@ namespace FlashCards
 		{
 			Console.Clear();
 			string year = UserInput.GetYearForPivot();
-			List<NumberOfSessionsModel> numberOfSessions = new();
+			List<ReportModel> numberOfSessions = new();
 			using (var connection = new SqlConnection(connectionString))
 			{
 				connection.Open();
@@ -534,7 +531,7 @@ namespace FlashCards
 				{
 					while (reader.Read())
 					{
-						numberOfSessions.Add(new NumberOfSessionsModel
+						numberOfSessions.Add(new ReportModel
 						{
 							StackName = reader.GetString(0),
 							January = reader.GetInt32(1),
@@ -566,7 +563,7 @@ namespace FlashCards
 		{
 			Console.Clear();
 			string year = UserInput.GetYearForPivot();
-			List<NumberOfSessionsModel> averageScore = new();
+			List<ReportModel> averageScore = new();
 			using (var connection = new SqlConnection(connectionString))
 			{
 				connection.Open();
@@ -585,7 +582,7 @@ namespace FlashCards
 				{
 					while (reader.Read())
 					{
-						averageScore.Add(new NumberOfSessionsModel
+						averageScore.Add(new ReportModel
 						{
 							StackName = reader.GetString(0),
 							January = reader.GetInt32(1),
