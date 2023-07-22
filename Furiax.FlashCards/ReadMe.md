@@ -1,6 +1,6 @@
 <h1>Flashcards</h1>
 <br>
-This application is a part of the www.csharpacademy.com roadmap. <br>
+This application is a part of the www.thecsharpacademy.com roadmap. <br>
 Goal of the website is to become a (better) C# and .Net developper. Learning happens trough building projects yourself. <br>
 They give the assingments, each time a bit more difficult, and provide links to the right documentation and we the students give our best to delivere a working application.<br>
 When we are done they give our code a manual review in wich we recieve feedback.<br>
