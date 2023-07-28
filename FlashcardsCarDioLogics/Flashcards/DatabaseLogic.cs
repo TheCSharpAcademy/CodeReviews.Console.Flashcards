@@ -12,7 +12,7 @@ public class DatabaseLogic
         using (SqlConnection conn = new SqlConnection(connectionString))
         {
             conn.Open();
-            var tableCmd = conn.CreateCommand();
+            conn.CreateCommand();
             string query = $"INSERT INTO StacksTable (StacksName) VALUES (@StackName);";
             var command = conn.CreateCommand();
             command.CommandText = query;
@@ -89,7 +89,7 @@ public class DatabaseLogic
             {
                 string StacksName = reader.GetString(0);
                 stacksList.Add(StacksName);
-            };         
+            }        
         }
         return stacksList;
     }
@@ -168,8 +168,8 @@ public class DatabaseLogic
             command.CommandText = query;
             command.Parameters.AddWithValue("@fcID", fcID);
             command.Parameters.AddWithValue("@front", front);
-            command.Parameters.AddWithValue("@back", back); ;
-            int countRows = command.ExecuteNonQuery();
+            command.Parameters.AddWithValue("@back", back);
+            command.ExecuteNonQuery();
 
             UpdateFlashcardTableID();
             conn.Close();

@@ -3,7 +3,7 @@
 public class UI
 {
     bool validInt;
-    bool closeApp = false;
+    bool closeApp;
     Validation validation = new Validation();
     UILogic uILogic = new UILogic();
     string selectedStack = "none";
