@@ -318,8 +318,6 @@ namespace Flashcards.JsPeanut
 
         var stacksWhereStackToStudy = Stacks.Where(s => s.StackId == stackToStudy).First();
 
-        var nameOfTheStackToStudy = stacksWhereStackToStudy.Name;
-
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
