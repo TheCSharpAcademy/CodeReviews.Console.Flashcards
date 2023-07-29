@@ -323,7 +323,7 @@ namespace Flashcards.JsPeanut
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand($"INSERT INTO dbo.study_sessions(Hits, Misses, Score, Month, stack_id, stack_name) VALUES({hits}, {misses}, {hits - misses}, {DateTime.Now.Month}, {stackToStudy}, '{nameOfTheStackToStudy}')", connection))
+                using (SqlCommand command = new SqlCommand($"INSERT INTO dbo.study_sessions(Hits, Misses, Score, Month, stack_id) VALUES({hits}, {misses}, {hits - misses}, {DateTime.Now.Month}, {stackToStudy})", connection))
                 {
                     command.ExecuteNonQuery();
                     UserInput.GetUserInput();
@@ -440,29 +440,21 @@ namespace Flashcards.JsPeanut
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT * FROM dbo.study_sessions", connection))
+                using (SqlCommand command = new SqlCommand(@"SELECT 
+study_sessions.Id AS Id,
+study_sessions.Hits AS Hits,
+study_sessions.Misses AS Misses,
+study_sessions.Score AS Score,
+study_sessions.Month AS month,
+stacks.stack_name AS name
+FROM study_sessions 
+JOIN stacks ON study_sessions.stack_id=stacks.stack_id", connection))
                 {
+                    command.ExecuteNonQuery();
                     SqlDataReader reader = command.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        int id = reader.GetInt32(0);
-                        int hits = reader.GetInt32(1);
-                        int misses = reader.GetInt32(2);
-                        int score = reader.GetInt32(3);
-                        int month = reader.GetInt32(4);
-                        int stack_id = reader.GetInt32(5);
-                        string stack_name = reader.GetString(6);
-                        StudySessions.Add(new StudySession
-                        {
-                            Id = id,
-                            Hits = hits,
-                            Misses = misses,
-                            Score = score,
-                            Month = month,
-                            StackId = stack_id,
-                            StackName = stack_name
-                        });
-                    }
+                    DataTable dataTable = new();
+                    dataTable.Load(reader);
+                    Console.WriteLine(ConsoleTableBuilder.From(dataTable).Export().ToString());
                 }
                 var studySessionsCopy = StudySessions.ToList();
                 if (displayOrRetrieve == "display")
