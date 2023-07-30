@@ -316,7 +316,7 @@ namespace Flashcards.JsPeanut
             }
             Console.ResetColor();
 
-        var stacksWhereStackToStudy = Stacks.Where(s => s.StackId == stackToStudy).First();
+            var stacksWhereStackToStudy = Stacks.Where(s => s.StackId == stackToStudy).First();
 
             using (var connection = new SqlConnection(connectionString))
             {
