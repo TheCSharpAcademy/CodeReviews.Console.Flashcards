@@ -1,6 +1,6 @@
 ﻿using Flashcards.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
+
 
 namespace Flashcards;
 
@@ -96,8 +96,6 @@ public class DatabaseLogic
 
             FlashCardCleanup(stackName);
             StudySessionCleanup(stackName);
-
-            var tableCmd = conn.CreateCommand();
             string query = $"DELETE FROM StacksTable WHERE StacksName LIKE @StackName;";
             var command = conn.CreateCommand();
             command.CommandText = query;
@@ -264,7 +262,7 @@ public class DatabaseLogic
                 string Back = reader.GetString(2);
                 string StackName = reader.GetString(3);
                 flashcardsList.Add(new FlashcardsModel(FcID, Front, Back, StackName));
-            };
+            }
             conn.Close();
         }
         return flashcardsList;
