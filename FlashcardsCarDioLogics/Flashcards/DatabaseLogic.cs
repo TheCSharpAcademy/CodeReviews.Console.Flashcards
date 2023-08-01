@@ -1,11 +1,77 @@
 ﻿using Flashcards.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace Flashcards;
 
 public class DatabaseLogic
 {
+    string masterConenctionString = "Data Source=JOAOSIILVA1993; Integrated Security=True";
     string connectionString = "Data Source=JOAOSIILVA1993;Initial Catalog=FlashcardsDB;Integrated Security=True";
+
+    public void CreateDatabase()
+    {
+        using (SqlConnection conn = new SqlConnection(masterConenctionString))
+        {
+            string databaseName = "FlashcardsDB";
+
+            conn.Open();
+            conn.CreateCommand();
+            string createDatabaseQuery = $@"
+                IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '{databaseName}')
+                BEGIN
+                    CREATE DATABASE [{databaseName}];
+                END
+            ";
+            var command = conn.CreateCommand();
+            command.CommandText = createDatabaseQuery;
+            command.ExecuteNonQuery();
+            conn.Close();
+        }
+    }
+
+    public void CreateTables()
+    {
+        using (SqlConnection conn = new SqlConnection(connectionString))
+        {
+            conn.Open();
+            conn.CreateCommand();
+            string queryFlascardsTable = @"IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'FlashcardsTable')
+                CREATE TABLE FlashcardsDB.dbo.FlashcardsTable
+                (fcID INT,
+                Front TEXT,
+                Back TEXT,
+                StacksName TEXT,
+                sID INT)
+                ;";
+            var command1 = conn.CreateCommand();
+            command1.CommandText = queryFlascardsTable;
+            command1.ExecuteNonQuery();
+
+            string queryStacksTable = @"IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'StacksTable')
+                CREATE TABLE FlashcardsDB.dbo.StacksTable
+                (dID INT,
+                StacksName TEXT)
+                ;";
+            var command2 = conn.CreateCommand();
+            command2.CommandText = queryStacksTable;
+            command2.ExecuteNonQuery();
+
+            string queryStudyTable = @"IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'StudyTable')
+                CREATE TABLE FlashcardsDB.dbo.StudyTable
+
+                (ID INT PRIMARY KEY,
+                StacksName TEXT,
+                Date TEXT,
+                Score INT)
+                ;";
+            var command3 = conn.CreateCommand();
+            command3.CommandText = queryStudyTable;
+            command3.ExecuteNonQuery();
+            //FlashcardsDB
+            conn.Close();
+        }
+    }
 
     public void InsertStack(string stackName)
     {

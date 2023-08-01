@@ -148,11 +148,11 @@ Choose an Option:
                 break;
             case 5:
                 uILogic.ShowAllFlashCardsList();
-                uILogic.uiUpdateFlashcard();
+                uILogic.UiUpdateFlashcard();
                 break;
             case 6:
                 uILogic.ShowAllFlashCardsList();
-                uILogic.uiDeleteFlashcard();
+                uILogic.UiDeleteFlashcard();
                 break;
             default:
                 validInt = false; //Will keep the loop going until the user picks a number thats is in the switch
