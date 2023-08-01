@@ -2,7 +2,7 @@
 
 public class Validation
 {
-    public void ValidString(string stringInput, out bool validString)
+    public void IsStringValid(string stringInput, out bool validString)
     {
         if (string.IsNullOrEmpty(stringInput))
         {

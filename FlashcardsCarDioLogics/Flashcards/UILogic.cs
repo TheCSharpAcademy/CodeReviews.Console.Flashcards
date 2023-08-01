@@ -29,7 +29,7 @@ public class UILogic
                 {
                     Console.WriteLine($"What is the answer to {flashcard.Front}");
                     userAnswer = Console.ReadLine().ToLower().Trim();
-                    validation.ValidString(userAnswer, out validString);
+                    validation.IsStringValid(userAnswer, out validString);
                 } while (validString == false);
 
                     string flashcardAnswer = flashcard.Back.ToLower().Trim();
@@ -75,7 +75,7 @@ public class UILogic
         {
             Console.WriteLine("Write a name for the new stack");
             newStackName = Console.ReadLine();
-            validation.ValidString(newStackName, out validString);
+            validation.IsStringValid(newStackName, out validString);
             validation.StackExistsCheck(newStackName, stacksList, out stackExists);
         } while (validString == false || stackExists == true);
 
@@ -91,7 +91,7 @@ public class UILogic
         {
             Console.WriteLine("Write the name of the stack you want to delete");
             newStackName = Console.ReadLine();
-            validation.ValidString(newStackName, out validString);
+            validation.IsStringValid(newStackName, out validString);
             validation.StackExistsCheck(newStackName, stacksList, out stackExists);
         } while (validString == false || stackExists == false);
 
@@ -110,7 +110,7 @@ public class UILogic
         {
             Console.WriteLine("Write the name of the stack you want to select!");
             stackName = Console.ReadLine();
-            validation.ValidString(stackName, out validString);
+            validation.IsStringValid(stackName, out validString);
             validation.StackExistsCheck(stackName, stacksList, out stackExists);
 
             if (stackExists == false)
@@ -155,7 +155,7 @@ public class UILogic
             {
                 Console.WriteLine("Provide text for the question (front of card):");
                 front = Console.ReadLine();
-                validation.ValidString(front, out validString);
+                validation.IsStringValid(front, out validString);
             } while (validString == false);
 
             validString = true;
@@ -164,7 +164,7 @@ public class UILogic
             {
                 Console.WriteLine("Provide text for the answer (back of card):");
                 back = Console.ReadLine();
-                validation.ValidString(back, out validString);
+                validation.IsStringValid(back, out validString);
             } while (validString == false);
 
             int stackID = databaseLogic.GetStackID(selectedStack);
@@ -209,14 +209,14 @@ public class UILogic
          .ExportAndWriteLine();
     }
 
-    public void uiDeleteFlashcard()
+    public void UiDeleteFlashcard()
     {
         Console.WriteLine("Select the flashcard you wish to delete:");
         int fcID = GetAndValidateFlashcardsID();
         databaseLogic.DeleteFlashcard(fcID);
     }
 
-    public void uiUpdateFlashcard()
+    public void UiUpdateFlashcard()
     {
         Console.WriteLine("Select the flashcard you wish to update:");
         int fcID = GetAndValidateFlashcardsID();
