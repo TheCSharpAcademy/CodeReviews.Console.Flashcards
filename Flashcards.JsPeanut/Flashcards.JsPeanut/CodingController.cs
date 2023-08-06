@@ -314,6 +314,7 @@ namespace Flashcards.JsPeanut
                     connection.Close();
                 }
             }
+
             Console.ResetColor();
 
             using (var connection = new SqlConnection(connectionString))
