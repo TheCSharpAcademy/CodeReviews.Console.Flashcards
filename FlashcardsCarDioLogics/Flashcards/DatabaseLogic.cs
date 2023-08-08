@@ -60,7 +60,7 @@ public class DatabaseLogic
             string queryStudyTable = @"IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'StudyTable')
                 CREATE TABLE FlashcardsDB.dbo.StudyTable
 
-                (ID INT PRIMARY KEY,
+                (ID INT IDENTITY(1,1) PRIMARY KEY,
                 StacksName TEXT,
                 Date TEXT,
                 Score INT)
@@ -68,7 +68,6 @@ public class DatabaseLogic
             var command3 = conn.CreateCommand();
             command3.CommandText = queryStudyTable;
             command3.ExecuteNonQuery();
-            //FlashcardsDB
             conn.Close();
         }
     }

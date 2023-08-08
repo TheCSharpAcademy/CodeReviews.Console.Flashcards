@@ -87,18 +87,27 @@ public class UILogic
         List<string> stacksList = databaseLogic.CreateStacksList();
         string newStackName;
 
-        do
+        if(stacksList.Count > 0 )
         {
-            Console.WriteLine("Write the name of the stack you want to delete");
-            newStackName = Console.ReadLine();
-            validation.IsStringValid(newStackName, out validString);
-            validation.StackExistsCheck(newStackName, stacksList, out stackExists);
-        } while (validString == false || stackExists == false);
+            do
+            {
+                Console.WriteLine("Write the name of the stack you want to delete");
+                newStackName = Console.ReadLine();
+                validation.IsStringValid(newStackName, out validString);
+                validation.StackExistsCheck(newStackName, stacksList, out stackExists);
+            } while (validString == false || stackExists == false);
 
-        databaseLogic.DeleteStack(newStackName);
-        Console.WriteLine("Stack Deleted!");
-        Console.ReadLine();
-        selectedStack = "none";
+            databaseLogic.DeleteStack(newStackName);
+            Console.WriteLine("Stack Deleted!");
+            Console.ReadLine();
+            selectedStack = "none";
+        }
+        else
+        {
+            Console.WriteLine("No stacks exist yet!");
+            Console.ReadLine();
+        }
+
     }
 
     public void SelectStack(ref string selectedStack)
@@ -106,22 +115,30 @@ public class UILogic
         List<string> stacksList = databaseLogic.CreateStacksList();
         string stackName;
 
-        do
+        if(stacksList.Count > 0 )
         {
-            Console.WriteLine("Write the name of the stack you want to select!");
-            stackName = Console.ReadLine();
-            validation.IsStringValid(stackName, out validString);
-            validation.StackExistsCheck(stackName, stacksList, out stackExists);
+            do
+            {
+                Console.WriteLine("Write the name of the stack you want to select!");
+                stackName = Console.ReadLine();
+                validation.IsStringValid(stackName, out validString);
+                validation.StackExistsCheck(stackName, stacksList, out stackExists);
 
-            if (stackExists == false)
-                Console.WriteLine("Stack does not exist!");
+                if (stackExists == false)
+                    Console.WriteLine("Stack does not exist!");
 
-        } while (validString == false || stackExists == false);
+            } while (validString == false || stackExists == false);
 
-        selectedStack = stackName;
-        int stackID = databaseLogic.GetStackID(stackName);
-        Console.WriteLine($"Stack Changed to {stackName}! The stack ID is {stackID}!");
-        Console.ReadLine();
+            selectedStack = stackName;
+            int stackID = databaseLogic.GetStackID(stackName);
+            Console.WriteLine($"Stack Changed to {stackName}! The stack ID is {stackID}!");
+            Console.ReadLine();
+        }
+        else
+        {
+            Console.WriteLine("No stacks exist yet!");
+            Console.ReadLine();
+        }
     }
 
     public void ShowStacksList()
@@ -139,8 +156,18 @@ public class UILogic
     public void CreateFlashcard(string selectedStack)
     {
         List<FlashcardsModel> allFlashcards = databaseLogic.CreateFlashCardsList();
-        FlashcardsModel lastFlashcard = allFlashcards[allFlashcards.Count - 1];
-        int newFcID = lastFlashcard.FcID + 1;
+        FlashcardsModel lastFlashcard;
+        int newFcID;
+        //This part is meant to help keep the IDs of flashcards in order. If there are is no Flashcards or just 1 Flashcard in the the database then nothing changes.
+        if (allFlashcards.Count > 1 )
+        {
+            lastFlashcard = allFlashcards[allFlashcards.Count - 1];
+            newFcID = lastFlashcard.FcID + 1;
+        }
+        else
+        {
+            newFcID = 1;
+        }
 
         string front = "", back = "";
 
@@ -211,23 +238,43 @@ public class UILogic
 
     public void UiDeleteFlashcard()
     {
-        Console.WriteLine("Select the flashcard you wish to delete:");
-        int fcID = GetAndValidateFlashcardsID();
-        databaseLogic.DeleteFlashcard(fcID);
+        List<FlashcardsModel> allFlashcards = databaseLogic.CreateFlashCardsList();
+
+        if(allFlashcards.Count > 0)
+        {
+            Console.WriteLine("Select the flashcard you wish to delete:");
+            int fcID = GetAndValidateFlashcardsID();
+            databaseLogic.DeleteFlashcard(fcID);
+        }
+        else
+        {
+            Console.WriteLine("No flashcards exit!");
+            Console.ReadLine ();
+        }
     }
 
     public void UiUpdateFlashcard()
     {
-        Console.WriteLine("Select the flashcard you wish to update:");
-        int fcID = GetAndValidateFlashcardsID();
+        List<FlashcardsModel> allFlashcards = databaseLogic.CreateFlashCardsList();
 
-        Console.WriteLine("Write text for the front of the card:");
-        string front = Console.ReadLine();
+        if (allFlashcards.Count > 0)
+        {
+            Console.WriteLine("Select the flashcard you wish to update:");
+            int fcID = GetAndValidateFlashcardsID();
 
-        Console.WriteLine("Write text for the back of the card:");
-        string back = Console.ReadLine();
+            Console.WriteLine("Write text for the front of the card:");
+            string front = Console.ReadLine();
 
-        databaseLogic.UpdateFlashcard(fcID, front, back);
+            Console.WriteLine("Write text for the back of the card:");
+            string back = Console.ReadLine();
+
+            databaseLogic.UpdateFlashcard(fcID, front, back);
+        }
+        else
+        {
+            Console.WriteLine("No flashcards exit!");
+            Console.ReadLine();
+        }
     }
 
     public int GetAndValidateFlashcardsID()
