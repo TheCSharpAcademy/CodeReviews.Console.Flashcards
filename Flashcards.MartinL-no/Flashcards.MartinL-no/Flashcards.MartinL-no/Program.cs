@@ -1,3 +1,4 @@
 ﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
 
+var connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("connectionString");
+Console.WriteLine("Hello, World!");
