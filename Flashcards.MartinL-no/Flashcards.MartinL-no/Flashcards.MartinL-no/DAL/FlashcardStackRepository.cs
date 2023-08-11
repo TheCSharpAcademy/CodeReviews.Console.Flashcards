@@ -67,7 +67,7 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                     SELECT s.[Name], f.[Text]
                     FROM
                         [dbo].[Stack] s
-                    INNER JOIN
+                    LEFT JOIN
                         [dbo].[Flashcard] f ON s.[Name] = f.[StackName];
                     """;
 
@@ -86,7 +86,9 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                         }
 
                         name = reader.GetString(0);
-                        flashcards.Push(reader.GetString(1));
+
+                        var hasFlashcard = !reader.IsDBNull(1);
+                        if (hasFlashcard) flashcards.Push(reader.GetString(1));
                     }
 
                     if (reader.HasRows == true) stacks.Add(new FlashcardStack(name, flashcards));
