@@ -14,8 +14,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="DAL\" />
+    <None Remove="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DAL\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 </Project>
