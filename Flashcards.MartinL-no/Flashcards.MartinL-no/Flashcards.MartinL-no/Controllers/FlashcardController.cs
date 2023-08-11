@@ -31,4 +31,14 @@ internal class FlashcardController
 
         return false;
     }
+
+    public bool CreateFlashcard(string text, string stackName)
+    {
+        if (!string.IsNullOrWhiteSpace(text) || !string.IsNullOrWhiteSpace(stackName))
+        {
+            return _stackRepo.InsertFlashcard(text, stackName);
+        }
+
+        return false;
+    }
 }
