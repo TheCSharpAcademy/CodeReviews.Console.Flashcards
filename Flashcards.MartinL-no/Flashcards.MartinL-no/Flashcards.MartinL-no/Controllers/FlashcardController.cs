@@ -15,4 +15,9 @@ internal class FlashcardController
     {
         return _stackRepo.GetStacks();
     }
+
+    public FlashcardStack GetStackByName(string name)
+    {
+        return _stackRepo.GetStackByName(name);
+    }
 }
