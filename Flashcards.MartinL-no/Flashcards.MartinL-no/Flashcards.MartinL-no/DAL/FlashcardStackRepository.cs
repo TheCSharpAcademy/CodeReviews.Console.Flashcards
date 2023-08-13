@@ -1,5 +1,6 @@
 ﻿using QC = Microsoft.Data.SqlClient;
 using DT = System.Data;
+using Microsoft.Data.SqlClient;
 
 using Flashcards.MartinL_no.Models;
 
@@ -29,8 +30,9 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                     IF OBJECT_ID(N'[dbo].[Stack]', N'U') IS NULL
                     BEGIN
                         CREATE TABLE [dbo].[Stack] (
+                            [Id] INT IDENTITY (1, 1) NOT NULL,
                             [Name] NVARCHAR (100) NOT NULL,
-                            PRIMARY KEY CLUSTERED ([Name] ASC),
+                            PRIMARY KEY CLUSTERED ([Id] ASC),
                             CONSTRAINT [AK_Name] UNIQUE NONCLUSTERED ([Name] ASC)
                         );
                     END;
@@ -42,9 +44,12 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                     IF OBJECT_ID(N'[dbo].[Flashcard]', N'U') IS NULL
                     BEGIN
                         CREATE TABLE [dbo].[Flashcard] (
-                            [Text]    NVARCHAR (MAX) NOT NULL,
-                            [StackName] NVARCHAR (100)  NOT NULL,
-                            CONSTRAINT [FK_Flashcard_Stack] FOREIGN KEY ([StackName]) REFERENCES [dbo].[Stack] ([Name]) ON DELETE CASCADE
+                            [Id] INT IDENTITY (1, 1) NOT NULL,
+                            [Original] NVARCHAR (MAX) NOT NULL,
+                            [Translation] NVARCHAR (MAX) NOT NULL,
+                            [StackId] INT NOT NULL,
+                            PRIMARY KEY CLUSTERED ([Id] ASC),
+                            CONSTRAINT [FK_Flashcard_Stack] FOREIGN KEY ([StackId]) REFERENCES [dbo].[Stack] ([Id]) ON DELETE CASCADE
                         );
                     END;
                     """;
@@ -64,32 +69,59 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                 command.Connection = connection;
                 command.CommandType = DT.CommandType.Text;
                 command.CommandText = """
-                    SELECT s.[Name], f.[Text]
+                    SELECT s.[Id] AS [StackId], s.[Name], f.[Id] AS [FlashcardId], f.[Original], f.[Translation]
                     FROM
                         [dbo].[Stack] s
-                    INNER JOIN
-                        [dbo].[Flashcard] f ON s.[Name] = f.[StackName];
+                    LEFT JOIN
+                        [dbo].[Flashcard] f ON s.[Id] = f.[StackId];
                     """;
 
                 using (var reader = command.ExecuteReader())
                 {
+                    int stackId = 0;
+                    string name = null;
                     var stacks = new List<FlashcardStack>();
-                    string? name = null;
-                    var flashcards = new Stack<string>();
+                    var flashcards = new List<Flashcard>();
 
                     while (reader.Read())
                     {
-                        if (name != null && reader.GetString(0) != name)
+                        if (stackId != 0 && (int) reader["StackId"] != stackId)
                         {
-                            stacks.Add(new FlashcardStack(name, flashcards));
-                            flashcards = new Stack<string>();
+                            stacks.Add(new FlashcardStack()
+                            {
+                                Id = stackId,
+                                Name = name,
+                                Flashcards = flashcards
+                            });
+
+                            flashcards = new List<Flashcard>();
                         }
 
-                        name = reader.GetString(0);
-                        flashcards.Push(reader.GetString(1));
+                        stackId = (int) reader["StackId"];
+                        name = (string) reader["Name"];
+
+                        var hasFlashcard = !reader.IsDBNull(2);
+                        if (hasFlashcard)
+                        {
+                            flashcards.Add(new Flashcard()
+                            {
+                                Id = (int) reader["FlashcardId"],
+                                Original = (string) reader["Original"],
+                                Translation = (string) reader["Translation"],
+                                StackId = stackId
+                            });
+                        }
                     }
 
-                    if (reader.HasRows == true) stacks.Add(new FlashcardStack(name, flashcards));
+                    if (reader.HasRows == true)
+                    {
+                        stacks.Add(new FlashcardStack()
+                        {
+                            Id = stackId,
+                            Name = name,
+                            Flashcards = flashcards
+                        });
+                    }
 
                     return stacks;
                 }
@@ -107,15 +139,14 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                 command.Connection = connection;
                 command.CommandType = DT.CommandType.Text;
                 command.CommandText = """
-                    SELECT s.[Name], f.[Text]
+                    SELECT s.[Id] AS [StackId], f.[Id] AS [FlashcardId], f.[Original], f.[Translation]
                     FROM
                         [dbo].[Stack] s
-                    INNER JOIN
-                        [dbo].[Flashcard] f ON s.[Name] = f.[StackName]
+                    LEFT JOIN
+                        [dbo].[Flashcard] f ON s.[Id] = f.[StackId]
                     WHERE
                         s.[Name] = @name
-                    """
-                ;
+                    """;
 
                 var parameter = new QC.SqlParameter("@name", DT.SqlDbType.NVarChar);
                 parameter.Value = name;
@@ -123,16 +154,34 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
 
                 using (var reader = command.ExecuteReader())
                 {
-                    var flashcards = new Stack<string>();
+                    if (!reader.HasRows) return null;
+
+                    int stackId = 0; 
+                    var flashcards = new List<Flashcard>();
 
                     while (reader.Read())
                     {
-                        if (!reader.HasRows) return null;
+                        stackId = (int) reader["StackId"];
 
-                        flashcards.Push(reader.GetString(1));
+                        var hasFlashcard = !reader.IsDBNull(1);
+                        if (hasFlashcard)
+                        {
+                            flashcards.Add(new Flashcard()
+                            {
+                                Id = (int) reader["FlashcardId"],
+                                Original = (string) reader["Original"],
+                                Translation = (string) reader["Translation"],
+                                StackId = stackId
+                            });
+                        }
                     }
 
-                    return new FlashcardStack(name, flashcards);
+                    return new FlashcardStack()
+                    {
+                        Id = stackId,
+                        Name = name,
+                        Flashcards = flashcards
+                    };
                 }
             }
         }
@@ -160,26 +209,17 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
 
                 try
                 {
-                    var rowsAffected = command.ExecuteNonQuery();
-                    if (rowsAffected <= 0) return false;
+                    return command.ExecuteNonQuery() > 0;
                 }
-                catch
+                catch (SqlException)
                 {
                     return false;
                 }
             }
         }
-
-        foreach (var flashcard in stack.Flashcards)
-        {
-            var insertedSuccessfully = InsertFlashcard(flashcard, stack.Name);
-            if (!insertedSuccessfully) return false;
-        }
-
-        return true;
     }
 
-    public bool InsertFlashcard(string text, string stackName)
+    public bool InsertFlashcard(Flashcard flashCard)
     {
         using (var connection = new QC.SqlConnection(_connectionString))
         {
@@ -190,25 +230,82 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                 command.CommandType = DT.CommandType.Text;
                 command.CommandText = """
                     INSERT INTO [dbo].[Flashcard]
-                        ([Text], [StackName])
+                        ([Original], [Translation], [StackId])
                     VALUES
-                        (@text, @stackName)
+                        (@original, @translation, @stackId)
                     """;
 
-                var parameter = new QC.SqlParameter("@text", DT.SqlDbType.NVarChar);
-                parameter.Value = text;
+                var parameter = new QC.SqlParameter("@original", DT.SqlDbType.NVarChar);
+                parameter.Value = flashCard.Original;
                 command.Parameters.Add(parameter);
 
-                parameter = new QC.SqlParameter("@stackName", DT.SqlDbType.NVarChar);
-                parameter.Value = stackName;
+                parameter = new QC.SqlParameter("@translation", DT.SqlDbType.NVarChar);
+                parameter.Value = flashCard.Translation;
                 command.Parameters.Add(parameter);
 
-                return command.ExecuteNonQuery() > 0;
+                parameter = new QC.SqlParameter("@stackId", DT.SqlDbType.Int);
+                parameter.Value = flashCard.StackId;
+                command.Parameters.Add(parameter);
+
+                try
+                {
+                    return command.ExecuteNonQuery() > 0;
+                }
+                catch (SqlException)
+                {
+                    return false;
+                }
             }
         }
     }
 
-    public bool DeleteStack(FlashcardStack stack)
+    public bool UpdateFlashcard(Flashcard flashCard)
+    {
+        using (var connection = new QC.SqlConnection(_connectionString))
+        {
+            connection.Open();
+            using (var command = new QC.SqlCommand())
+            {
+                command.Connection = connection;
+                command.CommandType = DT.CommandType.Text;
+                command.CommandText = """
+                    UPDATE [dbo].[Flashcard]
+                    SET Original = @original,
+                        Translation = @translation,
+                        StackId = @stackId
+                    WHERE
+                        Id = @id;
+                    """;
+
+                var parameter = new QC.SqlParameter("@id", DT.SqlDbType.Int);
+                parameter.Value = flashCard.Id;
+                command.Parameters.Add(parameter);
+
+                parameter = new QC.SqlParameter("@original", DT.SqlDbType.NVarChar);
+                parameter.Value = flashCard.Original;
+                command.Parameters.Add(parameter);
+
+                parameter = new QC.SqlParameter("@translation", DT.SqlDbType.NVarChar);
+                parameter.Value = flashCard.Translation;
+                command.Parameters.Add(parameter);
+
+                parameter = new QC.SqlParameter("@stackId", DT.SqlDbType.Int);
+                parameter.Value = flashCard.StackId;
+                command.Parameters.Add(parameter);
+
+                try
+                {
+                    return command.ExecuteNonQuery() > 0;
+                }
+                catch (SqlException)
+                {
+                    return false;
+                }
+            }
+        }
+    }
+
+    public bool DeleteStack(int id)
     {
         using (var connection = new QC.SqlConnection(_connectionString))
         {
@@ -223,7 +320,7 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                     """;
 
                 var parameter = new QC.SqlParameter("@name", DT.SqlDbType.NVarChar);
-                parameter.Value = stack.Name;
+                parameter.Value = id;
                 command.Parameters.Add(parameter);
 
                 return command.ExecuteNonQuery() > 0;
@@ -231,7 +328,7 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
         }
     }
 
-    public bool DeleteFlashCard(string text, string stackName)
+    public bool DeleteFlashCard(int id)
     {
         using (var connection = new QC.SqlConnection(_connectionString))
         {
@@ -242,15 +339,11 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                 command.CommandType = DT.CommandType.Text;
                 command.CommandText = """
                     DELETE FROM [dbo].[Flashcard]
-                    WHERE Text = @text
+                    WHERE Id = @id;
                     """;
 
-                var parameter = new QC.SqlParameter("@text", DT.SqlDbType.NVarChar);
-                parameter.Value = text;
-                command.Parameters.Add(parameter);
-
-                parameter = new QC.SqlParameter("@stackName", DT.SqlDbType.NVarChar);
-                parameter.Value = stackName;
+                var parameter = new QC.SqlParameter("@id", DT.SqlDbType.Int);
+                parameter.Value = id;
                 command.Parameters.Add(parameter);
 
                 return command.ExecuteNonQuery() > 0;
