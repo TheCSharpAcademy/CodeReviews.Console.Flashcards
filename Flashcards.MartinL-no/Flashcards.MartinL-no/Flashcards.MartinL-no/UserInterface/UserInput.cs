@@ -57,10 +57,11 @@ internal class UserInput
     {
         while (true)
         {
-            var stacks = _controller.GetStacks();
 
             Console.Clear();
-            // Table output to be added
+
+            var stackNames = _controller.GetStackNames();
+            TableVisualizationEngine.ShowTable(stackNames);
 
             ShowLine();
             Console.WriteLine("""
@@ -138,12 +139,13 @@ internal class UserInput
 
     private void ManageFlashcards()
     {
-        var stacks = _controller.GetStacks();
+        var stackNames = _controller.GetStackNames();
 
         while (true)
         {
             Console.Clear();
-            // Table output to be added
+
+            TableVisualizationEngine.ShowTable(stackNames);
 
             Console.WriteLine("""
                 
@@ -161,10 +163,10 @@ internal class UserInput
             var stackName = Console.ReadLine();
             if (stackName == "0") break;
 
-            var stack = stacks.FirstOrDefault(s => s.Name.ToLower() == stackName.ToLower());
-            if (stack != null)
+            var isValidStackName = stackNames.Exists(s => s.ToLower() == stackName.ToLower());
+            if (isValidStackName)
             {
-                StackMenu(stack.Name);
+                StackMenu(stackName);
                 break;
             }
             else ShowMessage("Invalid input, please try again");
@@ -185,17 +187,15 @@ internal class UserInput
     {
         while (true)
         {
-            var stack = _controller.GetStackByName(stackName);
-
             Console.Clear();
 
             ShowLine();
             Console.WriteLine($"""
-                Current working stack: {stack.Name}
+                Current working stack: {stackName}
 
                 0 to return to main menu
                 X to change current stack
-                V to view all Flashcards in sack
+                V to view all Flashcards in stack
                 A to view X amount of cards in stack
                 C to create a Flashcard in current stack
                 E to edit a Flashcard
@@ -213,22 +213,22 @@ internal class UserInput
                     ManageFlashcards();
                     break;
                 case "V":
-                    ViewAllFlashCards(stack);
+                    ViewAllFlashCards(stackName);
                     break;
                 case "A":
-                    var amountString = Ask("How many Flashcards do you want to see?");
+                    var amountString = Ask("How many Flashcards do you want to see: ");
                     int amount;
                     if (!Int32.TryParse(amountString, out amount)) goto default;
-                    ViewFlashcards(stack, amount);
+                    ViewFlashcards(stackName, amount);
                     break;
                 case "C":
-                    CreateFlashcard(stack);
+                    CreateFlashcard(stackName);
                     break;
                 case "E":
-                    EditFlashcard(stack);
+                    EditFlashcard(stackName);
                     break;
                 case "D":
-                    DeleteFlashcard(stack);
+                    DeleteFlashcard(stackName);
                     break;
                 default:
                     ShowMessage("Invalid input, please try again");
@@ -237,17 +237,36 @@ internal class UserInput
         }
     }
 
-    private void ViewAllFlashCards(FlashcardStackDTO stack)
+    private void ViewAllFlashCards(string stackName)
     {
-        throw new NotImplementedException();
+        Console.Clear();
+
+        var stack = _controller.GetStackByName(stackName);
+        TableVisualizationEngine.ShowTable(stack);
+
+        Console.WriteLine();
+        ShowLine();
+        Ask("Press any key to return to menu: ");
+        ShowLine();
+
     }
 
-    private void ViewFlashcards(FlashcardStackDTO stack, int amount)
+    private void ViewFlashcards(string stackName, int amount)
     {
-        throw new NotImplementedException();
+        Console.Clear();
+
+        var stack = _controller.GetStackByName(stackName);
+        var flashcards = stack.Flashcards.Take(amount).ToList();
+        stack.Flashcards = flashcards;
+        TableVisualizationEngine.ShowTable(stack);
+
+        Console.WriteLine();
+        ShowLine();
+        Ask("Press any key to return to menu: ");
+        ShowLine();
     }
 
-    private void CreateFlashcard(FlashcardStackDTO stack)
+    private void CreateFlashcard(string stackName)
     {
         while (true)
         {
@@ -255,22 +274,73 @@ internal class UserInput
             var front = Ask("What should the front be? ");
             var back = Ask("What should the back be? ");
 
+            var stack = _controller.GetStackByName(stackName);
             var isAdded = _controller.CreateFlashcard(front, back, stack.Id);
 
-            if (isAdded) break;
+            if (isAdded)
+            {
+                ShowMessage("Flashcard created!");
+                break;
+            }
 
             ShowMessage("Invalid entry, please try again");
         }
     }
 
-    private void EditFlashcard(FlashcardStackDTO stack)
+    private void EditFlashcard(string stackName)
     {
-        throw new NotImplementedException();
+        while (true)
+        {
+            Console.Clear();
+
+            var stack = _controller.GetStackByName(stackName);
+            TableVisualizationEngine.ShowTable(stack);
+
+            var viewIdString = Ask("What is the id of the flashcard you want to edit: ");
+            var front = Ask("What should the front be: ");
+            var back = Ask("What should the back be: ");
+            int viewId;
+
+            if (Int32.TryParse(viewIdString, out viewId))
+            {
+                var id = stack.Flashcards[viewId - 1].Id;
+                var isAdded = _controller.UpdateFlashcard(id, front, back, stack.Id);
+                if (isAdded)
+                {
+                    ShowMessage("Flashcard updated!");
+                    return;
+                }
+            }
+
+            else ShowMessage("Invalid entry, please try again");
+        }
     }
 
-    private void DeleteFlashcard(FlashcardStackDTO stack)
+    private void DeleteFlashcard(string stackName)
     {
-        throw new NotImplementedException();
+        while (true)
+        {
+            Console.Clear();
+
+            var stack = _controller.GetStackByName(stackName);
+            TableVisualizationEngine.ShowTable(stack);
+
+            var viewIdString = Ask("What is the id of the flashcard you want to delete: ");
+            int viewId;
+
+            if (Int32.TryParse(viewIdString, out viewId))
+            {
+                var id = stack.Flashcards[viewId - 1].Id;
+                var isAdded = _controller.DeleteFlashcard(id);
+                if (isAdded)
+                {
+                    ShowMessage("Flashcard deleted!");
+                    //return;
+                }
+            }
+
+            else ShowMessage("Invalid entry, please try again");
+        }
     }
 
     private void ShowMessage(string message)
