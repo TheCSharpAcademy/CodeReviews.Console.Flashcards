@@ -270,7 +270,7 @@ internal class StackManager
             var stack = _stackManagerController.GetStackByName(stackName);
             TableVisualizationEngine.ShowTable(stack);
 
-            var viewIdString = Ask("What is the id of the flashcard you want to delete: ");
+            var viewIdString = Helpers.Ask("What is the id of the flashcard you want to delete: ");
             int viewId;
 
             if (Int32.TryParse(viewIdString, out viewId))
