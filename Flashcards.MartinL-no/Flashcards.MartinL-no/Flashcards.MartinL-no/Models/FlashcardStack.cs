@@ -2,12 +2,7 @@
 
 internal class FlashcardStack
 {
-    public readonly string Name;
-    public readonly Stack<string> Flashcards;
-
-    public FlashcardStack(string name, Stack<string> flashcards)
-    {
-        Name = name;
-        Flashcards = flashcards;
-    }
+    public int Id;
+    public string Name;
+    public List<Flashcard> Flashcards;
 }
