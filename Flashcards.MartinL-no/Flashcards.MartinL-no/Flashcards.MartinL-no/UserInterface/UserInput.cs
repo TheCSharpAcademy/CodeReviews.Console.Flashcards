@@ -12,17 +12,26 @@ internal class UserInput
         _controller = controller;
     }
 
-    public void Execute()
+    public void Menu()
     {
         while (true)
         {
-            ShowMainMenuOptions();
-            var op = Ask("Your choice: ");
+            ShowLine();
+            Console.WriteLine("""
+                0 - exit
+                S - Manage Stacks
+                F - Manage Flashcards
+                ST - Study
+                V - View study session data
+                """);
+            ShowLine();
+
+            var op = Console.ReadLine();
 
             switch (op.ToUpper())
             {
                 case "S":
-                    ManageStacks();
+                    ManageStacksMenu();
                     break;
                 case "F":
                     ManageFlashCards();
@@ -37,28 +46,13 @@ internal class UserInput
                     ShowMessage("Program ended");
                     return;
                 default:
-                    ShowMessage("Invalid option, please try again");
+                    ShowMessage("Invalid input, please try again");
                     break;
             }
         }
     }
 
-    private void ShowMainMenuOptions()
-    {
-        Console.Clear();
-
-        ShowLine();
-        Console.WriteLine("""
-            0 - exit
-            S - Manage Stacks
-            F - Manage Flashcards
-            ST - Study
-            V - View study session data
-            """);
-        ShowLine();
-    }
-
-    private void ManageStacks()
+    private void ManageStacksMenu()
     {
         var stacks = _controller.GetStacks();
 
@@ -80,14 +74,90 @@ internal class UserInput
             var stack = stacks.FirstOrDefault(s => s.Name.ToLower() == stackName.ToLower());
             if (stack != null)
             {
-                StackMenu(stack);
+                StackMenu(stack.Name);
                 break;
             }
             else ShowMessage("Invalid input, please try again");
         }
     }
 
-    private void StackMenu(FlashcardStackDTO stack)
+    private void StackMenu(string stackName)
+    {
+        while (true)
+        {
+            var stack = _controller.GetStackByName(stackName);
+
+            Console.Clear();
+
+            ShowLine();
+            Console.WriteLine($"""
+                Current working stack: {stack.Name}
+
+                0 to return to main menu
+                X to change current stack
+                V to view all Flashcards in sack
+                A to view X amount of cards in stack
+                C to create a Flashcard in current stack
+                E to edit a Flashcard
+                D to delete a Flashcard
+                """);
+            ShowLine();
+
+            var op = Console.ReadLine();
+
+            switch (op.ToUpper())
+            {
+                case "0":
+                    return;
+                case "X":
+                    ManageStacksMenu();
+                    break;
+                case "V":
+                    ViewAllFlashCards(stack);
+                    break;
+                case "A":
+                    var amountString = Ask("How many Flashcards do you want to see?");
+                    int amount;
+                    if (!Int32.TryParse(amountString, out amount)) goto default;
+                    ViewFlashcards(stack, amount);
+                    break;
+                case "C":
+                    CreateFlashcard(stack);
+                    break;
+                case "E":
+                    EditFlashcard(stack);
+                    break;
+                case "D":
+                    DeleteFlashcard(stack);
+                    break;
+                default:
+                    ShowMessage("Invalid input, please try again");
+                    break;
+            }
+        }
+    }
+
+    private void DeleteFlashcard(FlashcardStackDTO stack)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void EditFlashcard(FlashcardStackDTO stack)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void CreateFlashcard(FlashcardStackDTO stack)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void ViewFlashcards(FlashcardStackDTO stack, int amount)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void ViewAllFlashCards(FlashcardStackDTO stack)
     {
         throw new NotImplementedException();
     }
@@ -106,6 +176,7 @@ internal class UserInput
     {
         throw new NotImplementedException();
     }
+
     private void ShowMessage(string message)
     {
         Console.Clear();
