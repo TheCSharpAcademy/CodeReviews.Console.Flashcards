@@ -34,6 +34,7 @@ internal static class TableVisualizationEngine
             .WithTitle(title)
             .WithColumn(columnNames)
             .ExportAndWriteLine();
+        Console.WriteLine();
     }
 
     private static List<List<object>> FormatTableData(List<string> stacks)
