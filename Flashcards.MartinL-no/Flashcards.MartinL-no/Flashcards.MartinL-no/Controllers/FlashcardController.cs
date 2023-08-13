@@ -18,6 +18,11 @@ internal class FlashcardController
             .ToList();
     }
 
+    public List<string> GetStackNames()
+    {
+        return _stackRepo.GetStacks().Select(s => s.Name).ToList();
+    }
+
     public FlashcardStackDTO GetStackByName(string name)
     {
         var stack = _stackRepo.GetStackByName(name);
@@ -52,7 +57,7 @@ internal class FlashcardController
     {
         if (id > 0 && !string.IsNullOrWhiteSpace(original) || !string.IsNullOrWhiteSpace(translation) && stackId > 0)
         {
-            var flashcard = new Flashcard() { Original = original, Translation = translation, StackId = stackId };
+            var flashcard = new Flashcard() { Id = id, Original = original, Translation = translation, StackId = stackId };
 
             return _stackRepo.UpdateFlashcard(flashcard);
         }
@@ -80,16 +85,17 @@ internal class FlashcardController
             Id = stack.Id,
             Name = stack.Name,
             Flashcards = stack.Flashcards
-                .Select(f => FlashcardToDto(f))
+                .Select((f, i) => FlashcardToDto(f, i+1))
                 .ToList()
         };
     }
 
-    private FlashcardDTO FlashcardToDto(Flashcard flashcard)
+    private FlashcardDTO FlashcardToDto(Flashcard flashcard, int viewId)
     {
         return new FlashcardDTO()
         {
             Id = flashcard.Id,
+            ViewId = viewId,
             Original = flashcard.Original,
             Translation = flashcard.Translation
         };
