@@ -8,9 +8,11 @@ internal interface IFlashcardStackRepository
 
     public bool InsertStack(FlashcardStack stack);
 
-    public bool InsertFlashcard(string text, string stackName);
+    public bool InsertFlashcard(Flashcard flashcard);
 
-    public bool DeleteStack(FlashcardStack stack);
+    public bool UpdateFlashcard(Flashcard flashCard);
 
-    public bool DeleteFlashCard(string text, string stackName);
+    public bool DeleteStack(int id);
+
+    public bool DeleteFlashCard(int id);
 }

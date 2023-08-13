@@ -1,8 +1,8 @@
 ﻿namespace Flashcards.MartinL_no.Models;
 
-internal class FlashcardStack
+internal class FlashcardStackDTO
 {
     public int Id;
     public string Name;
-    public List<Flashcard> Flashcards;
+    public List<FlashcardDTO> Flashcards;
 }
