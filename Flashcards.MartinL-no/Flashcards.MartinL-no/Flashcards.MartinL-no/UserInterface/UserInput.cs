@@ -1,4 +1,5 @@
 ﻿using Flashcards.MartinL_no.Controllers;
+using Flashcards.MartinL_no.Models;
 
 namespace Flashcards.MartinL_no.UserInterface;
 
@@ -42,7 +43,51 @@ internal class UserInput
         }
     }
 
+    private void ShowMainMenuOptions()
+    {
+        Console.Clear();
+
+        ShowLine();
+        Console.WriteLine("""
+            0 - exit
+            S - Manage Stacks
+            F - Manage Flashcards
+            ST - Study
+            V - View study session data
+            """);
+        ShowLine();
+    }
+
     private void ManageStacks()
+    {
+        var stacks = _controller.GetStacks();
+
+        while (true)
+        {
+            Console.Clear();
+            // Table output to be added
+
+            ShowLine();
+            Console.WriteLine("""
+                Input a current stack name
+                or input 0 to exit input
+                """);
+            ShowLine();
+
+            var stackName = Console.ReadLine();
+            if (stackName == "0") break;
+
+            var stack = stacks.FirstOrDefault(s => s.Name.ToLower() == stackName.ToLower());
+            if (stack != null)
+            {
+                StackMenu(stack);
+                break;
+            }
+            else ShowMessage("Invalid input, please try again");
+        }
+    }
+
+    private void StackMenu(FlashcardStackDTO stack)
     {
         throw new NotImplementedException();
     }
@@ -61,25 +106,6 @@ internal class UserInput
     {
         throw new NotImplementedException();
     }
-
-    private void ShowMainMenuOptions()
-    {
-        ShowLine();
-
-        Console.WriteLine("""
-
-            Select an option:
-                0 - exit
-                S - Manage Stacks
-                F - Manage Flashcards
-                ST - Study
-                V - View study session data
-
-            """);
-
-        ShowLine();
-    }
-
     private void ShowMessage(string message)
     {
         Console.Clear();
