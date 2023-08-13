@@ -1,13 +1,15 @@
 ﻿using Flashcards.MartinL_no.Controllers;
 using Flashcards.MartinL_no.DAL;
 using Flashcards.MartinL_no.Models;
+using Flashcards.MartinL_no.UserInterface;
+
 
 var connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("connectionString");
 var stackRepo = new FlashcardStackRepository(connectionString);
 var controller = new FlashcardController(stackRepo);
-
-var flashcards = new List<Flashcard>();
-var flashcard = new Flashcard() { Id = 2, Original = "dolce vita", Translation = "the good life", StackId = 1 };
+var ui = new UserInput(controller);
+//var flashcards = new List<Flashcard>();
+//var flashcard = new Flashcard() { Id = 2, Original = "dolce vita", Translation = "the good life", StackId = 1 };
 //flashcards.Add(flashcard);
 //var stack = new FlashcardStack("italian", flashcards);
 
