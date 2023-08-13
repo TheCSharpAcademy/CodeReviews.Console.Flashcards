@@ -65,9 +65,12 @@ internal class FlashcardController
         return _stackRepo.DeleteFlashCard(id);
     }
 
-    public bool DeleteStack(int id)
+    public bool DeleteStack(string name)
     {
-        return _stackRepo.DeleteStack(id);
+        var stack = _stackRepo.GetStackByName(name);
+        if (stack == null) return false;
+
+        return _stackRepo.DeleteStack(stack.Id);
     }
 
     private FlashcardStackDTO StackToDTO(FlashcardStack stack)
