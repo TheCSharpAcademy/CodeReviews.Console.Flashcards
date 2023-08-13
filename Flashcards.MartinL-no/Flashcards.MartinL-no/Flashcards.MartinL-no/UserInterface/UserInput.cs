@@ -1,5 +1,4 @@
 ﻿using Flashcards.MartinL_no.Controllers;
-using Flashcards.MartinL_no.Models;
 
 namespace Flashcards.MartinL_no.UserInterface;
 
@@ -148,7 +147,6 @@ internal class UserInput
             TableVisualizationEngine.ShowTable(stackNames);
 
             Console.WriteLine("""
-                
                 Choose a stack of flashcards to interact with:
 
                 """);
@@ -171,16 +169,6 @@ internal class UserInput
             }
             else ShowMessage("Invalid input, please try again");
         }
-    }
-
-    private void Study()
-    {
-        throw new NotImplementedException();
-    }
-
-    private void ViewStudySessionData()
-    {
-        throw new NotImplementedException();
     }
 
     private void StackMenu(string stackName)
@@ -244,7 +232,6 @@ internal class UserInput
         var stack = _controller.GetStackByName(stackName);
         TableVisualizationEngine.ShowTable(stack);
 
-        Console.WriteLine();
         ShowLine();
         Ask("Press any key to return to menu: ");
         ShowLine();
@@ -260,7 +247,6 @@ internal class UserInput
         stack.Flashcards = flashcards;
         TableVisualizationEngine.ShowTable(stack);
 
-        Console.WriteLine();
         ShowLine();
         Ask("Press any key to return to menu: ");
         ShowLine();
@@ -335,12 +321,22 @@ internal class UserInput
                 if (isAdded)
                 {
                     ShowMessage("Flashcard deleted!");
-                    //return;
+                    return;
                 }
             }
 
             else ShowMessage("Invalid entry, please try again");
         }
+    }
+
+    private void Study()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void ViewStudySessionData()
+    {
+        throw new NotImplementedException();
     }
 
     private void ShowMessage(string message)
