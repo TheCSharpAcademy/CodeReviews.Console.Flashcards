@@ -16,6 +16,7 @@ internal class UserInput
     {
         while (true)
         {
+            Console.Clear();
             ShowLine();
             Console.WriteLine("""
                 0 - exit
@@ -31,10 +32,10 @@ internal class UserInput
             switch (op.ToUpper())
             {
                 case "S":
-                    ManageStacksMenu();
+                    ManageStacks();
                     break;
                 case "F":
-                    ManageFlashCards();
+                    ManageFlashcards();
                     break;
                 case "ST":
                     Study();
@@ -52,7 +53,53 @@ internal class UserInput
         }
     }
 
-    private void ManageStacksMenu()
+    private void ManageStacks()
+    {
+        while (true)
+        {
+            var stacks = _controller.GetStacks();
+
+            Console.Clear();
+            // Table output to be added
+
+            ShowLine();
+            Console.WriteLine("""
+                0 to exit
+                C to create Stack
+                D to delete Stack
+                """);
+            ShowLine();
+
+            var op = Console.ReadLine();
+
+            switch (op.ToUpper())
+            {
+                case "0":
+                    return;
+                case "C":
+                    CreateStack();
+                    break;
+                case "D":
+                    DeleteStack();
+                    break;
+                default:
+                    ShowMessage("Invalid input, please try again");
+                    break;
+            }
+        }
+    }
+
+    private void CreateStack()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void DeleteStack()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void ManageFlashcards()
     {
         var stacks = _controller.GetStacks();
 
@@ -60,6 +107,8 @@ internal class UserInput
         {
             Console.Clear();
             // Table output to be added
+
+            Console.WriteLine("Choose a sack of flashcards to interact with: ");
 
             ShowLine();
             Console.WriteLine("""
@@ -79,6 +128,16 @@ internal class UserInput
             }
             else ShowMessage("Invalid input, please try again");
         }
+    }
+
+    private void Study()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void ViewStudySessionData()
+    {
+        throw new NotImplementedException();
     }
 
     private void StackMenu(string stackName)
@@ -110,7 +169,7 @@ internal class UserInput
                 case "0":
                     return;
                 case "X":
-                    ManageStacksMenu();
+                    ManageFlashcards();
                     break;
                 case "V":
                     ViewAllFlashCards(stack);
@@ -137,17 +196,7 @@ internal class UserInput
         }
     }
 
-    private void DeleteFlashcard(FlashcardStackDTO stack)
-    {
-        throw new NotImplementedException();
-    }
-
-    private void EditFlashcard(FlashcardStackDTO stack)
-    {
-        throw new NotImplementedException();
-    }
-
-    private void CreateFlashcard(FlashcardStackDTO stack)
+    private void ViewAllFlashCards(FlashcardStackDTO stack)
     {
         throw new NotImplementedException();
     }
@@ -157,22 +206,28 @@ internal class UserInput
         throw new NotImplementedException();
     }
 
-    private void ViewAllFlashCards(FlashcardStackDTO stack)
+    private void CreateFlashcard(FlashcardStackDTO stack)
+    {
+        while (true)
+        {
+            Console.Clear();
+            var front = Ask("What should the front be? ");
+            var back = Ask("What should the back be? ");
+
+            var isAdded = _controller.CreateFlashcard(front, back, stack.Id);
+
+            if (isAdded) break;
+
+            ShowMessage("Invalid entry, please try again");
+        }
+    }
+
+    private void EditFlashcard(FlashcardStackDTO stack)
     {
         throw new NotImplementedException();
     }
 
-    private void ManageFlashCards()
-    {
-        throw new NotImplementedException();
-    }
-
-    private void Study()
-    {
-        throw new NotImplementedException();
-    }
-
-    private void ViewStudySessionData()
+    private void DeleteFlashcard(FlashcardStackDTO stack)
     {
         throw new NotImplementedException();
     }
