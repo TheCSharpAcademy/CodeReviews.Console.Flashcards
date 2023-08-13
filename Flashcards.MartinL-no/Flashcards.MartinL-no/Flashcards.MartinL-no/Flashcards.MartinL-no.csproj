@@ -16,10 +16,12 @@
     <None Remove="DAL\" />
     <None Remove="Models\" />
     <None Remove="Controllers\" />
+    <None Remove="UserInterface\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DAL\" />
     <Folder Include="Models\" />
     <Folder Include="Controllers\" />
+    <Folder Include="UserInterface\" />
   </ItemGroup>
 </Project>
