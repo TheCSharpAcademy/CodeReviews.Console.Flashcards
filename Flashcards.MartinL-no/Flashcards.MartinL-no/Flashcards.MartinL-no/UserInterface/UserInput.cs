@@ -91,12 +91,49 @@ internal class UserInput
 
     private void CreateStack()
     {
-        throw new NotImplementedException();
+        while (true)
+        {
+            Console.Clear();
+            var name = Ask("Enter the name of the stack you would like to create (or 0 to exit): ");
+            if (name == "0") return;
+
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                ShowMessage("You must enter a name, please try again");
+            }
+            else if (_controller.CreateStack(name))
+            {
+                ShowMessage("Stack added!");
+            }
+            else
+            {
+                ShowMessage("Stack already exists, please try again");
+            }
+        }
     }
 
     private void DeleteStack()
     {
-        throw new NotImplementedException();
+        while (true)
+        {
+            Console.Clear();
+            var name = Ask("Enter the name of the stack you would like to delete (or 0 to exit): ");
+            if (name == "0") return;
+
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                ShowMessage("You must enter a name, please try again");
+            }
+            else if (_controller.DeleteStack(name))
+            {
+                ShowMessage("Stack deleted!");
+                return;
+            }
+            else
+            {
+                ShowMessage("Stack does not exist, please try again");
+            }
+        }
     }
 
     private void ManageFlashcards()
@@ -108,7 +145,11 @@ internal class UserInput
             Console.Clear();
             // Table output to be added
 
-            Console.WriteLine("Choose a sack of flashcards to interact with: ");
+            Console.WriteLine("""
+                
+                Choose a stack of flashcards to interact with:
+
+                """);
 
             ShowLine();
             Console.WriteLine("""
