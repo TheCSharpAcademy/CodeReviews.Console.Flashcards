@@ -316,10 +316,10 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                 command.CommandType = DT.CommandType.Text;
                 command.CommandText = """
                     DELETE FROM [dbo].[Stack]
-                    WHERE Name = @name
+                    WHERE Id = @id
                     """;
 
-                var parameter = new QC.SqlParameter("@name", DT.SqlDbType.NVarChar);
+                var parameter = new QC.SqlParameter("@id", DT.SqlDbType.NVarChar);
                 parameter.Value = id;
                 command.Parameters.Add(parameter);
 
