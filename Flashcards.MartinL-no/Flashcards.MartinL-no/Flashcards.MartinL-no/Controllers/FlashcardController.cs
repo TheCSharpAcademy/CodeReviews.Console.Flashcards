@@ -11,34 +11,84 @@ internal class FlashcardController
         _stackRepo = stackRepo;
     }
 
-    public List<FlashcardStack> GetStacks()
+    public List<FlashcardStackDTO> GetStacks()
     {
-        return _stackRepo.GetStacks();
+        return _stackRepo.GetStacks()
+            .Select(s => StackToDTO(s))
+            .ToList();
     }
 
-    public FlashcardStack GetStackByName(string name)
+    public FlashcardStackDTO GetStackByName(string name)
     {
-        return _stackRepo.GetStackByName(name);
+        var stack = _stackRepo.GetStackByName(name);
+
+        return StackToDTO(stack);
     }
 
     public bool CreateStack(string name)
     {
         if (!string.IsNullOrWhiteSpace(name))
         {
-            var stack = new FlashcardStack(name, new Stack<string>());
+            var stack = new FlashcardStack() { Name = name };
             return _stackRepo.InsertStack(stack);
         }
 
         return false;
     }
 
-    public bool CreateFlashcard(string text, string stackName)
+    public bool CreateFlashcard(string original, string translation, int stackId)
     {
-        if (!string.IsNullOrWhiteSpace(text) || !string.IsNullOrWhiteSpace(stackName))
+        if (!string.IsNullOrWhiteSpace(original) && !string.IsNullOrWhiteSpace(translation))
         {
-            return _stackRepo.InsertFlashcard(text, stackName);
+            var flashcard = new Flashcard() { Original = original, Translation = translation, StackId = stackId };
+
+            return _stackRepo.InsertFlashcard(flashcard);
         }
 
         return false;
+    }
+
+    public bool UpdateFlashcard(int id, string original, string translation, int stackId)
+    {
+        if (id > 0 && !string.IsNullOrWhiteSpace(original) || !string.IsNullOrWhiteSpace(translation) && stackId > 0)
+        {
+            var flashcard = new Flashcard() { Original = original, Translation = translation, StackId = stackId };
+
+            return _stackRepo.UpdateFlashcard(flashcard);
+        }
+
+        return false;
+    }
+
+    public bool DeleteFlashcard(int id)
+    {
+        return _stackRepo.DeleteFlashCard(id);
+    }
+
+    public bool DeleteStack(int id)
+    {
+        return _stackRepo.DeleteStack(id);
+    }
+
+    private FlashcardStackDTO StackToDTO(FlashcardStack stack)
+    {
+        return new FlashcardStackDTO()
+        {
+            Id = stack.Id,
+            Name = stack.Name,
+            Flashcards = stack.Flashcards
+                .Select(f => FlashcardToDto(f))
+                .ToList()
+        };
+    }
+
+    private FlashcardDTO FlashcardToDto(Flashcard flashcard)
+    {
+        return new FlashcardDTO()
+        {
+            Id = flashcard.Id,
+            Original = flashcard.Original,
+            Translation = flashcard.Translation
+        };
     }
 }
