@@ -8,4 +8,4 @@ var stackRepo = new FlashcardStackRepository(connectionString);
 var controller = new FlashcardController(stackRepo);
 var ui = new UserInput(controller);
 
-ui.Execute();
+ui.Menu();
