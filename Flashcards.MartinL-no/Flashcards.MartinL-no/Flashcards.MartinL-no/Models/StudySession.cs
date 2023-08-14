@@ -6,4 +6,5 @@ internal class StudySession
 	public DateOnly Date;
 	public int Score;
 	public int StackId;
+	public string StackName;
 }

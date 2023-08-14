@@ -5,6 +5,6 @@ internal class FlashcardDTO
     public int Id;
     // Index (plus one) of flashcard in stack
     public int ViewId;
-    public string Original;
-    public string Translation;
+    public string Front;
+    public string Back;
 }

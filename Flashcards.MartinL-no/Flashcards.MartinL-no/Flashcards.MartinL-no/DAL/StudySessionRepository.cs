@@ -54,24 +54,26 @@ internal class StudySessionRepository
                 command.Connection = connection;
                 command.CommandType = DT.CommandType.Text;
                 command.CommandText = """
-                    SELECT ss.[Id], ss.[Date], ss.[Score], ss.[StackId]
+                    SELECT ss.[Id], ss.[Date], ss.[Score], ss.[StackId], st.[Name] AS [StackName]
                     FROM
                         [dbo].[StudySession] ss
+                    INNER JOIN
+                        [dbo].[Stack] st ON st.Id = ss.[StackId]
                     """;
 
                 using (var reader = command.ExecuteReader())
                 {
-                    if (!reader.HasRows) return null;
                     var studySessions = new List<StudySession>();
 
                     while (reader.Read())
                     {
                         var studySession = new StudySession()
                         {
-                            Id = (int)reader["Id"],
+                            Id = (int) reader["Id"],
                             Date = DateOnly.FromDateTime((DateTime)reader["Date"]),
-                            Score = (int)reader["Score"],
-                            StackId = (int)reader["StackId"],
+                            Score = (int) reader["Score"],
+                            StackId = (int) reader["StackId"],
+                            StackName = (string) reader["StackName"]
                         };
 
                         studySessions.Add(studySession);
@@ -83,7 +85,7 @@ internal class StudySessionRepository
         }
     }
 
-    public List<StudySession> GetSessionByName(string name)
+    public List<StudySession> GetSessionsByStackName(string name)
     {
         using (var connection = new QC.SqlConnection(_connectionString))
         {
@@ -93,7 +95,7 @@ internal class StudySessionRepository
                 command.Connection = connection;
                 command.CommandType = DT.CommandType.Text;
                 command.CommandText = """
-                    SELECT ss.[Id], ss.[Date], ss.[Score], ss.[StackId]
+                    SELECT ss.[Id], ss.[Date], ss.[Score], ss.[StackId], st.[Name] AS [StackName]
                     FROM
                         [dbo].[StudySession] ss
                     INNER JOIN
@@ -108,8 +110,6 @@ internal class StudySessionRepository
 
                 using (var reader = command.ExecuteReader())
                 {
-                    if (!reader.HasRows) return null;
-
                     var studySessions = new List<StudySession>();
 
                     while (reader.Read())
@@ -120,6 +120,7 @@ internal class StudySessionRepository
                             Date = DateOnly.FromDateTime((DateTime)reader["Date"]),
                             Score = (int)reader["Score"],
                             StackId = (int)reader["StackId"],
+                            StackName = (string)reader["StackName"]
                         };
 
                         studySessions.Add(studySession);
