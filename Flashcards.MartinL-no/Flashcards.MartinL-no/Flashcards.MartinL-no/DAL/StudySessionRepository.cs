@@ -3,6 +3,8 @@ using DT = System.Data;
 using Microsoft.Data.SqlClient;
 using Flashcards.MartinL_no.Models;
 
+namespace Flashcards.MartinL_no.DAL;
+
 internal class StudySessionRepository
 {
     private readonly string _connectionString;
