@@ -6,10 +6,11 @@ var connectionString = System.Configuration.ConfigurationManager.AppSettings.Get
 
 var stackRepo = new FlashcardStackRepository(connectionString);
 var stackManagerController = new StackManagerController(stackRepo);
-var stackManager = new StackManager(stackManagerController);
+var stackManagerApp = new StackManagerApplication(stackManagerController);
 
 var sessionRepo = new StudySessionRepository(connectionString);
 var studySessionController = new StudySessionController(sessionRepo);
-var ui = new UserInput(stackManager);
+
+var ui = new UserInput(stackManagerApp);
 
 ui.Menu();

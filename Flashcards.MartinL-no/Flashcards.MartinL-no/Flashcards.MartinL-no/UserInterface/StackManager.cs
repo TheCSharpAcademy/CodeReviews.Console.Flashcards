@@ -2,11 +2,11 @@
 
 namespace Flashcards.MartinL_no.UserInterface;
 
-internal class StackManager
+internal class StackManagerApplication
 {
     private readonly StackManagerController _stackManagerController;
 
-    public StackManager(StackManagerController stackManagerController)
+    public StackManagerApplication(StackManagerController stackManagerController)
 	{
         _stackManagerController = stackManagerController;
     }

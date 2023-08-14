@@ -4,11 +4,11 @@ namespace Flashcards.MartinL_no.UserInterface;
 
 internal class UserInput
 {
-    private readonly StackManager _stackManager;
+    private readonly StackManagerApplication _stackManagerApp;
 
-	public UserInput(StackManager stackManager)
+	public UserInput(StackManagerApplication stackManagerApp)
 	{
-        _stackManager = stackManager;
+        _stackManagerApp = stackManagerApp;
     }
 
     public void Menu()
@@ -31,10 +31,10 @@ internal class UserInput
             switch (op.ToUpper())
             {
                 case "S":
-                    _stackManager.ManageStacks();
+                    _stackManagerApp.ManageStacks();
                     break;
                 case "F":
-                    _stackManager.ManageFlashcards();
+                    _stackManagerApp.ManageFlashcards();
                     break;
                 case "ST":
                     Study();
