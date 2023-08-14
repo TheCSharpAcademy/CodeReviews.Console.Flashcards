@@ -45,8 +45,8 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                     BEGIN
                         CREATE TABLE [dbo].[Flashcard] (
                             [Id] INT IDENTITY (1, 1) NOT NULL,
-                            [Original] NVARCHAR (MAX) NOT NULL,
-                            [Translation] NVARCHAR (MAX) NOT NULL,
+                            [Front] NVARCHAR (MAX) NOT NULL,
+                            [Back] NVARCHAR (MAX) NOT NULL,
                             [StackId] INT NOT NULL,
                             PRIMARY KEY CLUSTERED ([Id] ASC),
                             CONSTRAINT [FK_Flashcard_Stack] FOREIGN KEY ([StackId]) REFERENCES [dbo].[Stack] ([Id]) ON DELETE CASCADE
@@ -69,7 +69,7 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                 command.Connection = connection;
                 command.CommandType = DT.CommandType.Text;
                 command.CommandText = """
-                    SELECT s.[Id] AS [StackId], s.[Name], f.[Id] AS [FlashcardId], f.[Original], f.[Translation]
+                    SELECT s.[Id] AS [StackId], s.[Name], f.[Id] AS [FlashcardId], f.[Front], f.[Back]
                     FROM
                         [dbo].[Stack] s
                     LEFT JOIN
@@ -106,8 +106,8 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                             flashcards.Add(new Flashcard()
                             {
                                 Id = (int) reader["FlashcardId"],
-                                Original = (string) reader["Original"],
-                                Translation = (string) reader["Translation"],
+                                Front = (string) reader["Front"],
+                                Back = (string) reader["Back"],
                                 StackId = stackId
                             });
                         }
@@ -139,7 +139,7 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                 command.Connection = connection;
                 command.CommandType = DT.CommandType.Text;
                 command.CommandText = """
-                    SELECT s.[Id] AS [StackId], f.[Id] AS [FlashcardId], f.[Original], f.[Translation]
+                    SELECT s.[Id] AS [StackId], f.[Id] AS [FlashcardId], f.[Front], f.[Back]
                     FROM
                         [dbo].[Stack] s
                     LEFT JOIN
@@ -169,8 +169,8 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                             flashcards.Add(new Flashcard()
                             {
                                 Id = (int) reader["FlashcardId"],
-                                Original = (string) reader["Original"],
-                                Translation = (string) reader["Translation"],
+                                Front = (string) reader["Front"],
+                                Back = (string) reader["Back"],
                                 StackId = stackId
                             });
                         }
@@ -230,17 +230,17 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                 command.CommandType = DT.CommandType.Text;
                 command.CommandText = """
                     INSERT INTO [dbo].[Flashcard]
-                        ([Original], [Translation], [StackId])
+                        ([Front], [Back], [StackId])
                     VALUES
-                        (@original, @translation, @stackId)
+                        (@front, @back, @stackId)
                     """;
 
-                var parameter = new QC.SqlParameter("@original", DT.SqlDbType.NVarChar);
-                parameter.Value = flashCard.Original;
+                var parameter = new QC.SqlParameter("@front", DT.SqlDbType.NVarChar);
+                parameter.Value = flashCard.Front;
                 command.Parameters.Add(parameter);
 
-                parameter = new QC.SqlParameter("@translation", DT.SqlDbType.NVarChar);
-                parameter.Value = flashCard.Translation;
+                parameter = new QC.SqlParameter("@back", DT.SqlDbType.NVarChar);
+                parameter.Value = flashCard.Back;
                 command.Parameters.Add(parameter);
 
                 parameter = new QC.SqlParameter("@stackId", DT.SqlDbType.Int);
@@ -270,8 +270,8 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                 command.CommandType = DT.CommandType.Text;
                 command.CommandText = """
                     UPDATE [dbo].[Flashcard]
-                    SET Original = @original,
-                        Translation = @translation,
+                    SET Front = @front,
+                        Back = @back,
                         StackId = @stackId
                     WHERE
                         Id = @id;
@@ -281,12 +281,12 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                 parameter.Value = flashCard.Id;
                 command.Parameters.Add(parameter);
 
-                parameter = new QC.SqlParameter("@original", DT.SqlDbType.NVarChar);
-                parameter.Value = flashCard.Original;
+                parameter = new QC.SqlParameter("@front", DT.SqlDbType.NVarChar);
+                parameter.Value = flashCard.Front;
                 command.Parameters.Add(parameter);
 
-                parameter = new QC.SqlParameter("@translation", DT.SqlDbType.NVarChar);
-                parameter.Value = flashCard.Translation;
+                parameter = new QC.SqlParameter("@back", DT.SqlDbType.NVarChar);
+                parameter.Value = flashCard.Back;
                 command.Parameters.Add(parameter);
 
                 parameter = new QC.SqlParameter("@stackId", DT.SqlDbType.Int);
