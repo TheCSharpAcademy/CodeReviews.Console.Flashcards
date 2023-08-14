@@ -2,11 +2,11 @@
 
 namespace Flashcards.MartinL_no.Controllers;
 
-internal class FlashcardController
+internal class StackManagerController
 {
     private readonly IFlashcardStackRepository _stackRepo;
 
-    public FlashcardController(IFlashcardStackRepository stackRepo)
+    public StackManagerController(IFlashcardStackRepository stackRepo)
     {
         _stackRepo = stackRepo;
     }
