@@ -319,7 +319,7 @@ internal class FlashcardStackRepository : IFlashcardStackRepository
                     WHERE Id = @id
                     """;
 
-                var parameter = new QC.SqlParameter("@id", DT.SqlDbType.NVarChar);
+                var parameter = new QC.SqlParameter("@id", DT.SqlDbType.Int);
                 parameter.Value = id;
                 command.Parameters.Add(parameter);
 

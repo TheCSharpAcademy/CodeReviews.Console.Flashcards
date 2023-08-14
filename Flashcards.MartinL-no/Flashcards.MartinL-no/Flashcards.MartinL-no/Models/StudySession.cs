@@ -3,7 +3,7 @@
 internal class StudySession
 {
 	public int Id;
-	public DateOnly date;
+	public DateOnly Date;
 	public int Score;
 	public int StackId;
 }
