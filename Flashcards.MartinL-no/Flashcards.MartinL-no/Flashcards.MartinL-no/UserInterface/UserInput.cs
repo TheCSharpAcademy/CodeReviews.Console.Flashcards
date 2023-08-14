@@ -1,14 +1,14 @@
-﻿using Flashcards.MartinL_no.Controllers;
-
-namespace Flashcards.MartinL_no.UserInterface;
+﻿namespace Flashcards.MartinL_no.UserInterface;
 
 internal class UserInput
 {
     private readonly StackManagerApplication _stackManagerApp;
+    private readonly StudySessionApplication _sessionApp;
 
-	public UserInput(StackManagerApplication stackManagerApp)
+    public UserInput(StackManagerApplication stackManagerApp, StudySessionApplication sessionApp)
 	{
         _stackManagerApp = stackManagerApp;
+        _sessionApp = sessionApp;
     }
 
     public void Menu()
@@ -37,10 +37,10 @@ internal class UserInput
                     _stackManagerApp.ManageFlashcards();
                     break;
                 case "ST":
-                    Study();
+                    _sessionApp.Study();
                     break;
                 case "V":
-                    ViewStudySessionData();
+                    _sessionApp.ViewStudySessionData();
                     break;
                 case "0":
                     Helpers.ShowMessage("Program ended");
@@ -50,15 +50,5 @@ internal class UserInput
                     break;
             }
         }
-    }
-
-    private void Study()
-    {
-        throw new NotImplementedException();
-    }
-
-    private void ViewStudySessionData()
-    {
-        throw new NotImplementedException();
     }
 }

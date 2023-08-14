@@ -3,7 +3,7 @@
 internal class Flashcard
 {
     public int Id;
-    public string Original;
-    public string Translation;
+    public string Front;
+    public string Back;
     public int StackId;
 }
