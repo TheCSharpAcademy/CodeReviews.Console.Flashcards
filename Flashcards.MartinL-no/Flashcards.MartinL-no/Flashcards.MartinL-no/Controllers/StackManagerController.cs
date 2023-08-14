@@ -20,13 +20,13 @@ internal class StackManagerController
 
     public List<string> GetStackNames()
     {
-        return _stackRepo.GetStacks().Select(s => s.Name).ToList();
+        var stacks = _stackRepo.GetStacks();
+        return stacks.Select(s => s.Name).ToList();
     }
 
     public FlashcardStackDTO GetStackByName(string name)
     {
         var stack = _stackRepo.GetStackByName(name);
-
         return StackToDTO(stack);
     }
 
@@ -41,11 +41,11 @@ internal class StackManagerController
         return false;
     }
 
-    public bool CreateFlashcard(string original, string translation, int stackId)
+    public bool CreateFlashcard(string front, string back, int stackId)
     {
-        if (!string.IsNullOrWhiteSpace(original) && !string.IsNullOrWhiteSpace(translation))
+        if (!string.IsNullOrWhiteSpace(front) && !string.IsNullOrWhiteSpace(back))
         {
-            var flashcard = new Flashcard() { Original = original, Translation = translation, StackId = stackId };
+            var flashcard = new Flashcard() { Front = front, Back = back, StackId = stackId };
 
             return _stackRepo.InsertFlashcard(flashcard);
         }
@@ -53,11 +53,11 @@ internal class StackManagerController
         return false;
     }
 
-    public bool UpdateFlashcard(int id, string original, string translation, int stackId)
+    public bool UpdateFlashcard(int id, string front, string back, int stackId)
     {
-        if (id > 0 && !string.IsNullOrWhiteSpace(original) || !string.IsNullOrWhiteSpace(translation) && stackId > 0)
+        if (id > 0 && !string.IsNullOrWhiteSpace(front) || !string.IsNullOrWhiteSpace(back) && stackId > 0)
         {
-            var flashcard = new Flashcard() { Id = id, Original = original, Translation = translation, StackId = stackId };
+            var flashcard = new Flashcard() { Id = id, Front = front, Back = back, StackId = stackId };
 
             return _stackRepo.UpdateFlashcard(flashcard);
         }
@@ -96,8 +96,8 @@ internal class StackManagerController
         {
             Id = flashcard.Id,
             ViewId = viewId,
-            Original = flashcard.Original,
-            Translation = flashcard.Translation
+            Front = flashcard.Front,
+            Back = flashcard.Back
         };
     }
 }

@@ -15,11 +15,12 @@ internal class StackManagerApplication
     {
         while (true)
         {
-
             Console.Clear();
 
             var stackNames = _stackManagerController.GetStackNames();
-            TableVisualizationEngine.ShowTable(stackNames);
+
+            if (stackNames.Count() > 0) TableVisualizationEngine.ShowStackNameTable(stackNames);
+            else Console.WriteLine("No stacks created yet");
 
             Helpers.ShowLine();
             Console.WriteLine("""
@@ -39,6 +40,7 @@ internal class StackManagerApplication
                     CreateStack();
                     break;
                 case "D":
+                    if (stackNames.Count == 0) goto default;
                     DeleteStack();
                     break;
                 default:
@@ -63,6 +65,7 @@ internal class StackManagerApplication
             else if (_stackManagerController.CreateStack(name))
             {
                 Helpers.ShowMessage("Stack added!");
+                return;
             }
             else
             {
@@ -99,11 +102,17 @@ internal class StackManagerApplication
     {
         var stackNames = _stackManagerController.GetStackNames();
 
+        if (stackNames.Count() == 0)
+        {
+            Helpers.ShowMessage("No stacks created yet");
+            return;
+        }
+
         while (true)
         {
             Console.Clear();
 
-            TableVisualizationEngine.ShowTable(stackNames);
+            TableVisualizationEngine.ShowStackNameTable(stackNames);
 
             Console.WriteLine("""
                 Choose a stack of flashcards to interact with:
@@ -186,10 +195,15 @@ internal class StackManagerApplication
 
     private void ViewAllFlashCards(string stackName)
     {
-        Console.Clear();
-
         var stack = _stackManagerController.GetStackByName(stackName);
-        TableVisualizationEngine.ShowTable(stack);
+        if (stack.Flashcards.Count() == 0)
+        {
+            Helpers.ShowMessage("Stack has no flashcards");
+            return;
+        }
+
+        Console.Clear();
+        TableVisualizationEngine.ShowFlashcardsTable(stack);
 
         Helpers.ShowLine();
         Helpers.Ask("Press any key to return to menu: ");
@@ -199,12 +213,18 @@ internal class StackManagerApplication
 
     private void ViewFlashcards(string stackName, int amount)
     {
-        Console.Clear();
-
         var stack = _stackManagerController.GetStackByName(stackName);
+        if (stack.Flashcards.Count() == 0)
+        {
+            Helpers.ShowMessage("Stack has no flashcards");
+            return;
+        }
+
         var flashcards = stack.Flashcards.Take(amount).ToList();
         stack.Flashcards = flashcards;
-        TableVisualizationEngine.ShowTable(stack);
+
+        Console.Clear();
+        TableVisualizationEngine.ShowFlashcardsTable(stack);
 
         Helpers.ShowLine();
         Helpers.Ask("Press any key to return to menu: ");
@@ -224,7 +244,7 @@ internal class StackManagerApplication
 
             if (isAdded)
             {
-                Helpers.ShowMessage("Flashcard created!");
+                Helpers.ShowMessage("Flashcard added!");
                 break;
             }
 
@@ -236,10 +256,15 @@ internal class StackManagerApplication
     {
         while (true)
         {
-            Console.Clear();
-
             var stack = _stackManagerController.GetStackByName(stackName);
-            TableVisualizationEngine.ShowTable(stack);
+            if (stack.Flashcards.Count() == 0)
+            {
+                Helpers.ShowMessage("Stack has no flashcards");
+                return;
+            }
+
+            Console.Clear();
+            TableVisualizationEngine.ShowFlashcardsTable(stack);
 
             var viewIdString = Helpers.Ask("What is the id of the flashcard you want to edit: ");
             var front = Helpers.Ask("What should the front be: ");
@@ -265,10 +290,15 @@ internal class StackManagerApplication
     {
         while (true)
         {
-            Console.Clear();
-
             var stack = _stackManagerController.GetStackByName(stackName);
-            TableVisualizationEngine.ShowTable(stack);
+            if (stack.Flashcards.Count() == 0)
+            {
+                Helpers.ShowMessage("Stack has no flashcards");
+                return;
+            }
+
+            Console.Clear();
+            TableVisualizationEngine.ShowFlashcardsTable(stack);
 
             var viewIdString = Helpers.Ask("What is the id of the flashcard you want to delete: ");
             int viewId;
