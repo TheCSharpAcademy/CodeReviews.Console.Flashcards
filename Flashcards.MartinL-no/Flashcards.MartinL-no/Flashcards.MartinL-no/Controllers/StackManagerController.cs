@@ -14,7 +14,7 @@ internal class StackManagerController
     public List<FlashcardStackDto> GetStacks()
     {
         return _stackRepo.GetStacks()
-            .Select(s => StackToDTO(s))
+            .Select(s => StackToDto(s))
             .ToList();
     }
 
@@ -27,7 +27,7 @@ internal class StackManagerController
     public FlashcardStackDto GetStackByName(string name)
     {
         var stack = _stackRepo.GetStackByName(name);
-        return StackToDTO(stack);
+        return StackToDto(stack);
     }
 
     public bool CreateStack(string name)
@@ -78,7 +78,7 @@ internal class StackManagerController
         return _stackRepo.DeleteStack(stack.Id);
     }
 
-    private FlashcardStackDto StackToDTO(FlashcardStack stack)
+    private FlashcardStackDto StackToDto(FlashcardStack stack)
     {
         return new FlashcardStackDto()
         {
