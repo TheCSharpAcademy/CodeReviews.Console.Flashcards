@@ -12,26 +12,26 @@ internal static class TableVisualizationEngine
         BuildTable(tableData, new string[] { "Name" });
     }
 
-    public static void ShowFlashcardsTable(FlashcardStackDTO stack)
+    public static void ShowFlashcardsTable(FlashcardStackDto stack)
     {
         var tableData = FormatTableData(stack);
         BuildTableWithTitle(tableData, stack.Name, new string[] { "Id", "Front", "Back" });
     }
 
-    public static void ShowStudySessionsTable(List<StudySessionDTO> sessions)
+    public static void ShowStudySessionsTable(List<StudySessionDto> sessions)
     {
         var tableData = FormatTableData(sessions);
         BuildTable(tableData, new string[] { "Stack", "Date", "Score" });
     }
 
-    public static void ShowStudyQuestionTable(FlashcardDTO flashcard, string stackName)
+    public static void ShowStudyQuestionTable(FlashcardDto flashcard, string stackName)
     {
         var tableData = FormatTableData(flashcard);
         var tableTitle = stackName.Substring(0, 2) + "...";
         BuildTableWithTitle(tableData, tableTitle, new string[] { "Front" });
     }
 
-    private static List<List<object>> FormatTableData(FlashcardDTO flashcard)
+    private static List<List<object>> FormatTableData(FlashcardDto flashcard)
     {
         var originalText =  new List<object>() { flashcard.Front };
         return new List<List<object>>() { originalText };
@@ -66,7 +66,7 @@ internal static class TableVisualizationEngine
             }).ToList();
     }
 
-    private static List<List<object>> FormatTableData(FlashcardStackDTO stack)
+    private static List<List<object>> FormatTableData(FlashcardStackDto stack)
     {
         return stack.Flashcards.Select(s => new List<object>
             {
@@ -76,7 +76,7 @@ internal static class TableVisualizationEngine
             }).ToList();
     }
 
-    private static List<List<object>> FormatTableData(List<StudySessionDTO> sessions)
+    private static List<List<object>> FormatTableData(List<StudySessionDto> sessions)
     {
         return sessions.Select(s => new List<object>
             {

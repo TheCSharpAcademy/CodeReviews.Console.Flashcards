@@ -1,6 +1,6 @@
 ﻿namespace Flashcards.MartinL_no.Models;
 
-internal class StudySessionDTO
+internal class StudySessionDto
 {
     public DateOnly Date;
     public int Score;
