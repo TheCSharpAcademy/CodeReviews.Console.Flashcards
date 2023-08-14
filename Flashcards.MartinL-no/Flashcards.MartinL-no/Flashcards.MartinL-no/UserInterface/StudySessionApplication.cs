@@ -121,7 +121,7 @@ internal class StudySessionApplication
         ViewStudySessions(sessions);
     }
 
-    private void ViewStudySessions(List<StudySessionDTO> sessions)
+    private void ViewStudySessions(List<StudySessionDto> sessions)
     {
         if (sessions.Count() == 0)
         {

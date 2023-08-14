@@ -12,20 +12,20 @@ internal class StudySessionController
         _sessionRepo = sessionRepo;
     }
 
-    public List<StudySessionDTO> GetSessions()
+    public List<StudySessionDto> GetSessions()
     {
         var sessions = _sessionRepo.GetSessions();
-        if (sessions.Count() == 0) return new List<StudySessionDTO>();
+        if (sessions.Count() == 0) return new List<StudySessionDto>();
 
         return sessions.Select(s => StudySessionToDTO(s))
             .OrderBy(s => s.StackName)
             .ThenBy(s => s.Date).ToList();
     }
 
-    public List<StudySessionDTO> GetSessionsByName(string name)
+    public List<StudySessionDto> GetSessionsByName(string name)
     {
         var sessions = _sessionRepo.GetSessionsByStackName(name);
-        if (sessions == null) return new List<StudySessionDTO>();
+        if (sessions == null) return new List<StudySessionDto>();
 
         return sessions.Select(s => StudySessionToDTO(s))
             .OrderBy(s => s.StackName)
@@ -45,8 +45,8 @@ internal class StudySessionController
         return _sessionRepo.InsertStudySession(session);
     }
 
-    private StudySessionDTO StudySessionToDTO(StudySession session)
+    private StudySessionDto StudySessionToDTO(StudySession session)
     {
-        return new StudySessionDTO() { Date = session.Date, Score = session.Score, StackName = session.StackName };
+        return new StudySessionDto() { Date = session.Date, Score = session.Score, StackName = session.StackName };
     }
 }
