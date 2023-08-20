@@ -131,7 +131,7 @@ namespace Flashcards.JsPeanut
                 connection.Open();
                 try
                 {
-                    using (SqlCommand command = new SqlCommand($"UPDATE dbo.stacks SET stack_name = {stackName} WHERE stack_id = {stackId}", connection))
+                    using (SqlCommand command = new SqlCommand($"UPDATE dbo.stacks SET stack_name = '{stackName}' WHERE stack_id = {stackId}", connection))
                     {
                         command.ExecuteNonQuery();
                     }
@@ -238,7 +238,7 @@ namespace Flashcards.JsPeanut
                 connection.Open();
                 try
                 {
-                    using (SqlCommand command = new SqlCommand($"UPDATE dbo.flashcards SET flashcard_question = {fc_question}, flashcard_answer = {fc_answer}, difficulty = {difficulty} WHERE flashcard_id = {IdOfTheFcToDelete}", connection))
+                    using (SqlCommand command = new SqlCommand($"UPDATE dbo.flashcards SET flashcard_question = '{fc_question}', flashcard_answer = '{fc_answer}', difficulty = '{difficulty}' WHERE flashcard_id = {IdOfTheFcToDelete}", connection))
                     {
                         command.ExecuteNonQuery();
                     }
