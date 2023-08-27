@@ -3,6 +3,9 @@ using System.Data.SqlClient;
 using TestingArea;
 using ConsoleTableExt;
 using System.Linq;
+using static System.Formats.Asn1.AsnWriter;
+using System.Xml.Linq;
+using System;
 
 namespace Flashcards.JsPeanut
 {
@@ -468,9 +471,35 @@ JOIN stacks ON study_sessions.stack_id=stacks.stack_id", connection))
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT stack_name, [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] FROM (SELECT stack_name, Month, COUNT(*) AS row_count FROM study_sessions GROUP BY stack_name, Month) AS counts PIVOT (SUM(row_count) FOR Month IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])) AS PivotTable", connection))
+                using (SqlCommand command = new SqlCommand(@"WITH PivotedTable AS (
+SELECT
+study_sessions.Id AS Id,
+study_sessions.Hits AS Hits,
+study_sessions.Misses AS Misses,
+study_sessions.Score AS Score,
+study_sessions.Month AS month,
+stacks.stack_name AS name
+FROM study_sessions
+JOIN stacks ON study_sessions.stack_id=stacks.stack_id
+)
+
+SELECT
+name,
+[1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12]
+FROM (
+SELECT
+name,
+Month,
+COUNT(*) AS row_count
+FROM PivotedTable
+GROUP BY name, Month
+) AS counts
+PIVOT (
+SUM(row_count)
+FOR Month IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
+) AS PivotTable;", connection))
                 {
-                    command.ExecuteNonQuery();
+
                     SqlDataReader reader = command.ExecuteReader();
                     DataTable dataTable = new();
                     dataTable.Load(reader);
@@ -486,7 +515,18 @@ JOIN stacks ON study_sessions.stack_id=stacks.stack_id", connection))
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                using(SqlCommand command = new SqlCommand("SELECT * FROM (SELECT stack_name, Score, Month FROM study_sessions) S PIVOT (SUM(Score) FOR [Month] in ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])) P;", connection))
+                using(SqlCommand command = new SqlCommand(@"WITH PivotedTable AS(SELECT
+study_sessions.Id AS Id,
+study_sessions.Hits AS Hits,
+study_sessions.Misses AS Misses,
+study_sessions.Score AS Score,
+study_sessions.Month AS month,
+stacks.stack_name AS name
+FROM study_sessions
+JOIN stacks ON study_sessions.stack_id=stacks.stack_id)
+
+SELECT * FROM (SELECT name, Score, Month FROM PivotedTable) S PIVOT (SUM(Score) FOR [Month] in ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])) P;
+", connection))
                 {
                     command.ExecuteNonQuery();
                     SqlDataReader reader = command.ExecuteReader();
