@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-
-namespace FlashCards.Ramseis
+﻿namespace FlashCards.Ramseis
 {
     internal class Manage
     {
