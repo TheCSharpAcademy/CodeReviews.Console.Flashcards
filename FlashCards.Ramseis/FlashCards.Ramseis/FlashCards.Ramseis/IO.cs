@@ -1,7 +1,4 @@
-﻿using System.Collections.Specialized;
-using System.Configuration;
-using System.Data.SqlClient;
-using System.Diagnostics;
+﻿using System.Data.SqlClient;
 
 namespace FlashCards.Ramseis
 {

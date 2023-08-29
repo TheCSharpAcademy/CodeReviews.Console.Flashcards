@@ -1,6 +1,4 @@
-﻿using FlashCards.Ramseis;
-
-namespace FlashCards.Ramseis
+﻿namespace FlashCards.Ramseis
 {
     internal class Study
     {
