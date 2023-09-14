@@ -41,7 +41,7 @@ class FlashcardMenuView : BaseView
                 controller.ShowDelete();
                 break;
             case "5":
-                controller.ChangeStack();
+                controller.SelectStack();
                 break;
             case "0":
                 controller.BackToMainMenu();

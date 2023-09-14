@@ -198,4 +198,29 @@ class Database
         }
         return cards;
     }
+
+    public bool CreateFlashcard(long stackId, string front, string back)
+    {
+        try
+        {
+            using var connection = new SqlConnection(databaseConnectionString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = 
+            @"
+            INSERT INTO flashcards 
+            (stack_id, front, back) 
+            VALUES 
+            (@stack_id, @front, @back)";
+            command.Parameters.AddWithValue("@stack_id", stackId);
+            command.Parameters.AddWithValue("@front", front);
+            command.Parameters.AddWithValue("@back", back);
+            return command.ExecuteNonQuery() == 1;
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex);
+            return false;
+        }
+    }
 }
