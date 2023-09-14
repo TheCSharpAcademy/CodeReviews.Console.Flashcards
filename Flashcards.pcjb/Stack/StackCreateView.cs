@@ -1,7 +1,5 @@
 namespace Flashcards;
 
-using ConsoleTableExt;
-
 class StackCreateView : BaseView
 {
     private readonly StackController controller;
