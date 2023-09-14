@@ -31,6 +31,9 @@ class StackMenuView : BaseView
             case "3":
                 controller.ShowEdit();
                 break;
+            case "4":
+                controller.ShowDelete();
+                break;
             case "0":
                 controller.BackToMainMenu();
                 break;

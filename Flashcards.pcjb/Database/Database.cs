@@ -146,6 +146,28 @@ class Database
         }
     }
 
+    public bool DeleteStack(long stackId)
+    {
+        try
+        {
+            using var connection = new SqlConnection(databaseConnectionString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText =
+            @"
+            DELETE FROM stacks 
+            WHERE id=@id
+            ";
+            command.Parameters.AddWithValue("@id", stackId);
+            return command.ExecuteNonQuery() == 1;
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex);
+            return false;
+        }
+    }
+
     public List<Flashcard> ReadAllFlashcardsOfStack(long stackId)
     {
         List<Flashcard> cards = new();

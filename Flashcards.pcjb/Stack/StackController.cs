@@ -116,9 +116,16 @@ class StackController
         else
         {
             var stack = database.ReadStackById(AppState.CurrentWorkingStack.Id);
-            var view = new StackEditView(this, stack);
-            view.SetMessage(message);
-            view.Show();
+            if (stack == null)
+            {
+                ShowMenu("ERROR - Failed to read stack from database.");
+            }
+            else
+            {
+                var view = new StackEditView(this, stack);
+                view.SetMessage(message);
+                view.Show();
+            }
         }
     }
 
@@ -139,6 +146,33 @@ class StackController
         {
             ShowMenu("ERROR - Failed to update stack.");
         }
+    }
+
+    public void ShowDelete()
+    {
+        if (AppState.CurrentWorkingStack == null)
+        {
+            ShowList();
+            return;
+        }
+        var stack = database.ReadStackById(AppState.CurrentWorkingStack.Id);
+        if (stack == null)
+        {
+            ShowMenu("ERROR - Failed to read stack from database.");
+            return;
+        }
+        var view = new StackDeleteView(this, stack);
+        view.Show();
+    }
+
+    public void Delete(Stack stack)
+    {
+        if (database.DeleteStack(stack.Id))
+        {
+            ShowMenu($"OK - Stack deleted '{stack.Name}'");
+            return;
+        }
+        ShowMenu($"ERROR - Failed to delete stack '{stack.Name}'");
     }
 
     public void ManageFlashcards()
