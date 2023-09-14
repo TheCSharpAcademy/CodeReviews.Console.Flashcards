@@ -15,6 +15,18 @@ class StackController
         mainMenuController = controller;
     }
 
+    public void ShowMenu()
+    {
+        ShowMenu(null);
+    }
+
+    public void ShowMenu(string? message)
+    {
+        var view = new StackMenuView(this);
+        view.SetMessage(message);
+        view.Show();
+    }
+
     public void ShowList()
     {
         ShowList(null);
@@ -46,7 +58,7 @@ class StackController
             switch (AppState.CurrentMode)
             {
                 case AppState.Mode.ManageStacks:
-                    BackToMainMenu($"Selected stack: '{selectedStack.Name}'");
+                    ShowMenu($"Selected stack: '{selectedStack.Name}'");
                     break;
                 case AppState.Mode.ManageFlashcards:
                     ManageFlashcards();
@@ -56,6 +68,38 @@ class StackController
                     break;
             }
 
+        }
+    }
+
+    public void ShowCreate()
+    {
+        ShowCreate(null)
+    ;
+    }
+
+    public void ShowCreate(string? message)
+    {
+        var view = new StackCreateView(this);
+        view.SetMessage(message);
+        view.Show();
+    }
+
+    public void Create(string? name)
+    {
+        if (String.IsNullOrEmpty(name) || String.IsNullOrWhiteSpace(name))
+        {
+            ShowCreate("The name must not be empty.");
+            return;
+        }
+
+        var cleanName = name.Trim();
+        if (database.CreateStack(cleanName))
+        {
+            ShowMenu($"OK - Stack created '{cleanName}'");
+        }
+        else
+        {
+            ShowMenu("ERROR - Failed to save new stack.");
         }
     }
 

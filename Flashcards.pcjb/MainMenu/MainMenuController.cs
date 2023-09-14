@@ -34,7 +34,7 @@ class MainMenuController
         {
             throw new InvalidOperationException("Required StackController missing.");
         }
-        stackController.ShowList();
+        stackController.ShowMenu();
     }
 
     public void ManageFlashcards()

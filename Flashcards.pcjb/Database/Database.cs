@@ -74,6 +74,24 @@ class Database
         return stack;
     }
 
+    public bool CreateStack(string name)
+    {
+         try
+        {
+            using var connection = new SqlConnection(databaseConnectionString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = "INSERT INTO stacks (name) VALUES (@name)";
+            command.Parameters.AddWithValue("@name", name);
+            return command.ExecuteNonQuery() == 1;
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex);
+            return false;
+        }
+    }
+
     public List<Flashcard> ReadAllFlashcardsOfStack(long stackId)
     {
         List<Flashcard> cards = new();
