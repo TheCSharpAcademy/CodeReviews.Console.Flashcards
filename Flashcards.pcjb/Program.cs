@@ -4,10 +4,16 @@ class Program
 {
     static void Main(string[] args)
     {
+        Console.WriteLine("Flashcards starts. Please wait a moment...");
+        Logger.Info("Application started.");
+
         var config = new Configuration();
 
-        Logger.Info("Application started.");
-        DatabaseSetup.CreateTablesIfNotPresent(config.DatabaseConnectionString);
+        if (!DatabaseSetup.CreateTablesIfNotPresent(config.DatabaseConnectionString))
+        {
+            Console.WriteLine("Database setup failed. Please check Flashcards.log for error details.");
+            Environment.Exit(1);
+        }
 
         var database = new Database(config.DatabaseConnectionString);
         
