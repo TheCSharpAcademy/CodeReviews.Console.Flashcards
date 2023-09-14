@@ -14,6 +14,7 @@ class StackCreateView : BaseView
     public override void Body()
     {
         Console.WriteLine("New Stack");
+        Console.WriteLine("Leave name empty to cancel and return to menu.");
         Console.Write("Stack-Name: ");
         var name = Console.ReadLine();
         controller.Create(name);

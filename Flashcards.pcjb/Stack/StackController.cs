@@ -87,7 +87,7 @@ class StackController
     {
         if (String.IsNullOrEmpty(name) || String.IsNullOrWhiteSpace(name))
         {
-            ShowCreate("The name must not be empty.");
+            ShowMenu();
             return;
         }
 

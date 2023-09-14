@@ -16,6 +16,7 @@ class StackEditView : BaseView
     public override void Body()
     {
         Console.WriteLine("Edit Stack");
+        Console.WriteLine("Leave new name empty to cancel and return to menu.");
         Console.WriteLine($"Old Stack-Name: {stack.Name}");
         Console.Write("New Stack-Name: ");
         var name = Console.ReadLine();
