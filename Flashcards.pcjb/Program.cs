@@ -9,7 +9,14 @@ class Program
         Logger.Info("Application started.");
         DatabaseSetup.CreateTablesIfNotPresent(config.DatabaseConnectionString);
 
+        var database = new Database(config.DatabaseConnectionString);
+        
         var mainMenuController = new MainMenuController();
+        
+        var stackController = new StackController(database);
+        stackController.SetMainMenuController(mainMenuController);
+        mainMenuController.SetStackController(stackController);
+        
         mainMenuController.ShowMainMenu();
     }
 }
