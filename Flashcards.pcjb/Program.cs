@@ -7,7 +7,9 @@ class Program
         var config = new Configuration();
 
         Logger.Info("Application started.");
-        Console.WriteLine("Flashcards");
         DatabaseSetup.CreateTablesIfNotPresent(config.DatabaseConnectionString);
+
+        var mainMenuController = new MainMenuController();
+        mainMenuController.ShowMainMenu();
     }
 }
