@@ -73,8 +73,7 @@ class StackController
 
     public void ShowCreate()
     {
-        ShowCreate(null)
-    ;
+        ShowCreate(null);
     }
 
     public void ShowCreate(string? message)
@@ -100,6 +99,45 @@ class StackController
         else
         {
             ShowMenu("ERROR - Failed to save new stack.");
+        }
+    }
+
+    public void ShowEdit()
+    {
+        ShowEdit(null);
+    }
+
+    public void ShowEdit(string? message)
+    {
+        if (AppState.CurrentWorkingStack == null)
+        {
+            ShowList();
+        }
+        else
+        {
+            var stack = database.ReadStackById(AppState.CurrentWorkingStack.Id);
+            var view = new StackEditView(this, stack);
+            view.SetMessage(message);
+            view.Show();
+        }
+    }
+
+    public void Update(long stackId, string? newName)
+    {
+        if (String.IsNullOrEmpty(newName) || String.IsNullOrWhiteSpace(newName))
+        {
+            ShowMenu();
+            return;
+        }
+
+        var cleanName = newName.Trim();
+        if (database.UpdateStack(stackId, cleanName))
+        {
+            ShowMenu($"OK - Stack updated '{cleanName}'");
+        }
+        else
+        {
+            ShowMenu("ERROR - Failed to update stack.");
         }
     }
 
