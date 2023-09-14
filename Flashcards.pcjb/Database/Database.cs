@@ -280,4 +280,26 @@ class Database
             return false;
         }
     }
+
+    public bool DeleteFlashcard(long cardId)
+    {
+        try
+        {
+            using var connection = new SqlConnection(databaseConnectionString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText =
+            @"
+            DELETE FROM flashcards 
+            WHERE id=@id
+            ";
+            command.Parameters.AddWithValue("@id", cardId);
+            return command.ExecuteNonQuery() == 1;
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex);
+            return false;
+        }
+    }
 }
