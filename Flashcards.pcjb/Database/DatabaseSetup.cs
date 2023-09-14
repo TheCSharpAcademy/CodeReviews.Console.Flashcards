@@ -67,6 +67,15 @@ internal static class DatabaseSetup
         );
         ";
         command.ExecuteNonQuery();
+
+        command = connection.CreateCommand();
+        command.CommandText =
+        @"
+        CREATE UNIQUE NONCLUSTERED INDEX [Index_stacks_name_unique]
+            ON [dbo].[stacks]([name] ASC);
+        ";
+        command.ExecuteNonQuery();
+        
         Logger.Info("Table 'stacks' created.");
     }
 
