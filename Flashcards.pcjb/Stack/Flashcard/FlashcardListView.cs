@@ -31,11 +31,11 @@ class FlashcardListView : BaseView
         var rawInput = Console.ReadLine();
         if (String.IsNullOrEmpty(rawInput))
         {
-            controller.BackToMainMenu();
+            controller.ShowMenu();
         }
         else
         {
-            controller.ShowList(stack);
+            controller.ShowList();
         }
     }
 }

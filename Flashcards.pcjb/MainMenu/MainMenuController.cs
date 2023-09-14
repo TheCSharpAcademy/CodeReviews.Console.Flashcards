@@ -54,7 +54,7 @@ class MainMenuController
         } 
         else
         {
-            flashcardController.ShowList(AppState.ActiveStack);
+            flashcardController.ShowMenu();
         }
     }
 
