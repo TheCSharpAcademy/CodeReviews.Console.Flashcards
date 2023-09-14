@@ -206,13 +206,70 @@ class Database
             using var connection = new SqlConnection(databaseConnectionString);
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = 
+            command.CommandText =
             @"
             INSERT INTO flashcards 
             (stack_id, front, back) 
             VALUES 
             (@stack_id, @front, @back)";
             command.Parameters.AddWithValue("@stack_id", stackId);
+            command.Parameters.AddWithValue("@front", front);
+            command.Parameters.AddWithValue("@back", back);
+            return command.ExecuteNonQuery() == 1;
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex);
+            return false;
+        }
+    }
+
+    public Flashcard? ReadFlashcardById(long cardId)
+    {
+        Flashcard? card = null;
+        try
+        {
+            using var connection = new SqlConnection(databaseConnectionString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText =
+            @"
+            SELECT id, stack_id, front, back
+            FROM flashcards
+            WHERE id=@id
+            ";
+            command.Parameters.AddWithValue("@id", cardId);
+            using var reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                var id = reader.GetInt32(0);
+                var stackId = reader.GetInt32(1);
+                var front = reader.GetString(2);
+                var back = reader.GetString(3);
+                card = new Flashcard(id, stackId, front, back);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex);
+        }
+        return card;
+    }
+
+    public bool UpdateFlashcard(long cardId, string front, string back)
+    {
+        try
+        {
+            using var connection = new SqlConnection(databaseConnectionString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText =
+            @"
+            UPDATE flashcards 
+            SET front=@front, back=@back 
+            WHERE id=@id 
+            ";
+            command.Parameters.AddWithValue("@id", cardId);
             command.Parameters.AddWithValue("@front", front);
             command.Parameters.AddWithValue("@back", back);
             return command.ExecuteNonQuery() == 1;

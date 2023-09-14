@@ -7,12 +7,17 @@ class FlashcardListView : BaseView
     private readonly FlashcardController controller;
     private readonly Stack stack;
     private readonly List<FlashcardDto> cards;
+    private FlashcardSelectionMode mode = FlashcardSelectionMode.None;
 
     public FlashcardListView(FlashcardController controller, Stack stack, List<FlashcardDto> cards)
     {
         this.controller = controller;
         this.stack = stack;
         this.cards = cards;
+    }
+
+    public void SetMode(FlashcardSelectionMode mode) {
+        this.mode = mode;
     }
 
     public override void Body()
@@ -33,9 +38,13 @@ class FlashcardListView : BaseView
         {
             controller.ShowMenu();
         }
+        else if (int.TryParse(rawInput, out int cardId))
+        {
+            controller.SelectCard(mode, cardId);
+        }
         else
         {
-            controller.ShowList();
+            controller.ShowList(mode);
         }
     }
 }

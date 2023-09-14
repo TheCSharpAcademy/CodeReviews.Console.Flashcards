@@ -29,16 +29,16 @@ class FlashcardMenuView : BaseView
         switch (Console.ReadKey().KeyChar.ToString())
         {
             case "1":
-                controller.ShowList();
+                controller.ShowList(FlashcardSelectionMode.None);
                 break;
             case "2":
                 controller.ShowCreate();
                 break;
             case "3":
-                controller.ShowEdit();
+                controller.ShowList(FlashcardSelectionMode.ForEdit);
                 break;
             case "4":
-                controller.ShowDelete();
+                controller.ShowList(FlashcardSelectionMode.ForDelete);
                 break;
             case "5":
                 controller.SelectStack();
