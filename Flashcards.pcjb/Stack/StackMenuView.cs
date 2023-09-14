@@ -3,22 +3,16 @@ namespace Flashcards;
 class StackMenuView : BaseView
 {
     private readonly StackController controller;
-    private readonly Stack? activeStack;
 
-    public StackMenuView(StackController controller, Stack? activeStack)
+    public StackMenuView(StackController controller)
     {
         this.controller = controller;
-        this.activeStack = activeStack;
     }
 
     public override void Body()
     {
         Console.WriteLine("Manage Stacks");
-        if (activeStack != null)
-        {
-            Console.WriteLine($"Active Stack: {activeStack.Name}");
-        }
-        Console.WriteLine("1 - List Stacks & Select Active Stack");
+        Console.WriteLine("1 - List Stacks");
         Console.WriteLine("2 - Add Stack");
         Console.WriteLine("3 - Edit Stack");
         Console.WriteLine("4 - Delete Stack");
@@ -28,16 +22,16 @@ class StackMenuView : BaseView
         switch (Console.ReadKey().KeyChar.ToString())
         {
             case "1":
-                controller.ShowList();
+                controller.ShowList(StackSelectionMode.None);
                 break;
             case "2":
                 controller.ShowCreate();
                 break;
             case "3":
-                controller.ShowEdit();
+                controller.ShowList(StackSelectionMode.ForEdit);
                 break;
             case "4":
-                controller.ShowDelete();
+                controller.ShowList(StackSelectionMode.ForDelete);
                 break;
             case "0":
                 controller.BackToMainMenu();
