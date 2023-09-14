@@ -26,11 +26,11 @@ class StackListView : BaseView
         }
 
         Console.WriteLine("Enter stack name and press enter to select a stack.");
-        Console.WriteLine("Press enter alone to return to main menu.");
+        Console.WriteLine("Press enter alone to return to menu.");
         var rawInput = Console.ReadLine();
         if (String.IsNullOrEmpty(rawInput))
         {
-            controller.BackToMainMenu();
+            controller.ShowMenu();
         }
         else
         {
