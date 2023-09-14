@@ -22,7 +22,7 @@ class StackController
 
     public void ShowMenu(string? message)
     {
-        var view = new StackMenuView(this);
+        var view = new StackMenuView(this, AppState.ActiveStack);
         view.SetMessage(message);
         view.Show();
     }
@@ -48,7 +48,7 @@ class StackController
     public void SelectStack(string name)
     {
         var selectedStack = database.ReadStackByName(name);
-        AppState.CurrentWorkingStack = selectedStack;
+        AppState.ActiveStack = selectedStack;
         if (selectedStack == null)
         {
             ShowList($"No stack found with name '{name}'.");
@@ -58,13 +58,19 @@ class StackController
             switch (AppState.CurrentMode)
             {
                 case AppState.Mode.ManageStacks:
-                    ShowMenu($"Selected stack: '{selectedStack.Name}'");
+                    ShowMenu();
+                    break;
+                case AppState.Mode.EditStack:
+                    ShowEdit();
+                    break;
+                case AppState.Mode.DeleteStack:
+                    ShowDelete();
                     break;
                 case AppState.Mode.ManageFlashcards:
                     ManageFlashcards();
                     break;
                 default:
-                    BackToMainMenu($"Selected stack: '{selectedStack.Name}'");
+                    ShowMenu();
                     break;
             }
 
@@ -94,7 +100,8 @@ class StackController
         var cleanName = name.Trim();
         if (database.CreateStack(cleanName))
         {
-            ShowMenu($"OK - Stack created '{cleanName}'");
+            AppState.ActiveStack = database.ReadStackByName(cleanName);
+            ShowMenu();
         }
         else
         {
@@ -109,13 +116,14 @@ class StackController
 
     public void ShowEdit(string? message)
     {
-        if (AppState.CurrentWorkingStack == null)
+        AppState.CurrentMode = AppState.Mode.EditStack;
+        if (AppState.ActiveStack == null)
         {
             ShowList();
         }
         else
         {
-            var stack = database.ReadStackById(AppState.CurrentWorkingStack.Id);
+            var stack = database.ReadStackById(AppState.ActiveStack.Id);
             if (stack == null)
             {
                 ShowMenu("ERROR - Failed to read stack from database.");
@@ -140,6 +148,7 @@ class StackController
         var cleanName = newName.Trim();
         if (database.UpdateStack(stackId, cleanName))
         {
+            AppState.ActiveStack = database.ReadStackById(stackId);
             ShowMenu($"OK - Stack updated '{cleanName}'");
         }
         else
@@ -150,12 +159,13 @@ class StackController
 
     public void ShowDelete()
     {
-        if (AppState.CurrentWorkingStack == null)
+        AppState.CurrentMode = AppState.Mode.DeleteStack;
+        if (AppState.ActiveStack == null)
         {
             ShowList();
             return;
         }
-        var stack = database.ReadStackById(AppState.CurrentWorkingStack.Id);
+        var stack = database.ReadStackById(AppState.ActiveStack.Id);
         if (stack == null)
         {
             ShowMenu("ERROR - Failed to read stack from database.");
@@ -169,6 +179,7 @@ class StackController
     {
         if (database.DeleteStack(stack.Id))
         {
+            AppState.ActiveStack = null;
             ShowMenu($"OK - Stack deleted '{stack.Name}'");
             return;
         }

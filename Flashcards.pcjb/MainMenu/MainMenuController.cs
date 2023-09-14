@@ -48,13 +48,13 @@ class MainMenuController
         {
             throw new InvalidOperationException("Required FlashcardController missing.");
         }
-        if (AppState.CurrentWorkingStack == null)
+        if (AppState.ActiveStack == null)
         {
             stackController.ShowList();
         } 
         else
         {
-            flashcardController.ShowList(AppState.CurrentWorkingStack);
+            flashcardController.ShowList(AppState.ActiveStack);
         }
     }
 
