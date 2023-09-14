@@ -111,13 +111,6 @@ class FlashcardController
 
     public void ShowEdit(long cardId, string? message)
     {
-        var stack = AppState.ActiveStack;
-        if (stack == null)
-        {
-            SelectStack();
-            return;
-        }
-
         var card = database.ReadFlashcardById(cardId);
         if (card == null)
         {
@@ -129,7 +122,6 @@ class FlashcardController
             view.SetMessage(message);
             view.Show();
         }
-
     }
 
     public void Update(long cardId, string? newFront, string? newBack)
