@@ -44,6 +44,36 @@ class Database
         return stacks;
     }
 
+    public Stack? ReadStackById(long stackId)
+    {
+        Stack? stack = null;
+        try
+        {
+            using var connection = new SqlConnection(databaseConnectionString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText =
+            @"
+            SELECT id, name
+            FROM stacks
+            WHERE id=@id
+            ";
+            command.Parameters.AddWithValue("@id", stackId);
+            using var reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                var id = reader.GetInt32(0);
+                var name = reader.GetString(1);
+                stack = new Stack(id, name);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex);
+        }
+        return stack;
+    }
+
     public Stack? ReadStackByName(string stackName)
     {
         Stack? stack = null;
@@ -76,12 +106,36 @@ class Database
 
     public bool CreateStack(string name)
     {
-         try
+        try
         {
             using var connection = new SqlConnection(databaseConnectionString);
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = "INSERT INTO stacks (name) VALUES (@name)";
+            command.Parameters.AddWithValue("@name", name);
+            return command.ExecuteNonQuery() == 1;
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex);
+            return false;
+        }
+    }
+
+    public bool UpdateStack(long id, string name)
+    {
+        try
+        {
+            using var connection = new SqlConnection(databaseConnectionString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText =
+            @"
+            UPDATE stacks 
+            SET name=@name 
+            WHERE id=@id
+            ";
+            command.Parameters.AddWithValue("@id", id);
             command.Parameters.AddWithValue("@name", name);
             return command.ExecuteNonQuery() == 1;
         }
