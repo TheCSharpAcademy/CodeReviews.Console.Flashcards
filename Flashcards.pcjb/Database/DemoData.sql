@@ -1,5 +1,5 @@
 SET IDENTITY_INSERT stacks on;
-INSERT INTO stacks (id, name) VALUEs 
+INSERT INTO stacks (id, name) VALUES 
 (1, 'French'),
 (2, 'Spanish'),
 (3, 'German');
