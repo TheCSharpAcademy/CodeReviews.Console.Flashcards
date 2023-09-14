@@ -37,6 +37,7 @@ class FlashcardController
         var stack = AppState.ActiveStack;
         if (stack == null)
         {
+            SelectStack();
             return;
         }
         var cards = database.ReadAllFlashcardsOfStack(stack.Id);
@@ -52,8 +53,41 @@ class FlashcardController
 
     public void ShowCreate()
     {
-        // TODO
-        ShowMenu();
+        ShowCreate(null);
+    }
+
+    public void ShowCreate(string? message)
+    {
+        var stack = AppState.ActiveStack;
+        if (stack == null)
+        {
+            SelectStack();
+            return;
+        }
+        var view = new FlashcardCreateView(this, stack);
+        view.SetMessage(message);
+        view.Show();
+    }
+
+    public void Create(Stack stack, string? front, string? back)
+    {
+        if (String.IsNullOrEmpty(front) || String.IsNullOrWhiteSpace(front)
+        || String.IsNullOrEmpty(back) || String.IsNullOrWhiteSpace(back))
+        {
+            ShowMenu();
+            return;
+        }
+
+        var cleanFront = front.Trim();
+        var cleanBack = back.Trim();
+        if (database.CreateFlashcard(stack.Id, cleanFront, cleanBack))
+        {
+            ShowMenu("OK - New flashcard created.");
+        }
+        else
+        {
+            ShowMenu("ERROR - Failed to save new flashcard.");
+        }
     }
 
     public void ShowEdit()
@@ -68,7 +102,7 @@ class FlashcardController
         ShowMenu();
     }
 
-    public void ChangeStack()
+    public void SelectStack()
     {
         AppState.ActiveStack = null;
         if (mainMenuController == null)
