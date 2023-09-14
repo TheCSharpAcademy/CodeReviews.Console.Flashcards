@@ -147,8 +147,26 @@ class FlashcardController
 
     public void ShowDelete(long cardId)
     {
-        // TODO
-        ShowMenu();
+        var card = database.ReadFlashcardById(cardId);
+        if (card == null)
+        {
+            ShowMenu("ERROR - Failed to read card from database.");
+        }
+        else
+        {
+            var view = new FlashcardDeleteView(this, card);
+            view.Show();
+        }
+    }
+
+    public void Delete(Flashcard card)
+    {
+        if (database.DeleteFlashcard(card.Id))
+        {
+            ShowMenu($"OK - Flashcard deleted");
+            return;
+        }
+        ShowMenu($"ERROR - Failed to delete flashcard.");
     }
 
     public void SelectStack()
