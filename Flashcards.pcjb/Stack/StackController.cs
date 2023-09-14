@@ -22,17 +22,17 @@ class StackController
 
     public void ShowMenu(string? message)
     {
-        var view = new StackMenuView(this, AppState.ActiveStack);
+        var view = new StackMenuView(this);
         view.SetMessage(message);
         view.Show();
     }
 
-    public void ShowList()
+    public void ShowList(StackSelectionMode mode)
     {
-        ShowList(null);
+        ShowList(mode, null);
     }
 
-    public void ShowList(string? message)
+    public void ShowList(StackSelectionMode mode, string? message)
     {
         var stacks = database.ReadAllStacks();
         List<StackDto> stackDtos = new();
@@ -42,32 +42,32 @@ class StackController
         }
         var view = new StackListView(this, stackDtos);
         view.SetMessage(message);
+        view.SetStackSelectionMode(mode);
         view.Show();
     }
 
-    public void SelectStack(string name)
+    public void SelectStack(string name, StackSelectionMode mode)
     {
         var selectedStack = database.ReadStackByName(name);
-        AppState.ActiveStack = selectedStack;
         if (selectedStack == null)
         {
-            ShowList($"No stack found with name '{name}'.");
+            ShowList(mode, $"No stack found with name '{name}'.");
         }
         else
         {
-            switch (AppState.CurrentMode)
+            switch (mode)
             {
-                case AppState.Mode.ManageStacks:
+                case StackSelectionMode.None:
                     ShowMenu();
                     break;
-                case AppState.Mode.EditStack:
-                    ShowEdit();
+                case StackSelectionMode.ForEdit:
+                    ShowEdit(selectedStack);
                     break;
-                case AppState.Mode.DeleteStack:
-                    ShowDelete();
+                case StackSelectionMode.ForDelete:
+                    ShowDelete(selectedStack);
                     break;
-                case AppState.Mode.ManageFlashcards:
-                    ManageFlashcards();
+                case StackSelectionMode.ForFlashcards:
+                    ManageFlashcards(selectedStack);
                     break;
                 default:
                     ShowMenu();
@@ -100,8 +100,7 @@ class StackController
         var cleanName = name.Trim();
         if (database.CreateStack(cleanName))
         {
-            AppState.ActiveStack = database.ReadStackByName(cleanName);
-            ShowMenu();
+            ShowMenu($"OK - Created new stack '{cleanName}'");
         }
         else
         {
@@ -109,31 +108,22 @@ class StackController
         }
     }
 
-    public void ShowEdit()
+    public void ShowEdit(Stack stack)
     {
-        ShowEdit(null);
+        ShowEdit(stack, null);
     }
 
-    public void ShowEdit(string? message)
+    public void ShowEdit(Stack stack, string? message)
     {
-        AppState.CurrentMode = AppState.Mode.EditStack;
-        if (AppState.ActiveStack == null)
+        if (stack == null)
         {
-            ShowList();
+            ShowMenu("ERROR - No stack selected for edit.");
         }
         else
         {
-            var stack = database.ReadStackById(AppState.ActiveStack.Id);
-            if (stack == null)
-            {
-                ShowMenu("ERROR - Failed to read stack from database.");
-            }
-            else
-            {
-                var view = new StackEditView(this, stack);
-                view.SetMessage(message);
-                view.Show();
-            }
+            var view = new StackEditView(this, stack);
+            view.SetMessage(message);
+            view.Show();
         }
     }
 
@@ -148,7 +138,6 @@ class StackController
         var cleanName = newName.Trim();
         if (database.UpdateStack(stackId, cleanName))
         {
-            AppState.ActiveStack = database.ReadStackById(stackId);
             ShowMenu($"OK - Stack updated '{cleanName}'");
         }
         else
@@ -157,18 +146,11 @@ class StackController
         }
     }
 
-    public void ShowDelete()
+    public void ShowDelete(Stack stack)
     {
-        AppState.CurrentMode = AppState.Mode.DeleteStack;
-        if (AppState.ActiveStack == null)
-        {
-            ShowList();
-            return;
-        }
-        var stack = database.ReadStackById(AppState.ActiveStack.Id);
         if (stack == null)
         {
-            ShowMenu("ERROR - Failed to read stack from database.");
+            ShowMenu("ERROR - No stack selected for delete.");
             return;
         }
         var view = new StackDeleteView(this, stack);
@@ -179,20 +161,19 @@ class StackController
     {
         if (database.DeleteStack(stack.Id))
         {
-            AppState.ActiveStack = null;
             ShowMenu($"OK - Stack deleted '{stack.Name}'");
             return;
         }
         ShowMenu($"ERROR - Failed to delete stack '{stack.Name}'");
     }
 
-    public void ManageFlashcards()
+    public void ManageFlashcards(Stack selectedStack)
     {
         if (mainMenuController == null)
         {
             throw new InvalidOperationException("Required MainMenuController missing.");
         }
-        mainMenuController.ManageFlashcards();
+        mainMenuController.ManageFlashcards(selectedStack);
     }
 
     public void BackToMainMenu()

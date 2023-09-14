@@ -29,7 +29,6 @@ class MainMenuController
 
     public void ManageStacks()
     {
-        AppState.CurrentMode = AppState.Mode.ManageStacks;
         if (stackController == null)
         {
             throw new InvalidOperationException("Required StackController missing.");
@@ -39,28 +38,32 @@ class MainMenuController
 
     public void ManageFlashcards()
     {
-        AppState.CurrentMode = AppState.Mode.ManageFlashcards;
-        if (stackController == null)
+        ManageFlashcards(null);
+    }
+
+    public void ManageFlashcards(Stack? stack)
+    {
+        if (stack == null)
         {
-            throw new InvalidOperationException("Required StackController missing.");
+            if (stackController == null)
+            {
+                throw new InvalidOperationException("Required StackController missing.");
+            }
+            stackController.ShowList(StackSelectionMode.ForFlashcards);
         }
+
         if (flashcardController == null)
         {
             throw new InvalidOperationException("Required FlashcardController missing.");
         }
-        if (AppState.ActiveStack == null)
-        {
-            stackController.ShowList();
-        } 
-        else
-        {
-            flashcardController.ShowMenu();
-        }
+        flashcardController.SetStack(stack);
+        flashcardController.ShowMenu();
     }
 
     public void Exit()
     {
         var view = new ExitView();
         view.Show();
+        Environment.Exit(0);
     }
 }

@@ -4,6 +4,7 @@ class FlashcardController
 {
     private readonly Database database;
     private MainMenuController? mainMenuController;
+    private Stack? stack;
 
     public FlashcardController(Database database)
     {
@@ -15,6 +16,11 @@ class FlashcardController
         mainMenuController = controller;
     }
 
+    public void SetStack(Stack? stack)
+    {
+        this.stack = stack;
+    }
+
     public void ShowMenu()
     {
         ShowMenu(null);
@@ -22,7 +28,7 @@ class FlashcardController
 
     public void ShowMenu(string? message)
     {
-        var view = new FlashcardMenuView(this, AppState.ActiveStack);
+        var view = new FlashcardMenuView(this, stack);
         view.SetMessage(message);
         view.Show();
     }
@@ -34,7 +40,6 @@ class FlashcardController
 
     public void ShowList(FlashcardSelectionMode mode, string? message)
     {
-        var stack = AppState.ActiveStack;
         if (stack == null)
         {
             SelectStack();
@@ -72,7 +77,6 @@ class FlashcardController
 
     public void ShowCreate(string? message)
     {
-        var stack = AppState.ActiveStack;
         if (stack == null)
         {
             SelectStack();
@@ -171,7 +175,6 @@ class FlashcardController
 
     public void SelectStack()
     {
-        AppState.ActiveStack = null;
         if (mainMenuController == null)
         {
             throw new InvalidOperationException("Required MainMenuController missing.");
