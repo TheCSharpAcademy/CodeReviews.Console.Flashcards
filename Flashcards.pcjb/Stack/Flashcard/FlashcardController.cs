@@ -27,12 +27,12 @@ class FlashcardController
         view.Show();
     }
 
-    public void ShowList()
+    public void ShowList(FlashcardSelectionMode mode)
     {
-        ShowList(null);
+        ShowList(mode, null);
     }
 
-    public void ShowList(string? message)
+    public void ShowList(FlashcardSelectionMode mode, string? message)
     {
         var stack = AppState.ActiveStack;
         if (stack == null)
@@ -47,8 +47,22 @@ class FlashcardController
             cardDtos.Add(new FlashcardDto(card.Id, card.Front, card.Back));
         }
         var view = new FlashcardListView(this, stack, cardDtos);
+        view.SetMode(mode);
         view.SetMessage(message);
         view.Show();
+    }
+
+    public void SelectCard(FlashcardSelectionMode mode, long cardId)
+    {
+        switch (mode)
+        {
+            case FlashcardSelectionMode.ForEdit:
+                ShowEdit(cardId);
+                break;
+            case FlashcardSelectionMode.ForDelete:
+                ShowDelete(cardId);
+                break;
+        }
     }
 
     public void ShowCreate()
@@ -90,13 +104,56 @@ class FlashcardController
         }
     }
 
-    public void ShowEdit()
+    public void ShowEdit(long cardId)
     {
-        // TODO
-        ShowMenu();
+        ShowEdit(cardId, null);
     }
 
-    public void ShowDelete()
+    public void ShowEdit(long cardId, string? message)
+    {
+        var stack = AppState.ActiveStack;
+        if (stack == null)
+        {
+            SelectStack();
+            return;
+        }
+
+        var card = database.ReadFlashcardById(cardId);
+        if (card == null)
+        {
+            ShowMenu("ERROR - Failed to read card from database.");
+        }
+        else
+        {
+            var view = new FlashcardEditView(this, card);
+            view.SetMessage(message);
+            view.Show();
+        }
+
+    }
+
+    public void Update(long cardId, string? newFront, string? newBack)
+    {
+        if (String.IsNullOrEmpty(newFront) || String.IsNullOrWhiteSpace(newFront)
+        || String.IsNullOrEmpty(newBack) || String.IsNullOrWhiteSpace(newBack))
+        {
+            ShowMenu();
+            return;
+        }
+
+        var cleanFront = newFront.Trim();
+        var cleanBack = newFront.Trim();
+        if (database.UpdateFlashcard(cardId, cleanFront, cleanBack))
+        {
+            ShowMenu($"OK - Flashcard updated.");
+        }
+        else
+        {
+            ShowMenu("ERROR - Failed to update Flashcard.");
+        }
+    }
+
+    public void ShowDelete(long cardId)
     {
         // TODO
         ShowMenu();
