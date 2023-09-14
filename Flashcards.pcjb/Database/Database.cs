@@ -44,7 +44,7 @@ class Database
         return stacks;
     }
 
-        public Stack? ReadStackByName(string stackName)
+    public Stack? ReadStackByName(string stackName)
     {
         Stack? stack = null;
         try
@@ -72,5 +72,36 @@ class Database
             Logger.Error(ex);
         }
         return stack;
+    }
+
+    public List<Flashcard> ReadAllFlashcardsOfStack(long stackId)
+    {
+        List<Flashcard> cards = new();
+        try
+        {
+            using var connection = new SqlConnection(databaseConnectionString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText =
+            @"
+            SELECT id, front, back
+            FROM flashcards
+            WHERE stack_id=@stack_id
+            ";
+            command.Parameters.AddWithValue("@stack_id", stackId);
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                var id = reader.GetInt32(0);
+                var front = reader.GetString(1);
+                var back = reader.GetString(2);
+                cards.Add(new Flashcard(id, stackId, front, back));
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex);
+        }
+        return cards;
     }
 }

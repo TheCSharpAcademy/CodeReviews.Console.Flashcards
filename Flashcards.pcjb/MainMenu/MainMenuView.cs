@@ -12,6 +12,7 @@ class MainMenuView : BaseView
     public override void Body()
     {
         Console.WriteLine("1 - Manage Stacks");
+        Console.WriteLine("2 - Manage Flashcards");
         Console.WriteLine("0 - Exit");
         Console.WriteLine("Enter one of the numbers above to select a menu option.");
 
@@ -19,6 +20,9 @@ class MainMenuView : BaseView
         {
             case "1":
                 controller.ManageStacks();
+                break;
+            case "2":
+                controller.ManageFlashcards();
                 break;
             case "0":
                 controller.Exit();

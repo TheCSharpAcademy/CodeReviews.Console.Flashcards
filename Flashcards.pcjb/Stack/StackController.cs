@@ -10,6 +10,11 @@ class StackController
         this.database = database;
     }
 
+    public void SetMainMenuController(MainMenuController controller)
+    {
+        mainMenuController = controller;
+    }
+
     public void ShowList()
     {
         ShowList(null);
@@ -31,19 +36,36 @@ class StackController
     public void SelectStack(string name)
     {
         var selectedStack = database.ReadStackByName(name);
+        AppState.CurrentWorkingStack = selectedStack;
         if (selectedStack == null)
         {
             ShowList($"No stack found with name '{name}'.");
         }
         else
         {
-            BackToMainMenu($"Selected stack: '{selectedStack.Name}'");
+            switch (AppState.CurrentMode)
+            {
+                case AppState.Mode.ManageStacks:
+                    BackToMainMenu($"Selected stack: '{selectedStack.Name}'");
+                    break;
+                case AppState.Mode.ManageFlashcards:
+                    ManageFlashcards();
+                    break;
+                default:
+                    BackToMainMenu($"Selected stack: '{selectedStack.Name}'");
+                    break;
+            }
+
         }
     }
 
-    public void SetMainMenuController(MainMenuController controller)
+    public void ManageFlashcards()
     {
-        mainMenuController = controller;
+        if (mainMenuController == null)
+        {
+            throw new InvalidOperationException("Required MainMenuController missing.");
+        }
+        mainMenuController.ManageFlashcards();
     }
 
     public void BackToMainMenu()
