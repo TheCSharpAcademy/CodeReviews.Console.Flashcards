@@ -16,6 +16,10 @@ class Program
         var stackController = new StackController(database);
         stackController.SetMainMenuController(mainMenuController);
         mainMenuController.SetStackController(stackController);
+
+        var flashcardController = new FlashcardController(database);
+        flashcardController.SetMainMenuController(mainMenuController);
+        mainMenuController.SetFlashcardController(flashcardController);
         
         mainMenuController.ShowMainMenu();
     }
