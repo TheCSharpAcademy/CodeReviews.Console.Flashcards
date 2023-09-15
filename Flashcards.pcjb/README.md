@@ -19,4 +19,4 @@ The app will create databases tables on startup as needed.
 Thus the database user must to be allowed to create tables in the database.
 
 ### Demo Data
-Use the SQL-statements in Database/DemoData.sql to quickly create example stacks and flashcards for testing/demo purposes.
+Use the SQL-statements in Database/DemoData.txt to quickly create example stacks and flashcards for testing/demo purposes.
