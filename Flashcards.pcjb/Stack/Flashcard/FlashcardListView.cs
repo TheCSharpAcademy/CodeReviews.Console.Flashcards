@@ -6,14 +6,23 @@ class FlashcardListView : BaseView
 {
     private readonly FlashcardController controller;
     private readonly Stack stack;
-    private readonly List<FlashcardDto> cards;
+    private readonly List<FlashcardDto> cardDtos;
+    Dictionary<long, long> publicToDatabaseId;
     private FlashcardSelectionMode mode = FlashcardSelectionMode.None;
 
-    public FlashcardListView(FlashcardController controller, Stack stack, List<FlashcardDto> cards)
+    public FlashcardListView(FlashcardController controller, Stack stack, List<Flashcard> cards)
     {
         this.controller = controller;
         this.stack = stack;
-        this.cards = cards;
+        cardDtos = new();
+        publicToDatabaseId = new();
+        int publicId = 0;
+        foreach (Flashcard card in cards)
+        {
+            publicId++;
+            cardDtos.Add(new FlashcardDto(publicId, card.Front, card.Back));
+            publicToDatabaseId.Add(publicId, card.Id);
+        }
     }
 
     public void SetMode(FlashcardSelectionMode mode)
@@ -23,10 +32,11 @@ class FlashcardListView : BaseView
 
     public override void Body()
     {
+        
         Console.WriteLine($"Flashcards in stack '{stack.Name}'");
-        if (cards != null && cards.Count > 0)
+        if (cardDtos != null && cardDtos.Count > 0)
         {
-            ConsoleTableBuilder.From(cards).ExportAndWriteLine();
+            ConsoleTableBuilder.From(cardDtos).ExportAndWriteLine();
         }
         else
         {
@@ -49,14 +59,18 @@ class FlashcardListView : BaseView
         if (String.IsNullOrEmpty(rawInput))
         {
             controller.ShowMenu();
+            return;
         }
-        else if (int.TryParse(rawInput, out int cardId))
+        
+        if (int.TryParse(rawInput, out int publicCardId))
         {
-            controller.SelectCard(mode, cardId);
+            if (publicToDatabaseId.TryGetValue(publicCardId, out long databaseCardId))
+            {
+                controller.SelectCard(mode, databaseCardId);
+                return;
+            }
         }
-        else
-        {
-            controller.ShowList(mode);
-        }
+        
+        controller.ShowList(mode);
     }
 }
