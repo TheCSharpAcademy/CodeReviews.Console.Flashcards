@@ -127,7 +127,9 @@ class StudySessionController
 
     public void ShowSessionHistory()
     {
-        ShowMenu();
+        var history = database.ReadStudySessionHistory();
+        var view = new StudySessionHistoryView(this, history);
+        view.Show();
     }
 
     public void BackToMainMenu()

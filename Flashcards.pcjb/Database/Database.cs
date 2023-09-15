@@ -327,4 +327,35 @@ class Database
             return false;
         }
     }
+
+    public List<StudySessionHistoryDto> ReadStudySessionHistory()
+    {
+        List<StudySessionHistoryDto> history = new();
+        try
+        {
+            using var connection = new SqlConnection(databaseConnectionString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText =
+            @"
+            SELECT study_sessions.completed_at, stacks.name, study_sessions.score_percent 
+            FROM study_sessions
+            JOIN stacks ON stacks.id = study_sessions.stack_id
+            ORDER BY study_sessions.completed_at ASC;
+            ";
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                var completedAt = reader.GetDateTime(0);
+                var stackName = reader.GetString(1);
+                var scorePercent = reader.GetByte(2);
+                history.Add(new StudySessionHistoryDto(completedAt, stackName, scorePercent));
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex);
+        }
+        return history;
+    }
 }
