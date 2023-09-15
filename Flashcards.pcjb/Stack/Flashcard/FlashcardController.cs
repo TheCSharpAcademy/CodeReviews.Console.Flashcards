@@ -133,7 +133,7 @@ class FlashcardController
         }
 
         var cleanFront = newFront.Trim();
-        var cleanBack = newFront.Trim();
+        var cleanBack = newBack.Trim();
         if (database.UpdateFlashcard(cardId, cleanFront, cleanBack))
         {
             ShowMenu($"OK - Flashcard updated.");
