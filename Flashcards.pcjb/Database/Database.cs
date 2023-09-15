@@ -302,4 +302,29 @@ class Database
             return false;
         }
     }
+
+    public bool CreateStudySession(StudySession session)
+    {
+        try
+        {
+            using var connection = new SqlConnection(databaseConnectionString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText =
+            @"
+            INSERT INTO study_sessions 
+            (stack_id, completed_at, score_percent) 
+            VALUES 
+            (@stack_id, @completed_at, @score_percent)";
+            command.Parameters.AddWithValue("@stack_id", session.StackId);
+            command.Parameters.AddWithValue("@completed_at", session.CompletedAt);
+            command.Parameters.AddWithValue("@score_percent", session.ScorePercent);
+            return command.ExecuteNonQuery() == 1;
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex);
+            return false;
+        }
+    }
 }

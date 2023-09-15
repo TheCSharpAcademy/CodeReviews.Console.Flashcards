@@ -113,7 +113,7 @@ internal static class DatabaseSetup
         command.CommandText =
         @"
         CREATE TABLE [dbo].[study_sessions] (
-            [id]            INT      NOT NULL,
+            [id]            INT      IDENTITY (1, 1) NOT NULL,
             [stack_id]      INT      NOT NULL,
             [completed_at]  DATETIME NOT NULL,
             [score_percent] TINYINT  NOT NULL,
