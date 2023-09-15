@@ -5,6 +5,7 @@ class MainMenuController
     private StackController? stackController;
     private FlashcardController? flashcardController;
     private StudySessionController? studySessionController;
+    private ReportController? reportController;
 
     public void SetStackController(StackController controller)
     {
@@ -19,6 +20,11 @@ class MainMenuController
     public void SetStudySessionController(StudySessionController controller)
     {
         studySessionController = controller;
+    }
+
+    public void SetReportController(ReportController controller)
+    {
+        reportController = controller;
     }
 
     public void ShowMainMenu()
@@ -92,6 +98,15 @@ class MainMenuController
             throw new InvalidOperationException("Required StackController missing.");
         }
         stackController.ShowList(StackSelectionMode.ForStudySession);
+    }
+
+    public void Reports()
+    {
+        if (reportController == null)
+        {
+            throw new InvalidOperationException("Required ReportController missing.");
+        }
+        reportController.ShowMenu();
     }
 
     public void Exit()
