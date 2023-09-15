@@ -13,6 +13,7 @@ class MainMenuView : BaseView
     {
         Console.WriteLine("1 - Manage Stacks");
         Console.WriteLine("2 - Manage Flashcards");
+        Console.WriteLine("3 - Study");
         Console.WriteLine("0 - Exit");
         Console.WriteLine("Enter one of the numbers above to select a menu option.");
 
@@ -23,6 +24,9 @@ class MainMenuView : BaseView
                 break;
             case "2":
                 controller.ManageFlashcards();
+                break;
+            case "3":
+                controller.Study();
                 break;
             case "0":
                 controller.Exit();

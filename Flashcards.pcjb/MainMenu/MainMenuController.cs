@@ -4,6 +4,7 @@ class MainMenuController
 {
     private StackController? stackController;
     private FlashcardController? flashcardController;
+    private StudySessionController? studySessionController;
 
     public void SetStackController(StackController controller)
     {
@@ -13,6 +14,11 @@ class MainMenuController
     public void SetFlashcardController(FlashcardController controller)
     {
         flashcardController = controller;
+    }
+
+    public void SetStudySessionController(StudySessionController controller)
+    {
+        studySessionController = controller;
     }
 
     public void ShowMainMenu()
@@ -58,6 +64,15 @@ class MainMenuController
         }
         flashcardController.SetStack(stack);
         flashcardController.ShowMenu();
+    }
+
+    public void Study()
+    {
+        if (studySessionController == null)
+        {
+            throw new InvalidOperationException("Required StudySessionController missing.");
+        }
+        studySessionController.ShowMenu();
     }
 
     public void Exit()
