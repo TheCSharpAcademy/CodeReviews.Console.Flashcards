@@ -26,6 +26,10 @@ class Program
         var flashcardController = new FlashcardController(database);
         flashcardController.SetMainMenuController(mainMenuController);
         mainMenuController.SetFlashcardController(flashcardController);
+
+        var studySessionController = new StudySessionController(database);
+        studySessionController.SetMainMenuController(mainMenuController);
+        mainMenuController.SetStudySessionController(studySessionController);
         
         mainMenuController.ShowMainMenu();
     }
