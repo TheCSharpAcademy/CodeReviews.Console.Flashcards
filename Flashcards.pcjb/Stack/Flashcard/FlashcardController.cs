@@ -46,12 +46,7 @@ class FlashcardController
             return;
         }
         var cards = database.ReadAllFlashcardsOfStack(stack.Id);
-        List<FlashcardDto> cardDtos = new();
-        foreach (Flashcard card in cards)
-        {
-            cardDtos.Add(new FlashcardDto(card.Id, card.Front, card.Back));
-        }
-        var view = new FlashcardListView(this, stack, cardDtos);
+        var view = new FlashcardListView(this, stack, cards);
         view.SetMode(mode);
         view.SetMessage(message);
         view.Show();
