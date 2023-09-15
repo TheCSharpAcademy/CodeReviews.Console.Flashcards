@@ -5,20 +5,20 @@ class StudySession
     public long Id { get; set; }
     public long StackId { get; set; }
     public DateTime CompletedAt { get; set; }
-    public int Score { get; set; }
+    public int ScorePercent { get; set; }
 
-    public StudySession(long id, long stackId, DateTime completedAt, int score)
+    public StudySession(long id, long stackId, DateTime completedAt, int scorePercent)
     {
         Id = id;
         StackId = stackId;
         CompletedAt = completedAt;
-        Score = score;
+        ScorePercent = scorePercent;
     }
 
-    public StudySession(long stackId, DateTime completedAt, int score)
+    public StudySession(long stackId, DateTime completedAt, int scorePercent)
     {
         StackId = stackId;
         CompletedAt = completedAt;
-        Score = score;
+        ScorePercent = scorePercent;
     }
 }

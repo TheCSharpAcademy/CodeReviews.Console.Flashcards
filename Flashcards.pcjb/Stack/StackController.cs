@@ -69,6 +69,9 @@ class StackController
                 case StackSelectionMode.ForFlashcards:
                     ManageFlashcards(selectedStack);
                     break;
+                case StackSelectionMode.ForStudySession:
+                    Study(selectedStack);
+                    break;
                 default:
                     ShowMenu();
                     break;
@@ -174,6 +177,15 @@ class StackController
             throw new InvalidOperationException("Required MainMenuController missing.");
         }
         mainMenuController.ManageFlashcards(selectedStack);
+    }
+
+    public void Study(Stack selectedStack)
+    {
+        if (mainMenuController == null)
+        {
+            throw new InvalidOperationException("Required MainMenuController missing.");
+        }
+        mainMenuController.Study(selectedStack);
     }
 
     public void BackToMainMenu()

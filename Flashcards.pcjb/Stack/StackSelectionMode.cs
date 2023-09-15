@@ -5,5 +5,6 @@ enum StackSelectionMode
     None,
     ForEdit,
     ForDelete,
-    ForFlashcards
+    ForFlashcards,
+    ForStudySession
 }

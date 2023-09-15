@@ -75,6 +75,25 @@ class MainMenuController
         studySessionController.ShowMenu();
     }
 
+    public void Study(Stack selectedStack)
+    {
+        if (studySessionController == null)
+        {
+            throw new InvalidOperationException("Required StudySessionController missing.");
+        }
+        studySessionController.StartNewSession(selectedStack);
+    }
+
+
+    public void StudySelectStack()
+    {
+        if (stackController == null)
+        {
+            throw new InvalidOperationException("Required StackController missing.");
+        }
+        stackController.ShowList(StackSelectionMode.ForStudySession);
+    }
+
     public void Exit()
     {
         var view = new ExitView();
