@@ -6,8 +6,8 @@ class StudySessionController
     private MainMenuController? mainMenuController;
     private Stack? stack;
     private List<Flashcard>? cards;
-    private int totalQuestions = 0;
-    private int correctAnswers = 0;
+    private int totalQuestions;
+    private int correctAnswers;
 
     public StudySessionController(Database database)
     {
