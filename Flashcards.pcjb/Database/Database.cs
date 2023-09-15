@@ -358,4 +358,62 @@ class Database
         }
         return history;
     }
+
+    public List<ReportRow> Report(ReportType reportType, int? year)
+    {
+        List<ReportRow> reportData = new();
+        if (year == null)
+        {
+            return reportData;
+        }
+        try
+        {
+            using var connection = new SqlConnection(databaseConnectionString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText =
+            @"
+            SELECT StackName, [1] AS Jan, [2] AS Feb, [3] AS Mar, [4] AS Apr, [5] AS May, [6] AS Jun, [7] AS Jul, [8] AS Aug, [9] AS Sep, [10] AS Oct, [11] AS Nov, [12] AS Dec
+            FROM
+            (
+                SELECT stacks.name AS StackName, 
+                MONTH(study_sessions.completed_at) As StudyMonth, 
+                study_sessions.score_percent AS ScorePercent
+                FROM study_sessions
+                JOIN stacks ON stacks.id = study_sessions.stack_id
+                WHERE YEAR(study_sessions.completed_at) = @year
+            ) AS StudyHistory
+            PIVOT
+            (
+                COUNT(ScorePercent)
+                FOR StudyMonth
+                IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
+            ) AS StudyHistoryPivot
+            ORDER BY StudyHistoryPivot.StackName;
+            ";
+
+            if (ReportType.AverageScorePerMonthPerStack.Equals(reportType))
+            {
+                command.CommandText = command.CommandText.Replace("COUNT(ScorePercent)", "AVG(ScorePercent)");
+            }
+            
+            command.Parameters.AddWithValue("@year", year);
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                var stackName = reader.GetString(0);
+                var monthlyValues = new int[12];
+                for (int i = 0; i < 12; i++)
+                {
+                    monthlyValues[i] = reader.IsDBNull(i+1) ? 0 : reader.GetInt32(i+1);
+                }
+                reportData.Add(new ReportRow(stackName, monthlyValues));
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex);
+        }
+        return reportData;
+    }
 }

@@ -30,6 +30,10 @@ class Program
         var studySessionController = new StudySessionController(database);
         studySessionController.SetMainMenuController(mainMenuController);
         mainMenuController.SetStudySessionController(studySessionController);
+
+        var reportController = new ReportController(database);
+        reportController.SetMainMenuController(mainMenuController);
+        mainMenuController.SetReportController(reportController);
         
         mainMenuController.ShowMainMenu();
     }
