@@ -5,7 +5,7 @@ namespace Flashcards
 {
     internal class Database
     {
-        public bool isConnected = false;
+        public bool isConnected;
         public string currentDirectory;
         public string dbName;
         public string connInfo;
@@ -228,7 +228,7 @@ namespace Flashcards
             }
             catch
             {
-                throw new Exception("no such a stack."); ;
+                throw new Exception("no such a stack.");
             }
         }
 
