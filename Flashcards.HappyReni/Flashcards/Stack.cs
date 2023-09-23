@@ -19,7 +19,7 @@
             Flashcards = new List<Flashcard>();
         }
 
-        public static int Count { get; private set; } = 0;
+        public static int Count { get; private set; }
         public int Id { get; set; }
         public string Name { get; set; }
         public List<Flashcard> Flashcards { get; private set; }

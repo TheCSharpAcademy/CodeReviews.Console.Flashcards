@@ -7,8 +7,8 @@
         public string Front { get; set; }
         public string Back { get; set; }
         public static int Count { get; private set; } = 1;
-        public FlashcardDTO DTO { get; private set; }
-        public FlashcardQuestionDTO QuestionDTO { get; private set; }
+        public FlashcardDto Dto { get; private set; }
+        public FlashcardQuestionDto QuestionDto { get; private set; }
 
         public Flashcard(int stackId, string front, string back)
         {
@@ -16,8 +16,8 @@
             StackId = stackId;
             Front = front;
             Back = back;
-            DTO = new FlashcardDTO(front,back);
-            QuestionDTO = new FlashcardQuestionDTO(front);
+            Dto = new FlashcardDto(front,back);
+            QuestionDto = new FlashcardQuestionDto(front);
         }
         public Flashcard(int id, int stackId, string front, string back)
         {
@@ -25,17 +25,17 @@
             StackId = stackId;
             Front = front;
             Back = back;
-            DTO = new FlashcardDTO(front, back);
-            QuestionDTO = new FlashcardQuestionDTO(front);
+            Dto = new FlashcardDto(front, back);
+            QuestionDto = new FlashcardQuestionDto(front);
             Count++;
         }
         public static void DownCount() => Count--;
 
     }
 
-    internal class FlashcardDTO
+    internal class FlashcardDto
     {
-        public FlashcardDTO(string front, string back)
+        public FlashcardDto(string front, string back)
         {
             Front = front;
             Back = back;
@@ -45,9 +45,9 @@
         public string Back { get; set; }
     }
 
-    internal class FlashcardQuestionDTO
+    internal class FlashcardQuestionDto
     {
-        public FlashcardQuestionDTO(string front)
+        public FlashcardQuestionDto(string front)
         {
             Front = front;
         }

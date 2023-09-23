@@ -279,7 +279,7 @@
             {
                 foreach (var card in cards)
                 {
-                    cardList.Add(new List<object> { card.DTO.Front, card.DTO.Back });
+                    cardList.Add(new List<object> { card.Dto.Front, card.Dto.Back });
                 }
                 ui.MakeTable(cardList, "Flashcards");
             }
@@ -322,7 +322,7 @@
             var score = 0;
             foreach (var card in cards)
             {
-                var front = card.QuestionDTO.Front;
+                var front = card.QuestionDto.Front;
                 var answer = ui.GetInput(front).str;
 
                 if (answer == card.Back)
@@ -340,13 +340,12 @@
             return score;
         }
 
-        private Session StudyReport(Session session)
+        private void StudyReport(Session session)
         {
             Console.Clear();
             ui.Write("Study Finished!");
             ui.Write($"Your score is {session.Score} out of {session.QuestionCount} questions");
             Sessions.Add(session);
-            return session;
         }
 
         private void ViewAllSessions()
