@@ -1,4 +1,2 @@
-﻿using FlashCards.Forser;
-
-MainMenuController mainMenuController = new MainMenuController();
+﻿MainMenuController mainMenuController = new MainMenuController();
 mainMenuController.MainMenu();

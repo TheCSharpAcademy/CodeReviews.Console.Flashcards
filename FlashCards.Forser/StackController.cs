@@ -1,10 +1,8 @@
-﻿using FlashCards.Forser.DTOs;
-using Microsoft.Data.SqlClient;
-
-namespace FlashCards.Forser
+﻿namespace FlashCards.Forser
 {
     internal class StackController
     {
+        private readonly DataLayer _dataLayer = new DataLayer();
         internal void ShowStackMenu()
         {
             FlashcardController flashcardController = new FlashcardController();
@@ -14,9 +12,9 @@ namespace FlashCards.Forser
             Console.WriteLine("------------------------------------------");
             Console.WriteLine("              STACK MENU");
             Console.WriteLine("List - List all Stacks");
-            if (CountAllStacks() > 10)
+            Console.WriteLine("Add - Add a new Stack");
+            if (CountAllStacks() >= 1)
             {
-                Console.WriteLine("Add - Add a new Stack");
                 Console.WriteLine("Edit - Edit a Stack");
                 Console.WriteLine("Delete - Delete a Stack\n");
             }
@@ -37,6 +35,7 @@ namespace FlashCards.Forser
                 case "edit":
                     break;
                 case "delete":
+                    DeleteStack();
                     break;
                 case "menu":
                     mainMenuController.MainMenu();
@@ -44,38 +43,48 @@ namespace FlashCards.Forser
                 case "flash":
                     flashcardController.ShowFlashcardMenu();
                     break;
+                default:
+                    Console.WriteLine("Not a valid option, select from an option from the Menu");
+                    break;
             }
         }
+        private void DeleteStack()
+        {
+            List<Stack> allStacks = _dataLayer.FetchAllStacks();
+            bool stackDeleted = false;
 
+            foreach(Stack stack in allStacks)
+            {
+                Console.WriteLine($"ID: {stack.StackId} - Name: {stack.Name}");
+            }
+            Console.WriteLine("Enter the ID of the stack you want to remove: ");
+            int stackId = Convert.ToInt32(Console.ReadLine());
 
+            if (_dataLayer.CheckStackId(stackId))
+            {
+                stackDeleted = _dataLayer.DeleteStackById(stackId);
+            }
+
+            if(stackDeleted) 
+            {
+                Console.WriteLine($"Stack with ID : {stackId} has been deleted!\n Press any key to return to Stack Menu");
+                Console.ReadLine();
+                ShowStackMenu();
+            }
+            else
+            {
+                Console.WriteLine("No stack deleted.\n Press any key to return to Stack Menu");
+                ShowStackMenu();
+            }
+        }
         internal void AddNewStack()
         {
             Console.WriteLine("------------------------------------------");
             Console.WriteLine("Enter your new Stack name: ");
-            string stackName = Console.ReadLine();
+            string stackName = Console.ReadLine().Trim();
 
-            StackDTO newStack = new StackDTO();
-            newStack.Name = stackName;
-            int rows = 0;
-
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(new Startup().AppSettings.ConnectionString))
-                {
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.Connection = connection;
-                    cmd.CommandType = System.Data.CommandType.Text;
-                    cmd.CommandText = $"INSERT Stacks (Name) VALUES ('{newStack.Name}')";
-
-                    connection.Open();
-                    rows = cmd.ExecuteNonQuery();
-                    connection.Close();
-                }
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message.ToString());
-            }
+            Stack newStack = new Stack(name: stackName);
+            int rows = _dataLayer.NewStackEntry(newStack);
 
             if (rows > 0)
             {
@@ -83,70 +92,34 @@ namespace FlashCards.Forser
                 Console.WriteLine("Press ENTER to return to Stack Menu");
                 Console.ReadLine();
                 ShowStackMenu();
-
             }
+            Console.WriteLine($"Stack with the name {newStack.Name} didn't get saved");
+            Console.WriteLine("Press any key to return to Stack Menu");
+            Console.ReadLine();
+            ShowStackMenu();
         }
-
         internal int CountAllStacks()
         {
-            int stackCount = 0;
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(new Startup().AppSettings.ConnectionString))
-                {
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.Connection = connection;
-                    cmd.CommandType = System.Data.CommandType.Text;
-                    cmd.CommandText = "SELECT Count('Name') FROM Stacks";
-
-                    connection.Open();
-                    stackCount = Convert.ToInt32(cmd.ExecuteScalar());
-                    connection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message.ToString());
-            }
+            int stackCount = _dataLayer.ReturnNumberOfStacks();
 
             return stackCount;
         }
-
-        internal void ListAllStacks()
+        public void ListAllStacks()
         {
-            List<StackDTO> stackList = new List<StackDTO>();
-            try
+            List<Stack> allStacks = _dataLayer.FetchAllStacks();
+            if (allStacks.Any())
             {
-                using (SqlConnection connection = new SqlConnection(new Startup().AppSettings.ConnectionString))
+                Console.WriteLine($"Found {allStacks.Count()} Stacks");
+                foreach (Stack stack in allStacks)
                 {
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.Connection = connection;
-                    cmd.CommandType = System.Data.CommandType.Text;
-                    cmd.CommandText = "SELECT * FROM Stacks";
-
-                    connection.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        stackList.Add(new StackDTO
-                        {
-                            Name = reader[1].ToString()
-                        });
-                    }
-
-                    connection.Close();
+                    Console.WriteLine($"{stack.Name}");
                 }
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message.ToString());
+                Console.WriteLine("Press any key to return to Stack Menu");
+                Console.ReadLine();
+                ShowStackMenu();
             }
 
-            foreach (StackDTO stack in stackList)
-            {
-                Console.WriteLine($"Stack Name: {stack.Name}");
-            }
+            Console.WriteLine($"Found no stacks! Press any key to return to Stack Menu");
             Console.ReadLine();
             ShowStackMenu();
         }
