@@ -3,12 +3,12 @@
     public class Stack
     {
         public int StackId { get; set; }
-        public required string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         public List<FlashCard> FlashCards { get; set; } = new List<FlashCard>();
 
         public Stack() { }
-        public Stack(string name) 
+        public Stack(string name)
         {
             Name = name;
         }

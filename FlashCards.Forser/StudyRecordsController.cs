@@ -22,6 +22,9 @@
                     break;
                 case "show":
                     break;
+                default:
+                    Console.WriteLine("Not a valid option, select from an option from the Menu");
+                    break;
             }
         }
     }

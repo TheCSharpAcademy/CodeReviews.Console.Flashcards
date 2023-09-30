@@ -39,6 +39,9 @@
                 case "stack":
                     stackController.ShowStackMenu();
                     break;
+                default:
+                    Console.WriteLine("Not a valid option, select from an option from the Menu");
+                    break;
             }
         }
     }
