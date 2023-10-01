@@ -6,26 +6,37 @@
         {
             MainMenuController mainMenuController = new MainMenuController();
 
-            Console.Clear();
-            Console.WriteLine("------------------------------------------");
-            Console.WriteLine("              RECORDS MENU");
-            Console.WriteLine("Show - Show study records");
-            Console.WriteLine("Menu - Return to Main Menu");
-            Console.WriteLine("------------------------------------------");
-
-            string selectedRecordsMenu = Console.ReadLine().Trim().ToLower();
+            AnsiConsole.Clear();
+            Menu.RenderTitle("Records Menu");
+            int selectedRecordsMenu = AnsiConsole.Prompt(DrawMenu()).Id;
 
             switch (selectedRecordsMenu)
             {
-                case "menu":
+                case 0:
+                    break;
+                case 1:
                     mainMenuController.MainMenu();
                     break;
-                case "show":
-                    break;
                 default:
-                    Console.WriteLine("Not a valid option, select from an option from the Menu");
+                    AnsiConsole.WriteLine("Not a valid option, select from an option from the Menu");
                     break;
             }
+        }
+        private SelectionPrompt<Menu> DrawMenu()
+        {
+            SelectionPrompt<Menu> menu = new()
+            {
+                HighlightStyle = Menu.HighLightStyle
+            };
+
+            menu.Title("Select an [B]option[/]");
+            menu.AddChoices(new List<Menu>()
+            {
+                new() { Id = 0, Text = "Show study records" },
+                new() { Id = 1, Text = "Return to Main Menu"}
+            });
+
+            return menu;
         }
     }
 }

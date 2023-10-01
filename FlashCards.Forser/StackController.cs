@@ -8,43 +8,31 @@
             FlashcardController flashcardController = new FlashcardController();
             MainMenuController mainMenuController = new MainMenuController();
 
-            Console.Clear();
-            Console.WriteLine("------------------------------------------");
-            Console.WriteLine("              STACK MENU");
-            Console.WriteLine("List - List all Stacks");
-            Console.WriteLine("Add - Add a new Stack");
-            if (CountAllStacks() >= 1)
-            {
-                Console.WriteLine("Edit - Edit a Stack");
-                Console.WriteLine("Delete - Delete a Stack\n");
-            }
-            Console.WriteLine("Flash - Go to Flashcard Menu");
-            Console.WriteLine("Menu - Return to Main Menu");
-            Console.WriteLine("------------------------------------------");
-
-            string selectedStackMenu = Console.ReadLine().Trim().ToLower();
+            AnsiConsole.Clear();
+            Menu.RenderTitle("Stack Menu");
+            int selectedStackMenu = AnsiConsole.Prompt(DrawMenu()).Id;
 
             switch (selectedStackMenu)
             {
-                case "list":
+                case 0:
                     ListAllStacks();
                     break;
-                case "add":
+                case 1:
                     AddNewStack();
                     break;
-                case "edit":
+                case 2:
                     break;
-                case "delete":
+                case 3:
                     DeleteStack();
                     break;
-                case "menu":
-                    mainMenuController.MainMenu();
-                    break;
-                case "flash":
+                case 4:
                     flashcardController.ShowFlashcardMenu();
                     break;
+                case 5:
+                    mainMenuController.MainMenu();
+                    break;
                 default:
-                    Console.WriteLine("Not a valid option, select from an option from the Menu");
+                    AnsiConsole.WriteLine("Not a valid option, select from an option from the Menu");
                     break;
             }
         }
@@ -53,12 +41,16 @@
             List<Stack> allStacks = _dataLayer.FetchAllStacks();
             bool stackDeleted = false;
 
+            Table table = new();
+            table.AddColumn("Id");
+            table.AddColumn("Stack Name");
+
             foreach(Stack stack in allStacks)
             {
-                Console.WriteLine($"ID: {stack.StackId} - Name: {stack.Name}");
+                table.AddRow($"{stack.StackId}", $"{stack.Name}");
             }
-            Console.WriteLine("Enter the ID of the stack you want to remove: ");
-            int stackId = Convert.ToInt32(Console.ReadLine());
+            AnsiConsole.Write(table);
+            int stackId = AnsiConsole.Ask<int>("Enter the ID of the stack you want to remove: ");
 
             if (_dataLayer.CheckStackId(stackId))
             {
@@ -67,61 +59,87 @@
 
             if(stackDeleted) 
             {
-                Console.WriteLine($"Stack with ID : {stackId} has been deleted!\n Press any key to return to Stack Menu");
-                Console.ReadLine();
-                ShowStackMenu();
+                AnsiConsole.WriteLine($"Stack with ID : {stackId} has been deleted!");
             }
             else
             {
-                Console.WriteLine("No stack deleted.\n Press any key to return to Stack Menu");
-                ShowStackMenu();
+                AnsiConsole.WriteLine("No stack deleted.");
             }
+            AnsiConsole.WriteLine("Press any key to return to Stack Menu");
+            Console.ReadLine();
+            ShowStackMenu();
         }
         internal void AddNewStack()
         {
-            Console.WriteLine("------------------------------------------");
-            Console.WriteLine("Enter your new Stack name: ");
-            string stackName = Console.ReadLine().Trim();
+            AnsiConsole.Clear();
+            Menu.RenderTitle("Add a new Stack");
+            string stackName = AnsiConsole.Ask<string>("Enter your new [blue]Stack name[/]:");
 
             Stack newStack = new Stack(name: stackName);
             int rows = _dataLayer.NewStackEntry(newStack);
 
             if (rows > 0)
             {
-                Console.WriteLine("Stack has been saved.");
-                Console.WriteLine("Press ENTER to return to Stack Menu");
-                Console.ReadLine();
-                ShowStackMenu();
+                AnsiConsole.WriteLine("Your new stack has been saved.");
             }
-            Console.WriteLine($"Stack with the name {newStack.Name} didn't get saved");
-            Console.WriteLine("Press any key to return to Stack Menu");
+            else
+            {
+                AnsiConsole.WriteLine($"Stack with the name {newStack.Name} didn't get saved");
+            }
+            AnsiConsole.WriteLine("Press any key to return to Stack Menu");
             Console.ReadLine();
             ShowStackMenu();
         }
         internal int CountAllStacks()
         {
-            int stackCount = _dataLayer.ReturnNumberOfStacks();
-
-            return stackCount;
+            return _dataLayer.ReturnNumberOfStacks();
         }
         public void ListAllStacks()
         {
             List<Stack> allStacks = _dataLayer.FetchAllStacks();
+
+            Table table = new Table();
+            table.Expand();
+            table.AddColumn("Stack Name");
+
             if (allStacks.Any())
             {
-                Console.WriteLine($"Found {allStacks.Count()} Stacks");
                 foreach (Stack stack in allStacks)
                 {
-                    Console.WriteLine($"{stack.Name}");
+                    table.AddRow($"{stack.Name}");
                 }
-                Console.WriteLine("Press any key to return to Stack Menu");
-                Console.ReadLine();
-                ShowStackMenu();
+                AnsiConsole.Write(table);
             }
-
-            Console.WriteLine($"Found no stacks! Press any key to return to Stack Menu");
+            else
+            {
+                AnsiConsole.WriteLine($"Found no stacks!");
+            }
+            AnsiConsole.WriteLine("Press any key to return to Stack Menu");
             Console.ReadLine();
             ShowStackMenu();
+        }
+        private SelectionPrompt<Menu> DrawMenu()
+        {
+            SelectionPrompt<Menu> menu = new()
+            {
+                HighlightStyle = Menu.HighLightStyle
+            };
+
+            List<Menu> stackMenu = new List<Menu>();
+            stackMenu.Add(new Menu { Id = 0, Text = "List all Stacks" });
+            stackMenu.Add(new Menu { Id = 1, Text = "Add new Stack" });
+            if (CountAllStacks() > 0)
+            {
+                stackMenu.Add(new Menu { Id = 2, Text = "Edit a Stack" });
+                stackMenu.Add(new Menu { Id = 3, Text = "Delete a Stack" });
+            }
+            stackMenu.Add(new Menu { Id = 4, Text = "Go to Flashcard Menu" });
+            stackMenu.Add(new Menu { Id = 5, Text = "Return to Main Menu" });
+
+            menu.Title("Select an [B]option[/]");
+            menu.AddChoices(stackMenu);
+
+            return menu;
         }
     }
 }
