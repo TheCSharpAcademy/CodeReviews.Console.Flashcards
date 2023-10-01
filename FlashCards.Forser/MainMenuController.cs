@@ -12,37 +12,48 @@
                 StudyRecordsController studyRecordsController = new StudyRecordsController();
                 StudyController studyController = new StudyController();
 
-                Console.Clear();
-                Console.WriteLine("------------------------------------------");
-                Console.WriteLine("              MAIN MENU");
-                Console.WriteLine("Study - Study a Stack");
-                Console.WriteLine("Stack - Go to Stack Menu");
-                Console.WriteLine("Records - View Study Records\n");
-                Console.WriteLine("Exit - Exit Application");
-                Console.WriteLine("------------------------------------------");
-
-                string selectedMenu = Console.ReadLine().Trim().ToLower();
-
+                AnsiConsole.Clear();
+                Menu.RenderTitle("Main Menu");
+                int selectedMenu = AnsiConsole.Prompt(DrawMenu()).Id;
+                
                 switch (selectedMenu)
                 {
-                    case "study":
+                    case 0:
                         studyController.ShowStudyMenu();
                         break;
-                    case "records":
-                        studyRecordsController.ShowRecordsMenu();
-                        break;
-                    case "stack":
+                    case 1:
                         stackController.ShowStackMenu();
                         break;
-                    case "exit":
+                    case 2:
+                        studyRecordsController.ShowRecordsMenu();
+                        break;
+                    case -1:
                         closeApp = true;
                         Environment.Exit(0);
                         break;
                     default:
-                        Console.WriteLine("Not a valid option, select from an option from the Menu");
+                        AnsiConsole.WriteLine("Not a valid option, select from an option from the Menu");
                         break;
                 }
             }
+        }
+        private static SelectionPrompt<Menu> DrawMenu()
+        {
+            SelectionPrompt<Menu> menu = new()
+            { 
+                HighlightStyle = Menu.HighLightStyle
+            };
+
+            menu.Title("Select an [B]option[/]");
+            menu.AddChoices(new List<Menu>()
+            {
+                new() { Id = 0, Text = "Study a Stack" },
+                new() { Id = 1, Text = "Go to Stack Menu" },
+                new() { Id = 2, Text = "View Study Records"},
+                new() { Id = -1, Text = "Exit Application"}
+            });
+
+            return menu;
         }
     }
 }
