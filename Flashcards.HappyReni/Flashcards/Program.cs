@@ -1,0 +1,3 @@
+﻿using Flashcards;
+
+new Controller();
