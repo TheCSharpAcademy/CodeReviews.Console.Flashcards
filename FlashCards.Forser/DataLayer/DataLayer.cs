@@ -369,4 +369,33 @@ public class DataLayer
 
         return isSaved;
     }
+    internal List<StudyRecords> FetchAllStudyRecords()
+    {
+        List<StudyRecords> studyRecords = new List<StudyRecords>();
+
+        using (SqlConnection connection = new SqlConnection(DatabaseConnection))
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandType = System.Data.CommandType.Text;
+            cmd.CommandText = "SELECT SessionDate, StackName, Score FROM StudyRecords";
+
+            connection.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                studyRecords.Add(new StudyRecords
+                {
+                    SessionDate = Convert.ToDateTime(reader[0]),
+                    StackName = reader[1].ToString(),
+                    Score = Convert.ToInt32(reader[2])
+                });
+            }
+
+            connection.Close();
+
+            return studyRecords;
+        }
+    }
 }
