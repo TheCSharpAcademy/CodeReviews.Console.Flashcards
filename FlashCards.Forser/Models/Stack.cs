@@ -4,7 +4,6 @@
     {
         public int StackId { get; set; }
         public string Name { get; set; } = string.Empty;
-
         public List<FlashCard> FlashCards { get; set; } = new List<FlashCard>();
 
         public Stack() { }
