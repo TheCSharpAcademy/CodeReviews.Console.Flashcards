@@ -341,4 +341,32 @@ public class DataLayer
 
         return cardUpdated;
     }
+    internal bool SaveStudySession(StudyRecords newStudyRecord)
+    {
+        bool isSaved = false;
+        try
+        {
+            using (SqlConnection connection = new SqlConnection(DatabaseConnection))
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = connection;
+                cmd.CommandType = System.Data.CommandType.Text;
+                cmd.CommandText = $"INSERT StudyRecords (SessionDate, StackName, Score) " +
+                    $"VALUES ('{newStudyRecord.SessionDate}', '{newStudyRecord.StackName}', {newStudyRecord.Score})";
+
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    isSaved = true;
+                }
+                connection.Close();
+            }
+        }
+        catch ( Exception ex )
+        {
+            AnsiConsole.WriteLine (ex.Message.ToString());
+        }
+
+        return isSaved;
+    }
 }
