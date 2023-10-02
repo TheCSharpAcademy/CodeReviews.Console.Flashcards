@@ -1,4 +1,4 @@
-﻿SET IDENTITY_INSERT Stacks on;
+﻿SET IDENTITY_INSERT dbo.Stacks on;
 INSERT INTO Stacks (Id, Name) VALUES 
 (1, 'French'),
 (2, 'Spanish'),
