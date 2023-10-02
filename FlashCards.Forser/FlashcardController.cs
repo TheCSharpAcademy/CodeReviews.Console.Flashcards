@@ -27,7 +27,6 @@
                     break;
                 case 1:
                     ShowAllFlashCardsByStackId();
-
                     break;
                 case 2:
                     AddNewFlashCard();
