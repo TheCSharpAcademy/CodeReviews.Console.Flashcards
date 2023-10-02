@@ -1,4 +1,4 @@
-﻿USE [master]
+﻿USE master
 GO
 /****** Object:  Database [FlashCards]    Script Date: 2023-10-02 09:55:54 ******/
 CREATE DATABASE [FlashCards]

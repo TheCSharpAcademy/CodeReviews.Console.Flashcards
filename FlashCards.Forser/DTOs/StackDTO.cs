@@ -1,16 +1,16 @@
 ﻿namespace FlashCards.Forser.DTOs
 {
-    public class StackDTO
+    public class StackDto
     {
         public string? Name { get; set; }
-        public List<FlashCardDTO>? FlashCards { get; set; } = new List<FlashCardDTO>();
+        public List<FlashCardDto>? FlashCards { get; set; } = new List<FlashCardDto>();
 
-        public StackDTO() { }
-        public StackDTO(string? name) 
+        public StackDto() { }
+        public StackDto(string? name) 
         {
             Name = name;
         }
-        public StackDTO(string? name, List<FlashCardDTO>? flashCards)
+        public StackDto(string? name, List<FlashCardDto>? flashCards)
         {
             Name = name;
             FlashCards = flashCards;
