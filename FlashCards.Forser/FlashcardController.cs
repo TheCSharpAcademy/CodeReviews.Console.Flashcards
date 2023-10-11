@@ -221,12 +221,15 @@
 
             List<Menu> flashCardMenu = new List<Menu>();
             flashCardMenu.Add(new Menu { Id = 0, Text = "Select a Stack" });
-            if (selectedStack != null && CountAllFlashCards() > 0)
+            if (selectedStack != null)
             {
-                flashCardMenu.Add(new Menu { Id = 1, Text = "List all Flashcards for selected Stack" });
                 flashCardMenu.Add(new Menu { Id = 2, Text = "Add a new Flashcard to selected Stack" });
-                flashCardMenu.Add(new Menu { Id = 3, Text = "Edit a Flashcard from selected Stack" });
-                flashCardMenu.Add(new Menu { Id = 4, Text = "Delete Flashcard from selected Stack" });
+                if (CountAllFlashCards() > 0)
+                {
+                    flashCardMenu.Add(new Menu { Id = 1, Text = "List all Flashcards for selected Stack" });
+                    flashCardMenu.Add(new Menu { Id = 3, Text = "Edit a Flashcard from selected Stack" });
+                    flashCardMenu.Add(new Menu { Id = 4, Text = "Delete Flashcard from selected Stack" });
+                }
             }
             flashCardMenu.Add(new Menu { Id = 5, Text = "Go to Stack Menu" });
             flashCardMenu.Add(new Menu { Id = 6, Text = "Return to Main Menu" });
