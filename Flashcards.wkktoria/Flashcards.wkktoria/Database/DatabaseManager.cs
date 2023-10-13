@@ -25,6 +25,26 @@ public class DatabaseManager
                          BEGIN
                             CREATE DATABASE {_databaseName};
                          END;
+
+                         USE {_databaseName};
+
+                         IF OBJECT_ID('Stacks', 'U') IS NULL
+                         BEGIN
+                            CREATE TABLE Stacks(
+                                Id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+                                Name NVARCHAR(25) NOT NULL
+                            );
+                         END;
+
+                         IF OBJECT_ID('Cards', 'U') IS NULL
+                         BEGIN
+                            CREATE TABLE Cards(
+                                Id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+                                StackId INT FOREIGN KEY REFERENCES Stacks(Id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+                                Front NVARCHAR(50) NOT NULL,
+                                Back NVARCHAR(50) NOT NULL,
+                             );
+                         END;
                          """;
             var command = new SqlCommand(query, _connection);
 
