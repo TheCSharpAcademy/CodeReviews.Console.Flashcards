@@ -6,7 +6,7 @@ namespace Flashcards.wkktoria.Managers.Helpers;
 
 internal class AllStackManager
 {
-    internal readonly StackController _stackController;
+    private readonly StackController _stackController;
 
     internal AllStackManager(StackService stackService)
     {

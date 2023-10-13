@@ -1,8 +1,7 @@
 using Flashcards.wkktoria.Managers;
 using Flashcards.wkktoria.Services;
-using Flashcards.wkktoria.UserInteractions;
 
-namespace Flashcards.wkktoria;
+namespace Flashcards.wkktoria.UserInteractions;
 
 internal class UserInterface
 {
