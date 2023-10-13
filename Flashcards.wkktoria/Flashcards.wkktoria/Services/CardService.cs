@@ -1,6 +1,7 @@
 using System.Data;
 using Flashcards.wkktoria.Models;
 using Flashcards.wkktoria.Models.Dtos;
+using Flashcards.wkktoria.UserInteractions;
 using Microsoft.Data.SqlClient;
 
 namespace Flashcards.wkktoria.Services;
@@ -43,7 +44,7 @@ internal class CardService
         }
         catch (Exception)
         {
-            Console.WriteLine("Failed to get cards.");
+            UserOutput.ErrorMessage("Failed to get cards.");
         }
         finally
         {
@@ -79,10 +80,9 @@ internal class CardService
                     card.Back = reader.GetString(3);
                 }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine(ex.Message);
-            Console.WriteLine("Failed to get card.");
+            UserOutput.ErrorMessage("Failed to get card.");
         }
         finally
         {
@@ -111,7 +111,7 @@ internal class CardService
         }
         catch (Exception)
         {
-            Console.WriteLine("Failed to create new card.");
+            UserOutput.ErrorMessage("Failed to create new card.");
         }
         finally
         {
@@ -140,7 +140,7 @@ internal class CardService
         }
         catch (Exception)
         {
-            Console.WriteLine("Failed to delete card.");
+            UserOutput.ErrorMessage("Failed to delete card.");
         }
         finally
         {
@@ -167,10 +167,9 @@ internal class CardService
 
             updated = command.ExecuteNonQuery() == 1;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine(ex.Message);
-            Console.WriteLine("Failed to update card.");
+            UserOutput.ErrorMessage("Failed to update card.");
         }
         finally
         {

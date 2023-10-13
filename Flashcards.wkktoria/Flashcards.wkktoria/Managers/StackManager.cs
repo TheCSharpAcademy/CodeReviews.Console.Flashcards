@@ -1,5 +1,6 @@
 using Flashcards.wkktoria.Managers.Helpers;
 using Flashcards.wkktoria.Services;
+using Flashcards.wkktoria.UserInteractions;
 
 namespace Flashcards.wkktoria.Managers;
 
@@ -16,11 +17,11 @@ internal class StackManager
 
     private static void ShowMenu()
     {
-        Console.WriteLine("""
-                          0 - Return to main menu
-                          1 - Manage all stacks
-                          2 - Manage existing stack
-                          """);
+        UserOutput.InfoMessage("""
+                               0 - Return to main menu
+                               1 - Manage all stacks
+                               2 - Manage existing stack
+                               """);
     }
 
     internal void Run()
@@ -47,8 +48,8 @@ internal class StackManager
                     _existingStackManager.Run();
                     break;
                 default:
-                    Console.WriteLine("Invalid option.");
-                    Console.WriteLine("Press any key to continue...");
+                    UserOutput.ErrorMessage("Invalid option.");
+                    UserOutput.InfoMessage("Press any key to continue...");
                     Console.ReadKey();
                     break;
             }

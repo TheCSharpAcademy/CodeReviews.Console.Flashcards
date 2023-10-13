@@ -1,5 +1,6 @@
 using Flashcards.wkktoria.Models.Dtos;
 using Flashcards.wkktoria.Services;
+using Flashcards.wkktoria.UserInteractions;
 using Flashcards.wkktoria.Validators;
 
 namespace Flashcards.wkktoria.Controllers;
@@ -21,9 +22,9 @@ internal class StackController
 
         if (stacks.Any()) TableVisualisation.ShowStacksTable(stacks);
         else
-            Console.WriteLine("No stacks found.");
+            UserOutput.InfoMessage("No stacks found.");
 
-        Console.WriteLine("Press any key to continue...");
+        UserOutput.InfoMessage("Press any key to continue...");
         Console.ReadKey();
     }
 
@@ -35,13 +36,13 @@ internal class StackController
 
         while (!StackValidator.CheckName(name))
         {
-            Console.WriteLine($"'{name}' is invalid name.");
+            UserOutput.ErrorMessage($"'{name}' is invalid name.");
             name = UserInput.GetStringInput("Enter name for new stack.");
         }
 
         while (_stackService.CheckIfNameExists(name))
         {
-            Console.WriteLine($"Stack with name '{name}' already exists.");
+            UserOutput.ErrorMessage($"Stack with name '{name}' already exists.");
             name = UserInput.GetStringInput("Enter name for new stack.");
         }
 
@@ -52,11 +53,12 @@ internal class StackController
 
         var created = _stackService.Create(newStack);
 
-        Console.WriteLine(created
-            ? $"Stack '{name}' has been created."
-            : $"Failed to create stack with name '{name}'.");
+        if (created)
+            UserOutput.SuccessMessage($"Stack '{name}' has been created.");
+        else
+            UserOutput.ErrorMessage($"Failed to create stack with name '{name}'.");
 
-        Console.WriteLine("Press any key to continue...");
+        UserOutput.InfoMessage("Press any key to continue...");
         Console.ReadKey();
     }
 
@@ -75,23 +77,24 @@ internal class StackController
 
             if (stackToDelete.Id == 0)
             {
-                Console.WriteLine($"No stack with name '{name}'.");
+                UserOutput.ErrorMessage($"No stack with name '{name}'.");
             }
             else
             {
                 var deleted = _stackService.Delete(stackToDelete.Id);
 
-                Console.WriteLine(deleted
-                    ? $"Stack '{name}' has been deleted."
-                    : $"Failed to delete stack with name '{name}'.");
+                if (deleted)
+                    UserOutput.SuccessMessage($"Stack '{name}' has been deleted.");
+                else
+                    UserOutput.ErrorMessage($"Failed to delete stack with name '{name}'.");
             }
         }
         else
         {
-            Console.WriteLine("No stacks to delete.");
+            UserOutput.InfoMessage("No stacks to delete.");
         }
 
-        Console.WriteLine("Press any key to continue...");
+        UserOutput.InfoMessage("Press any key to continue...");
         Console.ReadKey();
     }
 }

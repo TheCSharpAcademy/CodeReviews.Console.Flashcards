@@ -1,6 +1,7 @@
 using Flashcards.wkktoria.Controllers;
 using Flashcards.wkktoria.Models;
 using Flashcards.wkktoria.Services;
+using Flashcards.wkktoria.UserInteractions;
 
 namespace Flashcards.wkktoria.Managers.Helpers;
 
@@ -20,17 +21,17 @@ internal class ExistingStackManager
     {
         var currentStackName = _currentStack == null ? "-" : _currentStack.Name;
 
-        Console.WriteLine($"""
-                           Current stack: {currentStackName}
+        UserOutput.InfoMessage($"""
+                                Current stack: {currentStackName}
 
-                           0 - Return
-                           1 - Change current stack
-                           2 - Show all cards in current stack
-                           3 - Show X cards in current stack
-                           4 - Create card in current current stack
-                           5 - Update card in current stack
-                           6 - Delete card in current stack
-                           """);
+                                0 - Return
+                                1 - Change current stack
+                                2 - Show all cards in current stack
+                                3 - Show X cards in current stack
+                                4 - Create card in current current stack
+                                5 - Update card in current stack
+                                6 - Delete card in current stack
+                                """);
     }
 
     internal void Run()
@@ -39,8 +40,8 @@ internal class ExistingStackManager
 
         if (!_stackService.GetAll().Any())
         {
-            Console.WriteLine("No existing stacks.");
-            Console.WriteLine("Press any key to continue...");
+            UserOutput.InfoMessage("No existing stacks.");
+            UserOutput.InfoMessage("Press any key to continue...");
             Console.ReadKey();
             return;
         }
@@ -83,8 +84,8 @@ internal class ExistingStackManager
                     _cardController.Delete(_currentStack.Id);
                     break;
                 default:
-                    Console.WriteLine("Invalid option.");
-                    Console.WriteLine("Press any key to continue...");
+                    UserOutput.ErrorMessage("Invalid option.");
+                    UserOutput.InfoMessage("Press any key to continue...");
                     Console.ReadKey();
                     break;
             }
@@ -105,19 +106,19 @@ internal class ExistingStackManager
             if (stack.Id != 0)
             {
                 _currentStack = stack;
-                Console.WriteLine($"Current stack has been changed to '{stack.Name}'.");
+                UserOutput.InfoMessage($"Current stack has been changed to '{stack.Name}'.");
             }
             else
             {
-                Console.WriteLine($"No stack with name '{name}'.");
+                UserOutput.ErrorMessage($"No stack with name '{name}'.");
             }
         }
         else
         {
-            Console.WriteLine("No stack found.");
+            UserOutput.InfoMessage("No stacks found.");
         }
 
-        Console.WriteLine("Press any key to continue...");
+        UserOutput.InfoMessage("Press any key to continue...");
         Console.ReadKey();
     }
 }
