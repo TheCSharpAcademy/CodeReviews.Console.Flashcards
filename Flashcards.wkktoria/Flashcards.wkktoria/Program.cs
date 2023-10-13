@@ -1,3 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using System.Configuration;
 
-Console.WriteLine("Hello, World!");
+var databaseName = ConfigurationManager.AppSettings.Get("DatabaseName");
+var databasePassword = ConfigurationManager.AppSettings.Get("DatabasePassword");
+var connectionString = $@"Server=localhost,1433;User Id=sa;Password={databasePassword};;TrustServerCertificate=true;";
