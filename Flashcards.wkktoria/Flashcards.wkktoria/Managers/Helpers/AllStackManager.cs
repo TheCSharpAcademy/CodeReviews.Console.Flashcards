@@ -1,5 +1,6 @@
 using Flashcards.wkktoria.Controllers;
 using Flashcards.wkktoria.Services;
+using Flashcards.wkktoria.UserInteractions;
 
 namespace Flashcards.wkktoria.Managers.Helpers;
 
@@ -14,12 +15,12 @@ internal class AllStackManager
 
     private static void ShowMenu()
     {
-        Console.WriteLine("""
-                          0 - Return
-                          1 - Show all stacks
-                          2 - Create new stack
-                          3 - Delete stack
-                          """);
+        UserOutput.InfoMessage("""
+                               0 - Return
+                               1 - Show all stacks
+                               2 - Create new stack
+                               3 - Delete stack
+                               """);
     }
 
     internal void Run()
@@ -49,8 +50,8 @@ internal class AllStackManager
                     _stackController.Delete();
                     break;
                 default:
-                    Console.WriteLine("Invalid option.");
-                    Console.WriteLine("Press any key to continue...");
+                    UserOutput.ErrorMessage("Invalid option.");
+                    UserOutput.InfoMessage("Press any key to continue...");
                     Console.ReadKey();
                     break;
             }

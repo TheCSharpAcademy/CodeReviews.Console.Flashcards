@@ -1,5 +1,6 @@
 using Flashcards.wkktoria.Managers;
 using Flashcards.wkktoria.Services;
+using Flashcards.wkktoria.UserInteractions;
 
 namespace Flashcards.wkktoria;
 
@@ -42,11 +43,11 @@ internal class UserInterface
                     _stackManager.Run();
                     break;
                 case "2":
-                    Console.WriteLine("NOT IMPLEMENTED");
+                    UserOutput.InfoMessage("NOT IMPLEMENTED");
                     break;
                 default:
-                    Console.WriteLine("Invalid option.");
-                    Console.WriteLine("Press any key to continue...");
+                    UserOutput.ErrorMessage("Invalid option.");
+                    UserOutput.InfoMessage("Press any key to continue...");
                     Console.ReadKey();
                     break;
             }

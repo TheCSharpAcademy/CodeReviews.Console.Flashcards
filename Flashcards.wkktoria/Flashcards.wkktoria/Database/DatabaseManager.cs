@@ -1,4 +1,5 @@
 using System.Data;
+using Flashcards.wkktoria.UserInteractions;
 using Microsoft.Data.SqlClient;
 
 namespace Flashcards.wkktoria.Database;
@@ -52,7 +53,7 @@ internal class DatabaseManager
         }
         catch (Exception)
         {
-            Console.WriteLine("Failed to initialize database.");
+            UserOutput.ErrorMessage("Failed to initialize database.");
         }
         finally
         {

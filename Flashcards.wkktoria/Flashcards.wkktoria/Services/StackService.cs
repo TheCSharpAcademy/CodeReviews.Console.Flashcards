@@ -2,6 +2,7 @@ using System.Data;
 using Flashcards.wkktoria.Models;
 using Flashcards.wkktoria.Models.Dtos;
 using Flashcards.wkktoria.Services.Helpers;
+using Flashcards.wkktoria.UserInteractions;
 using Microsoft.Data.SqlClient;
 
 namespace Flashcards.wkktoria.Services;
@@ -43,7 +44,7 @@ internal class StackService
         }
         catch (Exception)
         {
-            Console.WriteLine("Failed to get all stacks.");
+            UserOutput.ErrorMessage("Failed to get all stacks.");
         }
         finally
         {
@@ -79,7 +80,7 @@ internal class StackService
         }
         catch (Exception)
         {
-            Console.WriteLine("Failed to get stack.");
+            UserOutput.ErrorMessage("Failed to get stack.");
         }
         finally
         {
@@ -109,7 +110,7 @@ internal class StackService
         }
         catch (Exception)
         {
-            Console.WriteLine("Failed to check if name exists.");
+            UserOutput.ErrorMessage("Failed to check if name exists.");
         }
         finally
         {
@@ -138,7 +139,7 @@ internal class StackService
         }
         catch (Exception)
         {
-            Console.WriteLine("Failed to create new stack.");
+            UserOutput.ErrorMessage("Failed to create new stack.");
         }
         finally
         {
@@ -167,7 +168,7 @@ internal class StackService
         }
         catch (Exception)
         {
-            Console.WriteLine("Failed to delete stack.");
+            UserOutput.ErrorMessage("Failed to delete stack.");
         }
         finally
         {

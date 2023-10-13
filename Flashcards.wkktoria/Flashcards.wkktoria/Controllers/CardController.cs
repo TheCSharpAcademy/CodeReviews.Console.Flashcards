@@ -1,5 +1,6 @@
 using Flashcards.wkktoria.Models.Dtos;
 using Flashcards.wkktoria.Services;
+using Flashcards.wkktoria.UserInteractions;
 using Flashcards.wkktoria.Validators;
 
 namespace Flashcards.wkktoria.Controllers;
@@ -22,9 +23,9 @@ internal class CardController
         if (cards.Any())
             TableVisualisation.ShowCardsTable(cards);
         else
-            Console.WriteLine("No cards in stack.");
+            UserOutput.InfoMessage("No cards in stack.");
 
-        Console.WriteLine("Press any key to continue...");
+        UserOutput.InfoMessage("Press any key to continue...");
         Console.ReadKey();
     }
 
@@ -41,7 +42,7 @@ internal class CardController
 
             while (limit > cardsAmount)
             {
-                Console.WriteLine($"Max amount is {cardsAmount}.");
+                UserOutput.ErrorMessage($"Max amount is {cardsAmount}.");
                 limit = UserInput.GetNumberInput($"Enter how many cards to show (max: {cardsAmount}).");
             }
 
@@ -50,11 +51,11 @@ internal class CardController
         }
         else
         {
-            Console.WriteLine("No cards in stack.");
+            UserOutput.InfoMessage("No cards in stack.");
         }
 
 
-        Console.WriteLine("Press any key to continue...");
+        UserOutput.InfoMessage("Press any key to continue...");
         Console.ReadKey();
     }
 
@@ -74,16 +75,17 @@ internal class CardController
                 Back = back
             };
 
-            if (!CardValidator.Check(newCard)) Console.WriteLine("Card is not valid.");
+            if (!CardValidator.Check(newCard)) UserOutput.ErrorMessage("Card is not valid.");
         } while (!CardValidator.Check(newCard));
 
         var created = _cardService.Create(newCard, stackId);
 
-        Console.WriteLine(created
-            ? "Card has been created."
-            : "Failed to create card.");
+        if (created)
+            UserOutput.SuccessMessage("Card has been created.");
+        else
+            UserOutput.ErrorMessage("Failed to create card");
 
-        Console.WriteLine("Press any key to continue...");
+        UserOutput.InfoMessage("Press any key to continue...");
         Console.ReadKey();
     }
 
@@ -102,23 +104,24 @@ internal class CardController
 
             if (cardToDelete.Id == 0)
             {
-                Console.WriteLine($"No card with front '{front}'.");
+                UserOutput.ErrorMessage($"No card with front '{front}'.");
             }
             else
             {
                 var deleted = _cardService.Delete(front, stackId);
 
-                Console.WriteLine(deleted
-                    ? $"Card with front '{front}' has been deleted."
-                    : $"Failed to delete card with front '{front}'.");
+                if (deleted)
+                    UserOutput.SuccessMessage($"Card with front '{front}' has been deleted.");
+                else
+                    UserOutput.ErrorMessage($"Failed to delete card with front '{front}'.");
             }
         }
         else
         {
-            Console.WriteLine("No cards to delete.");
+            UserOutput.InfoMessage("No cards to delete.");
         }
 
-        Console.WriteLine("Press any key to continue...");
+        UserOutput.InfoMessage("Press any key to continue...");
         Console.ReadKey();
     }
 
@@ -139,7 +142,7 @@ internal class CardController
 
             if (cardToUpdate.Id == 0)
             {
-                Console.WriteLine($"No card with front '{front}'.");
+                UserOutput.ErrorMessage($"No card with front '{front}'.");
             }
             else
             {
@@ -160,22 +163,23 @@ internal class CardController
                         Back = newBack
                     };
 
-                    if (!CardValidator.Check(updatedCard)) Console.WriteLine("Card is not valid.");
+                    if (!CardValidator.Check(updatedCard)) UserOutput.ErrorMessage("Card is not valid.");
                 } while (!CardValidator.Check(updatedCard));
 
                 var updated = _cardService.Update(cardToUpdate, updatedCard, stackId);
 
-                Console.WriteLine(updated
-                    ? "Card has been updated."
-                    : "Failed to update card.");
+                if (updated)
+                    UserOutput.SuccessMessage("Card has been updated.");
+                else
+                    UserOutput.ErrorMessage("Failed to update card.");
             }
         }
         else
         {
-            Console.WriteLine("No cards to update.");
+            UserOutput.InfoMessage("No cards to update.");
         }
 
-        Console.WriteLine("Press any key to continue...");
+        UserOutput.InfoMessage("Press any key to continue...");
         Console.ReadKey();
     }
 }
