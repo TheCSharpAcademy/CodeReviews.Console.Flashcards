@@ -3,18 +3,18 @@ using Microsoft.Data.SqlClient;
 
 namespace Flashcards.wkktoria.Database;
 
-public class DatabaseManager
+internal class DatabaseManager
 {
     private readonly SqlConnection _connection;
     private readonly string _databaseName;
 
-    public DatabaseManager(string connectionString, string databaseName)
+    internal DatabaseManager(string connectionString, string databaseName)
     {
         _connection = new SqlConnection(connectionString);
         _databaseName = databaseName;
     }
 
-    public void Initialize()
+    internal void Initialize()
     {
         try
         {
