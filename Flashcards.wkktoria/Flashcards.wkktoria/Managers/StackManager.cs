@@ -1,0 +1,57 @@
+using Flashcards.wkktoria.Managers.Helpers;
+using Flashcards.wkktoria.Services;
+
+namespace Flashcards.wkktoria.Managers;
+
+internal class StackManager
+{
+    private readonly AllStackManager _allStackManager;
+    private readonly ExistingStackManager _existingStackManager;
+
+    internal StackManager(StackService stackService, CardService cardService)
+    {
+        _allStackManager = new AllStackManager(stackService);
+        _existingStackManager = new ExistingStackManager(stackService, cardService);
+    }
+
+    private static void ShowMenu()
+    {
+        Console.WriteLine("""
+                          0 - Return to main menu
+                          1 - Manage all stacks
+                          2 - Manage existing stack
+                          """);
+    }
+
+    internal void Run()
+    {
+        var quit = false;
+
+        while (!quit)
+        {
+            Console.Clear();
+            ShowMenu();
+
+            Console.Write("> ");
+            var option = Console.ReadLine();
+
+            switch (option!.Trim())
+            {
+                case "0":
+                    quit = true;
+                    break;
+                case "1":
+                    _allStackManager.Run();
+                    break;
+                case "2":
+                    _existingStackManager.Run();
+                    break;
+                default:
+                    Console.WriteLine("Invalid option.");
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ReadKey();
+                    break;
+            }
+        }
+    }
+}
