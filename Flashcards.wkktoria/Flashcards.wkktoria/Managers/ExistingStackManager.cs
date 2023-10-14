@@ -4,7 +4,7 @@ using Flashcards.wkktoria.Services;
 using Flashcards.wkktoria.UserInteractions;
 using Flashcards.wkktoria.UserInteractions.Helpers;
 
-namespace Flashcards.wkktoria.Managers.Helpers;
+namespace Flashcards.wkktoria.Managers;
 
 internal class ExistingStackManager
 {

@@ -60,28 +60,29 @@ internal class CardController
     internal void Create(int stackId)
     {
         Console.Clear();
-        CardDto newCard;
 
-        do
+        var front = UserInput.GetStringInput("Enter front of new card.");
+        var back = UserInput.GetStringInput("Enter back of new card.");
+
+        var newCard = new CardDto
         {
-            var front = UserInput.GetStringInput("Enter front of new card.");
-            var back = UserInput.GetStringInput("Enter back of new card.");
+            Front = front,
+            Back = back
+        };
 
-            newCard = new CardDto
-            {
-                Front = front,
-                Back = back
-            };
+        if (CardValidator.Check(newCard))
+        {
+            var created = _cardService.Create(newCard, stackId);
 
-            if (!CardValidator.Check(newCard)) UserOutput.ErrorMessage("Card is not valid.");
-        } while (!CardValidator.Check(newCard));
-
-        var created = _cardService.Create(newCard, stackId);
-
-        if (created)
-            UserOutput.SuccessMessage("Card has been created.");
+            if (created)
+                UserOutput.SuccessMessage("Card has been created.");
+            else
+                UserOutput.ErrorMessage("Failed to create card");
+        }
         else
-            UserOutput.ErrorMessage("Failed to create card");
+        {
+            UserOutput.ErrorMessage("Card is not valid.");
+        }
 
         ConsoleHelpers.PressToContinue();
     }
@@ -138,32 +139,32 @@ internal class CardController
 
             if (cardToUpdate != null)
             {
-                CardDto updatedCard;
+                var newFront =
+                    UserInput.GetStringInput("Enter new front for card (or press enter to use current front).");
+                if (newFront == "") newFront = cardToUpdate.Front;
+                var newBack =
+                    UserInput.GetStringInput("Enter new back for card (or press enter to use current back).");
+                if (newBack == "") newBack = cardToUpdate.Back;
 
-                do
+                var updatedCard = new CardDto
                 {
-                    var newFront =
-                        UserInput.GetStringInput("Enter new front for card (or press enter to use current front).");
-                    if (newFront == "") newFront = cardToUpdate.Front;
-                    var newBack =
-                        UserInput.GetStringInput("Enter new back for card (or press enter to use current back).");
-                    if (newBack == "") newBack = cardToUpdate.Back;
+                    Front = newFront,
+                    Back = newBack
+                };
 
-                    updatedCard = new CardDto
-                    {
-                        Front = newFront,
-                        Back = newBack
-                    };
+                if (CardValidator.Check(updatedCard))
+                {
+                    var updated = _cardService.Update(cardToUpdate, updatedCard, stackId);
 
-                    if (!CardValidator.Check(updatedCard)) UserOutput.ErrorMessage("Card is not valid.");
-                } while (!CardValidator.Check(updatedCard));
-
-                var updated = _cardService.Update(cardToUpdate, updatedCard, stackId);
-
-                if (updated)
-                    UserOutput.SuccessMessage("Card has been updated.");
+                    if (updated)
+                        UserOutput.SuccessMessage("Card has been updated.");
+                    else
+                        UserOutput.ErrorMessage("Failed to update card.");
+                }
                 else
-                    UserOutput.ErrorMessage("Failed to update card.");
+                {
+                    UserOutput.ErrorMessage("Card is not valid.");
+                }
             }
             else
             {

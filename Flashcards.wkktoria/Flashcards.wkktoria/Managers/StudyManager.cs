@@ -1,4 +1,5 @@
 using Flashcards.wkktoria.Controllers;
+using Flashcards.wkktoria.Managers.Helpers;
 using Flashcards.wkktoria.Models;
 using Flashcards.wkktoria.Services;
 using Flashcards.wkktoria.UserInteractions;
@@ -20,30 +21,12 @@ internal class StudyManager
 
     internal void Run()
     {
-        SetUp();
         Console.Clear();
 
-        _stackController.Study(_studyStack!.Id);
-    }
-
-    private void SetUp()
-    {
-        Console.Clear();
-
-        var stacks = _stackService.GetAll();
-
-        if (stacks.Any())
+        if (_stackService.GetAll().Any())
         {
-            TableVisualisation.ShowStacksTable(stacks);
-
-            do
-            {
-                var id = UserInput.GetNumberInput("Enter id of stack to study.");
-                var stack = _stackService.GetByDtoId(id);
-                _studyStack = stack;
-
-                if (_studyStack == null) UserOutput.ErrorMessage("No stack found.");
-            } while (_studyStack == null);
+            _studyStack = StackHelper.Choose(_stackService);
+            _stackController.Study(_studyStack!.Id);
         }
         else
         {
