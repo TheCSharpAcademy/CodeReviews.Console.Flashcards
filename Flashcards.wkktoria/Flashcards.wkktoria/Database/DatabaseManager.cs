@@ -24,8 +24,8 @@ internal class DatabaseManager
             var query = $"""
                          IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = N'{_databaseName}')
                          BEGIN
-                            CREATE DATABASE {_databaseName};
-                         END;
+                            CREATE DATABASE {_databaseName}
+                         END
                          """;
             var command = new SqlCommand(query, _connection);
 
@@ -48,15 +48,15 @@ internal class DatabaseManager
             _connection.Open();
 
             var query = $"""
-                         USE {_databaseName};
+                         USE {_databaseName}
 
                          IF OBJECT_ID('Stacks', 'U') IS NULL
                          BEGIN
                             CREATE TABLE Stacks(
                                 Id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
                                 Name NVARCHAR(25) NOT NULL
-                            );
-                         END;
+                            )
+                         END
 
                          IF OBJECT_ID('Cards', 'U') IS NULL
                          BEGIN
@@ -65,18 +65,18 @@ internal class DatabaseManager
                                 StackId INT FOREIGN KEY REFERENCES Stacks(Id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
                                 Front NVARCHAR(50) NOT NULL,
                                 Back NVARCHAR(50) NOT NULL
-                             );
-                         END;
+                             )
+                         END
 
                          IF OBJECT_ID('Sessions', 'U') IS NULL
                          BEGIN
                             CREATE TABLE Sessions(
                                 Id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
                                 StackId INT FOREIGN KEY REFERENCES Stacks(Id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
-                                Date TEXT NOT NULL,
+                                Date DATETIME NOT NULL,
                                 Score INT NOT NULL
-                            );
-                         END;
+                            )
+                         END
                          """;
             var command = new SqlCommand(query, _connection);
 

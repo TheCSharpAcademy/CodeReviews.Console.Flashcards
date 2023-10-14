@@ -130,7 +130,7 @@ internal class StackController
 
             var session = new SessionDto
             {
-                Date = DateTime.Now.ToString("dd MMM yyyy HH:mm:ss"),
+                Date = DateTime.Now, // DateTime.Now.ToString("dd MMM yyyy HH:mm:ss"),
                 Score = score
             };
 
