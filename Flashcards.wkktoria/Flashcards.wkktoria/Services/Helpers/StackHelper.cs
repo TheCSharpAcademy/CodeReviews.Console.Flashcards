@@ -8,9 +8,9 @@ internal static class StackHelper
     {
         if (!stacks.Any()) return stacks;
 
-        var count = stacks.Count;
+        var size = stacks.Count;
 
-        for (var i = 0; i < count; i++) stacks[i].Number = i + 1;
+        for (var i = 0; i < size; i++) stacks[i].Number = i + 1;
 
         return stacks;
     }
