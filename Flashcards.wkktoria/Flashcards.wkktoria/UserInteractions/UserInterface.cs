@@ -1,4 +1,5 @@
 using Flashcards.wkktoria.Managers;
+using Flashcards.wkktoria.Managers.Helpers;
 using Flashcards.wkktoria.Services;
 using Flashcards.wkktoria.UserInteractions.Helpers;
 
@@ -6,11 +7,13 @@ namespace Flashcards.wkktoria.UserInteractions;
 
 internal class UserInterface
 {
+    private readonly ExistingStackManager _existingStackManager;
     private readonly StackManager _stackManager;
 
     internal UserInterface(StackService stackService, CardService cardService)
     {
         _stackManager = new StackManager(stackService, cardService);
+        _existingStackManager = new ExistingStackManager(stackService, cardService);
     }
 
     private static void ShowMenu()
@@ -43,7 +46,7 @@ internal class UserInterface
                     _stackManager.Run();
                     break;
                 case "2":
-                    UserOutput.InfoMessage("NOT IMPLEMENTED");
+                    _existingStackManager.Run();
                     break;
                 default:
                     UserOutput.ErrorMessage("Invalid option.");

@@ -19,7 +19,7 @@ internal class StackManager
     private static void ShowMenu()
     {
         UserOutput.InfoMessage("""
-                               0 - Return to main menu
+                               0 - Return
                                1 - Manage all stacks
                                2 - Manage existing stack
                                """);

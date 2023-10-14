@@ -54,7 +54,6 @@ internal class CardController
             UserOutput.InfoMessage("No cards in stack.");
         }
 
-
         ConsoleHelpers.PressToContinue();
     }
 
