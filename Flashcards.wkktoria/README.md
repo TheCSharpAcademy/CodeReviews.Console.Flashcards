@@ -13,3 +13,5 @@
 - [X] There should be possibility to see all study sessions. Study session cannot be updated and deleted.
 
 ## Challenge
+
+Create report systems. One to report number of sessions per month per stack, and another one to report average score per month per stack.
