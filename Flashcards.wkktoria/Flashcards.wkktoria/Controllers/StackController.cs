@@ -111,7 +111,11 @@ internal class StackController
             {
                 Console.Clear();
 
-                var userBack = UserInput.GetStringInput($"Enter back for '{card.Front.ToUpper()}'.");
+                var userBack =
+                    UserInput.GetStringInput(
+                        $"Enter back for '{card.Front.ToUpper()}' (or type 'qt' to quit study session).");
+
+                if (userBack.ToLower() == "qt") break;
 
                 if (string.Equals(userBack, card.Back, StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -130,7 +134,7 @@ internal class StackController
 
             var session = new SessionDto
             {
-                Date = DateTime.Now, // DateTime.Now.ToString("dd MMM yyyy HH:mm:ss"),
+                Date = DateTime.Now,
                 Score = score
             };
 
