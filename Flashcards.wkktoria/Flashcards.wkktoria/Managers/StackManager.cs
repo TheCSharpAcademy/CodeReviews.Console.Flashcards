@@ -1,6 +1,7 @@
 using Flashcards.wkktoria.Managers.Helpers;
 using Flashcards.wkktoria.Services;
 using Flashcards.wkktoria.UserInteractions;
+using Flashcards.wkktoria.UserInteractions.Helpers;
 
 namespace Flashcards.wkktoria.Managers;
 
@@ -49,8 +50,7 @@ internal class StackManager
                     break;
                 default:
                     UserOutput.ErrorMessage("Invalid option.");
-                    UserOutput.InfoMessage("Press any key to continue...");
-                    Console.ReadKey();
+                    ConsoleHelpers.PressToContinue();
                     break;
             }
         }

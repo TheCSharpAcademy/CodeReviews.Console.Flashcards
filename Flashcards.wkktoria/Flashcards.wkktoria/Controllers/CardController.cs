@@ -1,6 +1,7 @@
 using Flashcards.wkktoria.Models.Dtos;
 using Flashcards.wkktoria.Services;
 using Flashcards.wkktoria.UserInteractions;
+using Flashcards.wkktoria.UserInteractions.Helpers;
 using Flashcards.wkktoria.Validators;
 
 namespace Flashcards.wkktoria.Controllers;
@@ -25,8 +26,7 @@ internal class CardController
         else
             UserOutput.InfoMessage("No cards in stack.");
 
-        UserOutput.InfoMessage("Press any key to continue...");
-        Console.ReadKey();
+        ConsoleHelpers.PressToContinue();
     }
 
     internal void ShowXCards(int stackId)
@@ -55,8 +55,7 @@ internal class CardController
         }
 
 
-        UserOutput.InfoMessage("Press any key to continue...");
-        Console.ReadKey();
+        ConsoleHelpers.PressToContinue();
     }
 
     internal void Create(int stackId)
@@ -85,8 +84,7 @@ internal class CardController
         else
             UserOutput.ErrorMessage("Failed to create card");
 
-        UserOutput.InfoMessage("Press any key to continue...");
-        Console.ReadKey();
+        ConsoleHelpers.PressToContinue();
     }
 
     internal void Delete(int stackId)
@@ -121,8 +119,7 @@ internal class CardController
             UserOutput.InfoMessage("No cards to delete.");
         }
 
-        UserOutput.InfoMessage("Press any key to continue...");
-        Console.ReadKey();
+        ConsoleHelpers.PressToContinue();
     }
 
     internal void Update(int stackId)
@@ -179,7 +176,6 @@ internal class CardController
             UserOutput.InfoMessage("No cards to update.");
         }
 
-        UserOutput.InfoMessage("Press any key to continue...");
-        Console.ReadKey();
+        ConsoleHelpers.PressToContinue();
     }
 }

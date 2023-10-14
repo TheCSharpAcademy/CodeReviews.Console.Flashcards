@@ -2,6 +2,7 @@ using Flashcards.wkktoria.Controllers;
 using Flashcards.wkktoria.Models;
 using Flashcards.wkktoria.Services;
 using Flashcards.wkktoria.UserInteractions;
+using Flashcards.wkktoria.UserInteractions.Helpers;
 
 namespace Flashcards.wkktoria.Managers.Helpers;
 
@@ -41,8 +42,7 @@ internal class ExistingStackManager
         if (!_stackService.GetAll().Any())
         {
             UserOutput.InfoMessage("No existing stacks.");
-            UserOutput.InfoMessage("Press any key to continue...");
-            Console.ReadKey();
+            ConsoleHelpers.PressToContinue();
             return;
         }
 
@@ -85,8 +85,7 @@ internal class ExistingStackManager
                     break;
                 default:
                     UserOutput.ErrorMessage("Invalid option.");
-                    UserOutput.InfoMessage("Press any key to continue...");
-                    Console.ReadKey();
+                    ConsoleHelpers.PressToContinue();
                     break;
             }
         }
@@ -118,7 +117,6 @@ internal class ExistingStackManager
             UserOutput.InfoMessage("No stacks found.");
         }
 
-        UserOutput.InfoMessage("Press any key to continue...");
-        Console.ReadKey();
+        ConsoleHelpers.PressToContinue();
     }
 }
