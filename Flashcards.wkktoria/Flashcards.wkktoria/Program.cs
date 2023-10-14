@@ -9,6 +9,7 @@ var connectionString = $"Server=localhost,1433;User Id=sa;Password={databasePass
 
 var databaseManager = new DatabaseManager(connectionString, databaseName!);
 databaseManager.Initialize();
+databaseManager.CreateTables();
 
 var stackService = new StackService(connectionString, databaseName!);
 var cardService = new CardService(connectionString, databaseName!);
