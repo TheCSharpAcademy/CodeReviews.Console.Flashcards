@@ -69,10 +69,10 @@ internal class ExistingStackManager
                     ChangeCurrent();
                     break;
                 case "2":
-                    _cardController.ShowCards(_currentStack.Id);
+                    _cardController.ShowAll(_currentStack.Id);
                     break;
                 case "3":
-                    _cardController.ShowXCards(_currentStack.Id);
+                    _cardController.ShowX(_currentStack.Id);
                     break;
                 case "4":
                     _cardController.Create(_currentStack.Id);

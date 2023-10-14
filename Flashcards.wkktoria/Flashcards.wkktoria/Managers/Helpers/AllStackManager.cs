@@ -9,9 +9,9 @@ internal class AllStackManager
 {
     private readonly StackController _stackController;
 
-    internal AllStackManager(StackService stackService)
+    internal AllStackManager(StackService stackService, CardService cardService, SessionService sessionService)
     {
-        _stackController = new StackController(stackService);
+        _stackController = new StackController(stackService, cardService, sessionService);
     }
 
     private static void ShowMenu()

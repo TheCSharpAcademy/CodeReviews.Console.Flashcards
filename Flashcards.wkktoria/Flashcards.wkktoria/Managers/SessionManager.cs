@@ -1,3 +1,4 @@
+using Flashcards.wkktoria.Controllers;
 using Flashcards.wkktoria.Models;
 using Flashcards.wkktoria.Services;
 using Flashcards.wkktoria.UserInteractions;
@@ -7,14 +8,14 @@ namespace Flashcards.wkktoria.Managers;
 
 internal class SessionManager
 {
-    private readonly SessionService _sessionService;
+    private readonly SessionController _sessionController;
     private readonly StackService _stackService;
     private Stack? _currentStack;
 
     internal SessionManager(StackService stackService, SessionService sessionService)
     {
         _stackService = stackService;
-        _sessionService = sessionService;
+        _sessionController = new SessionController(sessionService);
     }
 
     internal void Run()
@@ -22,15 +23,7 @@ internal class SessionManager
         Choose();
         Console.Clear();
 
-        var sessions = _sessionService.GetAll(_currentStack!.Id);
-
-        if (sessions.Any())
-            TableVisualisation.ShowSessionsTable(sessions);
-        else
-            UserOutput.ErrorMessage("Stack is empty.");
-
-
-        ConsoleHelpers.PressToContinue();
+        _sessionController.ShowAll(_currentStack!.Id);
     }
 
     private void Choose()

@@ -14,7 +14,7 @@ internal class UserInterface
 
     internal UserInterface(StackService stackService, CardService cardService, SessionService sessionService)
     {
-        _stackManager = new StackManager(stackService, cardService);
+        _stackManager = new StackManager(stackService, cardService, sessionService);
         _existingStackManager = new ExistingStackManager(stackService, cardService);
         _studyManager = new StudyManager(stackService, cardService, sessionService);
         _sessionManager = new SessionManager(stackService, sessionService);
