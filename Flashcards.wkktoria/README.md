@@ -8,8 +8,8 @@
 - [X] Every flashcards should be part of stack. If stack is deleted, the same should happen with linked flashcards.
 - [X] DTO should be used to show flashcards without IDs of stacks they belong to.
 - [X] When showing, flashcards IDs should always start with 1, without gaps between numbers.
-- [ ] There should be study session area, where it's possible to study stacks. All study sessions should be stored with date and score.
-- [ ] Study session and stack should be linked. If stack is deleted, linked study session should also be deleted.
-- [ ] There should be possibility to see all study sessions. Study session cannot be updated and deleted.
+- [X] There should be study session area, where it's possible to study stacks. All study sessions should be stored with date and score.
+- [X] Study session and stack should be linked. If stack is deleted, linked study session should also be deleted.
+- [X] There should be possibility to see all study sessions. Study session cannot be updated and deleted.
 
 ## Challenge
