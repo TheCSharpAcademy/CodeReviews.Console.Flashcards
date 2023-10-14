@@ -1,30 +1,80 @@
-INSERT INTO Stacks(Name) VALUES(N'Polish-English');
-INSERT INTO Stacks(Name) VALUES(N'English-Polish');
-INSERT INTO Stacks(Name) VALUES(N'Empty Stack');
+INSERT INTO Stacks(Name) VALUES(N'Polish-English')
+INSERT INTO Stacks(Name) VALUES(N'English-Polish')
+INSERT INTO Stacks(Name) VALUES(N'Empty Stack')
 
-INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Pies', N'Dog');
-INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Kot', N'Cat');
-INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Papuga', N'Parrot');
-INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Mysz', N'Mouse');
-INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Ryba', N'Fish');
-INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Wiewiórka', N'Squirrel');
-INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Królik', N'Rabbit');
-INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Ptak', N'Bird');
+INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Pies', N'Dog')
+INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Kot', N'Cat')
+INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Papuga', N'Parrot')
+INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Mysz', N'Mouse')
+INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Ryba', N'Fish')
+INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Wiewiórka', N'Squirrel')
+INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Królik', N'Rabbit')
+INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Ptak', N'Bird')
 
-INSERT INTO Cards(StackId, Front, Back) VALUES(2, N'Dog', N'Pies');
-INSERT INTO Cards(StackId, Front, Back) VALUES(2, N'Cat', N'Kot');
-INSERT INTO Cards(StackId, Front, Back) VALUES(2, N'Parrot', N'Papuga');
-INSERT INTO Cards(StackId, Front, Back) VALUES(2, N'Mouse', N'Mysz');
-INSERT INTO Cards(StackId, Front, Back) VALUES(2, N'Fish', N'Ryba');
+INSERT INTO Cards(StackId, Front, Back) VALUES(2, N'Dog', N'Pies')
+INSERT INTO Cards(StackId, Front, Back) VALUES(2, N'Cat', N'Kot')
+INSERT INTO Cards(StackId, Front, Back) VALUES(2, N'Parrot', N'Papuga')
+INSERT INTO Cards(StackId, Front, Back) VALUES(2, N'Mouse', N'Mysz')
+INSERT INTO Cards(StackId, Front, Back) VALUES(2, N'Fish', N'Ryba')
 
-INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '14 Oct 2023 10:00:00', 0);
-INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '15 Oct 2023 12:00:00', 2);
-INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '16 Oct 2023 14:00:00', 4);
-INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '17 Oct 2023 16:00:00', 6);
-INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '18 Oct 2023 18:00:00', 8);
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2022-01-01 08:00:00.000', 0)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2022-01-02 10:00:00.000', 2)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2022-02-03 12:00:00.000', 4)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2022-02-04 14:00:00.000', 6)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2022-03-05 16:00:00.000', 8)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2022-03-06 18:00:00.000', 0)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2022-04-07 20:00:00.000', 2)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2022-04-08 22:00:00.000', 4)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2022-05-09 24:00:00.000', 6)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2022-05-10 02:00:00.000', 8)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2022-06-11 04:00:00.000', 0)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2022-06-12 06:00:00.000', 2)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2022-07-13 08:00:00.000', 4)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2022-07-14 10:00:00.000', 6)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2022-08-15 12:00:00.000', 8)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2023-01-01 08:00:00.000', 0)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2023-01-02 10:00:00.000', 2)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2023-02-03 12:00:00.000', 4)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2023-02-04 14:00:00.000', 6)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2023-03-05 16:00:00.000', 8)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2023-03-06 18:00:00.000', 0)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2023-04-07 20:00:00.000', 2)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2023-04-08 22:00:00.000', 4)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2023-05-09 24:00:00.000', 6)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2023-05-10 02:00:00.000', 8)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2023-06-11 04:00:00.000', 0)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2023-06-12 06:00:00.000', 2)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2023-07-13 08:00:00.000', 4)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2023-07-14 10:00:00.000', 6)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(1, '2023-08-15 12:00:00.000', 8)
 
-INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '15 Oct 2023 11:00:00', 1);
-INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '16 Oct 2023 13:00:00', 3);
-INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '17 Oct 2023 15:00:00', 5);
-INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '18 Oct 2023 17:00:00', 7);
-INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '19 Oct 2023 19:00:00', 9);
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2022-01-01 08:00:00.000', 1)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2022-02-02 10:00:00.000', 3)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2022-03-03 12:00:00.000', 5)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2022-04-04 14:00:00.000', 7)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2022-05-05 16:00:00.000', 9)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2022-06-06 18:00:00.000', 1)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2022-07-07 20:00:00.000', 3)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2022-08-08 22:00:00.000', 5)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2022-09-09 24:00:00.000', 7)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2022-10-10 02:00:00.000', 9)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2022-11-11 04:00:00.000', 1)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2022-12-12 06:00:00.000', 3)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2022-01-13 08:00:00.000', 5)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2022-02-14 10:00:00.000', 7)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2022-03-15 12:00:00.000', 9)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2023-01-01 08:00:00.000', 1)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2023-02-02 10:00:00.000', 3)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2023-03-03 12:00:00.000', 5)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2023-04-04 14:00:00.000', 7)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2023-05-05 16:00:00.000', 9)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2023-06-06 18:00:00.000', 1)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2023-07-07 20:00:00.000', 3)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2023-08-08 22:00:00.000', 5)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2023-09-09 24:00:00.000', 7)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2023-10-10 02:00:00.000', 9)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2023-11-11 04:00:00.000', 1)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2023-12-12 06:00:00.000', 3)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2023-01-13 08:00:00.000', 5)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2023-02-14 10:00:00.000', 7)
+INSERT INTO Sessions(StackId, Date, Score) VALUES(2, '2023-03-15 12:00:00.000', 9)
