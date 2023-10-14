@@ -73,7 +73,7 @@ internal class DatabaseManager
                             CREATE TABLE Sessions(
                                 Id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
                                 StackId INT FOREIGN KEY REFERENCES Stacks(Id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
-                                Date DATETIME NOT NULL,
+                                Date TEXT NOT NULL,
                                 Score INT NOT NULL
                             );
                          END;

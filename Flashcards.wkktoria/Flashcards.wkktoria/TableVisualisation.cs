@@ -22,4 +22,13 @@ internal static class TableVisualisation
             .WithColumn("Id", "Front", "Back")
             .ExportAndWriteLine();
     }
+
+    internal static void ShowSessionsTable(List<SessionDto> sessions)
+    {
+        ConsoleTableBuilder
+            .From(sessions)
+            .WithTitle("Sessions")
+            .WithColumn("Date", "Score")
+            .ExportAndWriteLine();
+    }
 }
