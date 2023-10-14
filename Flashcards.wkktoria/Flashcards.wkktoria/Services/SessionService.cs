@@ -27,7 +27,7 @@ internal class SessionService
             var query = $"""
                          USE {_databaseName}
 
-                         SELECT Date, Score FROM Sessions WHERE StackId = @stackId
+                         SELECT FinishedDate, Score FROM Sessions WHERE StackId = @stackId
                          """;
             var command = new SqlCommand(query, _connection);
             command.Parameters.AddWithValue("@stackId", stackId);
@@ -38,7 +38,7 @@ internal class SessionService
                 while (reader.Read())
                     sessions.Add(new SessionDto
                     {
-                        Date = reader.GetDateTime(0),
+                        FinishedDate = reader.GetDateTime(0),
                         Score = reader.GetInt32(1)
                     });
         }
@@ -66,11 +66,11 @@ internal class SessionService
             var query = $"""
                          USE {_databaseName};
 
-                         INSERT INTO Sessions(StackId, Date, Score)  VALUES(@stackId, @date, @score)
+                         INSERT INTO Sessions(StackId, FinishedDate, Score) VALUES(@stackId, @finishedDate, @score)
                          """;
             var command = new SqlCommand(query, _connection);
             command.Parameters.AddWithValue("@stackId", stackId);
-            command.Parameters.AddWithValue("@date", session.Date);
+            command.Parameters.AddWithValue("@finishedDate", session.FinishedDate);
             command.Parameters.AddWithValue("@score", session.Score);
 
             created = command.ExecuteNonQuery() == 1;
