@@ -10,9 +10,9 @@ internal class StackManager
     private readonly AllStackManager _allStackManager;
     private readonly ExistingStackManager _existingStackManager;
 
-    internal StackManager(StackService stackService, CardService cardService)
+    internal StackManager(StackService stackService, CardService cardService, SessionService sessionService)
     {
-        _allStackManager = new AllStackManager(stackService);
+        _allStackManager = new AllStackManager(stackService, cardService, sessionService);
         _existingStackManager = new ExistingStackManager(stackService, cardService);
     }
 

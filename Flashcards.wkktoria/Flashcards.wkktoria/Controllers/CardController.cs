@@ -15,7 +15,7 @@ internal class CardController
         _cardService = cardService;
     }
 
-    internal void ShowCards(int stackId)
+    internal void ShowAll(int stackId)
     {
         Console.Clear();
 
@@ -29,7 +29,7 @@ internal class CardController
         ConsoleHelpers.PressToContinue();
     }
 
-    internal void ShowXCards(int stackId)
+    internal void ShowX(int stackId)
     {
         Console.Clear();
 
