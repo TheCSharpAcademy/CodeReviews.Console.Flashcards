@@ -1,11 +1,15 @@
 INSERT INTO Stacks(Name) VALUES(N'Polish-English');
 INSERT INTO Stacks(Name) VALUES(N'English-Polish');
+INSERT INTO Stacks(Name) VALUES(N'Empty Stack');
 
 INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Pies', N'Dog');
 INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Kot', N'Cat');
 INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Papuga', N'Parrot');
 INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Mysz', N'Mouse');
 INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Ryba', N'Fish');
+INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Wiewiórka', N'Squirrel');
+INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Królik', N'Rabbit');
+INSERT INTO Cards(StackId, Front, Back) VALUES(1, N'Ptak', N'Bird');
 
 INSERT INTO Cards(StackId, Front, Back) VALUES(2, N'Dog', N'Pies');
 INSERT INTO Cards(StackId, Front, Back) VALUES(2, N'Cat', N'Kot');
