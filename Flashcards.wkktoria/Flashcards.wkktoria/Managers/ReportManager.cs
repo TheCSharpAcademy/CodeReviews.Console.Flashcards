@@ -7,12 +7,12 @@ namespace Flashcards.wkktoria.Managers;
 
 internal class ReportManager
 {
-    private readonly ReportDataController _reportDataController;
+    private readonly ReportController _reportController;
 
     internal ReportManager(StackService stackService, SessionService sessionService,
         ReportDataService reportDataService)
     {
-        _reportDataController = new ReportDataController(stackService, sessionService, reportDataService);
+        _reportController = new ReportController(stackService, sessionService, reportDataService);
     }
 
     private static void ShowMenu()
@@ -42,10 +42,10 @@ internal class ReportManager
                     quit = true;
                     break;
                 case "1":
-                    _reportDataController.ReportSessions();
+                    _reportController.Sessions();
                     break;
                 case "2":
-                    _reportDataController.ReportAverageScores();
+                    _reportController.AverageScores();
                     break;
                 default:
                     UserOutput.ErrorMessage("Invalid option.");

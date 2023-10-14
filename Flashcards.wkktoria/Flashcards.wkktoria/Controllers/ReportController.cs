@@ -7,19 +7,19 @@ using Flashcards.wkktoria.UserInteractions.Helpers;
 
 namespace Flashcards.wkktoria.Controllers;
 
-internal class ReportDataController
+internal class ReportController
 {
     private readonly List<ReportDataDto> _reportData;
     private readonly ReportDataService _reportDataService;
 
-    internal ReportDataController(StackService stackService, SessionService sessionService,
+    internal ReportController(StackService stackService, SessionService sessionService,
         ReportDataService reportDataService)
     {
         _reportDataService = reportDataService;
         _reportData = ReportDataHelper.Load(stackService, sessionService);
     }
 
-    internal void ReportSessions()
+    internal void Sessions()
     {
         Console.Clear();
 
@@ -68,7 +68,7 @@ internal class ReportDataController
         ConsoleHelpers.PressToContinue();
     }
 
-    internal void ReportAverageScores()
+    internal void AverageScores()
     {
         Console.Clear();
 
