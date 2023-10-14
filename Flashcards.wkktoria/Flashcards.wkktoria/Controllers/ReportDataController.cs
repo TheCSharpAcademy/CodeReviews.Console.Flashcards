@@ -59,7 +59,7 @@ internal class ReportDataController
 
         if (_reportData.Any())
         {
-            var deleted = _reportDataService.DeleteAll(_reportData);
+            var deleted = _reportDataService.DeleteAll();
 
             if (!deleted) UserOutput.ErrorMessage("Failed to delete record data.");
         }
@@ -107,7 +107,7 @@ internal class ReportDataController
 
         if (_reportData.Any())
         {
-            var deleted = _reportDataService.DeleteAll(_reportData);
+            var deleted = _reportDataService.DeleteAll();
 
             if (!deleted) UserOutput.ErrorMessage("Failed to delete record data.");
         }
