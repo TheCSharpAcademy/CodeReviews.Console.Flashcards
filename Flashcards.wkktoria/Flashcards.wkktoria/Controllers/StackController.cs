@@ -71,21 +71,21 @@ internal class StackController
         {
             TableVisualisation.ShowStacksTable(stacks);
 
-            var name = UserInput.GetStringInput("Enter name of stack to delete.");
-            var stackToDelete = _stackService.GetByName(name);
+            var id = UserInput.GetNumberInput("Enter id of stack to delete.");
+            var stackToDelete = _stackService.GetByDtoId(id);
 
-            if (stackToDelete.Id == 0)
-            {
-                UserOutput.ErrorMessage($"No stack with name '{name}'.");
-            }
-            else
+            if (stackToDelete != null)
             {
                 var deleted = _stackService.Delete(stackToDelete.Id);
 
                 if (deleted)
-                    UserOutput.SuccessMessage($"Stack '{name}' has been deleted.");
+                    UserOutput.SuccessMessage("Stack has been deleted.");
                 else
-                    UserOutput.ErrorMessage($"Failed to delete stack with name '{name}'.");
+                    UserOutput.ErrorMessage("Failed to delete stack.");
+            }
+            else
+            {
+                UserOutput.ErrorMessage("No stack found.");
             }
         }
         else

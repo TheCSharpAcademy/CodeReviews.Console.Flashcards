@@ -99,17 +99,17 @@ internal class ExistingStackManager
         {
             TableVisualisation.ShowStacksTable(stacks);
 
-            var name = UserInput.GetStringInput("Enter name of stack to use.");
-            var stack = _stackService.GetByName(name);
+            var id = UserInput.GetNumberInput("Enter id of stack to use.");
+            var stack = _stackService.GetByDtoId(id);
 
-            if (stack.Id != 0)
+            if (stack != null)
             {
                 _currentStack = stack;
                 UserOutput.InfoMessage($"Current stack has been changed to '{stack.Name}'.");
             }
             else
             {
-                UserOutput.ErrorMessage($"No stack with name '{name}'.");
+                UserOutput.ErrorMessage($"No stack with name '{id}'.");
             }
         }
         else
