@@ -134,7 +134,7 @@ internal class StackController
 
             var session = new SessionDto
             {
-                Date = DateTime.Now,
+                FinishedDate = DateTime.Now,
                 Score = score
             };
 

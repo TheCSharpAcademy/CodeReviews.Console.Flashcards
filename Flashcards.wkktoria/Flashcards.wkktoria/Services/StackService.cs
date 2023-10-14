@@ -142,7 +142,7 @@ internal class StackService
             var query = $"""
                          USE {_databaseName}
 
-                         INSERT INTO Stacks(Name)  VALUES(@name)
+                         INSERT INTO Stacks(Name) VALUES(@name)
                          """;
             var command = new SqlCommand(query, _connection);
             command.Parameters.AddWithValue("@name", stack.Name);

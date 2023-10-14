@@ -115,7 +115,7 @@ internal class CardService
             var query = $"""
                          USE {_databaseName}
 
-                         INSERT INTO Cards(StackId, Front, Back)  VALUES(@stackId, @front, @back)
+                         INSERT INTO Cards(StackId, Front, Back) VALUES(@stackId, @front, @back)
                          """;
             var command = new SqlCommand(query, _connection);
             command.Parameters.AddWithValue("@stackId", stackId);
@@ -147,9 +147,10 @@ internal class CardService
             var query = $"""
                          USE {_databaseName}
 
-                         DELETE FROM Cards WHERE Id = {cardId} AND StackId = @stackId
+                         DELETE FROM Cards WHERE Id = @cardId AND StackId = @stackId
                          """;
             var command = new SqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@cardId", cardId);
             command.Parameters.AddWithValue("@stackId", stackId);
 
             deleted = command.ExecuteNonQuery() == 1;
