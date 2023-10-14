@@ -1,5 +1,4 @@
 using Flashcards.wkktoria.Managers;
-using Flashcards.wkktoria.Managers.Helpers;
 using Flashcards.wkktoria.Services;
 using Flashcards.wkktoria.UserInteractions.Helpers;
 
@@ -8,16 +7,19 @@ namespace Flashcards.wkktoria.UserInteractions;
 internal class UserInterface
 {
     private readonly ExistingStackManager _existingStackManager;
+    private readonly ReportManager _reportManager;
     private readonly SessionManager _sessionManager;
     private readonly StackManager _stackManager;
     private readonly StudyManager _studyManager;
 
-    internal UserInterface(StackService stackService, CardService cardService, SessionService sessionService)
+    internal UserInterface(StackService stackService, CardService cardService, SessionService sessionService,
+        ReportDataService reportDataService)
     {
         _stackManager = new StackManager(stackService, cardService, sessionService);
         _existingStackManager = new ExistingStackManager(stackService, cardService);
         _studyManager = new StudyManager(stackService, cardService, sessionService);
         _sessionManager = new SessionManager(stackService, sessionService);
+        _reportManager = new ReportManager(stackService, sessionService, reportDataService);
     }
 
     private static void ShowMenu()
@@ -28,6 +30,7 @@ internal class UserInterface
                           2 - Manage cards
                           3 - Study
                           4 - Show study sessions
+                          5 - Show report
                           """);
     }
 
@@ -59,6 +62,9 @@ internal class UserInterface
                     break;
                 case "4":
                     _sessionManager.Run();
+                    break;
+                case "5":
+                    _reportManager.Run();
                     break;
                 default:
                     UserOutput.ErrorMessage("Invalid option.");

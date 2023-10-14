@@ -14,6 +14,7 @@ databaseManager.CreateTables();
 var stackService = new StackService(connectionString, databaseName!);
 var cardService = new CardService(connectionString, databaseName!);
 var sessionService = new SessionService(connectionString, databaseName!);
+var reportDataService = new ReportDataService(connectionString, databaseName!);
 
-var ui = new UserInterface(stackService, cardService, sessionService);
+var ui = new UserInterface(stackService, cardService, sessionService, reportDataService);
 ui.Run();
