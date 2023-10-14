@@ -54,7 +54,15 @@ internal class StackService
         return StackHelper.ToFullDto(stacks);
     }
 
-    internal Stack GetByName(string name)
+    internal Stack? GetByDtoId(int dtoId)
+    {
+        var stacks = GetAll();
+        var stack = stacks.Find(card => card.DtoId == dtoId);
+
+        return stack == null ? null : GetByName(stack.Name);
+    }
+
+    private Stack GetByName(string name)
     {
         var stack = new Stack();
 

@@ -96,21 +96,21 @@ internal class CardController
         {
             TableVisualisation.ShowCardsTable(cards);
 
-            var front = UserInput.GetStringInput("Enter front of card to delete.");
-            var cardToDelete = _cardService.GetByFront(front, stackId);
+            var id = UserInput.GetNumberInput("Enter id of card to delete.");
+            var cardToDelete = _cardService.GetByDtoId(id, stackId);
 
-            if (cardToDelete.Id == 0)
+            if (cardToDelete != null)
             {
-                UserOutput.ErrorMessage($"No card with front '{front}'.");
+                var deleted = _cardService.Delete(cardToDelete.Id, stackId);
+
+                if (deleted)
+                    UserOutput.SuccessMessage("Card has been deleted.");
+                else
+                    UserOutput.ErrorMessage("Failed to delete card.");
             }
             else
             {
-                var deleted = _cardService.Delete(front, stackId);
-
-                if (deleted)
-                    UserOutput.SuccessMessage($"Card with front '{front}' has been deleted.");
-                else
-                    UserOutput.ErrorMessage($"Failed to delete card with front '{front}'.");
+                UserOutput.ErrorMessage("No card found.");
             }
         }
         else
@@ -131,16 +131,12 @@ internal class CardController
         {
             TableVisualisation.ShowCardsTable(cards);
 
-            var front = UserInput.GetStringInput(
-                "Enter front of card to update.");
+            var id = UserInput.GetNumberInput(
+                "Enter id of card to update.");
 
-            var cardToUpdate = _cardService.GetByFront(front, stackId);
+            var cardToUpdate = _cardService.GetByDtoId(id, stackId);
 
-            if (cardToUpdate.Id == 0)
-            {
-                UserOutput.ErrorMessage($"No card with front '{front}'.");
-            }
-            else
+            if (cardToUpdate != null)
             {
                 CardDto updatedCard;
 
@@ -168,6 +164,10 @@ internal class CardController
                     UserOutput.SuccessMessage("Card has been updated.");
                 else
                     UserOutput.ErrorMessage("Failed to update card.");
+            }
+            else
+            {
+                UserOutput.ErrorMessage("No card found.");
             }
         }
         else

@@ -1,6 +1,7 @@
 using System.Data;
 using Flashcards.wkktoria.Models;
 using Flashcards.wkktoria.Models.Dtos;
+using Flashcards.wkktoria.Services.Helpers;
 using Flashcards.wkktoria.UserInteractions;
 using Microsoft.Data.SqlClient;
 
@@ -51,10 +52,18 @@ internal class CardService
             if (_connection.State == ConnectionState.Open) _connection.Close();
         }
 
-        return cards;
+        return CardHelper.ToFullDto(cards);
     }
 
-    internal Card GetByFront(string front, int stackId)
+    internal Card? GetByDtoId(int dtoId, int stackId)
+    {
+        var cards = GetAll(stackId);
+        var card = cards.Find(card => card.DtoId == dtoId);
+
+        return card == null ? null : GetByFront(card.Front, stackId);
+    }
+
+    private Card GetByFront(string front, int stackId)
     {
         var card = new Card();
 
@@ -121,7 +130,7 @@ internal class CardService
         return created;
     }
 
-    internal bool Delete(string front, int stackId)
+    internal bool Delete(int cardId, int stackId)
     {
         var deleted = false;
 
@@ -132,7 +141,7 @@ internal class CardService
             var query = $"""
                          USE {_databaseName};
 
-                         DELETE FROM Cards WHERE StackId = {stackId} AND Front = N'{front}';
+                         DELETE FROM Cards WHERE Id = {cardId} AND StackId = {stackId};
                          """;
             var command = new SqlCommand(query, _connection);
 

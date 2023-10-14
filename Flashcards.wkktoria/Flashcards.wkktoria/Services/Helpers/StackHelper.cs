@@ -10,7 +10,7 @@ internal static class StackHelper
 
         var size = stacks.Count;
 
-        for (var i = 0; i < size; i++) stacks[i].Number = i + 1;
+        for (var i = 0; i < size; i++) stacks[i].DtoId = i + 1;
 
         return stacks;
     }

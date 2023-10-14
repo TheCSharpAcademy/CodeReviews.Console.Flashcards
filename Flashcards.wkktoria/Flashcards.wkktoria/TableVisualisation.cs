@@ -10,7 +10,7 @@ internal static class TableVisualisation
         ConsoleTableBuilder
             .From(stacks)
             .WithTitle("Stacks")
-            .WithColumn("No.", "Name")
+            .WithColumn("Id", "Name")
             .ExportAndWriteLine();
     }
 
@@ -19,7 +19,7 @@ internal static class TableVisualisation
         ConsoleTableBuilder
             .From(cards)
             .WithTitle("Cards")
-            .WithColumn("Front", "Back")
+            .WithColumn("Id", "Front", "Back")
             .ExportAndWriteLine();
     }
 }
