@@ -1,6 +1,7 @@
 using Flashcards.wkktoria.Models.Dtos;
 using Flashcards.wkktoria.Services;
 using Flashcards.wkktoria.UserInteractions;
+using Flashcards.wkktoria.UserInteractions.Helpers;
 using Flashcards.wkktoria.Validators;
 
 namespace Flashcards.wkktoria.Controllers;
@@ -24,8 +25,7 @@ internal class StackController
         else
             UserOutput.InfoMessage("No stacks found.");
 
-        UserOutput.InfoMessage("Press any key to continue...");
-        Console.ReadKey();
+        ConsoleHelpers.PressToContinue();
     }
 
     internal void Create()
@@ -58,8 +58,7 @@ internal class StackController
         else
             UserOutput.ErrorMessage($"Failed to create stack with name '{name}'.");
 
-        UserOutput.InfoMessage("Press any key to continue...");
-        Console.ReadKey();
+        ConsoleHelpers.PressToContinue();
     }
 
     internal void Delete()
@@ -94,7 +93,6 @@ internal class StackController
             UserOutput.InfoMessage("No stacks to delete.");
         }
 
-        UserOutput.InfoMessage("Press any key to continue...");
-        Console.ReadKey();
+        ConsoleHelpers.PressToContinue();
     }
 }

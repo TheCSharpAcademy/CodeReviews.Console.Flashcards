@@ -2,24 +2,25 @@ namespace Flashcards.wkktoria.UserInteractions;
 
 internal static class UserOutput
 {
-    internal static void ErrorMessage(string message)
+    private static void Print(ConsoleColor color, string message)
     {
-        Console.ForegroundColor = ConsoleColor.Red;
+        Console.ForegroundColor = color;
         Console.WriteLine(message);
         Console.ResetColor();
+    }
+
+    internal static void ErrorMessage(string message)
+    {
+        Print(ConsoleColor.Red, message);
     }
 
     internal static void InfoMessage(string message)
     {
-        Console.ForegroundColor = ConsoleColor.White;
-        Console.WriteLine(message);
-        Console.ResetColor();
+        Print(ConsoleColor.White, message);
     }
 
     internal static void SuccessMessage(string message)
     {
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine(message);
-        Console.ResetColor();
+        Print(ConsoleColor.Green, message);
     }
 }
