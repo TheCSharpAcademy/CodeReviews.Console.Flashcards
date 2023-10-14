@@ -77,13 +77,26 @@ internal class DatabaseManager
                                 Score INT NOT NULL
                             )
                          END
+
+                         IF OBJECT_ID('ReportData', 'U') IS NULL
+                         BEGIN
+                            CREATE TABLE ReportData(
+                                Id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+                                StackId INT FOREIGN KEY REFERENCES Stacks(Id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+                                StackName NVARCHAR(25) NOT NULL,
+                                SessionYear INT NOT NULL,
+                                SessionMonth INT NOT NULL,
+                                Score INT NOT NULL
+                            )
+                         END
                          """;
             var command = new SqlCommand(query, _connection);
 
             command.ExecuteNonQuery();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            UserOutput.ErrorMessage(ex.Message);
             UserOutput.ErrorMessage("Failed to create tables in database.");
         }
         finally

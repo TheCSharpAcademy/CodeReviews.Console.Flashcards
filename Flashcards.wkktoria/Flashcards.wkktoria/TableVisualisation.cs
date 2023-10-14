@@ -31,4 +31,22 @@ internal static class TableVisualisation
             .WithColumn("Date", "Score")
             .ExportAndWriteLine();
     }
+
+    internal static void ShowSessionsInYear(List<ReportDataDto.ReportDataSessions> data, int year)
+    {
+        ConsoleTableBuilder
+            .From(data)
+            .WithTitle($"Sessions per month in {year}")
+            .WithColumn("Month", "Sessions")
+            .ExportAndWriteLine();
+    }
+
+    internal static void ShowAverageScoresInYear(List<ReportDataDto.ReportDataAverageScores> data, int year)
+    {
+        ConsoleTableBuilder
+            .From(data)
+            .WithTitle($"Average scores per month in {year}")
+            .WithColumn("Month", "Name", "Score")
+            .ExportAndWriteLine();
+    }
 }
