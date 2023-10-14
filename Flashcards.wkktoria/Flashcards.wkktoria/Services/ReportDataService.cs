@@ -54,7 +54,7 @@ internal class ReportDataService
         return created;
     }
 
-    internal bool DeleteAll(List<ReportDataDto> data)
+    internal bool DeleteAll()
     {
         var deleted = false;
 

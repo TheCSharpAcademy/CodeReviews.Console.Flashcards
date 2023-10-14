@@ -87,7 +87,7 @@ internal class CardService
                 while (reader.Read())
                 {
                     card.Id = reader.GetInt32(0);
-                    card.StackId = reader.GetInt32(1);
+                    reader.GetInt32(1);
                     card.Front = reader.GetString(2);
                     card.Back = reader.GetString(3);
                 }
