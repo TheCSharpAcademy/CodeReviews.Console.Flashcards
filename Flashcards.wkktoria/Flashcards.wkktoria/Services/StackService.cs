@@ -27,9 +27,9 @@ internal class StackService
             _connection.Open();
 
             var query = $"""
-                         USE {_databaseName};
+                         USE {_databaseName}
 
-                         SELECT Name FROM Stacks;
+                         SELECT Name FROM Stacks
                          """;
             var command = new SqlCommand(query, _connection);
 
@@ -71,11 +71,12 @@ internal class StackService
             _connection.Open();
 
             var query = $"""
-                         USE {_databaseName};
+                         USE {_databaseName}
 
-                         SELECT Id, Name FROM Stacks WHERE Name = N'{name}';
+                         SELECT Id, Name FROM Stacks WHERE Name = @name
                          """;
             var command = new SqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@name", name);
 
             var reader = command.ExecuteReader();
 
@@ -107,11 +108,13 @@ internal class StackService
             _connection.Open();
 
             var query = $"""
-                         USE {_databaseName};
+                         USE {_databaseName}
 
-                         SELECT * FROM Stacks WHERE Name = N'{name}';
+                         SELECT * FROM Stacks WHERE Name = @name
                          """;
             var command = new SqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@name", name);
+
             var reader = command.ExecuteReader();
 
             nameExists = reader.HasRows;
@@ -137,11 +140,12 @@ internal class StackService
             _connection.Open();
 
             var query = $"""
-                         USE {_databaseName};
+                         USE {_databaseName}
 
-                         INSERT INTO Stacks(Name)  VALUES(N'{stack.Name}');
+                         INSERT INTO Stacks(Name)  VALUES(@name)
                          """;
             var command = new SqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@name", stack.Name);
 
             created = command.ExecuteNonQuery() == 1;
         }
@@ -166,11 +170,12 @@ internal class StackService
             _connection.Open();
 
             var query = $"""
-                         USE {_databaseName};
+                         USE {_databaseName}
 
-                         DELETE FROM Stacks WHERE Id = {id};
+                         DELETE FROM Stacks WHERE Id = @id
                          """;
             var command = new SqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@id", id);
 
             deleted = command.ExecuteNonQuery() == 1;
         }

@@ -25,11 +25,12 @@ internal class SessionService
             _connection.Open();
 
             var query = $"""
-                         USE {_databaseName};
+                         USE {_databaseName}
 
-                         SELECT Date, Score FROM Sessions WHERE StackId = {stackId};
+                         SELECT Date, Score FROM Sessions WHERE StackId = @stackId
                          """;
             var command = new SqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@stackId", stackId);
 
             var reader = command.ExecuteReader();
 
@@ -41,8 +42,9 @@ internal class SessionService
                         Score = reader.GetInt32(1)
                     });
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            UserOutput.ErrorMessage(ex.Message);
             UserOutput.ErrorMessage("Failed to get sessions.");
         }
         finally
@@ -64,9 +66,12 @@ internal class SessionService
             var query = $"""
                          USE {_databaseName};
 
-                         INSERT INTO Sessions(StackId, Date, Score)  VALUES({stackId}, '{session.Date:yyyy-MM-dd HH:mm:ss}', N'{session.Score}')
+                         INSERT INTO Sessions(StackId, Date, Score)  VALUES(@stackId, @date, @score)
                          """;
             var command = new SqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@stackId", stackId);
+            command.Parameters.AddWithValue("@date", session.Date);
+            command.Parameters.AddWithValue("@score", session.Score);
 
             created = command.ExecuteNonQuery() == 1;
         }

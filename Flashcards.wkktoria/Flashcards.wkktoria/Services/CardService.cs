@@ -27,11 +27,12 @@ internal class CardService
             _connection.Open();
 
             var query = $"""
-                         USE {_databaseName};
+                         USE {_databaseName}
 
-                         SELECT Front, Back FROM Cards WHERE StackId = {stackId};
+                         SELECT Front, Back FROM Cards WHERE StackId = @stackId
                          """;
             var command = new SqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@stackId", stackId);
 
             var reader = command.ExecuteReader();
 
@@ -72,11 +73,13 @@ internal class CardService
             _connection.Open();
 
             var query = $"""
-                         USE {_databaseName};
+                         USE {_databaseName}
 
-                         SELECT Id, StackId, Front, Back FROM Cards WHERE StackId = {stackId} AND Front = N'{front}';
+                         SELECT Id, StackId, Front, Back FROM Cards WHERE StackId = @stackId AND Front = @front
                          """;
             var command = new SqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@stackId", stackId);
+            command.Parameters.AddWithValue("@front", front);
 
             var reader = command.ExecuteReader();
 
@@ -110,11 +113,14 @@ internal class CardService
             _connection.Open();
 
             var query = $"""
-                         USE {_databaseName};
+                         USE {_databaseName}
 
-                         INSERT INTO Cards(StackId, Front, Back)  VALUES({stackId}, N'{card.Front}', N'{card.Back}');
+                         INSERT INTO Cards(StackId, Front, Back)  VALUES(@stackId, @front, @back)
                          """;
             var command = new SqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@stackId", stackId);
+            command.Parameters.AddWithValue("@front", card.Front);
+            command.Parameters.AddWithValue("@back", card.Back);
 
             created = command.ExecuteNonQuery() == 1;
         }
@@ -139,11 +145,12 @@ internal class CardService
             _connection.Open();
 
             var query = $"""
-                         USE {_databaseName};
+                         USE {_databaseName}
 
-                         DELETE FROM Cards WHERE Id = {cardId} AND StackId = {stackId};
+                         DELETE FROM Cards WHERE Id = {cardId} AND StackId = @stackId
                          """;
             var command = new SqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@stackId", stackId);
 
             deleted = command.ExecuteNonQuery() == 1;
         }
@@ -168,11 +175,16 @@ internal class CardService
             _connection.Open();
 
             var query = $"""
-                         USE {_databaseName};
+                         USE {_databaseName}
 
-                         UPDATE Cards SET Front = N'{newCard.Front}', Back = N'{newCard.Back}' WHERE Front = N'{oldCard.Front}' AND Back = N'{oldCard.Back}' AND StackId = {stackId};
+                         UPDATE Cards SET Front = @newFront, Back = @newBack WHERE Front = @oldFront AND Back = @oldBack AND StackId = @stackId
                          """;
             var command = new SqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@newFront", newCard.Front);
+            command.Parameters.AddWithValue("@newBack", newCard.Back);
+            command.Parameters.AddWithValue("@oldFront", oldCard.Front);
+            command.Parameters.AddWithValue("@oldBack", oldCard.Back);
+            command.Parameters.AddWithValue("@stackId", stackId);
 
             updated = command.ExecuteNonQuery() == 1;
         }
