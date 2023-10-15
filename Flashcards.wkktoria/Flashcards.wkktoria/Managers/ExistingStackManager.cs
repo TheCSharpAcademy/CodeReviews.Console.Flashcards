@@ -10,12 +10,14 @@ internal class ExistingStackManager
 {
     private readonly CardController _cardController;
     private readonly StackService _stackService;
+    private readonly StudyManager _studyManager;
     private Stack? _currentStack;
 
-    internal ExistingStackManager(StackService stackService, CardService cardService)
+    internal ExistingStackManager(StackService stackService, CardService cardService, SessionService sessionService)
     {
         _stackService = stackService;
         _cardController = new CardController(cardService);
+        _studyManager = new StudyManager(stackService, cardService, sessionService);
     }
 
     private void ShowMenu()
@@ -32,6 +34,7 @@ internal class ExistingStackManager
                                 4 - Create card in current current stack
                                 5 - Update card in current stack
                                 6 - Delete card in current stack
+                                7 - Study cards in current stack
                                 """);
     }
 
@@ -82,6 +85,9 @@ internal class ExistingStackManager
                     break;
                 case "6":
                     _cardController.Delete(_currentStack.Id);
+                    break;
+                case "7":
+                    _studyManager.Run(_currentStack);
                     break;
                 default:
                     UserOutput.ErrorMessage("Invalid option.");

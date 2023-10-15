@@ -19,13 +19,13 @@ internal class StudyManager
         _stackController = new StackController(stackService, cardService, sessionService);
     }
 
-    internal void Run()
+    internal void Run(Stack? stackToStudy = null)
     {
         Console.Clear();
 
         if (_stackService.GetAll().Any())
         {
-            _studyStack = StackHelper.Choose(_stackService);
+            _studyStack = stackToStudy ?? StackHelper.Choose(_stackService);
             _stackController.Study(_studyStack!.Id);
         }
         else
