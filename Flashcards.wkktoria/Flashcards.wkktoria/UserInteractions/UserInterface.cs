@@ -16,7 +16,7 @@ internal class UserInterface
         ReportDataService reportDataService)
     {
         _stackManager = new StackManager(stackService, cardService, sessionService);
-        _existingStackManager = new ExistingStackManager(stackService, cardService);
+        _existingStackManager = new ExistingStackManager(stackService, cardService, sessionService);
         _studyManager = new StudyManager(stackService, cardService, sessionService);
         _sessionManager = new SessionManager(stackService, sessionService);
         _reportManager = new ReportManager(stackService, sessionService, reportDataService);

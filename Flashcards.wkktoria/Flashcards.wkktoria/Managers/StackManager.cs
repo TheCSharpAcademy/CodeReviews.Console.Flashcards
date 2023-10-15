@@ -12,7 +12,7 @@ internal class StackManager
     internal StackManager(StackService stackService, CardService cardService, SessionService sessionService)
     {
         _allStackManager = new AllStackManager(stackService, cardService, sessionService);
-        _existingStackManager = new ExistingStackManager(stackService, cardService);
+        _existingStackManager = new ExistingStackManager(stackService, cardService, sessionService);
     }
 
     private static void ShowMenu()
