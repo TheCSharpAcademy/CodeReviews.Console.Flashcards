@@ -132,10 +132,10 @@ namespace FlashCardsUI
                         Environment.Exit(0);
                         break;
                     case "1":
-                        RequestFlashCardData.ReadAllFlashCards(sql); ;
+                        RequestFlashCardData.ReadAllFlashCards(sql);
                         break;
                     case "2":
-                        RequestFlashCardData.CreateNewFlashCard(sql); ;
+                        RequestFlashCardData.CreateNewFlashCard(sql);
                         break;
                     case "3":
                         RequestFlashCardData.RemoveFlashCard(sql);
@@ -179,10 +179,10 @@ namespace FlashCardsUI
                         Environment.Exit(0);
                         break;
                     case "1":
-                        RequestStudySessionData.ReadAllStudySessions(sql); ;
+                        RequestStudySessionData.ReadAllStudySessions(sql);
                         break;
                     case "2":
-                        RequestStudySessionData.CreateNewStudySession(sql); ;
+                        RequestStudySessionData.CreateNewStudySession(sql);
                         break;
                     case "3":
                         Console.Clear();
