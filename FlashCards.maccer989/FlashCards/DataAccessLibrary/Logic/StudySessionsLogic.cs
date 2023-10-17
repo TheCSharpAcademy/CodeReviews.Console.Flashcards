@@ -4,7 +4,7 @@ namespace DataAccessLibrary.Logic
 {
     public class StudySessionsLogic
     {       
-        public List<StudySessionsModel> runStudySession(List<StudySessionsModel> session, List<FlashCardsModel> cards)
+        public List<StudySessionsModel> RunStudySession(List<StudySessionsModel> session, List<FlashCardsModel> cards)
         {
             Console.WriteLine($"You are studying stack {session[0].StackName}\n");
             foreach(FlashCardsModel card in cards)

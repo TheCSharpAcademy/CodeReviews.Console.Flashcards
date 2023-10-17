@@ -14,7 +14,6 @@ namespace FlashCardsUI
         }
         public static void CreateNewStudySession(SqlStudySessionsCrud sql)
         {
-            string stackNameUserInput;
             int stackName = GetNumberInput("Please enter a stack name to study use numbers 1 to 9 only:");
             stackName = CheckValidRecord(sql, stackName);
             DateTime studySessionDate = DateTime.Now;
@@ -28,7 +27,7 @@ namespace FlashCardsUI
             List<StudySessionsModel> studySession = sql.CreateStudySession(session);
             List<FlashCardsModel> cards = sql.GetAllFlashCardsByStackName(studySession[0].StackName);
             StudySessionsLogic currentSession = new StudySessionsLogic();
-            studySession = currentSession.runStudySession(studySession, cards);
+            studySession = currentSession.RunStudySession(studySession, cards);
             Console.WriteLine($"You have answered {studySession[0].TotalAnswerCorrect} questions out of 9 correctly.");
         }
         static int CheckValidRecord(SqlStudySessionsCrud sql, int recordId)

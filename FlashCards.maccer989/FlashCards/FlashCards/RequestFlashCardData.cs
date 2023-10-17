@@ -17,7 +17,6 @@ namespace FlashCardsUI
             string cardQuestion = Console.ReadLine();
             Console.WriteLine("Please enter new card answer:");
             string cardAnswer = Console.ReadLine();
-            DateTime lastUpdated = DateTime.Now;
             sql.UpdateFlashCard(stackName, cardId, cardQuestion, cardAnswer);
         }
         public static void RemoveFlashCard(SqlFlashCardsCrud sql)

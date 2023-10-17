@@ -14,7 +14,6 @@ namespace FlashCardsUI
             stackId = CheckValidRecord(sql, stackId);
             int stackName = GetNumberInput("\nPlease type the updated name of the Stack:");
             stackName = CheckDuplicateRecord(sql, stackName);
-            DateTime lastUpdated = DateTime.Now;
             sql.UpdateStack(stackId, stackName);
         }
         public static void RemoveStack(SqlStacksCrud sql)

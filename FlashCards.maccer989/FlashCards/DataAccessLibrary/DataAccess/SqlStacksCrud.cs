@@ -20,7 +20,7 @@ namespace DataAccessLibrary.DataAccess
         }
         public List<StacksModel> GetAllStacks()
         {            
-            string sql = "select StackName from Stacks";
+            string sql = "select * from Stacks";
             var checkQuery = db.LoadData<StacksModel, dynamic>(sql, new { }, _connectionString);
             if (checkQuery.Count > 0)
             {

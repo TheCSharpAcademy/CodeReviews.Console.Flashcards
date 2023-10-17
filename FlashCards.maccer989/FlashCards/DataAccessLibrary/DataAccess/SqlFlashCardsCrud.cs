@@ -1,5 +1,4 @@
 ﻿using DataAccessLibrary.Models;
-using System.Diagnostics;
 
 namespace DataAccessLibrary.DataAccess
 {
