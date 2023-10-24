@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 namespace Flashcards.K_MYR;
 
 
-internal static class SQLController
+internal static class SqlController
 {
     static private readonly string ServerName = ConfigurationManager.AppSettings.Get("sqlServerName");
 

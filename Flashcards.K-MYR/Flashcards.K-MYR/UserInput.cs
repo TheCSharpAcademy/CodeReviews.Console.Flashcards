@@ -44,13 +44,13 @@ internal class UserInput
 
         while (!returnToMainMenu)
         {
-            var stacks = SQLController.SelectStacksFromDB();
-            List<CardStackDTO> stackDTOs = new();
+            var stacks = SqlController.SelectStacksFromDB();
+            List<CardStackDto> stackDTOs = new();
             int index = 1;
 
             foreach (var stack in stacks)
             {
-                stackDTOs.Add(new CardStackDTO
+                stackDTOs.Add(new CardStackDto
                 {
                     Row = index,
                     Name = stack.Name,
@@ -98,7 +98,7 @@ internal class UserInput
                     case ConsoleKey.A:
                         Console.CursorLeft = 0;
                         string Name = GetStackName("Please enter a unique name for the new stack (max 25 letters): ");
-                        SQLController.InsertStack(Name);
+                        SqlController.InsertStack(Name);
                         actionKeyPressed = true;
                         break;
                     case ConsoleKey.D:
@@ -144,14 +144,14 @@ internal class UserInput
 
         while (!returnToStacksMenu)
         {
-            var cards = SQLController.SelectFlashcardsFromDB(args: $"WHERE StackId = {cardStack.StackId}");
-            List<FlashcardDTO> cardDTOs = new();
+            var cards = SqlController.SelectFlashcardsFromDB(args: $"WHERE StackId = {cardStack.StackId}");
+            List<FlashcardDto> cardDTOs = new();
 
             int index = 1;
 
             foreach (var card in cards)
             {
-                cardDTOs.Add(new FlashcardDTO
+                cardDTOs.Add(new FlashcardDto
                 {
                     Row = index,
                     FrontText = card.FrontText,
@@ -203,7 +203,7 @@ internal class UserInput
                         Console.CursorLeft = 0;
                         frontText = GetFlashcardText("Please enter the text of the frontside (max 25 letters): ");
                         backText = GetFlashcardText("Please enter the text of the backside (max 25 letters): ");
-                        SQLController.InsertFlashcard(cardStack.StackId, frontText, backText);
+                        SqlController.InsertFlashcard(cardStack.StackId, frontText, backText);
                         cardStack.UpdateNumberOfCards();
                         actionKeyPressed = true;
                         break;
@@ -253,13 +253,13 @@ internal class UserInput
         {
             Console.Clear();
 
-            var stacks = SQLController.SelectStacksFromDB();
-            List<CardStackDTO> stackDTOs = new();
+            var stacks = SqlController.SelectStacksFromDB();
+            List<CardStackDto> stackDTOs = new();
             int index = 1;
 
             foreach (var stack in stacks)
             {
-                stackDTOs.Add(new CardStackDTO
+                stackDTOs.Add(new CardStackDto
                 {
                     Row = index,
                     Name = stack.Name,
@@ -338,7 +338,7 @@ internal class UserInput
         CancellationTokenSource cancelTokenSource = new();
         CancellationToken token = cancelTokenSource.Token;
 
-        var flashcards = SQLController.SelectFlashcardsFromDB(args: $"WHERE StackId = {stack.StackId}");
+        var flashcards = SqlController.SelectFlashcardsFromDB(args: $"WHERE StackId = {stack.StackId}");
         flashcards.Shuffle();
 
         Console.Clear();
@@ -406,7 +406,7 @@ internal class UserInput
         if (answeredQuestions > 0)
         {
             Console.WriteLine($"You got {score} out of {answeredQuestions} questions right!");
-            SQLController.InsertSession(stack.StackId, timeSpan.Ticks, score);
+            SqlController.InsertSession(stack.StackId, timeSpan.Ticks, score);
         }
 
         Console.Write("Press Enter to return to the menu");
@@ -415,13 +415,13 @@ internal class UserInput
 
     internal static void SessionDataMenu()
     {
-        var sessions = SQLController.SelectSessionsFromDB();
-        List<SessionDTO> sessionsDTO = new();
+        var sessions = SqlController.SelectSessionsFromDB();
+        List<SessionDto> sessionsDTO = new();
         int index = 1;
 
         foreach (var session in sessions)
         {
-            sessionsDTO.Add(new SessionDTO
+            sessionsDTO.Add(new SessionDto
             {
                 Row = index,
                 StackName = session.StackName,
@@ -507,10 +507,10 @@ internal class UserInput
                     case ConsoleKey.Enter:
                         if (sb.Length == 4)
                         {
-                            var tableData = SQLController.SumScorePerMonth(sb.ToString());
-                            var tableData2 = SQLController.AvgScorePerMonth(sb.ToString());
-                            var tableData3 = SQLController.SumTimePerMonth(sb.ToString());
-                            var tableData4 = SQLController.AvgTimePerMonth(sb.ToString());
+                            var tableData = SqlController.SumScorePerMonth(sb.ToString());
+                            var tableData2 = SqlController.AvgScorePerMonth(sb.ToString());
+                            var tableData3 = SqlController.SumTimePerMonth(sb.ToString());
+                            var tableData4 = SqlController.AvgTimePerMonth(sb.ToString());
                             Helpers.PrintReport(tableData, tableData2, tableData3, tableData4, sb.ToString());
                             actionKeyPressed = true;
                         }
@@ -552,7 +552,7 @@ internal class UserInput
             Console.CursorTop -= 1;
             Console.CursorLeft = 0;
 
-        } while (SQLController.StackNameExists(input) == 1);
+        } while (SqlController.StackNameExists(input) == 1);
 
         return input;
     }

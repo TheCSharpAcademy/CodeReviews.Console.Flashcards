@@ -60,7 +60,7 @@ internal static class Helpers
         return selected;
     }
 
-    internal static void PrintStacksMenu(List<CardStackDTO> tableData)
+    internal static void PrintStacksMenu(List<CardStackDto> tableData)
     {
         Console.Clear();
         PrintStacks(tableData);
@@ -69,7 +69,7 @@ internal static class Helpers
         Console.WriteLine("-------------------------------------------------------------------------------------------------------------------");
     }
 
-    internal static void PrintStackOptions(List<CardStackDTO> tableData)
+    internal static void PrintStackOptions(List<CardStackDto> tableData)
     {
         Console.Clear();
         Helpers.PrintStacks(tableData);
@@ -78,7 +78,7 @@ internal static class Helpers
         Console.WriteLine("------------------------------------------------------------");
     }
 
-    internal static void PrintStacks(List<CardStackDTO> tableData)
+    internal static void PrintStacks(List<CardStackDto> tableData)
     {
         ConsoleTableBuilder
             .From(tableData)
@@ -93,7 +93,7 @@ internal static class Helpers
             .ExportAndWriteLine();
     }
 
-    internal static void PrintCardsMenu(List<FlashcardDTO> tableData, string stackName)
+    internal static void PrintCardsMenu(List<FlashcardDto> tableData, string stackName)
     {
         Console.Clear();
         tableData.Sort((x, y) => x.Row - y.Row);
@@ -103,7 +103,7 @@ internal static class Helpers
         Console.WriteLine("------------------------------------------------------------------------------------------------------------------");
     }
 
-    internal static void PrintFlashcards(List<FlashcardDTO> tableData, string stackName)
+    internal static void PrintFlashcards(List<FlashcardDto> tableData, string stackName)
     {
         ConsoleTableBuilder
             .From(tableData)
@@ -119,7 +119,7 @@ internal static class Helpers
             .ExportAndWriteLine();
     }
 
-    internal static void PrintSessions(List<SessionDTO> tableData)
+    internal static void PrintSessions(List<SessionDto> tableData)
     {
         ConsoleTableBuilder
             .From(tableData)
