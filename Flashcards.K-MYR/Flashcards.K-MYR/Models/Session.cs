@@ -15,7 +15,7 @@
         public TimeSpan Duration { get; set; }
     }
 
-    internal class SessionDTO
+    internal class SessionDto
     {
         public int Row { get; set; }
 

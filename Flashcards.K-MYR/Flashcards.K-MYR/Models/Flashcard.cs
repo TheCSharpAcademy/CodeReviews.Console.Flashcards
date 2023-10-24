@@ -14,25 +14,25 @@
 
         internal void Delete()
         {
-            SQLController.DeleteFlashcard(FlashcardId);
+            SqlController.DeleteFlashcard(FlashcardId);
         }
 
         internal void UpdateBackText(string newText)
         {
-            SQLController.UpdateFlashcard($"BackText = '{newText}'", FlashcardId);
+            SqlController.UpdateFlashcard($"BackText = '{newText}'", FlashcardId);
             BackText = newText;
         }
 
         internal void UpdateFrontText(string newText)
         {
-            SQLController.UpdateFlashcard($"FrontText = '{newText}'", FlashcardId);
+            SqlController.UpdateFlashcard($"FrontText = '{newText}'", FlashcardId);
             FrontText = newText;
         }
 
 
     }
 
-    internal class FlashcardDTO
+    internal class FlashcardDto
     {
         public int Row { get; set; }
 
