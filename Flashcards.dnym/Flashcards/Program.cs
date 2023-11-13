@@ -9,11 +9,24 @@ internal static class Program
 
     static void Main()
     {
+        PrepareDatabase();
         var connectionString = ReadConfiguration();
         IDataAccess _dataAccess = new SqlDataAccess(connectionString);
         var screen = UI.MainMenu.Get(_dataAccess);
         screen.Show();
         Console.Clear();
+    }
+
+    private static void PrepareDatabase()
+    {
+        // Ugly workaround to get past Codacy which seemingly can't handle SQL Server projects.
+        string? connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("PreparationConnectionString");
+        if (connectionString == null)
+        {
+            return;
+        }
+        _ = bool.TryParse(System.Configuration.ConfigurationManager.AppSettings.Get("AddSampleData"), out bool addSampleData);
+        SqlServerPreparation.Prepare(connectionString, addSampleData);
     }
 
     private static string ReadConfiguration()
