@@ -1,5 +1,4 @@
 ﻿using Flashcards.DataAccess;
-using System.Configuration;
 
 namespace Flashcards;
 
@@ -19,18 +18,18 @@ internal static class Program
 
     private static string ReadConfiguration()
     {
-        string? connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+        string? connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString");
         if (connectionString == null)
         {
             Console.Clear();
             Console.WriteLine("Please add a connection string to the App.config file.");
             Environment.Exit(1);
         }
-        if (ConfigurationManager.AppSettings.Get("DateTimeFormat") is string dateTimeFormat)
+        if (System.Configuration.ConfigurationManager.AppSettings.Get("DateTimeFormat") is string dateTimeFormat)
         {
             try
             {
-                var foo = DateTime.Now.ToString(dateTimeFormat);
+                DateTime.Now.ToString(dateTimeFormat);
                 DateTimeFormat = dateTimeFormat;
             }
             catch (FormatException ex)

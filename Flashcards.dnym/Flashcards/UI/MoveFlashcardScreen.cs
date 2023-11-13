@@ -8,7 +8,6 @@ internal static class MoveFlashcardScreen
 {
     public static Screen Get(IDataAccess dataAccess, int flashcardId)
     {
-        var card = dataAccess.GetFlashcardByIdAsync(flashcardId).Result;
         var stack = dataAccess.GetStackListItemByFlashcardIdAsync(flashcardId).Result;
         string error = string.Empty;
 

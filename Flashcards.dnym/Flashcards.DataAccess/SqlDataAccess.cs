@@ -424,8 +424,7 @@ public class SqlDataAccess : IDataAccess
                     cmd.Parameters.AddWithValue("@StackId", newStackId);
                     cmd.Parameters.AddWithValue("@StartedAt", historyRow.StartedAt);
                     cmd.Transaction = transaction;
-                    int scopeIdentity = (int)(await cmd.ExecuteScalarAsync() ?? throw new ApplicationException("no new history id returned"));
-                    newHistoryId = (int)scopeIdentity;
+                    newHistoryId = (int)(await cmd.ExecuteScalarAsync() ?? throw new ApplicationException("no new history id returned"));
                 }
 
                 using (SqlCommand cmd = connection.CreateCommand())

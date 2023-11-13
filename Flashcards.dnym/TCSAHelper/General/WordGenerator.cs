@@ -17,19 +17,19 @@ public static class WordGenerator
         return _consonants[random.Next(0, _consonants.Length)];
     }
 
-    private static string CV(Random random)
+    private static string Cv(Random random)
     {
         return C(random) + V(random);
     }
 
-    private static string CVC(Random random)
+    private static string Cvc(Random random)
     {
         return C(random) + V(random) + C(random);
     }
 
     private static string Syllable(Random random)
     {
-        string[] syllables = { V(random), CV(random), CVC(random) };
+        string[] syllables = { V(random), Cv(random), Cvc(random) };
         return syllables[random.Next(0, syllables.Length)];
     }
 
