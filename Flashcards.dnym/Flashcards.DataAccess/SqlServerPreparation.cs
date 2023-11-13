@@ -1,4 +1,485 @@
-﻿--Data from https://en.wiktionary.org/wiki/Appendix:Swadesh_lists
+﻿using Microsoft.Data.SqlClient;
+
+namespace Flashcards.DataAccess;
+
+public static class SqlServerPreparation
+{
+    public static void Prepare(string connectionString, bool withSampleData)
+    {
+		try
+        {
+            using var connection = new SqlConnection(connectionString);
+            connection.Open();
+
+			using (SqlCommand cmd = connection.CreateCommand())
+			{
+				cmd.CommandText = _createDatabase;
+				cmd.ExecuteNonQuery();
+			}
+
+			foreach (var createTable in _createTables)
+			{
+                using (SqlCommand cmd = connection.CreateCommand())
+                {
+                    cmd.CommandText = createTable;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            using (SqlCommand cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = _createTriggers;
+                cmd.ExecuteNonQuery();
+            }
+
+			foreach (var createProcedure in _createProcedures)
+			{
+                using (SqlCommand cmd = connection.CreateCommand())
+                {
+                    cmd.CommandText = createProcedure;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+			if (withSampleData)
+            {
+                using SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = _addSampleData;
+                cmd.ExecuteNonQuery();
+            }
+        }
+		catch (SqlException ex)
+		{
+			if (ex.Number == 1801)
+			{
+                //Database already exists
+                return;
+            }
+            Console.Clear();
+            Console.WriteLine($"Database error: {ex.Message}\n\nSuggestion: verify your connection string.\n\nAborting!");
+            Environment.Exit(1);
+        }
+    }
+
+    private const string _createDatabase = @"USE master;
+
+CREATE DATABASE FlashcardsSQL;";
+
+    private static readonly string[] _createTables = { "USE FlashcardsSQL;",
+		@"CREATE TABLE [dbo].[Stack]
+(
+	[StackId] INT NOT NULL PRIMARY KEY IDENTITY, 
+    [SortName] NVARCHAR(255) NOT NULL, 
+    [ViewName] NVARCHAR(255) NOT NULL
+);",
+		@"CREATE TABLE [dbo].[Flashcard]
+(
+	[FlashcardId] INT NOT NULL PRIMARY KEY IDENTITY, 
+    [StackId] INT NOT NULL, 
+    [Front] NVARCHAR(MAX) NOT NULL, 
+    [Back] NVARCHAR(MAX) NOT NULL, 
+    CONSTRAINT [Flashcard_BelongsTo_Stack_fk] FOREIGN KEY ([StackId]) REFERENCES [Stack]([StackId]) ON DELETE CASCADE
+);",
+		@"CREATE TABLE [dbo].[History]
+(
+	[HistoryId] INT NOT NULL PRIMARY KEY IDENTITY, 
+    [StackId] INT NOT NULL, 
+    [StartedAt] DATETIME2 NOT NULL, 
+    CONSTRAINT [History_PertainsTo_Stack_fk] FOREIGN KEY ([StackId]) REFERENCES [Stack]([StackId]) ON DELETE CASCADE
+);",
+		@"CREATE TABLE [dbo].[StudyResult]
+(
+	[StudyResultId] INT NOT NULL PRIMARY KEY IDENTITY, 
+    [HistoryId] INT NOT NULL, 
+    [FlashcardId] INT NOT NULL, 
+    [WasCorrect] BIT NOT NULL, 
+    [AnsweredAt] DATETIME2 NOT NULL, 
+    --Constraint changed to trigger in History.sql
+    --CONSTRAINT [StudyResult_BelongsTo_History_fk] FOREIGN KEY ([HistoryId]) REFERENCES [History]([HistoryId]) ON DELETE CASCADE, 
+    CONSTRAINT [StudyResult_PertainsTo_Flashcard_fk] FOREIGN KEY ([FlashcardId]) REFERENCES [Flashcard]([FlashcardId]) ON DELETE CASCADE
+);" };
+
+	private const string _createTriggers = @"CREATE TRIGGER [dbo].[Delete_StudyResults_trg]
+    ON [dbo].[History]
+    FOR DELETE
+    AS
+    BEGIN
+        SET NOCOUNT ON;
+        DELETE FROM [dbo].[StudyResult]
+		WHERE [HistoryId] IN (SELECT [HistoryId] FROM DELETED);
+    END;";
+
+    private static readonly string[] _createProcedures = {
+		@"CREATE PROCEDURE [dbo].[Flashcard_Count_tr]
+    @StackId INT = NULL
+AS
+	BEGIN
+		SET NOCOUNT ON;
+
+		SELECT
+			COUNT(F.FlashcardId) as Flashcards
+		FROM Flashcard AS F
+		WHERE F.StackId = @StackId;
+	END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[Flashcard_Create_tr]
+	@StackId int,
+	@Front nvarchar(MAX),
+	@Back nvarchar(MAX)
+AS
+	BEGIN
+		SET NOCOUNT ON;
+		INSERT INTO [dbo].[Flashcard] ([StackId], [Front], [Back])
+		VALUES (@StackId, @Front, @Back);
+	END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[Flashcard_Delete_tr]
+	@FlashcardId int
+AS
+	BEGIN
+		SET NOCOUNT ON;
+
+		DELETE FROM Flashcard WHERE FlashcardId = @FlashcardId;
+	END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[Flashcard_GetById_tr]
+	@FlashcardId int
+AS
+	BEGIN
+		SET NOCOUNT ON;
+
+		SELECT TOP 1
+			F.FlashcardId, F.Front, F.Back
+		FROM Flashcard AS F
+		WHERE F.FlashcardId = @FlashcardId;
+	END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[Flashcard_GetMultiple_tr]
+    @StackId INT,
+    @Skip INT = NULL,
+    @Take INT = NULL
+AS
+    BEGIN
+        SET NOCOUNT ON;
+
+        DECLARE @SKIP_FALLBACK INT;
+        SET @SKIP_FALLBACK = 0;
+        DECLARE @TAKE_FALLBACK INT;
+        SET @TAKE_FALLBACK = 2147483647;
+
+        SELECT F.FlashcardId, F.Front, F.Back
+        FROM Flashcard AS F
+        WHERE F.StackId = @StackId
+        ORDER BY F.FlashcardId
+        OFFSET ISNULL(@Skip, @SKIP_FALLBACK) ROWS
+        FETCH NEXT ISNULL(@Take, @TAKE_FALLBACK) ROWS ONLY;
+    END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[Flashcard_IsInStack_tr]
+	@StackId int,
+	@FlashcardId int
+AS
+	BEGIN
+		SET NOCOUNT ON;
+
+		IF EXISTS (SELECT * FROM Flashcard WHERE StackId = @StackId AND FlashcardId = @FlashcardId)
+			SELECT 1 AS Result;
+		ELSE
+			SELECT 0 AS Result;
+	END
+RETURN;",
+		@"CREATE PROCEDURE [dbo].[Flashcard_MoveStack_tr]
+	@FlashcardId int,
+	@StackId int
+AS
+	BEGIN
+		SET NOCOUNT ON;
+
+		UPDATE Flashcard SET StackId = @StackId WHERE FlashcardId = @FlashcardId;
+	END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[Flashcard_Update_tr]
+	@FlashcardId int,
+	@Front nvarchar(255),
+	@Back nvarchar(255)
+AS
+	BEGIN
+		SET NOCOUNT ON;
+
+		UPDATE Flashcard SET Front = @Front, Back = @Back WHERE FlashcardId = @FlashcardId;
+	END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[History_Count_tr]
+AS
+	BEGIN
+		SET NOCOUNT ON;
+
+		SELECT
+			COUNT(H.HistoryId) as HistorySessions
+		FROM History AS H;
+	END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[History_Create_tr]
+	@StartedAt datetime2(7),
+	@StackId int
+AS
+	BEGIN
+		SET NOCOUNT ON;
+		INSERT INTO [dbo].[History] ([StartedAt], [StackId])
+		VALUES (@StartedAt, @StackId);
+
+		SELECT SCOPE_IDENTITY();
+	END
+RETURN SCOPE_IDENTITY();",
+		@"CREATE PROCEDURE [dbo].[History_DeleteUnused_tr]
+	@HistoryId int
+AS
+	BEGIN
+		SET NOCOUNT ON;
+
+		DELETE FROM History
+		WHERE HistoryId = @HistoryId
+			AND NOT EXISTS (SELECT 1 FROM StudyResult WHERE HistoryId = @HistoryId);
+	END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[History_GetByStackAndDateOrCreate_tr]
+	@StackId int,
+	@StartedAt datetime2(7)
+AS
+	BEGIN
+		SET NOCOUNT ON;
+
+		DECLARE @HistoryId int;
+		DECLARE @HistoryCount int;
+
+		SELECT @HistoryCount = COUNT(1) FROM History WHERE StackId = @StackId AND StartedAt = @StartedAt;
+
+		IF @HistoryCount = 0
+			BEGIN
+				INSERT INTO History (StackId, StartedAt) VALUES (@StackId, @StartedAt);
+				SELECT @HistoryId = SCOPE_IDENTITY();
+			END
+		ELSE
+			BEGIN
+				SELECT @HistoryId = HistoryId FROM History WHERE StackId = @StackId AND StartedAt = @StartedAt;
+			END
+
+		SELECT @HistoryId AS HistoryId;
+	END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[History_GetMultiple_tr]
+    @Skip INT = NULL,
+    @Take INT = NULL
+AS
+    BEGIN
+        SET NOCOUNT ON;
+
+        DECLARE @SKIP_FALLBACK INT;
+        SET @SKIP_FALLBACK = 0;
+        DECLARE @TAKE_FALLBACK INT;
+        SET @TAKE_FALLBACK = 2147483647;
+
+        SELECT
+            H.HistoryId, H.StartedAt,
+            S.ViewName,
+            COUNT(R.FlashcardId) as CardsStudied,
+            SUM(CASE WHEN R.WasCorrect = 1 THEN 1 ELSE 0 END) AS CorrectAnswers
+        FROM History AS H
+        INNER JOIN Stack AS S ON H.StackId = S.StackId
+        LEFT JOIN StudyResult AS R ON H.HistoryId = R.HistoryId
+        GROUP BY H.HistoryId, H.StartedAt, S.ViewName
+        ORDER BY H.HistoryId
+        OFFSET ISNULL(@Skip, @SKIP_FALLBACK) ROWS
+        FETCH NEXT ISNULL(@Take, @TAKE_FALLBACK) ROWS ONLY;
+    END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[History_GetMultipleByFlashcard_tr]
+	@FlashcardId int
+AS
+	BEGIN
+		SET NOCOUNT ON;
+
+		SELECT H.HistoryId, H.StackId, H.StartedAt FROM History H
+		INNER JOIN StudyResult SR ON H.HistoryId = SR.HistoryId
+		WHERE SR.FlashcardId = @FlashcardId;
+	END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[Stack_Count_tr]
+    @Skip INT = NULL,
+    @Take INT = NULL
+AS
+	BEGIN
+		SET NOCOUNT ON;
+
+        DECLARE @SKIP_FALLBACK INT;
+        SET @SKIP_FALLBACK = 0;
+        DECLARE @TAKE_FALLBACK INT;
+        SET @TAKE_FALLBACK = 2147483647;
+
+		SELECT
+			COUNT(S.StackId) as Stacks
+		FROM Stack AS S;
+	END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[Stack_Create_tr]
+	@ViewName nvarchar(255),
+	@SortName nvarchar(255)
+AS
+	BEGIN
+		SET NOCOUNT ON;
+		INSERT INTO [dbo].[Stack] ([ViewName], [SortName])
+		VALUES (@ViewName, @SortName);
+	END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[Stack_Delete_tr]
+	@StackId int
+AS
+	BEGIN
+		SET NOCOUNT ON;
+
+		DELETE FROM [dbo].[Stack]
+		WHERE [StackId] = @StackId;
+	END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[Stack_GetByFlashcardId_tr]
+	@FlashcardId int
+AS
+	BEGIN
+		SET NOCOUNT ON;
+
+		SELECT TOP 1
+			S.StackId, S.ViewName,
+			(SELECT COUNT(1) FROM Flashcard AS FC WHERE FC.StackId = S.StackId) as Cards,
+			MAX(H.StartedAt) as LastStudied
+		FROM Stack AS S
+		LEFT JOIN Flashcard AS F ON S.StackId = F.StackId
+		LEFT JOIN History AS H ON S.StackId = H.StackId
+		WHERE F.FlashcardId = @FlashcardId
+		GROUP BY S.StackId, S.ViewName;
+	END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[Stack_GetById_tr]
+	@StackId int
+AS
+	BEGIN
+		SET NOCOUNT ON;
+
+		SELECT TOP 1
+			S.StackId, S.ViewName,
+			COUNT(DISTINCT F.FlashcardId) as Cards,
+			MAX(H.StartedAt) as LastStudied
+		FROM Stack AS S
+		LEFT JOIN Flashcard AS F ON S.StackId = F.StackId
+		LEFT JOIN History AS H ON S.StackId = H.StackId
+		WHERE S.StackId = @StackId
+		GROUP BY S.StackId, S.ViewName;
+	END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[Stack_GetBySortName_tr]
+	@SortName nvarchar(255)
+AS
+	BEGIN
+		SET NOCOUNT ON;
+
+		SELECT TOP 1
+			S.StackId, S.ViewName,
+			COUNT(DISTINCT F.FlashcardId) as Cards,
+			MAX(H.StartedAt) as LastStudied
+		FROM Stack AS S
+		LEFT JOIN Flashcard AS F ON S.StackId = F.StackId
+		LEFT JOIN History AS H ON S.StackId = H.StackId
+		WHERE S.SortName = @SortName
+		GROUP BY S.StackId, S.ViewName;
+	END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[Stack_GetMultiple_tr]
+    @Skip INT = NULL,
+    @Take INT = NULL
+AS
+    BEGIN
+        SET NOCOUNT ON;
+
+        DECLARE @SKIP_FALLBACK INT;
+        SET @SKIP_FALLBACK = 0;
+        DECLARE @TAKE_FALLBACK INT;
+        SET @TAKE_FALLBACK = 2147483647;
+
+        SELECT
+            S.StackId, S.ViewName,
+            COUNT(DISTINCT F.FlashcardId) as Cards,
+            MAX(H.StartedAt) as LastStudied
+        FROM Stack AS S
+        LEFT JOIN Flashcard AS F ON S.StackId = F.StackId
+        LEFT JOIN History AS H ON S.StackId = H.StackId
+        GROUP BY S.StackId, S.ViewName
+        ORDER BY S.StackId
+        OFFSET ISNULL(@Skip, @SKIP_FALLBACK) ROWS
+        FETCH NEXT ISNULL(@Take, @TAKE_FALLBACK) ROWS ONLY;
+    END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[Stack_Rename_tr]
+	@StackId int,
+	@ViewName nvarchar(255),
+	@SortName nvarchar(255)
+AS
+	BEGIN
+		SET NOCOUNT ON;
+
+		UPDATE [dbo].[Stack]
+		SET [ViewName] = @ViewName, [SortName] = @SortName
+		WHERE [StackId] = @StackId;
+	END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[StudyResult_Create_tr]
+	@HistoryId int,
+	@FlashcardId int,
+	@WasCorrect bit,
+	@AnsweredAt datetime2(7)
+AS
+	BEGIN
+		SET NOCOUNT ON;
+		INSERT INTO [dbo].[StudyResult] ([HistoryId], [FlashcardId], [WasCorrect], [AnsweredAt])
+		VALUES (@HistoryId, @FlashcardId, @WasCorrect, @AnsweredAt);
+	END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[StudyResult_GetMultiple_tr]
+    @HistoryId INT,
+    @Skip INT = NULL,
+    @Take INT = NULL
+AS
+    BEGIN
+        SET NOCOUNT ON;
+
+        DECLARE @SKIP_FALLBACK INT;
+        SET @SKIP_FALLBACK = 0;
+        DECLARE @TAKE_FALLBACK INT;
+        SET @TAKE_FALLBACK = 2147483647;
+
+        SELECT
+            ROW_NUMBER() OVER (ORDER BY StudyResultId) AS Ordinal,
+            F.Front,
+            R.AnsweredAt, R.WasCorrect
+        FROM StudyResult AS R
+        INNER JOIN Flashcard AS F ON R.FlashcardId = F.FlashcardId
+        WHERE R.HistoryId = @HistoryId
+        ORDER BY R.StudyResultId
+        OFFSET ISNULL(@Skip, @SKIP_FALLBACK) ROWS
+        FETCH NEXT ISNULL(@Take, @TAKE_FALLBACK) ROWS ONLY;
+    END
+RETURN 0;",
+		@"CREATE PROCEDURE [dbo].[StudyResult_MoveMultiple_tr]
+	@FlashcardId int,
+	@OldHistoryId int,
+	@NewHistoryId int
+AS
+	BEGIN
+		SET NOCOUNT ON;
+
+		UPDATE StudyResult SET HistoryId = @NewHistoryId WHERE FlashcardId = @FlashcardId AND HistoryId = @OldHistoryId;
+	END
+RETURN 0;" };
+
+	private const string _addSampleData = @"--Data from https://en.wiktionary.org/wiki/Appendix:Swadesh_lists
 
 SET IDENTITY_INSERT [dbo].[Stack] ON
 INSERT INTO [dbo].[Stack] ([StackId], [SortName], [ViewName]) VALUES (1, N'bulgarian', N'Bulgarian')
@@ -154,4 +635,5 @@ INSERT INTO [dbo].[Flashcard] ([FlashcardId], [StackId], [Front], [Back]) VALUES
 INSERT INTO [dbo].[Flashcard] ([FlashcardId], [StackId], [Front], [Back]) VALUES (140, 8, N'What''s the Swedish word for: breast?', N'bröst')
 INSERT INTO [dbo].[Flashcard] ([FlashcardId], [StackId], [Front], [Back]) VALUES (141, 8, N'What''s the Swedish word for: heart?', N'hjärta')
 INSERT INTO [dbo].[Flashcard] ([FlashcardId], [StackId], [Front], [Back]) VALUES (142, 8, N'What''s the Swedish word for: liver?', N'lever ')
-SET IDENTITY_INSERT [dbo].[Flashcard] OFF
+SET IDENTITY_INSERT [dbo].[Flashcard] OFF";
+}
