@@ -10,13 +10,13 @@ namespace Flashcards
     internal static class Helpers
     {
 
-        internal static void setEnvironmentVariables()
+        internal static void SetEnvironmentVariables()
         {
             [DllImport("kernel32.dll", SetLastError = true)]
             static extern IntPtr GetStdHandle(int nStdHandle);
 
             [DllImport("kernel32.dll", SetLastError = true)]
-            static extern int SetConsoleOutputCP(uint wCodePageID);
+            static extern void SetConsoleOutputCP(uint wCodePageID);
 
             // Set the console font to Lucida Console (or any font that supports Unicode)
             Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -38,7 +38,7 @@ namespace Flashcards
             int finalLength = sanitized.Length;
             if (originalLength != finalLength)
             { Console.WriteLine("Your input has been sanitized."); }
-            else { }
+   
             return sanitized;
         }
 
@@ -77,13 +77,16 @@ namespace Flashcards
                 .ExportAndWriteLine(TableAligntment.Center);
         }
 
-        internal static void ViewCard(DTO_StackAndCard card, bool front)
+        internal static void ViewCard(DtoStackAndCard card, bool front)
         {
             string cardText = "";
             string cardSide = "";
             if (front)
             {
-                if (card.CardFront.IsNullOrEmpty()) { }
+                if (card.CardFront.IsNullOrEmpty()) 
+                {
+                   //empty on purpose
+                }
                 else
                 {
                     cardText = card.CardFront;
@@ -92,7 +95,10 @@ namespace Flashcards
             }
             else if (!front)
             {
-                if (card.CardBack.IsNullOrEmpty()) { }
+                if (card.CardBack.IsNullOrEmpty()) 
+                {
+                    //empty on purpose
+                }
                 else
                 {
                     cardText = card.CardBack;
@@ -138,7 +144,10 @@ namespace Flashcards
             string cardSide = "";
             if (front)
             {
-                if (card.Front.IsNullOrEmpty()) { }
+                if (card.Front.IsNullOrEmpty()) 
+                {
+                    //empty on purpose
+                }
                 else
                 {
                     cardText = card.Front;
@@ -147,7 +156,10 @@ namespace Flashcards
             }
             else if (!front)
             {
-                if (card.Back.IsNullOrEmpty()) { }
+                if (card.Back.IsNullOrEmpty()) 
+                {
+                    //empty on purpose
+                }
                 else
                 {
                     cardText = card.Back;

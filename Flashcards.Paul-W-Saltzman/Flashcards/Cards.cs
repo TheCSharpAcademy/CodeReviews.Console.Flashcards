@@ -36,7 +36,7 @@ namespace Flashcards
             return noInStack;
         }
 
-        internal static void reNumberCardsInStack(int stackId)
+        internal static void ReNumberCardsInStack(int stackId)
         {
             List<Card> cards = Data.LoadCards(stackId);
             List<Card> sortedCards = cards.OrderBy(o => o.CardID).ToList();

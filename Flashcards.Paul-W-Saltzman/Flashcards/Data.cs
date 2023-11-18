@@ -114,7 +114,7 @@ namespace Flashcards
                     END";
                 try
                 {
-                    int rowsAffected = tableCmd.ExecuteNonQuery();
+                    tableCmd.ExecuteNonQuery();
                 }
                 catch (Exception exception)
                 {
@@ -243,10 +243,8 @@ namespace Flashcards
                         {
                             while (reader.Read())
                             {
-                                {
-                                    settings.VersionID = reader.GetInt32(0);
-                                    settings.Version = reader.GetInt32(1);
-                                };
+                                settings.VersionID = reader.GetInt32(0);
+                                settings.Version = reader.GetInt32(1);  
                             }
                         }
                         else
@@ -622,7 +620,6 @@ namespace Flashcards
                     }
                     else
                     {
-                        //Console.WriteLine("No rows found");
                     }
                 }
                 catch (Exception exception)
@@ -726,7 +723,6 @@ namespace Flashcards
         internal static List<StudySessionReport> GetReports()
         {
             List<StudySessionReport> reports = new List<StudySessionReport>();
-            StudySessionReport report = new StudySessionReport();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
