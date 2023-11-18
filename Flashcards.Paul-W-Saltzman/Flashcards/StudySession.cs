@@ -29,26 +29,26 @@ namespace Flashcards
 
         internal static void LoadSeedDataStudySessions()
         {
-            StudySession studysession = new StudySession(1, new DateOnly(2021, 11, 1), "Variable Types", 4, 2);
-            StudySession studysession1 = new StudySession(1, new DateOnly(2022, 10, 20), "Variable Types", 4, 2); 
-            StudySession studysession3 = new StudySession(1, new DateOnly(2023, 9, 21), "Variable Types", 4, 2); 
-            StudySession studysession4 = new StudySession(2, new DateOnly(2021, 8, 2), "Selector Codes", 4, 2); 
-            StudySession studysession5 = new StudySession(2, new DateOnly(2022, 7, 3), "Selector Codes", 4, 2); 
-            StudySession studysession6 = new StudySession(2, new DateOnly(2023, 6, 4), "Selector Codes", 4, 2); 
-            StudySession studysession7 = new StudySession(3, new DateOnly(2020, 5, 10), "French", 4, 2); 
-            StudySession studysession8 = new StudySession(3, new DateOnly(2022, 4, 12), "French", 4, 2); 
-            StudySession studysession9 = new StudySession(3, new DateOnly(2023, 3, 13), "French", 4, 2); 
-            StudySession studysession10 = new StudySession(4, new DateOnly(2020, 2, 15), "Vietnamese", 4, 2); 
-            StudySession studysession11 = new StudySession(4, new DateOnly(2021, 1, 20), "Vietnamese", 4, 2); 
-            StudySession studysession12 = new StudySession(4, new DateOnly(2022, 12, 21), "Vietnamese", 4, 2); 
-            StudySession studysession13 = new StudySession(5, new DateOnly(2020, 11, 22), "Spanish", 4, 2); 
-            StudySession studysession14 = new StudySession(5, new DateOnly(2021, 10, 25), "Spanish", 4, 2);
-            StudySession studysession15 = new StudySession(5, new DateOnly(2023, 9, 30), "Spanish", 4, 2);
+            new StudySession(1, new DateOnly(2021, 11, 1), "Variable Types", 4, 2);
+            new StudySession(1, new DateOnly(2022, 10, 20), "Variable Types", 4, 2); 
+            new StudySession(1, new DateOnly(2023, 9, 21), "Variable Types", 4, 2); 
+            new StudySession(2, new DateOnly(2021, 8, 2), "Selector Codes", 4, 2); 
+            new StudySession(2, new DateOnly(2022, 7, 3), "Selector Codes", 4, 2); 
+            new StudySession(2, new DateOnly(2023, 6, 4), "Selector Codes", 4, 2); 
+            new StudySession(3, new DateOnly(2020, 5, 10), "French", 4, 2); 
+            new StudySession(3, new DateOnly(2022, 4, 12), "French", 4, 2); 
+            new StudySession(3, new DateOnly(2023, 3, 13), "French", 4, 2); 
+            new StudySession(4, new DateOnly(2020, 2, 15), "Vietnamese", 4, 2); 
+            new StudySession(4, new DateOnly(2021, 1, 20), "Vietnamese", 4, 2); 
+            new StudySession(4, new DateOnly(2022, 12, 21), "Vietnamese", 4, 2); 
+            new StudySession(5, new DateOnly(2020, 11, 22), "Spanish", 4, 2); 
+            new StudySession(5, new DateOnly(2021, 10, 25), "Spanish", 4, 2);
+            new StudySession(5, new DateOnly(2023, 9, 30), "Spanish", 4, 2);
         }
 
-        public static void Study(List<DTO_StackAndCard> study)
+        public static void StudyStack(List<DtoStackAndCard> study)
         {
-            DTO_StackAndCard stack = study[0];
+            DtoStackAndCard stack = study[0];
             int stackID = stack.StackID;
             DateOnly date = DateOnly.FromDateTime(DateTime.Now);
             string stackName = stack.StackName;
@@ -56,7 +56,7 @@ namespace Flashcards
             int total = study.Count;
 
             
-            foreach (DTO_StackAndCard card in study)
+            foreach (DtoStackAndCard card in study)
             {
                 Console.Clear();
                 Helpers.ViewCard(card, true);
@@ -80,10 +80,8 @@ namespace Flashcards
                     Helpers.ViewCard(card,false);
                     Console.ReadKey();
                 }
-
-
             }
-            StudySession thisStudySession = new StudySession(stackID,date,stackName,correct,total);
+            new StudySession(stackID,date,stackName,correct,total);
             Console.WriteLine($@"You got {correct} out of {total} correct.");
             Console.ReadLine(); 
         }

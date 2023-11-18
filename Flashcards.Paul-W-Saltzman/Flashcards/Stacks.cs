@@ -16,11 +16,11 @@ namespace Flashcards
 
         internal static void LoadSeedDataStacks()
         {
-            Stack variableTypes = new Stack("Variable Types");
-            Stack selectorCodes = new Stack("Selector Codes");
-            Stack french = new Stack("French");
-            Stack vietnamese = new Stack("Vietnamese");
-            Stack Spanish = new Stack("Spanish");
+            Data.EnterStack("Variable Types");
+            Data.EnterStack("Selector Codes");
+            Data.EnterStack("French");
+            Data.EnterStack("Vietnamese");
+            Data.EnterStack("Spanish");
 
         }
     }

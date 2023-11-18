@@ -145,7 +145,7 @@ namespace Flashcards
                 else
                 {
                     DeleteCardConfirm(selectedCard);
-                    Card.reNumberCardsInStack(selectedCard.StackID);
+                    Card.ReNumberCardsInStack(selectedCard.StackID);
                 }
             }
         }
@@ -159,9 +159,6 @@ namespace Flashcards
             bool isSelected = false;
             string color = $"{checkMark}{green}   ";
             string color2 = $"{checkMark}{red}   ";
-
-            int index = 1;
-
 
             while (!exitMenu)
             {
@@ -314,10 +311,6 @@ namespace Flashcards
                                     }
 
                                 }
-
-                            }
-                            else
-                            {
 
                             }
                         }

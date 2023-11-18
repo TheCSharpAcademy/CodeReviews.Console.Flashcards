@@ -1,7 +1,7 @@
 ﻿
 namespace Flashcards
 {
-    internal class DTO_StackAndCard
+    internal class DtoStackAndCard
     {
 
         internal int StackID;
@@ -10,13 +10,13 @@ namespace Flashcards
         internal String CardFront;
         internal String CardBack;
 
-        public DTO_StackAndCard()
+        public DtoStackAndCard()
         {
 
         }
 
 
-        public DTO_StackAndCard(Card card, Stack stack)
+        public DtoStackAndCard(Card card, Stack stack)
         {
             StackID = stack.StackID;
             StackName = stack.StackName;
@@ -25,13 +25,13 @@ namespace Flashcards
             CardBack = card.Back;
         }
 
-        public static List<DTO_StackAndCard> LoadStackAndCardList(Stack selectedStack)
+        public static List<DtoStackAndCard> LoadStackAndCardList(Stack selectedStack)
         {
-            List <DTO_StackAndCard> studySession = new List<DTO_StackAndCard>();
+            List <DtoStackAndCard> studySession = new List<DtoStackAndCard>();
             List<Card> cards = Data.LoadCards(selectedStack.StackID);
             foreach (Card card in cards) 
             {
-                DTO_StackAndCard stackAndCard = new DTO_StackAndCard(card, selectedStack);
+                DtoStackAndCard stackAndCard = new DtoStackAndCard(card, selectedStack);
                 studySession.Add(stackAndCard);
             }
 
