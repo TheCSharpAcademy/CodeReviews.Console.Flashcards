@@ -10,13 +10,20 @@ namespace Flashcards.SamGannon.UI
     {
         public static void ShowFlashcardMenu()
         {
+            Console.Clear();
             Console.WriteLine("=== Flashcard Menu ===");
             Console.WriteLine("1. Create Flashcards");
             Console.WriteLine("2. Manage Flashcards");
             Console.WriteLine("3. Back to Main Menu");
+            Console.WriteLine("Enter your choice (1, 2, or 3): ");
 
-            Console.Write("Enter your choice (1, 2, or 3): ");
             string choice = Console.ReadLine();
+
+            while (choice != "1" && choice != "2" && choice != "3" && choice != "4")
+            {
+                Console.WriteLine("Invalid choice. Please enter 1, 2, 3, or 4.");
+                choice = Console.ReadLine();
+            }
 
             switch (choice)
             {

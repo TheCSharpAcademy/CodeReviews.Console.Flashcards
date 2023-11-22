@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using Flashcards.SamGannon.UI;
+using System.Configuration;
 
 string? connectionString = ConfigurationManager.ConnectionStrings["DataConnection"].ConnectionString;
 
@@ -8,4 +9,4 @@ if (connectionString == null )
 
 }
 
-Console.WriteLine("Intializing connection...");
+MainMenu.ShowMenu();
