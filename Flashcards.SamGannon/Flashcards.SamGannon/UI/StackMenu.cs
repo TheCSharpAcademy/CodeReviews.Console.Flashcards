@@ -21,7 +21,7 @@ namespace Flashcards.SamGannon.UI
 
             while (choice != "1" && choice != "2" && choice != "3")
             {
-                Console.WriteLine("Invalid choice. Please enter 1, 2, 3, or 4.");
+                Console.WriteLine("Invalid choice. Please enter 1, 2, or 3.");
                 choice = Console.ReadLine();
             };
 
