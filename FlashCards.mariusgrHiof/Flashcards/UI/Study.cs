@@ -24,7 +24,6 @@ public class Study
         Console.WriteLine("Study session");
 
         Stack stack = null;
-        List<Flashcard> flashcards = null;
         StudySession studySessionResult = null;
 
         int QuestionsAnswered = 0;
