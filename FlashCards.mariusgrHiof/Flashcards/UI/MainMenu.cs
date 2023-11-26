@@ -12,13 +12,14 @@ public class MainMenu
         _studySessionsController = studySessionsController;
     }
 
-    bool exitApp = false;
     private readonly StacksController _stacksController;
     private readonly FlashcardsController _flashcardsController;
     private readonly StudySessionsController _studySessionsController;
 
     public async Task ShowMenu()
     {
+        bool exitApp = false;
+
         while (!exitApp)
         {
             AnsiConsole.Clear();
