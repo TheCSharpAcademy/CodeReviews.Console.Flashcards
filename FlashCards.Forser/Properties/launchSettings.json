@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FlashCards.Forser": {
+      "commandName": "Project",
+      "workingDirectory": "D:\\Projects\\CSharpAcademy\\CodeReviews.Console.Flashcards\\FlashCards.Forser"
+    }
+  }
+}
