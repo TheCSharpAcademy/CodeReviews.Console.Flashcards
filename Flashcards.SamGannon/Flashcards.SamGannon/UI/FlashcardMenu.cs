@@ -45,6 +45,7 @@ namespace Flashcards.SamGannon.UI
 
         private static void CreateFlashcardsMenu()
         {
+            Console.Clear();
             Console.WriteLine("=== Create Flashcards ===");
             Console.WriteLine("Enter the question for the new flashcard:");
             string question = Console.ReadLine();
@@ -61,6 +62,7 @@ namespace Flashcards.SamGannon.UI
 
         private static void ManageFlashcards()
         {
+            Console.Clear();
             Console.WriteLine("=== Manage Flashcards ===");
             // List flashcards, allow user to edit or delete flashcards, etc.
 

@@ -14,6 +14,7 @@ namespace Flashcards.SamGannon.UI
 
         public static void StartStudySession()
         {
+            Console.Clear();
             Console.WriteLine("=== Start Study Session ===");
             // Add logic for starting a study session
             // Show list of stacks

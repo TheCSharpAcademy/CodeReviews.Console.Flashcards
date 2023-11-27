@@ -45,6 +45,7 @@ namespace Flashcards.SamGannon.UI
 
         private static void CreateStack()
         {
+            Console.Clear ();
             Console.WriteLine("Enter the name for your new stack:");
             string stackName = Console.ReadLine();
 
@@ -57,6 +58,7 @@ namespace Flashcards.SamGannon.UI
 
         private static void ManageStacks()
         {
+            Console.Clear();
             Console.WriteLine("=== Manage Stacks ===");
             // List existing stacks, allow user to edit or delete stacks, etc.
 
