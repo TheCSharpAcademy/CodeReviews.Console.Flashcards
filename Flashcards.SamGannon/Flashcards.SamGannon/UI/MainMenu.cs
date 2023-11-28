@@ -56,7 +56,23 @@ namespace Flashcards.SamGannon.UI
             Console.Clear();
             Console.WriteLine("=== Instructions ===");
             Console.WriteLine("");
-            Console.WriteLine("Press E to exit this screen.");
+            Console.WriteLine("Welcome to the Custom Flashcard Console App!");
+            Console.WriteLine("Navigate through the app using the following instructions:");
+            Console.WriteLine("");
+            Console.WriteLine("1. To access different menus, enter the corresponding number:");
+            Console.WriteLine("   - Enter '1' for Flashcard Menu");
+            Console.WriteLine("   - Enter '2' for Stack Menu");
+            Console.WriteLine("   - Enter '3' to start a Study Session");
+            Console.WriteLine("   - Enter '4' to exit the application");
+            Console.WriteLine("   - Enter 'I' to view instructions (you're here now)");
+            Console.WriteLine("");
+            Console.WriteLine("2. In each menu, follow the on-screen prompts to perform actions:");
+            Console.WriteLine("   - Create and manage flashcards in the Flashcard Menu");
+            Console.WriteLine("   - Create and manage stacks in the Stack Menu");
+            Console.WriteLine("   - Start a study session to review flashcards");
+            Console.WriteLine("");
+            // add more instructions as they become neccessary
+            Console.WriteLine("3. Press 'E' to exit the instructions screen and return to the main menu.");
 
             string choice = Console.ReadLine()?.Trim().ToUpper();
             int exitAttempts = 0;
@@ -64,7 +80,7 @@ namespace Flashcards.SamGannon.UI
             while (choice != "E" && exitAttempts < 3)
             {
                 Console.Clear();
-                Console.WriteLine("Invalid comand. Press E to Exit");
+                Console.WriteLine("Invalid command. Press 'E' to exit.");
                 choice = Console.ReadLine()?.Trim().ToUpper();
                 exitAttempts++;
             }
@@ -75,10 +91,11 @@ namespace Flashcards.SamGannon.UI
             }
             else
             {
+                // i may log that the user failed to exit the instructions menu successfully.
                 Environment.Exit(1);
             }
-
         }
+
     }
 }
  
