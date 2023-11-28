@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flashcards.SamGannon", "Flashcards.SamGannon\Flashcards.SamGannon.csproj", "{E4C49B06-7ACF-4283-A4CB-96AD8B4916FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flashcards.SamGannon", "Flashcards.SamGannon\Flashcards.SamGannon.csproj", "{E4C49B06-7ACF-4283-A4CB-96AD8B4916FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{1CD50121-83CC-4006-B152-640604811585}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{E4C49B06-7ACF-4283-A4CB-96AD8B4916FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4C49B06-7ACF-4283-A4CB-96AD8B4916FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4C49B06-7ACF-4283-A4CB-96AD8B4916FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CD50121-83CC-4006-B152-640604811585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CD50121-83CC-4006-B152-640604811585}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CD50121-83CC-4006-B152-640604811585}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CD50121-83CC-4006-B152-640604811585}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
