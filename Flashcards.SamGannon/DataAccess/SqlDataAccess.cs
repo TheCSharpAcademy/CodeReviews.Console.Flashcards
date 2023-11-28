@@ -84,5 +84,10 @@ namespace DataAccess
             }
         }
 
+        public void AddFlashcard(string? question, string? answer)
+        {
+            // i probably need to pass an object here.
+        }
+
     }
 }

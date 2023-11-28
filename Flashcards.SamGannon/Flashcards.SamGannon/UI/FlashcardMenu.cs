@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAccess;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Flashcards.SamGannon.UI
 {
     internal class FlashcardMenu
     {
-        public static void ShowFlashcardMenu()
+        public static void ShowFlashcardMenu(IDataAccess _dataAccess)
         {
             Console.Clear();
             Console.WriteLine("=== Flashcard Menu ===");
@@ -21,7 +22,7 @@ namespace Flashcards.SamGannon.UI
 
             while (choice != "1" && choice != "2" && choice != "3")
             {
-                Console.WriteLine("Invalid choice. Please enter 1, 2, 3, or 4.");
+                Console.WriteLine("Invalid choice. Please enter 1, 2, or 3.");
                 choice = Console.ReadLine();
             }
 
@@ -38,36 +39,37 @@ namespace Flashcards.SamGannon.UI
                     break;
                 default:
                     Console.WriteLine("Invalid choice. Please enter 1, 2, or 3.");
-                    ShowFlashcardMenu();
+                    //ShowFlashcardMenu();
                     break;
             }
-        }
 
-        private static void CreateFlashcardsMenu()
-        {
-            Console.Clear();
-            Console.WriteLine("=== Create Flashcards ===");
-            Console.WriteLine("Enter the question for the new flashcard:");
-            string question = Console.ReadLine();
+            void CreateFlashcardsMenu()
+            {
+                Console.Clear();
+                Console.WriteLine("=== Create Flashcards ===");
+                Console.WriteLine("Enter the question for the new flashcard:");
+                string question = Console.ReadLine();
 
-            Console.WriteLine("Enter the answer for the new flashcard:");
-            string answer = Console.ReadLine();
+                Console.WriteLine("Enter the answer for the new flashcard:");
+                string answer = Console.ReadLine();
 
-            // Call DatabaseService method to add the new flashcard to the database
-            // DatabaseService.AddFlashcard(question, answer);
+                // Call DatabaseService method to add the new flashcard to the database
+                 _dataAccess.AddFlashcard(question, answer);
 
-            Console.WriteLine("Flashcard created successfully!");
-            ShowFlashcardMenu();
-        }
+                Console.WriteLine("Flashcard created successfully!");
+                // ShowFlashcardMenu();
+            }
 
-        private static void ManageFlashcards()
-        {
-            Console.Clear();
-            Console.WriteLine("=== Manage Flashcards ===");
-            // List flashcards, allow user to edit or delete flashcards, etc.
+            void ManageFlashcards()
+            {
+                Console.Clear();
+                Console.WriteLine("=== Manage Flashcards ===");
+                // List flashcards, allow user to edit or delete flashcards, etc.
 
-            // After managing flashcards, return to the flashcard menu
-            ShowFlashcardMenu();
+                // After managing flashcards, return to the flashcard menu
+                // ShowFlashcardMenu();
+            }
+
         }
     }
 }

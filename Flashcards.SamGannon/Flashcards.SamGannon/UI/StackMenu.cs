@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAccess;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Flashcards.SamGannon.UI
 {
     internal class StackMenu
     {
-        public static void ShowStackMenu()
+        public static void ShowStackMenu(IDataAccess _dataAccess)
         {
             Console.Clear();
             Console.WriteLine("=== Stack Menu ===");
@@ -47,10 +48,18 @@ namespace Flashcards.SamGannon.UI
         {
             Console.Clear ();
             Console.WriteLine("Enter the name for your new stack:");
-            string stackName = Console.ReadLine();
-
+            string stackName = Console.ReadLine()?.Trim().ToUpper();
+            string compareToName = stackName.Trim().ToUpper();
+            
+            // _dataAccess.CheckIfStackExist(compareToName);
+            // if stack doesn't exist
             // Call DatabaseService method to add the new stack to the database
             // DatabaseService.AddStack(stackName);
+            // else
+            // notify the user stack exist and request another name
+            // Call DatabaseService method to add the new stack to the database
+            // DatabaseService.AddStack(stackName);
+
 
             Console.WriteLine($"Stack '{stackName}' created successfully!");
             ShowStackMenu();

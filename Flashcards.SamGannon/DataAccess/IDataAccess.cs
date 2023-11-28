@@ -11,6 +11,6 @@ namespace DataAccess
         public void CreateStackTable();
         public void CreateFlashcardTable();
         public void CreateStudyTable();
-        
+        void AddFlashcard(string? question, string? answer);
     }
 }
