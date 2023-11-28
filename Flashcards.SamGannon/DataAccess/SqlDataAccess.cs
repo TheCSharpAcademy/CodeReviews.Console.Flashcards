@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DataAccess.DTOs;
+using Microsoft.Data.SqlClient;
+using System.Text;
 
 namespace DataAccess
 {
@@ -80,6 +82,40 @@ namespace DataAccess
                                           "Score INT)";
 
                     tableCmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public List<DtoStack> CheckIfStackExist(string compareName)
+        {
+            List<DtoStack>  stacks = new List<DtoStack>();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                using (var tableCmd = connection.CreateCommand())
+                {
+                    connection.Open();
+                    tableCmd.CommandText = $"SELECT * FROM dbo.Stack WHERE Name = {compareName}";
+                    using (var reader = tableCmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                stacks.Add(
+                                    new DtoStack
+                                    {
+                                        StackId = reader.GetInt32(0),
+                                        StackName = reader.GetString(1),
+                                    });
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n\nNo rows found");
+                        }
+
+                        return stacks;
+                    }
                 }
             }
         }

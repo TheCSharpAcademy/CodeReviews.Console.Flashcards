@@ -31,10 +31,10 @@ namespace Flashcards.SamGannon.UI
             switch (choice)
             {
                 case "1":
-                    FlashcardMenu.ShowFlashcardMenu();
+                    // FlashcardMenu.ShowFlashcardMenu();
                     break;
                 case "2":
-                    StackMenu.ShowStackMenu();
+                    // StackMenu.ShowStackMenu();
                     break;
                 case "3":
                     StudySession.StartStudySession();

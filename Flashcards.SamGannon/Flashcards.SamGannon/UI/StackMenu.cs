@@ -39,40 +39,41 @@ namespace Flashcards.SamGannon.UI
                     break;
                 default:
                     Console.WriteLine("Invalid choice. Please enter 1, 2, or 3.");
-                    ShowStackMenu();
+                    // ShowStackMenu();
                     break;
             }
-        }
 
-        private static void CreateStack()
-        {
-            Console.Clear ();
-            Console.WriteLine("Enter the name for your new stack:");
-            string stackName = Console.ReadLine()?.Trim().ToUpper();
-            string compareToName = stackName.Trim().ToUpper();
-            
-            // _dataAccess.CheckIfStackExist(compareToName);
-            // if stack doesn't exist
-            // Call DatabaseService method to add the new stack to the database
-            // DatabaseService.AddStack(stackName);
-            // else
-            // notify the user stack exist and request another name
-            // Call DatabaseService method to add the new stack to the database
-            // DatabaseService.AddStack(stackName);
+            void CreateStack()
+            {
+                Console.Clear();
+                Console.WriteLine("Enter the name for your new stack:");
+                string stackName = Console.ReadLine()?.Trim().ToUpper();
+                string compareToName = stackName.Trim().ToUpper();
+
+                _dataAccess.CheckIfStackExist(compareToName);
+                // if stack doesn't exist
+                // Call DatabaseService method to add the new stack to the database
+                // DatabaseService.AddStack(stackName);
+                // else
+                // notify the user stack exist and request another name
+                // Call DatabaseService method to add the new stack to the database
+                // DatabaseService.AddStack(stackName);
 
 
-            Console.WriteLine($"Stack '{stackName}' created successfully!");
-            ShowStackMenu();
-        }
+                Console.WriteLine($"Stack '{stackName}' created successfully!");
+                // ShowStackMenu();
+            }
 
-        private static void ManageStacks()
-        {
-            Console.Clear();
-            Console.WriteLine("=== Manage Stacks ===");
-            // List existing stacks, allow user to edit or delete stacks, etc.
+            void ManageStacks()
+            {
+                Console.Clear();
+                Console.WriteLine("=== Manage Stacks ===");
+                // List existing stacks, allow user to edit or delete stacks, etc.
 
-            // After managing stacks, return to the stack menu
-            ShowStackMenu();
+                // After managing stacks, return to the stack menu
+                // ShowStackMenu();
+            }
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAccess.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +13,6 @@ namespace DataAccess
         public void CreateFlashcardTable();
         public void CreateStudyTable();
         void AddFlashcard(string? question, string? answer);
+        List<DtoStack> CheckIfStackExist(string compareToName);
     }
 }
