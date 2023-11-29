@@ -10,15 +10,14 @@ if (connectionString == null )
 
 }
 
-//IDataAccess _dataAccess = new SqlDataAccess(connectionString);
-//InitalizeTables();
-//Console.ReadLine();
+IDataAccess _dataAccess = new SqlDataAccess(connectionString);
+InitalizeTables();
 
-//void InitalizeTables()
-//{
-//    _dataAccess.CreateStackTable();
-//    _dataAccess.CreateFlashcardTable();
-//    _dataAccess.CreateStudyTable();
-//}
+void InitalizeTables()
+{
+    _dataAccess.CreateStackTable();
+    _dataAccess.CreateFlashcardTable();
+    _dataAccess.CreateStudyTable();
+}
 
-MainMenu.ShowMenu();
+MainMenu.ShowMenu(_dataAccess);

@@ -86,26 +86,26 @@ namespace DataAccess
             }
         }
 
-        public List<DtoStack> CheckIfStackExist(string compareName)
+        public List<DtoStack> GetListOfStackNames()
         {
-            List<DtoStack>  stacks = new List<DtoStack>();
+            List<DtoStack> listOfStackNames = new List<DtoStack>();
             using (var connection = new SqlConnection(_connectionString))
             {
                 using (var tableCmd = connection.CreateCommand())
                 {
                     connection.Open();
-                    tableCmd.CommandText = $"SELECT * FROM dbo.Stack WHERE Name = {compareName}";
+                    tableCmd.CommandText = $"SELECT DISTINCT Name FROM dbo.Stack";
                     using (var reader = tableCmd.ExecuteReader())
                     {
                         if (reader.HasRows)
                         {
                             while (reader.Read())
                             {
-                                stacks.Add(
+                                listOfStackNames.Add(
                                     new DtoStack
                                     {
-                                        StackId = reader.GetInt32(0),
-                                        StackName = reader.GetString(1),
+                                        // StackId = reader.GetInt32(0),
+                                        StackName = reader.GetString(0)
                                     });
                             }
                         }
@@ -113,9 +113,22 @@ namespace DataAccess
                         {
                             Console.WriteLine("\n\nNo rows found");
                         }
-
-                        return stacks;
                     }
+
+                    return listOfStackNames;
+                }
+            }
+        }
+
+        public void AddStack(string? stackName)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                using (var tableCmd = connection.CreateCommand())
+                {
+                    connection.Open();
+                    tableCmd.CommandText = $"INSERT INTO dbo.Stack (Name) Values ('{stackName}')";
+                    tableCmd.ExecuteNonQuery();
                 }
             }
         }

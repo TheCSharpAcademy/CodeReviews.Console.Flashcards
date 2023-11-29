@@ -13,6 +13,7 @@ namespace DataAccess
         public void CreateFlashcardTable();
         public void CreateStudyTable();
         void AddFlashcard(string? question, string? answer);
-        List<DtoStack> CheckIfStackExist(string compareToName);
+        List<DtoStack> GetListOfStackNames();
+        void AddStack(string? stackName);
     }
 }

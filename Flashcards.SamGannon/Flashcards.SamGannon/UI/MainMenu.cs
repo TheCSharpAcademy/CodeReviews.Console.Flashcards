@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAccess;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Flashcards.SamGannon.UI
 {
     public class MainMenu
     {
-        public static void ShowMenu()
+        public static void ShowMenu(IDataAccess _dataAccess)
         {
             Console.Clear();
             Console.WriteLine("=== Custom Flashcard Console App ===");
@@ -34,7 +35,7 @@ namespace Flashcards.SamGannon.UI
                     // FlashcardMenu.ShowFlashcardMenu();
                     break;
                 case "2":
-                    // StackMenu.ShowStackMenu();
+                    StackMenu.ShowStackMenu(_dataAccess);
                     break;
                 case "3":
                     StudySession.StartStudySession();
@@ -87,7 +88,7 @@ namespace Flashcards.SamGannon.UI
 
             if (choice == "E")
             {
-                ShowMenu();
+                // ShowMenu();
             }
             else
             {

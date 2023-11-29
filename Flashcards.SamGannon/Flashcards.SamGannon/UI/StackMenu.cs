@@ -1,4 +1,5 @@
 ﻿using DataAccess;
+using DataAccess.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,10 +33,10 @@ namespace Flashcards.SamGannon.UI
                     CreateStack();
                     break;
                 case "2":
-                    ManageStacks();
+                    // ManageStacks();
                     break;
                 case "3":
-                    MainMenu.ShowMenu();
+                    // MainMenu.ShowMenu();
                     break;
                 default:
                     Console.WriteLine("Invalid choice. Please enter 1, 2, or 3.");
@@ -45,23 +46,36 @@ namespace Flashcards.SamGannon.UI
 
             void CreateStack()
             {
+                List<DtoStack> listOfStackNames = new();
                 Console.Clear();
                 Console.WriteLine("Enter the name for your new stack:");
-                string stackName = Console.ReadLine()?.Trim().ToUpper();
+                string stackName = Console.ReadLine();
                 string compareToName = stackName.Trim().ToUpper();
 
-                _dataAccess.CheckIfStackExist(compareToName);
-                // if stack doesn't exist
-                // Call DatabaseService method to add the new stack to the database
-                // DatabaseService.AddStack(stackName);
-                // else
-                // notify the user stack exist and request another name
-                // Call DatabaseService method to add the new stack to the database
-                // DatabaseService.AddStack(stackName);
+                while (stackName == null)
+                {
+                    Console.WriteLine("Please enter a name for your new flashcard stack");
+                    stackName = Console.ReadLine();
+                    compareToName = stackName.Trim().ToUpper();
+                }
 
+                listOfStackNames = _dataAccess.GetListOfStackNames();
+                bool stackExists = CheckIfStackNameExist(listOfStackNames, compareToName);
 
-                Console.WriteLine($"Stack '{stackName}' created successfully!");
-                // ShowStackMenu();
+                while (stackExists)
+                {
+                    Console.WriteLine($"A stack with the name '{stackName}' already exists. Please enter a different name");
+                    stackName = Console.ReadLine();
+                    compareToName = stackName.Trim().ToUpper();
+
+                    stackExists = CheckIfStackNameExist(listOfStackNames, compareToName);
+                }
+
+                _dataAccess.AddStack(stackName);
+
+                Console.WriteLine($"Stack '{stackName}' created successfully! Press a key to go back to the Main Menu.");
+                Console.Read();
+                ShowStackMenu(_dataAccess);
             }
 
             void ManageStacks()
@@ -74,6 +88,20 @@ namespace Flashcards.SamGannon.UI
                 // ShowStackMenu();
             }
 
+        }
+
+        private static bool CheckIfStackNameExist(List<DtoStack> stackNames, string compareToName)
+        {
+            foreach (DtoStack stack in stackNames)
+            {
+                stack.StackName = stack.StackName.Trim().ToUpper();
+                if (stack.StackName == compareToName)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

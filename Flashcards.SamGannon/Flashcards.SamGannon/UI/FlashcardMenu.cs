@@ -35,7 +35,7 @@ namespace Flashcards.SamGannon.UI
                     ManageFlashcards();
                     break;
                 case "3":
-                    MainMenu.ShowMenu();
+                    // MainMenu.ShowMenu();
                     break;
                 default:
                     Console.WriteLine("Invalid choice. Please enter 1, 2, or 3.");

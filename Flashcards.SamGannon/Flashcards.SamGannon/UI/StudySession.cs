@@ -44,7 +44,7 @@ namespace Flashcards.SamGannon.UI
             studySession.InsertStudySessionIntoDatabase();
 
             // After the study session, return to the main menu
-            MainMenu.ShowMenu();
+            // MainMenu.ShowMenu();
         }
 
         private void StartTimer()
