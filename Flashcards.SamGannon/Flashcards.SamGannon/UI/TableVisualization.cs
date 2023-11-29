@@ -16,7 +16,7 @@ namespace Flashcards.SamGannon.UI
 
             ConsoleTableBuilder
                 .From(tableData)
-                .WithTitle("=== Manage Stacks ===")
+                .WithTitle(" Manage Stacks ")
                 .ExportAndWriteLine();
             Console.Write("\n\n");
             Console.ReadLine();
