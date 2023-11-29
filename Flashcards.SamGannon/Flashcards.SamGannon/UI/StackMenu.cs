@@ -51,37 +51,59 @@ namespace Flashcards.SamGannon.UI
                 Console.WriteLine("Enter the name for your new stack:");
                 string stackName = Console.ReadLine();
                 string compareToName = stackName.Trim().ToUpper();
+                int iAttempts = 0;
 
-                while (stackName == null)
+                while (string.IsNullOrEmpty(stackName)) 
                 {
-                    Console.WriteLine("Please enter a name for your new flashcard stack");
-                    stackName = Console.ReadLine();
-                    compareToName = stackName.Trim().ToUpper();
+                    if(iAttempts < 3)
+                    {
+                        Console.WriteLine("Please enter a name for your new flashcard stack");
+                        stackName = Console.ReadLine();
+                        compareToName = stackName.Trim().ToUpper();
+                        iAttempts++;
+                    }
+                    else
+                    {
+                        Console.WriteLine("You have exceeded the amount of attempts.");
+                        Environment.Exit(1);
+                    }
                 }
 
+                iAttempts = 0;
                 listOfStackNames = _dataAccess.GetListOfStackNames();
                 bool stackExists = CheckIfStackNameExist(listOfStackNames, compareToName);
 
                 while (stackExists)
                 {
-                    Console.WriteLine($"A stack with the name '{stackName}' already exists. Please enter a different name");
-                    stackName = Console.ReadLine();
-                    compareToName = stackName.Trim().ToUpper();
-
-                    stackExists = CheckIfStackNameExist(listOfStackNames, compareToName);
+                    if (iAttempts < 3)
+                    {
+                        Console.WriteLine($"A stack with the name '{stackName}' already exists. Please enter a different name");
+                        stackName = Console.ReadLine();
+                        compareToName = stackName.Trim().ToUpper();
+                        stackExists = CheckIfStackNameExist(listOfStackNames, compareToName);
+                        iAttempts++;
+                    }
+                    else
+                    {
+                        Console.WriteLine("You have exceeded the amount of attempts.");
+                        Environment.Exit(1);
+                    }
+                    
                 }
 
+                iAttempts = 0;
                 _dataAccess.AddStack(stackName);
 
                 Console.WriteLine($"Stack '{stackName}' created successfully! Press a key to go back to the Main Menu.");
                 Console.Read();
-                ShowStackMenu(_dataAccess);
+                MainMenu.ShowMenu(_dataAccess);
             }
 
             void ManageStacks()
             {
                 Console.Clear();
-                Console.WriteLine("=== Manage Stacks ===");
+
+                // TableVisualization.ShowTable();
                 // List existing stacks, allow user to edit or delete stacks, etc.
 
                 // After managing stacks, return to the stack menu
