@@ -19,6 +19,7 @@ namespace Flashcards.SamGannon.UI
                 .WithTitle("=== Manage Stacks ===")
                 .ExportAndWriteLine();
             Console.Write("\n\n");
+            Console.ReadLine();
         }
     }
 }

@@ -15,5 +15,6 @@ namespace DataAccess
         void AddFlashcard(string? question, string? answer);
         List<DtoStack> GetListOfStackNames();
         void AddStack(string? stackName);
+        List <DtoStack> GetAllStacks();
     }
 }

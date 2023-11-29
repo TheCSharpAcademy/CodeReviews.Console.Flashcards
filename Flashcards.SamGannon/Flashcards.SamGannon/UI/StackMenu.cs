@@ -33,7 +33,7 @@ namespace Flashcards.SamGannon.UI
                     CreateStack();
                     break;
                 case "2":
-                    // ManageStacks();
+                    ManageStacks();
                     break;
                 case "3":
                     // MainMenu.ShowMenu();
@@ -102,8 +102,9 @@ namespace Flashcards.SamGannon.UI
             void ManageStacks()
             {
                 Console.Clear();
-
-                // TableVisualization.ShowTable();
+                List<DtoStack> lstAllStacks = new();
+                lstAllStacks = _dataAccess.GetAllStacks();
+                TableVisualization.ShowTable(lstAllStacks);
                 // List existing stacks, allow user to edit or delete stacks, etc.
 
                 // After managing stacks, return to the stack menu

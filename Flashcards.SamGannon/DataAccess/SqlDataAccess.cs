@@ -133,6 +133,40 @@ namespace DataAccess
             }
         }
 
+        public List<DtoStack> GetAllStacks()
+        {
+            List<DtoStack> listOfStackNames = new List<DtoStack>();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                using (var tableCmd = connection.CreateCommand())
+                {
+                    connection.Open();
+                    tableCmd.CommandText = $"SELECT * FROM dbo.Stack ORDER BY Id";
+                    using (var reader = tableCmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                listOfStackNames.Add(
+                                    new DtoStack
+                                    {
+                                        StackId = reader.GetInt32(0),
+                                        StackName = reader.GetString(1)
+                                    });
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n\nNo rows found");
+                        }
+                    }
+
+                    return listOfStackNames;
+                }
+            }
+        }
+
         public void AddFlashcard(string? question, string? answer)
         {
             // i probably need to pass an object here.
