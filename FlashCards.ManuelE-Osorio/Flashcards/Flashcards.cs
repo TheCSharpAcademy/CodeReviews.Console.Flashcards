@@ -6,7 +6,15 @@ class Flashcards
     public static string SelectedStack = "spanish";
     public static void Main()
     {
-        ProgramUI.MainMenu();
+        Console.WriteLine(InputValidation.ValidateNewStack("hola"));
+        Console.WriteLine(InputValidation.ValidateNewStack("c"));
+        Console.WriteLine(InputValidation.ValidateNewStack(null));
+        Console.WriteLine(InputValidation.ValidateNewStack("Ho.Laundo"));
+        Console.WriteLine(InputValidation.ValidateNewStack("hola@"));
+        Console.WriteLine(InputValidation.ValidateNewStack("adsfasdfasdfasdfasdfasdfasdfjasldfjaksdfhaksdjflasdfklajhdsfkjahsdfkjasdkfhjadfjhlasfadsfasdfasdfasdfasdfasdfadsfasdf"));
+                
+        // ProgramUI.MainMenu();
+
     }
 }
 
