@@ -2,18 +2,20 @@
 
 class Flashcards
 {
-    public static UI ProgramUI = new();
+    public static DataController ProgramController = new();
     public static string SelectedStack = "spanish";
     public static void Main()
     {
-        Console.WriteLine(InputValidation.ValidateNewStack("hola"));
-        Console.WriteLine(InputValidation.ValidateNewStack("c"));
-        Console.WriteLine(InputValidation.ValidateNewStack(null));
-        Console.WriteLine(InputValidation.ValidateNewStack("Ho.Laundo"));
-        Console.WriteLine(InputValidation.ValidateNewStack("hola@"));
-        Console.WriteLine(InputValidation.ValidateNewStack("adsfasdfasdfasdfasdfasdfasdfjasldfjaksdfhaksdjflasdfklajhdsfkjahsdfkjasdkfhjadfjhlasfadsfasdfasdfasdfasdfasdfadsfasdf"));
-                
-        // ProgramUI.MainMenu();
+        Console.WriteLine(InputValidation.ValidateNewStackName("hola"));
+        Console.WriteLine(InputValidation.ValidateNewStackName("c"));
+        Console.WriteLine(InputValidation.ValidateNewStackName(null));
+        Console.WriteLine(InputValidation.ValidateNewStackName("Ho()Laundo"));
+        Console.WriteLine(InputValidation.ValidateNewStackName("hola@"));
+        Console.WriteLine(InputValidation.ValidateNewStackName("adsfasdfasdfasdfasdfasdfasdfjasldfjaksdfhaksdjflasdfklajhdsfkjahsdfkjasdkfhjadfjhlasfadsfasdfasdfasdfasdfasdfadsfasdf"));
+        Console.WriteLine(InputValidation.ValidateNewStackName(""));
+        Console.WriteLine(InputValidation.ValidateNewStackName(" "));
+        Console.WriteLine(InputValidation.ValidateNewStackName("  "));                        
+        ProgramController.MainMenuController();
 
     }
 }

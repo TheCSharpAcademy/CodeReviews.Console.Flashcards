@@ -29,7 +29,7 @@ SELECT 1
 ELSE SELECT 0
 GO
 
-SELECT * FROM stacks
+SELECT stackid, stackname FROM stacks
 GO
 
 SELECT * FROM dbo.flashcards
