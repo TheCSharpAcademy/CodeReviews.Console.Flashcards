@@ -10,6 +10,7 @@ class DBController
     private static readonly string flashcardsTableName = "flashcards";
     private static readonly string connectionString = ConfigurationManager.ConnectionStrings["FlashCardsConnectionString"].ConnectionString;
 
+
     public static void CreateDB()
     {
         using var connection = new SqlConnection(connectionString);
@@ -34,12 +35,14 @@ class DBController
              
         connection.Open();
         var tableCmd = connection.CreateCommand();
+        
         tableCmd.CommandText = 
         $@"USE {DBName}
         IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='{stacksTableName}' and xtype='U')
         CREATE TABLE dbo.{stacksTableName} (
         stackid INT IDENTITY(1,1) PRIMARY KEY,
         stackname VARCHAR(50) UNIQUE NOT NULL)";
+        
         tableCmd.ExecuteNonQuery();
 
         tableCmd.CommandText = 
@@ -50,8 +53,8 @@ class DBController
         ON DELETE CASCADE ON UPDATE CASCADE,
         question VARCHAR(50) NOT NULL,
         answer VARCHAR(50) NOT NULL )";
-        tableCmd.ExecuteNonQuery();
         
+        tableCmd.ExecuteNonQuery();
         connection.Close();   
     }
 
@@ -99,6 +102,28 @@ class DBController
         connection.Close();
         return insertSuccess;   
     }
-}
 
+    public static List<Stacks> SelectStacks()
+    {
+        List<Stacks> stacksQuery = [];
+ 
+        using var connection = new SqlConnection(connectionString);
+        
+        connection.Open();
+        var command = connection.CreateCommand();
+        command.CommandText = 
+        $@"USE {DBName}
+        SELECT stackid, stackname
+        FROM {stacksTableName}";
+
+        SqlDataReader reader = command.ExecuteReader();
+
+        while(reader.Read())
+        {
+            stacksQuery.Add(new Stacks(reader.GetString(1), reader.GetInt32(0)));
+        }
+
+        return stacksQuery;
+    }
+}
 // tableCmd.Parameters.Add("@table",System.Data.SqlDbType.VarChar,25).Value = table;
