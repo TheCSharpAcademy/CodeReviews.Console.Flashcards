@@ -44,11 +44,13 @@ public class DisplayController
         {
             Console.WriteLine("Choice needs to be not null");
             return null;
-        }if(int.TryParse(option, out optionNumeric) == false)
+        }
+        if(int.TryParse(option, out optionNumeric) == false)
         {
             Console.WriteLine("Choice needs to be numeric");
             return null;
-        }if (optionNumeric > count)
+        }
+        if (optionNumeric > count)
         {
             Console.WriteLine("Invalid choice");
             return null;
@@ -98,7 +100,7 @@ public class DisplayController
             string? stackName = Console.ReadLine();
             if (stackName != null)
             {
-                if (Stacks.InsertStack(CurrentDriver.SqlConn,(string)stackName) == false)
+                if (Stacks.InsertStack(CurrentDriver.SqlConn, stackName) == false)
                 {
                     Console.WriteLine("Stack with this name already exist");
                 }
@@ -122,7 +124,7 @@ public class DisplayController
             Console.WriteLine("This stack has no flashcards");
             return;
         }
-        Dictionary<int, FlashcardDTO> flashcardDtos = new Dictionary<int, FlashcardDTO>();
+        Dictionary<int, FlashcardDto> flashcardDtos = new Dictionary<int, FlashcardDto>();
         int counter = 0;
         foreach (var flashCard in flashCards)
         {
@@ -151,7 +153,7 @@ public class DisplayController
 
         } while (true);
 
-        FlashcardDTO flashcardDto;
+        FlashcardDto flashcardDto;
         flashcardDtos.TryGetValue((int)optionId, out flashcardDto);
         int actualId = flashcardDto.GetActualId();
         Models.Flashcards flashcard;
@@ -178,7 +180,7 @@ public class DisplayController
             string? input = Console.ReadLine();
             if (!string.IsNullOrEmpty(input))
             {
-                return (string)input;
+                return input;
             }
             else
             {
@@ -278,11 +280,11 @@ public class DisplayController
         } while (true);
 
         Random rand = new Random();
-        List<FlashcardDTO> flashcardDtos = CurrentDriver
+        List<FlashcardDto> flashcardDtos = CurrentDriver
             .GetFlashCards((int)optionId)
             .OrderBy(_ => rand.Next())
             .ToList()
-            .ConvertAll<FlashcardDTO>(keyValuePair => keyValuePair.Value.ConvertToDto(0));
+            .ConvertAll<FlashcardDto>(keyValuePair => keyValuePair.Value.ConvertToDto(0));
         if (flashcardDtos.Count == 0)
         {
             Console.WriteLine("This stack doesn't have any flashcard to study from");
@@ -318,7 +320,7 @@ public class DisplayController
 
     public void DisplaySessions()
     {
-        List<StudySessionDTO> studySessions = CurrentDriver.GetStudySessions();
+        List<StudySessionDto> studySessions = CurrentDriver.GetStudySessions();
         if (studySessions.Count == 0)
         {
             Console.WriteLine("Study session list is empty.");
