@@ -29,7 +29,6 @@ public class Menu
     }
     public void Display(bool initial = true)
     {
-        string? option;
         do
         {
             Console.WriteLine(MenuTitle);

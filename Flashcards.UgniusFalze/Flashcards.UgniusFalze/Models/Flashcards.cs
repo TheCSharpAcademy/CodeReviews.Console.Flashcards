@@ -16,9 +16,9 @@ namespace Flashcards.UgniusFalze.Models
             Back = back;
         }
 
-        public FlashcardDTO ConvertToDto(int order)
+        public FlashcardDto ConvertToDto(int order)
         {
-            return new FlashcardDTO(FlashcardId, Front, Back, order);
+            return new FlashcardDto(FlashcardId, Front, Back, order);
         }
         
         public static bool InsertFlashcard(SqlConnection sqlConn, string front, string back, int stackId)

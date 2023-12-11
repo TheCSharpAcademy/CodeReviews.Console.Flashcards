@@ -1,10 +1,9 @@
-﻿
-using Flashcards.UgniusFalze;using Flashcards.UgniusFalze.Menu;
-using System.Configuration;
+﻿using Flashcards.UgniusFalze;using Flashcards.UgniusFalze.Menu;
+
 
 try
 {
-    string? connString = ConfigurationManager.AppSettings.Get("ConnString");
+    string? connString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnString");
     if (connString == null)
     {
         Console.WriteLine("Connection string is missing");

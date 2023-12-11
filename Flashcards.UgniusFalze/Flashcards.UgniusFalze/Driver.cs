@@ -51,7 +51,7 @@ public class Driver
         return stacksList;
     }
 
-    public List<Models.StudySessionDTO> GetStudySessions()
+    public List<Models.StudySessionDto> GetStudySessions()
     {
         SqlCommand sqlCommand = SqlConn.CreateCommand();
         sqlCommand.CommandText =
@@ -59,13 +59,13 @@ public class Driver
             "FROM dbo.StudySessions AS sess " +
             "JOIN dbo.Stack AS stack ON sess.StackId = Stack.StackId " +
             "ORDER BY StudySessionId";
-        List<Models.StudySessionDTO> sessionList = new List<Models.StudySessionDTO>();
+        List<Models.StudySessionDto> sessionList = new List<Models.StudySessionDto>();
         SqlConn.Open();
         sqlCommand.Prepare();
         using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
         {
             while (dataReader.Read()){
-                sessionList.Add(new Models.StudySessionDTO(dataReader.GetDateTime(0), dataReader.GetInt32(1), dataReader.GetString(2)));
+                sessionList.Add(new Models.StudySessionDto(dataReader.GetDateTime(0), dataReader.GetInt32(1), dataReader.GetString(2)));
             }
         }
 
