@@ -29,8 +29,22 @@ SELECT 1
 ELSE SELECT 0
 GO
 
+-- Insert rows into tableO flashcards'
+INSERT INTO flashcards
+( -- columns to insert data into
+ stackid, question, answer
+)
+VALUES
+( -- first row: values for the columns in the list above
+17, 'hola', 'hola'
+),
+(17, 'adios', 'adios'),
+(17, 'prueba', 'prueba')
+GO
+
 SELECT stackid, stackname FROM stacks
 GO
 
 SELECT * FROM dbo.flashcards
 GO
+
