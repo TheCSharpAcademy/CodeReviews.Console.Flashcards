@@ -114,7 +114,8 @@ class DBController
         command.CommandText = 
         $@"USE {DBName}
         SELECT stackid, stackname
-        FROM {stacksTableName}";
+        FROM {stacksTableName}
+        ORDER BY stackname ASC";
 
         SqlDataReader reader = command.ExecuteReader();
 
@@ -124,6 +125,73 @@ class DBController
         }
 
         return stacksQuery;
+    }
+
+    public static void DeleteStack(string stackName) //To improve
+    {
+
+        using var connection = new SqlConnection(connectionString);
+        connection.Open();
+        var command = connection.CreateCommand();
+        command.CommandText = 
+        $@"USE {DBName}
+        DELETE FROM {stacksTableName}
+        WHERE stackname = @stackName";
+
+        command.Parameters.Add("@stackName", System.Data.SqlDbType.VarChar,50).Value = stackName;
+        command.ExecuteNonQuery();
+
+        connection.Close();
+    }
+
+    public static int ModifyStack(Stacks modifyStack, Stacks newStack)
+    {
+        int insertSuccess;
+
+        using var connection = new SqlConnection(connectionString);
+        connection.Open();
+        var command = connection.CreateCommand();
+        command.CommandText = 
+        $@"USE {DBName}
+        UPDATE {stacksTableName}
+        SET
+            stackname = @newStackName
+        WHERE stackname = @stackName";
+
+        command.Parameters.Add("@newStackName", System.Data.SqlDbType.VarChar,50).Value = newStack.StackName;
+        command.Parameters.Add("@stackName", System.Data.SqlDbType.VarChar,50).Value = modifyStack.StackName;
+        insertSuccess = command.ExecuteNonQuery();
+
+        connection.Close();
+        return insertSuccess; 
+    }
+
+    public static List<Cards> SelectFlashcards(Stacks? selectedStack)
+    {
+        List<Cards> flashcardsQuery = [];
+ 
+        using var connection = new SqlConnection(connectionString);
+        
+        connection.Open();
+        var command = connection.CreateCommand();
+        command.CommandText = 
+        $@"USE {DBName}
+        SELECT cardid, stackid, question, answer
+        FROM {flashcardsTableName}
+        WHERE stackid = @stackID
+        ORDER BY question ASC";
+
+        command.Parameters.Add("@stackID", System.Data.SqlDbType.Int).Value = selectedStack?.StackID;
+
+        SqlDataReader reader = command.ExecuteReader();
+
+        while(reader.Read())
+        {
+            flashcardsQuery.Add(new Cards(reader.GetInt32(0), reader.GetInt32(1),
+            reader.GetString(2),reader.GetString(3)));
+        }
+
+        return flashcardsQuery;
     }
 }
 // tableCmd.Parameters.Add("@table",System.Data.SqlDbType.VarChar,25).Value = table;

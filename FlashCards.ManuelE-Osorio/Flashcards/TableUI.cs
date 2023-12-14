@@ -6,12 +6,16 @@ class TableUI
 {
     public static string StacksTitle = "Stacks";
     public static string[] StacksHeader = ["Stack ID", "Stack Name"];
-    public static void PrintTable(List<List<object>> data)
+    public static void PrintTable(List<StacksDTO> currentStacksToUI)
     {  
-        Helpers.ClearConsole();
+        List<List<object>> listToUI = [];;      
+        foreach (StacksDTO stacksDTO in currentStacksToUI)
+        {
+            listToUI.Add([stacksDTO.StackID, stacksDTO.StackName]);
+        }
         
         ConsoleTableBuilder
-        .From(data)
+        .From(listToUI)
         .WithTitle(StacksTitle)
         .WithColumn(StacksHeader)
         .WithCharMapDefinition(
@@ -30,5 +34,7 @@ class TableUI
                         {HeaderCharMapPositions.Divider, '│' },
                     })
         .ExportAndWriteLine(TableAligntment.Center);
+    
+    Console.WriteLine();
     }
 }
