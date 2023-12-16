@@ -79,7 +79,7 @@ namespace Flashcards
             }
             else
             {
-                sql = $"SELECT DISTINCT s.Id FROM Stacks s JOIN Flashcards f ON f.StackId = s.Id WHERE CONVERT(VARCHAR, s.Name) = '{stackname}'";
+                sql = $"SELECT DISTINCT s.Id FROM Stacks s LEFT JOIN Flashcards f ON f.StackId = s.Id WHERE CONVERT(VARCHAR, s.Name) = '{stackname}'";
                 command = new SqlCommand(sql, cnn);
                 int stackId = (int)command.ExecuteScalar();
 
