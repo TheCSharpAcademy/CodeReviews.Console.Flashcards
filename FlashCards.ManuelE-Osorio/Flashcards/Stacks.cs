@@ -1,13 +1,7 @@
 namespace Flashcards;
 
-class Stacks
+class Stacks(string stackName, int stackID = 0)
 {
-    public int StackID;
-    public string StackName;
-
-    public Stacks(string stackName, int stackID = 0)
-    {
-        StackID = stackID;
-        StackName = stackName;
-    }
+    public int StackID = stackID;
+    public string StackName = stackName;
 }

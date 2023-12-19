@@ -1,17 +1,9 @@
 namespace Flashcards;
 
-class Cards
+class Cards(int stackID, string question, string answer, int cardID = 0)
 {
-    public int CardID;
-    public int StackID;
-    public string Question;
-    public string Answer;
-
-    public Cards(int cardID, int stackID, string question, string answer)
-    {
-        CardID = cardID;
-        StackID = stackID;
-        Question = question;
-        Answer = answer;
-    }
+    public int CardID = cardID;
+    public int StackID = stackID;
+    public string Question = question;
+    public string Answer = answer;
 }
