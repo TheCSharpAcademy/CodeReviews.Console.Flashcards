@@ -51,7 +51,7 @@ class DBController
         cardid INT IDENTITY(1,1) PRIMARY KEY,
         stackid INT FOREIGN KEY REFERENCES stacks(stackid) 
         ON DELETE CASCADE ON UPDATE CASCADE,
-        question VARCHAR(50) NOT NULL,
+        question VARCHAR(50) UNIQUE NOT NULL,
         answer VARCHAR(50) NOT NULL )";
         
         tableCmd.ExecuteNonQuery();
@@ -123,7 +123,7 @@ class DBController
         {
             stacksQuery.Add(new Stacks(reader.GetString(1), reader.GetInt32(0)));
         }
-
+        connection.Close();
         return stacksQuery;
     }
 
@@ -187,11 +187,103 @@ class DBController
 
         while(reader.Read())
         {
-            flashcardsQuery.Add(new Cards(reader.GetInt32(0), reader.GetInt32(1),
-            reader.GetString(2),reader.GetString(3)));
+            flashcardsQuery.Add(new Cards(reader.GetInt32(1), reader.GetString(2),
+            reader.GetString(3),reader.GetInt32(0)));
         }
 
+        connection.Close();
+        return flashcardsQuery;
+    }
+
+    public static int InsertNewCard(Cards newCard)
+    {
+        int insertSuccess;
+
+        using var connection = new SqlConnection(connectionString);
+        connection.Open();
+        var command = connection.CreateCommand();
+        command.CommandText = 
+        $@"USE {DBName}
+        INSERT INTO {flashcardsTableName}
+        (stackid, question, answer)
+        VALUES
+        (@stackid, @question, @answer)";
+
+        command.Parameters.Add("@stackid", System.Data.SqlDbType.Int).Value = newCard.StackID;
+        command.Parameters.Add("@question", System.Data.SqlDbType.VarChar,50).Value = newCard.Question;
+        command.Parameters.Add("@answer", System.Data.SqlDbType.VarChar,50).Value = newCard.Answer;
+
+        insertSuccess = command.ExecuteNonQuery();
+
+        connection.Close();
+        return insertSuccess;   
+    }
+
+    public static int ModifyCard(Cards modifyCard)
+    {
+        int insertSuccess;
+
+        using var connection = new SqlConnection(connectionString);
+        connection.Open();
+        var command = connection.CreateCommand();
+        command.CommandText = 
+        $@"USE {DBName}
+        UPDATE {flashcardsTableName}
+        SET
+        question = @question,
+        answer = @answer
+        WHERE cardid = @cardid";
+
+        command.Parameters.Add("@question", System.Data.SqlDbType.VarChar, 50).Value = modifyCard.Question;
+        command.Parameters.Add("@answer", System.Data.SqlDbType.VarChar,50).Value = modifyCard.Answer;
+        command.Parameters.Add("@cardid", System.Data.SqlDbType.Int).Value = modifyCard.CardID;
+
+        insertSuccess = command.ExecuteNonQuery();
+
+        connection.Close();
+        return insertSuccess;   
+    }
+
+    public static void DeleteCard(Cards card) //To improve
+    {
+        using var connection = new SqlConnection(connectionString);
+        connection.Open();
+        var command = connection.CreateCommand();
+        command.CommandText = 
+        $@"USE {DBName}
+        DELETE FROM {flashcardsTableName}
+        WHERE cardid = @cardID";
+
+        command.Parameters.Add("@cardID", System.Data.SqlDbType.Int).Value = card.CardID;
+        command.ExecuteNonQuery();
+
+        connection.Close();
+    }    
+
+    public static List<Cards> SelectCardsStudySession(int quantity, Stacks? stack)
+    {
+        List<Cards> flashcardsQuery = [];
+ 
+        using var connection = new SqlConnection(connectionString);
+        
+        connection.Open();
+        var command = connection.CreateCommand();
+        command.CommandText = 
+        $@"USE {DBName}
+        SELECT TOP {quantity} * FROM {flashcardsTableName} 
+        WHERE stackid = @stackID
+        ORDER BY NEWID()";
+
+        command.Parameters.Add("@stackID", System.Data.SqlDbType.Int).Value = stack?.StackID;
+
+        SqlDataReader reader = command.ExecuteReader();
+
+        while(reader.Read())
+        {
+            flashcardsQuery.Add(new Cards(reader.GetInt32(1), reader.GetString(2),
+            reader.GetString(3),reader.GetInt32(0)));
+        }
+        connection.Close();
         return flashcardsQuery;
     }
 }
-// tableCmd.Parameters.Add("@table",System.Data.SqlDbType.VarChar,25).Value = table;

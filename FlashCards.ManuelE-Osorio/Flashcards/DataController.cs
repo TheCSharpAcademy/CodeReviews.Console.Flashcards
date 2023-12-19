@@ -9,27 +9,29 @@ class DataController
     public bool RunStacksController;
     public bool RunFlashCardsController;
     public bool RunStudySessionController;
-    public bool NewStackNameIsInvalid;
     public Stacks? SelectedStack;
 
+    public int StudySessionQuestions;
     public DataController()
     {
         RunFlashCardsProgram = true;
         RunStacksController = false;
         RunFlashCardsController = false;
         RunStudySessionController = false;
-        NewStackNameIsInvalid = false;
         SelectedStack = null;
+        StudySessionQuestions = 5;
     }
 
     public void MainMenuController()
     {
         UI.WelcomeMessage();
-        string? selection;
+        string? errorMessage = null;
+        string selection;
         do
         {
-            UI.MainMenu(SelectedStack?.StackName);
-            selection = Console.ReadLine();
+            UI.MainMenu(SelectedStack?.StackName, errorMessage);
+            selection = Console.ReadLine() ?? "";
+            errorMessage = InputValidation.ValidateSelection(selection, 0, 4);
             switch(selection)
             {
                 case("1"):
@@ -37,19 +39,24 @@ class DataController
                     StacksController();
                     break;
                 case("2"):
-                    RunFlashCardsController = true;
-                    FlashCardsController();
+                    if(SelectedStack == null)
+                    {
+                        errorMessage += "You have not selected a stack. "; //Pending
+                    }
+                    else
+                    {
+                        RunFlashCardsController = true;
+                        FlashCardsController();
+                    }
                     break;
                 case("3"):
-                    RunStudySessionController = true;
+                    RunStudySessionController = true; //Table Empty constrain, selected stack constrain
                     StudySessionController();
                     break;
                 case("4"):
                     break;
                 case("0"):
                     RunFlashCardsProgram = false;
-                    break;
-                default:
                     break;
             }
         }
@@ -60,16 +67,17 @@ class DataController
 
     public void StacksController()
     {
-        string? selection;
+        string selection;
+        string? errorMessage = null;
         do
         {
-            UI.Stacks();
-            selection = Console.ReadLine();
+            UI.Stacks(errorMessage);
+            selection = Console.ReadLine() ?? "";
+            errorMessage = InputValidation.ValidateSelection(selection, 0, 4);
             switch(selection)
             {
                 case("1"):
-                    NewStackNameIsInvalid = true;
-                    NewStackOrModifyController();
+                    NewOrModifyStackController();
                     break;
                 case("2"):
                     SelectOrDeleteStackController("select");
@@ -83,8 +91,6 @@ class DataController
                 case("0"):
                     RunStacksController = false;
                     break;
-                default:
-                    break;
             }
         }
         while(RunStacksController);
@@ -92,26 +98,30 @@ class DataController
 
     public void FlashCardsController()
     {
-        string? selection;
+        string? errorMessage = null;
+        string selection;
 
         do
         {
-            UI.FlashCards(SelectedStack?.StackName);
-            selection = Console.ReadLine();
+            UI.FlashCards(SelectedStack?.StackName, errorMessage);
+            selection = Console.ReadLine() ?? "";
+            errorMessage = InputValidation.ValidateSelection(selection, 0, 4);
             switch(selection)
             {
                 case("1"):
+                    SelectOrDeleteCardController(null); //table empty constrain
                     break;
                 case("2"):
+                    NewOrModifyCardController();
                     break;
                 case("3"):
+                    SelectOrDeleteCardController("modify");
                     break;
                 case("4"):
+                    SelectOrDeleteCardController("delete");
                     break;
                 case("0"):
                     RunFlashCardsController = false;
-                    break;
-                default:
                     break;
             }
         }
@@ -120,7 +130,28 @@ class DataController
 
     public void StudySessionController()
     {
-
+        string? errorMessage = null;
+        string selection;
+        
+        do
+        {
+            UI.StudySession(errorMessage);
+            selection = Console.ReadLine() ?? "";
+            errorMessage = InputValidation.ValidateSelection(selection, 0, 2);
+            switch(selection)
+            {
+                case("1"):
+                    RunStudySession();
+                    break;
+                case("2"):
+                    // Modify Parameters
+                    break;
+                case("0"):
+                    RunStudySessionController = false;
+                    break;
+            }
+        }
+        while(RunStacksController);
     }
 
     public void StudySessionsDataController()
@@ -128,7 +159,7 @@ class DataController
 
     }
 
-    public void NewStackOrModifyController(string modifyStackName = "", string? action = null)
+    public void NewOrModifyStackController(string modifyStackName = "", string? action = null)
     {
         string stackName;
         string? errorMessage = null;
@@ -138,12 +169,8 @@ class DataController
             stackName = Console.ReadLine() ?? "";
             errorMessage = InputValidation.ValidateNewStackName(stackName);
 
-            if (errorMessage == null)
-            {
-                NewStackNameIsInvalid = false;
-            }
         }
-        while(NewStackNameIsInvalid);
+        while(errorMessage != null);
 
         if (action == null)
         {
@@ -181,11 +208,102 @@ class DataController
                     SelectedStack = null;
                 break;
             case("modify"):
-                NewStackOrModifyController(stackName, "new");
+                NewOrModifyStackController(stackName, "new");
                 if (SelectedStack?.StackName == stackName)
                     SelectedStack = null;
                 break;
         }
+    }
+
+    public void NewOrModifyCardController(Cards? oldCard = null, string? action = null)  //Delete?
+    {
+        string cardQuestion;
+        string cardAnswer;
+        string? errorMessage = null;
+        do
+        {
+            UI.NewCard(errorMessage, "question", action);
+            cardQuestion = Console.ReadLine() ?? "";
+            errorMessage = InputValidation.ValidateNewStackName(cardQuestion);
+        }
+        while(errorMessage != null);
+
+        do
+        {
+            UI.NewCard(errorMessage, "answer", action);
+            cardAnswer = Console.ReadLine() ?? "";
+            errorMessage = InputValidation.ValidateNewStackName(cardAnswer);
+        }
+        while(errorMessage != null);
+
+
+        if (action == null)
+        {
+            DBController.InsertNewCard(new Cards(SelectedStack?.StackID ?? 0, cardQuestion, cardAnswer));
+        }
+        else if (action == "new")
+        {
+            DBController.ModifyCard(
+                new Cards(SelectedStack?.StackID ?? 0, cardQuestion, 
+                cardAnswer, oldCard?.CardID ?? 0));
+        }
+    }
+
+    public void SelectOrDeleteCardController(string? selectionString)
+    {
+        List<Cards> currentCards = DBController.SelectFlashcards(SelectedStack);
+        List<CardsDTO> currentCardsToUI = CardsToCardsDTO(currentCards);
+        string cardID;
+        string? errorMessage = null;
+
+        do
+        {
+            UI.DisplayCards(currentCardsToUI,SelectedStack, errorMessage, selectionString);
+            cardID = Console.ReadLine() ?? "";
+            if(selectionString != null)
+            {
+                errorMessage = InputValidation.ValidateSelection(cardID,currentCardsToUI[0].CardID, 
+                currentCardsToUI[^1].CardID);
+                errorMessage ??= InputValidation.ValidateCardSelection(currentCards, cardID);
+            }
+        }
+        while(errorMessage != null);
+
+        switch(selectionString)
+        {
+            case("delete"):
+                Cards deleteCard = currentCards[
+                    currentCardsToUI.FindIndex(cards => cards.CardID == Convert.ToInt32(cardID))];
+                DBController.DeleteCard(deleteCard);
+                break;
+            case("modify"):
+                Cards oldCard = currentCards[
+                    currentCardsToUI.FindIndex(cards => cards.CardID == Convert.ToInt32(cardID))];
+                NewOrModifyCardController(oldCard,"new");
+                break;
+        }
+    }
+
+    public void RunStudySession()
+    {
+        List<Cards> studySessionCards = DBController.SelectCardsStudySession(StudySessionQuestions, SelectedStack);
+        string answer;
+        bool answerIsCorrect;
+        int score = 0;
+
+        foreach (Cards studySessionCard in studySessionCards)
+        {
+            UI.StudySessionQuestion(studySessionCard);
+            answer = Console.ReadLine() ?? "";
+            answerIsCorrect = InputValidation.ValidateStudySessionAnswer(studySessionCard, answer);
+            UI.StudySessionAnswer(studySessionCard, answerIsCorrect);
+            Console.ReadLine();
+            if (answerIsCorrect)
+            {
+                score++;
+            }
+        }
+
     }
 
     public static List<StacksDTO> StacksToStacksDTO(List<Stacks> stacks)
@@ -198,6 +316,17 @@ class DataController
         }
 
         return stacksToUI;
+    }
+
+    public static List<CardsDTO> CardsToCardsDTO(List<Cards> cards)
+    {
+        List<CardsDTO> cardsToUI = [];
+
+        for(int i=0; i<cards.Count; i++)
+        {
+            cardsToUI.Add(new CardsDTO(cards[i], i+1));
+        }
+        return cardsToUI;
     }
 
 }
