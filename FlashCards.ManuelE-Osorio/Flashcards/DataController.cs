@@ -9,8 +9,8 @@ class DataController
     public bool RunStacksController;
     public bool RunFlashCardsController;
     public bool RunStudySessionController;
+    public bool RunStudySessionDataController;
     public Stacks? SelectedStack;
-
     public int StudySessionQuestions;
     public DataController()
     {
@@ -18,6 +18,7 @@ class DataController
         RunStacksController = false;
         RunFlashCardsController = false;
         RunStudySessionController = false;
+        RunStudySessionDataController = false;
         SelectedStack = null;
         StudySessionQuestions = 5;
     }
@@ -25,13 +26,13 @@ class DataController
     public void MainMenuController()
     {
         UI.WelcomeMessage();
-        string? errorMessage = null;
+        string? errorMessage = null; //DB Init missing
         string selection;
         do
         {
             UI.MainMenu(SelectedStack?.StackName, errorMessage);
             selection = Console.ReadLine() ?? "";
-            errorMessage = InputValidation.ValidateSelection(selection, 0, 4);
+            errorMessage = InputValidation.ValidateSelection(selection, 0, 4); //add a constrains method
             switch(selection)
             {
                 case("1"):
@@ -54,6 +55,8 @@ class DataController
                     StudySessionController();
                     break;
                 case("4"):
+                    RunStudySessionDataController = true;
+                    StudySessionsDataController();
                     break;
                 case("0"):
                     RunFlashCardsProgram = false;
@@ -144,19 +147,41 @@ class DataController
                     RunStudySession();
                     break;
                 case("2"):
-                    // Modify Parameters
+                    ModifyStudySessionQuestions();
                     break;
                 case("0"):
                     RunStudySessionController = false;
                     break;
             }
         }
-        while(RunStacksController);
+        while(RunStudySessionController);
     }
 
     public void StudySessionsDataController()
     {
+        string? errorMessage = null;
+        string selection;
 
+        do
+        {
+            UI.StudySessionData(errorMessage);
+            selection = Console.ReadLine() ?? "";
+            errorMessage = InputValidation.ValidateSelection(selection, 0, 3);
+            switch(selection)
+            {
+                case("1"):
+                    StudySessionGetData();
+                    break;
+                case("2"):
+                    break;
+                case("3"):
+                    break;
+                case("0"):
+                    RunStudySessionDataController = false;
+                    break;
+            }
+        }
+        while(RunStudySessionDataController);
     }
 
     public void NewOrModifyStackController(string modifyStackName = "", string? action = null)
@@ -224,7 +249,7 @@ class DataController
         {
             UI.NewCard(errorMessage, "question", action);
             cardQuestion = Console.ReadLine() ?? "";
-            errorMessage = InputValidation.ValidateNewStackName(cardQuestion);
+            errorMessage = InputValidation.ValidateNewStackName(cardQuestion); //Method to validate cards Q&A
         }
         while(errorMessage != null);
 
@@ -232,7 +257,7 @@ class DataController
         {
             UI.NewCard(errorMessage, "answer", action);
             cardAnswer = Console.ReadLine() ?? "";
-            errorMessage = InputValidation.ValidateNewStackName(cardAnswer);
+            errorMessage = InputValidation.ValidateNewStackName(cardAnswer); //Method to validate cards Q&A
         }
         while(errorMessage != null);
 
@@ -258,7 +283,7 @@ class DataController
 
         do
         {
-            UI.DisplayCards(currentCardsToUI,SelectedStack, errorMessage, selectionString);
+            UI.DisplayCards(currentCardsToUI,SelectedStack?.StackName, errorMessage, selectionString);
             cardID = Console.ReadLine() ?? "";
             if(selectionString != null)
             {
@@ -287,25 +312,51 @@ class DataController
     public void RunStudySession()
     {
         List<Cards> studySessionCards = DBController.SelectCardsStudySession(StudySessionQuestions, SelectedStack);
+        List<CardsDTO> studySessionCardsToUI = CardsToCardsDTO(studySessionCards);
         string answer;
         bool answerIsCorrect;
         int score = 0;
 
-        foreach (Cards studySessionCard in studySessionCards)
+        foreach (CardsDTO studySessionCardDTO in studySessionCardsToUI)
         {
-            UI.StudySessionQuestion(studySessionCard);
+            UI.StudySessionQuestion(studySessionCardDTO);
             answer = Console.ReadLine() ?? "";
-            answerIsCorrect = InputValidation.ValidateStudySessionAnswer(studySessionCard, answer);
-            UI.StudySessionAnswer(studySessionCard, answerIsCorrect);
+            answerIsCorrect = InputValidation.ValidateStudySessionAnswer(studySessionCardDTO, answer);
+            UI.StudySessionAnswer(studySessionCardDTO, answerIsCorrect);
             Console.ReadLine();
             if (answerIsCorrect)
             {
                 score++;
             }
         }
-
+        StudySession currentStudySession = new(SelectedStack?.StackName ?? "", DateTime.Today, 
+            score/(double)studySessionCards.Count);
+        DBController.InsertNewStudySession(currentStudySession);
+        UI.StudySessionFinished(currentStudySession.Score);
     }
 
+    public void ModifyStudySessionQuestions()
+    {
+        string questionsQuantity;
+        string? errorMessage = null;
+        do
+        {
+            UI.ModifyStudySessionQuestions(errorMessage);
+            questionsQuantity = Console.ReadLine() ?? "";
+            errorMessage = InputValidation.ValidateSelection(questionsQuantity,1,100);
+        }
+        while(errorMessage != null);
+        int questionsQuantityInt = Convert.ToInt32(questionsQuantity);
+        StudySessionQuestions = questionsQuantityInt;
+    }
+
+    public void StudySessionGetData()
+    {
+        List<StudySession> studySessions = DBController.SelectStudySessions();
+        List<StudySessionDTO> studySessionsToUI = StudySessionToStudySessionsDTO(studySessions);
+        UI.DisplayStudySessions(studySessionsToUI);
+        Console.ReadLine();
+    }
     public static List<StacksDTO> StacksToStacksDTO(List<Stacks> stacks)
     {
         List<StacksDTO> stacksToUI = [];
@@ -329,4 +380,14 @@ class DataController
         return cardsToUI;
     }
 
+    public static List<StudySessionDTO> StudySessionToStudySessionsDTO(List<StudySession> studySessions)
+    {
+        List<StudySessionDTO> studySessionsToUI = [];
+
+        for(int i =0; i<studySessions.Count; i++)
+        {
+            studySessionsToUI.Add(new StudySessionDTO(studySessions[i],i+1));
+        }
+        return studySessionsToUI;        
+    }
 }

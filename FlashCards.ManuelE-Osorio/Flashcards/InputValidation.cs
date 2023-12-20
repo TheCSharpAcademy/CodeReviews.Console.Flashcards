@@ -62,10 +62,10 @@ class InputValidation
         return errorMessage;
     }
 
-    public static bool ValidateStudySessionAnswer(Cards card, string answer)
+    public static bool ValidateStudySessionAnswer(CardsDTO card, string answer)
     {
         bool answerIsCorrect = false;
-        if(answer == card.Answer)
+        if(answer.Equals(card.Answer,StringComparison.OrdinalIgnoreCase))
         {
             answerIsCorrect = true;
         }
