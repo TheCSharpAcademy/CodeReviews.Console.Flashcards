@@ -8,8 +8,8 @@ class DBController
     private static readonly string DBName = "FlashCardsProgram";
     private static readonly string stacksTableName = "stacks";
     private static readonly string flashcardsTableName = "flashcards";
+    private static readonly string studysessionsTableName = "studysessions";
     private static readonly string connectionString = ConfigurationManager.ConnectionStrings["FlashCardsConnectionString"].ConnectionString;
-
 
     public static void CreateDB()
     {
@@ -55,6 +55,17 @@ class DBController
         answer VARCHAR(50) NOT NULL )";
         
         tableCmd.ExecuteNonQuery();
+
+        tableCmd.CommandText = 
+        $@"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='{studysessionsTableName}' and xtype='U')
+        CREATE TABLE dbo.{studysessionsTableName} (
+        studysessionid INT IDENTITY(1,1) PRIMARY KEY,
+        stackname VARCHAR(50) FOREIGN KEY REFERENCES stacks(stackname) ON DELETE CASCADE ON UPDATE CASCADE,
+        studysessiondate DATETIME,
+        score FLOAT)";
+
+        tableCmd.ExecuteNonQuery();
+
         connection.Close();   
     }
 
@@ -285,5 +296,55 @@ class DBController
         }
         connection.Close();
         return flashcardsQuery;
+    }
+
+    public static int InsertNewStudySession(StudySession newStudySession)
+    {
+        int insertSuccess;
+
+        using var connection = new SqlConnection(connectionString);
+        connection.Open();
+        var command = connection.CreateCommand();
+        command.CommandText = 
+        $@"USE {DBName}
+        INSERT INTO {studysessionsTableName}
+        (stackname, studysessiondate, score)
+        VALUES
+        (@stackname, @studysessiondate, @score)";
+
+        command.Parameters.Add("@stackname", System.Data.SqlDbType.VarChar, 50).Value = newStudySession.StackName;
+        command.Parameters.Add("@studysessiondate", System.Data.SqlDbType.DateTime).Value = newStudySession.Date;
+        command.Parameters.Add("@score", System.Data.SqlDbType.Float).Value = newStudySession.Score;
+
+        insertSuccess = command.ExecuteNonQuery();
+
+        connection.Close();
+        return insertSuccess;   
+    }
+
+    public static List<StudySession> SelectStudySessions()
+    {
+        List<StudySession> studySessionsQuery = [];
+ 
+        using var connection = new SqlConnection(connectionString);
+        
+        connection.Open();
+        var command = connection.CreateCommand();
+        command.CommandText = 
+        $@"USE {DBName}
+        SELECT studysessionid, stackname, studysessiondate, score
+        FROM {studysessionsTableName}
+        ORDER BY studysessiondate ASC";
+
+        SqlDataReader reader = command.ExecuteReader();
+
+        while(reader.Read())
+        {
+            studySessionsQuery.Add(new StudySession(reader.GetString(1), reader.GetDateTime(2),
+            reader.GetDouble(3),reader.GetInt32(0)));
+        }
+
+        connection.Close();
+        return studySessionsQuery;
     }
 }

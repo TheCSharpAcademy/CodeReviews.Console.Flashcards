@@ -18,6 +18,15 @@ IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='flashcards' and xtype='U')
     )
 GO
 
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='studysessions' and xtype='U')
+    CREATE TABLE dbo.studysessions (
+    studysessionid INT IDENTITY(1,1) PRIMARY KEY,
+    stackname VARCHAR(50) FOREIGN KEY REFERENCES stacks(stackname) ON DELETE CASCADE ON UPDATE CASCADE,
+    studysessiondate DATETIME,
+    score FLOAT,
+    )
+GO
+
 SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'
 GO
 
@@ -35,9 +44,5 @@ GO
 SELECT * FROM dbo.flashcards
 GO
 
-
-
-select top 4 * from flashcards 
-WHERE stackid = 17
-ORDER BY NEWID()
+SELECT * FROM dbo.studysessions
 GO
