@@ -5,10 +5,10 @@ namespace Flashcards;
 
 class DBController
 {
-    private static readonly string DBName = "FlashCardsProgram";
-    private static readonly string stacksTableName = "stacks";
-    private static readonly string flashcardsTableName = "flashcards";
-    private static readonly string studysessionsTableName = "studysessions";
+    public static readonly string DBName = "FlashCardsProgram";
+    public static readonly string stacksTableName = "stacks";
+    public static readonly string flashcardsTableName = "flashcards";
+    public static readonly string studysessionsTableName = "studysessions";
     private static readonly string connectionString = ConfigurationManager.ConnectionStrings["FlashCardsConnectionString"].ConnectionString;
 
     public static void CreateDB()
@@ -82,6 +82,28 @@ class DBController
         SELECT 1
         ELSE SELECT 0";
 
+        SqlDataReader reader = command.ExecuteReader();
+        reader.Read();
+        tableIsNotEmpty = Convert.ToBoolean(reader.GetInt32(0));
+
+        connection.Close();
+        return tableIsNotEmpty;
+    }
+
+    public static bool StackHasCards(Stacks selectedStack)
+    {
+        bool tableIsNotEmpty;
+
+        using var connection = new SqlConnection(connectionString);
+        connection.Open();
+        var command = connection.CreateCommand();
+        command.CommandText = 
+        $@"USE {DBName}
+        IF EXISTS(SELECT 1 FROM dbo.{flashcardsTableName} WHERE stackid = @stackID)
+        SELECT 1
+        ELSE SELECT 0";
+
+        command.Parameters.Add("@stackID", System.Data.SqlDbType.Int).Value = selectedStack.StackID;
         SqlDataReader reader = command.ExecuteReader();
         reader.Read();
         tableIsNotEmpty = Convert.ToBoolean(reader.GetInt32(0));
@@ -347,4 +369,33 @@ class DBController
         connection.Close();
         return studySessionsQuery;
     }
+
+    public static List<List<object>> GetStudySessionsReports()
+    {
+        List<List<object>> studySessionReport = [];
+    
+        using var connection = new SqlConnection(connectionString);
+
+        connection.Open();
+        var command = connection.CreateCommand();
+        command.CommandText = 
+        $@"USE {DBName}
+        SELECT YEAR(studysessiondate) AS 'year', MONTH(studysessiondate) AS 'month', stackname,
+        COUNT(studysessionid) AS 'studysessionqty',  AVG(score)*100 AS 'avgscore'
+        FROM {studysessionsTableName}
+        GROUP BY stackName, YEAR(studysessiondate), MONTH(studysessiondate)
+        ORDER BY 'year', 'month', stackname";
+
+        SqlDataReader reader = command.ExecuteReader();
+
+        while(reader.Read())
+        {
+            studySessionReport.Add([reader.GetInt32(0), reader.GetInt32(1), reader.GetString(2), 
+                reader.GetInt32(3), reader.GetDouble(4).ToString("0.#")]);
+        }
+
+        connection.Close();
+        return studySessionReport;
+    }
+
 }

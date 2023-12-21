@@ -11,7 +11,15 @@ class UI
     public static void MainMenu(string? stackName, string? errorMessage)
     {
         Helpers.ClearConsole();
-        Console.WriteLine($"Currently you have selected the stack \"{stackName}\"\n"); //pending if null
+        if(stackName == null)
+        {
+            Console.WriteLine("You haven't selected a stack\n");
+        }
+        else
+        {
+            Console.WriteLine($"Currently you have selected the stack \"{stackName}\"\n"); //pending if null
+        }
+        
         if (errorMessage != null)
         {
             Console.WriteLine("Error: " + errorMessage+"\n");
@@ -86,8 +94,7 @@ class UI
 
         Console.WriteLine(
             "1) View all the study sessions records\n"+
-            "2) Report 1\n"+
-            "3) Report 2\n"+
+            "2) View total and average score of study sessions by month and stack\n"+
             "0) Return to the main menu\n"
         );
     }
@@ -157,23 +164,25 @@ class UI
     public static void StudySessionQuestion(CardsDTO card)
     {
         Helpers.ClearConsole();
-        Console.WriteLine("What is the answer to the following question:\n");
-        Console.WriteLine($"{card.Question}\n");
+        Console.WriteLine("What is the answer to the following card:\n");
+        TableUI.PrintCardQuestion(card);
+        Console.WriteLine("\n");
     }
 
     public static void StudySessionAnswer(CardsDTO card, bool answerIsCorrect)
     {
         Helpers.ClearConsole();
-        Console.WriteLine("What is the answer to the following question:\n");
-        Console.WriteLine($"{card.Question}\n");
-
+        Console.WriteLine("What is the answer to the following card:\n");
+        TableUI.PrintCardAnswer(card);
+        Console.WriteLine("\n");
+    
         if(answerIsCorrect)
         {
-            Console.WriteLine("That is the correct answer. Press any key to continue");
+            Console.WriteLine("Correct answer. Press any key to continue");
         }
         else
         {
-            Console.WriteLine($"Wrong answer. The correct answer is: {card.Answer}. Press any key to continue");
+            Console.WriteLine("Wrong answer. Press any key to continue");
         }
     }
 
@@ -198,6 +207,13 @@ class UI
     {
         Helpers.ClearConsole();
         TableUI.PrintStudySessionsTable(currentStudySessionsToUI);
+        Console.WriteLine("Press any key to return");
+    }
+
+    public static void DisplayStudySessionsReport(List<List<object>> reportData)
+    {
+        Helpers.ClearConsole();
+        TableUI.PrintTable(reportData, TableUI.ReportTitle, TableUI.ReportHeader);
         Console.WriteLine("Press any key to return");
     }
 }

@@ -1,4 +1,3 @@
-
 USE FlashCardsProgram;
 GO
 
@@ -41,8 +40,24 @@ GO
 SELECT stackid, stackname FROM stacks
 GO
 
-SELECT * FROM dbo.flashcards
+IF EXISTS (SELECT 1 FROM dbo.flashcards WHERE stackid = 17)
+SELECT 1
+ELSE SELECT 0
 GO
+
+--  INSERT INTO studysessions
+--  (
+--   stackname, studysessiondate, score
+--  )
+--  VALUES
+--  ('spanish', DATETIMEFROMPARTS(2022,10,15,0,0,0,0), 0.25)
+--  GO
 
 SELECT * FROM dbo.studysessions
 GO
+
+SELECT YEAR(studysessiondate) AS 'year', MONTH(studysessiondate) AS 'month', stackname,
+COUNT(studysessionid) AS 'studysessionqty', AVG(score) AS 'avgscore'
+FROM studysessions
+GROUP BY stackName, YEAR(studysessiondate), MONTH(studysessiondate)
+ORDER BY 'year', 'month', stackName
