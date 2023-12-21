@@ -52,7 +52,7 @@ class InputValidation
         return errorMessage;
     }
 
-    public static string? ValidateCardSelection(List<Cards> cards, string? cardID)
+    public static string? ValidateCardSelection(List<CardsDTO> cards, string? cardID)
     {
         string? errorMessage = "The card you selected does not exists. ";
         if(cards.Any(cards => cards.CardID == Convert.ToInt32(cardID)))

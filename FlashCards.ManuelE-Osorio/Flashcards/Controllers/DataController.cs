@@ -1,6 +1,3 @@
-using System.Collections;
-using System.ComponentModel.Design;
-
 namespace Flashcards;
 
 class DataController
@@ -32,35 +29,32 @@ class DataController
         {
             UI.MainMenu(SelectedStack?.StackName, errorMessage);
             selection = Console.ReadLine() ?? "";
-            errorMessage = InputValidation.ValidateSelection(selection, 0, 4); //add a constrains method
-            switch(selection)
+            errorMessage = InputValidation.ValidateSelection(selection, 0, 4);
+            errorMessage ??= ConstraintsValidation.MainMenuConstraints(selection, SelectedStack);
+            if(errorMessage == null)
             {
-                case("1"):
-                    RunStacksController = true;
-                    StacksController();
-                    break;
-                case("2"):
-                    if(SelectedStack == null)
-                    {
-                        errorMessage += "You have not selected a stack. "; //Pending
-                    }
-                    else
-                    {
+                switch(selection)
+                {
+                    case("1"):
+                        RunStacksController = true;
+                        StacksController();
+                        break;
+                    case("2"):
                         RunFlashCardsController = true;
                         FlashCardsController();
-                    }
-                    break;
-                case("3"):
-                    RunStudySessionController = true; //Table Empty constrain, selected stack constrain
-                    StudySessionController();
-                    break;
-                case("4"):
-                    RunStudySessionDataController = true;
-                    StudySessionsDataController();
-                    break;
-                case("0"):
-                    RunFlashCardsProgram = false;
-                    break;
+                        break;
+                    case("3"):
+                        RunStudySessionController = true;
+                        StudySessionController();
+                        break;
+                    case("4"):
+                        RunStudySessionDataController = true;
+                        StudySessionsDataController();
+                        break;
+                    case("0"):
+                        RunFlashCardsProgram = false;
+                        break;
+                }
             }
         }
         while(RunFlashCardsProgram);
@@ -77,23 +71,27 @@ class DataController
             UI.Stacks(errorMessage);
             selection = Console.ReadLine() ?? "";
             errorMessage = InputValidation.ValidateSelection(selection, 0, 4);
-            switch(selection)
+            errorMessage ??= ConstraintsValidation.StacksMenuConstraints(selection);
+            if(errorMessage == null)
             {
-                case("1"):
-                    NewOrModifyStackController();
-                    break;
-                case("2"):
-                    SelectOrDeleteStackController("select");
-                    break;
-                case("3"):
-                    SelectOrDeleteStackController("modify");
-                    break;
-                case("4"):
-                    SelectOrDeleteStackController("delete");
-                    break;
-                case("0"):
-                    RunStacksController = false;
-                    break;
+                switch(selection)
+                {
+                    case("1"):
+                        NewOrModifyStackController();
+                        break;
+                    case("2"):
+                        SelectOrDeleteStackController("select");
+                        break;
+                    case("3"):
+                        SelectOrDeleteStackController("modify");
+                        break;
+                    case("4"):
+                        SelectOrDeleteStackController("delete");
+                        break;
+                    case("0"):
+                        RunStacksController = false;
+                        break;
+                }
             }
         }
         while(RunStacksController);
@@ -109,23 +107,27 @@ class DataController
             UI.FlashCards(SelectedStack?.StackName, errorMessage);
             selection = Console.ReadLine() ?? "";
             errorMessage = InputValidation.ValidateSelection(selection, 0, 4);
-            switch(selection)
+            errorMessage ??= ConstraintsValidation.FlashCardsMenuConstraints(selection, SelectedStack);
+            if(errorMessage == null)
             {
-                case("1"):
-                    SelectOrDeleteCardController(null); //table empty constrain
-                    break;
-                case("2"):
-                    NewOrModifyCardController();
-                    break;
-                case("3"):
-                    SelectOrDeleteCardController("modify");
-                    break;
-                case("4"):
-                    SelectOrDeleteCardController("delete");
-                    break;
-                case("0"):
-                    RunFlashCardsController = false;
-                    break;
+                switch(selection)
+                {
+                    case("1"):
+                        SelectOrDeleteCardController(null);
+                        break;
+                    case("2"):
+                        NewOrModifyCardController();
+                        break;
+                    case("3"):
+                        SelectOrDeleteCardController("modify");
+                        break;
+                    case("4"):
+                        SelectOrDeleteCardController("delete");
+                        break;
+                    case("0"):
+                        RunFlashCardsController = false;
+                        break;
+                }
             }
         }
         while(RunFlashCardsController);
@@ -173,8 +175,7 @@ class DataController
                     StudySessionGetData();
                     break;
                 case("2"):
-                    break;
-                case("3"):
+                    StudySessionGetReport();
                     break;
                 case("0"):
                     RunStudySessionDataController = false;
@@ -240,7 +241,7 @@ class DataController
         }
     }
 
-    public void NewOrModifyCardController(Cards? oldCard = null, string? action = null)  //Delete?
+    public void NewOrModifyCardController(Cards? oldCard = null, string? action = null)
     {
         string cardQuestion;
         string cardAnswer;
@@ -249,7 +250,7 @@ class DataController
         {
             UI.NewCard(errorMessage, "question", action);
             cardQuestion = Console.ReadLine() ?? "";
-            errorMessage = InputValidation.ValidateNewStackName(cardQuestion); //Method to validate cards Q&A
+            errorMessage = InputValidation.ValidateNewStackName(cardQuestion);
         }
         while(errorMessage != null);
 
@@ -257,7 +258,7 @@ class DataController
         {
             UI.NewCard(errorMessage, "answer", action);
             cardAnswer = Console.ReadLine() ?? "";
-            errorMessage = InputValidation.ValidateNewStackName(cardAnswer); //Method to validate cards Q&A
+            errorMessage = InputValidation.ValidateNewStackName(cardAnswer);
         }
         while(errorMessage != null);
 
@@ -289,7 +290,7 @@ class DataController
             {
                 errorMessage = InputValidation.ValidateSelection(cardID,currentCardsToUI[0].CardID, 
                 currentCardsToUI[^1].CardID);
-                errorMessage ??= InputValidation.ValidateCardSelection(currentCards, cardID);
+                errorMessage ??= InputValidation.ValidateCardSelection(currentCardsToUI, cardID);
             }
         }
         while(errorMessage != null);
@@ -350,11 +351,18 @@ class DataController
         StudySessionQuestions = questionsQuantityInt;
     }
 
-    public void StudySessionGetData()
+    public static void StudySessionGetData()
     {
         List<StudySession> studySessions = DBController.SelectStudySessions();
         List<StudySessionDTO> studySessionsToUI = StudySessionToStudySessionsDTO(studySessions);
         UI.DisplayStudySessions(studySessionsToUI);
+        Console.ReadLine();
+    }
+
+    public static void StudySessionGetReport()
+    {
+        List<List<object>> reportDate = DBController.GetStudySessionsReports();
+        UI.DisplayStudySessionsReport(reportDate);
         Console.ReadLine();
     }
     public static List<StacksDTO> StacksToStacksDTO(List<Stacks> stacks)
