@@ -1,19 +1,17 @@
 ﻿using Dapper;
 using System;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using Spectre.Console;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Collections;
 
 namespace Kakurokan.Flashcards
 {
     public class DataAcess
     {
-        private readonly string ConnectionString = ConfigurationManager.ConnectionStrings["Stacks"].ConnectionString;
+        private readonly string ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["Stacks"].ConnectionString;
 
         public DataAcess()
         {
@@ -70,7 +68,7 @@ namespace Kakurokan.Flashcards
             int n1 = 1;
             foreach (Flashcards flashcards1 in flashcards)
             {
-                FlashcardsDTO clean_flashcard = new FlashcardsDTO(flashcards1.Id, flashcards1.Question, flashcards1.Answer);
+                FlashcardsDto clean_flashcard = new FlashcardsDto(flashcards1.Id, flashcards1.Question, flashcards1.Answer);
                 table.AddRow(n1.ToString(), clean_flashcard.Question, clean_flashcard.Answer);
                 n1 += 1;
             }
