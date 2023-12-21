@@ -7,11 +7,12 @@ namespace Kakurokan.Flashcards
         public int Id { get; private set; }
         public int StackId { get; private set; }
 
-        public int Score = 0;
+        public int Score;
         public string Date { get; private set; }
 
         public StudySessions()
         {
+            Score = 0;
         }
 
         public StudySessions(int stackId)

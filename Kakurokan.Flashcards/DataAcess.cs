@@ -7,7 +7,6 @@ using System.Linq;
 using Spectre.Console;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Collections;
 
 namespace Kakurokan.Flashcards
 {
