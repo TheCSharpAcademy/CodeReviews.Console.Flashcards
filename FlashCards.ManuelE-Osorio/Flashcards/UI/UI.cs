@@ -2,10 +2,17 @@ namespace Flashcards;
 
 class UI
 {
-    public static void WelcomeMessage()
+    public static void WelcomeMessage(string? errorMessage)
     {
         Helpers.ClearConsole();
+        if(errorMessage != null)
+        {
+            Console.WriteLine("Error: " + errorMessage + "\n");
+        }
+        else
+        {
         Console.WriteLine("Welcome to the Flash Cards App!\n");
+        }
         Thread.Sleep(2000);
     }
     public static void MainMenu(string? stackName, string? errorMessage)
@@ -157,8 +164,7 @@ class UI
             Console.WriteLine("Error: " + errorMessage+"\n");
         }
 
-        Console.WriteLine($"Please write the {action} {type} of the card. Valid characters are a to z, A to Z and 0 to 9.\n"+
-        $"The maximum length of the {type} is 50 characters.\n");
+        Console.WriteLine($"Please write the {action} {type} of the card. The maximum length of the {type} is 300 characters.\n");
     }
 
     public static void StudySessionQuestion(CardsDTO card)

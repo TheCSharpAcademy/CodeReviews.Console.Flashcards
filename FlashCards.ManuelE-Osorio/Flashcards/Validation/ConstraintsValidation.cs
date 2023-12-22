@@ -64,7 +64,6 @@ class ConstraintsValidation
                 if(selectedStack!= null && !DBController.StackHasCards(selectedStack))
                 {
                     errorMessage += "The selected stacks doesn't have any cards recorded. ";
-
                 }
                 break;
         }

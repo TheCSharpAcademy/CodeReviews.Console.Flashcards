@@ -21,3 +21,7 @@ stackid column useless, so it may be removed)
 5. https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference?redirectedfrom=MSDN
 6. https://learn.microsoft.com/en-us/sql/t-sql/data-types/data-types-transact-sql?view=sql-server-ver16
 7. https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/
+8. https://stackoverflow.com/questions/26790477/read-csv-to-list-of-objects
+9. https://learn.microsoft.com/en-us/sql/t-sql/data-types/nchar-and-nvarchar-transact-sql?view=sql-server-ver16
+
+

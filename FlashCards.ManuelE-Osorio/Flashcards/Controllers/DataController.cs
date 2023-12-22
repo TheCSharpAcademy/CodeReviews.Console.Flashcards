@@ -20,9 +20,19 @@ class DataController
         StudySessionQuestions = 5;
     }
 
+    public void Init()
+    {
+        string? errorMessage = DBController.DBInit();
+        UI.WelcomeMessage(errorMessage);
+        if(errorMessage != null)
+        {
+            RunFlashCardsProgram = false;
+        }
+        MainMenuController();
+    }
+
     public void MainMenuController()
     {
-        UI.WelcomeMessage();
         string? errorMessage = null; //DB Init missing
         string selection;
         do
@@ -229,7 +239,7 @@ class DataController
                 SelectedStack = currentStacks.Find(stacks => stacks.StackName == stackName);
                 break;
             case("delete"):
-                DBController.DeleteStack(stackName);
+                DBController.DeleteStack(SelectedStack);
                 if (SelectedStack?.StackName == stackName)
                     SelectedStack = null;
                 break;
@@ -250,7 +260,7 @@ class DataController
         {
             UI.NewCard(errorMessage, "question", action);
             cardQuestion = Console.ReadLine() ?? "";
-            errorMessage = InputValidation.ValidateNewStackName(cardQuestion);
+            errorMessage = InputValidation.ValidateCardAnswerQuestion(cardQuestion);
         }
         while(errorMessage != null);
 
@@ -258,19 +268,19 @@ class DataController
         {
             UI.NewCard(errorMessage, "answer", action);
             cardAnswer = Console.ReadLine() ?? "";
-            errorMessage = InputValidation.ValidateNewStackName(cardAnswer);
+            errorMessage = InputValidation.ValidateCardAnswerQuestion(cardAnswer);
         }
         while(errorMessage != null);
 
 
         if (action == null)
         {
-            DBController.InsertNewCard(new Cards(SelectedStack?.StackID ?? 0, cardQuestion, cardAnswer));
+            DBController.InsertNewCard(new Cards(SelectedStack?.StackName ?? "", cardQuestion, cardAnswer));
         }
         else if (action == "new")
         {
             DBController.ModifyCard(
-                new Cards(SelectedStack?.StackID ?? 0, cardQuestion, 
+                new Cards(SelectedStack?.StackName ?? "", cardQuestion, 
                 cardAnswer, oldCard?.CardID ?? 0));
         }
     }
