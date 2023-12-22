@@ -9,7 +9,7 @@ class DBController
     public static readonly string stacksTableName = "stacks";
     public static readonly string flashcardsTableName = "flashcards";
     public static readonly string studysessionsTableName = "studysessions";
-    private static readonly string connectionString = ConfigurationManager.ConnectionStrings["FlashCardsConnectionString"].ConnectionString;
+    private static string? connectionString;
 
     public static void CreateDB()
     {
@@ -40,8 +40,8 @@ class DBController
         $@"USE {DBName}
         IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='{stacksTableName}' and xtype='U')
         CREATE TABLE dbo.{stacksTableName} (
-        stackid INT IDENTITY(1,1) PRIMARY KEY,
-        stackname VARCHAR(50) UNIQUE NOT NULL)";
+        stackid INT IDENTITY(1,1) UNIQUE NOT NULL,
+        stackname VARCHAR(50) PRIMARY KEY)";
         
         tableCmd.ExecuteNonQuery();
 
@@ -49,10 +49,9 @@ class DBController
         $@"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='{flashcardsTableName}' and xtype='U')
         CREATE TABLE dbo.{flashcardsTableName} (
         cardid INT IDENTITY(1,1) PRIMARY KEY,
-        stackid INT FOREIGN KEY REFERENCES stacks(stackid) 
-        ON DELETE CASCADE ON UPDATE CASCADE,
-        question VARCHAR(50) UNIQUE NOT NULL,
-        answer VARCHAR(50) NOT NULL )";
+        stackname VARCHAR(50) FOREIGN KEY REFERENCES stacks(stackname) ON DELETE CASCADE ON UPDATE CASCADE,
+        question NVARCHAR(600) NOT NULL,
+        answer NVARCHAR(600) NOT NULL, )";
         
         tableCmd.ExecuteNonQuery();
 
@@ -67,6 +66,38 @@ class DBController
         tableCmd.ExecuteNonQuery();
 
         connection.Close();   
+    }
+
+    public static string? DBInit()
+    {
+        string? errorMessage = null;
+        bool insertData = false;
+
+        try
+        {
+            connectionString = ConfigurationManager.ConnectionStrings["FlashCardsConnectionString"].ConnectionString;
+            CreateDB();
+            CreateTables();
+
+            insertData = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("PopulateDB"));
+        }
+        catch
+        {
+            errorMessage += "Please configure your connection string before using the program. ";
+        }
+
+        if(insertData && errorMessage == null)
+        {
+            try
+            {
+                Helpers.DBPopulate();
+            }
+            catch
+            {
+                errorMessage += "Please check your csv files. ";
+            }
+        }
+        return errorMessage;
     }
 
     public static bool TableIsNotEmpty(string table)
@@ -99,11 +130,11 @@ class DBController
         var command = connection.CreateCommand();
         command.CommandText = 
         $@"USE {DBName}
-        IF EXISTS(SELECT 1 FROM dbo.{flashcardsTableName} WHERE stackid = @stackID)
+        IF EXISTS(SELECT 1 FROM dbo.{flashcardsTableName} WHERE stackname = @stackName)
         SELECT 1
         ELSE SELECT 0";
 
-        command.Parameters.Add("@stackID", System.Data.SqlDbType.Int).Value = selectedStack.StackID;
+        command.Parameters.Add("@stackname", System.Data.SqlDbType.VarChar, 50).Value = selectedStack.StackName;
         SqlDataReader reader = command.ExecuteReader();
         reader.Read();
         tableIsNotEmpty = Convert.ToBoolean(reader.GetInt32(0));
@@ -160,7 +191,7 @@ class DBController
         return stacksQuery;
     }
 
-    public static void DeleteStack(string stackName) //To improve
+    public static void DeleteStack(Stacks? selectedStack) //To improve
     {
 
         using var connection = new SqlConnection(connectionString);
@@ -171,7 +202,7 @@ class DBController
         DELETE FROM {stacksTableName}
         WHERE stackname = @stackName";
 
-        command.Parameters.Add("@stackName", System.Data.SqlDbType.VarChar,50).Value = stackName;
+        command.Parameters.Add("@stackName", System.Data.SqlDbType.VarChar,50).Value = selectedStack?.StackName;
         command.ExecuteNonQuery();
 
         connection.Close();
@@ -209,18 +240,18 @@ class DBController
         var command = connection.CreateCommand();
         command.CommandText = 
         $@"USE {DBName}
-        SELECT cardid, stackid, question, answer
+        SELECT cardid, stackname, question, answer
         FROM {flashcardsTableName}
-        WHERE stackid = @stackID
+        WHERE stackname = @stackName
         ORDER BY question ASC";
 
-        command.Parameters.Add("@stackID", System.Data.SqlDbType.Int).Value = selectedStack?.StackID;
+        command.Parameters.Add("@stackName", System.Data.SqlDbType.VarChar, 50).Value = selectedStack?.StackName;
 
         SqlDataReader reader = command.ExecuteReader();
 
         while(reader.Read())
         {
-            flashcardsQuery.Add(new Cards(reader.GetInt32(1), reader.GetString(2),
+            flashcardsQuery.Add(new Cards(reader.GetString(1), reader.GetString(2),
             reader.GetString(3),reader.GetInt32(0)));
         }
 
@@ -238,13 +269,13 @@ class DBController
         command.CommandText = 
         $@"USE {DBName}
         INSERT INTO {flashcardsTableName}
-        (stackid, question, answer)
+        (stackname, question, answer)
         VALUES
-        (@stackid, @question, @answer)";
+        (@stackName, @question, @answer)";
 
-        command.Parameters.Add("@stackid", System.Data.SqlDbType.Int).Value = newCard.StackID;
-        command.Parameters.Add("@question", System.Data.SqlDbType.VarChar,50).Value = newCard.Question;
-        command.Parameters.Add("@answer", System.Data.SqlDbType.VarChar,50).Value = newCard.Answer;
+        command.Parameters.Add("@stackName", System.Data.SqlDbType.VarChar, 50).Value = newCard.StackName;
+        command.Parameters.Add("@question", System.Data.SqlDbType.NVarChar,600).Value = newCard.Question;
+        command.Parameters.Add("@answer", System.Data.SqlDbType.NVarChar,600).Value = newCard.Answer;
 
         insertSuccess = command.ExecuteNonQuery();
 
@@ -267,8 +298,8 @@ class DBController
         answer = @answer
         WHERE cardid = @cardid";
 
-        command.Parameters.Add("@question", System.Data.SqlDbType.VarChar, 50).Value = modifyCard.Question;
-        command.Parameters.Add("@answer", System.Data.SqlDbType.VarChar,50).Value = modifyCard.Answer;
+        command.Parameters.Add("@question", System.Data.SqlDbType.NVarChar, 600).Value = modifyCard.Question;
+        command.Parameters.Add("@answer", System.Data.SqlDbType.NVarChar,600).Value = modifyCard.Answer;
         command.Parameters.Add("@cardid", System.Data.SqlDbType.Int).Value = modifyCard.CardID;
 
         insertSuccess = command.ExecuteNonQuery();
@@ -277,7 +308,7 @@ class DBController
         return insertSuccess;   
     }
 
-    public static void DeleteCard(Cards card) //To improve
+    public static void DeleteCard(Cards card)
     {
         using var connection = new SqlConnection(connectionString);
         connection.Open();
@@ -304,16 +335,16 @@ class DBController
         command.CommandText = 
         $@"USE {DBName}
         SELECT TOP {quantity} * FROM {flashcardsTableName} 
-        WHERE stackid = @stackID
+        WHERE stackname = @stackName
         ORDER BY NEWID()";
 
-        command.Parameters.Add("@stackID", System.Data.SqlDbType.Int).Value = stack?.StackID;
+        command.Parameters.Add("@stackName", System.Data.SqlDbType.VarChar, 50).Value = stack?.StackName;
 
         SqlDataReader reader = command.ExecuteReader();
 
         while(reader.Read())
         {
-            flashcardsQuery.Add(new Cards(reader.GetInt32(1), reader.GetString(2),
+            flashcardsQuery.Add(new Cards(reader.GetString(1), reader.GetString(2),
             reader.GetString(3),reader.GetInt32(0)));
         }
         connection.Close();

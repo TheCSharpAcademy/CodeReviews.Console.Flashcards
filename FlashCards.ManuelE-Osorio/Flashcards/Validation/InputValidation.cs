@@ -52,6 +52,22 @@ class InputValidation
         return errorMessage;
     }
 
+    public static string? ValidateCardAnswerQuestion(string cardValue)
+    {
+        string? errorMessage = null;
+
+        if(cardValue.Length<1)
+        {
+            errorMessage += "Input is empty. ";
+        }
+
+        if(cardValue.Length >= 300)
+        {
+            errorMessage += "Input is more than 300 characters. ";
+        }
+
+        return errorMessage;
+    }
     public static string? ValidateCardSelection(List<CardsDTO> cards, string? cardID)
     {
         string? errorMessage = "The card you selected does not exists. ";
