@@ -24,7 +24,7 @@ class UI
         }
         else
         {
-            Console.WriteLine($"Currently you have selected the stack \"{stackName}\"\n"); //pending if null
+            Console.WriteLine($"Currently you have selected the stack \"{stackName}\"\n");
         }
         
         if (errorMessage != null)
@@ -53,7 +53,7 @@ class UI
             "2) Select a stack\n"+
             "3) Modify a stack\n"+
             "4) Delete a stack\n"+
-          "0) Return to the main menu\n");
+            "0) Return to the main menu\n");
     }
 
     public static void FlashCards(string? stackName, string? errorMessage)

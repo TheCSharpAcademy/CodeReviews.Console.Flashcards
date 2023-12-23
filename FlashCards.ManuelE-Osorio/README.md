@@ -2,16 +2,34 @@
 
 ## Usage
 
+# First Time Running
+
+The user has to configure the app.config file with the appropiate connection string for SQL Sever. There are three .csv files included for testing purposes, they can be imported if the tables are empty and the user has selected the PopulateDB as true in the app.config file.
+
+# Stacks Menu
+
+The user is able to create, edit and delete stacks in the database. Before using the Cards Menu and running a Study Session the user has to selected the working stack they want to use.
+
+# Cards Menu
+
+The user is able to view, create, edit and delete the cards in the database for the selected stack. Currently there are no major restrictions on the answer and questions of the cards, just a 300 character length limitation.
+
+# Study Session
+
+The user is able to start a study session for the selected stack. Currently the only parameter the user is able to modify is the quantity of cards that will be displayed on the study session.
+
+# Study Session Data
+
+The user is able to access all the records of the previous study sessions and check monthy average scores by deck.
+
 
 ## To be done / Things to improve
 
 1. Implement async programming model.
 2. Implement keyboard press to exit the current event, so the user can exit and ongoing method without having to finish it.
 3. Add timer restrictions and retries on flashcards and the ability to flip cards to generate another stack.
-4. Migrate FK of cards table so it uses stackname instead of stackid. Since the stackname is UNIQUE is more convenient to relation them this way (this makes the 
-stackid column useless, so it may be removed)
-5. Create a input validation on the questions and answers of the cards. Right now it just checks for length constrains and then adds it as a SqlDBType.VarChar to que insert command.
-
+4. Create a input validation on the questions and answers of the cards. Right now it just checks for length constrains and then adds it as a SqlDBType.NVarChar to que insert command.
+5. Add an option to import cards from a .csv based on the Helpers.PopulateDB() method.
 
 ## References
 1. https://stackoverflow.com/questions/18435065/foreign-key-to-non-primary-key

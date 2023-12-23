@@ -24,11 +24,10 @@ class DataController
     {
         string? errorMessage = DBController.DBInit();
         UI.WelcomeMessage(errorMessage);
-        if(errorMessage != null)
+        if(errorMessage == null)
         {
-            RunFlashCardsProgram = false;
+            MainMenuController();
         }
-        MainMenuController();
     }
 
     public void MainMenuController()
