@@ -25,6 +25,7 @@ namespace FlashCards.Ibrahim.UI
                 Console.WriteLine("Type D to delete a Stack");
                 Console.WriteLine("Type U to update a Stack"); // updates stack and flashcards
                 Console.WriteLine("Type S to study a Stack");
+                Console.WriteLine("Type H to view your Game History");
                 
                 string firstOption = Console.ReadLine().ToUpper().Trim();
                 Console.Clear();
@@ -92,7 +93,7 @@ namespace FlashCards.Ibrahim.UI
                                 Console.WriteLine("Type I to insert a Flashcard");
                                 Console.WriteLine("Type U to update a Flashcard");
                                 Console.WriteLine("Type D to delete a Flashcard");
-                                string secondChoice = Console.ReadLine();
+                                string secondChoice = Console.ReadLine().ToUpper().Trim();
 
                                 switch (secondChoice)
                                 {
@@ -134,6 +135,13 @@ namespace FlashCards.Ibrahim.UI
                         studyGame.ShowMenu();
                         Console.WriteLine("press any key to go back to main menu");
                         break;
+                    case "H":
+                        Console.WriteLine("Your Game History \n");
+                        TableVisualization.ShowTable(StudySession_DB_Access.GetAllSessions());
+                        Console.WriteLine("press any key to go back to main menu");
+                        Console.ReadLine();
+                        break;
+
                 }
             }
         }

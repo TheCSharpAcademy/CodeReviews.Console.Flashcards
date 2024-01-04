@@ -26,7 +26,7 @@ namespace FlashCards.Ibrahim.Database_Access
                 SqlCommand command = sqlConnection.CreateCommand();
                 command.CommandText = @"
                         INSERT INTO StudySession_Table (Stacks_Id,Score,Date) 
-                        VALUES (@Stacks_Id,@Date,@Score)";
+                        VALUES (@Stacks_Id,@Score,@Date)";
                 command.Parameters.AddWithValue("@Stacks_Id", Stacks_Id);
                 command.Parameters.AddWithValue("@Score", score);
                 command.Parameters.AddWithValue("@Date", date);
@@ -49,8 +49,8 @@ namespace FlashCards.Ibrahim.Database_Access
                         StudySession session = new StudySession();
                         session.Id = reader.GetInt32(0);
                         session.Stacks_Id = reader.GetInt32(1);
-                        session.Date = reader.GetDateTime(2); 
-                        session.Score = reader.GetInt32(3);
+                        session.Date = reader.GetDateTime(3); 
+                        session.Score = reader.GetInt32(2);
                         studySessions.Add(session);
                     }
                 }
