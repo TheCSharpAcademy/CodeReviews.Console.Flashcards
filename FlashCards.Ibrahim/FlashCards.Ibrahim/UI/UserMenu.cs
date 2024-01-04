@@ -145,7 +145,7 @@ namespace FlashCards.Ibrahim.UI
                         TableVisualization.ShowTable(Stacks_DB_Access.GetAllStacks());
                         Console.WriteLine("Please enter the stack Id which you'd like to select");
                         int stackId= Convert.ToInt32(Console.ReadLine());
-                        Console.WriteLine("Please enter the year you'd like to view");
+                        Console.WriteLine("Please enter which year's report you'd like to view");
                         int year = Convert.ToInt32(Console.ReadLine());
                         StudySession_DB_Access.GetReports(year, stackId);
                         Console.WriteLine("enter any key to go back");
