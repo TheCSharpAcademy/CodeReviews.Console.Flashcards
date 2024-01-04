@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FlashCards.Ibrahim.Models
 {
-    internal class StackDTO
+    public class StackDTO
     {
     }
 }

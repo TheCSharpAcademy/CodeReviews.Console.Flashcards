@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FlashCards.Ibrahim.Models
 {
-    internal class FlashcardDTO
+    public class FlashcardDTO
     {
         public int Id { get; set; }
         public string Front {  get; set; }
