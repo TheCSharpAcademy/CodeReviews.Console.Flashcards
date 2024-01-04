@@ -26,7 +26,7 @@ namespace FlashCards.Ibrahim.UI
                 Console.WriteLine("Type U to update a Stack"); // updates stack and flashcards
                 Console.WriteLine("Type S to study a Stack");
                 Console.WriteLine("Type H to view your Game History");
-                
+                Console.WriteLine("Type R to view your Game reports");
                 string firstOption = Console.ReadLine().ToUpper().Trim();
                 Console.Clear();
 
@@ -141,7 +141,16 @@ namespace FlashCards.Ibrahim.UI
                         Console.WriteLine("press any key to go back to main menu");
                         Console.ReadLine();
                         break;
-
+                    case "R":
+                        TableVisualization.ShowTable(Stacks_DB_Access.GetAllStacks());
+                        Console.WriteLine("Please enter the stack Id which you'd like to select");
+                        int stackId= Convert.ToInt32(Console.ReadLine());
+                        Console.WriteLine("Please enter the year you'd like to view");
+                        int year = Convert.ToInt32(Console.ReadLine());
+                        StudySession_DB_Access.GetReports(year, stackId);
+                        Console.WriteLine("enter any key to go back");
+                        Console.ReadLine();
+                        break;
                 }
             }
         }
