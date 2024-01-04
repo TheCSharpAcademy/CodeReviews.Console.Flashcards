@@ -168,7 +168,6 @@ namespace FlashCards.Ibrahim.Database_Acess
                 SqlCommand command = sqlConnection.CreateCommand();
                 command.CommandText = @"SELECT * FROM Flashcards_Table WHERE Stacks_Id = @Id";
                 command.Parameters.AddWithValue("@Id", stackID);
-                command.ExecuteReader();
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
