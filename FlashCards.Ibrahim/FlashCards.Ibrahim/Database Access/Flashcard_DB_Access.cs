@@ -24,9 +24,9 @@ namespace FlashCards.Ibrahim.Database_Acess
                 sqlConnection.Open();
                 SqlCommand command = sqlConnection.CreateCommand();
                 command.CommandText = @"
-                        INSERT INTO Flashcards_Table (Stack_Id, Front, Back) 
-                        VALUES (@Stack_Id, @Front, @Back)";
-                command.Parameters.AddWithValue("@Stack_Id", Stack_Id);
+                        INSERT INTO Flashcards_Table (Stacks_Id, Front, Back) 
+                        VALUES (@Stacks_Id, @Front, @Back)";
+                command.Parameters.AddWithValue("@Stacks_Id", Stack_Id);
                 command.Parameters.AddWithValue("@Front", Front);
                 command.Parameters.AddWithValue("@Back", Back);
                 command.ExecuteNonQuery();
@@ -114,7 +114,6 @@ namespace FlashCards.Ibrahim.Database_Acess
                         SqlCommand command = sqlConnection.CreateCommand();
                         command.CommandText = @"SELECT * FROM Flashcards_Table WHERE Stacks_Id = @Id";
                         command.Parameters.AddWithValue("@Id", Id);
-                        command.ExecuteReader();
                         using(var reader = command.ExecuteReader())
                         {
                             int displayOrder = 1;
@@ -157,6 +156,32 @@ namespace FlashCards.Ibrahim.Database_Acess
                 }
             }
             return flashcard;
+        }
+
+        public static List<FlashcardDTO> GetAllFlashcards2(int stackID)
+        {
+            List<FlashcardDTO> flashcards = new List<FlashcardDTO>();
+
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+            {
+                sqlConnection.Open();
+                SqlCommand command = sqlConnection.CreateCommand();
+                command.CommandText = @"SELECT * FROM Flashcards_Table WHERE Stacks_Id = @Id";
+                command.Parameters.AddWithValue("@Id", stackID);
+                command.ExecuteReader();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        FlashcardDTO flashcard = new FlashcardDTO();
+                        flashcard.Id = reader.GetInt32(0);
+                        flashcard.Front = reader.GetString(2);
+                        flashcard.Back = reader.GetString(3);
+                        flashcards.Add(flashcard);
+                    }
+                }
+                return flashcards;
+            }
         }
     }
 }

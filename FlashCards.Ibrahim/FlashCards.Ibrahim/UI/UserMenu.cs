@@ -18,32 +18,34 @@ namespace FlashCards.Ibrahim.UI
 
             while(!endApp)
             {
-                Console.WriteLine("Flashcard application");
-                Console.WriteLine("Type S to create a new Stack");
-                Console.WriteLine("Type V to view Current Stacks");
+                Console.Clear();
+                Console.WriteLine("Flashcard Application\n");
+                Console.WriteLine("Type C to create a new Stack of flashcards");
+                Console.WriteLine("Type V to view current Stacks");
                 Console.WriteLine("Type D to delete a Stack");
-                Console.WriteLine("Type U to Update a current Stack");
-                Console.WriteLine("Type P to study a Stack");
-
-                string firstOption = helpers.ValidateFirstChoice(Console.ReadLine());
+                Console.WriteLine("Type U to update a Stack"); // updates stack and flashcards
+                Console.WriteLine("Type S to study a Stack");
+                
+                string firstOption = Console.ReadLine().ToUpper().Trim();
+                Console.Clear();
 
                 switch(firstOption)
                 {
-                    case "S":
+                    case "C":
                         Console.WriteLine("Please enter the name of your new Stack");
                         string name = Console.ReadLine();
-                        int Stack_Id= Stacks_DB_Access.Insert_Stack(name).ID;
+                        Stacks_DB_Access.Insert_Stack(name);
+                        int Stack_Id = Stacks_DB_Access.GetOneStack(name).ID;
                         bool endLoop = false;
                         while (!endLoop)
                         {
                             Console.Clear();
-                            Console.WriteLine("Please type in the front side of the flashcard");
+                            Console.WriteLine("\nPlease type in the front side of the flashcard");
                             String Front= Console.ReadLine();
-                            Console.WriteLine("Please type in the back side of the flashcard");
+                            Console.WriteLine("\nPlease type in the back side of the flashcard");
                             String Back = Console.ReadLine();
                             Flashcard_DB_Access.Insert_Flashcard(Stack_Id, Front, Back);
-                            Console.WriteLine(@"Type Q if you are done adding flashcards to the stack 
-or press any key to keep adding cards");
+                            Console.WriteLine("\nType Q if you are done adding flashcards to the stack or press any key to keep adding cards");
                             string option = Console.ReadLine();
                             endLoop = option.ToUpper() == "Q" ? true : false;
                         }
@@ -52,18 +54,82 @@ or press any key to keep adding cards");
                         break;
                     case "V":
                         Console.WriteLine("Your Stacks");
-                        Stacks_DB_Access.GetAllStacks();
-
-                        Console.WriteLine("Type in the Stack you wish to view");
-                        int stack_Id = Stacks_DB_Access.GetOneStack(Console.ReadLine()).ID;
-                        Flashcard_DB_Access.GetAllFlashcards(stack_Id);
-
+                        TableVisualization.ShowTable(Stacks_DB_Access.GetAllStacks());
+                        Console.WriteLine("\nType in the Stack you wish to view");
+                        int stack_Id = Stacks_DB_Access.GetOneStack(Console.ReadLine().Trim()).ID;
+                        Console.Clear();
+                        TableVisualization.ShowTable(Flashcard_DB_Access.GetAllFlashcards(stack_Id));
+                        Console.WriteLine("press any key to go back to main menu");
+                        Console.ReadLine();
                         break;
                     case "D":
+                        Console.WriteLine("Please enter the stack name you would like to delete");
+                        name = Console.ReadLine();
+                        int stackID = Stacks_DB_Access.GetOneStack(name).ID;
+                        Stacks_DB_Access.Delete_Stack(stackID);
+                        Console.WriteLine("press any key to go back to main menu");
+                        Console.ReadLine();
                         break;
                     case "U":
+                        Console.WriteLine("Please enter the stack name you would like to update");
+                        name = Console.ReadLine();
+                        stackID = Stacks_DB_Access.GetOneStack(name).ID;
+                        Console.WriteLine($"type N to change the stack's name");
+                        Console.WriteLine($"type V to view and update the flashcards in {name}");
+                        string userChoice = Console.ReadLine();
+                        Console.Clear();
+                        switch (userChoice)
+                        {
+                            case "N":
+                                Console.Write($"Enter new name for {name} stack here: ");
+                                string newName = Console.ReadLine();
+                                Stacks_DB_Access.Update_Stack(stackID, newName);
+                                break;
+                            case "V":
+                                Console.WriteLine($"{name} Flashcards");
+                                TableVisualization.ShowTable(Flashcard_DB_Access.GetAllFlashcards2(stackID));
+
+                                Console.WriteLine("Type I to insert a Flashcard");
+                                Console.WriteLine("Type U to update a Flashcard");
+                                Console.WriteLine("Type D to delete a Flashcard");
+                                string secondChoice = Console.ReadLine();
+
+                                switch (secondChoice)
+                                {
+                                    case "I":
+                                        Console.WriteLine("\nNew Flashcard Info");
+                                        Console.WriteLine("\nPlease type in the front side of the flashcard");
+                                        String Front = Console.ReadLine();
+                                        Console.WriteLine("\nPlease type in the back side of the flashcard");
+                                        String Back = Console.ReadLine();
+                                        Flashcard_DB_Access.Insert_Flashcard(stackID, Front, Back);
+                                        break;
+
+                                    case "U":
+                                        Console.WriteLine("Type in the Id of the flashcard you wish to update");
+                                        int Id = Convert.ToInt32(Console.ReadLine());
+                                        Console.WriteLine("Type in new front side of the card or hit enter to leave it as is");
+                                        string front= Console.ReadLine();
+                                        Console.WriteLine("Type in new back side of the card or hit enter to leave it as is");
+                                        string back = Console.ReadLine();
+
+                                        front = String.IsNullOrEmpty(front) ? null : front;
+                                        back = String.IsNullOrEmpty(back) ? null : back;
+
+                                        Flashcard_DB_Access.Update_Flashcard(Id, front, back);
+                                        break;
+                                    case "D":
+                                        Console.WriteLine("Type in the Id of the flashcard you wish to update");
+                                        Id = Convert.ToInt32(Console.ReadLine());
+                                        Flashcard_DB_Access.Delete_Flashcard(Id);
+                                        break;
+                                }
+                                break;
+                        }
+                        Console.WriteLine("press any key to go back to main menu");
+                        Console.ReadLine();
                         break;
-                    case "P":
+                    case "S":
                         StudyGame studyGame = new StudyGame();
                         studyGame.ShowMenu();
                         Console.WriteLine("press any key to go back to main menu");
