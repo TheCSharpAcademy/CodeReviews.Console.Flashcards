@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FlashCards.Ibrahim.Models
 {
-    internal class Stacks
+    public class Stacks
     {
         public int ID { get; set; }
         public string Name { get; set; }

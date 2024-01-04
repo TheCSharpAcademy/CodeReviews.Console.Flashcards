@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FlashCards.Ibrahim.Models
 {
-    internal class Flashcard
+    public class Flashcard
     {
         public int Id { get; set; }
         public int Stacks_Id { get; set; }

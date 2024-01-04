@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace FlashCards.Ibrahim.UI
 {
-    public class TableVisualization
+    public class StudyGame
     {
+        internal void ShowMenu()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
