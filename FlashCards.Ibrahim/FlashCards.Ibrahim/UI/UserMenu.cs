@@ -78,7 +78,7 @@ namespace FlashCards.Ibrahim.UI
                         Console.WriteLine($"type V to view and update the flashcards in {name}");
                         string userChoice = Console.ReadLine();
                         Console.Clear();
-                        switch (userChoice)
+                        switch (userChoice.ToUpper())
                         {
                             case "N":
                                 Console.Write($"Enter new name for {name} stack here: ");
