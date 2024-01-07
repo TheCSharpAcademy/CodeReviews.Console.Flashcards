@@ -11,6 +11,7 @@ internal static class Flashcards
 
     private static void Main()
     {
+        Console.Title = "Flash Cards by StevieTV";
         InitialiseDatabase();
         Menu.MainMenu();
 
