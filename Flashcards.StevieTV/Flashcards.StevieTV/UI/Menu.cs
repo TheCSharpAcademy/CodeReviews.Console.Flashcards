@@ -25,7 +25,7 @@ public class Menu
 
             var menuInput = Console.ReadLine();
             
-            var menuOption = 100;
+            int menuOption;
 
             while (!Int32.TryParse(menuInput, out menuOption) || !InputValidation.TestValidMenuOption(menuOption, 0, 4))
             {
