@@ -19,7 +19,7 @@ class Helpers
         {
             List<Stacks> stacks = File.ReadAllLines(stacksPath)
                 .Skip(1)
-                .Select(Stacks.FromCSV)
+                .Select(Stacks.FromCsv)
                 .ToList();
             
             foreach (Stacks stack in stacks)
@@ -32,7 +32,7 @@ class Helpers
         {
             List<Cards> cards = File.ReadAllLines(cardsPath)
                 .Skip(1)
-                .Select(Cards.FromCSV)
+                .Select(Cards.FromCsv)
                 .ToList();
 
             foreach (Cards card in cards)

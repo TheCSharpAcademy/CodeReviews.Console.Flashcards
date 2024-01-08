@@ -11,37 +11,37 @@ class TableUI
     public static string[] StudySessionsHeader = ["Study Session ID","Stack Name", "Date", "Score"];
     public static string ReportTitle = "Study Sessions Report";
     public static string[] ReportHeader = ["Year", "Month", "Stack Name", "Total Study Sessions", "Average Score"];
-    public static void PrintStacksTable(List<StacksDTO> currentStacksToUI)
+    public static void PrintStacksTable(List<StacksDto> currentStacksToUI)
     {  
-        List<List<object>> listToUI = [];;      
-        foreach (StacksDTO stacksDTO in currentStacksToUI)
+        List<List<object>> listToUI = [];      
+        foreach (StacksDto stacksDto in currentStacksToUI)
         {
-            listToUI.Add([stacksDTO.StackID, stacksDTO.StackName]);
+            listToUI.Add([stacksDto.StackID, stacksDto.StackName]);
         }
         PrintTable(listToUI,StacksTitle,StacksHeader);       
     }
 
-    public static void PrintCardsTable(List<CardsDTO> cardsToUI, string? stackName)
+    public static void PrintCardsTable(List<CardsDto> cardsToUI, string? stackName)
     {
-        List<List<object>> listToUI = [];;      
-        foreach (CardsDTO cardsDTO in cardsToUI)
+        List<List<object>> listToUI = [];      
+        foreach (CardsDto cardsDto in cardsToUI)
         {
-            listToUI.Add([cardsDTO.CardID, cardsDTO.Question, cardsDTO.Answer]);
+            listToUI.Add([cardsDto.CardID, cardsDto.Question, cardsDto.Answer]);
         }
         PrintTable(listToUI, stackName,CardsHeader);
     }
 
-    public static void PrintStudySessionsTable(List<StudySessionDTO> studySessionsToUI)
+    public static void PrintStudySessionsTable(List<StudySessionDto> studySessionsToUI)
     {
-        List<List<object>> listToUI = [];;      
-        foreach (StudySessionDTO studySessionDTO in studySessionsToUI)
+        List<List<object>> listToUI = [];      
+        foreach (StudySessionDto studySessionDto in studySessionsToUI)
         {
-            listToUI.Add([studySessionDTO.StudySessionID, studySessionDTO.StackName, studySessionDTO.Date, studySessionDTO.Score]);
+            listToUI.Add([studySessionDto.StudySessionID, studySessionDto.StackName, studySessionDto.Date, studySessionDto.Score]);
         }
         PrintTable(listToUI, StudySessionsTitle, StudySessionsHeader);
     }
 
-    public static void PrintCardQuestion(CardsDTO currentCard)
+    public static void PrintCardQuestion(CardsDto currentCard)
     {
         List<List<object>> listToUI = [];
         string[] columns = ["Question"];
@@ -49,7 +49,7 @@ class TableUI
         PrintTable(listToUI,"Card", columns);
     }
 
-    public static void PrintCardAnswer(CardsDTO currentCard)
+    public static void PrintCardAnswer(CardsDto currentCard)
     {
         List<List<object>> listToUI = [];
         string[] columns = ["Question", "Answer"];

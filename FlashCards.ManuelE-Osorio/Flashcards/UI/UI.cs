@@ -125,7 +125,7 @@ class UI
         "The maximum length of the name is 50 characters.\n");
     }
 
-    public static void SelectOrDeleteStack(List<StacksDTO> currentStacksUI, string? errorMessage, string action)
+    public static void SelectOrDeleteStack(List<StacksDto> currentStacksUI, string? errorMessage, string action)
     {
         Helpers.ClearConsole();
         TableUI.PrintStacksTable(currentStacksUI);
@@ -137,7 +137,7 @@ class UI
         Console.WriteLine($"Please write the name of the stack that you want to {action}:\n");
     }
 
-    public static void DisplayCards(List<CardsDTO> currentCardsUI, string? stackName, string? errorMessage, string? action)
+    public static void DisplayCards(List<CardsDto> currentCardsUI, string? stackName, string? errorMessage, string? action)
     {
         Helpers.ClearConsole();
         TableUI.PrintCardsTable(currentCardsUI, stackName);
@@ -167,7 +167,7 @@ class UI
         Console.WriteLine($"Please write the {action} {type} of the card. The maximum length of the {type} is 300 characters.\n");
     }
 
-    public static void StudySessionQuestion(CardsDTO card)
+    public static void StudySessionQuestion(CardsDto card)
     {
         Helpers.ClearConsole();
         Console.WriteLine("What is the answer to the following card:\n");
@@ -175,7 +175,7 @@ class UI
         Console.WriteLine("\n");
     }
 
-    public static void StudySessionAnswer(CardsDTO card, bool answerIsCorrect)
+    public static void StudySessionAnswer(CardsDto card, bool answerIsCorrect)
     {
         Helpers.ClearConsole();
         Console.WriteLine("What is the answer to the following card:\n");
@@ -209,7 +209,7 @@ class UI
         Console.WriteLine("Please write the quantity of questions for the study session. A maximum of 100 questions is allowed.");
     }
 
-    public static void DisplayStudySessions(List<StudySessionDTO> currentStudySessionsToUI)
+    public static void DisplayStudySessions(List<StudySessionDto> currentStudySessionsToUI)
     {
         Helpers.ClearConsole();
         TableUI.PrintStudySessionsTable(currentStudySessionsToUI);

@@ -2,8 +2,8 @@ StackName,Question,Answer
 spanish,adiós,goodbye
 spanish,feliz,happy
 spanish,mañana,tomorrow
-spanish,young,joven
-spanish,old,viejo
+spanish,joven,young
+spanish,viejo,old
 spanish,hola,hello
 spanish,semana,week
 spanish,hoy,today
@@ -26,9 +26,9 @@ spanish,miércoles,wednesday
 spanish,jueves,thursday
 spanish,sábado,saturday
 spanish,domingo,sunday
-spanish,one,uno
-spanish,two,dos
-spanish,three,tres
+spanish,uno,one
+spanish,dos,dos
+spanish,tres,three
 chinese,一,one
 chinese,二,two
 chinese,三,three
