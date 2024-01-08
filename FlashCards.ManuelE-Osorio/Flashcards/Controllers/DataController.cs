@@ -238,7 +238,7 @@ class DataController
                 SelectedStack = currentStacks.Find(stacks => stacks.StackName == stackName);
                 break;
             case("delete"):
-                DBController.DeleteStack(SelectedStack);
+                DBController.DeleteStack(new Stacks(stackName));
                 if (SelectedStack?.StackName == stackName)
                     SelectedStack = null;
                 break;
