@@ -6,7 +6,7 @@ class Stacks(string stackName, int stackID = 0)
     public string StackName = stackName;
 
      
-    public static Stacks FromCSV(string stackLine)
+    public static Stacks FromCsv(string stackLine)
     {
         string[] data = stackLine.Split(',');
         Stacks stack = new(data[0]);

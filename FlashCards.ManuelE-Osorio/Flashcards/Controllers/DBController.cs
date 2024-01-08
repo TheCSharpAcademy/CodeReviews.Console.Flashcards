@@ -208,7 +208,7 @@ class DBController
         connection.Close();
     }
 
-    public static int ModifyStack(Stacks modifyStack, Stacks newStack)
+    public static int ModifyStack(Stacks stackToModify, Stacks newStack)
     {
         int insertSuccess;
 
@@ -223,7 +223,7 @@ class DBController
         WHERE stackname = @stackName";
 
         command.Parameters.Add("@newStackName", System.Data.SqlDbType.VarChar,50).Value = newStack.StackName;
-        command.Parameters.Add("@stackName", System.Data.SqlDbType.VarChar,50).Value = modifyStack.StackName;
+        command.Parameters.Add("@stackName", System.Data.SqlDbType.VarChar,50).Value = stackToModify.StackName;
         insertSuccess = command.ExecuteNonQuery();
 
         connection.Close();
@@ -283,7 +283,7 @@ class DBController
         return insertSuccess;   
     }
 
-    public static int ModifyCard(Cards modifyCard)
+    public static int ModifyCard(Cards cardToModify)
     {
         int insertSuccess;
 
@@ -298,9 +298,9 @@ class DBController
         answer = @answer
         WHERE cardid = @cardid";
 
-        command.Parameters.Add("@question", System.Data.SqlDbType.NVarChar, 600).Value = modifyCard.Question;
-        command.Parameters.Add("@answer", System.Data.SqlDbType.NVarChar,600).Value = modifyCard.Answer;
-        command.Parameters.Add("@cardid", System.Data.SqlDbType.Int).Value = modifyCard.CardID;
+        command.Parameters.Add("@question", System.Data.SqlDbType.NVarChar, 600).Value = cardToModify.Question;
+        command.Parameters.Add("@answer", System.Data.SqlDbType.NVarChar,600).Value = cardToModify.Answer;
+        command.Parameters.Add("@cardid", System.Data.SqlDbType.Int).Value = cardToModify.CardID;
 
         insertSuccess = command.ExecuteNonQuery();
 

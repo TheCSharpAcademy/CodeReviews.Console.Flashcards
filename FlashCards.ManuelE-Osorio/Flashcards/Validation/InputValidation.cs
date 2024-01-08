@@ -68,7 +68,7 @@ class InputValidation
 
         return errorMessage;
     }
-    public static string? ValidateCardSelection(List<CardsDTO> cards, string? cardID)
+    public static string? ValidateCardSelection(List<CardsDto> cards, string? cardID)
     {
         string? errorMessage = "The card you selected does not exists. ";
         if(cards.Any(cards => cards.CardID == Convert.ToInt32(cardID)))
@@ -78,7 +78,7 @@ class InputValidation
         return errorMessage;
     }
 
-    public static bool ValidateStudySessionAnswer(CardsDTO card, string answer)
+    public static bool ValidateStudySessionAnswer(CardsDto card, string answer)
     {
         bool answerIsCorrect = false;
         if(answer.Equals(card.Answer,StringComparison.OrdinalIgnoreCase))

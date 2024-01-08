@@ -220,7 +220,7 @@ class DataController
     public void SelectOrDeleteStackController(string selectionString)
     {
         List<Stacks> currentStacks = DBController.SelectStacks();
-        List<StacksDTO> currentStacksToUI = StacksToStacksDTO(currentStacks);
+        List<StacksDto> currentStacksToUI = StacksToStacksDto(currentStacks);
         string stackName;
         string? errorMessage = null;
 
@@ -287,7 +287,7 @@ class DataController
     public void SelectOrDeleteCardController(string? selectionString)
     {
         List<Cards> currentCards = DBController.SelectFlashcards(SelectedStack);
-        List<CardsDTO> currentCardsToUI = CardsToCardsDTO(currentCards);
+        List<CardsDto> currentCardsToUI = CardsToCardsDto(currentCards);
         string cardID;
         string? errorMessage = null;
 
@@ -322,17 +322,17 @@ class DataController
     public void RunStudySession()
     {
         List<Cards> studySessionCards = DBController.SelectCardsStudySession(StudySessionQuestions, SelectedStack);
-        List<CardsDTO> studySessionCardsToUI = CardsToCardsDTO(studySessionCards);
+        List<CardsDto> studySessionCardsToUI = CardsToCardsDto(studySessionCards);
         string answer;
         bool answerIsCorrect;
         int score = 0;
 
-        foreach (CardsDTO studySessionCardDTO in studySessionCardsToUI)
+        foreach (CardsDto studySessionCardDto in studySessionCardsToUI)
         {
-            UI.StudySessionQuestion(studySessionCardDTO);
+            UI.StudySessionQuestion(studySessionCardDto);
             answer = Console.ReadLine() ?? "";
-            answerIsCorrect = InputValidation.ValidateStudySessionAnswer(studySessionCardDTO, answer);
-            UI.StudySessionAnswer(studySessionCardDTO, answerIsCorrect);
+            answerIsCorrect = InputValidation.ValidateStudySessionAnswer(studySessionCardDto, answer);
+            UI.StudySessionAnswer(studySessionCardDto, answerIsCorrect);
             Console.ReadLine();
             if (answerIsCorrect)
             {
@@ -363,7 +363,7 @@ class DataController
     public static void StudySessionGetData()
     {
         List<StudySession> studySessions = DBController.SelectStudySessions();
-        List<StudySessionDTO> studySessionsToUI = StudySessionToStudySessionsDTO(studySessions);
+        List<StudySessionDto> studySessionsToUI = StudySessionToStudySessionsDto(studySessions);
         UI.DisplayStudySessions(studySessionsToUI);
         Console.ReadLine();
     }
@@ -374,36 +374,36 @@ class DataController
         UI.DisplayStudySessionsReport(reportDate);
         Console.ReadLine();
     }
-    public static List<StacksDTO> StacksToStacksDTO(List<Stacks> stacks)
+    public static List<StacksDto> StacksToStacksDto(List<Stacks> stacks)
     {
-        List<StacksDTO> stacksToUI = [];
+        List<StacksDto> stacksToUI = [];
 
         for(int i=0; i<stacks.Count; i++)
         {
-            stacksToUI.Add(new StacksDTO(stacks[i],i+1));
+            stacksToUI.Add(new StacksDto(stacks[i],i+1));
         }
 
         return stacksToUI;
     }
 
-    public static List<CardsDTO> CardsToCardsDTO(List<Cards> cards)
+    public static List<CardsDto> CardsToCardsDto(List<Cards> cards)
     {
-        List<CardsDTO> cardsToUI = [];
+        List<CardsDto> cardsToUI = [];
 
         for(int i=0; i<cards.Count; i++)
         {
-            cardsToUI.Add(new CardsDTO(cards[i], i+1));
+            cardsToUI.Add(new CardsDto(cards[i], i+1));
         }
         return cardsToUI;
     }
 
-    public static List<StudySessionDTO> StudySessionToStudySessionsDTO(List<StudySession> studySessions)
+    public static List<StudySessionDto> StudySessionToStudySessionsDto(List<StudySession> studySessions)
     {
-        List<StudySessionDTO> studySessionsToUI = [];
+        List<StudySessionDto> studySessionsToUI = [];
 
         for(int i =0; i<studySessions.Count; i++)
         {
-            studySessionsToUI.Add(new StudySessionDTO(studySessions[i],i+1));
+            studySessionsToUI.Add(new StudySessionDto(studySessions[i],i+1));
         }
         return studySessionsToUI;        
     }
