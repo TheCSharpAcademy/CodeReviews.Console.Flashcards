@@ -1,4 +1,5 @@
 using Flashcards.StevieTV.Helpers;
+using Spectre.Console;
 
 namespace Flashcards.StevieTV.UI;
 
@@ -10,46 +11,36 @@ public class Menu
 
         while (!exitApp)
         {
-            Console.Clear();
-            Console.WriteLine("Welcome to the FlashCards App\n");
-            Console.WriteLine("Please choose an option from the list below\n");
-            Console.WriteLine("-------------------------------------------");
-            Console.WriteLine("0 - Exit");
-            Console.WriteLine("1 - Manage Stacks");
-            Console.WriteLine("2 - Manage Flashcards");
-            Console.WriteLine("3 - Begin a Study Session");
-            Console.WriteLine("4 - View Study Sessions");
-            Console.WriteLine("-------------------------------------------");
-            Console.WriteLine("");
-            Console.WriteLine("Enter your choice:");
+            AnsiConsole.Clear();
+            AnsiConsole.MarkupLine("Welcome to the [bold]FlashCards App[/]");
+    
+            var menuSelection = new SelectionPrompt<string>();
+            menuSelection.Title("Please choose an option from the list below");
+            menuSelection.AddChoice("Exit");
+            menuSelection.AddChoice("Manage Stacks");
+            menuSelection.AddChoice("Manage Flashcards");
+            menuSelection.AddChoice("Begin a Study Session");
+            menuSelection.AddChoice("View Study Sessions");
 
-            var menuInput = Console.ReadLine();
-            
-            int menuOption;
-
-            while (!Int32.TryParse(menuInput, out menuOption) || !InputValidation.TestValidMenuOption(menuOption, 0, 4))
+            var menuInput = AnsiConsole.Prompt(menuSelection);
+          
+            switch (menuInput)
             {
-                Console.WriteLine("Invalid Input, please enter an option from 0 to 4");
-                menuInput = Console.ReadLine();
-            }
-
-            switch (menuOption)
-            {
-                case 0:
-                    Console.WriteLine("Goodbye");
+                case "Exit":
+                    AnsiConsole.WriteLine("Goodbye");
                     exitApp = true;
                     Environment.Exit(0);
                     break;
-                case 1:
+                case "Manage Stacks":
                     ManageStacks.StacksMenu();
                     break;
-                case 2:
+                case "Manage Flashcards":
                     // ManageCards();
                     break;
-                case 3:
+                case "Begin a Study Session":
                     // StudySession();
                     break;
-                case 4:
+                case "View Study Sessions":
                     // ViewStudySessions();
                     break;
             }
