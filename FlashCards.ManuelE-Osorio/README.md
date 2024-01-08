@@ -2,23 +2,23 @@
 
 ## Usage
 
-# First Time Running
+### First Time Running
 
 The user has to configure the app.config file with the appropiate connection string for SQL Sever. There are three .csv files included for testing purposes, they can be imported if the tables are empty and the user has selected the PopulateDB as true in the app.config file.
 
-# Stacks Menu
+### Stacks Menu
 
 The user is able to create, edit and delete stacks in the database. Before using the Cards Menu and running a Study Session the user has to selected the working stack they want to use.
 
-# Cards Menu
+### Cards Menu
 
 The user is able to view, create, edit and delete the cards in the database for the selected stack. Currently there are no major restrictions on the answer and questions of the cards, just a 300 character length limitation.
 
-# Study Session
+### Study Session
 
 The user is able to start a study session for the selected stack. Currently the only parameter the user is able to modify is the quantity of cards that will be displayed on the study session.
 
-# Study Session Data
+### Study Session Data
 
 The user is able to access all the records of the previous study sessions and check monthy average scores by deck.
 
