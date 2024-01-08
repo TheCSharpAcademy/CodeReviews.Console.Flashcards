@@ -1,4 +1,3 @@
-using Flashcards.StevieTV.Helpers;
 using Spectre.Console;
 
 namespace Flashcards.StevieTV.UI;
