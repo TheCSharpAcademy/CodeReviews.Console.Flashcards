@@ -178,7 +178,7 @@ internal class UserInterface
         Console.ReadLine();
     }
 
-    void StartNewStudy() //***********************************************************************************
+    void StartNewStudy() 
     {
         int stackId = ChooseStack("Select the stack to practice.");
         var flashcardsInStack = dataAccess.GetStackFlashcards(stackId);
@@ -371,7 +371,6 @@ internal class UserInterface
         }
         Console.WriteLine("Press Enter to continue...");
         Console.ReadLine();
-        return stacks;
     }
 
     void UpdateStack()
