@@ -51,7 +51,7 @@ namespace Kakurokan.Flashcards
         {
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
-                connection.Execute("dbo.DeleteStack @StackId", stack);
+                connection.Execute(@"DELETE FROM Stacks WHERE StackId = @StackId", new { StackId = stack.StackId });
             }
         }
 

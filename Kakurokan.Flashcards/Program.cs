@@ -11,44 +11,55 @@ namespace Kakurokan.Flashcards
             DataAcess dataAcess = new DataAcess();
             AnsiConsole.Clear();
 
-            var input = AnsiConsole.Prompt(
+            try
+            {
+                var input = AnsiConsole.Prompt(
     new SelectionPrompt<string>()
         .Title("Welcome to your [red]Flashcard[/] app!")
         .AddChoices(new[] {"New Study Session",  "View Study Sessions", "Manage Stacks", "Exit"
         }));
-            switch (input)
-            {
-                case "New Study Session":
-                    StudySessionCreator.NewSession();
-                    break;
-                case "View Study Sessions":
-                    dataAcess.ViewStudySessions();
-                    break;
-                case "Manage Stacks":
-                    var new_input = AnsiConsole.Prompt(new SelectionPrompt<string>().Title("What do you want to do with your [Red]Stacks[/]?")
-                    .AddChoices(new[] { "New Stack", "View stacks", "Delete a stack", "Return to menu" }));
-                    switch (new_input)
-                    {
-                        case "New Stack":
-                            CreateStack();
-                            break;
-                        case "View stacks":
-                            dataAcess.ViewFlashcards(dataAcess.SelectStack());
-                            break;
-                        case "Delete a stack":
-                            dataAcess.DeleteStack(dataAcess.SelectStack());
-                            break;
-                        case "Return to menu":
+                switch (input)
+                {
+                    case "New Study Session":
+                        StudySessionCreator.NewSession();
+                        break;
+                    case "View Study Sessions":
+                        dataAcess.ViewStudySessions();
+                        break;
+                    case "Manage Stacks":
+                        var new_input = AnsiConsole.Prompt(new SelectionPrompt<string>().Title("What do you want to do with your [Red]Stacks[/]?")
+                        .AddChoices(new[] { "New Stack", "View stacks", "Delete a stack", "Return to menu" }));
+                        switch (new_input)
+                        {
+                            case "New Stack":
+                                CreateStack();
+                                break;
+                            case "View stacks":
+                                dataAcess.ViewFlashcards(dataAcess.SelectStack());
+                                break;
+                            case "Delete a stack":
+                                dataAcess.DeleteStack(dataAcess.SelectStack());
+                                break;
+                            case "Return to menu":
 
-                            break;
-                    }
-                    DisplayReturningTomenu();
-                    Main();
-                    break;
-                case "Exit":
-                    Environment.Exit(0);
-                    break;
+                                break;
+                        }
+                        DisplayReturningTomenu();
+                        Main();
+                        break;
+                    case "Exit":
+                        Environment.Exit(0);
+                        break;
+                }
             }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine("Sorry, an error occurred: " + ex.ToString());
+                Thread.Sleep(5000);
+                Main();
+            }
+
         }
 
         public static void CreateStack()
