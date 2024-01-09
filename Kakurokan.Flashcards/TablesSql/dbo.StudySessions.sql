@@ -1,7 +1,7 @@
 USE [AllStacks]
 GO
 
-/****** Object: Table [dbo].[StudySessions] Script Date: 28/12/2023 15:43:37 ******/
+/****** Object: Table [dbo].[StudySessions] Script Date: 09/01/2024 17:57:03 ******/
 SET ANSI_NULLS ON
 GO
 
