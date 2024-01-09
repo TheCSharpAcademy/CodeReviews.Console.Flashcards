@@ -167,14 +167,16 @@ internal class UserInterface
 
     void Statistics() 
     {
+        var table= new Table();
+        table.AddColumns("Year", "Month", "Stack", "Studies", "Avarage Score");
         var reports = dataAccess.GetReport();
         var stacks = dataAccess.GetAllStacks();
-        Console.Write("Year".PadRight(8) + "Month".PadRight(8) + "Stac".PadRight(8) +"Studies".PadRight(8) + "Avarage score\n");
         foreach ( var report in reports)
         {
             var stackName = stacks.Single(s => s.Id == report.StackId).Name;
-            Console.Write(report.Year.PadRight(8)+report.Month.PadRight(8)+stackName.PadRight(8)+report.StudyCount.ToString().PadRight(8)+report.Avarage);
+            table.AddRow(report.Year.ToString(),report.Month.ToString(),stackName,report.StudyCount.ToString(),report.Avarage.ToString());
         }
+        AnsiConsole.Write(table);
         Console.ReadLine();
     }
 
