@@ -50,7 +50,7 @@ internal static class ManageStacks
 
     private static void PrintCurrentStackNames()
     {
-        var stacks = StacksManager.GetStacks();
+        var stacks = StacksDatabaseManager.GetStacks();
 
         var table = new Table()
         {
@@ -75,7 +75,7 @@ internal static class ManageStacks
 
         if (newStackName.Trim() == "0") return;
 
-        StacksManager.Post(new StackDTO
+        StacksDatabaseManager.Post(new StackDTO
         {
             Name = newStackName.ToTitleCase()
         });
@@ -83,7 +83,7 @@ internal static class ManageStacks
        
     private static void RemoveStack()
     {
-        var stacks = StacksManager.GetStacks();
+        var stacks = StacksDatabaseManager.GetStacks();
 
         Console.Clear();
 
@@ -99,13 +99,13 @@ internal static class ManageStacks
 
         if (AnsiConsole.Confirm($"This will remove the stack '{selectedStack.Name.ToTitleCase()}' and all associated Flash Cards"))
         {
-            StacksManager.Delete(selectedStack);
+            StacksDatabaseManager.Delete(selectedStack);
         }
     }
     
     private static void RenameStack()
     {
-        var stacks = StacksManager.GetStacks();
+        var stacks = StacksDatabaseManager.GetStacks();
 
         Console.Clear();
 
@@ -128,14 +128,14 @@ internal static class ManageStacks
 
         if (AnsiConsole.Confirm($"This will rename the stack '{selectedStack.Name.ToTitleCase()}' to '{newStackName.ToTitleCase()}'"))
         {
-            StacksManager.Update(selectedStack, newStackName.ToTitleCase());
+            StacksDatabaseManager.Update(selectedStack, newStackName.ToTitleCase());
             
         }
     }
  
     public static void EditStack()
     {
-        var stacks = StacksManager.GetStacks();
+        var stacks = StacksDatabaseManager.GetStacks();
 
         Console.Clear();
 
@@ -152,7 +152,7 @@ internal static class ManageStacks
 
     private static bool CheckStackExists(string newStackName)
     {
-        var currentStacks = StacksManager.GetStacks();
+        var currentStacks = StacksDatabaseManager.GetStacks();
         var newStackFound = false;
 
         foreach (var stack in currentStacks)
