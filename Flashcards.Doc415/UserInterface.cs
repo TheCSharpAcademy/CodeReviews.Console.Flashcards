@@ -243,11 +243,14 @@ internal class UserInterface
         }
         return output.ToList();
     }
+
     void ViewFlashcards()
-    {
-        var flashcards = dataAccess.GetAllFlashcards();
-        DisplayFlashcards(flashcards);
-    }
+   {
+     var stack = ChooseStack("Select the stack to show flashcards");
+     var flashcards = dataAccess.GetStackFlashcards(stack);
+
+     DisplayFlashcards(flashcards);
+   }
 
     void DisplayFlashcards(IEnumerable<Flashcard> flashcards)
     {
