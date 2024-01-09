@@ -32,6 +32,19 @@ internal static class StacksManager
             }
         }
     }
+    
+    internal static void Update(Stack stack, string newStackName)
+    {
+        using (var connection = new SqlConnection(connectionString))
+        {
+            using (var tableCommand = connection.CreateCommand())
+            {
+                connection.Open();
+                tableCommand.CommandText = $"UPDATE Stacks SET Name = N'{newStackName}' WHERE Id = '{stack.StackId}'";
+                tableCommand.ExecuteNonQuery();
+            }
+        }
+    }
 
     internal static List<Stack> GetStacks()
     {
