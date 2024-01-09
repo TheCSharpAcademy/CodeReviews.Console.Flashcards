@@ -21,14 +21,14 @@ internal static class Flashcards
     {
         DatabaseManager.CreateDatabase();
 
-        var stacksTable = @"Id int identity,
+        const string stacksTable = @"Id int identity,
                             Name VARCHAR(50),
                             constraint Stacks_pk
                                 primary key (Id)";
 
         DatabaseManager.CreateTable("Stacks", stacksTable);
 
-        var cardsTable = @"Id int identity,
+        const string cardsTable = @"Id int identity,
                             StackId int Not Null,
                             Front VARCHAR(Max) Not Null,
                             Back VARCHAR(Max) Not Null,

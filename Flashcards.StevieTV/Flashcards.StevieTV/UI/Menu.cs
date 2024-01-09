@@ -11,7 +11,10 @@ public class Menu
         while (!exitApp)
         {
             AnsiConsole.Clear();
-            AnsiConsole.MarkupLine("Welcome to the [bold]FlashCards App[/]");
+            AnsiConsole.Write(new FigletText("FlashCards App")
+                .LeftJustified()
+                .Color(Color.Red));
+            //AnsiConsole.MarkupLine("Welcome to the [bold]FlashCards App[/]");
     
             var menuSelection = new SelectionPrompt<string>();
             menuSelection.Title("Please choose an option from the list below");
@@ -34,7 +37,7 @@ public class Menu
                     ManageStacks.StacksMenu();
                     break;
                 case "Manage Flashcards":
-                    // ManageCards();
+                    ManageStacks.EditStack();
                     break;
                 case "Begin a Study Session":
                     // StudySession();

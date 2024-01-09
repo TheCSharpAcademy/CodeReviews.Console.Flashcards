@@ -22,6 +22,7 @@ internal static class ManageStacks
             menuSelection.AddChoice("Return to Main Menu");
             menuSelection.AddChoice("Add a Stack");
             menuSelection.AddChoice("Remove a Stack");
+            menuSelection.AddChoice("Rename a Stack");
             menuSelection.AddChoice("Edit Flash Cards in a Stack");
 
             var menuInput = AnsiConsole.Prompt(menuSelection);
@@ -37,8 +38,11 @@ internal static class ManageStacks
                 case "Remove a Stack":
                     RemoveStack();
                     break;
+                case "Rename a Stack":
+                    RenameStack();
+                    break;
                 case "Edit Flash Cards in a Stack":
-                    // EditStack();
+                    EditStack();
                     break;
             }
         }
@@ -48,8 +52,10 @@ internal static class ManageStacks
     {
         var stacks = StacksManager.GetStacks();
 
-        var table = new Table();
-        table.Border = TableBorder.Rounded;
+        var table = new Table()
+        {
+            Border = TableBorder.Rounded
+        };
         table.AddColumn("Stack Name");
 
         foreach (var stack in stacks)
@@ -74,27 +80,74 @@ internal static class ManageStacks
             Name = newStackName.ToTitleCase()
         });
     }
-
+       
     private static void RemoveStack()
     {
         var stacks = StacksManager.GetStacks();
 
         Console.Clear();
-        
+
         var menuSelection = new SelectionPrompt<Stack>();
         menuSelection.Title("Which stack would you like to remove");
         menuSelection.AddChoices(stacks);
-        menuSelection.AddChoice(new Stack{StackId = 0, Name = "Cancel and return to menu"});
+        menuSelection.AddChoice(new Stack {StackId = 0, Name = "Cancel and return to menu"});
+        menuSelection.UseConverter(stack => stack.Name);
+
+        var selectedStack = AnsiConsole.Prompt(menuSelection);
+
+        if (selectedStack.StackId == 0) return;
+
+        if (AnsiConsole.Confirm($"This will remove the stack '{selectedStack.Name.ToTitleCase()}' and all associated Flash Cards"))
+        {
+            StacksManager.Delete(selectedStack);
+        }
+    }
+    
+    private static void RenameStack()
+    {
+        var stacks = StacksManager.GetStacks();
+
+        Console.Clear();
+
+        var menuSelection = new SelectionPrompt<Stack>();
+        menuSelection.Title("Which stack would you like to rename");
+        menuSelection.AddChoices(stacks);
+        menuSelection.AddChoice(new Stack {StackId = 0, Name = "Cancel and return to menu"});
         menuSelection.UseConverter(stack => stack.Name);
 
         var selectedStack = AnsiConsole.Prompt(menuSelection);
 
         if (selectedStack.StackId == 0) return;
         
-        if (AnsiConsole.Confirm($"This will remove the stack '{selectedStack.Name.ToTitleCase()}' and all associated Flash Cards"))
+        var newStackName = AnsiConsole.Prompt(
+            new TextPrompt<string>($"Please enter the new name for the {selectedStack.Name} stack (or press 0 to cancel):")
+                .Validate(name => !CheckStackExists(name.Trim()), "That stack already exists")
+        );
+
+        if (newStackName.Trim() == "0") return;
+
+        if (AnsiConsole.Confirm($"This will rename the stack '{selectedStack.Name.ToTitleCase()}' to '{newStackName.ToTitleCase()}'"))
         {
-            StacksManager.Delete(StacksManager.GetStackByName(selectedStack.Name.ToTitleCase()));
+            StacksManager.Update(selectedStack, newStackName.ToTitleCase());
+            
         }
+    }
+ 
+    public static void EditStack()
+    {
+        var stacks = StacksManager.GetStacks();
+
+        Console.Clear();
+
+        var menuSelection = new SelectionPrompt<Stack>();
+        menuSelection.Title("Which stack would you like to edit");
+        menuSelection.AddChoices(stacks);
+        menuSelection.AddChoice(new Stack {StackId = 0, Name = "Cancel and return to menu"});
+        menuSelection.UseConverter(stack => stack.Name);
+
+        var selectedStack = AnsiConsole.Prompt(menuSelection);
+
+        if (selectedStack.StackId != 0) ManageFlashCards.FlashCardsMenu(selectedStack);
     }
 
     private static bool CheckStackExists(string newStackName)
