@@ -1,6 +1,5 @@
 ﻿using FlashCards.Doc415.Models;
 using Spectre.Console;
-using System.Diagnostics;
 using static FlashCards.Doc415.Enums;
 namespace FlashCards.Doc415;
 
@@ -170,7 +169,7 @@ internal class UserInterface
     {
         var reports = dataAccess.GetReport();
         var stacks = dataAccess.GetAllStacks();
-        Console.Write("Year".PadRight(8) + "Month".PadRight(8) + "Stac".PadRight(8) +"Studies".ToString().PadRight(8) + "Avarage score\n");
+        Console.Write("Year".PadRight(8) + "Month".PadRight(8) + "Stac".PadRight(8) +"Studies".PadRight(8) + "Avarage score\n");
         foreach ( var report in reports)
         {
             var stackName = stacks.Single(s => s.Id == report.StackId).Name;
@@ -303,7 +302,7 @@ internal class UserInterface
 
         flashcard.StackId = ChooseStack("Choose stack to add flashcard");
 
-        flashcard.Question = AnsiConsole.Ask<string>("Enter Question: "); ;
+        flashcard.Question = AnsiConsole.Ask<string>("Enter Question: ");
         while (string.IsNullOrEmpty(flashcard.Question))
         {
             flashcard.Question = AnsiConsole.Ask<string>("Question can't be empty. Try again");
@@ -360,7 +359,7 @@ internal class UserInterface
         }
     }
 
-    IEnumerable<CardStack> ViewStacks()
+    void ViewStacks()
     {
         var stacks = dataAccess.GetAllStacks();
         AnsiConsole.Markup("[deeppink1_1]Id[/]     [indianred_1]Stack name[/]\n-----------------\n");
@@ -397,7 +396,7 @@ internal class UserInterface
     void DeleteStack()
     {
         int stackId = ChooseStack("Choose stack to delete.");
-        if (AnsiConsole.Confirm("Are you sure?", false)) ;
+        if (AnsiConsole.Confirm("Are you sure?", false))
         {
             try
             {
