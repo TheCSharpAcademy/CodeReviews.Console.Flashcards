@@ -53,7 +53,7 @@ internal static class ManageFlashCards
 
     private static void PrintCurrentFlashCards()
     {
-        var flashCards = FlashCardsManager.GetFlashCards(currentStack);
+        var flashCards = FlashCardsDatabaseManager.GetFlashCards(currentStack);
 
         var table = new Table
         {
@@ -89,7 +89,7 @@ internal static class ManageFlashCards
     
         if (newFlashCardBack.Trim() == "0") return;
         
-        FlashCardsManager.Post(new FlashCardDTO
+        FlashCardsDatabaseManager.Post(new FlashCardDTO
         {
             StackId = currentStack.StackId,
             Front = newFlashCardFront.ToTitleCase(),
@@ -99,7 +99,7 @@ internal static class ManageFlashCards
 
     private static void EditFlashCard()
     {
-        var flashCards = FlashCardsManager.GetFlashCards(currentStack);
+        var flashCards = FlashCardsDatabaseManager.GetFlashCards(currentStack);
     
         Console.Clear();
         
@@ -131,13 +131,13 @@ internal static class ManageFlashCards
         
         if (AnsiConsole.Confirm($"This will update the stack ['{selectedFlashCard.Front.ToTitleCase()}' / '{selectedFlashCard.Back.ToTitleCase()}'] to ['{newFlashCardFront.ToTitleCase()}' / '{newFlashCardBack.ToTitleCase()}']".EscapeMarkup()))
         {
-            FlashCardsManager.Update(selectedFlashCard, newFlashCardFront, newFlashCardBack);
+            FlashCardsDatabaseManager.Update(selectedFlashCard, newFlashCardFront, newFlashCardBack);
         }
     }
     
     private static void RemoveFlashCard()
     {
-        var flashCards = FlashCardsManager.GetFlashCards(currentStack);
+        var flashCards = FlashCardsDatabaseManager.GetFlashCards(currentStack);
     
         Console.Clear();
         
@@ -153,13 +153,13 @@ internal static class ManageFlashCards
         
         if (AnsiConsole.Confirm($"This will remove the stack '{selectedFlashCard.Front.ToTitleCase()}' / '{selectedFlashCard.Back.ToTitleCase()}'"))
         {
-            FlashCardsManager.Delete(selectedFlashCard);
+            FlashCardsDatabaseManager.Delete(selectedFlashCard);
         }
     }
 
     private static bool CheckFlashCardExists(string front)
     {
-        var flashCards = FlashCardsManager.GetFlashCards(currentStack);
+        var flashCards = FlashCardsDatabaseManager.GetFlashCards(currentStack);
         var newFlashCardFound = false;
     
         foreach (var flashCard in flashCards)

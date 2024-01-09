@@ -3,7 +3,7 @@ using Flashcards.StevieTV.Models;
 
 namespace Flashcards.StevieTV.Database;
 
-internal static class StacksManager
+internal static class StacksDatabaseManager
 {
     private static readonly string connectionString = Flashcards.DatabaseManager.connectionString;
 
