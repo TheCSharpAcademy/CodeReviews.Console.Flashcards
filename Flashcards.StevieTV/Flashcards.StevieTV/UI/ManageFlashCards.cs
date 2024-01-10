@@ -7,16 +7,16 @@ namespace Flashcards.StevieTV.UI;
 
 internal static class ManageFlashCards
 {
-    private static Stack currentStack;
+    private static Stack _currentStack = new();
     public static void FlashCardsMenu(Stack stack)
     {
-        currentStack = stack;
+        _currentStack = stack;
         var exitManageFlashCards = false;
 
         while (!exitManageFlashCards)
         {
             Console.Clear();
-            AnsiConsole.WriteLine($"You are editing the '{currentStack.Name}' stack");
+            AnsiConsole.WriteLine($"You are editing the '{_currentStack.Name}' stack");
             PrintCurrentFlashCards();
 
             var menuSelection = new SelectionPrompt<string>();
@@ -53,12 +53,12 @@ internal static class ManageFlashCards
 
     private static void PrintCurrentFlashCards()
     {
-        var flashCards = FlashCardsDatabaseManager.GetFlashCards(currentStack);
+        var flashCards = FlashCardsDatabaseManager.GetFlashCards(_currentStack);
 
         var table = new Table
         {
             Border = TableBorder.Rounded,
-            Title = new TableTitle(currentStack.Name)
+            Title = new TableTitle(_currentStack.Name)
         };
 
         table.AddColumn("ID");
@@ -91,7 +91,7 @@ internal static class ManageFlashCards
         
         FlashCardsDatabaseManager.Post(new FlashCardDTO
         {
-            StackId = currentStack.StackId,
+            StackId = _currentStack.StackId,
             Front = newFlashCardFront.ToTitleCase(),
             Back = newFlashCardBack.ToTitleCase()
         });
@@ -99,7 +99,7 @@ internal static class ManageFlashCards
 
     private static void EditFlashCard()
     {
-        var flashCards = FlashCardsDatabaseManager.GetFlashCards(currentStack);
+        var flashCards = FlashCardsDatabaseManager.GetFlashCards(_currentStack);
     
         Console.Clear();
         
@@ -137,7 +137,7 @@ internal static class ManageFlashCards
     
     private static void RemoveFlashCard()
     {
-        var flashCards = FlashCardsDatabaseManager.GetFlashCards(currentStack);
+        var flashCards = FlashCardsDatabaseManager.GetFlashCards(_currentStack);
     
         Console.Clear();
         
@@ -159,7 +159,7 @@ internal static class ManageFlashCards
 
     private static bool CheckFlashCardExists(string front)
     {
-        var flashCards = FlashCardsDatabaseManager.GetFlashCards(currentStack);
+        var flashCards = FlashCardsDatabaseManager.GetFlashCards(_currentStack);
         var newFlashCardFound = false;
     
         foreach (var flashCard in flashCards)

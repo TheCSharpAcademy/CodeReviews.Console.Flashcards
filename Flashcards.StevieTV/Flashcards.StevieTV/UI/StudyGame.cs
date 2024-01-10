@@ -42,7 +42,7 @@ internal static class StudyGame
                 .DefaultValue(flashCards.Count)
                 .Validate(count => count <= flashCards.Count));
 
-        Random randomCard = new Random();
+        var randomCard = new Random();
         var score = 0;
 
         for (int i = 0; i < studyLength; i++)
@@ -79,7 +79,7 @@ internal static class StudyGame
                 break;
         }
 
-        StudySession studySession = new StudySession
+        var studySession = new StudySession
         {
             DateTime = DateTime.Now,
             Stack = selectedStack,

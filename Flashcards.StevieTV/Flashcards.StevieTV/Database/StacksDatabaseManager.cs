@@ -5,17 +5,17 @@ namespace Flashcards.StevieTV.Database;
 
 internal static class StacksDatabaseManager
 {
-    private static readonly string connectionString = Flashcards.DatabaseManager.connectionString;
-    private static readonly string tableName = "Stacks";
+    private static readonly string ConnectionString = Flashcards.DatabaseManager.ConnectionString;
+    private const string TableName = "Stacks";
 
     internal static void Post(StackDTO stack)
     {
-        using (var connection = new SqlConnection(connectionString))
+        using (var connection = new SqlConnection(ConnectionString))
         {
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = $"INSERT INTO {tableName} (Name) VALUES (N'{stack.Name}')";
+                tableCommand.CommandText = $"INSERT INTO {TableName} (Name) VALUES (N'{stack.Name}')";
                 tableCommand.ExecuteNonQuery();
             }
         }
@@ -23,12 +23,12 @@ internal static class StacksDatabaseManager
 
     internal static void Delete(Stack stack)
     {
-        using (var connection = new SqlConnection(connectionString))
+        using (var connection = new SqlConnection(ConnectionString))
         {
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = $"DELETE FROM {tableName} where Id = '{stack.StackId}'";
+                tableCommand.CommandText = $"DELETE FROM {TableName} where Id = '{stack.StackId}'";
                 tableCommand.ExecuteNonQuery();
             }
         }
@@ -36,12 +36,12 @@ internal static class StacksDatabaseManager
 
     internal static void Update(Stack stack, string newStackName)
     {
-        using (var connection = new SqlConnection(connectionString))
+        using (var connection = new SqlConnection(ConnectionString))
         {
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = $"UPDATE {tableName} SET Name = N'{newStackName}' WHERE Id = '{stack.StackId}'";
+                tableCommand.CommandText = $"UPDATE {TableName} SET Name = N'{newStackName}' WHERE Id = '{stack.StackId}'";
                 tableCommand.ExecuteNonQuery();
             }
         }
@@ -51,12 +51,12 @@ internal static class StacksDatabaseManager
     {
         List<Stack> stacks = new List<Stack>();
 
-        using (var connection = new SqlConnection(connectionString))
+        using (var connection = new SqlConnection(ConnectionString))
         {
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = $"SELECT * FROM {tableName}";
+                tableCommand.CommandText = $"SELECT * FROM {TableName}";
 
                 using (var reader = tableCommand.ExecuteReader())
                 {
@@ -82,12 +82,12 @@ internal static class StacksDatabaseManager
     {
         Stack stack = new Stack();
 
-        using (var connection = new SqlConnection(connectionString))
+        using (var connection = new SqlConnection(ConnectionString))
         {
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = $"SELECT * FROM {tableName} WHERE Id = {id}";
+                tableCommand.CommandText = $"SELECT * FROM {TableName} WHERE Id = {id}";
 
                 using (var reader = tableCommand.ExecuteReader())
                 {
