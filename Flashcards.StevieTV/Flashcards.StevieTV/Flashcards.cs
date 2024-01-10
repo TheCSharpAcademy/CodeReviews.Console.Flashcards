@@ -35,5 +35,13 @@ internal static class Flashcards
                             FOREIGN KEY (StackId) REFERENCES Stacks(Id) ON DELETE CASCADE";
 
         DatabaseManager.CreateTable("Cards", cardsTable);
+
+        const string studySessionsTable = @"Id int identity,
+                            Date DateTime Not Null,
+                            StackId int Not Null,
+                            Score int Not Null,
+                            FOREIGN KEY (StackId) REFERENCES Stacks(Id) ON DELETE CASCADE";
+        
+        DatabaseManager.CreateTable("StudySessions", studySessionsTable);
     }
 }

@@ -40,7 +40,7 @@ public class Menu
                     ManageStacks.EditStack();
                     break;
                 case "Begin a Study Session":
-                    // StudySession();
+                    StudyGame.ChooseStudyStack();
                     break;
                 case "View Study Sessions":
                     // ViewStudySessions();
