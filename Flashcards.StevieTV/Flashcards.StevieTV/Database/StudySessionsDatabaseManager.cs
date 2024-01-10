@@ -15,7 +15,7 @@ internal static class StudySessionsDatabaseManager
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = $"INSERT INTO StudySessions (Date, StackId, Score) VALUES (@date, {studySession.Stack.StackId}, {studySession.Score})";
+                tableCommand.CommandText = $"INSERT INTO {tableName} (Date, StackId, Score, QuantityTested) VALUES (@date, {studySession.Stack.StackId}, {studySession.Score}, {studySession.QuantityTested})";
                 tableCommand.Parameters.AddWithValue("@date", studySession.DateTime);
                 tableCommand.ExecuteNonQuery();
             }
@@ -24,36 +24,38 @@ internal static class StudySessionsDatabaseManager
     
 
 
-    // internal static List<Stack> GetStacks()
-    // {
-    //     List<Stack> stacks = new List<Stack>();
-    //
-    //     using (var connection = new SqlConnection(connectionString))
-    //     {
-    //         using (var tableCommand = connection.CreateCommand())
-    //         {
-    //             connection.Open();
-    //             tableCommand.CommandText = "SELECT * FROM Stacks";
-    //
-    //             using (var reader = tableCommand.ExecuteReader())
-    //             {
-    //                 if (reader.HasRows)
-    //                 {
-    //                     while (reader.Read())
-    //                     {
-    //                         stacks.Add(new Stack
-    //                         {
-    //                             StackId = reader.GetInt32(0),
-    //                             Name = reader.GetString(1)
-    //                         });
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //
-    //     return stacks;
-    // }
+    internal static List<StudySession> GetStudySessions()
+    {
+        List<StudySession> studySessions = new List<StudySession>();
+    
+        using (var connection = new SqlConnection(connectionString))
+        {
+            using (var tableCommand = connection.CreateCommand())
+            {
+                connection.Open();
+                tableCommand.CommandText = $"SELECT Date, StackId, Score, QuantityTested FROM {tableName} ORDER BY Date";
+    
+                using (var reader = tableCommand.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            studySessions.Add(new StudySession
+                            {
+                                DateTime= reader.GetDateTime(0),
+                                Stack = StacksDatabaseManager.GetStackById(reader.GetInt32(1)),
+                                Score = reader.GetInt32(2),
+                                QuantityTested = reader.GetInt32(3)
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        
+        return studySessions;
+    }
 
 
 }

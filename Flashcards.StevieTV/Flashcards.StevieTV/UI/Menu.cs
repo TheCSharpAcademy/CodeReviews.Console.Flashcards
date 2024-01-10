@@ -43,7 +43,7 @@ public class Menu
                     StudyGame.ChooseStudyStack();
                     break;
                 case "View Study Sessions":
-                    // ViewStudySessions();
+                    StudySessionHistory.ShowStudySessions();
                     break;
             }
         }

@@ -20,7 +20,7 @@ internal static class StacksDatabaseManager
             }
         }
     }
-    
+
     internal static void Delete(Stack stack)
     {
         using (var connection = new SqlConnection(connectionString))
@@ -33,7 +33,7 @@ internal static class StacksDatabaseManager
             }
         }
     }
-    
+
     internal static void Update(Stack stack, string newStackName)
     {
         using (var connection = new SqlConnection(connectionString))
@@ -78,7 +78,7 @@ internal static class StacksDatabaseManager
         return stacks;
     }
 
-    internal static Stack GetStackByName(string stackName)
+    internal static Stack GetStackById(int id)
     {
         Stack stack = new Stack();
 
@@ -87,7 +87,7 @@ internal static class StacksDatabaseManager
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = $"SELECT * FROM {tableName} WHERE Name = '{stackName}'";
+                tableCommand.CommandText = $"SELECT * FROM {tableName} WHERE Id = {id}";
 
                 using (var reader = tableCommand.ExecuteReader())
                 {
@@ -97,10 +97,10 @@ internal static class StacksDatabaseManager
                         stack.StackId = reader.GetInt32(0);
                         stack.Name = reader.GetString(1);
                     }
-
-                    return stack;
                 }
             }
+
+            return stack;
         }
     }
 }
