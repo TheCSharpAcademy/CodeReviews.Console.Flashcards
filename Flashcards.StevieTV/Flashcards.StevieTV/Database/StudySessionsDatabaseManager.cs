@@ -5,17 +5,17 @@ namespace Flashcards.StevieTV.Database;
 
 internal static class StudySessionsDatabaseManager
 {
-    private static readonly string connectionString = Flashcards.DatabaseManager.connectionString;
-    private static readonly string tableName = "StudySessions";
+    private static readonly string ConnectionString = Flashcards.DatabaseManager.ConnectionString;
+    private const string TableName = "StudySessions";
 
     internal static void Post(StudySession studySession)
     {
-        using (var connection = new SqlConnection(connectionString))
+        using (var connection = new SqlConnection(ConnectionString))
         {
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = $"INSERT INTO {tableName} (Date, StackId, Score, QuantityTested) VALUES (@date, {studySession.Stack.StackId}, {studySession.Score}, {studySession.QuantityTested})";
+                tableCommand.CommandText = $"INSERT INTO {TableName} (Date, StackId, Score, QuantityTested) VALUES (@date, {studySession.Stack.StackId}, {studySession.Score}, {studySession.QuantityTested})";
                 tableCommand.Parameters.AddWithValue("@date", studySession.DateTime);
                 tableCommand.ExecuteNonQuery();
             }
@@ -28,12 +28,12 @@ internal static class StudySessionsDatabaseManager
     {
         List<StudySession> studySessions = new List<StudySession>();
     
-        using (var connection = new SqlConnection(connectionString))
+        using (var connection = new SqlConnection(ConnectionString))
         {
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = $"SELECT Date, StackId, Score, QuantityTested FROM {tableName} ORDER BY Date";
+                tableCommand.CommandText = $"SELECT Date, StackId, Score, QuantityTested FROM {TableName} ORDER BY Date";
     
                 using (var reader = tableCommand.ExecuteReader())
                 {

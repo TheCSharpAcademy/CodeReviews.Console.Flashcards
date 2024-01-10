@@ -2,7 +2,7 @@ using Spectre.Console;
 
 namespace Flashcards.StevieTV.UI;
 
-public class Menu
+internal static class Menu
 {
     public static void MainMenu()
     {
@@ -14,8 +14,7 @@ public class Menu
             AnsiConsole.Write(new FigletText("FlashCards App")
                 .LeftJustified()
                 .Color(Color.Red));
-            //AnsiConsole.MarkupLine("Welcome to the [bold]FlashCards App[/]");
-    
+   
             var menuSelection = new SelectionPrompt<string>();
             menuSelection.Title("Please choose an option from the list below");
             menuSelection.AddChoice("Exit");

@@ -2,7 +2,7 @@ using System.Globalization;
 
 namespace Flashcards.StevieTV.Helpers;
 
-static class StringManipulation
+internal static class StringManipulation
 {
     public static string ToTitleCase(this string title)
     {

@@ -3,7 +3,7 @@ using Spectre.Console;
 
 namespace Flashcards.StevieTV.UI;
 
-internal class StudySessionHistory
+internal static class StudySessionHistory
 {
     internal static void ShowStudySessions()
     {

@@ -1,29 +1,28 @@
 using System.Configuration;
 using System.Data.SqlClient;
-using Flashcards.StevieTV.Models;
 
 namespace Flashcards.StevieTV.Database;
 
-public class DatabaseManager
+internal class DatabaseManager
 {
-    private string dbName;
-    private string masterConnectionstring = ConfigurationManager.AppSettings.Get("ConnectionString");
-    public string connectionString;
+    private readonly string _dbName;
+    private readonly string _masterConnectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+    public readonly string ConnectionString;
 
-    public DatabaseManager(string _dbName)
+    public DatabaseManager(string dbName)
     {
-        dbName = _dbName;
-        connectionString = $"{masterConnectionstring}Initial Catalog={_dbName};";
+        _dbName = dbName;
+        ConnectionString = $"{_masterConnectionString}Initial Catalog={dbName};";
     }
 
     public void CreateDatabase()
     {
-        using (var connection = new SqlConnection(masterConnectionstring))
+        using (var connection = new SqlConnection(_masterConnectionString))
         {
             using (var databaseCommand = connection.CreateCommand())
             {
                 connection.Open();
-                databaseCommand.CommandText = $"If(db_id(N'{dbName}') IS NULL) CREATE DATABASE [{dbName}]";
+                databaseCommand.CommandText = $"If(db_id(N'{_dbName}') IS NULL) CREATE DATABASE [{_dbName}]";
                 databaseCommand.ExecuteNonQuery();
             }
         }
@@ -31,7 +30,7 @@ public class DatabaseManager
 
     public void CreateTable(string tableName, string tableContents)
     {
-        using (var connection = new SqlConnection(connectionString))
+        using (var connection = new SqlConnection(ConnectionString))
         {
             using (var tableCommand = connection.CreateCommand())
             {
