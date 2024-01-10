@@ -131,7 +131,7 @@ internal static class ManageFlashCards
         
         if (AnsiConsole.Confirm($"This will update the stack ['{selectedFlashCard.Front.ToTitleCase()}' / '{selectedFlashCard.Back.ToTitleCase()}'] to ['{newFlashCardFront.ToTitleCase()}' / '{newFlashCardBack.ToTitleCase()}']".EscapeMarkup()))
         {
-            FlashCardsDatabaseManager.Update(selectedFlashCard, newFlashCardFront, newFlashCardBack);
+            FlashCardsDatabaseManager.Update(selectedFlashCard, newFlashCardFront.ToTitleCase(), newFlashCardBack.ToTitleCase());
         }
     }
     
