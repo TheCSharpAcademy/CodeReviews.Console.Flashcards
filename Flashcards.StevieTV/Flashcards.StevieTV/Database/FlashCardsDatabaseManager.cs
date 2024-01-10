@@ -6,6 +6,7 @@ namespace Flashcards.StevieTV.Database;
 internal static class FlashCardsDatabaseManager
 {
     private static readonly string connectionString = Flashcards.DatabaseManager.connectionString;
+    private static readonly string tableName = "Cards";
 
     internal static void Post(FlashCardDTO flashCard)
     {
@@ -14,7 +15,7 @@ internal static class FlashCardsDatabaseManager
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = $"INSERT INTO Cards (StackId, Front, Back) VALUES ({flashCard.StackId}, N'{flashCard.Front}', N'{flashCard.Back}')";
+                tableCommand.CommandText = $"INSERT INT {tableName} (StackId, Front, Back) VALUES ({flashCard.StackId}, N'{flashCard.Front}', N'{flashCard.Back}')";
                 tableCommand.ExecuteNonQuery();
             }
         }
@@ -26,7 +27,7 @@ internal static class FlashCardsDatabaseManager
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = $"DELETE FROM Cards where Id = '{flashCard.Id}'";
+                tableCommand.CommandText = $"DELETE FROM {tableName} WHERE Id = '{flashCard.Id}'";
                 tableCommand.ExecuteNonQuery();
             }
         }
@@ -39,7 +40,7 @@ internal static class FlashCardsDatabaseManager
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = $"UPDATE Cards SET Front = N'{newFlashCardFront}', BACK = N'{newFlashCardBack}' WHERE Id = '{flashCard.Id}'";
+                tableCommand.CommandText = $"UPDATE {tableName} SET Front = N'{newFlashCardFront}', BACK = N'{newFlashCardBack}' WHERE Id = '{flashCard.Id}'";
                 tableCommand.ExecuteNonQuery();
             }
         }
@@ -54,7 +55,7 @@ internal static class FlashCardsDatabaseManager
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = $"SELECT * FROM Cards WHERE StackId = {stack.StackId}";
+                tableCommand.CommandText = $"SELECT * FROM {tableName} WHERE StackId = {stack.StackId}";
 
                 using (var reader = tableCommand.ExecuteReader())
                 {
@@ -77,30 +78,4 @@ internal static class FlashCardsDatabaseManager
 
         return flashCards;
     }
-
-    // internal static Stack GetStackByName(string stackName)
-    // {
-    //     Stack stack = new Stack();
-    //
-    //     using (var connection = new SqlConnection(connectionString))
-    //     {
-    //         using (var tableCommand = connection.CreateCommand())
-    //         {
-    //             connection.Open();
-    //             tableCommand.CommandText = $"SELECT * FROM Stacks WHERE Name = '{stackName}'";
-    //
-    //             using (var reader = tableCommand.ExecuteReader())
-    //             {
-    //                 if (reader.HasRows)
-    //                 {
-    //                     reader.Read();
-    //                     stack.StackId = reader.GetInt32(0);
-    //                     stack.Name = reader.GetString(1);
-    //                 }
-    //
-    //                 return stack;
-    //             }
-    //         }
-    //     }
-    // }
 }

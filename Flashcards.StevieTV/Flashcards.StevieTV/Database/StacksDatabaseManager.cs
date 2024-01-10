@@ -6,6 +6,7 @@ namespace Flashcards.StevieTV.Database;
 internal static class StacksDatabaseManager
 {
     private static readonly string connectionString = Flashcards.DatabaseManager.connectionString;
+    private static readonly string tableName = "Stacks";
 
     internal static void Post(StackDTO stack)
     {
@@ -14,7 +15,7 @@ internal static class StacksDatabaseManager
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = $"INSERT INTO Stacks (Name) VALUES (N'{stack.Name}')";
+                tableCommand.CommandText = $"INSERT INTO {tableName} (Name) VALUES (N'{stack.Name}')";
                 tableCommand.ExecuteNonQuery();
             }
         }
@@ -27,7 +28,7 @@ internal static class StacksDatabaseManager
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = $"DELETE FROM Stacks where Id = '{stack.StackId}'";
+                tableCommand.CommandText = $"DELETE FROM {tableName} where Id = '{stack.StackId}'";
                 tableCommand.ExecuteNonQuery();
             }
         }
@@ -40,7 +41,7 @@ internal static class StacksDatabaseManager
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = $"UPDATE Stacks SET Name = N'{newStackName}' WHERE Id = '{stack.StackId}'";
+                tableCommand.CommandText = $"UPDATE {tableName} SET Name = N'{newStackName}' WHERE Id = '{stack.StackId}'";
                 tableCommand.ExecuteNonQuery();
             }
         }
@@ -55,7 +56,7 @@ internal static class StacksDatabaseManager
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = "SELECT * FROM Stacks";
+                tableCommand.CommandText = $"SELECT * FROM {tableName}";
 
                 using (var reader = tableCommand.ExecuteReader())
                 {
@@ -86,7 +87,7 @@ internal static class StacksDatabaseManager
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = $"SELECT * FROM Stacks WHERE Name = '{stackName}'";
+                tableCommand.CommandText = $"SELECT * FROM {tableName} WHERE Name = '{stackName}'";
 
                 using (var reader = tableCommand.ExecuteReader())
                 {

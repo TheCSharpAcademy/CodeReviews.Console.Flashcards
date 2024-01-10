@@ -21,7 +21,6 @@ internal static class FlashCardMapper
     {
         return new FlashCardDTO
         {
-            StackId = flashCard.StackId,
             Front = flashCard.Front,
             Back = flashCard.Back
         };
