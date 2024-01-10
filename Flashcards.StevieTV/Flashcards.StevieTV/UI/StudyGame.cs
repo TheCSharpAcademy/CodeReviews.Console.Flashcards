@@ -83,13 +83,13 @@ internal static class StudyGame
         {
             DateTime = DateTime.Now,
             Stack = selectedStack,
-            Score = score
+            Score = score,
+            QuantityTested = studyLength
         };
         
         StudySessionsDatabaseManager.Post(studySession);
 
-        AnsiConsole.Prompt(new ConfirmationPrompt("Press enter to return to the main menu")
-            .ShowChoices(false));
+        AnsiConsole.Prompt(new ConfirmationPrompt("Press enter to return to the main menu"));
     }
 
     private static bool GuessCard(FlashCardDTO flashCard)

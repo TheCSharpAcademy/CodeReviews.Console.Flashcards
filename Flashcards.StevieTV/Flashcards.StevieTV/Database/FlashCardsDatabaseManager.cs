@@ -15,7 +15,7 @@ internal static class FlashCardsDatabaseManager
             using (var tableCommand = connection.CreateCommand())
             {
                 connection.Open();
-                tableCommand.CommandText = $"INSERT INT {tableName} (StackId, Front, Back) VALUES ({flashCard.StackId}, N'{flashCard.Front}', N'{flashCard.Back}')";
+                tableCommand.CommandText = $"INSERT INTO {tableName} (StackId, Front, Back) VALUES ({flashCard.StackId}, N'{flashCard.Front}', N'{flashCard.Back}')";
                 tableCommand.ExecuteNonQuery();
             }
         }

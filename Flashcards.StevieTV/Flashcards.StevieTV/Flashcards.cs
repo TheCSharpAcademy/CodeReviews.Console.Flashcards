@@ -40,6 +40,7 @@ internal static class Flashcards
                             Date DateTime Not Null,
                             StackId int Not Null,
                             Score int Not Null,
+                            QuantityTested int Not Null,
                             FOREIGN KEY (StackId) REFERENCES Stacks(Id) ON DELETE CASCADE";
         
         DatabaseManager.CreateTable("StudySessions", studySessionsTable);
