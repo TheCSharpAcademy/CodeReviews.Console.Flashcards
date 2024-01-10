@@ -1,49 +1,58 @@
-﻿using System.Data.SqlClient;
+﻿using Flashcards.StanimalTheMan;
+using System.Data.SqlClient;
 
 class Program
 {
     static void Main()
     {
-        string connectionString = "Data Source=(LocalDb)\\LocalDBDemo;Initial Catalog=Flashcards;Integrated Security=True";
+        StartApp();
 
-        using (SqlConnection connection = new SqlConnection(connectionString))
-        {
-            try
-            {
-                connection.Open();
+        //string connectionString = "Data Source=(LocalDb)\\LocalDBDemo;Initial Catalog=Flashcards;Integrated Security=True";
 
-                // Perform database operations here
+        //using (SqlConnection connection = new SqlConnection(connectionString))
+        //{
+        //    try
+        //    {
+        //        connection.Open();
 
-                //Console.WriteLine("Connection successful!");
+        //        // Perform database operations here
 
-                string selectFlashcardsQuery = $"SELECT * FROM Flashcards WHERE StackId = {1}";
+        //        //Console.WriteLine("Connection successful!");
 
-                using (SqlCommand command = new SqlCommand(selectFlashcardsQuery, connection))
-                {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        Console.WriteLine("Flashcards:");
+        //        string selectFlashcardsQuery = $"SELECT * FROM Flashcards WHERE StackId = {1}";
 
-                        while (reader.Read())
-                        {
-                            int flashcardId = reader.GetInt32(0);
-                            string question = reader.GetString(1);
-                            string answer = reader.GetString(2);
+        //        using (SqlCommand command = new SqlCommand(selectFlashcardsQuery, connection))
+        //        {
+        //            using (SqlDataReader reader = command.ExecuteReader())
+        //            {
+        //                Console.WriteLine("Flashcards:");
 
-                            Console.WriteLine($"FlashcardId: {flashcardId}, Question: {question}, Answer: {answer}");
-                        }
-                    }
-                }
+        //                while (reader.Read())
+        //                {
+        //                    int flashcardId = reader.GetInt32(0);
+        //                    string question = reader.GetString(1);
+        //                    string answer = reader.GetString(2);
 
-                // Ensure to close the connection when done
-                connection.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        //                    Console.WriteLine($"FlashcardId: {flashcardId}, Question: {question}, Answer: {answer}");
+        //                }
+        //            }
+        //        }
+
+        //        // Ensure to close the connection when done
+        //        connection.Close();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Error: {ex.Message}");
+        //    }
+        //}
 
         Console.ReadLine();
+    }
+
+    private static void StartApp()
+    {
+        MainMenu.ShowMenu();
+        String userInput = Console.ReadLine();
     }
 }
