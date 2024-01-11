@@ -29,5 +29,6 @@ internal class MainMenu
             }
         }
 
+        Environment.Exit(0);
     }
 }
