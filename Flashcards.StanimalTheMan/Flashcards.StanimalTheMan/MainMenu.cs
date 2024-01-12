@@ -26,6 +26,9 @@ internal class MainMenu
                 case "Manage Stacks":
                     StacksInterface.ShowMenu();
                     break;
+                case "Manage FlashCards":
+                    FlashcardsInterface.ShowMenu();
+                    break;
             }
         }
 
