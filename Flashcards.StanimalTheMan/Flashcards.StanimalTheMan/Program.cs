@@ -53,6 +53,5 @@ class Program
     private static void StartApp()
     {
         MainMenu.ShowMenu();
-        String userInput = Console.ReadLine();
     }
 }
