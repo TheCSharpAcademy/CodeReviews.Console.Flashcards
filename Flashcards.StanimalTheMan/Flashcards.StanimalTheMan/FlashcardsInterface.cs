@@ -89,39 +89,38 @@ internal class FlashcardsInterface
         Console.WriteLine($"Current working stack: {workingStack}");
 
         // probably bad that I'm making a query for the stack which was already found in calling environment above
-        string connectionString = "Data Source=(LocalDb)\\LocalDBDemo;Initial Catalog=Flashcards;Integrated Security=True";
+        SqlConnection connection = null;
+
         int selectedStackId = 0;
-        using (SqlConnection connection = new SqlConnection(connectionString))
+        try
         {
-            try
-            {
-                connection.Open();
+            connection = DatabaseHelper.GetOpenConnection();
 
-                // Perform database operations here
+            // Perform database operations here
 
-                //Console.WriteLine("Connection successful!");
+            //Console.WriteLine("Connection successful!");
 
-                string selectFlashcardsQuery = $"SELECT * FROM Stacks WHERE StackName = @StackName";
+            string selectFlashcardsQuery = $"SELECT * FROM Stacks WHERE StackName = @StackName";
                 
-                using (SqlCommand command = new SqlCommand(selectFlashcardsQuery, connection))
+            using (SqlCommand command = new SqlCommand(selectFlashcardsQuery, connection))
+            {
+                command.Parameters.AddWithValue("@StackName", workingStack);
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    command.Parameters.AddWithValue("@StackName", workingStack);
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    while (reader.Read())
                     {
-                        while (reader.Read())
-                        {
-                            int stackId = reader.GetInt32(0);
+                        int stackId = reader.GetInt32(0);
 
-                            selectedStackId = stackId;
-                        }
+                        selectedStackId = stackId;
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+
 
         var selection = AnsiConsole.Prompt(
                     new SelectionPrompt<ManageFlashcardsOption>()
