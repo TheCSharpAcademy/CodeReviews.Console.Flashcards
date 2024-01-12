@@ -40,6 +40,10 @@ internal class StacksInterface
                 DeleteStack();
                 ShowMenu();
                 break;
+            case ManageStacksOption.EditStack:
+                UpdateStack();
+                ShowMenu();
+                break;
         }
     }
 
@@ -145,8 +149,6 @@ internal class StacksInterface
     internal static void DeleteStack()
     {
         SqlConnection connection = null;
-        List<Stack> stacks = new();
-        List<string> stackNames = new();
 
         try
         {
@@ -157,50 +159,57 @@ internal class StacksInterface
             //Console.WriteLine("Connection successful!");
             string getStacksQuery = "SELECT * FROM Stacks";
             string deleteStackQuery = $"DELETE FROM Stacks WHERE StackName = @StackName";
-            SqlCommand command = null;
-            using (command = new SqlCommand(getStacksQuery, connection))
-            {
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
 
+            SqlCommand getStacksCommand = new SqlCommand(getStacksQuery, connection);
+            List<string> stackNames = new List<string>();
+
+            try
+            {
+                using (SqlDataReader reader = getStacksCommand.ExecuteReader())
+                {
                     while (reader.Read())
                     {
                         int stackId = reader.GetInt32(0);
                         string stackName = reader.GetString(1);
 
-                        stacks.Add(new Stack(stackId, stackName));
                         stackNames.Add(stackName);
                     }
-                    stackNames.Add("Return to Manage Stacks Menu"); // probably not good to revert to string to allow users to select name string of stack to delete; returning to main menu is not a name of a stack
+                }
 
-                    Console.WriteLine("Choose a stack to delete");
-                    var selection = AnsiConsole.Prompt(
-                        new SelectionPrompt<string>()
-                        .Title("-------------------------------")
-                        .PageSize(10)
-                        .AddChoices(stackNames));
+                stackNames.Add("Return to Manage Stacks Menu");
 
-                    if (selection == "Return to Manage Stacks Menu")
-                    {
-                        Console.Clear();
-                        ShowMenu();
-                    }
+                Console.WriteLine("Choose a stack to delete");
+                var selection = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                    .Title("-------------------------------")
+                    .PageSize(10)
+                    .AddChoices(stackNames));
 
-                    command = new SqlCommand(deleteStackQuery, connection);
-                    string stackNameToDelete = selection;
-                    command.Parameters.AddWithValue("@StackName", stackNameToDelete);
+                if (selection == "Return to Manage Stacks Menu")
+                {
+                    Console.Clear();
+                    ShowMenu();
+                }
 
-                    int rowsAffected = command.ExecuteNonQuery();
+                using (SqlCommand deleteStackCommand = new SqlCommand(deleteStackQuery, connection))
+                {
+                    deleteStackCommand.Parameters.AddWithValue("@StackName", selection);
+
+                    int rowsAffected = deleteStackCommand.ExecuteNonQuery();
 
                     if (rowsAffected > 0)
                     {
-                        Console.WriteLine($"Stack '{stackNameToDelete}' deleted successfully.");
+                        Console.WriteLine($"Stack '{selection}' deleted successfully.");
                     }
                     else
                     {
-                        Console.WriteLine($"No stack found with the name '{stackNameToDelete}'.");
+                        Console.WriteLine($"No stack found with the name '{selection}'.");
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
         catch (Exception ex)
@@ -216,24 +225,20 @@ internal class StacksInterface
     internal static void UpdateStack()
     {
         SqlConnection connection = null;
-        List<Stack> stacks = new();
-        List<string> stackNames = new();
 
         try
         {
             connection = DatabaseHelper.GetOpenConnection();
 
-            // Perform database operations here
+            List<Stack> stacks = new List<Stack>();
+            List<string> stackNames = new List<string>();
 
-            //Console.WriteLine("Connection successful!");
-            string getStacksQuery = $"SELECT * FROM Stacks";
-            string updateStackQuery = $"UPDATE Stacks SET StackName = @NewStackName WHERE StackName = @StackName";
-            SqlCommand command = null;
-            using (command = new SqlCommand(getStacksQuery, connection))
+            // Read stacks
+            string getStacksQuery = "SELECT * FROM Stacks";
+            using (SqlCommand readCommand = new SqlCommand(getStacksQuery, connection))
             {
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (SqlDataReader reader = readCommand.ExecuteReader())
                 {
-
                     while (reader.Read())
                     {
                         int stackId = reader.GetInt32(0);
@@ -242,39 +247,44 @@ internal class StacksInterface
                         stacks.Add(new Stack(stackId, stackName));
                         stackNames.Add(stackName);
                     }
-                    stackNames.Add("Return to Manage Stacks Menu"); // probably not good to revert to string to allow users to select name string of stack to delete; returning to main menu is not a name of a stack
+                }
+            }
 
-                    Console.WriteLine("Choose a stack to update");
-                    var selection = AnsiConsole.Prompt(
-                        new SelectionPrompt<string>()
-                        .Title("-------------------------------")
-                        .PageSize(10)
-                        .AddChoices(stackNames));
+            // Allow user to select a stack to update
+            stackNames.Add("Return to Manage Stacks Menu");
+            Console.WriteLine("Choose a stack to update");
+            var selection = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("-------------------------------")
+                    .PageSize(10)
+                    .AddChoices(stackNames));
 
-                    if (selection == "Return to Manage Stacks Menu")
-                    {
-                        Console.Clear();
-                        ShowMenu();
-                    }
+            if (selection == "Return to Manage Stacks Menu")
+            {
+                Console.Clear();
+                ShowMenu();
+            }
 
-                    Console.WriteLine("Enter New Stack Name: ");
+            // Get the new stack name
+            Console.WriteLine("Enter New Stack Name: ");
+            string newStackName = Console.ReadLine();
 
-                    string newStackName = Console.ReadLine();
-                    string stackNameToUpdate = selection;
-                    command = new SqlCommand(updateStackQuery, connection);
-                    command.Parameters.AddWithValue("@NewStackName", newStackName);
-                    command.Parameters.AddWithValue("@StackName", stackNameToUpdate);
+            // Update the selected stack
+            string updateStackQuery = "UPDATE Stacks SET StackName = @NewStackName WHERE StackName = @StackName";
+            using (SqlCommand updateCommand = new SqlCommand(updateStackQuery, connection))
+            {
+                updateCommand.Parameters.AddWithValue("@NewStackName", newStackName);
+                updateCommand.Parameters.AddWithValue("@StackName", selection);
 
-                    int rowsAffected = command.ExecuteNonQuery();
+                int rowsAffected = updateCommand.ExecuteNonQuery();
 
-                    if (rowsAffected > 0)
-                    {
-                        Console.WriteLine($"Stack '{stackNameToUpdate}' updated to '{newStackName}' successfully.");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"No stack found with the name '{stackNameToUpdate}'.");
-                    }
+                if (rowsAffected > 0)
+                {
+                    Console.WriteLine($"Stack '{selection}' updated to '{newStackName}' successfully.");
+                }
+                else
+                {
+                    Console.WriteLine($"No stack found with the name '{selection}'.");
                 }
             }
         }

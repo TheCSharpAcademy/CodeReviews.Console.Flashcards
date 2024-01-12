@@ -2,6 +2,7 @@
 using Flashcards.StanimalTheMan.Models;
 using Spectre.Console;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace Flashcards.StanimalTheMan;
 
@@ -142,58 +143,111 @@ internal class FlashcardsInterface
             //case ManageFlashcardsOption.ViewXAmountOfCardsInStack:
             //    ViewXAmountOfCardsInStack();
             //    break;
-            //case ManageFlashcardsOption.CreateAFlashcardInCurrentStack:
-            //    CreateAFlashcardInCurrentStack();
-            //    break;
-            //case ManageFlashcardsOption.EditFlashcard:
-            //    EditFlashcard();
-            //    break;
-            //case ManageFlashcardsOption.DeleteFlashcard:
-            //    DeleteFlashcard();
-            //    break;
+            case ManageFlashcardsOption.CreateAFlashcardInCurrentStack:
+                CreateAFlashcardInCurrentStack(selectedStackId);
+                break;
+                //case ManageFlashcardsOption.EditFlashcard:
+                //    EditFlashcard();
+                //    break;
+                //case ManageFlashcardsOption.DeleteFlashcard:
+                //    DeleteFlashcard();
+                //    break;
         }
+    }
+
+    private static void CreateAFlashcardInCurrentStack(int selectedStackId)
+    {
+
+
+        SqlConnection connection = null;
+
+        try
+        {
+            connection = DatabaseHelper.GetOpenConnection();
+
+            // Perform database operations here
+
+            //Console.WriteLine("Connection successful!");
+            Console.WriteLine("Enter text for the front of the new Flashcard");
+            string front = Console.ReadLine();
+            Console.WriteLine("Enter text for the back of the new Flashcard");
+            string back = Console.ReadLine();
+
+            string createFlashcardQuery = $"INSERT INTO Flashcards (Front, Back, StackId) VALUES (@Front, @Back, @StackId)";
+
+            using (SqlCommand command = new SqlCommand(createFlashcardQuery, connection))
+            {
+                List<FlashcardDTO> flashcardDTOs = new();
+                command.Parameters.AddWithValue("@Front", front);
+                command.Parameters.AddWithValue("@Back", back);
+                command.Parameters.AddWithValue("@StackId", selectedStackId);
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    Console.WriteLine($"Flashcard created successfully.");
+                }
+                else
+                {
+                    Console.WriteLine("Failed to create the flashcard.");
+                }
+                Console.Clear();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+        finally
+        {
+            DatabaseHelper.CloseConnection(connection);
+        }
+        
     }
 
     private static void ViewAllFlashcardsInStack(int selectedStackId)
     {
-        string connectionString = "Data Source=(LocalDb)\\LocalDBDemo;Initial Catalog=Flashcards;Integrated Security=True";
 
-        using (SqlConnection connection = new SqlConnection(connectionString))
+
+        SqlConnection connection = null;
+        try
         {
-            try
+            connection = DatabaseHelper.GetOpenConnection();
+
+            // Perform database operations here
+
+            //Console.WriteLine("Connection successful!");
+
+            string selectFlashcardsQuery = $"SELECT * FROM Flashcards WHERE StackId = @SelectedStackId";
+
+            using (SqlCommand command = new SqlCommand(selectFlashcardsQuery, connection))
             {
-                connection.Open();
-
-                // Perform database operations here
-
-                //Console.WriteLine("Connection successful!");
-
-                string selectFlashcardsQuery = $"SELECT * FROM Flashcards WHERE StackId = @SelectedStackId";
-
-                using (SqlCommand command = new SqlCommand(selectFlashcardsQuery, connection))
+                List<FlashcardDTO> flashcardDTOs = new();
+                command.Parameters.AddWithValue("@SelectedStackId", selectedStackId);
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    List<FlashcardDTO> flashcardDTOs = new();
-                    command.Parameters.AddWithValue("@SelectedStackId", selectedStackId);
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    while (reader.Read())
                     {
-                        while (reader.Read())
-                        {
-                            int flashcardId = reader.GetInt32(0);
-                            string front = reader.GetString(1);
-                            string back = reader.GetString(2);
-                            flashcardDTOs.Add(new FlashcardDTO(flashcardId, front, back));
-                        }
-                    }
-                    foreach(FlashcardDTO flashcardDTO in flashcardDTOs)
-                    {
-                        Console.WriteLine($"{flashcardDTO.FlashcardId} {flashcardDTO.Front} {flashcardDTO.Back}");
+                        int flashcardId = reader.GetInt32(0);
+                        string front = reader.GetString(1);
+                        string back = reader.GetString(2);
+                        flashcardDTOs.Add(new FlashcardDTO(flashcardId, front, back));
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
+                foreach(FlashcardDTO flashcardDTO in flashcardDTOs)
+                {
+                    Console.WriteLine($"{flashcardDTO.FlashcardId} {flashcardDTO.Front} {flashcardDTO.Back}");
+                }
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+        finally
+        {
+            DatabaseHelper.CloseConnection(connection);
+        }
+
     }
 }
