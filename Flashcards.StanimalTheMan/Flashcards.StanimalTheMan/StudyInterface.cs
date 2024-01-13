@@ -139,7 +139,7 @@ internal class StudyInterface
             if (selection == "Return to Manage Flashcards Menu")
             {
                 Console.Clear();
-                ShowMenu();
+                MainMenu.ShowMenu();
             }
 
             int studySessionScore = 0;
@@ -178,6 +178,8 @@ internal class StudyInterface
                         command.Parameters.AddWithValue("@Score", studySessionScore);
                         command.Parameters.AddWithValue("@StackId", selectedStackId);
 
+
+
                         int rowsAffected = command.ExecuteNonQuery();
 
                         if (rowsAffected > 0)
@@ -190,6 +192,9 @@ internal class StudyInterface
                         }
                         Console.WriteLine("Exiting Study session");
                         Console.WriteLine($"You got {studySessionScore} right out of {questionsAnswered}");
+                        // reset study session score and questions answered for next session
+                        studySessionScore = 0;
+                        questionsAnswered = 0;
                         Console.WriteLine("Press any key to continue");
                         Console.ReadLine();
                         Console.Clear();
@@ -204,11 +209,27 @@ internal class StudyInterface
                         studySessionScore++;
                         // go back to displaying flashcard in stack, maybe put in another method for DRY improvement
                         Console.WriteLine("Choose a flashcard to study or return to main menu");
-                        selection = AnsiConsole.Prompt(
-                            new SelectionPrompt<string>()
-                            .Title("-------------------------------")
-                            .PageSize(10)
-                            .AddChoices(flashcardSelectionOptions));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Your answer was wrong.");
+                        Console.WriteLine();
+                        Console.WriteLine($"You answered {userSelection}");
+                        Console.WriteLine($"The Correct answer was {back}");
+                    }
+
+                    Console.WriteLine("Press any key to continue");
+                    Console.Clear();
+                    selection = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                .Title("-------------------------------")
+                .PageSize(10)
+                .AddChoices(flashcardSelectionOptions));
+
+                    if (selection == "Return to Manage Flashcards Menu")
+                    {
+                        Console.Clear();
+                        MainMenu.ShowMenu();
                     }
                     questionsAnswered++;
                 }
