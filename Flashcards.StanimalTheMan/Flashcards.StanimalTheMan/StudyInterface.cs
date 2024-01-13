@@ -180,6 +180,15 @@ PIVOT(
                         pivotData = new StudyPivotDTO(stackName, monthlySessionsCount);
                     }
 
+                    if (pivotData == null)
+                    {
+                        Console.WriteLine("No study sessions");
+                        Console.WriteLine("Press any key to Continue...");
+                        Console.ReadLine();
+                        Console.Clear();
+                        MainMenu.ShowMenu();
+                    }
+
                     Console.WriteLine($"+---------Average per month for: {year} --|");
                     Console.WriteLine("| StackName | January | February | March | April | May | June | July | August | September | October | November | December |");
                     Console.Write($"{pivotData.StackName}");
@@ -368,7 +377,7 @@ PIVOT(
                         DateTime time = DateTime.Now;
                         string format = "yyyy-MM-dd HH:mm:ss.ffffff";
                         command.Parameters.Add("@Date", SqlDbType.DateTime).Value = time.ToString(format);
-                        command.Parameters.AddWithValue("@Score", studySessionScore);
+                        command.Parameters.AddWithValue("@Score", (int)(studySessionScore * 100.0 / questionsAnswered));
                         command.Parameters.AddWithValue("@StackId", selectedStackId);
 
 
