@@ -22,9 +22,9 @@ internal class StudyInterface
 
             //Console.WriteLine("Connection successful!");
 
-            string selectFlashcardsQuery = $"SELECT * FROM Stacks";
+            string selectStacksQuery = $"SELECT * FROM Stacks";
 
-            using (SqlCommand command = new SqlCommand(selectFlashcardsQuery, connection))
+            using (SqlCommand command = new SqlCommand(selectStacksQuery, connection))
             {
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
