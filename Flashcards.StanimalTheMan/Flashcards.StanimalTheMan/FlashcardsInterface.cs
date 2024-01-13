@@ -137,11 +137,12 @@ internal class FlashcardsInterface
                 ShowMenu();
                 break;
             case ManageFlashcardsOption.ViewAllFlashcardsInStack:
-                ViewAllFlashcardsInStack(selectedStackId);
+                ViewAllFlashcardsInStack(selectedStackId, -1);
                 break;
-            //case ManageFlashcardsOption.ViewXAmountOfCardsInStack:
-            //    ViewXAmountOfCardsInStack();
-            //    break;
+            case ManageFlashcardsOption.ViewXAmountOfCardsInStack:
+                int numFlashcards = GetXAmount();
+                ViewAllFlashcardsInStack(selectedStackId, numFlashcards);
+                break;
             case ManageFlashcardsOption.CreateAFlashcardInCurrentStack:
                 CreateAFlashcardInCurrentStack(selectedStackId);
                 break;
@@ -152,6 +153,17 @@ internal class FlashcardsInterface
                 //    DeleteFlashcard();
                 //    break;
         }
+    }
+
+    private static int GetXAmount()
+    {
+        Console.WriteLine("Enter the number of flashcards you want to fetch from selected stack: ");
+        int numFlashcards;
+        while(!Int32.TryParse(Console.ReadLine(), out numFlashcards))
+        {
+            Console.WriteLine("Enter the number of flashcards you want to fetch from selected stack: ");
+        }
+        return numFlashcards;
     }
 
     private static void CreateAFlashcardInCurrentStack(int selectedStackId)
@@ -204,7 +216,7 @@ internal class FlashcardsInterface
         
     }
 
-    private static void ViewAllFlashcardsInStack(int selectedStackId)
+    private static void ViewAllFlashcardsInStack(int selectedStackId,  int limit)
     {
 
 
@@ -219,10 +231,20 @@ internal class FlashcardsInterface
 
             string selectFlashcardsQuery = $"SELECT * FROM Flashcards WHERE StackId = @SelectedStackId";
 
+            if (limit != -1)
+            {
+                // user wants to get only x number of flashcards
+                selectFlashcardsQuery = $"SELECT TOP(@Limit) * FROM Flashcards WHERE StackId = @SelectedStackId"; 
+            }
+
             using (SqlCommand command = new SqlCommand(selectFlashcardsQuery, connection))
             {
                 List<FlashcardDTO> flashcardDTOs = new();
                 command.Parameters.AddWithValue("@SelectedStackId", selectedStackId);
+                if (limit != -1)
+                {
+                    command.Parameters.AddWithValue("@Limit", limit);
+                }
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
