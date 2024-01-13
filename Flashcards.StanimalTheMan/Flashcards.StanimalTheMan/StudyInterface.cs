@@ -1,18 +1,15 @@
 ﻿
 using Flashcards.StanimalTheMan.DTOs;
 using Spectre.Console;
-using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Flashcards.StanimalTheMan;
 
 internal enum StudyReportsOption
 {
     ViewAll, 
-    AverageSessionsPerMonthPerStack,
+    NumberSessionsPerMonthPerStack,
     AverageScorePerMonthPerStack,
     ReturnToMainMenu
 }
@@ -90,14 +87,14 @@ internal class StudyInterface
                 new SelectionPrompt<StudyReportsOption>()
                 .Title("-------------------------------")
                 .PageSize(10)
-                .AddChoices(StudyReportsOption.ViewAll, StudyReportsOption.AverageSessionsPerMonthPerStack, StudyReportsOption.AverageScorePerMonthPerStack, StudyReportsOption.ReturnToMainMenu));
+                .AddChoices(StudyReportsOption.ViewAll, StudyReportsOption.NumberSessionsPerMonthPerStack, StudyReportsOption.AverageScorePerMonthPerStack, StudyReportsOption.ReturnToMainMenu));
 
         switch (selection)
         {
             case StudyReportsOption.ViewAll:
                 ViewAllStudySessions();
                 break;
-            case StudyReportsOption.AverageSessionsPerMonthPerStack:
+            case StudyReportsOption.NumberSessionsPerMonthPerStack:
                 GetPivotReport(ReportType.NumberSessionsPerMonthPerStack);
                 break;
             case StudyReportsOption.AverageScorePerMonthPerStack:
@@ -191,7 +188,13 @@ PIVOT(
                         MainMenu.ShowMenu();
                     }
 
-                    Console.WriteLine($"+---------Average per month for: {year} --|");
+                    if (reportType == ReportType.NumberSessionsPerMonthPerStack)
+                    {
+                        Console.WriteLine($"+---------Total Sessions per month for: {year} --|");
+                    } else
+                    {
+                        Console.WriteLine($"+---------Average per month for: {year} --|");
+                    }
                     Console.WriteLine("| StackName | January | February | March | April | May | June | July | August | September | October | November | December |");
                     foreach (StudyPivotDTO pivotData in studyPivotDTOs)
                     {
