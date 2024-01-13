@@ -379,8 +379,18 @@ internal class FlashcardsInterface
             //Console.WriteLine("Connection successful!");
             Console.WriteLine("Enter text for the front of the new Flashcard");
             string front = Console.ReadLine();
+            while (string.IsNullOrWhiteSpace(front))
+            {
+                Console.WriteLine("Front cannot be empty, null, or whitespace");
+                front = Console.ReadLine();
+            }
             Console.WriteLine("Enter text for the back of the new Flashcard");
             string back = Console.ReadLine();
+            while (string.IsNullOrWhiteSpace(back))
+            {
+                Console.WriteLine("Back cannot be empty, null, or whitespace");
+                back = Console.ReadLine();
+            }
 
             string createFlashcardQuery = $"INSERT INTO Flashcards (Front, Back, StackId) VALUES (@Front, @Back, @StackId)";
 
