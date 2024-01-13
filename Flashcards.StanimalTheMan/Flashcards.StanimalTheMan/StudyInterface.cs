@@ -127,7 +127,7 @@ internal class StudyInterface
         try
         {
             connection = DatabaseHelper.GetOpenConnection();
-            StudyPivotDTO pivotData = null;
+            List<StudyPivotDTO>studyPivotDTOs = new();
             String query;
             
             if (reportType == ReportType.NumberSessionsPerMonthPerStack)
@@ -169,6 +169,7 @@ PIVOT(
 
                     while (reader.Read())
                     {
+                        StudyPivotDTO pivotData = null;
                         List<int> monthlySessionsCount = new();
                         string stackName = reader.GetString(0);
                         for (int i = 1; i <= 12; i++)
@@ -178,9 +179,10 @@ PIVOT(
                         }
 
                         pivotData = new StudyPivotDTO(stackName, monthlySessionsCount);
+                        studyPivotDTOs.Add(pivotData);
                     }
 
-                    if (pivotData == null)
+                    if (studyPivotDTOs.Count == 0)
                     {
                         Console.WriteLine("No study sessions");
                         Console.WriteLine("Press any key to Continue...");
@@ -191,10 +193,14 @@ PIVOT(
 
                     Console.WriteLine($"+---------Average per month for: {year} --|");
                     Console.WriteLine("| StackName | January | February | March | April | May | June | July | August | September | October | November | December |");
-                    Console.Write($"{pivotData.StackName}");
-                    foreach (int value in pivotData.MonthlyValues)
+                    foreach (StudyPivotDTO pivotData in studyPivotDTOs)
                     {
-                        Console.Write($" |    {value}   ");
+                        Console.Write($"{pivotData.StackName}");
+                        foreach (int value in pivotData.MonthlyValues)
+                        {
+                            Console.Write($" |    {value}   ");
+                        }
+                        Console.WriteLine();
                     }
                     Console.WriteLine();
                     Console.WriteLine("Press any key to continue");
