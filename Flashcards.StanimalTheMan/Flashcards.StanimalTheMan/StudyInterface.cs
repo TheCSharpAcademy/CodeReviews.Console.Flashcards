@@ -17,6 +17,12 @@ internal enum StudyReportsOption
     ReturnToMainMenu
 }
 
+internal enum ReportType
+{
+    NumberSessionsPerMonthPerStack,
+    AverageScorePerMonthPerStack
+}
+
 internal class StudyInterface
 {
     internal static void ShowMenu()
@@ -92,7 +98,10 @@ internal class StudyInterface
                 ViewAllStudySessions();
                 break;
             case StudyReportsOption.AverageSessionsPerMonthPerStack:
-                AverageSessionsPerMonthPerStack();
+                GetPivotReport(ReportType.NumberSessionsPerMonthPerStack);
+                break;
+            case StudyReportsOption.AverageScorePerMonthPerStack:
+                GetPivotReport(ReportType.AverageScorePerMonthPerStack);
                 break;
             case StudyReportsOption.ReturnToMainMenu:
                 MainMenu.ShowMenu();
@@ -100,7 +109,7 @@ internal class StudyInterface
         }
     }
 
-    private static void AverageSessionsPerMonthPerStack()
+    private static void GetPivotReport(ReportType reportType)
     {
         SqlConnection connection = null;
         Console.WriteLine("--------------");
@@ -119,7 +128,11 @@ internal class StudyInterface
         {
             connection = DatabaseHelper.GetOpenConnection();
             StudyPivotDTO pivotData = null;
-            String query = $@"SELECT *
+            String query;
+            
+            if (reportType == ReportType.NumberSessionsPerMonthPerStack)
+            {
+                query = $@"SELECT *
         FROM(
     SELECT stacks.StackName, DATENAME(MONTH, s.Date) AS Month, COUNT(s.Score) AS SessionCount
     FROM Study s
@@ -131,6 +144,22 @@ PIVOT(
         SUM(SessionCount)
     FOR Month IN([January], [February], [March], [April], [May], [June], [July], [August], [September], [October], [November], [December])
         ) AS PivotTable;";
+            }
+            else
+            {
+                query = $@"SELECT *
+FROM(
+    SELECT stacks.StackName, DATENAME(MONTH, s.Date) AS Month, AVG(s.Score) AS AverageScorePerMonthPerStack
+    FROM Study s
+    JOIN Stacks stacks ON stacks.StackId = s.StackId
+    WHERE YEAR(s.Date) = 2024
+    GROUP BY stacks.StackName, DATENAME(MONTH, s.Date)
+) AS SourceTable
+PIVOT(
+    MAX(AverageScorePerMonthPerStack)
+    FOR Month IN([January], [February], [March], [April], [May], [June], [July], [August], [September], [October], [November], [December])
+) AS PivotTable;";
+            }
 
             using (SqlCommand command = new SqlCommand(query, connection))
             {
@@ -142,7 +171,7 @@ PIVOT(
                     {
                         List<int> monthlySessionsCount = new();
                         string stackName = reader.GetString(0);
-                        for (int i = 1; i < 12; i++)
+                        for (int i = 1; i <= 12; i++)
                         {
                             int count = reader.IsDBNull(i) ? 0 : reader.GetInt32(i);
                             monthlySessionsCount.Add(count);
@@ -156,7 +185,7 @@ PIVOT(
                     Console.Write($"{pivotData.StackName}");
                     foreach (int value in pivotData.MonthlyValues)
                     {
-                        Console.Write($" | {value}");
+                        Console.Write($" |    {value}   ");
                     }
                     Console.WriteLine();
                     Console.WriteLine("Press any key to continue");
