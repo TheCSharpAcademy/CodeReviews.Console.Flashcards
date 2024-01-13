@@ -32,6 +32,9 @@ internal class MainMenu
                 case "Study":
                     StudyInterface.ShowMenu();
                     break;
+                case "view study session data":
+                    StudyInterface.ShowViewMenu();
+                    break;
             }
         }
 

@@ -1,10 +1,21 @@
 ﻿
 using Flashcards.StanimalTheMan.DTOs;
 using Spectre.Console;
+using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Flashcards.StanimalTheMan;
+
+internal enum StudyReportsOption
+{
+    ViewAll, 
+    AverageSessionsPerMonthPerStack,
+    AverageScorePerMonthPerStack,
+    ReturnToMainMenu
+}
 
 internal class StudyInterface
 {
@@ -48,11 +59,164 @@ internal class StudyInterface
                     if (selection == "Return to Main Menu")
                     {
                         Console.Clear();
-                        ShowMenu();
+                        MainMenu.ShowMenu();
                     }
 
                     // otherwise study a stack
                     Study(selection);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+        finally
+        {
+            DatabaseHelper.CloseConnection(connection);
+        }
+    }
+
+    internal static void ShowViewMenu()
+    {
+        Console.WriteLine("Select what you want to view regarding study sessions");
+        var selection = AnsiConsole.Prompt(
+                new SelectionPrompt<StudyReportsOption>()
+                .Title("-------------------------------")
+                .PageSize(10)
+                .AddChoices(StudyReportsOption.ViewAll, StudyReportsOption.AverageSessionsPerMonthPerStack, StudyReportsOption.AverageScorePerMonthPerStack, StudyReportsOption.ReturnToMainMenu));
+
+        switch (selection)
+        {
+            case StudyReportsOption.ViewAll:
+                ViewAllStudySessions();
+                break;
+            case StudyReportsOption.AverageSessionsPerMonthPerStack:
+                AverageSessionsPerMonthPerStack();
+                break;
+            case StudyReportsOption.ReturnToMainMenu:
+                MainMenu.ShowMenu();
+                break;
+        }
+    }
+
+    private static void AverageSessionsPerMonthPerStack()
+    {
+        SqlConnection connection = null;
+        Console.WriteLine("--------------");
+        Console.WriteLine("Input a year in format YYYY");
+        Console.WriteLine("--------------");
+
+        int year;
+        string userInput = Console.ReadLine();
+        while (!Int32.TryParse(userInput, out year) || userInput.Length != 4)
+        {
+            Console.WriteLine("Invalid format. Input a year in format YYYY");
+            userInput = Console.ReadLine();
+        }
+
+        try
+        {
+            connection = DatabaseHelper.GetOpenConnection();
+            StudyPivotDTO pivotData = null;
+            String query = $@"SELECT *
+        FROM(
+    SELECT stacks.StackName, DATENAME(MONTH, s.Date) AS Month, COUNT(s.Score) AS SessionCount
+    FROM Study s
+    JOIN Stacks stacks ON stacks.StackId = s.StackId
+    WHERE YEAR(s.Date) = @Year
+    GROUP BY stacks.StackName, DATENAME(MONTH, s.Date)
+) AS SourceTable
+PIVOT(
+        SUM(SessionCount)
+    FOR Month IN([January], [February], [March], [April], [May], [June], [July], [August], [September], [October], [November], [December])
+        ) AS PivotTable;";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Year", year);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+
+                    while (reader.Read())
+                    {
+                        List<int> monthlySessionsCount = new();
+                        string stackName = reader.GetString(0);
+                        for (int i = 1; i < 12; i++)
+                        {
+                            int count = reader.IsDBNull(i) ? 0 : reader.GetInt32(i);
+                            monthlySessionsCount.Add(count);
+                        }
+
+                        pivotData = new StudyPivotDTO(stackName, monthlySessionsCount);
+                    }
+
+                    Console.WriteLine($"+---------Average per month for: {year} --|");
+                    Console.WriteLine("| StackName | January | February | March | April | May | June | July | August | September | October | November | December |");
+                    Console.Write($"{pivotData.StackName}");
+                    foreach (int value in pivotData.MonthlyValues)
+                    {
+                        Console.Write($" | {value}");
+                    }
+                    Console.WriteLine();
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadLine();
+                    Console.Clear();
+                    ShowViewMenu();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+        finally
+        {
+            DatabaseHelper.CloseConnection(connection);
+        }
+    }
+    private static void ViewAllStudySessions()
+    {
+        SqlConnection connection = null;
+        List<StudyDTO> studyDTOs = new();
+        try
+        {
+
+            connection = DatabaseHelper.GetOpenConnection();
+
+            // Perform database operations here
+
+            //Console.WriteLine("Connection successful!");
+
+            string selectStudySessionsQuery = $"SELECT Study.Date AS date, Study.Score, Stacks.StackName FROM Study LEFT JOIN Stacks ON Study.StackId = Stacks.StackId";
+
+            using (SqlCommand command = new SqlCommand(selectStudySessionsQuery, connection))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+
+                    while (reader.Read())
+                    {
+                        DateTime dateTimeValue = reader.GetDateTime(reader.GetOrdinal("date"));
+                        int score = reader.GetInt32(1);
+                        string stackName = reader.GetString(2);
+
+                        studyDTOs.Add(new StudyDTO(dateTimeValue, score, stackName));
+                    }
+
+                    Console.WriteLine("+---------Date--------- | Score | StackName --|");
+                    foreach (StudyDTO studyDTO in studyDTOs)
+                    {
+                        Console.WriteLine($"| {studyDTO.Date} | {studyDTO.Score} | {studyDTO.StackName} |");
+                        //Console.WriteLine(studyDTO.Date);
+                        //Console.WriteLine(studyDTO.Score);
+                        //Console.WriteLine(studyDTO.StackName);
+                    }
+
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadLine();
+                    Console.Clear();
+                    ShowViewMenu();
                 }
             }
         }
