@@ -99,9 +99,9 @@ internal class FlashcardsInterface
 
             //Console.WriteLine("Connection successful!");
 
-            string selectFlashcardsQuery = $"SELECT * FROM Stacks WHERE StackName = @StackName";
+            string selectStackQuery = $"SELECT * FROM Stacks WHERE StackName = @StackName";
 
-            using (SqlCommand command = new SqlCommand(selectFlashcardsQuery, connection))
+            using (SqlCommand command = new SqlCommand(selectStackQuery, connection))
             {
                 command.Parameters.AddWithValue("@StackName", workingStack);
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -118,6 +118,10 @@ internal class FlashcardsInterface
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
+        }
+        finally
+        {
+            DatabaseHelper.CloseConnection(connection);
         }
 
 

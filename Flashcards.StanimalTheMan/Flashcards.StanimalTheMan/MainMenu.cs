@@ -29,6 +29,9 @@ internal class MainMenu
                 case "Manage FlashCards":
                     FlashcardsInterface.ShowMenu();
                     break;
+                case "Study":
+                    StudyInterface.ShowMenu();
+                    break;
             }
         }
 
