@@ -9,6 +9,7 @@ class Program
 
     private static void StartApp()
     {
+        DatabaseHelper.InitializeDatabase();
         MainMenu.ShowMenu();
     }
 }

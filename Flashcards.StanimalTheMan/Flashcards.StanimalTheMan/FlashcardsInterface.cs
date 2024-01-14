@@ -20,9 +20,8 @@ internal class FlashcardsInterface
 {
     internal static void ShowMenu()
     {
-        string connectionString = "Data Source=(LocalDb)\\LocalDBDemo;Initial Catalog=Flashcards;Integrated Security=True";
-
-        using (SqlConnection connection = new SqlConnection(connectionString))
+        SqlConnection connection = null;
+        using (connection = DatabaseHelper.GetOpenConnection())
         {
             List<Stack> stacks = new List<Stack>();
             List<string> stackSelectOptions = new List<string>();
