@@ -380,7 +380,6 @@ internal class FlashcardsInterface
 
             using (SqlCommand command = new SqlCommand(createFlashcardQuery, connection))
             {
-                List<FlashcardDto> flashcardDTOs = new();
                 command.Parameters.AddWithValue("@Front", front);
                 command.Parameters.AddWithValue("@Back", back);
                 command.Parameters.AddWithValue("@StackId", selectedStackId);

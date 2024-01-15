@@ -162,7 +162,6 @@ internal class StacksInterface
                 {
                     while (reader.Read())
                     {
-                        int stackId = reader.GetInt32(0);
                         string stackName = reader.GetString(1);
 
                         stackNames.Add(stackName);
