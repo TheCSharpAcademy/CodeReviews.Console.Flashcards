@@ -45,7 +45,6 @@ internal class StudyInterface
 
                     while (reader.Read())
                     {
-                        //int stackId = reader.GetInt32(0);
                         string stackName = reader.GetString(1);
 
                         stackNames.Add(stackName);
@@ -124,7 +123,7 @@ internal class StudyInterface
         try
         {
             connection = DatabaseHelper.GetOpenConnection();
-            List<StudyPivotDTO>studyPivotDTOs = new();
+            List<StudyPivotDto>studyPivotDTOs = new();
             String query;
             
             if (reportType == ReportType.NumberSessionsPerMonthPerStack)
@@ -166,7 +165,7 @@ PIVOT(
 
                     while (reader.Read())
                     {
-                        StudyPivotDTO pivotData = null;
+                        StudyPivotDto pivotData = null;
                         List<int> monthlySessionsCount = new();
                         string stackName = reader.GetString(0);
                         for (int i = 1; i <= 12; i++)
@@ -175,7 +174,7 @@ PIVOT(
                             monthlySessionsCount.Add(count);
                         }
 
-                        pivotData = new StudyPivotDTO(stackName, monthlySessionsCount);
+                        pivotData = new StudyPivotDto(stackName, monthlySessionsCount);
                         studyPivotDTOs.Add(pivotData);
                     }
 
@@ -196,7 +195,7 @@ PIVOT(
                         Console.WriteLine($"+---------Average per month for: {year} --|");
                     }
                     Console.WriteLine("| StackName | January | February | March | April | May | June | July | August | September | October | November | December |");
-                    foreach (StudyPivotDTO pivotData in studyPivotDTOs)
+                    foreach (StudyPivotDto pivotData in studyPivotDTOs)
                     {
                         Console.Write($"{pivotData.StackName}");
                         foreach (int value in pivotData.MonthlyValues)
@@ -225,15 +224,11 @@ PIVOT(
     private static void ViewAllStudySessions()
     {
         SqlConnection connection = null;
-        List<StudyDTO> studyDTOs = new();
+        List<StudyDto> studyDTOs = new();
         try
         {
 
             connection = DatabaseHelper.GetOpenConnection();
-
-            // Perform database operations here
-
-            //Console.WriteLine("Connection successful!");
 
             string selectStudySessionsQuery = $"SELECT Study.Date AS date, Study.Score, Stacks.StackName FROM Study LEFT JOIN Stacks ON Study.StackId = Stacks.StackId";
 
@@ -248,16 +243,13 @@ PIVOT(
                         int score = reader.GetInt32(1);
                         string stackName = reader.GetString(2);
 
-                        studyDTOs.Add(new StudyDTO(dateTimeValue, score, stackName));
+                        studyDTOs.Add(new StudyDto(dateTimeValue, score, stackName));
                     }
 
                     Console.WriteLine("+---------Date--------- | Score | StackName --|");
-                    foreach (StudyDTO studyDTO in studyDTOs)
+                    foreach (StudyDto studyDTO in studyDTOs)
                     {
                         Console.WriteLine($"| {studyDTO.Date} | {studyDTO.Score} | {studyDTO.StackName} |");
-                        //Console.WriteLine(studyDTO.Date);
-                        //Console.WriteLine(studyDTO.Score);
-                        //Console.WriteLine(studyDTO.StackName);
                     }
 
                     Console.WriteLine("Press any key to continue");
@@ -287,10 +279,6 @@ PIVOT(
         {
             connection = DatabaseHelper.GetOpenConnection();
 
-            // Perform database operations here
-
-            //Console.WriteLine("Connection successful!");
-
             string selectStackQuery = $"SELECT * FROM Stacks WHERE StackName = @StackName";
 
             using (SqlCommand command = new SqlCommand(selectStackQuery, connection))
@@ -308,7 +296,7 @@ PIVOT(
             }
 
             Dictionary<long, int> mapping = new();
-            List<FlashcardDTO> flashcardDTOs = new();
+            List<FlashcardDto> flashcardDTOs = new();
             List<string> flashcardSelectionOptions = new();
             string fetchFlashcardsQuery = $"SELECT FlashcardId, ROW_NUMBER() OVER (ORDER BY FlashcardId) AS SequentialId, Front, Back FROM Flashcards WHERE StackId = @StackId";
 
@@ -325,11 +313,11 @@ PIVOT(
                     string back = reader.GetString(3);
 
                     mapping.Add(sequentialId, flashcardId);
-                    flashcardDTOs.Add(new FlashcardDTO(sequentialId, flashcardId, front, back));
+                    flashcardDTOs.Add(new FlashcardDto(sequentialId, flashcardId, front, back));
                 }
             }
 
-            foreach (FlashcardDTO flashcardDTO in flashcardDTOs)
+            foreach (FlashcardDto flashcardDTO in flashcardDTOs)
             {
                 string selectionString = "";
                 selectionString += flashcardDTO.FlashcardSequentialId;

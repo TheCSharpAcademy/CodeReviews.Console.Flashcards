@@ -1,8 +1,8 @@
 ﻿namespace Flashcards.StanimalTheMan.DTOs
 {
-    internal class FlashcardDTO
+    internal class FlashcardDto
     {
-        public FlashcardDTO(long flashcardSequentialId, int flashcardId, string front, string back)
+        public FlashcardDto(long flashcardSequentialId, int flashcardId, string front, string back)
         {
             FlashcardSequentialId = flashcardSequentialId;
             FlashcardId = flashcardId;

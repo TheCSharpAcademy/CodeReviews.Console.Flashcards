@@ -57,9 +57,7 @@ internal class StacksInterface
 
             connection = DatabaseHelper.GetOpenConnection();
 
-            // Perform database operations here
 
-            //Console.WriteLine("Connection successful!");
 
             string selectFlashcardsQuery = $"SELECT * FROM Stacks";
 
@@ -70,7 +68,6 @@ internal class StacksInterface
 
                     while (reader.Read())
                     {
-                        //int stackId = reader.GetInt32(0);
                         string stackName = reader.GetString(1);
 
                         stackNames.Add(stackName);
@@ -153,10 +150,6 @@ internal class StacksInterface
         try
         {
             connection = DatabaseHelper.GetOpenConnection();
-
-            // Perform database operations here
-
-            //Console.WriteLine("Connection successful!");
             string getStacksQuery = "SELECT * FROM Stacks";
             string deleteStackQuery = $"DELETE FROM Stacks WHERE StackName = @StackName";
 

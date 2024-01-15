@@ -1,8 +1,8 @@
 ﻿namespace Flashcards.StanimalTheMan.DTOs;
 
-internal class StudyDTO
+internal class StudyDto
 {
-    public StudyDTO(DateTime date, int score, string stackName)
+    public StudyDto(DateTime date, int score, string stackName)
     {
         Date = date;
         Score = score;
