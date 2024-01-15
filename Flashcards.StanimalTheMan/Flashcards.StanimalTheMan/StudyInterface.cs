@@ -32,10 +32,6 @@ internal class StudyInterface
 
             connection = DatabaseHelper.GetOpenConnection();
 
-            // Perform database operations here
-
-            //Console.WriteLine("Connection successful!");
-
             string selectStacksQuery = $"SELECT * FROM Stacks";
 
             using (SqlCommand command = new SqlCommand(selectStacksQuery, connection))
