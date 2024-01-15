@@ -1,8 +1,8 @@
 ﻿namespace Flashcards.StanimalTheMan.DTOs;
 
-internal class StudyPivotDTO
+internal class StudyPivotDto
 {
-    public StudyPivotDTO(string stackName, List<int>monthlyValues)
+    public StudyPivotDto(string stackName, List<int>monthlyValues)
     {
         StackName = stackName;
         MonthlyValues = monthlyValues;

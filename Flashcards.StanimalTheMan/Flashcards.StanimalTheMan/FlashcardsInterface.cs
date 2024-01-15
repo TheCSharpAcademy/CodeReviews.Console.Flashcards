@@ -28,11 +28,7 @@ internal class FlashcardsInterface
             stackSelectOptions.Add("Return to Main Menu");
             try
             {
-                connection.Open();
 
-                // Perform database operations here
-
-                //Console.WriteLine("Connection successful!");
 
                 string selectFlashcardsQuery = $"SELECT * FROM Stacks";
 
@@ -93,10 +89,6 @@ internal class FlashcardsInterface
         try
         {
             connection = DatabaseHelper.GetOpenConnection();
-
-            // Perform database operations here
-
-            //Console.WriteLine("Connection successful!");
 
             string selectStackQuery = $"SELECT * FROM Stacks WHERE StackName = @StackName";
 
@@ -167,10 +159,9 @@ internal class FlashcardsInterface
 
             // Perform database operations here
 
-            //Console.WriteLine("Connection successful!");
             Console.WriteLine("Select the flashcard you want to update");
 
-            List<FlashcardDTO> flashcardDTOs = new();
+            List<FlashcardDto> flashcardDTOs = new();
             List<string> flashcardSelectionOptions = new();
 
             string selectFlashcardsQuery = $"SELECT FlashcardId, ROW_NUMBER() OVER (ORDER BY FlashcardId) AS SequentialId, Front, Back FROM Flashcards WHERE StackId = @StackId";
@@ -191,11 +182,11 @@ internal class FlashcardsInterface
                         string back = reader.GetString(3);
 
                         mapping.Add(sequentialId, flashcardId);
-                        flashcardDTOs.Add(new FlashcardDTO(sequentialId, flashcardId, front, back));
+                        flashcardDTOs.Add(new FlashcardDto(sequentialId, flashcardId, front, back));
                     }
                 }
 
-                foreach (FlashcardDTO flashcardDTO in flashcardDTOs)
+                foreach (FlashcardDto flashcardDTO in flashcardDTOs)
                 {
                     string selectionString = "";
                     selectionString += flashcardDTO.FlashcardSequentialId;
@@ -267,14 +258,10 @@ internal class FlashcardsInterface
         try
         {
             connection = DatabaseHelper.GetOpenConnection();
-
-            // Perform database operations here
-
-            //Console.WriteLine("Connection successful!");
             Console.WriteLine("Select the flashcard you want to delete");
 
             Dictionary<long, int> mapping = new();
-            List<FlashcardDTO> flashcardDTOs = new();
+            List<FlashcardDto> flashcardDTOs = new();
             List<string> flashcardSelectionOptions = new();
             string fetchFlashcardsQuery = $"SELECT FlashcardId, ROW_NUMBER() OVER (ORDER BY FlashcardId) AS SequentialId, Front, Back FROM Flashcards WHERE StackId = @StackId";
 
@@ -292,11 +279,11 @@ internal class FlashcardsInterface
                         string back = reader.GetString(3);
 
                         mapping.Add(sequentialId, flashcardId);
-                        flashcardDTOs.Add(new FlashcardDTO(sequentialId, flashcardId, front, back));
+                        flashcardDTOs.Add(new FlashcardDto(sequentialId, flashcardId, front, back));
                     }
                 }
 
-                foreach (FlashcardDTO flashcardDTO in flashcardDTOs)
+                foreach (FlashcardDto flashcardDTO in flashcardDTOs)
                 {
                     string selectionString = "";
                     selectionString += flashcardDTO.FlashcardSequentialId;
@@ -374,8 +361,6 @@ internal class FlashcardsInterface
             connection = DatabaseHelper.GetOpenConnection();
 
             // Perform database operations here
-
-            //Console.WriteLine("Connection successful!");
             Console.WriteLine("Enter text for the front of the new Flashcard");
             string front = Console.ReadLine();
             while (string.IsNullOrWhiteSpace(front))
@@ -395,7 +380,7 @@ internal class FlashcardsInterface
 
             using (SqlCommand command = new SqlCommand(createFlashcardQuery, connection))
             {
-                List<FlashcardDTO> flashcardDTOs = new();
+                List<FlashcardDto> flashcardDTOs = new();
                 command.Parameters.AddWithValue("@Front", front);
                 command.Parameters.AddWithValue("@Back", back);
                 command.Parameters.AddWithValue("@StackId", selectedStackId);
@@ -432,10 +417,6 @@ internal class FlashcardsInterface
         {
             connection = DatabaseHelper.GetOpenConnection();
 
-            // Perform database operations here
-
-            //Console.WriteLine("Connection successful!");
-
             string selectFlashcardsQuery = $"SELECT FlashcardId, ROW_NUMBER() OVER (ORDER BY FlashcardId) AS SequentialId, Front, Back FROM Flashcards WHERE StackId = @SelectedStackId";
             if (limit != -1)
             {
@@ -445,7 +426,7 @@ internal class FlashcardsInterface
 
             using (SqlCommand command = new SqlCommand(selectFlashcardsQuery, connection))
             {
-                List<FlashcardDTO> flashcardDTOs = new();
+                List<FlashcardDto> flashcardDTOs = new();
                 command.Parameters.AddWithValue("@SelectedStackId", selectedStackId);
                 if (limit != -1)
                 {
@@ -459,10 +440,10 @@ internal class FlashcardsInterface
                         long sequentialId = reader.GetInt64(1);
                         string front = reader.GetString(2);
                         string back = reader.GetString(3);
-                        flashcardDTOs.Add(new FlashcardDTO(sequentialId, flashcardId, front, back));
+                        flashcardDTOs.Add(new FlashcardDto(sequentialId, flashcardId, front, back));
                     }
                 }
-                foreach (FlashcardDTO flashcardDTO in flashcardDTOs)
+                foreach (FlashcardDto flashcardDTO in flashcardDTOs)
                 {
                     Console.WriteLine($"{flashcardDTO.FlashcardSequentialId} {flashcardDTO.Front} {flashcardDTO.Back}");
                 }
