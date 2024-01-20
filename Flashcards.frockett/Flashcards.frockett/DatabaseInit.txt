@@ -1,0 +1,26 @@
+﻿IF DB_ID('FlashCards') IS NULL
+BEGIN
+    CREATE DATABASE FlashCards;
+    USE FlashCards;
+
+    CREATE TABLE Stacks (
+        Id INT PRIMARY KEY IDENTITY,
+        Name NVARCHAR(100) NOT NULL
+    );
+
+    CREATE TABLE FlashCards (
+        Id INT PRIMARY KEY IDENTITY,
+        StackId INT NOT NULL,
+        Front NVARCHAR(255) NOT NULL,
+        Back NVARCHAR(255) NOT NULL,
+        FOREIGN KEY (StackId) REFERENCES Stacks(Id)
+    );
+
+    CREATE TABLE StudySessions (
+        Id INT PRIMARY KEY IDENTITY,
+        FlashCardId INT NOT NULL,
+        SessionDateTime DATETIME NOT NULL,
+        Correct BIT NOT NULL,
+        FOREIGN KEY (FlashCardId) REFERENCES FlashCards(Id)
+    );
+END
