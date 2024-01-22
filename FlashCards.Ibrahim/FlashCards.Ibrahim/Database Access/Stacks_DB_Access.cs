@@ -38,7 +38,7 @@ namespace FlashCards.Ibrahim.Database_Access
                 SqlCommand command = sqlConnection.CreateCommand();
 
                 command.CommandText = @"
-                        UPDATE Flashcards_Table Set Name = @Name WHERE Id = @Id";
+                        UPDATE Stacks_Table Set Name = @Name WHERE Id = @Id";
                 command.Parameters.AddWithValue("@Id", Id);
                 command.Parameters.AddWithValue("@Name", name);
                 command.ExecuteNonQuery();
