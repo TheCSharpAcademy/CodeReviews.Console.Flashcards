@@ -1,0 +1,34 @@
+﻿USE FlashCards;
+
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Stacks')
+BEGIN
+    CREATE TABLE Stacks (
+        Id INT PRIMARY KEY IDENTITY,
+        Name NVARCHAR(100) NOT NULL
+    );
+END
+
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Cards')
+BEGIN
+    CREATE TABLE Cards (
+        Id INT PRIMARY KEY IDENTITY,
+        StackId INT NOT NULL,
+        Question NVARCHAR(255) NOT NULL,
+        Answer NVARCHAR(255) NOT NULL,
+        FOREIGN KEY (StackId) REFERENCES Stacks(Id)
+    );
+END
+
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'StudySessions')
+BEGIN
+    CREATE TABLE StudySessions (
+        Id INT PRIMARY KEY IDENTITY,
+        FlashCardId INT NOT NULL,
+        StackId INT NOT NULL,
+        SessionDateTime DATETIME NOT NULL,
+        Correct BIT NOT NULL,
+        Score INT NOT NULL,
+        FOREIGN KEY (FlashCardId) REFERENCES Cards(Id),
+        FOREIGN KEY (StackId) REFERENCES Stacks(Id)
+    );
+END
