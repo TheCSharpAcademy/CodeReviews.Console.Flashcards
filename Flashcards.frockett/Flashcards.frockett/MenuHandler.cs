@@ -69,10 +69,35 @@ internal class MenuHandler
 
     private void HandleFlashCardSubmenu()
     {
-        AnsiConsole.Markup("\n[red]NOT READY, TURN BACK!![/]");
-        Console.ReadLine();
-        ShowMainMenu();
-        throw new NotImplementedException();
+        string[] flashcardMenuOptions =
+               {"Add Flashcard", "Delete Flashcard", "Display all cards in stack", "Return to Main Menu",};
+
+        string choice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title("Which operation would you like to perform? Use [green]arrow[/] and [green]enter[/] keys to make a selection.")
+            .PageSize(10)
+            .MoreChoicesText("Keep scrolling for more options")
+            .AddChoices(flashcardMenuOptions));
+
+        int menuSelection = Array.IndexOf(flashcardMenuOptions, choice) + 1;
+
+        switch (menuSelection)
+        {
+            case 1:
+                displayService.DisplayAllStacks(stackController.GetListOfStacks());
+                //cardController.InsertCard();
+                ShowMainMenu();
+                break;
+            case 2:
+                ShowMainMenu();
+                break;
+            case 3:
+                ShowMainMenu();
+                break;
+            case 4:
+                ShowMainMenu();
+                break;
+        }
     }
 
     private void HandleStackSubmenu()

@@ -10,10 +10,12 @@ internal class Program
         // cache the data access interface and initialize the database
         var dataAccess = InitDatabase();
 
+        var inputValidation = new InputValidation();
+
         // All controllers
-        var cardController = new CardController(dataAccess);
-        var stackController = new StackController(dataAccess);
-        var studySessionController = new StudySessionController(dataAccess);
+        var cardController = new CardController(dataAccess, inputValidation);
+        var stackController = new StackController(dataAccess, inputValidation);
+        var studySessionController = new StudySessionController(dataAccess, inputValidation);
 
         // View components
         var displayService = new DisplayService();

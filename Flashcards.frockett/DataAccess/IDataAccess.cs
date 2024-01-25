@@ -1,11 +1,16 @@
-﻿namespace DataAccess;
+﻿
+using Library.Models;
+
+namespace DataAccess;
 
 public interface IDataAccess
 {
     public void InitDatabase();
     //public string GetConnectionString();
-    public void InsertCard();
-    public void DeleteCard();
-    public void InsertStack();
-    public void DeleteStack();
+    public void InsertCard(CardModel flashcard);
+    public void DeleteCardById(int stackId, int cardId);
+    public void InsertStack(StackModel stack);
+    public void DeleteStackById(int stackId);
+    public List<StackModel> GetListOfStacks();
+    public StackModel GetStackById(int stackId);
 }
