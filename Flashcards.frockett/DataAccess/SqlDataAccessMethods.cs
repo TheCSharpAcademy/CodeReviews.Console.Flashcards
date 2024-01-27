@@ -97,4 +97,35 @@ public class SqlDataAccessMethods : IDataAccess
     {
         throw new NotImplementedException();
     }
+
+    public List<CardModel> GetCardsInStack(int id)
+    {
+        List<CardModel> flashcards = new List<CardModel>();
+        using (SqlConnection connection = new SqlConnection(dbConnString))
+        {
+            connection.Open();
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.CommandText = $"SELECT * FROM cards WHERE StackId = {id}";
+
+                using SqlDataReader reader = command.ExecuteReader();
+                if(reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        flashcards.Add(new CardModel()
+                        {
+                            Id= Convert.ToInt32(reader.GetOrdinal("Id")),
+                            StackId = Convert.ToInt32(reader.GetOrdinal("StackId")),
+                            Question = reader.GetString(reader.GetOrdinal("Question")),
+                            Answer = reader.GetString(reader.GetOrdinal("Answer"))
+                        });
+                    }
+                }
+            }
+            connection.Close();
+            return flashcards;
+        }
+
+    }
 }

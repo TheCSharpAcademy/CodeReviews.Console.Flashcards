@@ -17,7 +17,7 @@ public class StackController
     public List<StackDTO> GetListOfStacks()
     {
         var listOfAllStacks = dataAccess.GetListOfStacks();
-        var stackDTOs = listOfAllStacks.Select(stack => new StackDTO(stack.Name)).ToList();
+        List<StackDTO> stackDTOs = listOfAllStacks.Select(stack => new StackDTO(stack.Name)).ToList();
         return stackDTOs;
     }
 }
