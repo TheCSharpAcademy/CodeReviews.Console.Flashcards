@@ -92,6 +92,8 @@ internal class MenuHandler
                 ShowMainMenu();
                 break;
             case 3:
+                displayService.DisplayAllStacks(stackController.GetListOfStacks());
+                displayService.DisplayCards(cardController.GetCardsInStack());
                 ShowMainMenu();
                 break;
             case 4:
