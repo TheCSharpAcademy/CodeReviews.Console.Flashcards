@@ -1,6 +1,7 @@
 ﻿using DataAccess;
 using Library.Models;
 using Spectre.Console;
+using System.ComponentModel.DataAnnotations;
 
 namespace Library;
 
@@ -30,11 +31,11 @@ public class CardController
         dataAccess.InsertCard(newFlashcard);
     }
 
-    public void DeleteCard()
+    public void DeleteCard(int stackId)
     {
         // instantiate mapper class, create map
         IdMapper mapper = new IdMapper();
-        List<CardModel> flashcards = GetCardsInStack();
+        List<CardModel> flashcards = GetCardsInStack(stackId);
         mapper.BuildFlashCardMap(flashcards);
 
         // cache stack id from first element in list, then get the desired index
@@ -53,22 +54,23 @@ public class CardController
         }
     }
 
-    private List<CardModel> GetCardsInStack()
+    public int GetStackIdFromUser()
     {
-        // Send a list of all current stacks to the input validation class, which checks the name against the name property of each item.
-        int stackId = inputValidation.GetStackId(dataAccess.GetListOfStacks());
+        // send a list of all current stacks from dataAccess to inputValidation to present to the user
+        return inputValidation.GetStackId(dataAccess.GetListOfStacks());
+    }
+    public List<CardModel> GetCardsInStack(int stackId)
+    {
         // Get all the card models in a list based on the stackId
         List<CardModel> cards = dataAccess.GetCardsInStack(stackId);
         // Return the cards (probably to the GetCardDTOs method)
         return cards;
     }
 
-    public List<CardDTO> GetCardDTOs()
+    public List<CardDTO> GetCardDTOs(List<CardModel> flashcards)
     {
         List<CardDTO> cardDTOs = new List<CardDTO>();
         
-        List<CardModel> flashcards = GetCardsInStack();
-
         foreach (CardModel card in flashcards)
         {
             cardDTOs.Add(
