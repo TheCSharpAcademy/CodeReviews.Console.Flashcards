@@ -130,8 +130,8 @@ public class SqlDataAccessMethods : IDataAccess
                     {
                         flashcards.Add(new CardModel()
                         {
-                            Id= Convert.ToInt32(reader.GetOrdinal("Id")),
-                            StackId = Convert.ToInt32(reader.GetOrdinal("StackId")),
+                            Id= reader.GetInt32(reader.GetOrdinal("Id")),
+                            StackId = reader.GetInt32(reader.GetOrdinal("StackId")),
                             Question = reader.GetString(reader.GetOrdinal("Question")),
                             Answer = reader.GetString(reader.GetOrdinal("Answer"))
                         });
