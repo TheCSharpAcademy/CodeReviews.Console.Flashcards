@@ -18,7 +18,7 @@ public class CardController
 
     public void InsertCard()
     {
-        int stackToUpdate = inputValidation.GetStackId(dataAccess.GetListOfStacks());
+        int stackToUpdate = GetStackIdFromUser();
         //dataAccess.GetStackById(stackToUpdate);
 
         CardDTO newFlashcardDTO = inputValidation.GetNewFlashCardInput();
@@ -57,12 +57,12 @@ public class CardController
     public int GetStackIdFromUser()
     {
         // send a list of all current stacks from dataAccess to inputValidation to present to the user
-        return inputValidation.GetStackId(dataAccess.GetListOfStacks());
+        return inputValidation.GetStackId(dataAccess.GetListOfStacks(), "Enter the name of the stack you'd like to select: ");
     }
     public List<CardModel> GetCardsInStack(int stackId)
     {
         // Get all the card models in a list based on the stackId
-        List<CardModel> cards = dataAccess.GetCardsInStack(stackId);
+        List<CardModel> cards = dataAccess.GetCardsByStackId(stackId);
         // Return the cards (probably to the GetCardDTOs method)
         return cards;
     }

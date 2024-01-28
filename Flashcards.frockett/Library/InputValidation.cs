@@ -24,9 +24,25 @@ public class InputValidation
         return new CardDTO(question, answer);
     }
 
-    public int GetStackId(List<StackModel> stacks)
+    public StackDTO GetNewStackInput()
     {
-        string selection = AnsiConsole.Ask<string>("Select the stack you're looking for. Type the name as listed above.\n");
+        string newStackName = AnsiConsole.Ask<string>("Enter the name of the new stack: ");
+
+        if (string.IsNullOrEmpty(newStackName))
+        {
+            newStackName = AnsiConsole.Ask<string>("The stack's name can't be empty. Enter a name: ");
+        }
+
+        return new StackDTO(newStackName);
+    }
+    public bool ConfirmStackDeletion(int questions)
+    {
+        return AnsiConsole.Confirm($"Are you sure you want to delete the stack? It has {questions} questions in it. All questions will be lost.", false);
+    }
+
+    public int GetStackId(List<StackModel> stacks, string prompt)
+    {
+        string selection = AnsiConsole.Ask<string>(prompt);
         int stackIdToSelect = 0;
         
         if (!stacks.Any(s => s.Name.Contains(selection, StringComparison.OrdinalIgnoreCase))

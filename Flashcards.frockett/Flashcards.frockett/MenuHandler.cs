@@ -24,8 +24,8 @@ internal class MenuHandler
         AnsiConsole.Clear();
 
         string[] menuOptions =
-                {"Start Study Session", "Flashcard Menu",
-                "Edit Stacks", "View Reports", "Exit Program",};
+                {"Study Session Menu", "Flashcard Menu",
+                "Stacks Menu", "View Reports", "Exit Program",};
 
         string choice = AnsiConsole.Prompt(
                             new SelectionPrompt<string>()
@@ -85,19 +85,19 @@ internal class MenuHandler
         switch (menuSelection)
         {
             case 1:
-                displayService.DisplayAllStacks(stackController.GetListOfStacks());
+                displayService.DisplayAllStacks(stackController.GetListOfStacks(), false);
                 cardController.InsertCard();
                 ShowMainMenu();
                 break;
             case 2:
-                displayService.DisplayAllStacks(stackController.GetListOfStacks());
+                displayService.DisplayAllStacks(stackController.GetListOfStacks(), false);
                 int stackId = cardController.GetStackIdFromUser();
-                displayService.DisplayCards(cardController.GetCardDTOs(cardController.GetCardsInStack(stackId)));
+                displayService.DisplayCards(cardController.GetCardDTOs(cardController.GetCardsInStack(stackId)), false);
                 cardController.DeleteCard(stackId);
                 ShowMainMenu();
                 break;
             case 3:
-                displayService.DisplayAllStacks(stackController.GetListOfStacks());
+                displayService.DisplayAllStacks(stackController.GetListOfStacks(), false);
                 stackId = cardController.GetStackIdFromUser();
                 displayService.DisplayCards(cardController.GetCardDTOs(cardController.GetCardsInStack(stackId)));
                 ShowMainMenu();
@@ -110,9 +110,38 @@ internal class MenuHandler
 
     private void HandleStackSubmenu()
     {
-        AnsiConsole.Markup("\n[red]NOT READY, TURN BACK!![/]");
-        Console.ReadLine();
-        ShowMainMenu();
+        string[] stackMenuOptions =
+               {"Add Stack", "Delete Stack", "Display All Stacks", "Return to Main Menu",};
+
+        string choice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title("Which operation would you like to perform? Use [green]arrow[/] and [green]enter[/] keys to make a selection.")
+            .PageSize(10)
+            .MoreChoicesText("Keep scrolling for more options")
+            .AddChoices(stackMenuOptions));
+
+        int menuSelection = Array.IndexOf(stackMenuOptions, choice) + 1;
+
+        switch (menuSelection)
+        {
+            case 1:
+                displayService.DisplayAllStacks(stackController.GetListOfStacks(), false);
+                stackController.InsertStack();
+                ShowMainMenu();
+                break;
+            case 2:
+                displayService.DisplayAllStacks(stackController.GetListOfStacks(), false);
+                stackController.DeleteStackById();
+                ShowMainMenu();
+                break;
+            case 3:
+                displayService.DisplayAllStacks(stackController.GetListOfStacks());
+                ShowMainMenu();
+                break;
+            case 4:
+                ShowMainMenu();
+                break;
+        }
         throw new NotImplementedException();
     }
 

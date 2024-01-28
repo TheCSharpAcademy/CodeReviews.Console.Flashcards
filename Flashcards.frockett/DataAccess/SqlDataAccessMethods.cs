@@ -76,11 +76,54 @@ public class SqlDataAccessMethods : IDataAccess
     }
     public void InsertStack(StackModel stack)
     {
-        throw new NotImplementedException();
+        using (SqlConnection connection = new SqlConnection(dbConnString))
+        {
+            connection.Open();
+            SqlCommand command = connection.CreateCommand();
+            command.CommandText = $@"INSERT INTO stacks(name)
+                                    VALUES ('{stack.Name}')";
+            command.ExecuteNonQuery();
+            connection.Close();
+        }
     }
     public void DeleteStackById(int stackId)
     {
-        throw new NotImplementedException();
+        DeleteCardsBeforeStack(stackId);
+
+        using (SqlConnection connection = new SqlConnection(dbConnString))
+        {
+            connection.Open();
+            using SqlCommand command = connection.CreateCommand();
+            command.CommandText = $@"DELETE FROM stacks WHERE id = {stackId}";
+            command.ExecuteNonQuery();
+            connection.Close();
+        }
+    }
+
+    public int CheckForStackContents(int stackId)
+    {
+        using (SqlConnection connection = new SqlConnection(dbConnString))
+        {
+            connection.Open();
+            using SqlCommand command = connection.CreateCommand();
+            command.CommandText = $@"SELECT COUNT(*) FROM cards WHERE StackId = {stackId}";
+            int rows = (int)command.ExecuteScalar();
+            connection.Close();
+            return rows;
+        }
+    }
+
+    private void DeleteCardsBeforeStack(int stackId)
+    {
+        Console.WriteLine("deleted cards from stack");
+        using (SqlConnection connection = new SqlConnection(dbConnString))
+        {
+            connection.Open();
+            using SqlCommand command = connection.CreateCommand();
+            command.CommandText = $@"DELETE FROM cards WHERE StackId = {stackId}";
+            command.ExecuteNonQuery();
+            connection.Close();
+        }
     }
 
     public List<StackModel> GetListOfStacks()
@@ -110,10 +153,27 @@ public class SqlDataAccessMethods : IDataAccess
 
     public StackModel GetStackById(int stackId)
     {
-        throw new NotImplementedException();
+        StackModel stackToReturn = new StackModel();
+
+        using (SqlConnection connetion = new SqlConnection(dbConnString))
+        {
+            connetion.Open();
+            using SqlCommand command = connetion.CreateCommand();
+            command.CommandText = $@"SELECT * FROM Stacks WHERE Id = {stackId}";
+            using SqlDataReader reader = command.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while(reader.Read())
+                {
+                    stackToReturn.Id = reader.GetInt32(reader.GetOrdinal("Id"));
+                    stackToReturn.Name = reader.GetString(reader.GetOrdinal("Name"));
+                }
+            }
+        }
+        return stackToReturn;
     }
 
-    public List<CardModel> GetCardsInStack(int stackId)
+    public List<CardModel> GetCardsByStackId(int stackId)
     {
         List<CardModel> flashcards = new List<CardModel>();
         using (SqlConnection connection = new SqlConnection(dbConnString))
