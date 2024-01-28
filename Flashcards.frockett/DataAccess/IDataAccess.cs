@@ -11,7 +11,8 @@ public interface IDataAccess
     public void DeleteCardById(int cardId);
     public void InsertStack(StackModel stack);
     public void DeleteStackById(int stackId);
+    public int CheckForStackContents(int stackId);
     public List<StackModel> GetListOfStacks();
-    public List<CardModel> GetCardsInStack(int id);
+    public List<CardModel> GetCardsByStackId(int id);
     public StackModel GetStackById(int stackId);
 }

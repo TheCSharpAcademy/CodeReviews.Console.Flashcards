@@ -5,7 +5,7 @@ namespace Flashcards.frockett;
 
 internal class DisplayService
 {
-    public void DisplayAllStacks(List<StackDTO> stacks)
+    public void DisplayAllStacks(List<StackDTO> stacks, bool shouldWait = true)
     {
         Table table = new Table();
         table.AddColumn("Stacks");
@@ -15,11 +15,16 @@ internal class DisplayService
             table.AddRow(stack.Name.ToString());
         }
         AnsiConsole.Write(table);
-        AnsiConsole.WriteLine("Press enter to continue");
-        Console.ReadLine();
+
+        if (shouldWait)
+        {
+            AnsiConsole.WriteLine("Press enter to continue");
+            Console.ReadLine();
+        }
+
     }
 
-    public void DisplayCards(List<CardDTO> cards)
+    public void DisplayCards(List<CardDTO> cards, bool shouldWait = true)
     {
         AnsiConsole.Clear();
         Table table = new Table();
@@ -35,16 +40,13 @@ internal class DisplayService
             table.AddRow(index.ToString(), card.Question.ToString(), card.Answer.ToString());
         }
         AnsiConsole.Write(table);
-        AnsiConsole.WriteLine("Press enter to continue...");
-        Console.ReadLine();
 
-        /*
-        foreach (CardDTO card in cards)
+        if (shouldWait) 
         {
-            AnsiConsole.WriteLine($"Q: {card.Question}");
-            AnsiConsole.WriteLine($"A: {card.Answer}");
-            AnsiConsole.WriteLine();
+            AnsiConsole.WriteLine("Press enter to continue...");
+            Console.ReadLine();
         }
-        */
+
+
     }
 }
