@@ -1,5 +1,6 @@
 ﻿using Spectre.Console;
 using Library;
+using System.Reflection;
 
 namespace Flashcards.frockett;
 
@@ -85,15 +86,18 @@ internal class MenuHandler
         {
             case 1:
                 displayService.DisplayAllStacks(stackController.GetListOfStacks());
-                //cardController.InsertCard();
+                cardController.InsertCard();
                 ShowMainMenu();
                 break;
             case 2:
+                displayService.DisplayAllStacks(stackController.GetListOfStacks());
+                displayService.DisplayCards(cardController.GetCardDTOs());
+                cardController.DeleteCard();
                 ShowMainMenu();
                 break;
             case 3:
                 displayService.DisplayAllStacks(stackController.GetListOfStacks());
-                displayService.DisplayCards(cardController.GetCardsInStack());
+                displayService.DisplayCards(cardController.GetCardDTOs());
                 ShowMainMenu();
                 break;
             case 4:
