@@ -53,11 +53,26 @@ public class SqlDataAccessMethods : IDataAccess
     }
     public void InsertCard(CardModel flashcard)
     {
-        throw new NotImplementedException();
+        using (SqlConnection connection = new SqlConnection(dbConnString))
+        {
+            connection.Open();
+            SqlCommand command = connection.CreateCommand();
+            command.CommandText = $@"INSERT INTO cards(StackId, Question, Answer)
+                                    VALUES ({flashcard.StackId}, '{flashcard.Question}', '{flashcard.Answer}')";
+            command.ExecuteNonQuery();
+            connection.Close();
+        }
     }
-    public void DeleteCardById(int stackId, int cardId)
+    public void DeleteCardById(int cardId)
     {
-        throw new NotImplementedException();
+        using (SqlConnection connection = new SqlConnection(dbConnString))
+        {
+            connection.Open();
+            using SqlCommand command = connection.CreateCommand();
+            command.CommandText = $@"DELETE FROM cards WHERE id = {cardId}";
+            command.ExecuteNonQuery();
+            connection.Close();
+        }
     }
     public void InsertStack(StackModel stack)
     {
@@ -98,7 +113,7 @@ public class SqlDataAccessMethods : IDataAccess
         throw new NotImplementedException();
     }
 
-    public List<CardModel> GetCardsInStack(int id)
+    public List<CardModel> GetCardsInStack(int stackId)
     {
         List<CardModel> flashcards = new List<CardModel>();
         using (SqlConnection connection = new SqlConnection(dbConnString))
@@ -106,7 +121,7 @@ public class SqlDataAccessMethods : IDataAccess
             connection.Open();
             using (SqlCommand command = connection.CreateCommand())
             {
-                command.CommandText = $"SELECT * FROM cards WHERE StackId = {id}";
+                command.CommandText = $"SELECT * FROM cards WHERE StackId = {stackId}";
 
                 using SqlDataReader reader = command.ExecuteReader();
                 if(reader.HasRows)
