@@ -91,13 +91,15 @@ internal class MenuHandler
                 break;
             case 2:
                 displayService.DisplayAllStacks(stackController.GetListOfStacks());
-                displayService.DisplayCards(cardController.GetCardDTOs());
-                cardController.DeleteCard();
+                int stackId = cardController.GetStackIdFromUser();
+                displayService.DisplayCards(cardController.GetCardDTOs(cardController.GetCardsInStack(stackId)));
+                cardController.DeleteCard(stackId);
                 ShowMainMenu();
                 break;
             case 3:
                 displayService.DisplayAllStacks(stackController.GetListOfStacks());
-                displayService.DisplayCards(cardController.GetCardDTOs());
+                stackId = cardController.GetStackIdFromUser();
+                displayService.DisplayCards(cardController.GetCardDTOs(cardController.GetCardsInStack(stackId)));
                 ShowMainMenu();
                 break;
             case 4:
