@@ -40,10 +40,10 @@ public class InputValidation
         return AnsiConsole.Confirm($"Are you sure you want to delete the stack? It has {questions} questions in it. All questions will be lost.", false);
     }
 
-    public int GetStackId(List<StackModel> stacks, string prompt)
+    public StackModel GetMatchingStackFromList(List<StackModel> stacks, string prompt)
     {
         string selection = AnsiConsole.Ask<string>(prompt);
-        int stackIdToSelect = 0;
+        //int stackIdToSelect = 0;
         
         if (!stacks.Any(s => s.Name.Contains(selection, StringComparison.OrdinalIgnoreCase))
         )
@@ -54,7 +54,7 @@ public class InputValidation
 
         StackModel matchingStack = stacks.FirstOrDefault(s => s.Name.Contains(selection, StringComparison.OrdinalIgnoreCase));
 
-        return stackIdToSelect = matchingStack.Id;
+        return matchingStack;
     }
 
     public int GetCardIndex(string prompt)

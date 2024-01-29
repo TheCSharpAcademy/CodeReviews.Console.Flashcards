@@ -23,12 +23,9 @@ IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'StudySessions')
 BEGIN
     CREATE TABLE StudySessions (
         Id INT PRIMARY KEY IDENTITY,
-        FlashCardId INT NOT NULL,
         StackId INT NOT NULL,
         SessionDateTime DATETIME NOT NULL,
-        Correct BIT NOT NULL,
         Score INT NOT NULL,
-        FOREIGN KEY (FlashCardId) REFERENCES Cards(Id),
         FOREIGN KEY (StackId) REFERENCES Stacks(Id)
     );
 END

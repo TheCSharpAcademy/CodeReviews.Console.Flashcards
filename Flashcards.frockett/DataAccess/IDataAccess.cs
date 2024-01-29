@@ -15,4 +15,5 @@ public interface IDataAccess
     public List<StackModel> GetListOfStacks();
     public List<CardModel> GetCardsByStackId(int id);
     public StackModel GetStackById(int stackId);
+    public int InsertStudySession(StudySessionModel studySession);
 }

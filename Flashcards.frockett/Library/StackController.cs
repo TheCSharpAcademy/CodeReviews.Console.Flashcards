@@ -21,6 +21,20 @@ public class StackController
         return stackDTOs;
     }
 
+    public StackDTO GetStackDTOByName()
+    {
+        StackModel stack = inputValidation.GetMatchingStackFromList(dataAccess.GetListOfStacks(), "Enter the name of the stack you wish to select: ");
+
+        StackDTO stackDTO = new StackDTO(stack.Name);
+        stackDTO.stackId = stack.Id;
+        return stackDTO;
+    }
+    public StackModel GetStackById(int stackId)
+    {
+        StackModel currentStack = dataAccess.GetStackById(stackId);
+        return currentStack;
+    }
+
     public void InsertStack()
     {
         StackDTO stackDTO = inputValidation.GetNewStackInput();
@@ -29,23 +43,19 @@ public class StackController
 
     public void DeleteStackById()
     {
-        int stackToDelete = inputValidation.GetStackId(dataAccess.GetListOfStacks(), "Enter the name of the stack you want to delete: ");
-        int rowsInStack = dataAccess.CheckForStackContents(stackToDelete);
+        StackModel stackToDelete = inputValidation.GetMatchingStackFromList(dataAccess.GetListOfStacks(), "Enter the name of the stack you want to delete: ");
+        int stackIdToDelete = stackToDelete.Id;
+        int rowsInStack = dataAccess.CheckForStackContents(stackIdToDelete);
         bool deleteConfirmed = inputValidation.ConfirmStackDeletion(rowsInStack);
 
         if (deleteConfirmed)
         {
-            dataAccess.DeleteStackById(stackToDelete);
+            dataAccess.DeleteStackById(stackIdToDelete);
         }
         else
         {
             return;
         }
-    }
-
-    private StackDTO ToStackDTO(StackModel stack)
-    {
-        throw new NotImplementedException();
     }
 
     private StackModel ToStackDomainModel(StackDTO stackDTO)
