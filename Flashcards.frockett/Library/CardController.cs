@@ -19,7 +19,6 @@ public class CardController
     public void InsertCard()
     {
         int stackToUpdate = GetStackIdFromUser();
-        //dataAccess.GetStackById(stackToUpdate);
 
         CardDTO newFlashcardDTO = inputValidation.GetNewFlashCardInput();
 

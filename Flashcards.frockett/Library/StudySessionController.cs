@@ -18,11 +18,6 @@ public class StudySessionController
 
     public StackDTO GetCardsWithStack(List<CardDTO> cards, StackDTO stack)
     {
-        //StackModel stackToStudy = inputValidation.GetMatchingStackFromList(dataAccess.GetListOfStacks(), "Enter the name of the stack to study: ");
-
-        //StackDTO stack = new StackDTO(stackToStudy.Name);
-        //stack.stackId = stackToStudy.Id;
-
         foreach (CardDTO card in cards)
         {
             stack.AddFlashcard(card);
@@ -60,6 +55,7 @@ public class StudySessionController
 
         StudySessionModel currentSession = new StudySessionModel();
         currentSession.StackId = stack.stackId;
+        currentSession.StackName = stack.Name;
         currentSession.SessionDateTime = DateTime.Now;
         currentSession.Score = score;
 
@@ -81,6 +77,12 @@ public class StudySessionController
         {
             AnsiConsole.Markup("[red]Session saving operation was not successful[/] :( ...");
         }
+    }
+
+    public List<StudySessionModel> FetchAllStudySession()
+    {
+        List<StudySessionModel> studySessions = dataAccess.GetStudySessions();
+        return studySessions;
     }
 
 }
