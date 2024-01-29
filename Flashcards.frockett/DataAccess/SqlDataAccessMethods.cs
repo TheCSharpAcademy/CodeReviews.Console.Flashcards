@@ -89,6 +89,7 @@ public class SqlDataAccessMethods : IDataAccess
     public void DeleteStackById(int stackId)
     {
         DeleteCardsBeforeStack(stackId);
+        DeleteRelatedStudySessions(stackId);
 
         using (SqlConnection connection = new SqlConnection(dbConnString))
         {
@@ -115,12 +116,24 @@ public class SqlDataAccessMethods : IDataAccess
 
     private void DeleteCardsBeforeStack(int stackId)
     {
-        Console.WriteLine("deleted cards from stack");
         using (SqlConnection connection = new SqlConnection(dbConnString))
         {
             connection.Open();
             using SqlCommand command = connection.CreateCommand();
             command.CommandText = $@"DELETE FROM cards WHERE StackId = {stackId}";
+            command.ExecuteNonQuery();
+            connection.Close();
+        }
+    }
+
+    private void DeleteRelatedStudySessions(int stackId)
+    {
+        Console.WriteLine("deleted related study sessions");
+        using (SqlConnection connection = new SqlConnection(dbConnString))
+        {
+            connection.Open();
+            using SqlCommand command = connection.CreateCommand();
+            command.CommandText = $@"DELETE FROM StudySessions WHERE StackId = {stackId}";
             command.ExecuteNonQuery();
             connection.Close();
         }
@@ -210,11 +223,42 @@ public class SqlDataAccessMethods : IDataAccess
         {
             connection.Open();
             SqlCommand command = connection.CreateCommand();
-            command.CommandText = $@"INSERT INTO StudySessions(StackId, SessionDateTime, Score)
-                                    VALUES ({studySession.StackId}, '{studySession.SessionDateTime.ToString("yyyy-MM-dd HH:mm")}', {studySession.Score})";
+            command.CommandText = $@"INSERT INTO StudySessions(StackId, Stack_name, SessionDateTime, Score)
+                                    VALUES ({studySession.StackId}, '{studySession.StackName}', '{studySession.SessionDateTime.ToString("yyyy-MM-dd HH:mm")}', {studySession.Score})";
             int rowsAffected = command.ExecuteNonQuery();
             connection.Close();
             return rowsAffected;
+        }
+    }
+
+    public List<StudySessionModel> GetStudySessions()
+    {
+        List<StudySessionModel> studySessions = new List<StudySessionModel>();
+
+        using (SqlConnection connection = new SqlConnection(dbConnString))
+        {
+            connection.Open();
+            using SqlCommand command = connection.CreateCommand();
+            command.CommandText = $@"Select * FROM StudySessions";
+
+            using SqlDataReader reader = command.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    studySessions.Add(new
+                        StudySessionModel()
+                    {
+                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                        StackId = reader.GetInt32(reader.GetOrdinal("StackId")),
+                        StackName = reader.GetString(reader.GetOrdinal("Stack_name")),
+                        SessionDateTime = reader.GetDateTime(reader.GetOrdinal("SessionDateTime")),
+                        Score = reader.GetInt32(reader.GetOrdinal("Score"))
+                    });
+                }
+            }
+            connection.Close();
+            return studySessions;
         }
     }
 }

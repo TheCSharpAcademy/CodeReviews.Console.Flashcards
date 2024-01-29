@@ -24,6 +24,7 @@ BEGIN
     CREATE TABLE StudySessions (
         Id INT PRIMARY KEY IDENTITY,
         StackId INT NOT NULL,
+        Stack_name NVARCHAR(100) NOT NULL,
         SessionDateTime DATETIME NOT NULL,
         Score INT NOT NULL,
         FOREIGN KEY (StackId) REFERENCES Stacks(Id)

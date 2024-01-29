@@ -21,7 +21,6 @@ internal class DisplayService
             AnsiConsole.WriteLine("Press enter to continue");
             Console.ReadLine();
         }
-
     }
 
     public void DisplayCards(List<CardDTO> cards, bool shouldWait = true)
@@ -31,7 +30,7 @@ internal class DisplayService
 
         table.AddColumns(new[]
         {
-            "Number", "Question", "Answer"
+            "#", "Question", "Answer"
         });
 
         foreach (CardDTO card in cards)
@@ -46,7 +45,30 @@ internal class DisplayService
             AnsiConsole.WriteLine("Press enter to continue...");
             Console.ReadLine();
         }
-
-
     }
+
+    public void DisplayStudySessions(List<StudySessionModel> studySessions, bool shouldWait = true)
+    {
+        AnsiConsole.Clear();
+        Table table = new Table();
+
+        table.AddColumns(new[]
+        {
+            "#", "Stack Studied", "Score", "Date and Time"
+        });
+
+        foreach (StudySessionModel studySession in studySessions)
+        {
+            int index = studySessions.IndexOf(studySession) + 1;
+            table.AddRow(index.ToString(), studySession.StackName, studySession.Score.ToString(), studySession.SessionDateTime.ToString("f"));
+        }
+        AnsiConsole.Write(table);
+
+        if (shouldWait)
+        {
+            AnsiConsole.WriteLine("Press enter to continue...");
+            Console.ReadLine();
+        }
+    }
+
 }
