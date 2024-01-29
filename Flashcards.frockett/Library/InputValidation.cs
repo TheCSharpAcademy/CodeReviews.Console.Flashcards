@@ -43,7 +43,6 @@ public class InputValidation
     public StackModel GetMatchingStackFromList(List<StackModel> stacks, string prompt)
     {
         string selection = AnsiConsole.Ask<string>(prompt);
-        //int stackIdToSelect = 0;
         
         if (!stacks.Any(s => s.Name.Contains(selection, StringComparison.OrdinalIgnoreCase))
         )
