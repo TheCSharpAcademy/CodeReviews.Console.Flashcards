@@ -1,6 +1,7 @@
 ﻿using Spectre.Console;
 using Library;
 using System.Reflection;
+using Library.Models;
 
 namespace Flashcards.frockett;
 
@@ -62,10 +63,39 @@ internal class MenuHandler
 
     private void HandleStudySession()
     {
-        AnsiConsole.Markup("\n[red]NOT READY, TURN BACK!![/]");
-        Console.ReadLine();
-        ShowMainMenu();
-        throw new NotImplementedException();
+        string[] studySessionOptions =
+               {"Start Study Session", "View Past Study Sessions", "Return to Main Menu",};
+
+        string choice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title("Which operation would you like to perform? Use [green]arrow[/] and [green]enter[/] keys to make a selection.")
+            .PageSize(10)
+            .MoreChoicesText("Keep scrolling for more options")
+            .AddChoices(studySessionOptions));
+
+        int menuSelection = Array.IndexOf(studySessionOptions, choice) + 1;
+
+        switch (menuSelection)
+        {
+            case 1:
+                displayService.DisplayAllStacks(stackController.GetListOfStacks(), false);
+                StackDTO stackInfo = stackController.GetStackDTOByName();
+                StackDTO completeStack = studySessionController.GetCardsWithStack(cardController.GetCardDTOs(stackInfo.stackId), stackInfo);
+                studySessionController.PerformStudySession(completeStack);
+                //studySessionController.PerformStudySession(studySessionController.GetCardsWithStack(cardController.GetCardDTOs(cardController.GetCardsInStack(stackId))), stackId);
+                // TODO let the user pick a stack
+                // TODO display the questions in the stack one-by-one, check answers
+                // TODO store session score in db
+                ShowMainMenu();
+                break;
+            case 2:
+                // TODO print all study sessions
+                ShowMainMenu();
+                break;
+            case 3:
+                ShowMainMenu();
+                break;
+        }
     }
 
     private void HandleFlashCardSubmenu()
@@ -92,14 +122,14 @@ internal class MenuHandler
             case 2:
                 displayService.DisplayAllStacks(stackController.GetListOfStacks(), false);
                 int stackId = cardController.GetStackIdFromUser();
-                displayService.DisplayCards(cardController.GetCardDTOs(cardController.GetCardsInStack(stackId)), false);
+                displayService.DisplayCards(cardController.GetCardDTOs(stackId), false);
                 cardController.DeleteCard(stackId);
                 ShowMainMenu();
                 break;
             case 3:
                 displayService.DisplayAllStacks(stackController.GetListOfStacks(), false);
                 stackId = cardController.GetStackIdFromUser();
-                displayService.DisplayCards(cardController.GetCardDTOs(cardController.GetCardsInStack(stackId)));
+                displayService.DisplayCards(cardController.GetCardDTOs(stackId));
                 ShowMainMenu();
                 break;
             case 4:
@@ -142,7 +172,6 @@ internal class MenuHandler
                 ShowMainMenu();
                 break;
         }
-        throw new NotImplementedException();
     }
 
     private void HandleReportSubmenu()

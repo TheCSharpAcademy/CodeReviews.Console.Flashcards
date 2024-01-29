@@ -203,4 +203,18 @@ public class SqlDataAccessMethods : IDataAccess
         }
 
     }
+
+    public int InsertStudySession(StudySessionModel studySession)
+    {
+        using (SqlConnection connection = new SqlConnection(dbConnString))
+        {
+            connection.Open();
+            SqlCommand command = connection.CreateCommand();
+            command.CommandText = $@"INSERT INTO StudySessions(StackId, SessionDateTime, Score)
+                                    VALUES ({studySession.StackId}, '{studySession.SessionDateTime.ToString("yyyy-MM-dd HH:mm")}', {studySession.Score})";
+            int rowsAffected = command.ExecuteNonQuery();
+            connection.Close();
+            return rowsAffected;
+        }
+    }
 }

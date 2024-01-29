@@ -4,6 +4,7 @@ namespace Library.Models;
 public class StackDTO
 {
         public string Name { get; set; }
+        public int stackId { get; set; }
         public List<CardDTO> Flashcards { get; set; }
 
         public StackDTO(string stackName)

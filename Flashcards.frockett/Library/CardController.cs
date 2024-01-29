@@ -57,9 +57,11 @@ public class CardController
     public int GetStackIdFromUser()
     {
         // send a list of all current stacks from dataAccess to inputValidation to present to the user
-        return inputValidation.GetStackId(dataAccess.GetListOfStacks(), "Enter the name of the stack you'd like to select: ");
+        StackModel selectedStack = inputValidation.GetMatchingStackFromList(dataAccess.GetListOfStacks(), "Enter the name of the stack you'd like to select: ");
+        int stackId = selectedStack.Id;
+        return stackId;
     }
-    public List<CardModel> GetCardsInStack(int stackId)
+    private List<CardModel> GetCardsInStack(int stackId)
     {
         // Get all the card models in a list based on the stackId
         List<CardModel> cards = dataAccess.GetCardsByStackId(stackId);
@@ -67,8 +69,10 @@ public class CardController
         return cards;
     }
 
-    public List<CardDTO> GetCardDTOs(List<CardModel> flashcards)
+    public List<CardDTO> GetCardDTOs(int stackId)
     {
+        List <CardModel> flashcards = GetCardsInStack(stackId);
+
         List<CardDTO> cardDTOs = new List<CardDTO>();
         
         foreach (CardModel card in flashcards)
