@@ -1,7 +1,6 @@
 ﻿using DataAccess;
 using Library.Models;
 using Spectre.Console;
-using System.ComponentModel;
 
 namespace Library;
 
@@ -53,7 +52,7 @@ public class StudySessionController
         }
 
         StudySessionModel currentSession = new StudySessionModel();
-        currentSession.StackId = stack.stackId;
+        currentSession.StackId = stack.StackId;
         currentSession.StackName = stack.Name;
         currentSession.SessionDateTime = DateTime.Now;
         currentSession.Score = score;
