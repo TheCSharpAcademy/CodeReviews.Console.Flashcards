@@ -1,6 +1,5 @@
 ﻿using Spectre.Console;
 using Library;
-using System.Reflection;
 using Library.Models;
 
 namespace Flashcards.frockett;
@@ -79,9 +78,9 @@ internal class MenuHandler
         {
             case 1:
                 displayService.DisplayAllStacks(stackController.GetListOfStacks(), false);
-                StackDTO stackInfo = stackController.GetStackDTOByName();
+                StackDto stackInfo = stackController.GetStackDTOByName();
                 // There might be too much method chaining going on here. I didn't want to declare a bunch of variables in my menuHandler class, but idk if that or this is worse...
-                StackDTO completeStack = studySessionController.GetCardsWithStack(cardController.GetCardDTOs(stackInfo.stackId), stackInfo);
+                StackDto completeStack = studySessionController.GetCardsWithStack(cardController.GetCardDTOs(stackInfo.stackId), stackInfo);
                 studySessionController.PerformStudySession(completeStack);
                 ShowMainMenu();
                 break;

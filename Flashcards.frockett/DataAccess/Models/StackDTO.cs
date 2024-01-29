@@ -1,19 +1,19 @@
 ﻿
 namespace Library.Models;
 
-public class StackDTO
+public class StackDto
 {
         public string Name { get; set; }
         public int stackId { get; set; }
-        public List<CardDTO> Flashcards { get; set; }
+        public List<CardDto> Flashcards { get; set; }
 
-        public StackDTO(string stackName)
+        public StackDto(string stackName)
         {
             Name = stackName;
-            Flashcards = new List<CardDTO>();
+            Flashcards = new List<CardDto>();
         }
 
-        public void AddFlashcard(CardDTO flashcard)
+        public void AddFlashcard(CardDto flashcard)
         {
             Flashcards.Add(flashcard);
         }

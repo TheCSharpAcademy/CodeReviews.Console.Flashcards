@@ -1,12 +1,12 @@
 ﻿
 namespace Library.Models;
 
-public class CardDTO
+public class CardDto
 {
     public string Question { get; set; }
     public string Answer { get; set; }
 
-    public CardDTO(string question, string answer)
+    public CardDto(string question, string answer)
     {
         Question = question;
         Answer = answer;
