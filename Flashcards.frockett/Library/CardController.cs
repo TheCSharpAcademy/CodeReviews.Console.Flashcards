@@ -20,7 +20,7 @@ public class CardController
     {
         int stackToUpdate = GetStackIdFromUser();
 
-        CardDTO newFlashcardDTO = inputValidation.GetNewFlashCardInput();
+        CardDto newFlashcardDTO = inputValidation.GetNewFlashCardInput();
 
         CardModel newFlashcard = new CardModel();
         newFlashcard.StackId = stackToUpdate;
@@ -68,16 +68,16 @@ public class CardController
         return cards;
     }
 
-    public List<CardDTO> GetCardDTOs(int stackId)
+    public List<CardDto> GetCardDTOs(int stackId)
     {
         List <CardModel> flashcards = GetCardsInStack(stackId);
 
-        List<CardDTO> cardDTOs = new List<CardDTO>();
+        List<CardDto> cardDTOs = new List<CardDto>();
         
         foreach (CardModel card in flashcards)
         {
             cardDTOs.Add(
-                new CardDTO(card.Question, card.Answer));
+                new CardDto(card.Question, card.Answer));
         }
 
         return cardDTOs;

@@ -5,7 +5,7 @@ namespace Library;
 
 public class InputValidation
 {
-    public CardDTO GetNewFlashCardInput()
+    public CardDto GetNewFlashCardInput()
     {
         string question = AnsiConsole.Ask<string>("Enter the first side of the card: ");
 
@@ -21,10 +21,10 @@ public class InputValidation
             question = AnsiConsole.Ask<string>("The card can not be blank. Enter side two of the card: ");
         }
 
-        return new CardDTO(question, answer);
+        return new CardDto(question, answer);
     }
 
-    public StackDTO GetNewStackInput()
+    public StackDto GetNewStackInput()
     {
         string newStackName = AnsiConsole.Ask<string>("Enter the name of the new stack: ");
 
@@ -33,7 +33,7 @@ public class InputValidation
             newStackName = AnsiConsole.Ask<string>("The stack's name can't be empty. Enter a name: ");
         }
 
-        return new StackDTO(newStackName);
+        return new StackDto(newStackName);
     }
     public bool ConfirmStackDeletion(int questions)
     {

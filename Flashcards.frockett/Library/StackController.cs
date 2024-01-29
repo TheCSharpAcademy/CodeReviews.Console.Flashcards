@@ -14,18 +14,18 @@ public class StackController
         this.inputValidation = inputValidation;
     }
 
-    public List<StackDTO> GetListOfStacks()
+    public List<StackDto> GetListOfStacks()
     {
         var listOfAllStacks = dataAccess.GetListOfStacks();
-        List<StackDTO> stackDTOs = listOfAllStacks.Select(stack => new StackDTO(stack.Name)).ToList();
+        List<StackDto> stackDTOs = listOfAllStacks.Select(stack => new StackDto(stack.Name)).ToList();
         return stackDTOs;
     }
 
-    public StackDTO GetStackDTOByName()
+    public StackDto GetStackDTOByName()
     {
         StackModel stack = inputValidation.GetMatchingStackFromList(dataAccess.GetListOfStacks(), "Enter the name of the stack you wish to select: ");
 
-        StackDTO stackDTO = new StackDTO(stack.Name);
+        StackDto stackDTO = new StackDto(stack.Name);
         stackDTO.stackId = stack.Id;
         return stackDTO;
     }
@@ -37,7 +37,7 @@ public class StackController
 
     public void InsertStack()
     {
-        StackDTO stackDTO = inputValidation.GetNewStackInput();
+        StackDto stackDTO = inputValidation.GetNewStackInput();
         dataAccess.InsertStack(ToStackDomainModel(stackDTO));
     }
 
@@ -58,7 +58,7 @@ public class StackController
         }
     }
 
-    private StackModel ToStackDomainModel(StackDTO stackDTO)
+    private StackModel ToStackDomainModel(StackDto stackDTO)
     {
         StackModel stackModel = new StackModel();
         stackModel.Name = stackDTO.Name;

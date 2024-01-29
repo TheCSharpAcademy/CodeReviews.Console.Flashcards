@@ -16,16 +16,16 @@ public class StudySessionController
         this.inputValidation = inputValidation;
     }
 
-    public StackDTO GetCardsWithStack(List<CardDTO> cards, StackDTO stack)
+    public StackDto GetCardsWithStack(List<CardDto> cards, StackDto stack)
     {
-        foreach (CardDTO card in cards)
+        foreach (CardDto card in cards)
         {
             stack.AddFlashcard(card);
         }
         return stack;
     }
 
-    public void PerformStudySession(StackDTO stack)
+    public void PerformStudySession(StackDto stack)
     {
         int score = 0;
         int card = 1;
@@ -35,7 +35,7 @@ public class StudySessionController
         AnsiConsole.WriteLine($"Currently studying: {stack.Name}");
         AnsiConsole.WriteLine($"Total questions = {stack.Flashcards.Count}\n");
 
-        foreach (CardDTO flashcards in stack.Flashcards)
+        foreach (CardDto flashcards in stack.Flashcards)
         {
             string answer = AnsiConsole.Ask<string>($"Card number {card}: {flashcards.Question} = ");
 
