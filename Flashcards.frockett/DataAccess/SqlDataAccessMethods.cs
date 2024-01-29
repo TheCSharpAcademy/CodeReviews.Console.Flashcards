@@ -45,7 +45,7 @@ public class SqlDataAccessMethods : IDataAccess
             connection1.Close();
         }
     }
-    private string? GetConnectionStringFromSettings(string desiredString)
+    private static string? GetConnectionStringFromSettings(string desiredString)
     {
         var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: false);
         IConfiguration configuration = builder.Build();

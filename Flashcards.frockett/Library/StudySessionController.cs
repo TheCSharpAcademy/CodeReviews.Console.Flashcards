@@ -22,7 +22,6 @@ public class StudySessionController
         {
             stack.AddFlashcard(card);
         }
-
         return stack;
     }
 
