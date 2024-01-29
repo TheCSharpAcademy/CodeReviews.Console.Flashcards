@@ -78,9 +78,9 @@ internal class MenuHandler
         {
             case 1:
                 displayService.DisplayAllStacks(stackController.GetListOfStacks(), false);
-                StackDto stackInfo = stackController.GetStackDTOByName();
+                StackDto stackInfo = stackController.GetStackDtoByName();
                 // There might be too much method chaining going on here. I didn't want to declare a bunch of variables in my menuHandler class, but idk if that or this is worse...
-                StackDto completeStack = studySessionController.GetCardsWithStack(cardController.GetCardDTOs(stackInfo.stackId), stackInfo);
+                StackDto completeStack = studySessionController.GetCardsWithStack(cardController.GetCardDTOs(stackInfo.StackId), stackInfo);
                 studySessionController.PerformStudySession(completeStack);
                 ShowMainMenu();
                 break;

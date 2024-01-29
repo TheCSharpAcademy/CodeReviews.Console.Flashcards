@@ -21,12 +21,12 @@ public class StackController
         return stackDTOs;
     }
 
-    public StackDto GetStackDTOByName()
+    public StackDto GetStackDtoByName()
     {
         StackModel stack = inputValidation.GetMatchingStackFromList(dataAccess.GetListOfStacks(), "Enter the name of the stack you wish to select: ");
 
         StackDto stackDTO = new StackDto(stack.Name);
-        stackDTO.stackId = stack.Id;
+        stackDTO.StackId = stack.Id;
         return stackDTO;
     }
     public StackModel GetStackById(int stackId)
