@@ -1,13 +1,42 @@
-﻿using ConsoleTableExt;
-
-namespace FlashCards.Cactus
+﻿namespace FlashCards.Cactus
 {
     public class Application
     {
+        public void run()
+        {
+            while (true)
+            {
+                PrintMainMenu();
+                string? op = Console.ReadLine();
+                switch (op)
+                {
+                    case "0":
+                        Environment.Exit(0);
+                        break;
+                    case "1":
+                        ManageStacks();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private static void PrintMainMenu()
+        {
+            List<string> menuData = new List<string>
+            {
+                "<0> Exit app.",
+                "<1> Manage Stacks.",
+                "<2> Manage FlashCards.",
+                "<3> Study.",
+                "<4> Study report."
+            };
+            MenuUtils.PrintMenu("Main Menu", menuData);
+        }
+
         public void ManageStacks()
         {
-            Console.Clear();
-
             while (true)
             {
                 PrintStackManagementMenu();
@@ -29,14 +58,11 @@ namespace FlashCards.Cactus
                     default:
                         break;
                 }
-                Console.WriteLine("\n");
             }
         }
 
         private void PrintStackManagementMenu()
         {
-            Console.Clear();
-
             List<string> stackMenu = new List<string>
                 {
                     "<0> Back to Main menu.",
@@ -45,11 +71,7 @@ namespace FlashCards.Cactus
                     "<3> Delete a Stack.",
                 };
 
-            ConsoleTableBuilder
-            .From(stackMenu)
-            .WithTitle("Stack Menu", ConsoleColor.Yellow, ConsoleColor.DarkGray)
-            .WithFormat(ConsoleTableBuilderFormat.Alternative)
-            .ExportAndWriteLine(TableAligntment.Center);
+            MenuUtils.PrintMenu("Stack Menu", stackMenu);
         }
 
         private void DeleteStack()
