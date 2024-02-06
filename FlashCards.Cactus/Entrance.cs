@@ -1,12 +1,14 @@
 ﻿using ConsoleTableExt;
+using FlashCards.Cactus;
 
 namespace FlashCards;
 public class Entrance
 {
     public static void Main(string[] args)
     {
-        bool endApp = false;
-        while (!endApp)
+        Application app = new Application();
+
+        while (true)
         {
             PrintMenu();
             string? op = Console.ReadLine();
@@ -15,11 +17,12 @@ public class Entrance
                 case "0":
                     Environment.Exit(0);
                     break;
+                case "1":
+                    app.ManageStacks();
+                    break;
                 default:
                     break;
             }
-            Console.Write("\nPress 'q' and Enter to close the app, or press any other key and Enter to return MAIN MENU. ");
-            if (Console.ReadLine() == "q") endApp = true;
             Console.WriteLine("\n");
         }
     }
