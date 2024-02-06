@@ -2,6 +2,23 @@
 {
     public class Application
     {
+        #region Constants
+
+        private const string EXIT_APP = "0";
+        private const string MANAGE_STACKS = "1";
+        private const string MANAGE_FLASHCARDS = "2";
+        private const string STUDY = "3";
+        private const string STUDY_REPORT = "4";
+
+        private const string BACK_TO_MAIN = "0";
+
+        private const string SHOW_STACKS = "1";
+        private const string ADD_STACK = "2";
+        private const string DELETE_STACK = "3";
+
+        #endregion Constants
+
+        #region Menu
         public void run()
         {
             while (true)
@@ -10,17 +27,56 @@
                 string? op = Console.ReadLine();
                 switch (op)
                 {
-                    case "0":
+                    case EXIT_APP:
                         Environment.Exit(0);
                         break;
-                    case "1":
-                        ManageStacks();
+                    case MANAGE_STACKS:
+                        ManageStacksMenu();
+                        break;
+                    case MANAGE_FLASHCARDS:
+                        Console.WriteLine("Manage FlashCards.");
+                        break;
+                    case STUDY:
+                        Console.WriteLine("Study");
+                        break;
+                    case STUDY_REPORT:
+                        Console.WriteLine("Study Report");
                         break;
                     default:
                         break;
                 }
             }
         }
+
+        public void ManageStacksMenu()
+        {
+            while (true)
+            {
+                PrintStackManagementMenu();
+
+                string? op = Console.ReadLine();
+                switch (op)
+                {
+                    case BACK_TO_MAIN:
+                        return;
+                    case SHOW_STACKS:
+                        ShowStacks();
+                        break;
+                    case ADD_STACK:
+                        AddStack();
+                        break;
+                    case DELETE_STACK:
+                        DeleteStack();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        #endregion Menu
+
+        #region Menu print
 
         private static void PrintMainMenu()
         {
@@ -35,32 +91,6 @@
             MenuUtils.PrintMenu("Main Menu", menuData);
         }
 
-        public void ManageStacks()
-        {
-            while (true)
-            {
-                PrintStackManagementMenu();
-
-                string? op = Console.ReadLine();
-                switch (op)
-                {
-                    case "0":
-                        return;
-                    case "1":
-                        ShowStacks();
-                        break;
-                    case "2":
-                        AddStack();
-                        break;
-                    case "3":
-                        DeleteStack();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
         private void PrintStackManagementMenu()
         {
             List<string> stackMenu = new List<string>
@@ -73,6 +103,8 @@
 
             MenuUtils.PrintMenu("Stack Menu", stackMenu);
         }
+
+        #endregion Menu print
 
         private void DeleteStack()
         {
