@@ -60,7 +60,7 @@ internal class StackCreator
             BEGIN
                 CREATE TABLE StudySessions (
                     StudyId INTEGER IDENTITY(1,1) PRIMARY KEY,
-                    Date TEXT,
+                    Date DATE,
                     Score INTEGER,
                     Studied INTEGER,
                     Language TEXT,
