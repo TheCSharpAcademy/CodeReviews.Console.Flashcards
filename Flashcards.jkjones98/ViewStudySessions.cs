@@ -1,5 +1,6 @@
 
 using Flashcards.Functions;
+using Microsoft.VisualBasic;
 
 namespace Flashcards.jkjones98;
 
@@ -18,6 +19,8 @@ internal class ViewStudySessions
         Console.WriteLine("Enter 3 - View study sessions by stack");
         Console.WriteLine("Enter 4 - View all study sessions for selected stack");
         Console.WriteLine("Enter 5 - Change the stack of session data being reviewed");
+        Console.WriteLine("Enter 6 - View sessions per month per stack");
+        Console.WriteLine("Enter 7 - View average score per month per stack ");
         Console.WriteLine("Enter 0 - Return to main menu");
         string viewInput = Console.ReadLine();
 
@@ -31,18 +34,17 @@ internal class ViewStudySessions
         {
             case "1":
                 Console.WriteLine("\nWhat year would you like you to filter by? Use YYYY format");
-                string userYearInput = CheckYearFormat();
+                int userYearInput = CheckYearFormat();
                 controller.StudySessionsYear(stackId, userYearInput);
                 break;
             case "2": 
                 Console.WriteLine("\nWhich month and year would you like to filter by? Enter the year in YYYY format");
-                string userYear = CheckYearFormat();
+                int userYear = CheckYearFormat();
 
                 Console.WriteLine("\nEnter the numerical representation of the month you would you like to filter by");
                 Console.WriteLine("E.g. January would be 01");
-                string userMonth = CheckMonthFormat();
-                string yearMonth = userMonth + "/" + userYear;
-                controller.StudySessionsYear(stackId, yearMonth);
+                int userMonth = CheckMonthFormat();
+                controller.StudySessionsMonth(stackId, userYear, userMonth);
                 break;
             case "3": 
                 Console.WriteLine("\nWhich stack would you like to view data for?");
@@ -52,6 +54,16 @@ internal class ViewStudySessions
                 break;
             case "5": 
                 ViewSessionMenu();
+                break;
+            case "6": 
+                Console.WriteLine("\nPlease enter the year to view number of sessions per month");
+                int yearCount = CheckYearFormat();
+                controller.PivotMonthlySessions(stackId, yearCount);
+                break;
+            case "7": 
+                Console.WriteLine("\nPlease enter the year to view average score per month");
+                int yearAverage = CheckYearFormat();
+                controller.PivotMonthlyAverages(stackId, yearAverage);
                 break;
             case "0":
                 mainMenu.DisplayMenu();
@@ -63,28 +75,27 @@ internal class ViewStudySessions
 
     }
 
-    internal string CheckYearFormat()
+    internal int CheckYearFormat()
     {
-        string year = Console.ReadLine();
+        int year = checkUserInput.CheckForChar();
         var pattern = @"(?<Year>\d{4})";
         var regexp = new System.Text.RegularExpressions.Regex(pattern);
-        while(!regexp.IsMatch(year))
+        while(!regexp.IsMatch(Convert.ToString(year)))
         {
             Console.WriteLine("Does not match specified format. Please enter year in YYYY format");
-            year = Console.ReadLine();
+            year = checkUserInput.CheckForChar();
         }
 
         return year;
     }
-    internal string CheckMonthFormat()
+    internal int CheckMonthFormat()
     {
-        string month = Console.ReadLine();
-        int monthDig;
-        while(!Int32.TryParse(month, out monthDig) || monthDig < 1 || monthDig > 12)
+        int month = checkUserInput.CheckForChar();
+        while(month < 1 || month > 12)
         {
             Console.WriteLine("\nUnrecognised numerical date format - please try again");
             Console.WriteLine("January = 01, February = 02, March = 03 etc.");
-            month = Console.ReadLine();
+            month = checkUserInput.CheckForChar();
         }
 
         return month;

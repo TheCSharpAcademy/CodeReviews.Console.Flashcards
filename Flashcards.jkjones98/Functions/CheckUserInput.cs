@@ -29,6 +29,18 @@ internal class CheckUserInput
         Console.WriteLine("\n\nStack found!");
         return stackId;
     }
+    internal int CheckForChar()
+    {
+        string userInput = Console.ReadLine();
+        int parsedInput;
+        while(string.IsNullOrEmpty(userInput) || userInput.Any(char.IsLetter) || !Int32.TryParse(userInput, out parsedInput))
+        {
+
+            Console.WriteLine("Invalid input. Please enter a valid Id.");
+            userInput = Console.ReadLine();
+        }
+        return parsedInput;
+    }
     internal int CheckForChar(string userInput, string tblName, string prmryKey)
     {
         int parsedInput;

@@ -32,7 +32,8 @@ internal class StartStudySession
         
         Console.WriteLine($"\nYou scored {sessionScore} out of {sessionLength}, well done!");
         string studyLang = controller.GetLanguageName(stackId);
-        DateOnly date = DateOnly.FromDateTime(DateTime.Now);
+        DateTime dateToParse = DateTime.Now;
+        string date = dateToParse.Date.ToString("yyyy-MM-dd");
         StudySession studySession = new StudySession{Date = date.ToString(), Score = sessionScore, Studied = sessionLength, Language = studyLang, StackId = stackId};
 
         controller.InsertStudyDb(studySession);
