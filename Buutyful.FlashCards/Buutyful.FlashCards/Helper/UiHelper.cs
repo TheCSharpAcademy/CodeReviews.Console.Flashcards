@@ -1,6 +1,7 @@
 ﻿using Buutyful.Coding_Tracker.Abstraction;
 using Buutyful.Coding_Tracker.Command;
 using Buutyful.Coding_Tracker.State;
+using Buutyful.FlashCards.State;
 using Spectre.Console;
 
 namespace Buutyful.FlashCards.Helper;
@@ -11,10 +12,7 @@ public static class UiHelper
     {
             {Commands.Info, "Gets you all the infos u need" },
             {Commands.Menu, "Return to the main menu"},
-            {Commands.View, "Display database records"},
-            {Commands.Create, "Create new entry" },
-            {Commands.Update, "Update record" },
-            {Commands.Delete, "Delete record" },
+            {Commands.View, "Display menu"},               
             {Commands.Back, "Goes back to past state" },
             {Commands.Forward, "Goes to forward state" },
             {Commands.Clear, "Clear console"},
@@ -23,29 +21,47 @@ public static class UiHelper
     };
     public static ICommand MenuSelector(string? command, StateManager _manager)
     {
-        return command switch
+        return command?.ToLower() switch
         {
             "info" => new InfoCommand(),
+            "menu" => new SwitchStateCommand(_manager, new MainMenuState(_manager)),
             "view" => new SwitchStateCommand(_manager, new ViewState(_manager)),
+            "decks" => new SwitchStateCommand(_manager, new DeckViewState(_manager)),
             "create" => new SwitchStateCommand(_manager, new CreateState(_manager)),
-            "update" => new SwitchStateCommand(_manager, new UpdateState(_manager)),
-            "delete" => new SwitchStateCommand(_manager, new DeleteState(_manager)),
             "back" => new SwitchStateCommand(_manager, _manager.PastState()),
             "forward" => new SwitchStateCommand(_manager, _manager.FutureState()),
             "clear" => new ClearCommand(),
             "quit" => new QuitCommand(),
-            "menu" => new InvalidCommand(command, "You are already in the main menu"),
             _ => new InvalidCommand(command, "Please select [info] for navigation help"),
         };
     }
-    public static string DisplayOptions() =>
+    public static string DisplayOptions(IEnumerable<string> options) =>
       AnsiConsole.Prompt(
-      new SelectionPrompt<string>()
-      .Title("Main Menu please select command:")
-      .PageSize(20)
+      new SelectionPrompt<string>()     
+      .PageSize(10)
       .MoreChoicesText("===================")
-      .AddChoices(Enum.GetValues(typeof(Commands))
-      .Cast<Commands>()
-      .Select(o => o.ToString())
-          ));
+      .AddChoices(options));
+    public static IEnumerable<string> CommandsToStrings(this IEnumerable<Commands> commands) =>
+        commands.Select(c => c.ToString());
+}
+
+public enum Commands
+{
+    Info,
+    Menu,
+    View,
+    Decks,
+    DeckCards, //todo
+    Cards,  //todo
+    Sessions, //todo
+    Create, //todo
+    UpdateDeck, //todo
+    UpdateCard, //todo
+    DeleteDeck, //todo
+    DeleteCard, //todo
+    Back,
+    Forward,
+    Clear,
+    Break,
+    Quit
 }
