@@ -6,32 +6,28 @@ public class FlashCard
     public int Id { get; set; }
     public int DeckId { get; set; }
     public string FrontQuestion { get; set; } = null!;
-    public string BackAnswers { get; set; } = null!;
-    public int CorrectAnswer {  get; set; }
+    public string BackAnswer { get; set; } = null!;    
 }
 
-public record FlashCardDisplayDto(string FrontQuestion, List<string> BackAnswers)
+public record FlashCardDisplayDto(string FrontQuestion, string BackAnswers)
 {
     public static implicit operator FlashCardDisplayDto(FlashCard card) => 
-        new(card.FrontQuestion, new List<string>(card.BackAnswers.Split("|||")));
+        new(card.FrontQuestion, card.BackAnswer);
 }
 
 public record FlashCardCreateDto
 {
+    public int DeckId { get; private set; }
     public string FrontQuestion { get; private set; } 
-    public List<string> BackAnswers { get; private set; } 
-    public int CorrectAnswer { get; set;}   
+    public string BackAnswer { get; private set; }    
 
     private FlashCardCreateDto() { }
 
-    private FlashCardCreateDto(string question, List<string> list, int index) =>
-        (FrontQuestion, BackAnswers, CorrectAnswer) = (question, list, index);
-   
+    private FlashCardCreateDto(int deck, string question, string back) =>
+        (DeckId, FrontQuestion, BackAnswer) = (deck, question, back);
 
-    public static FlashCardCreateDto Create(string question, int index, params string[] answers)
-    {
-        if(index < 0 || index > answers.Length) throw new ArgumentOutOfRangeException(nameof(index));
-        return new(question, new List<string>(answers), index);
-    }
-    public string DbAnswersString() => string.Join("|||", BackAnswers);
+
+    public static FlashCardCreateDto Create(int id, string question, string answer) =>
+        new(id, question, answer);    
+    
 }
