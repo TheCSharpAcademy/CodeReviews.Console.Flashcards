@@ -1,35 +1,31 @@
 ﻿using Buutyful.Coding_Tracker.Abstraction;
-using Buutyful.Coding_Tracker.Command;
-using Spectre.Console;
+using Buutyful.Coding_Tracker.State;
+using Buutyful.FlashCards.Helper;
 
-namespace Buutyful.Coding_Tracker.State;
+
+namespace Buutyful.FlashCards.State;
 
 public class ViewState(StateManager manager) : IState
 {
-    private readonly StateManager _stateManager = manager;
+    private readonly StateManager _stateManager = manager;   
+    private readonly List<Commands> commands = new()
+    {        
+        Commands.Decks,
+        Commands.Cards,
+        Commands.Sessions,
+        Commands.Back,
+        Commands.Clear,
+        Commands.Quit
+    };
     public ICommand GetCommand()
     {
-        return new SwitchStateCommand(_stateManager, new MainMenuState(_stateManager));
+        var command = UiHelper.DisplayOptions(commands.CommandsToStrings());
+        return UiHelper.MenuSelector(command, _stateManager);
     }
 
     public void Render()
     {
-        AnsiConsole.MarkupLine("[gray]=====LOADING HABITS=====[/]");
-
-        var table = new Table();
-        // Add some columns
-        table.AddColumn("Id");
-        table.AddColumn("Start");
-        table.AddColumn("End");
-        table.AddColumn("Duration");
-
-        //foreach (var session in _stateManager.DbContext.Get())
-        //{
-        //    // Add some rows
-        //    table.AddRow($"{session.Id}", $"{session.StartAt}",
-        //        $"{session.EndAt}", $"{session.Duration}");
-        //}
-        AnsiConsole.Write(table);
-        AnsiConsole.MarkupLine("[gray]========================[/]");
+        Console.Clear();
+        Console.WriteLine("What do you want to see?");
     }
 }

@@ -9,7 +9,7 @@ public class DeleteState(StateManager manager) : IState
     private readonly StateManager _stateManager = manager;
     public ICommand GetCommand()
     {
-        return new SwitchStateCommand(_stateManager, new ViewState(_stateManager));
+        return new SwitchStateCommand(_stateManager, new DeckViewState(_stateManager));
     }
 
     public void Render()

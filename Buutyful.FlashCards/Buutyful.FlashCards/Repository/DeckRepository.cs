@@ -20,12 +20,16 @@ public class DeckRepository : IRepository<Deck>
                 Category = entity.Category
             });
     }  
-
     public Deck Find(Expression<Func<Deck, bool>> predicate)
     {
         throw new NotImplementedException();
     }
-
+    public List<Deck> GetDecksOnly()
+    {
+        using var connection = SqlConnectionFactory.Create();
+        const string sql = @"Select Id, Name, Category From Decks;";
+        return connection.Query<Deck>(sql).ToList();
+    }
     public IList<Deck> GetAll()
     {
         using var connection = SqlConnectionFactory.Create();

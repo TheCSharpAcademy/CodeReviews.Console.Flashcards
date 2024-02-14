@@ -17,17 +17,3 @@ public class InfoCommand : ICommand
         Console.WriteLine("============================");       
     }
 }
-public enum Commands
-{
-    Info,
-    Menu,
-    View,
-    Create,
-    Update,
-    Delete,
-    Back,
-    Forward,
-    Clear,
-    Break,
-    Quit
-}
