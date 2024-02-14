@@ -1,15 +1,13 @@
 ﻿using Buutyful.Coding_Tracker.Abstraction;
-using Buutyful.FlashCards.Data;
+
 
 namespace Buutyful.Coding_Tracker.State;
 
-public class StateManager(DbAccess context)
+public class StateManager
 {
     private readonly Stack<IState> _back = new();
     private readonly Queue<IState> _forward = new();
     private IState _currentState;
-    public DbAccess DbContext { get; } = context;
-
     public void SwitchState(IState state)
     {
         _back.Push(_currentState);

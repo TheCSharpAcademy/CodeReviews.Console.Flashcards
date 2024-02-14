@@ -1,8 +1,6 @@
 ﻿using Buutyful.Coding_Tracker.State;
 using Buutyful.FlashCards.Data;
 
-
-DbAccess context = new();
-context.CreateDatabase();
-StateManager stateManager = new(context);
+DbAccess.CreateDatabase();
+StateManager stateManager = new();
 stateManager.Run(new MainMenuState(stateManager));

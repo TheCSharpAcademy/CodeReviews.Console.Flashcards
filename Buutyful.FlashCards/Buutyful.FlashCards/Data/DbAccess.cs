@@ -5,9 +5,9 @@ using System.Data.SqlClient;
 
 namespace Buutyful.FlashCards.Data;
 
-public class DbAccess
+public static class DbAccess
 {
-    public void CreateDatabase()
+    public static void CreateDatabase()
     {
         using var connection = SqlConnectionFactory.Create();
         if (TablesExist(connection)) return;
@@ -15,9 +15,11 @@ public class DbAccess
         string createTablesSql = Constants.CreateTablesSql;
 
         connection.Execute(createTablesSql);
+        SeedDecks(connection);
+        SeedFlashCards(connection);
     }
  
-    private bool TablesExist(SqlConnection connection)
+    private static bool TablesExist(SqlConnection connection)
     {        
         string checkTablesExistSql = Constants.CheckTableExists;
 
@@ -25,5 +27,16 @@ public class DbAccess
 
         return tableCount == 3;
     }
+    private static void SeedDecks(SqlConnection connection)
+    {
+        var seedDecksSql = Constants.SeedDeckSql;
 
+        connection.Execute(seedDecksSql);
+    }
+    private static void SeedFlashCards(SqlConnection connection)
+    {
+        var seedFlashCardsSql = Constants.SeedFlashCards;
+
+        connection.Execute(seedFlashCardsSql);
+    }
 }
