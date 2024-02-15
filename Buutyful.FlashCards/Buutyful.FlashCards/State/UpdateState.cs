@@ -11,7 +11,7 @@ public class UpdateState(StateManager manager, Object obj) : IState
     private readonly Object _obj = obj;
     public ICommand GetCommand()
     {
-        return new SwitchStateCommand(_stateManager, new DeckViewState(_stateManager));
+        return new SwitchStateCommand(_stateManager, new DecksViewState(_stateManager));
     }
 
     public void Render()

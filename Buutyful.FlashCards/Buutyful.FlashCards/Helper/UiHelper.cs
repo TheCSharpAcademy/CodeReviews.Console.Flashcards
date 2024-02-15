@@ -26,8 +26,9 @@ public static class UiHelper
             "info" => new InfoCommand(),
             "menu" => new SwitchStateCommand(_manager, new MainMenuState(_manager)),
             "view" => new SwitchStateCommand(_manager, new ViewState(_manager)),
-            "decks" => new SwitchStateCommand(_manager, new DeckViewState(_manager)),            
-            //"create" => new SwitchStateCommand(_manager, new CreateState(_manager)),
+            "decks" => new SwitchStateCommand(_manager, new DecksViewState(_manager)),
+            "cards" => new SwitchStateCommand(_manager, new CardsViewState(_manager)),
+            "createdeck" => new SwitchStateCommand(_manager, new CreateDeckState(_manager)),
             "back" => new SwitchStateCommand(_manager, _manager.PastState()),
             "forward" => new SwitchStateCommand(_manager, _manager.FutureState()),
             "clear" => new ClearCommand(),
@@ -51,12 +52,12 @@ public enum Commands
     Menu, //done
     View, //done
     Decks, //done (DeckViewState)
-    DeckCards,//todo (DeckCardsViewState)
-    Cards,  //todo (get all cards directly)
+    DeckCards,//done (DeckCardsViewState)
+    Cards,  //done
     Sessions, //todo    
-    CreateDeck, //todo
+    CreateDeck, //todo <=
     CreateCard,//todo    
-    UpdateDeck, //todo
+    UpdateDeck, //todo 
     UpdateCard, //todo
     DeleteDeck, //todo
     DeleteCard, //todo
