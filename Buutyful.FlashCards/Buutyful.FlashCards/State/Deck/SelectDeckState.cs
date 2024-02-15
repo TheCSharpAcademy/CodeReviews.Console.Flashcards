@@ -6,18 +6,12 @@ using Buutyful.FlashCards.Models;
 
 namespace Buutyful.FlashCards.State;
 
-internal class SelectDeckState : IState
+public class SelectDeckState(StateManager manager, List<Deck> decks, string command) : IState
 {
-    private readonly StateManager _stateManager;
-    private readonly List<Deck> _decks;
-    private readonly string _command;
+    private readonly StateManager _stateManager = manager;
+    private readonly List<Deck> _decks = decks;
+    private readonly string _command = command;
 
-    public SelectDeckState(StateManager manager, List<Deck> decks, string command)
-    {
-        _stateManager = manager;
-        _decks = decks;
-        _command = command;
-    }
     public ICommand GetCommand()
     {
         var deck = SelectDeck();

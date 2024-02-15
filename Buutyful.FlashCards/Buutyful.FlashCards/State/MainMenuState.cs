@@ -10,8 +10,7 @@ public class MainMenuState(StateManager stateManager) : IState
     private static List<Commands> commands => new()
     {
          Commands.Info,
-         Commands.View,
-         Commands.Create,
+         Commands.View,        
          Commands.Clear,
          Commands.Quit
     };
@@ -23,8 +22,7 @@ public class MainMenuState(StateManager stateManager) : IState
     }
 
     public void Render()
-    {
-        Console.Clear();
+    {        
         Console.WriteLine("^^^^MainMenu^^^^");
     }
 

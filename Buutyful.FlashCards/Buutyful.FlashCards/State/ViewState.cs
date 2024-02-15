@@ -13,8 +13,7 @@ public class ViewState(StateManager manager) : IState
         Commands.Decks,
         Commands.Cards,
         Commands.Sessions,
-        Commands.Back,
-        Commands.Clear,
+        Commands.Back,       
         Commands.Quit
     };
     public ICommand GetCommand()
