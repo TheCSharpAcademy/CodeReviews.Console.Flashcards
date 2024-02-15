@@ -20,7 +20,7 @@ public class CreateDeckState(StateManager manager) : IState
 
     public void Render()
     {
-        Console.WriteLine("Create Deck State");
+        Console.WriteLine("Create Deck: ");
         bool loop = true;
         while (loop)
         {
