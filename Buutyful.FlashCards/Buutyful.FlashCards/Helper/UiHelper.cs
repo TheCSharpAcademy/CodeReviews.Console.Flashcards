@@ -54,7 +54,9 @@ public enum Commands
     DeckCards,
     Cards,  //todo
     Sessions, //todo
-    Create, //todo
+    Create,
+    CreateDeck, //todo
+    CreateCard,//todo    
     UpdateDeck, //todo
     UpdateCard, //todo
     DeleteDeck, //todo
