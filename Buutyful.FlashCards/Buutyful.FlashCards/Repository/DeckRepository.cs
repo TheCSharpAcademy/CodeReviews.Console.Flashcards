@@ -8,12 +8,12 @@ using System.Linq.Expressions;
 namespace Buutyful.FlashCards.Repository;
 
 public class DeckRepository : IRepository<Deck>
-{    
+{
     public void Add(Deck entity)
     {
 
         using var connection = SqlConnectionFactory.Create();
-        var sql ="INSERT INTO Decks (Name, Category) VALUES (@Name, @Category);";
+        var sql = "INSERT INTO Decks (Name, Category) VALUES (@Name, @Category);";
         var result = connection.Execute(sql,
             new
             {
@@ -24,15 +24,13 @@ public class DeckRepository : IRepository<Deck>
     public bool Find(Expression<Func<Deck, bool>> predicate)
     {
         using var con = SqlConnectionFactory.Create();
-        
+
         string sql = @$"SELECT * FROM {Constants.DecksTable}";
-       
+
         var result = con.Query<Deck>(sql);
 
         return result.Any(predicate.Compile());
     }
-
-
     public List<Deck> GetDecksOnly()
     {
         using var connection = SqlConnectionFactory.Create();
@@ -53,7 +51,7 @@ public class DeckRepository : IRepository<Deck>
 
         foreach (var deck in decks)
         {
-            var cards = connection.Query<FlashCard>(cardsSql, new { Id = deck.Id});
+            var cards = connection.Query<FlashCard>(cardsSql, new { Id = deck.Id });
             deck.FlashCards.AddRange(cards);
         }
         return decks.ToList();
@@ -89,15 +87,15 @@ public class DeckRepository : IRepository<Deck>
         const string sql = @"Select Id, Name, Category
                              From Decks
                              WHERE Id = @Id;";
-        var deck = connection.QueryFirstOrDefault<Deck>(sql, new { Id = id});
+        var deck = connection.QueryFirstOrDefault<Deck>(sql, new { Id = id });
         return deck ?? throw new Exception($"deck {id} not found");
     }
     public void Update(Deck entity)
     {
         using var connection = SqlConnectionFactory.Create();
         const string sql = @"UPDATE Decks
-                         SET Name = @Name, Category = @Category
-                         WHERE Id = @Id";
+                             SET Name = @Name, Category = @Category
+                             WHERE Id = @Id";
 
         var affectedRows = connection.Execute(sql, entity);
 
@@ -109,35 +107,39 @@ public class DeckRepository : IRepository<Deck>
     public void Delete(Deck entity)
     {
         using var connection = SqlConnectionFactory.Create();
-        using var transaction = connection.BeginTransaction();
-
-        try
         {
-            // Delete FlashCards associated with the Deck
-            const string deleteFlashCardsSql = "DELETE FROM FlashCards WHERE DeckId = @DeckId";
-            connection.Execute(deleteFlashCardsSql, new { DeckId = entity.Id }, transaction);
+            connection.Open();
+            using var transaction = connection.BeginTransaction();
 
-            // Delete StudySessions associated with the Deck            
-            const string deleteStudySessionsSql = "DELETE FROM StudySessions WHERE DeckId = @DeckId";
-            connection.Execute(deleteStudySessionsSql, new { DeckId = entity.Id }, transaction);
-
-            // Delete the Deck 
-            const string deleteDeckSql = "DELETE FROM Decks WHERE Id = @Id";
-            var affectedRows = connection.Execute(deleteDeckSql, new { Id = entity.Id }, transaction);
-
-            if (affectedRows == 0)
+            try
             {
-                throw new Exception($"Deck with Id {entity.Id} not found");
-            }
+                // Delete FlashCards associated with the Deck
+                const string deleteFlashCardsSql = "DELETE FROM FlashCards WHERE DeckId = @DeckId";
+                connection.Execute(deleteFlashCardsSql, new { DeckId = entity.Id }, transaction);
 
-            // Commit the transaction if everything is successful
-            transaction.Commit();
-        }
-        catch (Exception)
-        {
-            // Rollback the transaction in case of an exception
-            transaction.Rollback();
-            throw; 
+                // Delete StudySessions associated with the Deck            
+                const string deleteStudySessionsSql = "DELETE FROM StudySessions WHERE DeckId = @DeckId";
+                connection.Execute(deleteStudySessionsSql, new { DeckId = entity.Id }, transaction);
+
+                // Delete the Deck 
+                const string deleteDeckSql = "DELETE FROM Decks WHERE Id = @Id";
+                var affectedRows = connection.Execute(deleteDeckSql, new { Id = entity.Id }, transaction);
+
+                if (affectedRows == 0)
+                {
+                    throw new Exception($"Deck with Id {entity.Id} not found");
+                }
+
+                // Commit the transaction if everything is successful
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                // Rollback the transaction in case of an exception
+                transaction.Rollback();
+                throw;
+            }
+            connection.Close();
         }
     }
 

@@ -8,13 +8,13 @@ public class StateManager
     private readonly Stack<IState> _back = new();
     private readonly Stack<IState> _forward = new();
     private IState _currentState;
-    public void SwitchState(IState state)
+    public void SwitchState(IState newState)
     {
-        if (_currentState != state)
+        if (_currentState != newState)
         {
             _back.Push(_currentState);
             _forward.Clear(); 
-            _currentState = state;
+            _currentState = newState;
         }
     }
     public IState PastState()

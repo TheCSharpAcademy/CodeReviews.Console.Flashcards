@@ -11,13 +11,7 @@ public class DeleteCardState : IState
     private readonly FlashCard _card;
     private readonly StateManager _manager;
     private readonly CardRepository _cardRepository = new();
-    private readonly List<Commands> commands = new()
-    {
-        Commands.Menu,
-        Commands.Back,
-        Commands.Clear,
-        Commands.Quit
-    };
+  
     public DeleteCardState(StateManager manager, FlashCard card)
     {
         _manager = manager;
