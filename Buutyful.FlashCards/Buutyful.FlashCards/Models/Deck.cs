@@ -1,4 +1,6 @@
-﻿namespace Buutyful.FlashCards.Models;
+﻿using System.Runtime.CompilerServices;
+
+namespace Buutyful.FlashCards.Models;
 
 public class Deck
 {
@@ -20,4 +22,8 @@ public record DeckDisplayDto(string Name, string Category, List<FlashCard> list)
     private DeckCreateDto(string name, string category) =>
         (Name, Category) = (name, category);
     public static DeckCreateDto Create(string name, string category) => new(name, category);
+    public static implicit operator DeckCreateDto((string Name, string Category) tuple)
+        => new(tuple.Name, tuple.Category);
+    public static Deck ToDeck(DeckCreateDto dto) => 
+        new(){ Name = dto.Name, Category = dto.Category};
 }
