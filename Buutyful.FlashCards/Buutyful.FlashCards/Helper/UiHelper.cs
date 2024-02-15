@@ -57,7 +57,7 @@ public enum Commands
     Sessions, //todo    
     CreateDeck, //done
     CreateCard,//todo    
-    UpdateDeck, //todo <= 
+    UpdateDeck, //done 
     UpdateCard, //todo
     DeleteDeck, //done
     DeleteCard, //todo
