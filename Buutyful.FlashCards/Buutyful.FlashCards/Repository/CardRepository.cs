@@ -30,7 +30,7 @@ public class CardRepository : IRepository<FlashCard>
     public IList<FlashCard> GetByDeckId(int deckId)
     {
         using var connection = SqlConnectionFactory.Create();
-        const string sql = @"Select FrontQuestion, BackAnswer
+        const string sql = @"Select Id, FrontQuestion, BackAnswer
                              From FlashCards Where DeckId = @Id";
         var cards = connection.Query<FlashCard>(sql, new { Id = deckId });
         return cards.ToList();

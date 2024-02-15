@@ -1,4 +1,5 @@
 ﻿using Buutyful.Coding_Tracker.Abstraction;
+using Buutyful.Coding_Tracker.Command;
 using Buutyful.Coding_Tracker.State;
 using Buutyful.FlashCards.Helper;
 using Buutyful.FlashCards.Models;
@@ -31,7 +32,12 @@ public class DeckCardsViewState : IState
     }
     public ICommand GetCommand()
     {
-        var command = UiHelper.DisplayOptions(commands.CommandsToStrings());
+        var command = UiHelper.DisplayOptions(commands.CommandsToStrings()).ToLower();
+
+        if (command == "updatecard" || command == "deletedard")
+        {
+            return new SwitchStateCommand(_manager, new SelectCardState(_manager, Cards, command));
+        }
         return UiHelper.MenuSelector(command, _manager);
     }
 
@@ -51,7 +57,7 @@ public class DeckCardsViewState : IState
         for (int i = 0; i < Cards.Count; i++)
         {
             // Add some rows
-            table.AddRow($"{_deck.Name}", $"{_deck.Category}", $"{Cards[i].FrontQuestion}", $"{Cards[i].BackAnswer}", $"{i + 1}");
+            table.AddRow($"{_deck.Name}", $"{_deck.Category}", $"{Cards[i].FrontQuestion}", $"{Cards[i].BackAnswer}", $"{Cards[i].Id}");
         }
         AnsiConsole.Write(table);
         AnsiConsole.MarkupLine("[gray]========================[/]");
