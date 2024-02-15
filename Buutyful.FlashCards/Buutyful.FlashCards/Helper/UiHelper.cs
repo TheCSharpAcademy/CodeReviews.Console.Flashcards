@@ -44,6 +44,28 @@ public static class UiHelper
       .AddChoices(options));
     public static IEnumerable<string> CommandsToStrings(this IEnumerable<Commands> commands) =>
         commands.Select(c => c.ToString());
+    public static (string FrontQuestion, string BackAnswer) GetCardParameters()
+    {
+        var question = string.Empty;
+        var answer = string.Empty;
+        bool condition = true;
+        while (condition)
+        {
+            Console.WriteLine("Select Card Question:");
+
+            var input = Console.ReadLine();
+            if (input?.ToLower() == "break") break;
+            if (input is not null) question = input;
+
+            Console.WriteLine("Select Card Answer:");
+
+            answer = Console.ReadLine();
+            if (answer?.ToLower() == "break") break;
+
+            condition = (string.IsNullOrEmpty(question) || string.IsNullOrEmpty(answer));
+        }
+        return (question, answer);
+    }
 }
 
 public enum Commands
@@ -58,9 +80,9 @@ public enum Commands
     CreateDeck, //done
     CreateCard,//done
     UpdateDeck, //done 
-    UpdateCard, //todo <=
+    UpdateCard, //done
     DeleteDeck, //done
-    DeleteCard, //todo
+    DeleteCard, //todo <=
     Back, //done
     Forward,//done
     Clear, //done
