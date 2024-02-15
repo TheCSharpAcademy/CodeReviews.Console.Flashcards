@@ -12,9 +12,15 @@ public class DeckCardsViewState : IState
     private readonly Deck _deck;
     private readonly StateManager _manager;
     private readonly CardRepository _cardRepository = new();
-    private readonly List<Commands> commands = new List<Commands>()
+    private readonly List<Commands> commands = new()
     {
-        Commands.Menu
+        Commands.CreateCard,
+        Commands.UpdateCard,
+        Commands.DeleteCard,
+        Commands.Menu,
+        Commands.Back,
+        Commands.Clear,
+        Commands.Quit
     };
     private List<FlashCard> Cards { get; set; } = new();
     public DeckCardsViewState(StateManager manager, Deck deck)
@@ -42,10 +48,10 @@ public class DeckCardsViewState : IState
         table.AddColumn("BackAnswer");
         table.AddColumn("CardId");
 
-        for(int i = 0; i < Cards.Count; i++)
+        for (int i = 0; i < Cards.Count; i++)
         {
             // Add some rows
-            table.AddRow($"{_deck.Name}", $"{_deck.Category}", $"{Cards[i].FrontQuestion}", $"{Cards[i].BackAnswer}", $"{i+1}");
+            table.AddRow($"{_deck.Name}", $"{_deck.Category}", $"{Cards[i].FrontQuestion}", $"{Cards[i].BackAnswer}", $"{i + 1}");
         }
         AnsiConsole.Write(table);
         AnsiConsole.MarkupLine("[gray]========================[/]");

@@ -14,7 +14,8 @@ public class DeckViewState : IState
     private readonly DeckRepository _deckRepository = new();
     private readonly List<Commands> commands = new()
     {
-        Commands.DeckCards,        
+        Commands.DeckCards,
+        Commands.CreateDeck,        
         Commands.UpdateDeck,
         Commands.DeleteDeck,
         Commands.Menu,
@@ -31,11 +32,12 @@ public class DeckViewState : IState
     }
     public ICommand GetCommand()
     {
-        var deckName = UiHelper.DisplayOptions(Decks.Select( d => d.Name));
-        Console.WriteLine($"Selected deck: {deckName}");
-        var selectedDeck = Decks.First( d => d.Name.Equals(deckName));
+       
         var command = UiHelper.DisplayOptions(commands.CommandsToStrings()).ToLower();
-        if(command == "deckcards" || command == "updatedeck" || command == "deletedeck") return DeckViewSelector(command, selectedDeck);
+        if (command == "deckcards" || command == "updatedeck" || command == "deletedeck")
+        {
+            return new SwitchStateCommand(_stateManager, new SelectDeckState(_stateManager, Decks, command));
+        }
         return UiHelper.MenuSelector(command, _stateManager);
     }
 
@@ -57,12 +59,6 @@ public class DeckViewState : IState
         AnsiConsole.Write(table);
         AnsiConsole.MarkupLine("[gray]========================[/]");
     }
-    private ICommand DeckViewSelector(string cmd, Deck deck) => cmd?.ToLower() switch
-    {
-        "deckcards" => new SwitchStateCommand(_stateManager, new DeckCardsViewState(_stateManager, deck)),
-        "updatedeck" => new SwitchStateCommand(_stateManager, new UpdateDeckState(_stateManager, deck)),
-        "deletedeck" => new SwitchStateCommand(_stateManager, new DeleteDeckState(_stateManager, deck)),
-        _ => new InvalidCommand(cmd, "deckviewselector")
-    };
+ 
 
 }
