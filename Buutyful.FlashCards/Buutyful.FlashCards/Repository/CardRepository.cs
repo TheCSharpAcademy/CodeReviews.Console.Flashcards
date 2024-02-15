@@ -26,7 +26,14 @@ public class CardRepository : IRepository<FlashCard>
 
     public void Delete(FlashCard entity)
     {
-        throw new NotImplementedException();
+        using var connection = SqlConnectionFactory.Create();
+        var sql = @$"Delete From {Constants.FlashCardsTable} 
+                     Where Id = @Id;";
+        var affectedRows = connection.Execute(sql, new { Id = entity.Id });
+        if (affectedRows == 0)
+        {
+            throw new Exception($"Card with Id {entity.Id} not found");
+        }
     }
 
     public bool Find(Expression<Func<FlashCard, bool>> predicate)
@@ -73,7 +80,7 @@ public class CardRepository : IRepository<FlashCard>
         });
         if (res == 0)
         {
-            throw new Exception($"Deck with Id {entity.Id} not found");
+            throw new Exception($"Card with Id {entity.Id} not found");
         }
     }
 }

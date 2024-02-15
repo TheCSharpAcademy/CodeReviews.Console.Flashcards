@@ -15,7 +15,7 @@ public class UpdateCardState(StateManager manager, FlashCard card) : IState
 
     public ICommand GetCommand()
     {
-       return new SwitchStateCommand(_manager, new ViewState(_manager));
+        return new SwitchStateCommand(_manager, new CardsViewState(_manager));
     }
 
     public void Render()

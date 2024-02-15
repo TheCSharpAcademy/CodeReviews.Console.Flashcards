@@ -34,7 +34,7 @@ public class DeckCardsViewState : IState
     {
         var command = UiHelper.DisplayOptions(commands.CommandsToStrings()).ToLower();
 
-        if (command == "updatecard" || command == "deletedard")
+        if (command == "updatecard" || command == "deletecard") 
         {
             return new SwitchStateCommand(_manager, new SelectCardState(_manager, Cards, command));
         }

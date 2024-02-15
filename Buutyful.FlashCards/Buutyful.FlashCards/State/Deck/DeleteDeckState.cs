@@ -22,26 +22,25 @@ public class DeleteDeckState(StateManager manager, Deck deck) : IState
         AnsiConsole.MarkupLine($"[red]Deliting[/]: {_deck.Id}, {_deck.Name}, {_deck.Category}.\n" +
             $"[red](Warning, all deck relative cards will be also eliminated!)[/]\n" +
             $"Continue? [yellow][[y]]/[[n]][/]");
+
         var input = Console.ReadLine();
-        if (input?.ToLower() == "break" || input?.ToLower() == "n") return;
-        else if (input?.ToLower() == "y")
+        if (input?.ToLower() != "y") return;
+
+        bool exists = DeckExists(_deck.Id);
+        if (!exists)
         {
-            bool exists = DeckExists(_deck.Id);
-            if (!exists)
-            {
-                Console.WriteLine("Deck Not Found");
-                return;
-            }
-            try
-            {
-                _deckRepository.Delete(_deck);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.ReadLine();
-            }
-        }       
+            Console.WriteLine("Deck Not Found");
+            return;
+        }
+        try
+        {
+            _deckRepository.Delete(_deck);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            Console.ReadLine();
+        }
     }
     private bool DeckExists(int id) => _deckRepository.Find(d => d.Id == id);
 }
