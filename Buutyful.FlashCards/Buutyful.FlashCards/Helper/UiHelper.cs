@@ -55,16 +55,16 @@ public enum Commands
     DeckCards,//done (DeckCardsViewState)
     Cards,  //done
     Sessions, //todo    
-    CreateDeck, //todo <=
+    CreateDeck, //done
     CreateCard,//todo    
     UpdateDeck, //todo 
     UpdateCard, //todo
-    DeleteDeck, //todo
+    DeleteDeck, //todo <=
     DeleteCard, //todo
-    Back, //to fix
-    Forward,//to fix
-    Clear,
-    Break, //to remove?
-    Quit
+    Back, //done
+    Forward,//done
+    Clear, //done
+    Break, //done
+    Quit //done
 }
-//select helpers: SelectDeckState: done
+//select helpers: SelectDeckState: done, SelectCardState: done

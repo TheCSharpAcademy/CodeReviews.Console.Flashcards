@@ -1,7 +1,9 @@
 ﻿using Buutyful.Coding_Tracker.Abstraction;
 using Buutyful.Coding_Tracker.State;
-using Buutyful.FlashCards.Helper;
+using Buutyful.FlashCards.Models;
 using Buutyful.FlashCards.Repository;
+using Buutyful.Coding_Tracker.Command;
+using Spectre.Console;
 
 namespace Buutyful.FlashCards.State;
 
@@ -9,23 +11,32 @@ public class CreateDeckState(StateManager manager) : IState
 {
     private readonly StateManager _stateManager = manager;
     private readonly DeckRepository _deckRepository = new();
-    private readonly List<Commands> commands = new()
-    {
-        Commands.Menu,
-        Commands.Back,
-        Commands.Quit
-    };
+
 
     public ICommand GetCommand()
     {
-        var command = UiHelper.DisplayOptions(commands.CommandsToStrings());
-        return UiHelper.MenuSelector(command, _stateManager);
+        return new SwitchStateCommand(_stateManager, new DecksViewState(_stateManager));
     }
 
     public void Render()
     {
         Console.WriteLine("Create Deck State");
-        var res = GetDeckParameters();
+        bool loop = true;
+        while (loop)
+        {
+            DeckCreateDto res = GetDeckParameters();
+            if (string.IsNullOrEmpty(res.Name) || string.IsNullOrEmpty(res.Category)) break;
+            AnsiConsole.MarkupLine($"Name: [green]{res.Name}[/]," +
+                $" Category: [green]{res.Category}[/], Create? [yellow][[y]]/[[n]][/]");
+            var input = Console.ReadLine()?.ToLower();
+            if (input == "y")
+            {
+                _deckRepository.Add(DeckCreateDto.ToDeck(res));
+                loop = false;
+            }
+            if (input == "break") break;
+        }
+
 
     }
     private (string Name, string Category) GetDeckParameters()
@@ -37,7 +48,8 @@ public class CreateDeckState(StateManager manager) : IState
         {
             Console.WriteLine("Select Deck Name:");
             var input = Console.ReadLine();
-            if (input is not null && !ContainsName(input))
+            if (input?.ToLower() == "break") break;
+            else if (input is not null && !ContainsName(input))
             {
                 name = input;
             }
@@ -48,6 +60,7 @@ public class CreateDeckState(StateManager manager) : IState
             }
             Console.WriteLine("Select Deck Category:");
             category = Console.ReadLine();
+            if (category?.ToLower() == "break") break;
             condition = (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(category));
         }
         return (name, category);
