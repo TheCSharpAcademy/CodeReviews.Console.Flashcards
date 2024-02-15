@@ -19,7 +19,7 @@ public class CardRepository : IRepository<FlashCard>
         throw new NotImplementedException();
     }
 
-    public FlashCard Find(Expression<Func<FlashCard, bool>> predicate)
+    public bool Find(Expression<Func<FlashCard, bool>> predicate)
     {
         throw new NotImplementedException();
     }
