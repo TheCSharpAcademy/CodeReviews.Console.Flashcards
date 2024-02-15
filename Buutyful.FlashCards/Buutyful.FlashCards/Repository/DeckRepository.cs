@@ -1,4 +1,5 @@
-﻿using Buutyful.FlashCards.Data;
+﻿using Buutyful.Coding_Tracker;
+using Buutyful.FlashCards.Data;
 using Buutyful.FlashCards.Models;
 using Dapper;
 using Infrastructure.Repositoreis.Interfaces;
@@ -19,11 +20,19 @@ public class DeckRepository : IRepository<Deck>
                 Name = entity.Name,
                 Category = entity.Category
             });
-    }  
-    public Deck Find(Expression<Func<Deck, bool>> predicate)
-    {
-        throw new NotImplementedException();
     }
+    public bool Find(Expression<Func<Deck, bool>> predicate)
+    {
+        using var con = SqlConnectionFactory.Create();
+        
+        string sql = @$"SELECT * FROM {Constants.DecksTable}";
+       
+        var result = con.Query<Deck>(sql);
+
+        return result.Any(predicate.Compile());
+    }
+
+
     public List<Deck> GetDecksOnly()
     {
         using var connection = SqlConnectionFactory.Create();

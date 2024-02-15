@@ -17,10 +17,9 @@ public class Repository<T> : IRepository<T> where T : class
         throw new NotImplementedException();
     }
 
-    public T Find(Expression<Func<T, bool>> predicate)
+    public bool Find(Expression<Func<T, bool>> predicate)
     {
-
-        return _data.FirstOrDefault(predicate.Compile()) ?? default(T);
+        return _data.Any(predicate.Compile());
     }
 
     public IList<T> GetAll()

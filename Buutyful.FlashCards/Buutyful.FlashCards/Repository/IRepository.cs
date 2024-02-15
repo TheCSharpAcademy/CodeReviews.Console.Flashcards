@@ -10,5 +10,5 @@ public interface IRepository<T> where T : class
     void Delete(T entity);
     T GetById(int id);
     IList<T> GetAll();
-    T Find(Expression<Func<T, bool>> predicate);
+    bool Find(Expression<Func<T, bool>> predicate);
 }
