@@ -9,7 +9,7 @@ public class CreateState(StateManager manager) : IState
     private readonly StateManager _stateManager = manager;
     public ICommand GetCommand()
     {
-        return new SwitchStateCommand(_stateManager, new DeckViewState(_stateManager));
+        return new SwitchStateCommand(_stateManager, new DecksViewState(_stateManager));
     }
 
     public void Render()

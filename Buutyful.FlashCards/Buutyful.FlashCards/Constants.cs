@@ -42,4 +42,7 @@ public static class Constants
             (2, 'Who discovered gravity?', 'Isaac Newton'),
             (2, 'What is the chemical symbol for water?', 'H2O'),
             (3, 'What is the capital of France?', 'Paris');";
+    public static string FlashCardsTable => "FlashCards";
+    public static string DecksTable => "Decks";
+    public static string StudySessionsTable => "StudySessions";
 }

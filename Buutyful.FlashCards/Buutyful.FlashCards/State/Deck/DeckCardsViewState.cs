@@ -19,7 +19,7 @@ public class DeckCardsViewState : IState
         Commands.UpdateCard,
         Commands.DeleteCard,
         Commands.Menu,
-        Commands.Back,
+        Commands.Back,       
         Commands.Clear,
         Commands.Quit
     };

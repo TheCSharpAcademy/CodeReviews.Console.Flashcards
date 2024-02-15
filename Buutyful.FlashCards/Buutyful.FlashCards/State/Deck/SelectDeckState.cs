@@ -14,7 +14,12 @@ public class SelectDeckState(StateManager manager, List<Deck> decks, string comm
 
     public ICommand GetCommand()
     {
-        var deck = SelectDeck();
+        var options = _decks.Select(d => d.Name).ToList();
+        options.Add("Back");
+        var option = UiHelper.DisplayOptions(options);
+        if(option == "Back") 
+            return new SwitchStateCommand(_stateManager, _stateManager.PastState());
+        var deck = SelectDeck(option);
         return DeckViewSelector(_command, deck);
     }
 
@@ -29,9 +34,8 @@ public class SelectDeckState(StateManager manager, List<Deck> decks, string comm
         "deletedeck" => new SwitchStateCommand(_stateManager, new DeleteDeckState(_stateManager, deck)),
         _ => new InvalidCommand(cmd, "deckviewselector")
     };
-    private Deck SelectDeck()
-    {
-        var deckName = UiHelper.DisplayOptions(_decks.Select(d => d.Name));
+    private Deck SelectDeck(string deckName)
+    {       
         Console.WriteLine($"Selected deck: {deckName}");
         return _decks.First(d => d.Name.Equals(deckName));
     }

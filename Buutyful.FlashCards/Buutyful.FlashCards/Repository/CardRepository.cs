@@ -1,4 +1,5 @@
-﻿using Buutyful.FlashCards.Data;
+﻿using Buutyful.Coding_Tracker;
+using Buutyful.FlashCards.Data;
 using Buutyful.FlashCards.Models;
 using Dapper;
 using Infrastructure.Repositoreis.Interfaces;
@@ -25,7 +26,11 @@ public class CardRepository : IRepository<FlashCard>
 
     public IList<FlashCard> GetAll()
     {
-        throw new NotImplementedException();
+        using var connection = SqlConnectionFactory.Create();
+        string sql = @$"Select Id, FrontQuestion, BackAnswer
+                        From {Constants.FlashCardsTable};";
+        var cards = connection.Query<FlashCard>(sql);
+        return cards.ToList();
     }
     public IList<FlashCard> GetByDeckId(int deckId)
     {
