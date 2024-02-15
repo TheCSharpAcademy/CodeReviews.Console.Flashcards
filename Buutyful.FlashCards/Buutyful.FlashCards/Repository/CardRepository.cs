@@ -31,7 +31,10 @@ public class CardRepository : IRepository<FlashCard>
 
     public bool Find(Expression<Func<FlashCard, bool>> predicate)
     {
-        throw new NotImplementedException();
+        using var connection = SqlConnectionFactory.Create();
+        var sql = $@"Select * From {Constants.FlashCardsTable};";
+        var cards = connection.Query<FlashCard>(sql);
+        return cards.Any(predicate.Compile());
     }
 
     public IList<FlashCard> GetAll()
@@ -58,6 +61,19 @@ public class CardRepository : IRepository<FlashCard>
 
     public void Update(FlashCard entity)
     {
-        throw new NotImplementedException();
+        using var connection = SqlConnectionFactory.Create();
+        var sql = @$"UPDATE {Constants.FlashCardsTable}
+                    SET FrontQuestion = @FrontQuestion, BackAnswer = @BackAnswer
+                    WHERE Id = @Id";
+        var res = connection.Execute(sql, new
+        {
+            Id = entity.Id,
+            FrontQuestion = entity.FrontQuestion,
+            BackAnswer = entity.BackAnswer
+        });
+        if (res == 0)
+        {
+            throw new Exception($"Deck with Id {entity.Id} not found");
+        }
     }
 }

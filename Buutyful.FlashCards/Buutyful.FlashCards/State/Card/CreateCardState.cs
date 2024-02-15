@@ -1,6 +1,7 @@
 ﻿using Buutyful.Coding_Tracker.Abstraction;
 using Buutyful.Coding_Tracker.Command;
 using Buutyful.Coding_Tracker.State;
+using Buutyful.FlashCards.Helper;
 using Buutyful.FlashCards.Models;
 using Buutyful.FlashCards.Repository;
 using Spectre.Console;
@@ -23,10 +24,10 @@ public class CreateCardState(StateManager manager, Deck deck) : IState
         bool loop = true;
         while (loop)
         {
-            var tuple = GetCardParameters();
+            var (FrontQuestion, BackAnswer) = UiHelper.GetCardParameters();
             var res = FlashCardCreateDto.Create(_deck.Id,
-                                                 tuple.FrontQuestion,
-                                                 tuple.BackAnswer);
+                                                 FrontQuestion,
+                                                 BackAnswer);
             if (string.IsNullOrEmpty(res.FrontQuestion) || 
                 string.IsNullOrEmpty(res.BackAnswer)) break;
             AnsiConsole.MarkupLine($"FrontQuestion: [green]{res.FrontQuestion}[/]," +
@@ -42,26 +43,5 @@ public class CreateCardState(StateManager manager, Deck deck) : IState
 
 
     }
-    private (string FrontQuestion, string BackAnswer) GetCardParameters()
-    {
-        var question = string.Empty;
-        var answer = string.Empty;
-        bool condition = true;
-        while (condition)
-        {
-            Console.WriteLine("Select Card Question:");
-
-            var input = Console.ReadLine();
-            if (input?.ToLower() == "break") break;
-            if (input is not null) question = input;
-
-            Console.WriteLine("Select Card Answer:");
-
-            answer = Console.ReadLine();
-            if (answer?.ToLower() == "break") break;
-
-            condition = (string.IsNullOrEmpty(question) || string.IsNullOrEmpty(answer));
-        }
-        return (question, answer);
-    }
+   
 }
