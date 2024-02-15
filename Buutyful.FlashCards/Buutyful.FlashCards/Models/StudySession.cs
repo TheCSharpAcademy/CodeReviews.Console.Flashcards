@@ -4,6 +4,7 @@ public class StudySession
 {
     public int Id { get; set; }
     public int DeckId { get; set; }
+    public Deck Deck { get; set; }
     public DateTime CreatedAt { get; set; }
     public int Score { get; set; }
 }

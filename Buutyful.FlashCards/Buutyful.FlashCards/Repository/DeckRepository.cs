@@ -47,14 +47,14 @@ public class DeckRepository : IRepository<Deck>
                          FROM FlashCards f
                          WHERE f.DeckId = @Id";
 
-        var decks = connection.Query<Deck>(sql);
+        var decks = connection.Query<Deck>(sql).ToList();
 
         foreach (var deck in decks)
         {
             var cards = connection.Query<FlashCard>(cardsSql, new { Id = deck.Id });
             deck.FlashCards.AddRange(cards);
         }
-        return decks.ToList();
+        return decks;
     }
     public async Task<IList<Deck>> GetAllAsync()
     {

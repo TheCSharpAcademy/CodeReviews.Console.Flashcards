@@ -2,6 +2,7 @@
 using Buutyful.Coding_Tracker.Command;
 using Buutyful.Coding_Tracker.State;
 using Buutyful.FlashCards.State;
+using Buutyful.FlashCards.State.Session;
 using Spectre.Console;
 
 namespace Buutyful.FlashCards.Helper;
@@ -28,6 +29,7 @@ public static class UiHelper
             "view" => new SwitchStateCommand(_manager, new ViewState(_manager)),
             "decks" => new SwitchStateCommand(_manager, new DecksViewState(_manager)),
             "cards" => new SwitchStateCommand(_manager, new CardsViewState(_manager)),
+            "sessions" => new SwitchStateCommand(_manager, new ViewSessionsState(_manager)),
             "createdeck" => new SwitchStateCommand(_manager, new CreateDeckState(_manager)),            
             "back" => new SwitchStateCommand(_manager, _manager.PastState()),
             "forward" => new SwitchStateCommand(_manager, _manager.FutureState()),
@@ -77,6 +79,7 @@ public enum Commands
     DeckCards,//done (DeckCardsViewState)
     Cards,  //done
     Sessions, //todo  <=
+    StartNewSession, //todo
     CreateDeck, //done
     CreateCard,//done
     UpdateDeck, //done 
@@ -91,3 +94,6 @@ public enum Commands
 }
 //select helpers: SelectDeckState: done, SelectCardState: done
 
+// sessions => show all
+// start session => game loop, when over redirect sessions
+// optional: add caching system with flags that keep track of changes
