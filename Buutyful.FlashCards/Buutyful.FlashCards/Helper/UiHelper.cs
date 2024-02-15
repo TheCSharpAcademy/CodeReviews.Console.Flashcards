@@ -76,13 +76,13 @@ public enum Commands
     Decks, //done (DeckViewState)
     DeckCards,//done (DeckCardsViewState)
     Cards,  //done
-    Sessions, //todo    
+    Sessions, //todo  <=
     CreateDeck, //done
     CreateCard,//done
     UpdateDeck, //done 
     UpdateCard, //done
     DeleteDeck, //done
-    DeleteCard, //todo <=
+    DeleteCard, //done
     Back, //done
     Forward,//done
     Clear, //done

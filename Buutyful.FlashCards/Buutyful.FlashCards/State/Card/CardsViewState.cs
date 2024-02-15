@@ -16,10 +16,7 @@ public class CardsViewState: IState
     {    
         Commands.UpdateCard,
         Commands.DeleteCard,
-        Commands.Menu,
-        Commands.Back,
-        Commands.Forward,
-        Commands.Clear,
+        Commands.Menu,        
         Commands.Quit
     };
     private List<FlashCard> Cards { get; set; } = new();

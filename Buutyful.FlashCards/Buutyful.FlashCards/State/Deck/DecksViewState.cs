@@ -20,8 +20,7 @@ public class DecksViewState : IState
         Commands.DeleteDeck,
         Commands.Menu,
         Commands.Back,
-        Commands.Forward,
-        Commands.Clear,
+        Commands.Forward,       
         Commands.Quit
     };
     private List<Deck> Decks { get; set; } = new();
