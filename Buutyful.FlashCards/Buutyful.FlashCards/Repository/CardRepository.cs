@@ -11,7 +11,17 @@ public class CardRepository : IRepository<FlashCard>
 {
     public void Add(FlashCard entity)
     {
-        throw new NotImplementedException();
+        using var connection = SqlConnectionFactory.Create();
+        var sql = @$"INSERT INTO {Constants.FlashCardsTable} 
+                     (DeckId, FrontQuestion, BackAnswer) 
+                    VALUES (@DeckId, @FrontQuestion, @BackAnswer);";
+        var result = connection.Execute(sql,
+            new
+            {
+                DeckId = entity.DeckId,
+                FrontQuestion = entity.FrontQuestion,
+                BackAnswer = entity.BackAnswer
+            });
     }
 
     public void Delete(FlashCard entity)
