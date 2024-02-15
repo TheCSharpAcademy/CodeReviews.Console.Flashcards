@@ -3,6 +3,7 @@ using Buutyful.Coding_Tracker.Command;
 using Buutyful.FlashCards.Helper;
 using Buutyful.FlashCards.Models;
 using Buutyful.FlashCards.Repository;
+using Buutyful.FlashCards.State;
 using Spectre.Console;
 
 namespace Buutyful.Coding_Tracker.State;
@@ -30,14 +31,17 @@ public class DeckViewState : IState
     }
     public ICommand GetCommand()
     {
-        var deckName = UiHelper.DisplayOptions(Decks.Select( d => d.Name)).ToLower();
+        var deckName = UiHelper.DisplayOptions(Decks.Select( d => d.Name));
         Console.WriteLine($"Selected deck: {deckName}");
-        var command = UiHelper.DisplayOptions(commands.CommandsToStrings());
+        var selectedDeck = Decks.First( d => d.Name.Equals(deckName));
+        var command = UiHelper.DisplayOptions(commands.CommandsToStrings()).ToLower();
+        if(command == "deckcards" || command == "updatedeck" || command == "deletedeck") return DeckViewSelector(command, selectedDeck);
         return UiHelper.MenuSelector(command, _stateManager);
     }
 
     public void Render()
-    {        
+    {   
+        Console.Clear();
         AnsiConsole.MarkupLine("[gray]=====Decks=====[/]");
 
         var table = new Table();
@@ -53,4 +57,12 @@ public class DeckViewState : IState
         AnsiConsole.Write(table);
         AnsiConsole.MarkupLine("[gray]========================[/]");
     }
+    private ICommand DeckViewSelector(string cmd, Deck deck) => cmd?.ToLower() switch
+    {
+        "deckcards" => new SwitchStateCommand(_stateManager, new DeckCardsViewState(_stateManager, deck)),
+        "updatedeck" => new SwitchStateCommand(_stateManager, new UpdateDeckState(_stateManager, deck)),
+        "deletedeck" => new SwitchStateCommand(_stateManager, new DeleteDeckState(_stateManager, deck)),
+        _ => new InvalidCommand(cmd, "deckviewselector")
+    };
+
 }

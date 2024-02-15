@@ -24,6 +24,7 @@ public class MainMenuState(StateManager stateManager) : IState
 
     public void Render()
     {
+        Console.Clear();
         Console.WriteLine("^^^^MainMenu^^^^");
     }
 
