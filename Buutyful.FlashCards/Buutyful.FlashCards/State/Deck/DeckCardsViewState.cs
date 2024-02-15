@@ -19,7 +19,7 @@ public class DeckCardsViewState : IState
         Commands.UpdateCard,
         Commands.DeleteCard,
         Commands.Menu,
-        Commands.Back,       
+        Commands.Back,
         Commands.Clear,
         Commands.Quit
     };
@@ -37,6 +37,10 @@ public class DeckCardsViewState : IState
         if (command == "updatecard" || command == "deletedard")
         {
             return new SwitchStateCommand(_manager, new SelectCardState(_manager, Cards, command));
+        }
+        else if (command == "createcard")
+        {
+            return new SwitchStateCommand(_manager, new CreateCardState(_manager, _deck));
         }
         return UiHelper.MenuSelector(command, _manager);
     }

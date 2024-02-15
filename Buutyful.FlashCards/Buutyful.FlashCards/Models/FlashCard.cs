@@ -1,4 +1,6 @@
-﻿namespace Buutyful.FlashCards.Models;
+﻿using System.Runtime.CompilerServices;
+
+namespace Buutyful.FlashCards.Models;
 
 
 public class FlashCard
@@ -23,11 +25,15 @@ public record FlashCardCreateDto
 
     private FlashCardCreateDto() { }
 
-    private FlashCardCreateDto(int deck, string question, string back) =>
-        (DeckId, FrontQuestion, BackAnswer) = (deck, question, back);
-
-
-    public static FlashCardCreateDto Create(int id, string question, string answer) =>
-        new(id, question, answer);    
-    
+    private FlashCardCreateDto(int deckId, string question, string back) =>
+        (DeckId, FrontQuestion, BackAnswer) = (deckId, question, back);
+    public static FlashCardCreateDto Create(int deckId, string question, string answer) =>
+        new(deckId, question, answer);
+    public static FlashCard ToCard(FlashCardCreateDto dto) =>
+        new()
+        {
+            DeckId = dto.DeckId,
+            FrontQuestion = dto.FrontQuestion,
+            BackAnswer = dto.BackAnswer,
+        };
 }

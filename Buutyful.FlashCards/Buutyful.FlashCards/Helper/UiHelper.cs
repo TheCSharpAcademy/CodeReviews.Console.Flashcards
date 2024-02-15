@@ -28,7 +28,7 @@ public static class UiHelper
             "view" => new SwitchStateCommand(_manager, new ViewState(_manager)),
             "decks" => new SwitchStateCommand(_manager, new DecksViewState(_manager)),
             "cards" => new SwitchStateCommand(_manager, new CardsViewState(_manager)),
-            "createdeck" => new SwitchStateCommand(_manager, new CreateDeckState(_manager)),
+            "createdeck" => new SwitchStateCommand(_manager, new CreateDeckState(_manager)),            
             "back" => new SwitchStateCommand(_manager, _manager.PastState()),
             "forward" => new SwitchStateCommand(_manager, _manager.FutureState()),
             "clear" => new ClearCommand(),
@@ -56,9 +56,9 @@ public enum Commands
     Cards,  //done
     Sessions, //todo    
     CreateDeck, //done
-    CreateCard,//todo    
+    CreateCard,//done
     UpdateDeck, //done 
-    UpdateCard, //todo
+    UpdateCard, //todo <=
     DeleteDeck, //done
     DeleteCard, //todo
     Back, //done
@@ -68,3 +68,4 @@ public enum Commands
     Quit //done
 }
 //select helpers: SelectDeckState: done, SelectCardState: done
+
