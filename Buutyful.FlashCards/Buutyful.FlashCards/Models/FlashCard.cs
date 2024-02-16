@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace Buutyful.FlashCards.Models;
+﻿namespace Buutyful.FlashCards.Models;
 
 
 public class FlashCard
