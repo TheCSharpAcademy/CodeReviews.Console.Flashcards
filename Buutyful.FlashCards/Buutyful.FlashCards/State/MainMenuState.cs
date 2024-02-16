@@ -10,7 +10,8 @@ public class MainMenuState(StateManager stateManager) : IState
     private static List<Commands> commands => new()
     {
          Commands.Info,
-         Commands.View,        
+         Commands.View,
+         Commands.StartNewSession,
          Commands.Clear,
          Commands.Quit
     };
