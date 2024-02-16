@@ -1,4 +1,6 @@
-﻿namespace FlashCards.Cactus
+﻿using FlashCards.Cactus.DataModel;
+
+namespace FlashCards.Cactus
 {
     public class Application
     {
@@ -29,6 +31,28 @@
         private const string SHOW_STUDY_REPORT = "1";
 
         #endregion Constants
+
+        #region Constructor
+
+        public Application()
+        {
+            StackMangement = new StackMangement();
+            FlashCardManagement = new FlashCardManagement();
+            StudySessionManagement = new StudySessionManagement();
+        }
+
+        #endregion Constructor
+
+        #region Properties
+
+        public StackMangement StackMangement { get; set; }
+
+        public FlashCardManagement FlashCardManagement { get; set; }
+
+        public StudySessionManagement StudySessionManagement { get; set; }
+
+        #endregion Properties
+
 
         #region Menu
         public void run()
@@ -67,22 +91,26 @@
                 PrintStackManagementMenu();
 
                 string? op = Console.ReadLine();
+                Console.Clear();
                 switch (op)
                 {
                     case BACK_TO_MAIN:
                         return;
                     case SHOW_STACKS:
-                        ShowStacks();
+                        StackMangement.ShowStacks();
                         break;
                     case ADD_STACK:
-                        AddStack();
+                        StackMangement.AddStack();
                         break;
                     case DELETE_STACK:
-                        DeleteStack();
+                        StackMangement.DeleteStack();
                         break;
                     default:
                         break;
                 }
+
+                Console.WriteLine("\nPress any key to continue.");
+                Console.ReadLine();
             }
         }
 
@@ -93,25 +121,29 @@
                 PrintFlashCardsManagementMenu();
 
                 string? op = Console.ReadLine();
+                Console.Clear();
                 switch (op)
                 {
                     case BACK_TO_MAIN:
                         return;
                     case SHOW_FLASHCARDS:
-                        Console.WriteLine("Show all flashcards.");
+                        FlashCardManagement.ShowAllFlashCards();
                         break;
                     case ADD_FLASHCARD:
-                        Console.WriteLine("Add a flashcard.");
+                        FlashCardManagement.AddFlashCard();
                         break;
                     case DELETE_FLASHCARD:
-                        Console.WriteLine("Delete a flashcard.");
+                        FlashCardManagement.DeleteFlashCard();
                         break;
                     case MODIFY_FLASHCARD:
-                        Console.WriteLine("Modify a flashcard.");
+                        FlashCardManagement.ModifyFlashCard();
                         break;
                     default:
                         break;
                 }
+
+                Console.WriteLine("\nPress any key to continue.");
+                Console.ReadLine();
             }
         }
 
@@ -122,25 +154,29 @@
                 PrintStudyManagementMenu();
 
                 string? op = Console.ReadLine();
+                Console.Clear();
                 switch (op)
                 {
                     case BACK_TO_MAIN:
                         return;
                     case SHOW_STUDYS:
-                        Console.WriteLine("Show all study sessions.");
+                        StudySessionManagement.ShowAllStudySessions();
                         break;
                     case START_EXISTING_STUDY:
-                        Console.WriteLine("Start from an existing study session.");
+                        StudySessionManagement.StartFromExistingStudySession();
                         break;
                     case START_NEW_STUDY:
-                        Console.WriteLine("Start a new study session.");
+                        StudySessionManagement.StartNewStudySession();
                         break;
                     case DELETE_STUDY:
-                        Console.WriteLine("Delete a study session.");
+                        StudySessionManagement.DeleteStudySession();
                         break;
                     default:
                         break;
                 }
+
+                Console.WriteLine("\nPress any key to continue.");
+                Console.ReadLine();
             }
         }
 
@@ -234,20 +270,5 @@
         }
 
         #endregion Menu print
-
-        private void DeleteStack()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void AddStack()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void ShowStacks()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
