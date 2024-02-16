@@ -1,7 +1,4 @@
-﻿
-
-using Buutyful.Coding_Tracker.Abstraction;
-using Buutyful.Coding_Tracker.Command;
+﻿using Buutyful.Coding_Tracker.Abstraction;
 using Buutyful.Coding_Tracker.State;
 using Buutyful.FlashCards.Helper;
 using Buutyful.FlashCards.Models;
