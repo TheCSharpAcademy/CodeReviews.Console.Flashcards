@@ -3,8 +3,8 @@ using Buutyful.FlashCards.Data;
 using Buutyful.FlashCards.Models;
 using Dapper;
 using Infrastructure.Repositoreis.Interfaces;
-using System.Data.SqlClient;
 using System.Linq.Expressions;
+
 
 namespace Buutyful.FlashCards.Repository;
 
@@ -12,7 +12,19 @@ public class SessionRepository : IRepository<StudySession>
 {
     public void Add(StudySession entity)
     {
-        throw new NotImplementedException();
+        using var connection = SqlConnectionFactory.Create();
+        var sql = @$"INSERT INTO {Constants.Tables.StudySessionsTable}
+                    (DeckId, CreatedAt, Score)                     
+                    VALUES (@DeckId, @CreatedAt, @Score);";
+
+        var result = connection.Execute(sql,
+          new
+          {
+              DeckId = entity.DeckId,
+              CreatedAt = entity.CreatedAt,
+              Score = entity.Score
+          });
+
     }
 
     public void Delete(StudySession entity)
@@ -28,10 +40,10 @@ public class SessionRepository : IRepository<StudySession>
     public IList<StudySession> GetAll()
     {
         using var connection = SqlConnectionFactory.Create();
-        var sql = @$"Select * From {Constants.StudySessionsTable};";
+        var sql = @$"Select * From {Constants.Tables.StudySessionsTable};";
         const string sqlDeck = @"Select Id, Name, Category
                              From Decks
-                             WHERE Id = @Id;";        
+                             WHERE Id = @Id;";
         var sessions = connection.Query<StudySession>(sql).ToList();
         foreach (var session in sessions)
         {

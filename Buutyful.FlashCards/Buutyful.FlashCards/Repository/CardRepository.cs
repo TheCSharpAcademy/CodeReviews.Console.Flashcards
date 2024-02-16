@@ -12,7 +12,7 @@ public class CardRepository : IRepository<FlashCard>
     public void Add(FlashCard entity)
     {
         using var connection = SqlConnectionFactory.Create();
-        var sql = @$"INSERT INTO {Constants.FlashCardsTable} 
+        var sql = @$"INSERT INTO {Constants.Tables.FlashCardsTable} 
                      (DeckId, FrontQuestion, BackAnswer) 
                     VALUES (@DeckId, @FrontQuestion, @BackAnswer);";
         var result = connection.Execute(sql,
@@ -27,7 +27,7 @@ public class CardRepository : IRepository<FlashCard>
     public void Delete(FlashCard entity)
     {
         using var connection = SqlConnectionFactory.Create();
-        var sql = @$"Delete From {Constants.FlashCardsTable} 
+        var sql = @$"Delete From {Constants.Tables.FlashCardsTable} 
                      Where Id = @Id;";
         var affectedRows = connection.Execute(sql, new { Id = entity.Id });
         if (affectedRows == 0)
@@ -39,7 +39,7 @@ public class CardRepository : IRepository<FlashCard>
     public bool Find(Expression<Func<FlashCard, bool>> predicate)
     {
         using var connection = SqlConnectionFactory.Create();
-        var sql = $@"Select * From {Constants.FlashCardsTable};";
+        var sql = $@"Select * From {Constants.Tables.FlashCardsTable};";
         var cards = connection.Query<FlashCard>(sql);
         return cards.Any(predicate.Compile());
     }
@@ -48,7 +48,7 @@ public class CardRepository : IRepository<FlashCard>
     {
         using var connection = SqlConnectionFactory.Create();
         string sql = @$"Select Id, FrontQuestion, BackAnswer
-                        From {Constants.FlashCardsTable};";
+                        From {Constants.Tables.FlashCardsTable};";
         var cards = connection.Query<FlashCard>(sql);
         return cards.ToList();
     }
@@ -69,7 +69,7 @@ public class CardRepository : IRepository<FlashCard>
     public void Update(FlashCard entity)
     {
         using var connection = SqlConnectionFactory.Create();
-        var sql = @$"UPDATE {Constants.FlashCardsTable}
+        var sql = @$"UPDATE {Constants.Tables.FlashCardsTable}
                     SET FrontQuestion = @FrontQuestion, BackAnswer = @BackAnswer
                     WHERE Id = @Id";
         var res = connection.Execute(sql, new

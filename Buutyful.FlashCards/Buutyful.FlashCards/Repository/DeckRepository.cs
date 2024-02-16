@@ -13,7 +13,8 @@ public class DeckRepository : IRepository<Deck>
     {
 
         using var connection = SqlConnectionFactory.Create();
-        var sql = "INSERT INTO Decks (Name, Category) VALUES (@Name, @Category);";
+        var sql = @$"INSERT INTO {Constants.Tables.DecksTable}
+                    (Name, Category) VALUES (@Name, @Category);";
         var result = connection.Execute(sql,
             new
             {
@@ -25,7 +26,7 @@ public class DeckRepository : IRepository<Deck>
     {
         using var con = SqlConnectionFactory.Create();
 
-        string sql = @$"SELECT * FROM {Constants.DecksTable}";
+        string sql = @$"SELECT * FROM {Constants.Tables.DecksTable}";
 
         var result = con.Query<Deck>(sql);
 
@@ -34,17 +35,17 @@ public class DeckRepository : IRepository<Deck>
     public List<Deck> GetDecksOnly()
     {
         using var connection = SqlConnectionFactory.Create();
-        const string sql = @"Select Id, Name, Category From Decks;";
+        var sql = @$"Select Id, Name, Category From {Constants.Tables.DecksTable};";
         return connection.Query<Deck>(sql).ToList();
     }
     public IList<Deck> GetAll()
     {
         using var connection = SqlConnectionFactory.Create();
-        var sql = @"Select Id, Name, Category
-                    From Decks;";
+        var sql = @$"Select Id, Name, Category
+                    From {Constants.Tables.DecksTable};";
 
-        var cardsSql = @"Select Id, FrontQuestion, BackAnswer
-                         FROM FlashCards f
+        var cardsSql = @$"Select Id, FrontQuestion, BackAnswer
+                         FROM {Constants.Tables.FlashCardsTable} f
                          WHERE f.DeckId = @Id";
 
         var decks = connection.Query<Deck>(sql).ToList();
@@ -84,8 +85,8 @@ public class DeckRepository : IRepository<Deck>
     public Deck GetById(int id)
     {
         using var connection = SqlConnectionFactory.Create();
-        const string sql = @"Select Id, Name, Category
-                             From Decks
+        var sql = @$"Select Id, Name, Category
+                             From {Constants.Tables.DecksTable}
                              WHERE Id = @Id;";
         var deck = connection.QueryFirstOrDefault<Deck>(sql, new { Id = id });
         return deck ?? throw new Exception($"deck {id} not found");
@@ -93,9 +94,9 @@ public class DeckRepository : IRepository<Deck>
     public void Update(Deck entity)
     {
         using var connection = SqlConnectionFactory.Create();
-        const string sql = @"UPDATE Decks
-                             SET Name = @Name, Category = @Category
-                             WHERE Id = @Id";
+        var sql = @$"UPDATE {Constants.Tables.DecksTable}
+                     SET Name = @Name, Category = @Category
+                     WHERE Id = @Id";
 
         var affectedRows = connection.Execute(sql, entity);
 

@@ -30,6 +30,7 @@ public static class UiHelper
             "decks" => new SwitchStateCommand(_manager, new DecksViewState(_manager)),
             "cards" => new SwitchStateCommand(_manager, new CardsViewState(_manager)),
             "sessions" => new SwitchStateCommand(_manager, new ViewSessionsState(_manager)),
+            "startnewsession" => new SwitchStateCommand(_manager, new SelectorSessionDeck(_manager)),
             "createdeck" => new SwitchStateCommand(_manager, new CreateDeckState(_manager)),            
             "back" => new SwitchStateCommand(_manager, _manager.PastState()),
             "forward" => new SwitchStateCommand(_manager, _manager.FutureState()),
@@ -78,8 +79,8 @@ public enum Commands
     Decks, //done (DeckViewState)
     DeckCards,//done (DeckCardsViewState)
     Cards,  //done
-    Sessions, //todo  <=
-    StartNewSession, //todo
+    Sessions, //done
+    StartNewSession, //done
     CreateDeck, //done
     CreateCard,//done
     UpdateDeck, //done 
@@ -96,4 +97,5 @@ public enum Commands
 
 // sessions => show all
 // start session => game loop, when over redirect sessions
+// optional: create a more detailed session view
 // optional: add caching system with flags that keep track of changes
