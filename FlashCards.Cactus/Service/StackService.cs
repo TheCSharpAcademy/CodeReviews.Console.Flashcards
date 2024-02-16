@@ -22,6 +22,7 @@ public class StackService
         }
 
         var table = new Table();
+        table.Title("Stacks");
         table.Border(TableBorder.Square);
         table.Collapse();
         table.AddColumn(nameof(Stack.Id));
@@ -33,14 +34,12 @@ public class StackService
 
     public void AddStack()
     {
-        Console.WriteLine("Please input the name of a new stack. Type 'q' to quit. (No more than 50 characters.)");
-        string name = Console.ReadLine();
+        string name = AnsiConsole.Ask<string>("Please input the [green]name[/] of a new stack. Type 'q' to quit. (No more than 50 characters.)");
         if (name.Equals(QUIT)) return;
         do
         {
             if (name.Length <= 50) break;
-            Console.WriteLine("The name cannot exceed 50 characters. Please input a valid name. Type 'q' to quit.");
-            name = Console.ReadLine();
+            name = AnsiConsole.Ask<string>("The name cannot exceed [red]50[/] characters. Please input a valid name. Type 'q' to quit.");
             if (name.Equals(QUIT)) return;
         } while (true);
 
@@ -48,25 +47,25 @@ public class StackService
         Stack stack = new Stack(id++, name);
         Stacks.Add(stack);
 
-        Console.WriteLine($"Successfully added {name} Stack.");
+        AnsiConsole.MarkupLine($"Successfully added [green]{name}[/] Stack.");
     }
 
     public void DeleteStack()
     {
         ShowStacks();
-        Console.WriteLine("Please input the name of the Stack will be deleted. Type 'q' to quit.");
-        string name = Console.ReadLine();
+
+        string name = AnsiConsole.Ask<string>("Please input the [green]name[/] of the Stack will be deleted. Type 'q' to quit.");
         if (name.Equals(QUIT)) return;
 
         string[] stackNames = Stacks.Select(s => s.Name).ToArray();
         while (!stackNames.Contains(name))
         {
-            Console.WriteLine($"{name} dose not exist. Please input a valid name.");
-            name = Console.ReadLine();
+            name = AnsiConsole.Ask<string>($"[red]{name} dose not exist[/]. Please input a valid name. Type 'q' to quit.");
+            if (name.Equals(QUIT)) return;
         }
         Stacks = Stacks.Where(s => !s.Name.Equals(name)).ToList();
 
-        Console.WriteLine($"Successfully deleted {name} Stack.");
+        AnsiConsole.MarkupLine($"Successfully deleted [green]{name}[/] Stack.");
     }
 }
 
