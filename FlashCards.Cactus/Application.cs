@@ -6,28 +6,42 @@ namespace FlashCards.Cactus
     {
         #region Constants
 
+        /// <summary>
+        /// Main menu constants variables.
+        /// </summary>
         private const string EXIT_APP = "0";
         private const string MANAGE_STACKS = "1";
         private const string MANAGE_FLASHCARDS = "2";
         private const string STUDY = "3";
         private const string STUDY_REPORT = "4";
 
+        /// <summary>
+        /// Stack menu constants variables.
+        /// </summary>
         private const string BACK_TO_MAIN = "0";
-
         private const string SHOW_STACKS = "1";
         private const string ADD_STACK = "2";
         private const string DELETE_STACK = "3";
 
+        /// <summary>
+        /// FlashCard menu constants variables.
+        /// </summary>
         private const string SHOW_FLASHCARDS = "1";
         private const string ADD_FLASHCARD = "2";
         private const string DELETE_FLASHCARD = "3";
         private const string MODIFY_FLASHCARD = "4";
 
+        /// <summary>
+        /// Study menu constants variables.
+        /// </summary>
         private const string SHOW_STUDYS = "1";
         private const string START_EXISTING_STUDY = "2";
         private const string START_NEW_STUDY = "3";
         private const string DELETE_STUDY = "4";
 
+        /// <summary>
+        /// StudyReport menu constants variables.
+        /// </summary>
         private const string SHOW_STUDY_REPORT = "1";
 
         #endregion Constants
@@ -53,13 +67,12 @@ namespace FlashCards.Cactus
 
         #endregion Properties
 
-
         #region Menu
         public void run()
         {
             while (true)
             {
-                PrintMainMenu();
+                MenuUtils.PrintMainMenu();
                 string? op = Console.ReadLine();
                 switch (op)
                 {
@@ -88,7 +101,7 @@ namespace FlashCards.Cactus
         {
             while (true)
             {
-                PrintStackManagementMenu();
+                MenuUtils.PrintStackManagementMenu();
 
                 string? op = Console.ReadLine();
                 Console.Clear();
@@ -118,7 +131,7 @@ namespace FlashCards.Cactus
         {
             while (true)
             {
-                PrintFlashCardsManagementMenu();
+                MenuUtils.PrintFlashCardsManagementMenu();
 
                 string? op = Console.ReadLine();
                 Console.Clear();
@@ -151,7 +164,7 @@ namespace FlashCards.Cactus
         {
             while (true)
             {
-                PrintStudyManagementMenu();
+                MenuUtils.PrintStudyManagementMenu();
 
                 string? op = Console.ReadLine();
                 Console.Clear();
@@ -184,7 +197,7 @@ namespace FlashCards.Cactus
         {
             while (true)
             {
-                PrintStudyReportManagementMenu();
+                MenuUtils.PrintStudyReportManagementMenu();
 
                 string? op = Console.ReadLine();
                 switch (op)
@@ -201,74 +214,5 @@ namespace FlashCards.Cactus
         }
 
         #endregion Menu
-
-        #region Menu print
-
-        private static void PrintMainMenu()
-        {
-            List<string> menuData = new List<string>
-            {
-                "<0> Exit app.",
-                "<1> Manage Stacks.",
-                "<2> Manage FlashCards.",
-                "<3> Study.",
-                "<4> Study report."
-            };
-            MenuUtils.PrintMenu("Main Menu", menuData);
-        }
-
-        private void PrintStackManagementMenu()
-        {
-            List<string> stackMenu = new List<string>
-                {
-                    "<0> Back to Main menu.",
-                    "<1> Show Stacks.",
-                    "<2> Add a new Stack.",
-                    "<3> Delete a Stack.",
-                };
-
-            MenuUtils.PrintMenu("Stack Menu", stackMenu);
-        }
-
-        private void PrintFlashCardsManagementMenu()
-        {
-            List<string> flashcardMenu = new List<string>
-                {
-                    "<0> Back to Main menu.",
-                    "<1> Show all flashcards.",
-                    "<2> Add a new flashcard.",
-                    "<3> Delete a flashcard.",
-                    "<4> Modify a flashcard.",
-                };
-
-            MenuUtils.PrintMenu("FlashCard Menu", flashcardMenu);
-        }
-
-        private void PrintStudyManagementMenu()
-        {
-            List<string> studyMenu = new List<string>
-                {
-                    "<0> Back to Main menu.",
-                    "<1> Show all study sessions.",
-                    "<2> Start from an existing study session.",
-                    "<3> Start a new study session.",
-                    "<4> Delete a study session.",
-                };
-
-            MenuUtils.PrintMenu("Study Menu", studyMenu);
-        }
-
-        private void PrintStudyReportManagementMenu()
-        {
-            List<string> studyReportMenu = new List<string>
-                {
-                    "<0> Back to Main menu.",
-                    "<1> Show  the study report from a specific year.",
-                };
-
-            MenuUtils.PrintMenu("StudyReport Menu", studyReportMenu);
-        }
-
-        #endregion Menu print
     }
 }
