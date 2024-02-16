@@ -16,6 +16,18 @@
         private const string ADD_STACK = "2";
         private const string DELETE_STACK = "3";
 
+        private const string SHOW_FLASHCARDS = "1";
+        private const string ADD_FLASHCARD = "2";
+        private const string DELETE_FLASHCARD = "3";
+        private const string MODIFY_FLASHCARD = "4";
+
+        private const string SHOW_STUDYS = "1";
+        private const string START_EXISTING_STUDY = "2";
+        private const string START_NEW_STUDY = "3";
+        private const string DELETE_STUDY = "4";
+
+        private const string SHOW_STUDY_REPORT = "1";
+
         #endregion Constants
 
         #region Menu
@@ -31,16 +43,16 @@
                         Environment.Exit(0);
                         break;
                     case MANAGE_STACKS:
-                        ManageStacksMenu();
+                        RunStacksManagement();
                         break;
                     case MANAGE_FLASHCARDS:
-                        Console.WriteLine("Manage FlashCards.");
+                        RunFlashCardsManagement();
                         break;
                     case STUDY:
-                        Console.WriteLine("Study");
+                        RunStudyManagement();
                         break;
                     case STUDY_REPORT:
-                        Console.WriteLine("Study Report");
+                        RunStudyReportManagement();
                         break;
                     default:
                         break;
@@ -48,7 +60,7 @@
             }
         }
 
-        public void ManageStacksMenu()
+        public void RunStacksManagement()
         {
             while (true)
             {
@@ -67,6 +79,84 @@
                         break;
                     case DELETE_STACK:
                         DeleteStack();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        public void RunFlashCardsManagement()
+        {
+            while (true)
+            {
+                PrintFlashCardsManagementMenu();
+
+                string? op = Console.ReadLine();
+                switch (op)
+                {
+                    case BACK_TO_MAIN:
+                        return;
+                    case SHOW_FLASHCARDS:
+                        Console.WriteLine("Show all flashcards.");
+                        break;
+                    case ADD_FLASHCARD:
+                        Console.WriteLine("Add a flashcard.");
+                        break;
+                    case DELETE_FLASHCARD:
+                        Console.WriteLine("Delete a flashcard.");
+                        break;
+                    case MODIFY_FLASHCARD:
+                        Console.WriteLine("Modify a flashcard.");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        public void RunStudyManagement()
+        {
+            while (true)
+            {
+                PrintStudyManagementMenu();
+
+                string? op = Console.ReadLine();
+                switch (op)
+                {
+                    case BACK_TO_MAIN:
+                        return;
+                    case SHOW_STUDYS:
+                        Console.WriteLine("Show all study sessions.");
+                        break;
+                    case START_EXISTING_STUDY:
+                        Console.WriteLine("Start from an existing study session.");
+                        break;
+                    case START_NEW_STUDY:
+                        Console.WriteLine("Start a new study session.");
+                        break;
+                    case DELETE_STUDY:
+                        Console.WriteLine("Delete a study session.");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        public void RunStudyReportManagement()
+        {
+            while (true)
+            {
+                PrintStudyReportManagementMenu();
+
+                string? op = Console.ReadLine();
+                switch (op)
+                {
+                    case BACK_TO_MAIN:
+                        return;
+                    case SHOW_STUDY_REPORT:
+                        Console.WriteLine("Show  the study report from a specific year.");
                         break;
                     default:
                         break;
@@ -102,6 +192,45 @@
                 };
 
             MenuUtils.PrintMenu("Stack Menu", stackMenu);
+        }
+
+        private void PrintFlashCardsManagementMenu()
+        {
+            List<string> flashcardMenu = new List<string>
+                {
+                    "<0> Back to Main menu.",
+                    "<1> Show all flashcards.",
+                    "<2> Add a new flashcard.",
+                    "<3> Delete a flashcard.",
+                    "<4> Modify a flashcard.",
+                };
+
+            MenuUtils.PrintMenu("FlashCard Menu", flashcardMenu);
+        }
+
+        private void PrintStudyManagementMenu()
+        {
+            List<string> studyMenu = new List<string>
+                {
+                    "<0> Back to Main menu.",
+                    "<1> Show all study sessions.",
+                    "<2> Start from an existing study session.",
+                    "<3> Start a new study session.",
+                    "<4> Delete a study session.",
+                };
+
+            MenuUtils.PrintMenu("Study Menu", studyMenu);
+        }
+
+        private void PrintStudyReportManagementMenu()
+        {
+            List<string> studyReportMenu = new List<string>
+                {
+                    "<0> Back to Main menu.",
+                    "<1> Show  the study report from a specific year.",
+                };
+
+            MenuUtils.PrintMenu("StudyReport Menu", studyReportMenu);
         }
 
         #endregion Menu print
