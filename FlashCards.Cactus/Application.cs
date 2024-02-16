@@ -53,6 +53,7 @@ namespace FlashCards.Cactus
             StackMangement = new StackMangement();
             FlashCardManagement = new FlashCardManagement();
             StudySessionManagement = new StudySessionManagement();
+            StudyReportManagement = new StudyReportManagement();
         }
 
         #endregion Constructor
@@ -64,6 +65,8 @@ namespace FlashCards.Cactus
         public FlashCardManagement FlashCardManagement { get; set; }
 
         public StudySessionManagement StudySessionManagement { get; set; }
+
+        public StudyReportManagement StudyReportManagement { get; set; }
 
         #endregion Properties
 
@@ -200,16 +203,20 @@ namespace FlashCards.Cactus
                 MenuUtils.PrintStudyReportManagementMenu();
 
                 string? op = Console.ReadLine();
+                Console.Clear();
                 switch (op)
                 {
                     case BACK_TO_MAIN:
                         return;
                     case SHOW_STUDY_REPORT:
-                        Console.WriteLine("Show  the study report from a specific year.");
+                        StudyReportManagement.ShowStudyReportInSpecificYear();
                         break;
                     default:
                         break;
                 }
+
+                Console.WriteLine("\nPress any key to continue.");
+                Console.ReadLine();
             }
         }
 
