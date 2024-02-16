@@ -1,9 +1,8 @@
-﻿
-using FlashCards.Cactus.DataModel;
+﻿using FlashCards.Cactus.DataModel;
 
-namespace FlashCards.Cactus;
+namespace FlashCards.Cactus.Service;
 
-public class StudySessionManagement
+public class StudySessionService
 {
     public List<StudySession> StudySessions { get; set; }
 
