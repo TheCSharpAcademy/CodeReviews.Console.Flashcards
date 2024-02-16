@@ -1,7 +1,7 @@
 ﻿using FlashCards.Cactus.DataModel;
 
-namespace FlashCards.Cactus;
-public class FlashCardManagement
+namespace FlashCards.Cactus.Service;
+public class FlashCardService
 {
     public List<FlashCard> FlashCards { get; set; }
 

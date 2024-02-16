@@ -1,4 +1,4 @@
-﻿using FlashCards.Cactus.DataModel;
+﻿using FlashCards.Cactus.Service;
 
 namespace FlashCards.Cactus
 {
@@ -50,23 +50,23 @@ namespace FlashCards.Cactus
 
         public Application()
         {
-            StackMangement = new StackMangement();
-            FlashCardManagement = new FlashCardManagement();
-            StudySessionManagement = new StudySessionManagement();
-            StudyReportManagement = new StudyReportManagement();
+            StackMangement = new StackService();
+            FlashCardManagement = new FlashCardService();
+            StudySessionManagement = new StudySessionService();
+            StudyReportManagement = new StudyReportService();
         }
 
         #endregion Constructor
 
         #region Properties
 
-        public StackMangement StackMangement { get; set; }
+        public StackService StackMangement { get; set; }
 
-        public FlashCardManagement FlashCardManagement { get; set; }
+        public FlashCardService FlashCardManagement { get; set; }
 
-        public StudySessionManagement StudySessionManagement { get; set; }
+        public StudySessionService StudySessionManagement { get; set; }
 
-        public StudyReportManagement StudyReportManagement { get; set; }
+        public StudyReportService StudyReportManagement { get; set; }
 
         #endregion Properties
 

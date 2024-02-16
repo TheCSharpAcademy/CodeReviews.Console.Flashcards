@@ -1,6 +1,6 @@
-﻿namespace FlashCards.Cactus;
+﻿namespace FlashCards.Cactus.Service;
 
-public class StudyReportManagement
+public class StudyReportService
 {
     public void ShowStudyReportInSpecificYear()
     {
