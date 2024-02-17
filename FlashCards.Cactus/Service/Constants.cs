@@ -7,5 +7,7 @@
         public const string FLASHCARDS = "FlashCards";
         public const string STACK = "Stack";
         public const string STACKS = "Stacks";
+        public const string STUDYSESSION = "StudySession";
+        public const string STUDYSESSIONS = "StudySessions";
     }
 }
