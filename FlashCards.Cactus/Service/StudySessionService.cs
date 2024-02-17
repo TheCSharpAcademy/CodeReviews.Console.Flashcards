@@ -109,7 +109,25 @@ public class StudySessionService
 
     public void DeleteStudySession()
     {
-        Console.WriteLine("Delete a study session.");
+        ShowAllStudySessions();
+
+        if (StudySessions.Count == 0)
+        {
+            return;
+        }
+
+        string idStr = AnsiConsole.Ask<string>("Please input the [green]id[/] of the StudySession you want to delete. Type 'q' to quit.");
+        if (idStr.Equals(Constants.QUIT)) return;
+
+        int inputId = -1;
+        while (!int.TryParse(idStr, out inputId) || inputId < 1 || inputId > StudySessions.Count)
+        {
+            idStr = AnsiConsole.Ask<string>($"Please input a valid id.");
+        }
+        StudySession deletedSS = StudySessions[inputId - 1];
+        StudySessions = StudySessions.Where(ss => ss.Id != deletedSS.Id).ToList();
+
+        AnsiConsole.MarkupLine($"Successfully deleted [green]No.{inputId}[/] StudySession.");
     }
 }
 
