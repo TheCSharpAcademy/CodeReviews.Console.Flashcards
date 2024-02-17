@@ -49,20 +49,20 @@ public class FlashCardService
     {
         ShowAllFlashCards();
 
+        if (FlashCards.Count == 0) return;
+
         string idStr = AnsiConsole.Ask<string>("Please input the [green]id[/] of the FlashCard you want to delete. Type 'q' to quit.");
         if (idStr.Equals(Constants.QUIT)) return;
 
-        int[] ids = FlashCards.Select(f => f.Id).ToArray();
-
-        int id;
-        while (!int.TryParse(idStr, out id) || !ids.Contains(id))
+        int inputId;
+        while (!int.TryParse(idStr, out inputId) || inputId < 1 || inputId > FlashCards.Count)
         {
             idStr = AnsiConsole.Ask<string>($"Please input a valid id.");
         }
-        FlashCard deletedFlashCard = FlashCards.Where(f => f.Id == id).ToList()[0];
-        FlashCards = FlashCards.Where(f => f.Id != id).ToList();
+        FlashCard deletedFlashCard = FlashCards[inputId - 1];
+        FlashCards = FlashCards.Where(f => f.Id != deletedFlashCard.Id).ToList();
 
-        AnsiConsole.MarkupLine($"Successfully deleted [green]\"{deletedFlashCard.Front}, {deletedFlashCard.Back}\"[/] FlashCard.");
+        AnsiConsole.MarkupLine($"Successfully deleted [green]No.{inputId}[/] FlashCard.");
     }
 
     public void ModifyFlashCard()

@@ -40,6 +40,8 @@ public class StackService
     {
         ShowStacks();
 
+        if (Stacks.Count == 0) return;
+
         string name = AnsiConsole.Ask<string>("Please input the [green]name[/] of the Stack will be deleted. Type 'q' to quit.");
         if (name.Equals(Constants.QUIT)) return;
 
