@@ -61,9 +61,8 @@ namespace FlashCards.Cactus
                 {
                     "<0> Back to Main menu.",
                     "<1> Show all study sessions.",
-                    "<2> Start from an existing study session.",
-                    "<3> Start a new study session.",
-                    "<4> Delete a study session.",
+                    "<2> Start a new study session.",
+                    "<3> Delete a study session.",
                 };
 
             PrintMenu("Study Menu", studyMenu);
