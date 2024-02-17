@@ -15,7 +15,7 @@ public class StackService
     {
         List<List<string>> rows = new List<List<string>>();
         Stacks.ForEach(stack => rows.Add(new List<string>() { stack.Name }));
-        DisplayHelpers.ShowDataRecords(Constants.STACK, Constants.STACKS, rows);
+        ServiceHelpers.ShowDataRecords(Constants.STACK, Constants.STACKS, rows);
     }
 
     public void AddStack()

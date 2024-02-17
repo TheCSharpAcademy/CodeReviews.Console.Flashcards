@@ -3,7 +3,7 @@ using Spectre.Console;
 
 namespace FlashCards.Cactus.Service;
 
-public class DisplayHelpers
+public class ServiceHelpers
 {
     public static void ShowDataRecords(string name, string title, List<List<string>> rows)
     {
