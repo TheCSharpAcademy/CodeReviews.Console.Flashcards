@@ -5,6 +5,16 @@ namespace FlashCards.Cactus.Service;
 
 public class ServiceHelpers
 {
+
+    public static int GetUserInputId(string idStr, int count)
+    {
+        int inputId;
+        while (!int.TryParse(idStr, out inputId) || inputId < 1 || inputId > count)
+        {
+            idStr = AnsiConsole.Ask<string>($"Please input a valid id.");
+        }
+        return inputId;
+    }
     public static void ShowDataRecords(string name, string title, List<List<string>> rows)
     {
         if (rows.Count == 0)
