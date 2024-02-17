@@ -1,4 +1,5 @@
-﻿using FlashCards.Cactus.Service;
+﻿using FlashCards.Cactus.Helper;
+using FlashCards.Cactus.Service;
 
 namespace FlashCards.Cactus
 {
@@ -74,7 +75,7 @@ namespace FlashCards.Cactus
         {
             while (true)
             {
-                MenuUtils.PrintMainMenu();
+                MenuHelper.PrintMainMenu();
                 string? op = Console.ReadLine();
                 switch (op)
                 {
@@ -103,7 +104,7 @@ namespace FlashCards.Cactus
         {
             while (true)
             {
-                MenuUtils.PrintStackManagementMenu();
+                MenuHelper.PrintStackManagementMenu();
 
                 string? op = Console.ReadLine();
                 Console.Clear();
@@ -133,7 +134,7 @@ namespace FlashCards.Cactus
         {
             while (true)
             {
-                MenuUtils.PrintFlashCardsManagementMenu();
+                MenuHelper.PrintFlashCardsManagementMenu();
 
                 string? op = Console.ReadLine();
                 Console.Clear();
@@ -166,7 +167,7 @@ namespace FlashCards.Cactus
         {
             while (true)
             {
-                MenuUtils.PrintStudyManagementMenu();
+                MenuHelper.PrintStudyManagementMenu();
 
                 string? op = Console.ReadLine();
                 Console.Clear();
@@ -196,7 +197,7 @@ namespace FlashCards.Cactus
         {
             while (true)
             {
-                MenuUtils.PrintStudyReportManagementMenu();
+                MenuHelper.PrintStudyReportManagementMenu();
 
                 string? op = Console.ReadLine();
                 Console.Clear();

@@ -1,9 +1,10 @@
 ﻿using FlashCards.Cactus.DataModel;
+using FlashCards.Cactus.Service;
 using Spectre.Console;
 
-namespace FlashCards.Cactus.Service;
+namespace FlashCards.Cactus.Helper;
 
-public class ServiceHelpers
+public class ServiceHelper
 {
 
     public static int GetUserInputId(string idStr, int count)

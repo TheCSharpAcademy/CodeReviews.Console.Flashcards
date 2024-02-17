@@ -1,4 +1,5 @@
 ﻿using FlashCards.Cactus.DataModel;
+using FlashCards.Cactus.Helper;
 using Spectre.Console;
 
 namespace FlashCards.Cactus.Service;
@@ -15,7 +16,7 @@ public class FlashCardService
     {
         List<List<string>> rows = new List<List<string>>();
         FlashCards.ForEach(flashCard => rows.Add(new List<string>() { flashCard.Front, flashCard.Back }));
-        ServiceHelpers.ShowDataRecords(Constants.FLASHCARD, Constants.FLASHCARDS, rows);
+        ServiceHelper.ShowDataRecords(Constants.FLASHCARD, Constants.FLASHCARDS, rows);
     }
 
     public void AddFlashCard()
@@ -54,7 +55,7 @@ public class FlashCardService
         string idStr = AnsiConsole.Ask<string>("Please input the [green]id[/] of the FlashCard you want to delete. Type 'q' to quit.");
         if (idStr.Equals(Constants.QUIT)) return;
 
-        int inputId = ServiceHelpers.GetUserInputId(idStr, FlashCards.Count);
+        int inputId = ServiceHelper.GetUserInputId(idStr, FlashCards.Count);
         FlashCard deletedFlashCard = FlashCards[inputId - 1];
         FlashCards = FlashCards.Where(f => f.Id != deletedFlashCard.Id).ToList();
 
