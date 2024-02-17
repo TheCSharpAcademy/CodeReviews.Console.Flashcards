@@ -35,9 +35,8 @@ namespace FlashCards.Cactus
         /// Study menu constants variables.
         /// </summary>
         private const string SHOW_STUDYS = "1";
-        private const string START_EXISTING_STUDY = "2";
-        private const string START_NEW_STUDY = "3";
-        private const string DELETE_STUDY = "4";
+        private const string START_NEW_STUDY = "2";
+        private const string DELETE_STUDY = "3";
 
         /// <summary>
         /// StudyReport menu constants variables.
@@ -177,9 +176,6 @@ namespace FlashCards.Cactus
                         return;
                     case SHOW_STUDYS:
                         StudySessionManagement.ShowAllStudySessions();
-                        break;
-                    case START_EXISTING_STUDY:
-                        StudySessionManagement.StartFromExistingStudySession();
                         break;
                     case START_NEW_STUDY:
                         StudySessionManagement.StartNewStudySession();
