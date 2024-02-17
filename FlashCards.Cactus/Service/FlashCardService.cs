@@ -15,7 +15,7 @@ public class FlashCardService
     {
         List<List<string>> rows = new List<List<string>>();
         FlashCards.ForEach(flashCard => rows.Add(new List<string>() { flashCard.Front, flashCard.Back }));
-        DisplayHelpers.ShowDataRecords(Constants.FLASHCARD, Constants.FLASHCARDS, rows);
+        ServiceHelpers.ShowDataRecords(Constants.FLASHCARD, Constants.FLASHCARDS, rows);
     }
 
     public void AddFlashCard()
