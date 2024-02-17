@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="ConsoleTableExt" Version="3.2.0" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.5" />
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.1" />
 		<PackageReference Include="Spectre.Console" Version="0.48.0" />
 		<PackageReference Include="Spectre.Console.Cli" Version="0.48.0" />

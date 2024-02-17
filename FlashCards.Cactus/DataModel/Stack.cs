@@ -5,6 +5,11 @@
         #region Constructors
         public Stack() { }
 
+        public Stack(string name)
+        {
+            Name = name;
+        }
+
         public Stack(int id, string name)
         {
             Id = id;
