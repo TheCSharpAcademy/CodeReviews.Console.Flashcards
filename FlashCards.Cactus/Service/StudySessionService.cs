@@ -40,8 +40,8 @@ public class StudySessionService
         var shuffleCards = learnFlashCards.OrderBy(_ => Guid.NewGuid()).ToList();
 
         Console.WriteLine("Type any key to start learning, or 'q' to quit.");
-        string key = Console.ReadLine();
-        if (key.Equals(Constants.QUIT)) return;
+        string? key = Console.ReadLine();
+        if (Constants.QUIT.Equals(key)) return;
 
         Tuple<TimeSpan, int> timeScore = LearnFlashCards(stackIdName.Item2, shuffleCards);
 
@@ -84,7 +84,7 @@ public class StudySessionService
 
             Console.WriteLine();
             Console.WriteLine("Please input your answer to this card. Or 'q' to quit.");
-            string answer = Console.ReadLine();
+            string? answer = Console.ReadLine();
 
             if (Constants.QUIT.Equals(answer)) break;
             if (flashcard.Back.Equals(answer))
@@ -119,11 +119,7 @@ public class StudySessionService
         string idStr = AnsiConsole.Ask<string>("Please input the [green]id[/] of the StudySession you want to delete. Type 'q' to quit.");
         if (idStr.Equals(Constants.QUIT)) return;
 
-        int inputId = -1;
-        while (!int.TryParse(idStr, out inputId) || inputId < 1 || inputId > StudySessions.Count)
-        {
-            idStr = AnsiConsole.Ask<string>($"Please input a valid id.");
-        }
+        int inputId = ServiceHelpers.GetUserInputId(idStr, StudySessions.Count);
         StudySession deletedSS = StudySessions[inputId - 1];
         StudySessions = StudySessions.Where(ss => ss.Id != deletedSS.Id).ToList();
 

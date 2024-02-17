@@ -54,11 +54,7 @@ public class FlashCardService
         string idStr = AnsiConsole.Ask<string>("Please input the [green]id[/] of the FlashCard you want to delete. Type 'q' to quit.");
         if (idStr.Equals(Constants.QUIT)) return;
 
-        int inputId;
-        while (!int.TryParse(idStr, out inputId) || inputId < 1 || inputId > FlashCards.Count)
-        {
-            idStr = AnsiConsole.Ask<string>($"Please input a valid id.");
-        }
+        int inputId = ServiceHelpers.GetUserInputId(idStr, FlashCards.Count);
         FlashCard deletedFlashCard = FlashCards[inputId - 1];
         FlashCards = FlashCards.Where(f => f.Id != deletedFlashCard.Id).ToList();
 
