@@ -5,11 +5,11 @@
         #region Constructors
         public StudySession() { }
 
-        public StudySession(int id, int sId, DateTime date, int score)
+        public StudySession(int id, string stackName, TimeSpan time, int score)
         {
             Id = id;
-            SId = sId;
-            Date = date;
+            StackName = stackName;
+            Time = time;
             Score = score;
         }
 
@@ -17,9 +17,9 @@
 
         #region Properties
         public int Id { get; set; }
-        public int SId { get; set; }
+        public string StackName { get; set; }
 
-        public DateTime Date { get; set; }
+        public TimeSpan Time { get; set; }
 
         public int Score { get; set; }
 
