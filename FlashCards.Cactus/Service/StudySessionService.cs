@@ -1,4 +1,5 @@
 ﻿using FlashCards.Cactus.DataModel;
+using FlashCards.Cactus.Helper;
 using Spectre.Console;
 using System.Diagnostics;
 
@@ -20,7 +21,7 @@ public class StudySessionService
     {
         List<List<string>> rows = new List<List<string>>();
         StudySessions.ForEach(ss => rows.Add(new List<string>() { ss.StackName, ss.Time.TotalMinutes.ToString("F"), ss.Score.ToString() }));
-        ServiceHelpers.ShowDataRecords(Constants.STUDYSESSION, Constants.STUDYSESSIONS, rows);
+        ServiceHelper.ShowDataRecords(Constants.STUDYSESSION, Constants.STUDYSESSIONS, rows);
     }
 
     public void StartNewStudySession()
@@ -119,7 +120,7 @@ public class StudySessionService
         string idStr = AnsiConsole.Ask<string>("Please input the [green]id[/] of the StudySession you want to delete. Type 'q' to quit.");
         if (idStr.Equals(Constants.QUIT)) return;
 
-        int inputId = ServiceHelpers.GetUserInputId(idStr, StudySessions.Count);
+        int inputId = ServiceHelper.GetUserInputId(idStr, StudySessions.Count);
         StudySession deletedSS = StudySessions[inputId - 1];
         StudySessions = StudySessions.Where(ss => ss.Id != deletedSS.Id).ToList();
 

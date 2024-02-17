@@ -1,10 +1,10 @@
 ﻿using ConsoleTableExt;
 
-namespace FlashCards.Cactus
+namespace FlashCards.Cactus.Helper
 {
-    public class MenuUtils
+    public class MenuHelper
     {
-        public static void PrintMenu(string name, List<String> menu)
+        public static void PrintMenu(string name, List<string> menu)
         {
             Console.Clear();
 
