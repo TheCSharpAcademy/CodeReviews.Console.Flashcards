@@ -19,7 +19,7 @@ public class StudySessionService
     public void ShowAllStudySessions()
     {
         List<List<string>> rows = new List<List<string>>();
-        StudySessions.ForEach(ss => rows.Add(new List<string>() { ss.StackName, ss.Time.TotalMinutes.ToString(), ss.Score.ToString() }));
+        StudySessions.ForEach(ss => rows.Add(new List<string>() { ss.StackName, ss.Time.TotalMinutes.ToString("F"), ss.Score.ToString() }));
         ServiceHelpers.ShowDataRecords(Constants.STUDYSESSION, Constants.STUDYSESSIONS, rows);
     }
 
@@ -43,9 +43,11 @@ public class StudySessionService
         string key = Console.ReadLine();
         if (key.Equals(Constants.QUIT)) return;
 
-        Tuple<int, int> timeScore = LearnFlashCards(stackIdName.Item2, shuffleCards);
+        Tuple<TimeSpan, int> timeScore = LearnFlashCards(stackIdName.Item2, shuffleCards);
 
-        AnsiConsole.MarkupLine($"Study Finished. You taken [green]{timeScore.Item1}[/] minutes to learn, and got [green]{timeScore.Item2}[/] score.");
+        StudySessions.Add(new StudySession(StudySessions.Count, stackIdName.Item2, timeScore.Item1, timeScore.Item2));
+
+        AnsiConsole.MarkupLine($"Study Finished. You taken [green]{timeScore.Item1.TotalMinutes.ToString("F")}[/] minutes to learn, and got [green]{timeScore.Item2}[/] score.");
     }
 
     public Tuple<int, string> AskUserToTypeAStackName()
@@ -65,7 +67,7 @@ public class StudySessionService
         return new Tuple<int, string>(sid, stackName);
     }
 
-    public Tuple<int, int> LearnFlashCards(string stackName, List<FlashCard> flashcards)
+    public Tuple<TimeSpan, int> LearnFlashCards(string stackName, List<FlashCard> flashcards)
     {
         int score = 0;
         var timer = new Stopwatch();
@@ -102,7 +104,7 @@ public class StudySessionService
         timer.Stop();
         TimeSpan timeTaken = timer.Elapsed;
 
-        return new Tuple<int, int>(timeTaken.Minutes, score);
+        return new Tuple<TimeSpan, int>(timeTaken, score);
     }
 
     public void DeleteStudySession()
