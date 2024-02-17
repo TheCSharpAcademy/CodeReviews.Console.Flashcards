@@ -1,7 +1,6 @@
 ﻿using FlashCards.Cactus.DataModel;
 using Spectre.Console;
 using System.Diagnostics;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace FlashCards.Cactus.Service;
 
@@ -37,13 +36,14 @@ public class StudySessionService
             new FlashCard(2, 2, "1+1=", "2"),
             new FlashCard(3, 2, "1*1=", "1"),
         };
-        var shuffleCards = flashcards.OrderBy(_ => Guid.NewGuid()).ToList();
+        var learnFlashCards = flashcards.Where(card => card.SId == stackIdName.Item1).ToList();
+        var shuffleCards = learnFlashCards.OrderBy(_ => Guid.NewGuid()).ToList();
 
         Console.WriteLine("Type any key to start learning, or 'q' to quit.");
         string key = Console.ReadLine();
         if (key.Equals(Constants.QUIT)) return;
 
-        Tuple<int, int> timeScore = LearnFlashCards(shuffleCards);
+        Tuple<int, int> timeScore = LearnFlashCards(stackIdName.Item2, shuffleCards);
 
         AnsiConsole.MarkupLine($"Study Finished. You taken [green]{timeScore.Item1}[/] minutes to learn, and got [green]{timeScore.Item2}[/] score.");
     }
@@ -65,7 +65,7 @@ public class StudySessionService
         return new Tuple<int, string>(sid, stackName);
     }
 
-    public Tuple<int, int> LearnFlashCards(List<FlashCard> flashcards)
+    public Tuple<int, int> LearnFlashCards(string stackName, List<FlashCard> flashcards)
     {
         int score = 0;
         var timer = new Stopwatch();
@@ -75,7 +75,7 @@ public class StudySessionService
             Console.Clear();
 
             var table = new Table();
-            table.Title("StackName");
+            table.Title($"{stackName}");
             table.AddColumn("Front");
             table.AddRow(flashcard.Front);
             AnsiConsole.Write(table);
