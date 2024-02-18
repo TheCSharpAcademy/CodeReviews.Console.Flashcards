@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using System.Data.SqlTypes;
 
 namespace FlashCards.Cactus.Dao;
+
 public class StudySessionDao
 {
     public StudySessionDao(string DBConnStr)

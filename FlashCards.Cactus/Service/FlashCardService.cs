@@ -4,6 +4,7 @@ using FlashCards.Cactus.Helper;
 using Spectre.Console;
 
 namespace FlashCards.Cactus.Service;
+
 public class FlashCardService
 {
     public FlashCardService(FlashCardDao flashCardDao)

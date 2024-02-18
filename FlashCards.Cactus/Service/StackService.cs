@@ -4,6 +4,7 @@ using FlashCards.Cactus.Helper;
 using Spectre.Console;
 
 namespace FlashCards.Cactus.Service;
+
 public class StackService
 {
     public StackService(StackDao stackDao)
@@ -66,7 +67,7 @@ public class StackService
         }
         Stack deletedStack = Stacks.Where(s => s.Name.Equals(name)).ToList()[0];
 
-        // FlashCards belong to this stack should be delete first.
+        // !!!FlashCards belong to this stack should be delete first.
         List<int> fids = flashCardDao
                         .FindAll()
                         .Where(card => card.SId == deletedStack.Id).ToList()

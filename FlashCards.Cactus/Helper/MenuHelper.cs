@@ -1,23 +1,23 @@
 ﻿using ConsoleTableExt;
 
-namespace FlashCards.Cactus.Helper
+namespace FlashCards.Cactus.Helper;
+
+public class MenuHelper
 {
-    public class MenuHelper
+    public static void PrintMenu(string name, List<string> menu)
     {
-        public static void PrintMenu(string name, List<string> menu)
-        {
-            Console.Clear();
+        Console.Clear();
 
-            ConsoleTableBuilder
-            .From(menu)
-            .WithTitle(name, ConsoleColor.Yellow, ConsoleColor.DarkGray)
-            .WithFormat(ConsoleTableBuilderFormat.Alternative)
-            .ExportAndWriteLine(TableAligntment.Center);
-        }
+        ConsoleTableBuilder
+        .From(menu)
+        .WithTitle(name, ConsoleColor.Yellow, ConsoleColor.DarkGray)
+        .WithFormat(ConsoleTableBuilderFormat.Alternative)
+        .ExportAndWriteLine(TableAligntment.Center);
+    }
 
-        public static void PrintFlashCardsManagementMenu()
-        {
-            List<string> flashcardMenu = new List<string>
+    public static void PrintFlashCardsManagementMenu()
+    {
+        List<string> flashcardMenu = new List<string>
                 {
                     "<0> Back to Main menu.",
                     "<1> Show all flashcards.",
@@ -26,12 +26,12 @@ namespace FlashCards.Cactus.Helper
                     "<4> Modify a flashcard.",
                 };
 
-            PrintMenu("FlashCard Menu", flashcardMenu);
-        }
+        PrintMenu("FlashCard Menu", flashcardMenu);
+    }
 
-        public static void PrintMainMenu()
-        {
-            List<string> menuData = new List<string>
+    public static void PrintMainMenu()
+    {
+        List<string> menuData = new List<string>
             {
                 "<0> Exit app.",
                 "<1> Manage Stacks.",
@@ -39,12 +39,12 @@ namespace FlashCards.Cactus.Helper
                 "<3> Study.",
                 "<4> Study report."
             };
-            PrintMenu("Main Menu", menuData);
-        }
+        PrintMenu("Main Menu", menuData);
+    }
 
-        public static void PrintStackManagementMenu()
-        {
-            List<string> stackMenu = new List<string>
+    public static void PrintStackManagementMenu()
+    {
+        List<string> stackMenu = new List<string>
                 {
                     "<0> Back to Main menu.",
                     "<1> Show Stacks.",
@@ -52,12 +52,12 @@ namespace FlashCards.Cactus.Helper
                     "<3> Delete a Stack.",
                 };
 
-            PrintMenu("Stack Menu", stackMenu);
-        }
+        PrintMenu("Stack Menu", stackMenu);
+    }
 
-        public static void PrintStudyManagementMenu()
-        {
-            List<string> studyMenu = new List<string>
+    public static void PrintStudyManagementMenu()
+    {
+        List<string> studyMenu = new List<string>
                 {
                     "<0> Back to Main menu.",
                     "<1> Show all study sessions.",
@@ -65,18 +65,18 @@ namespace FlashCards.Cactus.Helper
                     "<3> Delete a study session.",
                 };
 
-            PrintMenu("Study Menu", studyMenu);
-        }
+        PrintMenu("Study Menu", studyMenu);
+    }
 
-        public static void PrintStudyReportManagementMenu()
-        {
-            List<string> studyReportMenu = new List<string>
+    public static void PrintStudyReportManagementMenu()
+    {
+        List<string> studyReportMenu = new List<string>
                 {
                     "<0> Back to Main menu.",
-                    "<1> Show  the study report from a specific year.",
+                    "<1> Show the study report of the average score per month in a specific year.",
                 };
 
-            PrintMenu("StudyReport Menu", studyReportMenu);
-        }
+        PrintMenu("StudyReport Menu", studyReportMenu);
     }
 }
+
