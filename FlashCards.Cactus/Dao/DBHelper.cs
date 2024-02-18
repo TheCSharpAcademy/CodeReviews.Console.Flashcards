@@ -44,8 +44,8 @@ public class DBHelper
                 );
                 CREATE TABLE flashcardsdb.dbo.StudySession
                 (
-                    ssid INT NOT NULL PRIMARY KEY IDENTITY(1, 1) ,
-                    sid INT FOREIGN KEY REFERENCES Stack(sid),
+                    ssid INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+                    stackName VARCHAR(50),
                     date DATETIME,
                     timeSpan FLOAT,
                     score Int,
@@ -67,7 +67,7 @@ public class DBHelper
         cardDao.Insert(new FlashCard(3, 2, "1+2=", "3"));
 
         StudySessionDao sessionDao = new StudySessionDao(DBConnectionStr);
-        sessionDao.Insert(new StudySession(1, 1, "Words", DateTime.Now, 10.01, 20));
+        sessionDao.Insert(new StudySession(1, "Words", DateTime.Now, 10.01, 20));
     }
 }
 

@@ -49,7 +49,7 @@ public class StackService
         }
     }
 
-    public void DeleteStack()
+    public void DeleteStack(FlashCardDao flashCardDao)
     {
         ShowStacks();
 
@@ -64,17 +64,36 @@ public class StackService
             name = AnsiConsole.Ask<string>($"[red]{name} dose not exist[/]. Please input a valid name. Type 'q' to quit.");
             if (name.Equals(Constants.QUIT)) return;
         }
+        Stack deletedStack = Stacks.Where(s => s.Name.Equals(name)).ToList()[0];
 
-        int res = StackDao.DeleteByName(name);
-        if (res == -1)
+        // FlashCards belong to this stack should be delete first.
+        List<int> fids = flashCardDao
+                        .FindAll()
+                        .Where(card => card.SId == deletedStack.Id).ToList()
+                        .Select(card => card.Id).ToList();
+        int delCardsRes = flashCardDao.DeleteByIds(fids);
+        if (delCardsRes == -1)
         {
-            AnsiConsole.MarkupLine($"[red]Failed to delete {name} Stack.[/]");
+            AnsiConsole.MarkupLine($"[red]Failed to delete the flashCards belong to {name} Stack.[/]");
         }
         else
         {
-            Stacks = Stacks.Where(s => !s.Name.Equals(name)).ToList();
-            AnsiConsole.MarkupLine($"Successfully deleted [green]{name}[/] Stack.");
+            int res = StackDao.Delete(deletedStack);
+            if (res == -1)
+            {
+                AnsiConsole.MarkupLine($"[red]Failed to delete {name} Stack.[/]");
+            }
+            else
+            {
+                Stacks = Stacks.Where(s => !s.Name.Equals(name)).ToList();
+                AnsiConsole.MarkupLine($"Successfully deleted [green]{name}[/] Stack.");
+            }
         }
+    }
+
+    public void UpdateCache()
+    {
+        Stacks = StackDao.FindAll();
     }
 }
 

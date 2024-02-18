@@ -18,8 +18,8 @@ public class StudySessionDao
         {
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = $@"INSERT INTO StudySession(sid, date, timeSpan, score) 
-                                    VALUES('{study.SId}', '{study.Date}', 
+            command.CommandText = $@"INSERT INTO StudySession(stackName, date, timeSpan, score) 
+                                    VALUES('{study.StackName}', '{study.Date}', 
                                            '{study.Time}', '{study.Score}');";
             rowsAffected = command.ExecuteNonQuery();
         }
@@ -33,19 +33,19 @@ public class StudySessionDao
         {
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = @"SELECT ss.ssid, ss.sid, ss.date, ss.timeSpan, ss.score, s.name  
-                                    FROM StudySession ss, Stack s WHERE ss.sid = s.sid";
+            command.CommandText = @"SELECT ss.ssid, ss.stackName, ss.date, ss.timeSpan, ss.score 
+                                    FROM StudySession ss";
             using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
                     int id = reader.GetInt32(0);
-                    int sid = reader.GetInt32(1);
+                    string stackName = reader.GetString(1);
                     DateTime date = reader.GetDateTime(2);
                     double time = reader.GetDouble(3);
                     int score = reader.GetInt32(4);
-                    string stackName = reader.GetString(5);
-                    StudySession study = new StudySession(id, sid, stackName, date, time, score);
+
+                    StudySession study = new StudySession(id, stackName, date, time, score);
                     studySessions.Add(study);
                 }
             }

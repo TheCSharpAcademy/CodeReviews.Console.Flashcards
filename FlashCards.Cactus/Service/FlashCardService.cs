@@ -25,21 +25,8 @@ public class FlashCardService
 
     public void AddFlashCard(List<Stack> stacks)
     {
-        // Show available stack names.
-        List<string> stackNames = stacks.Select(s => s.Name).ToList();
-        List<List<string>> rows = new List<List<string>>();
-        stackNames.ForEach(name => rows.Add(new List<string>() { name }));
-        ServiceHelper.ShowDataRecords(Constants.STACK, Constants.STACKS, rows);
-
-        // Get the stack where the new card belongs.
-        string stackName = AnsiConsole.Ask<string>("Please input the [green]name[/] of the Stack where the new FlashCard belongs. Type 'q' to quit.");
-        if (stackName.Equals(Constants.QUIT)) return;
-        while (!stackNames.Contains(stackName))
-        {
-            stackName = AnsiConsole.Ask<string>($"[red]{stackName}[/] Stack dose not exist. Please input a valid Stack name. Type 'q' to quit.");
-            if (stackName.Equals(Constants.QUIT)) return;
-        }
-        int sid = stacks.Where(s => s.Name.Equals(stackName)).ToArray()[0].Id;
+        Tuple<int, string> stackIdName = ServiceHelper.AskUserToTypeAStackName(stacks);
+        if (stackIdName.Item1 == -1) return;
 
         string front = AnsiConsole.Ask<string>("Please input the [green]front[/] of a new FlashCard. Type 'q' to quit.");
         if (front.Equals(Constants.QUIT)) return;
@@ -47,7 +34,7 @@ public class FlashCardService
         string back = AnsiConsole.Ask<string>("Please input the [green]back[/] of a new FlashCard. Type 'q' to quit.");
         if (back.Equals(Constants.QUIT)) return;
 
-        FlashCard flashCard = new FlashCard(sid, front, back);
+        FlashCard flashCard = new FlashCard(stackIdName.Item1, front, back);
 
         int res = FlashCardDao.Insert(flashCard);
         if (res == -1)
@@ -136,6 +123,11 @@ public class FlashCardService
         {
             AnsiConsole.MarkupLine($"Successfully update [green]No.{id} \"{updatedFC.Front}, {updatedFC.Back}\"[/] FlashCard.");
         }
+    }
+
+    public void UpdateCache()
+    {
+        FlashCards = FlashCardDao.FindAll();
     }
 }
 
