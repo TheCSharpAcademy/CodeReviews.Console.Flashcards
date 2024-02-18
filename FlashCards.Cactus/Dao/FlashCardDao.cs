@@ -64,6 +64,22 @@ public class FlashCardDao
         return rowsAffected;
     }
 
+    public int DeleteByIds(List<int> ids)
+    {
+        int rowsAffected = -1;
+        using (var connection = new SqlConnection(DBConnectionStr))
+        {
+            connection.Open();
+            string deleteSql = "DELETE FROM FlashCard WHERE fid in ("
+               + string.Join(",", ids)
+               + ")";
+            SqlCommand deleteCommand = new SqlCommand(deleteSql, connection);
+            rowsAffected = deleteCommand.ExecuteNonQuery();
+        }
+        return rowsAffected;
+    }
+
+
     public int Update(FlashCard card)
     {
         int rowsAffected = -1;

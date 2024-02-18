@@ -86,6 +86,17 @@ namespace FlashCards.Cactus
 
         #endregion Properties
 
+        #region Methods
+
+        public void UpdateCache()
+        {
+            StackService.UpdateCache();
+            FlashCardService.UpdateCache();
+            StudySessionService.UpdateCache();
+        }
+
+        #endregion Methods
+
         #region Menu
         public void run()
         {
@@ -133,9 +144,11 @@ namespace FlashCards.Cactus
                         break;
                     case ADD_STACK:
                         StackService.AddStack();
+                        UpdateCache();
                         break;
                     case DELETE_STACK:
-                        StackService.DeleteStack();
+                        StackService.DeleteStack(FlashCardDao);
+                        UpdateCache();
                         break;
                     default:
                         break;
@@ -163,12 +176,15 @@ namespace FlashCards.Cactus
                         break;
                     case ADD_FLASHCARD:
                         FlashCardService.AddFlashCard(StackDao.FindAll());
+                        UpdateCache();
                         break;
                     case DELETE_FLASHCARD:
                         FlashCardService.DeleteFlashCard();
+                        UpdateCache();
                         break;
                     case MODIFY_FLASHCARD:
                         FlashCardService.UpdateFlashCard();
+                        UpdateCache();
                         break;
                     default:
                         break;
@@ -196,9 +212,11 @@ namespace FlashCards.Cactus
                         break;
                     case START_NEW_STUDY:
                         StudySessionService.StartNewStudySession(StackDao.FindAll(), FlashCardDao.FindAll());
+                        UpdateCache();
                         break;
                     case DELETE_STUDY:
                         StudySessionService.DeleteStudySession();
+                        UpdateCache();
                         break;
                     default:
                         break;

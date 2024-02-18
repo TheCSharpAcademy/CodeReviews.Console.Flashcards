@@ -45,15 +45,15 @@ public class StackDao
         return stacks;
     }
 
-    public int DeleteByName(string name)
+    public int Delete(Stack stack)
     {
         int rowsAffected = -1;
         using (var connection = new SqlConnection(DBConnectionStr))
         {
             connection.Open();
-            string deleteSql = "DELETE FROM Stack WHERE name = @name";
+            string deleteSql = @"DELETE FROM Stack WHERE name = @name";
             SqlCommand deleteCommand = new SqlCommand(deleteSql, connection);
-            deleteCommand.Parameters.AddWithValue("@name", name);
+            deleteCommand.Parameters.AddWithValue("@name", stack.Name);
             rowsAffected = deleteCommand.ExecuteNonQuery();
         }
         return rowsAffected;

@@ -31,7 +31,7 @@ public class StudySessionService
     {
         Console.WriteLine("Start a new study session.");
 
-        Tuple<int, string> stackIdName = AskUserToTypeAStackName(stacks);
+        Tuple<int, string> stackIdName = ServiceHelper.AskUserToTypeAStackName(stacks);
         if (stackIdName.Item1 == -1) return;
 
         var learnFlashCards = flashcards.Where(card => card.SId == stackIdName.Item1).ToList();
@@ -55,27 +55,6 @@ public class StudySessionService
             StudySessions.Add(newStudySession);
             AnsiConsole.MarkupLine($"Study Finished. You taken [green]{timeScore.Item1.ToString("F")}[/] minutes to learn, and got [green]{timeScore.Item2}[/] score.");
         }
-    }
-
-    public Tuple<int, string> AskUserToTypeAStackName(List<Stack> stacks)
-    {
-        // Show available stack names.
-        List<string> stackNames = stacks.Select(s => s.Name).ToList();
-        List<List<string>> rows = new List<List<string>>();
-        stackNames.ForEach(name => rows.Add(new List<string>() { name }));
-        ServiceHelper.ShowDataRecords(Constants.STACK, Constants.STACKS, rows);
-
-
-        string stackName = AnsiConsole.Ask<string>("Please input the [green]name[/] of the Stack where you want to start. Type 'q' to quit.");
-        if (stackName.Equals(Constants.QUIT)) return new Tuple<int, string>(-1, "");
-        while (!stackNames.Contains(stackName))
-        {
-            stackName = AnsiConsole.Ask<string>($"[red]{stackName}[/] Stack dose not exist. Please input a valid Stack name. Type 'q' to quit.");
-            if (stackName.Equals(Constants.QUIT)) return new Tuple<int, string>(-1, "");
-        }
-        int sid = stacks.Where(s => s.Name.Equals(stackName)).ToArray()[0].Id;
-
-        return new Tuple<int, string>(sid, stackName);
     }
 
     public Tuple<double, int> LearnFlashCards(string stackName, List<FlashCard> flashcards)
@@ -145,6 +124,11 @@ public class StudySessionService
             StudySessions = StudySessions.Where(ss => ss.Id != deletedSS.Id).ToList();
             AnsiConsole.MarkupLine($"Successfully deleted [green]No.{inputId}[/] StudySession.");
         }
+    }
+
+    public void UpdateCache()
+    {
+        StudySessions = StudySessionDao.FindAll();
     }
 }
 
