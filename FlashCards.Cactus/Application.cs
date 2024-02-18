@@ -63,7 +63,7 @@ namespace FlashCards.Cactus
             StackService = new StackService(StackDao);
             FlashCardService = new FlashCardService(FlashCardDao);
             StudySessionService = new StudySessionService(StudySessionDao);
-            StudyReportService = new StudyReportService();
+            StudyReportService = new StudyReportService(StudySessionDao);
         }
 
         #endregion Constructor

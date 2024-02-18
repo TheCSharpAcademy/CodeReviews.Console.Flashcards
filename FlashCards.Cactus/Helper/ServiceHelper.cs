@@ -20,6 +20,7 @@ public class ServiceHelper
         }
         return inputId;
     }
+
     public static void ShowDataRecords(string name, string title, List<List<string>> rows)
     {
         if (rows.Count == 0)
