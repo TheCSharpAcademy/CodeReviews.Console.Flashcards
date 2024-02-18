@@ -121,6 +121,8 @@ public class StudySessionService
         if (idStr.Equals(Constants.QUIT)) return;
 
         int inputId = ServiceHelper.GetUserInputId(idStr, StudySessions.Count);
+        if (inputId == -1) return;
+
         StudySession deletedSS = StudySessions[inputId - 1];
         StudySessions = StudySessions.Where(ss => ss.Id != deletedSS.Id).ToList();
 

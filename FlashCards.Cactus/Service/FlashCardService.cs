@@ -1,14 +1,18 @@
-﻿using FlashCards.Cactus.DataModel;
+﻿using FlashCards.Cactus.Dao;
+using FlashCards.Cactus.DataModel;
 using FlashCards.Cactus.Helper;
 using Spectre.Console;
 
 namespace FlashCards.Cactus.Service;
 public class FlashCardService
 {
-    public FlashCardService()
+    public FlashCardService(FlashCardDao flashCardDao)
     {
-        FlashCards = new List<FlashCard>() { new FlashCard(1, 1, "Freedom", "ziyou"), new FlashCard(2, 2, "1+1=", "2") };
+        FlashCardDao = flashCardDao;
+        FlashCards = FlashCardDao.FindAll();
     }
+
+    public FlashCardDao FlashCardDao { get; set; }
 
     public List<FlashCard> FlashCards { get; set; }
 
@@ -19,12 +23,16 @@ public class FlashCardService
         ServiceHelper.ShowDataRecords(Constants.FLASHCARD, Constants.FLASHCARDS, rows);
     }
 
-    public void AddFlashCard()
+    public void AddFlashCard(List<Stack> stacks)
     {
-        List<Stack> stacks = new List<Stack> { new Stack(1, "Word"), new Stack(2, "Algorithm") };
-        List<string> stackNames = new List<string>() { "Word", "Algorithm" };
+        // Show available stack names.
+        List<string> stackNames = stacks.Select(s => s.Name).ToList();
+        List<List<string>> rows = new List<List<string>>();
+        stackNames.ForEach(name => rows.Add(new List<string>() { name }));
+        ServiceHelper.ShowDataRecords(Constants.STACK, Constants.STACKS, rows);
 
-        string stackName = AnsiConsole.Ask<string>("Please input the [green]name[/] of the Stack where the new FlashCard will be stored. Type 'q' to quit.");
+        // Get the stack where the new card belongs.
+        string stackName = AnsiConsole.Ask<string>("Please input the [green]name[/] of the Stack where the new FlashCard belongs. Type 'q' to quit.");
         if (stackName.Equals(Constants.QUIT)) return;
         while (!stackNames.Contains(stackName))
         {
@@ -39,11 +47,18 @@ public class FlashCardService
         string back = AnsiConsole.Ask<string>("Please input the [green]back[/] of a new FlashCard. Type 'q' to quit.");
         if (back.Equals(Constants.QUIT)) return;
 
-        int id = FlashCards[FlashCards.Count - 1].Id + 1;
-        FlashCard flashCard = new FlashCard(id, sid, front, back);
-        FlashCards.Add(flashCard);
+        FlashCard flashCard = new FlashCard(sid, front, back);
 
-        AnsiConsole.MarkupLine($"Successfully added [green]\"{front}, {back}\"[/] FlashCard.");
+        int res = FlashCardDao.Insert(flashCard);
+        if (res == -1)
+        {
+            AnsiConsole.MarkupLine($"[red]Failed to add \"{front}, {back}\" FlashCard.[/]");
+        }
+        else
+        {
+            FlashCards.Add(flashCard);
+            AnsiConsole.MarkupLine($"Successfully added [green]\"{front}, {back}\"[/] FlashCard.");
+        }
     }
 
     public void DeleteFlashCard()
@@ -56,13 +71,23 @@ public class FlashCardService
         if (idStr.Equals(Constants.QUIT)) return;
 
         int inputId = ServiceHelper.GetUserInputId(idStr, FlashCards.Count);
-        FlashCard deletedFlashCard = FlashCards[inputId - 1];
-        FlashCards = FlashCards.Where(f => f.Id != deletedFlashCard.Id).ToList();
+        if (inputId == -1) return;
 
-        AnsiConsole.MarkupLine($"Successfully deleted [green]No.{inputId}[/] FlashCard.");
+        FlashCard deletedFlashCard = FlashCards[inputId - 1];
+
+        int res = FlashCardDao.DeleteById(deletedFlashCard.Id);
+        if (res == -1)
+        {
+            AnsiConsole.MarkupLine($"[red]Failed to delete No.{inputId} FlashCard.[/]");
+        }
+        else
+        {
+            FlashCards = FlashCards.Where(f => f.Id != deletedFlashCard.Id).ToList();
+            AnsiConsole.MarkupLine($"Successfully deleted [green]No.{inputId}[/] FlashCard.");
+        }
     }
 
-    public void ModifyFlashCard()
+    public void UpdateFlashCard()
     {
         ShowAllFlashCards();
 
@@ -71,35 +96,46 @@ public class FlashCardService
         string idStr = AnsiConsole.Ask<string>("Please input the [green]id[/] of the FlashCard will be modified. Type 'q' to quit.");
         if (idStr.Equals(Constants.QUIT)) return;
 
-        int id;
-        while (!int.TryParse(idStr, out id) || !ids.Contains(id))
-        {
-            idStr = AnsiConsole.Ask<string>("Please input a valid id.");
-        }
-        FlashCard modifiedFC = FlashCards.Where(f => f.Id == id).ToList()[0];
+        int id = ServiceHelper.GetUserInputId(idStr, FlashCards.Count);
+        if (id == -1) return;
+
+        FlashCard updatedFC = FlashCards[id - 1];
 
         var field = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-                .Title("What's [green]field[/] you want to modify?")
+                .Title("What's [green]field[/] you want to update?")
                 .PageSize(10)
                 .AddChoices(new[] {
                     "Front", "Back"
                 }));
 
+        string frontBak = updatedFC.Front;
+        string backBak = updatedFC.Back;
+
         if (field.Equals("Front"))
         {
-            string front = AnsiConsole.Ask<string>("Please input the new content of Front. Type 'q' to quit.");
+            string front = AnsiConsole.Ask<string>("Please input the new content of FRONT. Type 'q' to quit.");
             if (front.Equals(Constants.QUIT)) return;
-            modifiedFC.Front = front;
+            updatedFC.Front = front;
         }
         else
         {
-            string back = AnsiConsole.Ask<string>("Please input the new content of Back. Type 'q' to quit.");
+            string back = AnsiConsole.Ask<string>("Please input the new content of BACK. Type 'q' to quit.");
             if (back.Equals(Constants.QUIT)) return;
-            modifiedFC.Back = back;
+            updatedFC.Back = back;
         }
 
-        AnsiConsole.MarkupLine($"Successfully modify [green]\"{modifiedFC.Front}, {modifiedFC.Back}\"[/] FlashCard.");
+        int res = FlashCardDao.Update(updatedFC);
+        if (res == -1)
+        {
+            updatedFC.Front = frontBak;
+            updatedFC.Back = backBak;
+            AnsiConsole.MarkupLine($"[red]Failed to update No.{id} FlashCard.[/]");
+        }
+        else
+        {
+            AnsiConsole.MarkupLine($"Successfully update [green]No.{id} \"{updatedFC.Front}, {updatedFC.Back}\"[/] FlashCard.");
+        }
     }
 }
 
