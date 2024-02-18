@@ -1,4 +1,4 @@
-﻿namespace FlashCards.Cactus;
+﻿namespace FlashCards.Cactus.Helper;
 public static class Constants
 {
     public const string QUIT = "q";
