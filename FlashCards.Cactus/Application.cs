@@ -58,11 +58,11 @@ namespace FlashCards.Cactus
             string connStr = DBHelper.DBConnectionStr;
             StackDao = new StackDao(connStr);
             FlashCardDao = new FlashCardDao(connStr);
+            StudySessionDao = new StudySessionDao(connStr);
 
             StackService = new StackService(StackDao);
             FlashCardService = new FlashCardService(FlashCardDao);
-
-            StudySessionService = new StudySessionService();
+            StudySessionService = new StudySessionService(StudySessionDao);
             StudyReportService = new StudyReportService();
         }
 
@@ -73,6 +73,8 @@ namespace FlashCards.Cactus
         public StackDao StackDao { get; set; }
 
         public FlashCardDao FlashCardDao { get; set; }
+
+        public StudySessionDao StudySessionDao { get; set; }
 
         public StackService StackService { get; set; }
 
@@ -160,7 +162,7 @@ namespace FlashCards.Cactus
                         FlashCardService.ShowAllFlashCards();
                         break;
                     case ADD_FLASHCARD:
-                        FlashCardService.AddFlashCard(StackDao.FindAllStacks());
+                        FlashCardService.AddFlashCard(StackDao.FindAll());
                         break;
                     case DELETE_FLASHCARD:
                         FlashCardService.DeleteFlashCard();
@@ -193,7 +195,7 @@ namespace FlashCards.Cactus
                         StudySessionService.ShowAllStudySessions();
                         break;
                     case START_NEW_STUDY:
-                        StudySessionService.StartNewStudySession();
+                        StudySessionService.StartNewStudySession(StackDao.FindAll(), FlashCardDao.FindAll());
                         break;
                     case DELETE_STUDY:
                         StudySessionService.DeleteStudySession();

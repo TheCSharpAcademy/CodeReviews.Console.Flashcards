@@ -51,9 +51,10 @@ public class ServiceHelper
             int id = 0;
             table.AddColumn(nameof(StudySession.Id));
             table.AddColumn(new TableColumn(nameof(StudySession.StackName)).Centered());
+            table.AddColumn(new TableColumn(nameof(StudySession.Date)).Centered());
             table.AddColumn(new TableColumn(nameof(StudySession.Time)).Centered());
             table.AddColumn(new TableColumn(nameof(StudySession.Score)).Centered());
-            rows.ForEach(row => { table.AddRow((++id).ToString(), row[0], row[1], row[2]); });
+            rows.ForEach(row => { table.AddRow((++id).ToString(), row[0], row[1], row[2], row[3]); });
         }
         AnsiConsole.Write(table);
     }

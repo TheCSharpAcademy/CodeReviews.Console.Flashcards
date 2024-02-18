@@ -1,4 +1,5 @@
-﻿using FlashCards.Cactus.DataModel;
+﻿using FlashCards.Cactus.Dao;
+using FlashCards.Cactus.DataModel;
 using FlashCards.Cactus.Helper;
 using Spectre.Console;
 using System.Diagnostics;
@@ -7,54 +8,63 @@ namespace FlashCards.Cactus.Service;
 
 public class StudySessionService
 {
-    public StudySessionService()
+    public StudySessionService(StudySessionDao studySessionDao)
     {
-        StudySessions = new List<StudySession>() {
-            new StudySession(1, "English", new TimeSpan(1,10,0), 10),
-            new StudySession(2, "Algorithm", new TimeSpan(2,0,0), 40)
-        };
+        StudySessionDao = studySessionDao;
+        StudySessions = StudySessionDao.FindAll();
     }
+
+    public StudySessionDao StudySessionDao { get; set; }
 
     public List<StudySession> StudySessions { get; set; }
 
     public void ShowAllStudySessions()
     {
         List<List<string>> rows = new List<List<string>>();
-        StudySessions.ForEach(ss => rows.Add(new List<string>() { ss.StackName, ss.Time.TotalMinutes.ToString("F"), ss.Score.ToString() }));
+        StudySessions.ForEach(ss => rows.Add(new List<string>() {
+            ss.StackName, ss.Date.ToShortDateString(), ss.Time.ToString("F"), ss.Score.ToString()
+        }));
         ServiceHelper.ShowDataRecords(Constants.STUDYSESSION, Constants.STUDYSESSIONS, rows);
     }
 
-    public void StartNewStudySession()
+    public void StartNewStudySession(List<Stack> stacks, List<FlashCard> flashcards)
     {
         Console.WriteLine("Start a new study session.");
 
-        Tuple<int, string> stackIdName = AskUserToTypeAStackName();
+        Tuple<int, string> stackIdName = AskUserToTypeAStackName(stacks);
         if (stackIdName.Item1 == -1) return;
 
-        // start to learn flashcards
-        List<FlashCard> flashcards = new List<FlashCard>() {
-            new FlashCard(1, 1, "Freedom", "ziyou"),
-            new FlashCard(2, 2, "1+1=", "2"),
-            new FlashCard(3, 2, "1*1=", "1"),
-        };
         var learnFlashCards = flashcards.Where(card => card.SId == stackIdName.Item1).ToList();
         var shuffleCards = learnFlashCards.OrderBy(_ => Guid.NewGuid()).ToList();
 
-        Console.WriteLine("Type any key to start learning, or 'q' to quit.");
+        Console.WriteLine("Press any key to start learning, or 'q' to quit.");
         string? key = Console.ReadLine();
         if (Constants.QUIT.Equals(key)) return;
 
-        Tuple<TimeSpan, int> timeScore = LearnFlashCards(stackIdName.Item2, shuffleCards);
+        Tuple<double, int> timeScore = LearnFlashCards(stackIdName.Item2, shuffleCards);
 
-        StudySessions.Add(new StudySession(StudySessions.Count, stackIdName.Item2, timeScore.Item1, timeScore.Item2));
+        StudySession newStudySession = new StudySession(stackIdName.Item1, stackIdName.Item2, DateTime.Now, timeScore.Item1, timeScore.Item2);
 
-        AnsiConsole.MarkupLine($"Study Finished. You taken [green]{timeScore.Item1.TotalMinutes.ToString("F")}[/] minutes to learn, and got [green]{timeScore.Item2}[/] score.");
+        int res = StudySessionDao.Insert(newStudySession);
+        if (res == -1)
+        {
+            AnsiConsole.MarkupLine($"[red]Failed to add this study session.[/]");
+        }
+        else
+        {
+            StudySessions.Add(newStudySession);
+            AnsiConsole.MarkupLine($"Study Finished. You taken [green]{timeScore.Item1.ToString("F")}[/] minutes to learn, and got [green]{timeScore.Item2}[/] score.");
+        }
     }
 
-    public Tuple<int, string> AskUserToTypeAStackName()
+    public Tuple<int, string> AskUserToTypeAStackName(List<Stack> stacks)
     {
-        List<Stack> stacks = new List<Stack> { new Stack(1, "Word"), new Stack(2, "Algorithm") };
-        List<string> stackNames = new List<string>() { "Word", "Algorithm" };
+        // Show available stack names.
+        List<string> stackNames = stacks.Select(s => s.Name).ToList();
+        List<List<string>> rows = new List<List<string>>();
+        stackNames.ForEach(name => rows.Add(new List<string>() { name }));
+        ServiceHelper.ShowDataRecords(Constants.STACK, Constants.STACKS, rows);
+
 
         string stackName = AnsiConsole.Ask<string>("Please input the [green]name[/] of the Stack where you want to start. Type 'q' to quit.");
         if (stackName.Equals(Constants.QUIT)) return new Tuple<int, string>(-1, "");
@@ -68,7 +78,7 @@ public class StudySessionService
         return new Tuple<int, string>(sid, stackName);
     }
 
-    public Tuple<TimeSpan, int> LearnFlashCards(string stackName, List<FlashCard> flashcards)
+    public Tuple<double, int> LearnFlashCards(string stackName, List<FlashCard> flashcards)
     {
         int score = 0;
         var timer = new Stopwatch();
@@ -103,9 +113,9 @@ public class StudySessionService
             Console.ReadLine();
         }
         timer.Stop();
-        TimeSpan timeTaken = timer.Elapsed;
+        double timeTaken = timer.Elapsed.TotalMinutes;
 
-        return new Tuple<TimeSpan, int>(timeTaken, score);
+        return new Tuple<double, int>(timeTaken, score);
     }
 
     public void DeleteStudySession()
@@ -124,9 +134,17 @@ public class StudySessionService
         if (inputId == -1) return;
 
         StudySession deletedSS = StudySessions[inputId - 1];
-        StudySessions = StudySessions.Where(ss => ss.Id != deletedSS.Id).ToList();
 
-        AnsiConsole.MarkupLine($"Successfully deleted [green]No.{inputId}[/] StudySession.");
+        int res = StudySessionDao.DeleteById(deletedSS.Id);
+        if (res == -1)
+        {
+            AnsiConsole.MarkupLine($"[red]Failed to delete No.{inputId} StudySession.[/]");
+        }
+        else
+        {
+            StudySessions = StudySessions.Where(ss => ss.Id != deletedSS.Id).ToList();
+            AnsiConsole.MarkupLine($"Successfully deleted [green]No.{inputId}[/] StudySession.");
+        }
     }
 }
 

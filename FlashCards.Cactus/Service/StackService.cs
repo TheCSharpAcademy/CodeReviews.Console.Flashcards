@@ -9,7 +9,7 @@ public class StackService
     public StackService(StackDao stackDao)
     {
         StackDao = stackDao;
-        Stacks = StackDao.FindAllStacks();
+        Stacks = StackDao.FindAll();
     }
 
     public StackDao StackDao { get; set; }
@@ -65,7 +65,7 @@ public class StackService
             if (name.Equals(Constants.QUIT)) return;
         }
 
-        int res = StackDao.DeleteStackByName(name);
+        int res = StackDao.DeleteByName(name);
         if (res == -1)
         {
             AnsiConsole.MarkupLine($"[red]Failed to delete {name} Stack.[/]");

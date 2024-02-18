@@ -14,6 +14,8 @@ public class DBHelper
             var command = connection.CreateCommand();
             command.CommandText = @"IF OBJECT_ID('FlashCard') IS NOT NULL 
                                     DROP TABLE FlashCard;
+                                    IF OBJECT_ID('StudySession') IS NOT NULL 
+                                    DROP TABLE StudySession;
                                     IF OBJECT_ID('Stack') IS NOT NULL 
                                     DROP TABLE Stack;
                                     ";
@@ -36,9 +38,17 @@ public class DBHelper
                 CREATE TABLE FlashCard
                 (
                     fid INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+                    sid INT FOREIGN KEY REFERENCES Stack(sid),
                     front VARCHAR(200),
-                    back VARCHAR(200),
-                    sid INT FOREIGN KEY REFERENCES Stack(sid)
+                    back VARCHAR(200)
+                );
+                CREATE TABLE flashcardsdb.dbo.StudySession
+                (
+                    ssid INT NOT NULL PRIMARY KEY IDENTITY(1, 1) ,
+                    sid INT FOREIGN KEY REFERENCES Stack(sid),
+                    date DATETIME,
+                    timeSpan FLOAT,
+                    score Int,
                 );
             ";
             command.ExecuteNonQuery();
@@ -53,7 +63,11 @@ public class DBHelper
 
         FlashCardDao cardDao = new FlashCardDao(DBConnectionStr);
         cardDao.Insert(new FlashCard(1, 1, "Freedom", "ziyou"));
-        cardDao.Insert(new FlashCard(2, 2, "1*2=", "3"));
+        cardDao.Insert(new FlashCard(2, 2, "1*2=", "2"));
+        cardDao.Insert(new FlashCard(3, 2, "1+2=", "3"));
+
+        StudySessionDao sessionDao = new StudySessionDao(DBConnectionStr);
+        sessionDao.Insert(new StudySession(1, 1, "Words", DateTime.Now, 10.01, 20));
     }
 }
 
