@@ -108,9 +108,9 @@ Show all study session after deleting a record.
 
 ![StudyReport1998](screenshots/StudyReport1998.png)
 
-## Refernce
+## References
 * https://spectreconsole.net/quick-start
 * https://www.c-sharpcorner.com/UploadFile/8911c4/pivot-examples-in-sql-server/
 * https://www.sqliz.com/posts/c-sharp-crud-sqlserver/
-* Many posts of StackOverflow
+* Of course. And many posts of StackOverflow
 
