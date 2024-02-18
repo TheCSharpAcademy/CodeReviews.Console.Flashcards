@@ -79,8 +79,6 @@ public class FlashCardService
     {
         ShowAllFlashCards();
 
-        int[] ids = FlashCards.Select(f => f.Id).ToArray();
-
         string idStr = AnsiConsole.Ask<string>("Please input the [green]id[/] of the FlashCard will be modified. Type 'q' to quit.");
         if (idStr.Equals(Constants.QUIT)) return;
 

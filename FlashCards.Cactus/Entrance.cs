@@ -7,6 +7,6 @@ public class Entrance
     {
         Console.WriteLine("Initialize FlashCard application, please wait for a while...");
         Application app = new Application();
-        app.run();
+        app.Run();
     }
 }

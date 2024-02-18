@@ -1,15 +1,17 @@
 # FlashCards Console Application
 
-This is console application allows users to create new stacks and add flashcards, and allows users to study the flashcards they created. It also provides a study report for user to recap their study session history.
+This is console application allows users to create new stacks and add flashcards. It allows users to study the flashcards they created. It also provides a study report for user to recap their study session history.
 
 This application was developed by c#/.Net and MSSQL.
 
 ## Features
 
 ### Main Menu
+
 ![MainMenu](screenshots/MainMenu.png)
 
 ### Stacks
+
 ![StackMenu](screenshots/StackMenu.png)
 
 Show the initial stacks.
@@ -24,16 +26,13 @@ Show all stacks after add `Test` stack.
 
 ![ShowStacksAfterAdding](screenshots/ShowStacksAfterAdding.png)
 
-
-
-Delete `Words` stack. <b>Note that the flashcards belong to this stack will be delete.</b>
+Delete `Words` stack. **Note that the flashcards belong to this stack will be delete.**
 
 ![DeleteStack](screenshots/DeleteStack.png)
 
 Show all stacks after deleting `Words` stack.
 
 ![ShowStacksAfterDeleting](screenshots/ShowStacksAfterDeleting.png)
-
 
 ### FlashCards
 
@@ -51,16 +50,13 @@ Show all flashcards after adding the new flashcard.
 
 ![ShowFlashCardsAfterAdding](screenshots/ShowFlashCardsAfterAdding.png)
 
-
 Delete a flashcard.
 
 ![DeleteFlashCard](screenshots/DeleteFlashCard.png)
 
-
 Show all flashcards after deleting a flashcard.
 
 ![ShowFlashCardsAfterDeleting](screenshots/ShowFlashCardsAfterDeleting.png)
-
 
 Modify a flashcard.
 
@@ -71,9 +67,9 @@ Show all flashcards after modifing a flashcard.
 
 ![ShowFlashCardAfterModifing](screenshots/ShowFlashCardAfterModifing.png)
 
-
 ### StudySession
-The unit of study time is <b>minute</b>.
+
+The unit of study time is **minute**.
 
 ![StudyMenu](screenshots/StudyMenu.png)
 
@@ -90,7 +86,6 @@ Show study sessions after finishing a new study.
 
 ![ShowStudiesAfterStudying](screenshots/ShowStudiesAfterStudying.png)
 
-
 Delete a study session.
 
 ![DeleteStudy](screenshots/DeleteStudy.png)
@@ -98,7 +93,6 @@ Delete a study session.
 Show all study session after deleting a record.
 
 ![ShowStudiesAfterDeleting](screenshots/ShowStudiesAfterDeleting.png)
-
 
 ### StudyReport
 
@@ -109,8 +103,9 @@ Show all study session after deleting a record.
 ![StudyReport1998](screenshots/StudyReport1998.png)
 
 ## References
-* https://spectreconsole.net/quick-start
-* https://www.c-sharpcorner.com/UploadFile/8911c4/pivot-examples-in-sql-server/
-* https://www.sqliz.com/posts/c-sharp-crud-sqlserver/
-* Of course. And many posts of StackOverflow
 
+* <https://spectreconsole.net/quick-start>
+* <https://www.c-sharpcorner.com/UploadFile/8911c4/pivot-examples-in-sql-server/>
+* <https://www.sqliz.com/posts/c-sharp-crud-sqlserver/>
+* Of course. And many posts of StackOverflow.
+* [markdownlint](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint)

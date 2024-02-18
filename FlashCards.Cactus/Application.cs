@@ -10,7 +10,7 @@ public class Application
 
     public Application()
     {
-        init();
+        Init();
     }
 
     #endregion Constructor
@@ -35,7 +35,7 @@ public class Application
 
     #region Methods
 
-    public void init()
+    public void Init()
     {
         DBHelper.DropTables();
         DBHelper.CreateTables();
@@ -62,7 +62,7 @@ public class Application
     #endregion Methods
 
     #region Menu
-    public void run()
+    public void Run()
     {
         while (true)
         {
