@@ -25,7 +25,7 @@ public class StackDao
         return rowsAffected;
     }
 
-    public List<Stack> FindAllStacks()
+    public List<Stack> FindAll()
     {
         List<Stack> stacks = new List<Stack>();
         using (var connection = new SqlConnection(DBConnectionStr))
@@ -45,7 +45,7 @@ public class StackDao
         return stacks;
     }
 
-    public int DeleteStackByName(string name)
+    public int DeleteByName(string name)
     {
         int rowsAffected = -1;
         using (var connection = new SqlConnection(DBConnectionStr))

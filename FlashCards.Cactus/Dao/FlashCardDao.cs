@@ -39,9 +39,9 @@ public class FlashCardDao
                 while (reader.Read())
                 {
                     int id = reader.GetInt32(0);
-                    string front = reader.GetString(1);
-                    string back = reader.GetString(2);
-                    int sid = reader.GetInt32(3);
+                    int sid = reader.GetInt32(1);
+                    string front = reader.GetString(2);
+                    string back = reader.GetString(3);
                     FlashCard card = new FlashCard(id, sid, front, back);
                     cards.Add(card);
                 }
