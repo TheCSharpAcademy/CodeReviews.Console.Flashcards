@@ -27,7 +27,6 @@ public class StudyReportService
         } while (true);
 
         int year = parseTmp.Year;
-
         var reports = StudySessionDao.GetAverageScorePerMontInSpecYear(year);
 
         var table = new Table();

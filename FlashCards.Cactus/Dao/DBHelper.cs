@@ -59,7 +59,7 @@ public class DBHelper
     {
         StackDao stackDao = new StackDao(DBConnectionStr);
         stackDao.Insert(new Stack("Words"));
-        stackDao.Insert(new Stack("Algorithm"));
+        stackDao.Insert(new Stack("Math"));
 
         FlashCardDao cardDao = new FlashCardDao(DBConnectionStr);
         cardDao.Insert(new FlashCard(1, 1, "Freedom", "ziyou"));

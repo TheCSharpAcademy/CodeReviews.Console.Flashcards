@@ -1,5 +1,4 @@
 ﻿using FlashCards.Cactus.DataModel;
-using FlashCards.Cactus.Service;
 using Spectre.Console;
 
 namespace FlashCards.Cactus.Helper;
@@ -66,7 +65,6 @@ public class ServiceHelper
         List<List<string>> rows = new List<List<string>>();
         stackNames.ForEach(name => rows.Add(new List<string>() { name }));
         ShowDataRecords(Constants.STACK, Constants.STACKS, rows);
-
 
         string stackName = AnsiConsole.Ask<string>("Please input the [green]name[/] of the Stack where you want to start. Type 'q' to quit.");
         if (stackName.Equals(Constants.QUIT)) return new Tuple<int, string>(-1, "");
