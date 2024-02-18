@@ -1,4 +1,5 @@
-﻿using FlashCards.Cactus.Helper;
+﻿using FlashCards.Cactus.Dao;
+using FlashCards.Cactus.Helper;
 using FlashCards.Cactus.Service;
 
 namespace FlashCards.Cactus
@@ -50,6 +51,10 @@ namespace FlashCards.Cactus
 
         public Application()
         {
+            DBHelper.DropStackTable();
+            DBHelper.CreateStackTable();
+            DBHelper.InsertSomeData();
+
             StackMangement = new StackService();
             FlashCardManagement = new FlashCardService();
             StudySessionManagement = new StudySessionService();

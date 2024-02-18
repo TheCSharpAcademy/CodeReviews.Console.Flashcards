@@ -1,4 +1,5 @@
-﻿using FlashCards.Cactus.DataModel;
+﻿using FlashCards.Cactus.Dao;
+using FlashCards.Cactus.DataModel;
 using FlashCards.Cactus.Helper;
 using Spectre.Console;
 
@@ -7,8 +8,11 @@ public class StackService
 {
     public StackService()
     {
-        Stacks = new List<Stack> { new Stack(1, "Word"), new Stack(2, "Algorithm") };
+        stackDao = new StackDao(DBHelper.DBConnectionStr);
+        Stacks = stackDao.FindAllStacks();
     }
+
+    public StackDao stackDao { get; set; }
 
     public List<Stack> Stacks { get; set; }
 
@@ -32,9 +36,17 @@ public class StackService
 
         int id = Stacks[Stacks.Count - 1].Id + 1;
         Stack stack = new Stack(id++, name);
-        Stacks.Add(stack);
 
-        AnsiConsole.MarkupLine($"Successfully added [green]{name}[/] Stack.");
+        int res = stackDao.Insert(stack);
+        if (res == -1)
+        {
+            AnsiConsole.MarkupLine($"[red]Failed to add {name} Stack.[/]");
+        }
+        else
+        {
+            Stacks.Add(stack);
+            AnsiConsole.MarkupLine($"Successfully added [green]{name}[/] Stack.");
+        }
     }
 
     public void DeleteStack()
@@ -52,9 +64,17 @@ public class StackService
             name = AnsiConsole.Ask<string>($"[red]{name} dose not exist[/]. Please input a valid name. Type 'q' to quit.");
             if (name.Equals(Constants.QUIT)) return;
         }
-        Stacks = Stacks.Where(s => !s.Name.Equals(name)).ToList();
 
-        AnsiConsole.MarkupLine($"Successfully deleted [green]{name}[/] Stack.");
+        int res = stackDao.DeleteStackByName(name);
+        if (res == -1)
+        {
+            AnsiConsole.MarkupLine($"[red]Failed to delete {name} Stack.[/]");
+        }
+        else
+        {
+            Stacks = Stacks.Where(s => !s.Name.Equals(name)).ToList();
+            AnsiConsole.MarkupLine($"Successfully deleted [green]{name}[/] Stack.");
+        }
     }
 }
 
