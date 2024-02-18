@@ -63,10 +63,12 @@ Show all flashcards after deleting a flashcard.
 
 
 Modify a flashcard.
+
 ![ModifyFlashCard1](screenshots/ModifyFlashCard1.png)
 ![ModifyFlashCard2](screenshots/ModifyFlashCard2.png)
 
 Show all flashcards after modifing a flashcard.
+
 ![ShowFlashCardAfterModifing](screenshots/ShowFlashCardAfterModifing.png)
 
 
@@ -90,9 +92,11 @@ Show study sessions after finishing a new study.
 
 
 Delete a study session.
+
 ![DeleteStudy](screenshots/DeleteStudy.png)
 
 Show all study session after deleting a record.
+
 ![ShowStudiesAfterDeleting](screenshots/ShowStudiesAfterDeleting.png)
 
 
