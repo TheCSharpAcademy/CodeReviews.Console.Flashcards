@@ -51,27 +51,36 @@ namespace FlashCards.Cactus
 
         public Application()
         {
-            DBHelper.DropStackTable();
-            DBHelper.CreateStackTable();
+            DBHelper.DropTables();
+            DBHelper.CreateTables();
             DBHelper.InsertSomeData();
 
-            StackMangement = new StackService();
-            FlashCardManagement = new FlashCardService();
-            StudySessionManagement = new StudySessionService();
-            StudyReportManagement = new StudyReportService();
+            string connStr = DBHelper.DBConnectionStr;
+            StackDao = new StackDao(connStr);
+            FlashCardDao = new FlashCardDao(connStr);
+
+            StackService = new StackService(StackDao);
+            FlashCardService = new FlashCardService(FlashCardDao);
+
+            StudySessionService = new StudySessionService();
+            StudyReportService = new StudyReportService();
         }
 
         #endregion Constructor
 
         #region Properties
 
-        public StackService StackMangement { get; set; }
+        public StackDao StackDao { get; set; }
 
-        public FlashCardService FlashCardManagement { get; set; }
+        public FlashCardDao FlashCardDao { get; set; }
 
-        public StudySessionService StudySessionManagement { get; set; }
+        public StackService StackService { get; set; }
 
-        public StudyReportService StudyReportManagement { get; set; }
+        public FlashCardService FlashCardService { get; set; }
+
+        public StudySessionService StudySessionService { get; set; }
+
+        public StudyReportService StudyReportService { get; set; }
 
         #endregion Properties
 
@@ -118,13 +127,13 @@ namespace FlashCards.Cactus
                     case BACK_TO_MAIN:
                         return;
                     case SHOW_STACKS:
-                        StackMangement.ShowStacks();
+                        StackService.ShowStacks();
                         break;
                     case ADD_STACK:
-                        StackMangement.AddStack();
+                        StackService.AddStack();
                         break;
                     case DELETE_STACK:
-                        StackMangement.DeleteStack();
+                        StackService.DeleteStack();
                         break;
                     default:
                         break;
@@ -148,16 +157,16 @@ namespace FlashCards.Cactus
                     case BACK_TO_MAIN:
                         return;
                     case SHOW_FLASHCARDS:
-                        FlashCardManagement.ShowAllFlashCards();
+                        FlashCardService.ShowAllFlashCards();
                         break;
                     case ADD_FLASHCARD:
-                        FlashCardManagement.AddFlashCard();
+                        FlashCardService.AddFlashCard(StackDao.FindAllStacks());
                         break;
                     case DELETE_FLASHCARD:
-                        FlashCardManagement.DeleteFlashCard();
+                        FlashCardService.DeleteFlashCard();
                         break;
                     case MODIFY_FLASHCARD:
-                        FlashCardManagement.ModifyFlashCard();
+                        FlashCardService.UpdateFlashCard();
                         break;
                     default:
                         break;
@@ -181,13 +190,13 @@ namespace FlashCards.Cactus
                     case BACK_TO_MAIN:
                         return;
                     case SHOW_STUDYS:
-                        StudySessionManagement.ShowAllStudySessions();
+                        StudySessionService.ShowAllStudySessions();
                         break;
                     case START_NEW_STUDY:
-                        StudySessionManagement.StartNewStudySession();
+                        StudySessionService.StartNewStudySession();
                         break;
                     case DELETE_STUDY:
-                        StudySessionManagement.DeleteStudySession();
+                        StudySessionService.DeleteStudySession();
                         break;
                     default:
                         break;
@@ -211,7 +220,7 @@ namespace FlashCards.Cactus
                     case BACK_TO_MAIN:
                         return;
                     case SHOW_STUDY_REPORT:
-                        StudyReportManagement.ShowStudyReportInSpecificYear();
+                        StudyReportService.ShowStudyReportInSpecificYear();
                         break;
                     default:
                         break;

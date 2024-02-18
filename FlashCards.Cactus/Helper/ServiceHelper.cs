@@ -12,7 +12,12 @@ public class ServiceHelper
         int inputId;
         while (!int.TryParse(idStr, out inputId) || inputId < 1 || inputId > count)
         {
-            idStr = AnsiConsole.Ask<string>($"Please input a valid id.");
+            idStr = AnsiConsole.Ask<string>($"Please input a valid id. Type 'q' to quit.");
+            if (idStr == "q")
+            {
+                inputId = -1;
+                break;
+            }
         }
         return inputId;
     }
@@ -38,10 +43,8 @@ public class ServiceHelper
         }
         else if (name.Equals(Constants.STACK))
         {
-            int id = 0;
-            table.AddColumn(nameof(Stack.Id));
             table.AddColumn(new TableColumn(nameof(Stack.Name)).Centered());
-            rows.ForEach(row => { table.AddRow((++id).ToString(), row[0]); });
+            rows.ForEach(row => { table.AddRow(row[0]); });
         }
         else if (name.Equals(Constants.STUDYSESSION))
         {

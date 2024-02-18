@@ -6,13 +6,13 @@ using Spectre.Console;
 namespace FlashCards.Cactus.Service;
 public class StackService
 {
-    public StackService()
+    public StackService(StackDao stackDao)
     {
-        stackDao = new StackDao(DBHelper.DBConnectionStr);
-        Stacks = stackDao.FindAllStacks();
+        StackDao = stackDao;
+        Stacks = StackDao.FindAllStacks();
     }
 
-    public StackDao stackDao { get; set; }
+    public StackDao StackDao { get; set; }
 
     public List<Stack> Stacks { get; set; }
 
@@ -37,7 +37,7 @@ public class StackService
         int id = Stacks[Stacks.Count - 1].Id + 1;
         Stack stack = new Stack(id++, name);
 
-        int res = stackDao.Insert(stack);
+        int res = StackDao.Insert(stack);
         if (res == -1)
         {
             AnsiConsole.MarkupLine($"[red]Failed to add {name} Stack.[/]");
@@ -65,7 +65,7 @@ public class StackService
             if (name.Equals(Constants.QUIT)) return;
         }
 
-        int res = stackDao.DeleteStackByName(name);
+        int res = StackDao.DeleteStackByName(name);
         if (res == -1)
         {
             AnsiConsole.MarkupLine($"[red]Failed to delete {name} Stack.[/]");

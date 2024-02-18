@@ -14,6 +14,13 @@
             Back = back;
         }
 
+        public FlashCard(int sId, string front, string back)
+        {
+            SId = sId;
+            Front = front;
+            Back = back;
+        }
+
         #endregion Constructors
 
         #region Properties
