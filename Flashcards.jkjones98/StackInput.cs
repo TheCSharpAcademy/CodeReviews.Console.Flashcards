@@ -55,7 +55,6 @@ internal class StackInput
 
     internal void DeleteStacks()
     {
-        //TEST THIS
         controller.ViewStackDb();
         Console.WriteLine("\nWhich stack would you like to delete?");
         string deleteStack = Console.ReadLine();

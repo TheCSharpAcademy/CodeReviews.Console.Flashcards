@@ -42,8 +42,6 @@ internal class FlashcardController
             Console.WriteLine("\nNo rows found");
 
         ShowTable.CreateFlashcardTable(flashcardTable);
-
-        // When showing flashcard - need to make Ids sequential
     }
 
     internal void ViewFlashcardDb(int stackId, string prmryKey)

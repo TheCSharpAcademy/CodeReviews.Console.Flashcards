@@ -38,12 +38,10 @@ internal class MainMenu
                     flashcardMenu.DisplayFlashcardMenu();
                     break;
                 case "3":
-                // Start study sessions menu
                     studyMenu.DisplayStudyMenu();
                     break;
                 case "4":
                     viewSessions.ViewSessionMenu();
-                // View study sessions
                     break;
                 case "0":
                 closeApp = true;
