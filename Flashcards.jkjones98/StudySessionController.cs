@@ -1,4 +1,5 @@
 using System.Configuration;
+using System.Data;
 using System.Data.Common;
 using Microsoft.Data.SqlClient;
 
@@ -80,7 +81,7 @@ internal class StudySessionController
                 studySessions.Add(new StudySession
                     {
                         StudyId = reader.GetInt32(0), 
-                        Date = reader.GetString(1),
+                        Date = reader.GetDateTime(1).ToString("yyyy-MM-dd"),
                         Score = reader.GetInt32(2),
                         Studied = reader.GetInt32(3),
                         Language = reader.GetString(4),
@@ -131,7 +132,7 @@ internal class StudySessionController
         using var connection = new SqlConnection(connectionString);
         using var tableCmd = connection.CreateCommand();
         connection.Open();
-        tableCmd.CommandText = $"SELECT * FROM StudySessions WHERE MONTH(Date) = {month} AND YEAR(Date) = {year} AND StackID = {stackId}";
+        tableCmd.CommandText = $"SELECT * FROM StudySessions WHERE MONTH(Date) = {month} AND YEAR(Date) = {year} AND StackId = {stackId}";
         using var reader = tableCmd.ExecuteReader();
         if(reader.HasRows)
         {
@@ -236,7 +237,7 @@ internal class StudySessionController
             ISNULL([12],0)AS December
             FROM 
             (SELECT CAST(Language AS varchar(MAX)) AS Language, Score, MONTH(Date) AS TMonth
-                FROM StudySessions WHERE YEAR(Date) = 2024 AND StackId = StackId) AS SourceTable
+                FROM StudySessions WHERE YEAR(Date) = {year} AND StackId = {stackId} AS SourceTable
             PIVOT 
             (
                 AVG(Score)

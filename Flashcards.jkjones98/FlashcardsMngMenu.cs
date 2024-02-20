@@ -1,3 +1,5 @@
+using Flashcards.Functions;
+
 namespace Flashcards.jkjones98;
 
 internal class FlashcardsMngMenu
@@ -6,7 +8,8 @@ internal class FlashcardsMngMenu
     {
         bool rtnMainMenu = false;
         FlashcardInput input = new();
-        int stackId = input.ChooseStack();
+        CheckUserInput checkUserInput = new();
+        int stackId = checkUserInput.ChooseStack();
         while(!rtnMainMenu)
         {
             Console.WriteLine("\n\nFLASHCARD MENU");
@@ -40,7 +43,7 @@ internal class FlashcardsMngMenu
                     input.DeleteFlashcard(stackId);
                     break;
                 case "5":
-                    stackId = input.ChangeStack();
+                    stackId = checkUserInput.ChooseStack();
                     break;
                 case "0":
                     Console.Clear();
