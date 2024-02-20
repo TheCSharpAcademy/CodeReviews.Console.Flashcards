@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace Flashcards.jkjones98;
 
 internal class MainMenu

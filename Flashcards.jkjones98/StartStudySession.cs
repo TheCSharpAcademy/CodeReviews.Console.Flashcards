@@ -34,7 +34,7 @@ internal class StartStudySession
         string studyLang = controller.GetLanguageName(stackId);
         DateTime dateToParse = DateTime.Now;
         string date = dateToParse.Date.ToString("yyyy-MM-dd");
-        StudySession studySession = new StudySession{Date = date.ToString(), Score = sessionScore, Studied = sessionLength, Language = studyLang, StackId = stackId};
+        StudySession studySession = new StudySession{Date = date, Score = sessionScore, Studied = sessionLength, Language = studyLang, StackId = stackId};
 
         controller.InsertStudyDb(studySession);
     }

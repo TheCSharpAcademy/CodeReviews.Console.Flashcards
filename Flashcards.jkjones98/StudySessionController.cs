@@ -8,10 +8,6 @@ namespace Flashcards.jkjones98;
 internal class StudySessionController
 {
     static string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
-    internal void StartStudySession()
-    {
-        
-    }
 
     internal List<FlashcardDto> GetFlashcards(int stackId)
     {
