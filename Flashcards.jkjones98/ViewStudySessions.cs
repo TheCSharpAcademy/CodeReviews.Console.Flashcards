@@ -95,7 +95,5 @@ internal class ViewStudySessions
         }
 
         return month;
-        //If has digit check if between 0 and 12
-        //If has char check if full name or short name
     }
 }

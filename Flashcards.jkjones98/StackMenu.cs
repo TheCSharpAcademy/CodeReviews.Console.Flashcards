@@ -32,11 +32,9 @@ internal class StackMenu
                     getInputs.AddNewStack();
                     break;
                 case "2":
-                    // NEED TO TEST
                     getInputs.ChangeStackName();
                     break;
                 case "3": 
-                    // NEED TO TEST
                     getInputs.DeleteStacks();
                     break;
                 case "0": 

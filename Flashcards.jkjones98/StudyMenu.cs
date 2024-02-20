@@ -28,7 +28,6 @@ internal class StudyMenu
         switch(sessionNum)
         {
             case 1:
-                // Pass stackId to the controller if necessary
                 startStudySession.StartSession(stackId, 5);
                 break;
             case 2:

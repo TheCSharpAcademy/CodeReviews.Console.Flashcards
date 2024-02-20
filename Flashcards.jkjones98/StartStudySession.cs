@@ -37,7 +37,5 @@ internal class StartStudySession
         StudySession studySession = new StudySession{Date = date.ToString(), Score = sessionScore, Studied = sessionLength, Language = studyLang, StackId = stackId};
 
         controller.InsertStudyDb(studySession);
-        // Pass score and how many were answered to database - need input method to db in controller
-        // Then display how many were correct out of x amount
     }
 }
