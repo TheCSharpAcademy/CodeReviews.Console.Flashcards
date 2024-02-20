@@ -12,7 +12,7 @@ internal class CheckUserInput
         stackController.ViewStackDb();
         Console.WriteLine("\nEnter the Id of the stack you would like to enter?");
         string stackChoice = Console.ReadLine();
-        int stackId = CheckForChar(stackChoice,"Stacks","StackId");;
+        int stackId = CheckForChar(stackChoice,"Stacks","StackId");
 
         Console.WriteLine("\n\nStack found!");
         return stackId;
