@@ -72,7 +72,7 @@ internal class FlashcardController
         ShowTable.CreateFlashcardTable(flashcardTable);
     }
 
-    internal void ChangeFlashcardDb(int cardId, string col, string val)
+    internal void ChangeFlashcardDb(int cardId, string col, string val, int stackId)
     {   
         using var connection = new SqlConnection(connectionString);
         using var tableCmd = connection.CreateCommand();
@@ -80,11 +80,12 @@ internal class FlashcardController
         tableCmd.CommandText = 
             $@"UPDATE Flashcards
                 SET {col} = '{val}'
-                WHERE FlashId={cardId}";
+                WHERE FlashId={cardId}
+                AND StackId={stackId}";
         tableCmd.ExecuteNonQuery();
     }
 
-    internal void ChangeFlashcardDb(int cardId, string col, int val)
+    internal void ChangeFlashcardDb(int cardId, string col, int val, int stackId)
     {
         using var connection = new SqlConnection(connectionString);
         using var tableCmd = connection.CreateCommand();
@@ -92,7 +93,8 @@ internal class FlashcardController
         tableCmd.CommandText = 
             $@"UPDATE Flashcards
                 SET {col} = {val}
-                WHERE FlashId={cardId}";
+                WHERE FlashId={cardId}
+                AND StackId={stackId}";
         tableCmd.ExecuteNonQuery();
     }
 
@@ -105,7 +107,7 @@ internal class FlashcardController
         tableCmd.ExecuteNonQuery();
     }
 
-    internal bool CheckIdExists(int checkId, string table, string tablePk)
+    internal bool CheckIdExists(int checkId, string table, string tablePk, int stackId)
     {
         bool checkedId = false;
 
@@ -114,7 +116,7 @@ internal class FlashcardController
         connection.Open();
         tableCmd.CommandText = 
             $@"USE FlashcardsDb
-            SELECT * FROM {table} WHERE {tablePk}='{checkId}'";
+            SELECT * FROM {table} WHERE {tablePk}='{checkId}' AND StackId={stackId}";
         using var reader = tableCmd.ExecuteReader();
         
 
@@ -149,9 +151,53 @@ internal class FlashcardController
                 Console.WriteLine("\nNo rows found");
             }
         }
-        
-            
         return checkedId;
     }
 
+    internal bool CheckIdExists(int checkId, string table, string tablePk)
+        {
+            bool checkedId = false;
+
+            using var connection = new SqlConnection(connectionString);
+            using var tableCmd = connection.CreateCommand();
+            connection.Open();
+            tableCmd.CommandText = 
+                $@"USE FlashcardsDb
+                SELECT * FROM {table} WHERE {tablePk}='{checkId}'";
+            using var reader = tableCmd.ExecuteReader();
+            
+
+            if(table == "Stacks")
+            {
+                Stack stackCheck = new();
+                if(reader.HasRows)
+                {
+                    reader.Read();
+                    stackCheck.StackId = reader.GetInt32(0);
+                    stackCheck.StackName = reader.GetString(1);
+                    checkedId = true;
+                }
+                else
+                {
+                    Console.WriteLine("\nNo rows found");
+                }
+            }
+            else if(table == "Flashcards")
+            {
+                FlashcardDto cardCheck = new();
+                if(reader.HasRows)
+                {
+                    reader.Read();
+                    cardCheck.FlashcardId = reader.GetInt32(0);
+                    cardCheck.Front = reader.GetString(1);
+                    cardCheck.Back = reader.GetString(2);
+                    checkedId = true;
+                }
+                else
+                {
+                    Console.WriteLine("\nNo rows found");
+                }
+            }   
+            return checkedId;
+        }
 }

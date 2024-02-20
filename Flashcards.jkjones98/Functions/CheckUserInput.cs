@@ -6,18 +6,6 @@ internal class CheckUserInput
 {
     FlashcardController controller = new();
     StackController stackController = new();
-    internal int ChangeStack()
-    {
-        Console.Clear();
-        stackController.ViewStackDb();
-        Console.WriteLine("\nEnter the Id of the stack you would like to enter?");
-        string stackChoice = Console.ReadLine();
-        int changedId = CheckForChar(stackChoice,"Stacks","StackId");
-
-        Console.WriteLine("\n\nStack found!");
-        return changedId;
-    }
-
     internal int ChooseStack()
     {
         Console.Clear();
@@ -45,6 +33,17 @@ internal class CheckUserInput
     {
         int parsedInput;
         while(string.IsNullOrEmpty(userInput) || userInput.Any(char.IsLetter) || !Int32.TryParse(userInput, out parsedInput) || !controller.CheckIdExists(parsedInput,tblName,prmryKey))
+        {
+
+            Console.WriteLine("Invalid input. Please enter a valid Id.");
+            userInput = Console.ReadLine();
+        }
+        return parsedInput;
+    }
+    internal int CheckForChar(string userInput, string tblName, string prmryKey, int stackId)
+    {
+        int parsedInput;
+        while(string.IsNullOrEmpty(userInput) || userInput.Any(char.IsLetter) || !Int32.TryParse(userInput, out parsedInput) || !controller.CheckIdExists(parsedInput,tblName,prmryKey, stackId))
         {
 
             Console.WriteLine("Invalid input. Please enter a valid Id.");

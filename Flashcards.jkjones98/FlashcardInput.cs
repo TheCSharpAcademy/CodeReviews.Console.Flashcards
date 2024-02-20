@@ -38,7 +38,7 @@ internal class FlashcardInput
         controller.ViewFlashcardDb(stackId, "StackId");
         Console.WriteLine("Which Flashcard would you like to change?");
         string cardId = Console.ReadLine();
-        flashId = checkUserInput.CheckForChar(cardId,"Flashcards","FlashId");
+        flashId = checkUserInput.CheckForChar(cardId,"Flashcards","FlashId", stackId);
 
         Console.WriteLine("\n\nWould you like to change the Front of the card, the Back of the card or the Stack this belongs to?");
         Console.WriteLine("Enter F for Front");
@@ -55,14 +55,14 @@ internal class FlashcardInput
                 columnName = "Front";
                 Console.WriteLine("\nEnter what you would like this to change the Front to");
                 string front = checkUserInput.CheckForDigit();
-                controller.ChangeFlashcardDb(flashId, columnName, front);
+                controller.ChangeFlashcardDb(flashId, columnName, front, stackId);
                 break;
             case "B":
                 controller.ViewFlashcardDb(flashId, "FlashId");
                 columnName = "Back";
                 Console.WriteLine("\nEnter what you would like this to change the Back to");
                 string back = checkUserInput.CheckForDigit();
-                controller.ChangeFlashcardDb(flashId, columnName, back);
+                controller.ChangeFlashcardDb(flashId, columnName, back, stackId);
                 break;
             case "S":
                 Console.Clear();
@@ -73,7 +73,7 @@ internal class FlashcardInput
                 string stack = Console.ReadLine();
                 int parseStack = checkUserInput.CheckForChar(stack,"Stacks","StackId");
  
-                controller.ChangeFlashcardDb(flashId, columnName, parseStack);
+                controller.ChangeFlashcardDb(flashId, columnName, parseStack, stackId);
                 break;
             default:
                 Console.WriteLine("Invalid option selected please try again");
@@ -89,22 +89,10 @@ internal class FlashcardInput
         controller.ViewFlashcardDb(stackId, "StackId");
         Console.WriteLine("\n\nPlease enter the Id of the flashcard you would like to delete");
         string cardId = Console.ReadLine();
-        int deleteId = checkUserInput.CheckForChar(cardId,"Flashcards","FlashId");
+        int deleteId = checkUserInput.CheckForChar(cardId,"Flashcards","FlashId", stackId);
 
         Console.WriteLine("Flashcard removed!");
 
         controller.DeleteFlashcardDb(deleteId);
-    }
-
-    internal int ChangeStack()
-    {
-        int changedId = checkUserInput.ChangeStack();
-        return changedId;
-    }
-
-    internal int ChooseStack()
-    {
-        int stackId = checkUserInput.ChangeStack();
-        return stackId;
     }
 }

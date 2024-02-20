@@ -73,7 +73,7 @@ internal class StackController
         using var tableCmd = connection.CreateCommand();
         connection.Open();
         tableCmd.CommandText = $@"UPDATE Stacks
-                SET StackName = {newStackName}
+                SET StackName = '{newStackName}'
                 WHERE StackId={stackId}";
         tableCmd.ExecuteNonQuery();
     }

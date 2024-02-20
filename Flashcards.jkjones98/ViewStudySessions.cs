@@ -16,11 +16,10 @@ internal class ViewStudySessions
         Console.WriteLine("\nWhat data would you like to view?");
         Console.WriteLine("\nEnter 1 - View study sessions by year");
         Console.WriteLine("Enter 2 - View study sessions by month + year");
-        Console.WriteLine("Enter 3 - View study sessions by stack");
-        Console.WriteLine("Enter 4 - View all study sessions for selected stack");
-        Console.WriteLine("Enter 5 - Change the stack of session data being reviewed");
-        Console.WriteLine("Enter 6 - View sessions per month per stack");
-        Console.WriteLine("Enter 7 - View average score per month per stack ");
+        Console.WriteLine("Enter 3 - View all study sessions for selected stack");
+        Console.WriteLine("Enter 4 - Change the stack of session data being reviewed");
+        Console.WriteLine("Enter 5 - View sessions per month per stack");
+        Console.WriteLine("Enter 6 - View average score per month per stack ");
         Console.WriteLine("Enter 0 - Return to main menu");
         string viewInput = Console.ReadLine();
 
@@ -44,23 +43,20 @@ internal class ViewStudySessions
                 Console.WriteLine("\nEnter the numerical representation of the month you would you like to filter by");
                 Console.WriteLine("E.g. January would be 01");
                 int userMonth = CheckMonthFormat();
-                controller.StudySessionsMonth(stackId, userYear, userMonth);
+                controller.StudySessionsMonth(stackId, userMonth, userYear);
                 break;
             case "3": 
-                Console.WriteLine("\nWhich stack would you like to view data for?");
-                break;
-            case "4": 
                 controller.ViewStudySessions(stackId);
                 break;
-            case "5": 
+            case "4": 
                 ViewSessionMenu();
                 break;
-            case "6": 
+            case "5": 
                 Console.WriteLine("\nPlease enter the year to view number of sessions per month");
                 int yearCount = CheckYearFormat();
                 controller.PivotMonthlySessions(stackId, yearCount);
                 break;
-            case "7": 
+            case "6": 
                 Console.WriteLine("\nPlease enter the year to view average score per month");
                 int yearAverage = CheckYearFormat();
                 controller.PivotMonthlyAverages(stackId, yearAverage);
@@ -78,7 +74,7 @@ internal class ViewStudySessions
     internal int CheckYearFormat()
     {
         int year = checkUserInput.CheckForChar();
-        var pattern = @"(?<Year>\d{4})";
+        var pattern = "^(?=.{4}$)[0-9]{4}$";
         var regexp = new System.Text.RegularExpressions.Regex(pattern);
         while(!regexp.IsMatch(Convert.ToString(year)))
         {

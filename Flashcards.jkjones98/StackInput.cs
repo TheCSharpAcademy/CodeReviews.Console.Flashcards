@@ -14,12 +14,12 @@ internal class StackInput
         Console.WriteLine("Alternatively, enter 0 to return to the main menu");
         string stackName = Console.ReadLine();
 
-        if(stackName == "0") mainMenu.DisplayMenu();
-
-        while(string.IsNullOrEmpty(stackName) || stackName.Any(char.IsDigit) || controller.CheckNameExists(stackName))
+        while(string.IsNullOrEmpty(stackName) || stackName.Any(char.IsDigit) || controller.CheckNameExists(stackName)|| stackName == "0")
         {
+            if(stackName == "0") mainMenu.DisplayMenu();
             Console.WriteLine("Empty answer, duplicate stack name or contains a digit. Please enter again.");
             stackName = Console.ReadLine();
+            
         }
 
         Stack stack = new()
