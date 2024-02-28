@@ -3,10 +3,14 @@ namespace FlashCards;
 public class MenuManager
 {
     private readonly Stack<Menu> _menuStack = new Stack<Menu>();
+    private readonly FlashcardDb _flashcardDb;
+    private readonly StackDb _stackDb;
 
-    public MenuManager()
+    public MenuManager(FlashcardDb flashcardDb, StackDb stackDb)
     {
-        _menuStack.Push(new MainMenu(this));
+        _flashcardDb = flashcardDb;
+        _stackDb = stackDb;
+        _menuStack.Push(new MainMenu(this, _flashcardDb, _stackDb));
     }
 
     public void DisplayCurrentMenu()
@@ -37,7 +41,7 @@ public class MenuManager
             _menuStack.Pop();
         DisplayCurrentMenu();
     }
-    
+
     public void Close()
     {
         Environment.Exit(0);

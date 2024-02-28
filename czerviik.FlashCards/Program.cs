@@ -10,10 +10,11 @@ internal class Program
             string connectionString = configReader.GetConnectionString();
             string fileName = configReader.GetFileNameString();
 
-            //var database = new Database(connectionString, fileName);
+            var flashcardDb = new FlashcardDb(connectionString, fileName);
+            var stackDb = new StackDb(connectionString, fileName);
 
-            //var menuManager = new MenuManager(database);
-            //menuManager.DisplayCurrentMenu();
+            var menuManager = new MenuManager(flashcardDb, stackDb);
+            menuManager.DisplayCurrentMenu();
         }
         catch (InvalidOperationException ex)
         {

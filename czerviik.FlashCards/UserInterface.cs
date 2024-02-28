@@ -30,13 +30,30 @@ public static class UserInterface
         UserInput.DisplayMessage("Under construction.");
     }
 
-    public static void NewFlashCard()
+    public static void NewFlashcard(string[] stacks)
     {
-        Header("new flash card");
+        Header("new flashcard");
 
+        if (stacks.Length != 0)
+        {
+            Console.WriteLine("Select a stack");
+
+            var modifiedStacks = new string[stacks.Length + 2];
+            stacks.CopyTo(modifiedStacks, 0);
+            modifiedStacks[^2] = "Create a new stack";
+            modifiedStacks[^1] = "Go back";
+
+            ChooseOptions(modifiedStacks);
+        }
         UserInput.DisplayMessage("Under construction.");
     }
 
+    public static void NewFlashcardQuestion(string currentStack)
+    {
+        Header($"new {currentStack} flashcard");
+
+        Console.WriteLine("Enter a question:");
+    }
     public static void ShowStacks()
     {
         Header("show stacks");
