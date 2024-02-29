@@ -119,17 +119,28 @@ public class FlashCardMenu : Menu
 
     private void HandleFlashcardCreation(Stack currentStack)
     {
-        UserInterface.NewFlashcardQuestion(currentStack.Name);
-        var userQuestion = UserInput.InputWithSpecialKeys(MenuManager, true, 50);
+        var anotherFlashcard = true;
 
-        UserInterface.NewFlashcardAnswer(currentStack.Name, userQuestion);
-        var userAnswer = UserInput.InputWithSpecialKeys(MenuManager, true, 50);
+        while (anotherFlashcard)
+        {
+            UserInterface.NewFlashcardQuestion(currentStack.Name);
+            var userQuestion = UserInput.InputWithSpecialKeys(MenuManager, true, 50);
 
-        UserInterface.NewFlashcardConfirm(currentStack.Name, userQuestion, userAnswer);
-        if (UserInterface.OptionChoice == "Yes")
-            FlashcardDb.Insert(userQuestion, userAnswer, currentStack.Id);
-        else
-            MenuManager.DisplayCurrentMenu();
+            UserInterface.NewFlashcardAnswer(currentStack.Name, userQuestion);
+            var userAnswer = UserInput.InputWithSpecialKeys(MenuManager, true, 50);
+
+            UserInterface.NewFlashcardConfirm(currentStack.Name, userQuestion, userAnswer);
+            if (UserInterface.OptionChoice == "Confirm")
+            {
+                FlashcardDb.Insert(userQuestion, userAnswer, currentStack.Id);
+                UserInterface.AnotherFlashcard();
+                if (UserInterface.OptionChoice == "Done")
+                {
+                    anotherFlashcard = false;
+                }
+            }
+        }
+        MenuManager.DisplayCurrentMenu();
     }
 
     private static string[] GetStackNamesArray(List<Stack> stacks)

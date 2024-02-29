@@ -51,14 +51,14 @@ public static class UserInterface
     {
         Header($"new {currentStack} flashcard");
 
-        Console.WriteLine("Enter a question:");
+        Console.WriteLine("Enter a question (esc - Go back):");
     }
 
      public static void NewFlashcardAnswer(string currentStack, string question)
     {
         Header($"new {currentStack} flashcard");
         Console.WriteLine($"Question: {question}");
-        Console.WriteLine("Enter an answer:");
+        Console.WriteLine("Enter an answer (esc - Go back):");
     }
 
     public static void NewFlashcardConfirm(string currentStack, string question, string answer)
@@ -67,10 +67,16 @@ public static class UserInterface
         Console.WriteLine($"Stack: {currentStack}");
         Console.WriteLine($"Question: {question}");
         Console.WriteLine($"Answer: {answer}");
-        Console.WriteLine("\nConfirm?");
-        ChooseOptions(["Yes","No"]);
+        Console.WriteLine();
+        ChooseOptions(["Confirm","Enter again"]);
     }
-    
+    public static void AnotherFlashcard()
+    {
+        Console.Clear();
+        Console.WriteLine("Flashcard saved!");
+        Console.WriteLine();
+        ChooseOptions(["Add another flashcard","Done"]);
+    }
     public static void NewStack()
     {
         Header("create new stack");

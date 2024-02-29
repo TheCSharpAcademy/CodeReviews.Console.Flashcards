@@ -18,6 +18,7 @@ public abstract class Database
         _connectionString = connectionString;
         _fileName = fileName;
         InitializeDatabase();
+
     }
     public abstract void InitializeDatabase();
     protected void ExecuteCommand(string sql)
@@ -50,6 +51,7 @@ public class FlashcardDb : Database
 
         ExecuteCommand(sql);
     }
+
 
     private List<Flashcard> ReadRowsCommand(string sql)
     {
