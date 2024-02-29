@@ -45,7 +45,6 @@ public static class UserInterface
 
             ChooseOptions(modifiedStacks);
         }
-        UserInput.DisplayMessage("Under construction.");
     }
 
     public static void NewFlashcardQuestion(string currentStack)
@@ -53,6 +52,29 @@ public static class UserInterface
         Header($"new {currentStack} flashcard");
 
         Console.WriteLine("Enter a question:");
+    }
+
+     public static void NewFlashcardAnswer(string currentStack, string question)
+    {
+        Header($"new {currentStack} flashcard");
+        Console.WriteLine($"Question: {question}");
+        Console.WriteLine("Enter an answer:");
+    }
+
+    public static void NewFlashcardConfirm(string currentStack, string question, string answer)
+    {
+        Header($"new {currentStack} flashcard");
+        Console.WriteLine($"Stack: {currentStack}");
+        Console.WriteLine($"Question: {question}");
+        Console.WriteLine($"Answer: {answer}");
+        Console.WriteLine("\nConfirm?");
+        ChooseOptions(["Yes","No"]);
+    }
+    
+    public static void NewStack()
+    {
+        Header("create new stack");
+        Console.WriteLine("Enter stack's name: ");
     }
     public static void ShowStacks()
     {
@@ -71,7 +93,7 @@ public static class UserInterface
     private static void Header(string headerText)
     {
         Console.Clear();
-        Console.WriteLine($"-----{headerText.ToUpper()}-----");
+        Console.WriteLine($"----- {headerText.ToUpper()} -----");
         Console.WriteLine();
     }
 

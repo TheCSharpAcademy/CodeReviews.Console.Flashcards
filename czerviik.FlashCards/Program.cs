@@ -10,8 +10,8 @@ internal class Program
             string connectionString = configReader.GetConnectionString();
             string fileName = configReader.GetFileNameString();
 
-            var flashcardDb = new FlashcardDb(connectionString, fileName);
             var stackDb = new StackDb(connectionString, fileName);
+            var flashcardDb = new FlashcardDb(connectionString, fileName);
 
             var menuManager = new MenuManager(flashcardDb, stackDb);
             menuManager.DisplayCurrentMenu();

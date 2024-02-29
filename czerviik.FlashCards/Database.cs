@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.SqlClient;
@@ -36,12 +37,16 @@ public class FlashcardDb : Database
     public override void InitializeDatabase()
     {
         var sql = @"
-                CREATE TABLE IF NOT EXISTS flashcards(
-                    Id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                    Question VARCHAR(50), 
-                    Answer VARCHAR(50), 
-                    StackId INT,
-                    FOREIGN KEY(StackId) REFERENCES stacks(StackId))";
+                IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'flashcards' AND type = 'U')
+                BEGIN
+                    CREATE TABLE flashcards(
+                        Id INT PRIMARY KEY IDENTITY(1,1), 
+                        Question VARCHAR(50), 
+                        Answer VARCHAR(50), 
+                        StackId INT,
+                        FOREIGN KEY(StackId) REFERENCES stacks(Id)
+                        );
+                END";
 
         ExecuteCommand(sql);
     }
@@ -65,7 +70,7 @@ public class FlashcardDb : Database
     {
         using (var connection = new SqlConnection(_connectionString))
         {
-            return connection.QuerySingleOrDefault(sql, new { Id = id });
+            return connection.QuerySingleOrDefault<Flashcard>(sql, new { Id = id });
         }
     }
 
@@ -84,7 +89,7 @@ public class FlashcardDb : Database
         return ReadRowsCommand(sql);
     }
 
-    public Flashcard GetFlashcard(int id)
+    public Flashcard GetById(int id)
     {
         var sql = $"SELECT * FROM flashcards WHERE Id = @Id";
         return ReadSingleCommand(sql, id);
@@ -98,9 +103,13 @@ public class StackDb : Database
     public override void InitializeDatabase()
     {
         var sql = @"
-                CREATE TABLE IF NOT EXISTS stacks(
-                    Id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                    Name VARCHAR(50))";
+                IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'stacks' AND type = 'U')
+                BEGIN
+                    CREATE TABLE stacks( 
+                        Id INT PRIMARY KEY IDENTITY(1,1), 
+                        Name VARCHAR(50)
+                    );
+                END";
 
         ExecuteCommand(sql);
     }
@@ -120,18 +129,39 @@ public class StackDb : Database
         }
     }
 
-    public void Insert(string language)
+    private Stack ReadSingleCommand(string sql, string name)
+    {
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            return connection.QuerySingleOrDefault<Stack>(sql, new { Name = name });
+        }
+    }
+
+    public void Insert(string stackName)
     {
         var sql = @$"
-        INSERT INTO stacks (Language)
-        VALUES ('{language}')";
+        INSERT INTO stacks (Name)
+        VALUES ('{stackName}')";
 
         ExecuteCommand(sql);
     }
 
     public List<Stack> GetAll()
     {
-        var sql = "SELECT * FROM flashcards";
+        var sql = "SELECT * FROM stacks";
         return ReadRowsCommand(sql);
     }
+
+    public Stack GetByName(string name)
+    {
+        var sql = $"SELECT * FROM stacks WHERE Name = @Name";
+        return ReadSingleCommand(sql, name);
+    }
+
+    public bool NamePresent(string name)
+    {
+        var sql = $"SELECT * FROM stacks WHERE Name = @Name";
+        return ReadSingleCommand(sql, name) != null;
+    }
+
 }

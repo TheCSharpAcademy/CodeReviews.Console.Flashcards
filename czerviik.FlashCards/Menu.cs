@@ -58,39 +58,113 @@ public class StudySessionMenu : Menu
 
 public class FlashCardMenu : Menu
 {
+    List<Stack> stacksList;
     public FlashCardMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb) : base(menuManager, flashcardDb, stackDb) { }
 
     public override void Display()
     {
-        var currentStack = "";
-        var stacksList = StackDb.GetAll();
+        stacksList = StackDb.GetAll();
+
+        if (stacksList.Count != 0)
+        {
+            DisplayStackOptions();
+
+            try
+            {
+                HandleUserOptions();
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine(ex.Message);
+                UserInput.DisplayMessage();
+                MenuManager.GoBack();
+            }
+        }
+        else
+        {
+            var newStack = CreateStack();
+            HandleFlashcardCreation(newStack);
+        }
+    }
+
+    private void DisplayStackOptions()
+    {
         var stacksArray = GetStackNamesArray(stacksList);
-        
         UserInterface.NewFlashcard(stacksArray);
+    }
+
+    private void HandleUserOptions()
+    {
+        Stack userStack;
 
         switch (UserInterface.OptionChoice)
         {
             case "Create a new stack":
+                userStack = CreateStack();
+                HandleFlashcardCreation(userStack);
                 break;
             case "Go back":
                 MenuManager.GoBack();
                 break;
             default:
-                currentStack = UserInterface.OptionChoice;
+                userStack = stacksList.FirstOrDefault(s => s.Name == UserInterface.OptionChoice);
+                if (userStack == null)
+                {
+                    throw new InvalidOperationException($"A stack with the name {UserInterface.OptionChoice}, does not exist in this context.");
+                }
+                HandleFlashcardCreation(userStack);
                 break;
         }
-
-        UserInterface.NewFlashcardQuestion(currentStack);
-
     }
+
+    private void HandleFlashcardCreation(Stack currentStack)
+    {
+        UserInterface.NewFlashcardQuestion(currentStack.Name);
+        var userQuestion = UserInput.InputWithSpecialKeys(MenuManager, true, 50);
+
+        UserInterface.NewFlashcardAnswer(currentStack.Name, userQuestion);
+        var userAnswer = UserInput.InputWithSpecialKeys(MenuManager, true, 50);
+
+        UserInterface.NewFlashcardConfirm(currentStack.Name, userQuestion, userAnswer);
+        if (UserInterface.OptionChoice == "Yes")
+            FlashcardDb.Insert(userQuestion, userAnswer, currentStack.Id);
+        else
+            MenuManager.DisplayCurrentMenu();
+    }
+
     private static string[] GetStackNamesArray(List<Stack> stacks)
     {
         var stacksArray = new string[stacks.Count];
         for (int i = 0; i < stacks.Count; i++)
         {
-            stacksArray[0] = stacks[0].Name;
+            stacksArray[i] = stacks[i].Name;
         }
         return stacksArray;
+    }
+
+    private Stack CreateStack()
+    {
+        string stackName = HandleStackNameInput();
+
+        StackDb.Insert(stackName.ToLower());
+
+        return StackDb.GetByName(stackName);
+    }
+
+    private string HandleStackNameInput()
+    {
+        string stackName;
+        do
+        {
+            UserInterface.NewStack();
+            stackName = UserInput.InputWithSpecialKeys(MenuManager, true, 50).ToLower();
+            if (StackDb.NamePresent(stackName))
+            {
+                UserInput.DisplayMessage($"Stack {stackName} already exists.", "enter again");
+            }
+        } while (StackDb.NamePresent(stackName));
+
+        return stackName;
     }
 }
 
