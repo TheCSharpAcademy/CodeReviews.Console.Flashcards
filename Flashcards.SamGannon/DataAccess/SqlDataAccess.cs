@@ -142,7 +142,7 @@ public class SqlDataAccess : IDataAccess
                                 {
                                     StackId = reader.GetInt32(0),
                                     StackName = reader.GetString(1)
-                                }); ; ;
+                                })
                         }
                     }
                     else
@@ -225,21 +225,19 @@ public class SqlDataAccess : IDataAccess
         {
             connection.Open();
 
+            using var tableCmd = connection.CreateCommand();
             {
-                using var tableCmd = connection.CreateCommand();
-                {
-                    // delete flashcards associated with stack while the stack still exist
-                    tableCmd.CommandText = "DELETE FROM dbo.FlashCard WHERE StackId IN (SELECT Id FROM dbo.Stack WHERE Name = @stackName)";
-                    tableCmd.Parameters.AddWithValue("@stackName", stackName);
+                // delete flashcards associated with stack while the stack still exist
+                tableCmd.CommandText = "DELETE FROM dbo.FlashCard WHERE StackId IN (SELECT Id FROM dbo.Stack WHERE Name = @stackName)";
+                tableCmd.Parameters.AddWithValue("@stackName", stackName);
 
-                    tableCmd.ExecuteNonQuery();
+                tableCmd.ExecuteNonQuery();
 
-                    // now delete the stack
-                    tableCmd.CommandText = "DELETE FROM dbo.Stack WHERE Name = @Name";
-                    tableCmd.Parameters.AddWithValue("@Name", stackName);
+                // now delete the stack
+                tableCmd.CommandText = "DELETE FROM dbo.Stack WHERE Name = @Name";
+                tableCmd.Parameters.AddWithValue("@Name", stackName);
 
-                    tableCmd.ExecuteNonQuery();
-                }
+                tableCmd.ExecuteNonQuery();
             }
         }
     }
