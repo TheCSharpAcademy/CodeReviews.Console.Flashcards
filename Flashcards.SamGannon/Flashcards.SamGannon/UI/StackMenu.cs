@@ -143,7 +143,7 @@ public class StackMenu : IMenu
 
     private void EditStacksSubMenu(StackDto stack, string editType)
     {
-        TableVisualization.ShowSingleRow(new List<StackDto> { stack }, stack.StackName);
+        TableVisualization.ShowTable(new List<StackDto> { stack }, stack.StackName);
 
         Console.WriteLine($"\nIs this the stack you wish to {editType}? (Y/N)");
         Console.WriteLine($"Y - {editType} stack");

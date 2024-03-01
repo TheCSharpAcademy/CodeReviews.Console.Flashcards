@@ -143,7 +143,7 @@ public class SqlDataAccess : IDataAccess
                                     StackId = reader.GetInt32(0),
                                     StackName = reader.GetString(1)
                                 });
-                        };
+                        }
                     }
                     else
                     {
@@ -225,7 +225,7 @@ public class SqlDataAccess : IDataAccess
         {
             connection.Open();
 
-            using var tableCmd = connection.CreateCommand();
+            using (var tableCmd = connection.CreateCommand())
             {
                 // delete flashcards associated with stack while the stack still exist
                 tableCmd.CommandText = "DELETE FROM dbo.FlashCard WHERE StackId IN (SELECT Id FROM dbo.Stack WHERE Name = @stackName)";

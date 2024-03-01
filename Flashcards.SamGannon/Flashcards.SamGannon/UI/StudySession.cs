@@ -33,7 +33,7 @@ public class StudySession
         List<Flashcard> rawFlashcards = _dataAccess.GetFlashcardsByStackId(stackId);
         flashcardList = FlashcardDto.ToDto(rawFlashcards);
         
-        Study(stackName);
+        Study();
         score = CalculateScore(flashcardList, score);
 
         Console.WriteLine("Press any key to end the study session.");

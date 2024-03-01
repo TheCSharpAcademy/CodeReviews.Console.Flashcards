@@ -17,17 +17,4 @@ internal class TableVisualization
         Console.Write("\n\n");
         
     }
-
-    internal static void ShowSingleRow<T>(List<T> tableData, string tableTitle) where T : class
-    {
-        Console.Clear();
-        Console.WriteLine("\n\n");
-
-        ConsoleTableBuilder
-            .From(tableData)
-            .WithTitle(tableTitle)
-            .ExportAndWriteLine();
-        Console.Write("\n\n");
-        
-    }
 }
