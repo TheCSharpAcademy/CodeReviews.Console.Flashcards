@@ -2,10 +2,6 @@
 using DataAccess.Models;
 using Flashcards.SamGannon.DTOs;
 using Flashcards.SamGannon.Utilities;
-using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Flashcards.SamGannon.UI;
 
