@@ -1,38 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DataAccess.Models;
+﻿using DataAccess.Models;
 
-namespace Flashcards.SamGannon.DTOs
+namespace Flashcards.SamGannon.DTOs;
+
+public class FlashcardDto
 {
-    public class FlashcardDto
+    public int FlashcardId { get; set; }
+    public string? Question { get; set; } = string.Empty;
+    public string? Answer { get; set; } = string.Empty;
+
+    public FlashcardDto() { }
+
+    public FlashcardDto(Flashcard flashcard) 
     {
-        public int FlashcardId { get; set; }
-        public string? Question { get; set; } = string.Empty;
-        public string? Answer { get; set; } = string.Empty;
+        FlashcardId = flashcard.FlashcardId;
+        Question = flashcard.Question;
+        Answer = flashcard.Answer;
+    }
 
-        public FlashcardDto() { }
+    public static List<FlashcardDto> ToDto(List<Flashcard> flashcards)
+    {
+        List<FlashcardDto> returnStack = new List<FlashcardDto>();
 
-        public FlashcardDto(Flashcard flashcard) 
+        foreach (var card in flashcards)
         {
-            FlashcardId = flashcard.FlashcardId;
-            Question = flashcard.Question;
-            Answer = flashcard.Answer;
+            var FlashcardDto = new FlashcardDto(card);
+            returnStack.Add(FlashcardDto);
         }
 
-        public static List<FlashcardDto> ToDto(List<Flashcard> flashcards)
-        {
-            List<FlashcardDto> returnStack = new List<FlashcardDto>();
-
-            foreach (var card in flashcards)
-            {
-                var FlashcardDto = new FlashcardDto(card);
-                returnStack.Add(FlashcardDto);
-            }
-
-            return returnStack;
-        }
+        return returnStack;
     }
 }
