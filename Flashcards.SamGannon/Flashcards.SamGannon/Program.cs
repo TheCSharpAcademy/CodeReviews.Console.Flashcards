@@ -21,7 +21,4 @@ void InitalizeTables()
 }
 
 MainMenu mainMenu = new MainMenu(_dataAccess);
-StackMenu stackMenu = new StackMenu(mainMenu);
-FlashcardMenu flashcardMenu = new FlashcardMenu(mainMenu);
-StudySession session = new StudySession(mainMenu);
 mainMenu.ShowMenu();

@@ -142,8 +142,8 @@ public class SqlDataAccess : IDataAccess
                                 {
                                     StackId = reader.GetInt32(0),
                                     StackName = reader.GetString(1)
-                                })
-                        }
+                                });
+                        };
                     }
                     else
                     {
