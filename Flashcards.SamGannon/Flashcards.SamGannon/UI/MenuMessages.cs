@@ -19,6 +19,7 @@ namespace Flashcards.SamGannon.UI
             Console.WriteLine("3. Start Study Session");
             Console.WriteLine("4. Exit");
             Console.WriteLine("");
+            Console.WriteLine("H - History");
             Console.WriteLine("I - Instructions");
             Console.WriteLine("Enter your choice (1, 2, 3, 4, or I): ");
         }

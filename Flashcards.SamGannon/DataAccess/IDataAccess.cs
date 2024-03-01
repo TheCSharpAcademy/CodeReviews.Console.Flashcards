@@ -33,5 +33,6 @@ namespace DataAccess
 
         // Study Session
         void InsertStudySession(int stackId, DateTime startTime, DateTime endTime, double score);
+        List<StudyHistory> GetHistroyReport();
     }
 }

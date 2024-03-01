@@ -1,4 +1,6 @@
 ﻿using DataAccess;
+using DataAccess.Models;
+using Flashcards.SamGannon.DTOs;
 using Flashcards.SamGannon.Utilities;
 using System;
 using System.Collections.Generic;
@@ -22,7 +24,7 @@ namespace Flashcards.SamGannon.UI
         public void ShowMenu()
         {
             MenuMessages.ShowMainMenu();
-            string choice = ConsoleHelper.ReadValidInput(new[] { "1", "2", "3", "4", "I" });
+            string choice = ConsoleHelper.ReadValidInput(new[] { "1", "2", "3", "4", "H", "I" });
 
             switch (choice)
             {
@@ -42,6 +44,9 @@ namespace Flashcards.SamGannon.UI
                     Console.WriteLine("Exiting the Custom Flashcard Console App. Goodbye!");
                     Environment.Exit(0);
                     break;
+                case "H":
+                    ShowHistory();
+                    break;
                 case "I":
                     ShowInstructions();
                     ShowMenu();
@@ -49,6 +54,16 @@ namespace Flashcards.SamGannon.UI
                 default:
                     break;
             }
+        }
+
+        private void ShowHistory()
+        {
+            List<StudyHistory> lstHistoryReport = DataAccess.GetHistroyReport();
+            List<StudyHistoryDto> reports = StudyHistoryDto.ToDto(lstHistoryReport);
+            TableVisualization.ShowTable(reports, "Report");
+
+            Console.WriteLine("");
+            Console.WriteLine("Press E to Exit");
         }
 
         public void ShowInstructions()

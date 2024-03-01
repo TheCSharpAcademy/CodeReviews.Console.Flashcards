@@ -488,6 +488,49 @@ namespace DataAccess
             }
         }
 
+        public List<StudyHistory> GetHistroyReport()
+        {
+            List<StudyHistory> reports = new List<StudyHistory>();
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using(var tableCmd = connection.CreateCommand())
+                {
+                    tableCmd.CommandText = "SELECT SA.Id, StackId, Name, StartDate, EndDate, Score " +
+                        "FROM dbo.StudyArea AS SA " +
+                        "INNER JOIN dbo.Stack AS ST ON SA.StackId = ST.Id";
+
+                    using (var reader = tableCmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                reports.Add(
+                                    new StudyHistory
+                                    {
+                                        Id = reader.GetInt32(0),
+                                        StackId = reader.GetInt32(1),
+                                        StackName = reader.GetString(2),
+                                        StartTime = reader.GetDateTime(3),
+                                        EndTime = reader.GetDateTime(4),
+                                        Score = reader.GetDecimal(5),
+                                    });
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n\nNo rows found");
+                        }
+                    }
+
+                    return reports;
+
+                }
+            }
+        }
 
     }
 }
