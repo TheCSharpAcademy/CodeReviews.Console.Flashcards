@@ -448,15 +448,9 @@ public class SqlDataAccess : IDataAccess
 
                 using (var reader = tableCmd.ExecuteReader())
                 {
-                    if (reader.HasRows)
+                    if (reader.HasRows && reader.Read())
                     {
-                        while (reader.Read())
-                        {
-                            {
-                                stackId = reader.GetInt32(0);
-                                return stackId;
-                            }
-                        }
+                        stackId = reader.GetInt32(0);
                     }
 
                     return stackId;
