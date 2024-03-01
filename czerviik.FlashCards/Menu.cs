@@ -58,7 +58,7 @@ public class StudySessionMenu : Menu
 
 public class FlashCardMenu : Menu
 {
-    List<Stack> stacksList;
+    protected List<Stack> stacksList;
     public FlashCardMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb) : base(menuManager, flashcardDb, stackDb) { }
 
     public override void Display()
@@ -143,7 +143,7 @@ public class FlashCardMenu : Menu
         MenuManager.DisplayCurrentMenu();
     }
 
-    private static string[] GetStackNamesArray(List<Stack> stacks)
+    protected static string[] GetStackNamesArray(List<Stack> stacks)
     {
         var stacksArray = new string[stacks.Count];
         for (int i = 0; i < stacks.Count; i++)
@@ -179,13 +179,99 @@ public class FlashCardMenu : Menu
     }
 }
 
-public class ShowStacksMenu : Menu
+public class ShowStacksMenu : FlashCardMenu
 {
+    private List<Flashcard> flashcards;
     public ShowStacksMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb) : base(menuManager, flashcardDb, stackDb) { }
 
     public override void Display()
     {
-        UserInterface.ShowStacks();
+        stacksList = StackDb.GetAll();
+
+        if (stacksList.Count != 0)
+        {
+            DisplayStackOptions();
+
+            try
+            {
+                HandleUserOptions();
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine(ex.Message);
+                UserInput.DisplayMessage();
+                MenuManager.GoBack();
+            }
+        }
+        else
+        {
+            UserInput.DisplayMessage("No flashcards yet.", "return to Main Menu", true);
+            MenuManager.ReturnToMainMenu();
+        }
+    }
+
+    private void DisplayStackOptions()
+    {
+        var stacksArray = GetStackNamesArray(stacksList);
+        UserInterface.ShowStacks(stacksArray);
+    }
+
+    private void DisplayFlashcards(Stack stack)
+    {
+        List<FlashcardReviewDto> flashcardDtos = ConvertToDto(flashcards);
+        UserInterface.ShowFlashcards(flashcardDtos, stack);
+    }
+    private void DisplayFlashcards(List<Stack> stacks)
+    {
+        List<FlashcardReviewDto> flashcardDtos = ConvertToDto(flashcards);
+        UserInterface.ShowFlashcards(flashcardDtos, stacks);
+    }
+
+    private void HandleUserOptions()
+    {
+        Stack userStack;
+
+        switch (UserInterface.OptionChoice)
+        {
+            case "Show all":
+                flashcards = FlashcardDb.GetAll();
+                DisplayFlashcards(stacksList);
+                break;
+
+            case "Go back":
+                MenuManager.GoBack();
+                break;
+
+            default:
+                userStack = stacksList.FirstOrDefault(s => s.Name == UserInterface.OptionChoice);
+                if (userStack == null)
+                {
+                    throw new InvalidOperationException($"A stack with the name {UserInterface.OptionChoice}, does not exist in this context.");
+                }
+                else
+                {
+                    flashcards = FlashcardDb.GetByStackId(userStack.Id);
+                    DisplayFlashcards(userStack);
+                }
+                break;
+        }
+    }
+
+    private List<FlashcardReviewDto> ConvertToDto(List<Flashcard> flashcards)
+    {
+        var flashcardDtos = new List<FlashcardReviewDto>();
+        int startId = 1;
+        foreach (var flashcard in flashcards)
+        {
+            flashcardDtos.Add(new FlashcardReviewDto
+            {
+                DisplayId = startId++,
+                Question = flashcard.Question,
+                Answer = flashcard.Answer,
+                StackId = flashcard.StackId
+            });
+        }
+        return flashcardDtos;
     }
 }
 

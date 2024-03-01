@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
@@ -53,26 +54,18 @@ public class FlashcardDb : Database
     }
 
 
-    private List<Flashcard> ReadRowsCommand(string sql)
+    private List<Flashcard> ReadRowsCommand(string sql, object parameters = null)
     {
         var flashcardsList = new List<Flashcard>();
 
         using (var connection = new SqlConnection(_connectionString))
         {
-            var flashcards = connection.Query<Flashcard>(sql);
+            var flashcards = connection.Query<Flashcard>(sql, parameters);
             foreach (var flashcard in flashcards)
             {
                 flashcardsList.Add(flashcard);
             }
             return flashcardsList;
-        }
-    }
-
-    private Flashcard ReadSingleCommand(string sql, int id)
-    {
-        using (var connection = new SqlConnection(_connectionString))
-        {
-            return connection.QuerySingleOrDefault<Flashcard>(sql, new { Id = id });
         }
     }
 
@@ -94,9 +87,20 @@ public class FlashcardDb : Database
     public Flashcard GetById(int id)
     {
         var sql = $"SELECT * FROM flashcards WHERE Id = @Id";
-        return ReadSingleCommand(sql, id);
+
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            return connection.QuerySingleOrDefault<Flashcard>(sql, new { Id = id });
+        }
+    }
+
+    public List<Flashcard> GetByStackId(int id)
+    {
+        var sql = $"SELECT * FROM flashcards WHERE StackId = @Id";
+        return ReadRowsCommand(sql, new { Id = id });
     }
 }
+
 
 public class StackDb : Database
 {
@@ -116,13 +120,13 @@ public class StackDb : Database
         ExecuteCommand(sql);
     }
 
-    private List<Stack> ReadRowsCommand(string sql)
+    private List<Stack> ReadRowsCommand(string sql, object parameters = null)
     {
         var stacksList = new List<Stack>();
 
         using (var connection = new SqlConnection(_connectionString))
         {
-            var stacks = connection.Query<Stack>(sql);
+            var stacks = connection.Query<Stack>(sql, parameters);
             foreach (var stack in stacks)
             {
                 stacksList.Add(stack);
@@ -131,11 +135,11 @@ public class StackDb : Database
         }
     }
 
-    private Stack ReadSingleCommand(string sql, string name)
+    private Stack ReadSingleCommand(string sql, object parameters = null)
     {
         using (var connection = new SqlConnection(_connectionString))
         {
-            return connection.QuerySingleOrDefault<Stack>(sql, new { Name = name });
+            return connection.QuerySingleOrDefault<Stack>(sql, parameters);
         }
     }
 
@@ -154,10 +158,16 @@ public class StackDb : Database
         return ReadRowsCommand(sql);
     }
 
+    public List<Stack> GetById(int id)
+    {
+        var sql = $"SELECT * FROM stacks WHERE Id = @Id";
+        return ReadRowsCommand(sql, new { Id = id });
+    }
+
     public Stack GetByName(string name)
     {
         var sql = $"SELECT * FROM stacks WHERE Name = @Name";
-        return ReadSingleCommand(sql, name);
+        return ReadSingleCommand(sql, new { Name = name });
     }
 
     public bool NamePresent(string name)
