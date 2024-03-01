@@ -2,85 +2,77 @@
 using DataAccess.Models;
 using Flashcards.SamGannon.DTOs;
 using Flashcards.SamGannon.UI;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Flashcards.SamGannon.Utilities
+namespace Flashcards.SamGannon.Utilities;
+
+public static class ConsoleHelper
 {
-    public static class ConsoleHelper
+    public static string ReadValidInput(IEnumerable<string> validChoices)
     {
-        public static string ReadValidInput(IEnumerable<string> validChoices)
+        string choice = Console.ReadLine()?.Trim().ToUpper();
+
+        while (!validChoices.Contains(choice))
         {
-            string choice = Console.ReadLine()?.Trim().ToUpper();
-
-            while (!validChoices.Contains(choice))
-            {
-                Console.WriteLine("Invalid choice. Please enter a valid option.");
-                choice = Console.ReadLine()?.Trim().ToUpper();
-            }
-
-            return choice;
+            Console.WriteLine("Invalid choice. Please enter a valid option.");
+            choice = Console.ReadLine()?.Trim().ToUpper();
         }
 
-        public static string ValidateStackName(IDataAccess dataAccess)
+        return choice;
+    }
+
+    public static string ValidateStackName(IDataAccess dataAccess)
+    {
+        string rawStackName;
+
+        while (true)
         {
-            string rawStackName;
+            Console.WriteLine("Enter Stack Name (or 'E' to exit): ");
+            rawStackName = Console.ReadLine();
+            string formattedStackName = rawStackName.Trim().ToUpper();
 
-            while (true)
+            if (formattedStackName.Equals("E", StringComparison.OrdinalIgnoreCase))
             {
-                Console.WriteLine("Enter Stack Name (or 'E' to exit): ");
-                rawStackName = Console.ReadLine();
-                string formattedStackName = rawStackName.Trim().ToUpper();
-
-                if (formattedStackName.Equals("E", StringComparison.OrdinalIgnoreCase))
-                {
-                    //Environment.Exit(0);
-                    return null;
-                }
-                else if (dataAccess.CheckStackName(formattedStackName))
-                {
-                    return formattedStackName;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid stack name. Please enter a name from the list");
-                }
+                return null;
+            }
+            else if (dataAccess.CheckStackName(formattedStackName))
+            {
+                return formattedStackName;
+            }
+            else
+            {
+                Console.WriteLine("Invalid stack name. Please enter a name from the list");
             }
         }
+    }
 
-        public static string GetValidInput()
+    public static string GetValidInput()
+    {
+        string input = "";
+        while (string.IsNullOrEmpty(input))
         {
-            string input = "";
-            while (string.IsNullOrEmpty(input))
-            {
-                input = Console.ReadLine();
-            }
-            return input;
+            input = Console.ReadLine();
         }
+        return input;
+    }
 
-        public static string GetValidChoice()
+    public static string GetValidChoice()
+    {
+        string choice = "";
+        while (choice != "Y" && choice != "N")
         {
-            string choice = "";
-            while (choice != "Y" && choice != "N")
-            {
-                choice = GetValidInput().Trim().ToUpper();
-            }
-            return choice;
+            choice = GetValidInput().Trim().ToUpper();
         }
+        return choice;
+    }
 
-        public static void Map(IDataAccess DataAccess, string title)
-        {
-            Console.Clear();
-            List<StackModel> lstAllStacks = new();
-            lstAllStacks = DataAccess.GetAllStacks();
+    public static void Map(IDataAccess DataAccess, string title)
+    {
+        Console.Clear();
+        List<StackModel> lstAllStacks = new();
+        lstAllStacks = DataAccess.GetAllStacks();
 
-            List<StackDto> stacks = StackDto.ToDto(lstAllStacks);
+        List<StackDto> stacks = StackDto.ToDto(lstAllStacks);
 
-            TableVisualization.ShowTable(stacks, title);
-        }
+        TableVisualization.ShowTable(stacks, title);
     }
 }
