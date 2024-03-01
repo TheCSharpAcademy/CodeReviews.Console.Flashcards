@@ -2,37 +2,33 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace Flashcards.SamGannon.DTOs;
 
-namespace Flashcards.SamGannon.DTOs
+internal class StudyHistoryDto
 {
-    internal class StudyHistoryDto
+    public string? StackName { get; set; } = string.Empty;
+    public TimeSpan StudyLength { get; set; }
+    public decimal? Score {  get; set; }   
+
+    public StudyHistoryDto() { }
+
+    public StudyHistoryDto(StudyHistory history)
     {
-        public string? StackName { get; set; } = string.Empty;
-        public TimeSpan StudyLength { get; set; }
-        public decimal? Score {  get; set; }   
+        StackName = history.StackName;
+        StudyLength = history.EndTime - history.StartTime;
+        Score = history.Score;
+    }
 
-        public StudyHistoryDto() { }
+    public static List<StudyHistoryDto> ToDto(List<StudyHistory> reports)
+    {
+        List<StudyHistoryDto> lstReports = new List<StudyHistoryDto>();
 
-        public StudyHistoryDto(StudyHistory history)
+        foreach (var report in reports)
         {
-            StackName = history.StackName;
-            StudyLength = history.EndTime - history.StartTime;
-            Score = history.Score;
+            var StudyHistoryDto = new StudyHistoryDto(report);
+            lstReports.Add(StudyHistoryDto);
         }
 
-        public static List<StudyHistoryDto> ToDto(List<StudyHistory> reports)
-        {
-            List<StudyHistoryDto> lstReports = new List<StudyHistoryDto>();
-
-            foreach (var report in reports)
-            {
-                var StudyHistoryDto = new StudyHistoryDto(report);
-                lstReports.Add(StudyHistoryDto);
-            }
-
-            return lstReports;
-        }
+        return lstReports;
     }
 }
