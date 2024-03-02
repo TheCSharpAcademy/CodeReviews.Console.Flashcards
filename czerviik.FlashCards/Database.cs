@@ -22,6 +22,7 @@ public abstract class Database
 
     }
     public abstract void InitializeDatabase();
+    public abstract object GetById(int id);
     protected void ExecuteCommand(string sql)
     {
         using (var connection = new SqlConnection(_connectionString))
@@ -84,7 +85,7 @@ public class FlashcardDb : Database
         return ReadRowsCommand(sql);
     }
 
-    public Flashcard GetById(int id)
+    public override Flashcard GetById(int id)
     {
         var sql = $"SELECT * FROM flashcards WHERE Id = @Id";
 
@@ -158,7 +159,7 @@ public class StackDb : Database
         return ReadRowsCommand(sql);
     }
 
-    public List<Stack> GetById(int id)
+    public override List<Stack> GetById(int id)
     {
         var sql = $"SELECT * FROM stacks WHERE Id = @Id";
         return ReadRowsCommand(sql, new { Id = id });

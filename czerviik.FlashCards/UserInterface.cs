@@ -90,6 +90,7 @@ public static class UserInterface
         string[] options = {
                 "Update a Flashcard",
                 "Delete a Flashcard",
+                "Delete a Stack",
                 "Go back"};
 
         Header("show stacks");
@@ -128,6 +129,31 @@ public static class UserInterface
         Console.WriteLine();
         ChooseOptions(["Confirm", "Enter again"]);
     }
+
+    public static void UpdateFlashcardQuestion(int id)
+    {
+        Header($"update flashcard #{id}");
+
+        Console.WriteLine("Enter a question (esc - Go back):");
+    }
+
+    public static void UpdateFlashcardAnswer(int id, string question)
+    {
+        Header($"update flashcard #{id}");
+        Console.WriteLine($"Question: {question}");
+        Console.WriteLine("Enter an answer (esc - Go back):");
+    }
+
+    public static void UpdateFlashcardConfirm(int id, string question, string answer, string currentStack)
+    {
+        Header($"update flashcard #{id}");
+        Console.WriteLine($"Stack: {currentStack}");
+        Console.WriteLine($"Question: {question}");
+        Console.WriteLine($"Answer: {answer}");
+        Console.WriteLine();
+        ChooseOptions(["Confirm", "Enter again"]);
+    }
+
     public static void AnotherFlashcard()
     {
         Console.Clear();
@@ -140,7 +166,12 @@ public static class UserInterface
         Header("create new stack");
         Console.WriteLine("Enter stack's name: ");
     }
-
+    public static void UpdateFlashcard(List<FlashcardReviewDto> flashcards, List<Stack> stacks)
+    {
+        Header("show stacks");
+        FlashcardsTable(flashcards, stacks);
+        Console.WriteLine("Type a Flashcard Id to Update:\n");
+    }
     public static void ShowStudySessions()
     {
         Header("show study sessions");

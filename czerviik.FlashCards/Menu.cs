@@ -182,6 +182,8 @@ public class FlashCardMenu : Menu
 public class ShowStacksMenu : FlashCardMenu
 {
     private List<Flashcard> flashcards;
+    private List<FlashcardReviewDto> flashcardDtos;
+    private Stack userStack;
     public ShowStacksMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb) : base(menuManager, flashcardDb, stackDb) { }
 
     public override void Display()
@@ -195,6 +197,8 @@ public class ShowStacksMenu : FlashCardMenu
             try
             {
                 HandleUserOptions();
+                HandleActionMenu();
+
             }
             catch (InvalidOperationException ex)
             {
@@ -202,7 +206,6 @@ public class ShowStacksMenu : FlashCardMenu
                 UserInput.DisplayMessage();
                 MenuManager.GoBack();
             }
-            HandleActionMenu();
         }
         else
         {
@@ -219,19 +222,17 @@ public class ShowStacksMenu : FlashCardMenu
 
     private void DisplayFlashcards(Stack stack)
     {
-        List<FlashcardReviewDto> flashcardDtos = ConvertToDto(flashcards);
+        flashcardDtos = ConvertToDto(flashcards);
         UserInterface.ShowFlashcards(flashcardDtos, stack);
     }
     private void DisplayFlashcards(List<Stack> stacks)
     {
-        List<FlashcardReviewDto> flashcardDtos = ConvertToDto(flashcards);
+        flashcardDtos = ConvertToDto(flashcards);
         UserInterface.ShowFlashcards(flashcardDtos, stacks);
     }
 
     private void HandleUserOptions()
     {
-        Stack userStack;
-
         switch (UserInterface.OptionChoice)
         {
             case "Show all":
@@ -266,6 +267,7 @@ public class ShowStacksMenu : FlashCardMenu
                 MenuManager.GoBack();
                 break;
             case "Update a Flashcard":
+                HandleFlashcardUpdate();
                 break;
             case "Delete a Flashcard":
                 break;
@@ -273,7 +275,24 @@ public class ShowStacksMenu : FlashCardMenu
                 break;
         }
     }
+    private void HandleFlashcardUpdate()
+    {
+        UserInterface.UpdateFlashcard(flashcardDtos, stacksList);
+        var userId = UserInput.FlashcardIdInput(MenuManager, flashcardDtos);
 
+        UserInterface.UpdateFlashcardQuestion(userId);
+        var userQuestion = UserInput.InputWithSpecialKeys(MenuManager, true, 50);
+
+        UserInterface.UpdateFlashcardAnswer(userId, userQuestion);
+        var userAnswer = UserInput.InputWithSpecialKeys(MenuManager, true, 50);
+
+        UserInterface.UpdateFlashcardConfirm(userId, userQuestion, userAnswer,userStack.Name); //obecně zajisti aby database classy plivaly jen listy svých objektů a pak upravit, aby to všude fungovalo
+        if (UserInterface.OptionChoice == "Confirm")
+        {
+            //FlashcardDb.Insert(userQuestion, userAnswer, currentStack.Id); dodělat tuhle methodu (možná přidat funkci pro přesouvání flashcards)
+        }
+
+    }
     private List<FlashcardReviewDto> ConvertToDto(List<Flashcard> flashcards)
     {
         var flashcardDtos = new List<FlashcardReviewDto>();
@@ -291,7 +310,15 @@ public class ShowStacksMenu : FlashCardMenu
         return flashcardDtos;
     }
 }
+public class UpdateFlashcardMenu : Menu
+{
+    public UpdateFlashcardMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb) : base(menuManager, flashcardDb, stackDb) { }
 
+    public override void Display()
+    {
+    }
+
+}
 public class ShowStudySessionsMenu : Menu
 {
     public ShowStudySessionsMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb) : base(menuManager, flashcardDb, stackDb) { }

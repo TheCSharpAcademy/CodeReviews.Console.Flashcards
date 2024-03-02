@@ -55,4 +55,30 @@ public static class UserInput
         } while (true);
 
     }
+    public static int FlashcardIdInput(MenuManager menuManager, List<FlashcardReviewDto> flashcardDtos)
+    {
+        bool idFound = false;
+
+        do
+        {
+            string userInput = InputWithSpecialKeys(menuManager, true);
+
+            if (int.TryParse(userInput, out int resultId))
+            {
+                foreach (var flashcard in flashcardDtos)
+                {
+                    if (flashcard.DisplayId == resultId)
+                    {
+                        idFound = true;
+                        return resultId;
+                    }
+                }
+                if (!idFound)
+                    Console.WriteLine($"ID '{resultId}' not found, enter a valid ID number:\n");
+            }
+            else
+                Console.WriteLine("Enter a valid ID number:\n");
+        }
+        while (true);
+    }
 }
