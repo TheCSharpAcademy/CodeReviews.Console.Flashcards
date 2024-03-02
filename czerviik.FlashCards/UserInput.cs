@@ -12,9 +12,9 @@ public static class UserInput
         if (consoleClear) Console.Clear();
 
         if (message == "")
-            Console.WriteLine($"\nPress any key to {actionMessage}...");
+            Console.WriteLine($"Press any key to {actionMessage}...");
         else
-            Console.WriteLine($"\n{message} Press any key to {actionMessage}...");
+            Console.WriteLine($"{message} Press any key to {actionMessage}...");
 
         Console.ReadKey();
     }

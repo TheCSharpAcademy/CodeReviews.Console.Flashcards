@@ -8,7 +8,7 @@ namespace FlashCards;
 
 public static class UserInterface
 {
-    public static Option OptionChoice { get; private set; }
+    public static string? OptionChoice { get; private set; }
     public static void MainMenu()
     {
         Header("main menu");
@@ -66,17 +66,23 @@ public static class UserInterface
 
     public static void ShowFlashcards(List<FlashcardReviewDto> flashcards, Stack stack)
     {
-        var options = new Dictionary<string,Option> 
-        {
-                {"Update a Flashcard",Option.Option1},
-                {"Delete a Flashcard",Option.Option2},
-                {"Delete a Stack",Option.Option3},
-                {"Go back", Option.Option4}
-        };
+        string[] options = {
+                "Update a Flashcard",
+                "Delete a Flashcard",
+                "Delete a Stack",
+                "Go back"};
 
         Header("show stacks");
         FlashcardsTable(flashcards, stack);
-        ChooseOptions(options);
+
+        if (flashcards.Count == 0)
+        {
+            UserInput.DisplayMessage("No Flashcards in this stack.", "go back");
+            OptionChoice = "Go back";
+        }
+        else
+            ChooseOptions(options);
+
     }
 
     public static void ShowFlashcards(List<FlashcardReviewDto> flashcards, List<Stack> stacks)
@@ -88,7 +94,15 @@ public static class UserInterface
 
         Header("show stacks");
         FlashcardsTable(flashcards, stacks);
-        ChooseOptions(options);
+
+        if (flashcards.Count == 0)
+        {
+            UserInput.DisplayMessage("No Flashcards in this stack.");
+            OptionChoice = "Go back";
+        }
+
+        else
+            ChooseOptions(options);
     }
 
     public static void NewFlashcardQuestion(string currentStack)
@@ -141,14 +155,13 @@ public static class UserInterface
         Console.WriteLine();
     }
 
-    private static void ChooseOptions(Dictionary<string, Option> options)
+    private static void ChooseOptions(string[] options)
     {
-       string selectedOptionText = AnsiConsole.Prompt(
+        OptionChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
             .HighlightStyle("red")
-            .AddChoices(options.Keys)
+            .AddChoices(options)
             );
-        OptionChoice = options[selectedOptionText]; //dodělat i u dalších method, tedy převést na Option enum type
     }
 
     private static void FlashcardsTable(List<FlashcardReviewDto> flashcards, Stack stack)
@@ -182,7 +195,6 @@ public static class UserInterface
             AnsiConsole.Write(table);
             Console.WriteLine();
         }
-
     }
 }
 

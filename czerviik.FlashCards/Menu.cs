@@ -202,6 +202,7 @@ public class ShowStacksMenu : FlashCardMenu
                 UserInput.DisplayMessage();
                 MenuManager.GoBack();
             }
+            HandleActionMenu();
         }
         else
         {
@@ -253,6 +254,22 @@ public class ShowStacksMenu : FlashCardMenu
                     flashcards = FlashcardDb.GetByStackId(userStack.Id);
                     DisplayFlashcards(userStack);
                 }
+                break;
+        }
+    }
+
+    private void HandleActionMenu()
+    {
+        switch (UserInterface.OptionChoice)
+        {
+            case "Go back":
+                MenuManager.GoBack();
+                break;
+            case "Update a Flashcard":
+                break;
+            case "Delete a Flashcard":
+                break;
+            case "Delete a Stack":
                 break;
         }
     }
