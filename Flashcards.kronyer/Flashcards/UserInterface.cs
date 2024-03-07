@@ -1,11 +1,6 @@
 ﻿using Flashcards.Models;
 using Microsoft.IdentityModel.Tokens;
 using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static Flashcards.Enums;
 
 namespace Flashcards
