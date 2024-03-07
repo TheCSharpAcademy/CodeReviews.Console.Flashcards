@@ -34,7 +34,7 @@ namespace Flashcards.Dejmenek.Services
         {
             return AnsiConsole.Prompt(
                 new TextPrompt<string>("Enter the stack name")
-                ); ;
+                );
         }
 
         public string GetAnswer()
