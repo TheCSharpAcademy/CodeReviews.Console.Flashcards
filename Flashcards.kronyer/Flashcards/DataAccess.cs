@@ -75,7 +75,7 @@ public class DataAcess
         }
     }
 
-    internal List<StudySessionDTO> GetStudySessionData()
+    internal List<StudySessionDto> GetStudySessionData()
     {
         using (var connection = new SqlConnection(ConnectionString))
         {
@@ -95,7 +95,7 @@ public class DataAcess
             Stacks s ON ss.StackId = s.Id;";
 
 
-            return connection.Query<StudySessionDTO>(getStudyQuery).ToList();
+            return connection.Query<StudySessionDto>(getStudyQuery).ToList();
         }
     }
     internal void InsertStudySession(StudySession session)
@@ -289,7 +289,7 @@ public class DataAcess
                 connection.Open();
                 string deleteQuery = "DELETE FROM flashcards WHERE Id = @Id";
 
-                int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
+                connection.Execute(deleteQuery, new { Id = id });
 
 
             }
