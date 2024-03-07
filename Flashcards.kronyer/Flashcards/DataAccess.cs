@@ -308,7 +308,7 @@ public class DataAcess
             {
                 connection.Open();
                 string deleteQuery = "DELETE FROM stacks WHERE Id = @Id";
-                int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
+                connection.Execute(deleteQuery, new { Id = id });
             }
         }
         catch (Exception ex)
