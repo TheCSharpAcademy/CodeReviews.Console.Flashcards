@@ -31,14 +31,23 @@ It allows users to create stacks, add flashcards with questions and answers, see
 - Input validation: Ensure data entered by the user is valid.
 
 ## Examples
-- Main Menu
-- Manage Stacks
-- Manage Flashcards
-- Study Session
-- View Study Sessions
+- Main Menu  
+![image](https://github.com/Dejmenek/CodeReviews.Console.Flashcards/assets/83865666/ac35eb3c-b3c6-4d05-a7b0-0ffc1503f672)
+- Manage Stacks  
+![image](https://github.com/Dejmenek/CodeReviews.Console.Flashcards/assets/83865666/4cc43681-a5d2-4652-bb89-3bede0de3f6d)  
+![image](https://github.com/Dejmenek/CodeReviews.Console.Flashcards/assets/83865666/e1e224b8-5e59-4c65-a0ab-d0b915c9dd91)  
+- Manage Flashcards  
+![image](https://github.com/Dejmenek/CodeReviews.Console.Flashcards/assets/83865666/edbb1d2f-5821-4e76-bdf7-b7619d85cb33)
+- Study Session  
+![image](https://github.com/Dejmenek/CodeReviews.Console.Flashcards/assets/83865666/936a147e-1319-4d7a-8920-d40265d912ad)
+- View Study Sessions  
+![image](https://github.com/Dejmenek/CodeReviews.Console.Flashcards/assets/83865666/242a87ac-25bf-47b9-9525-e38aefec4381)
 - View monthly study session reports per stack:
-	- Average Score
-	- Number of sessions
+	- Average Score  
+ ![image](https://github.com/Dejmenek/CodeReviews.Console.Flashcards/assets/83865666/cf33c691-c65a-4a79-8408-1b166b7dbe47)
+	- Number of sessions  
+ ![image](https://github.com/Dejmenek/CodeReviews.Console.Flashcards/assets/83865666/033a3263-02c1-4d3b-9a9c-8adc9bd1395a)
+
 
 ## Instalation and Setup
 1. Clone or download this project repository.
