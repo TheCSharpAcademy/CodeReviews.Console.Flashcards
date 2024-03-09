@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Data.SqlClient;
 using Dapper;
 using flashcards.Fennikko.Models;
@@ -75,14 +74,14 @@ public class DatabaseController
     {
         AnsiConsole.Clear();
         var stackName = AnsiConsole.Prompt(
-            new TextPrompt<string>("Please enter a [green]stack name[/]")
+            new TextPrompt<string>("Please enter a [green]stack name[/]: ")
                 .PromptStyle("blue")
                 .AllowEmpty());
         if(stackName == "0") UserInput.GetUserInput();
         while (string.IsNullOrWhiteSpace(stackName))
         {
             stackName = AnsiConsole.Prompt(
-                new TextPrompt<string>("Please enter a [green]stack name[/]")
+                new TextPrompt<string>("Please enter a [green]stack name[/]: ")
                     .PromptStyle("blue")
                     .AllowEmpty());
             if(stackName == "0") UserInput.GetUserInput();
@@ -92,7 +91,8 @@ public class DatabaseController
         var command = "INSERT INTO stacks (StackName) VALUES (@StackName)";
         var stack = new Stacks { StackName = stackName };
         var stackCreation = connection.Execute(command, stack);
-        AnsiConsole.MarkupLine($"[green]{stackCreation}[/] stack added.");
+        AnsiConsole.MarkupLine($"[green]{stackCreation}[/] stack added. Press any key to continue.");
+        Console.ReadKey();
         var getStackIdCommand = $"SELECT StackId from stacks WHERE StackName = '{stackName}'";
         var stackIdQuery = connection.Query<Stacks>(getStackIdCommand);
         var stackIdArray = stackIdQuery.Select(id => id.StackId).ToArray();
@@ -111,9 +111,10 @@ public class DatabaseController
                 {
                     "Yes", "No"
                 }));
-        if (newStackQuestion == "yes")
+        if (newStackQuestion == "Yes")
         {
             var stackId = CreateStack();
+            AnsiConsole.Clear();
             var flashCardIndex = 1;
             using var connection = new SqlConnection(ConnectionString);
             var cardFront = AnsiConsole.Prompt(
@@ -148,7 +149,7 @@ public class DatabaseController
                 "INSERT INTO flash_cards (FlashcardIndex,CardFront,CardBack,StackId) VALUES (@FlashcardIndex,@CardFront,@CardBack,@StackId)";
             var flashcard = new Flashcards { FlashcardIndex = flashCardIndex,CardFront = cardFront,CardBack = cardBack,StackId = stackId};
             var cardCreation = connection.Execute(cardCreationCommand, flashcard);
-            AnsiConsole.Write(new Markup($"[green]{cardCreation}[/] stack added. Press any key to continue."));
+            AnsiConsole.Write(new Markup($"[green]{cardCreation}[/] flashcard added. Press any key to continue."));
             Console.ReadKey();
         }
         else
@@ -192,7 +193,7 @@ public class DatabaseController
                 "INSERT INTO flash_cards (FlashcardIndex,CardFront,CardBack,StackId) VALUES (@FlashcardIndex,@CardFront,@CardBack,@StackId)";
             var flashcard = new Flashcards { FlashcardIndex = flashcardIndex, CardFront = cardFront, CardBack = cardBack, StackId = stackId };
             var cardCreation = connection.Execute(cardCreationCommand, flashcard);
-            AnsiConsole.Write(new Markup($"[green]{cardCreation}[/] stack added. Press any key to continue."));
+            AnsiConsole.Write(new Markup($"[green]{cardCreation}[/] flashcard added. Press any key to continue."));
             Console.ReadKey();
         }
     }
@@ -221,7 +222,7 @@ public class DatabaseController
         var flashcardIndexId = flashcardIndexIdList[0];
         var deleteFlashcard = connection.Execute(deleteCommand);
         var flashcardIdIndexUpdateCommand =
-            $"UPDATE flash_cards SET FlashcardIndex - 1 WHERE FlashcardIndex > {flashcardIndexId}' AND StackId = '{stackId}'";
+            $"UPDATE flash_cards SET FlashcardIndex = FlashcardIndex - 1 WHERE FlashcardIndex > {flashcardIndexId} AND StackId = '{stackId}'";
         var updateFlashcardIndexes = connection.Execute(flashcardIdIndexUpdateCommand);
         AnsiConsole.MarkupLine($"[green]{deleteFlashcard}[/] flashcard deleted.");
         AnsiConsole.MarkupLine($"[green]{updateFlashcardIndexes}[/] flashcard indexes updated. Press any key to continue.");

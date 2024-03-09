@@ -1,3 +1,3 @@
 ﻿using flashcards.Fennikko;
 
-DatabaseController.DatabaseCreation();
+UserInput.GetUserInput();
