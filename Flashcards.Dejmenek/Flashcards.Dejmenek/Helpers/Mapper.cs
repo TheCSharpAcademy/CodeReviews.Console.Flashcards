@@ -1,35 +1,34 @@
 ﻿using Flashcards.Dejmenek.Models;
 
-namespace Flashcards.Dejmenek.Helpers
+namespace Flashcards.Dejmenek.Helpers;
+
+public static class Mapper
 {
-    public static class Mapper
+    public static FlashcardDTO ToFlashcardDTO(Flashcard flashcard)
     {
-        public static FlashcardDTO ToFlashcardDTO(Flashcard flashcard)
+        return new FlashcardDTO
         {
-            return new FlashcardDTO
-            {
-                Id = flashcard.Id,
-                Front = flashcard.Front,
-                Back = flashcard.Back,
-            };
-        }
+            Id = flashcard.Id,
+            Front = flashcard.Front,
+            Back = flashcard.Back,
+        };
+    }
 
-        public static StackDTO ToStackDTO(Stack stack)
+    public static StackDTO ToStackDTO(Stack stack)
+    {
+        return new StackDTO
         {
-            return new StackDTO
-            {
-                Name = stack.Name,
-            };
-        }
+            Name = stack.Name,
+        };
+    }
 
-        public static StudySessionDTO ToStudySessionDTO(StudySession studysession)
+    public static StudySessionDTO ToStudySessionDTO(StudySession studysession)
+    {
+        return new StudySessionDTO
         {
-            return new StudySessionDTO
-            {
-                Id = studysession.Id,
-                Date = studysession.Date,
-                Score = studysession.Score,
-            };
-        }
+            Id = studysession.Id,
+            Date = studysession.Date,
+            Score = studysession.Score,
+        };
     }
 }

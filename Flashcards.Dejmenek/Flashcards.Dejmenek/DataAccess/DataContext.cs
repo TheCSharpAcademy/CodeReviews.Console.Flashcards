@@ -2,23 +2,23 @@
 using System.Configuration;
 using System.Data.SqlClient;
 
-namespace Flashcards.Dejmenek.DataAccess
-{
-    public static class DataContext
-    {
-        private static readonly string _connectionString = ConfigurationManager.ConnectionStrings["LocalDbConnection"].ConnectionString;
+namespace Flashcards.Dejmenek.DataAccess;
 
-        public static void CreateDatabase()
+public static class DataContext
+{
+    private static readonly string _connectionString = ConfigurationManager.ConnectionStrings["LocalDbConnection"].ConnectionString;
+
+    public static void CreateDatabase()
+    {
+        CreateTables();
+        SeedStacks();
+        SeedFlashcards();
+    }
+    private static void CreateTables()
+    {
+        using (var connection = new SqlConnection(_connectionString))
         {
-            CreateTables();
-            SeedStacks();
-            SeedFlashcards();
-        }
-        private static void CreateTables()
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                string sql = @"IF NOT EXISTS (
+            string sql = @"IF NOT EXISTS (
                                 SELECT * FROM INFORMATION_SCHEMA.TABLES
                                 WHERE TABLE_NAME = 'Stacks'
                                )
@@ -60,15 +60,15 @@ namespace Flashcards.Dejmenek.DataAccess
                                END;
                                ";
 
-                connection.Execute(sql);
-            }
+            connection.Execute(sql);
         }
+    }
 
-        private static void SeedStacks()
+    private static void SeedStacks()
+    {
+        using (var connection = new SqlConnection(_connectionString))
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                string sql = @"
+            string sql = @"
                                IF NOT EXISTS (
                                  SELECT 1 FROM Stacks
                                )
@@ -80,15 +80,15 @@ namespace Flashcards.Dejmenek.DataAccess
                                END;
                               ";
 
-                connection.Execute(sql);
-            }
+            connection.Execute(sql);
         }
+    }
 
-        private static void SeedFlashcards()
+    private static void SeedFlashcards()
+    {
+        using (var connection = new SqlConnection(_connectionString))
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                string sql = @"
+            string sql = @"
                                IF NOT EXISTS (
                                  SELECT 1 FROM Flashcards
                                )
@@ -105,8 +105,7 @@ namespace Flashcards.Dejmenek.DataAccess
                                 (3, 'Proszę', 'Please')
                                END;";
 
-                connection.Execute(sql);
-            }
+            connection.Execute(sql);
         }
     }
 }
