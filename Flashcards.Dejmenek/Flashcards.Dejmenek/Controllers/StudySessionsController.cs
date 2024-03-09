@@ -20,6 +20,7 @@ public class StudySessionsController
 
     public void StartStudySession(List<FlashcardDTO> flashcards)
     {
+        Score = 0;
         foreach (FlashcardDTO flashcard in flashcards)
         {
             DataVisualizer.ShowFlashcardFront(flashcard);
