@@ -1,7 +1,6 @@
-﻿namespace Flashcards.Dejmenek.DataAccess.Interfaces
+﻿namespace Flashcards.Dejmenek.DataAccess.Interfaces;
+
+internal interface IAddFlashcard
 {
-    internal interface IAddFlashcard
-    {
-        void AddFlashcard(int stackId, string front, string back);
-    }
+    void AddFlashcard(int stackId, string front, string back);
 }

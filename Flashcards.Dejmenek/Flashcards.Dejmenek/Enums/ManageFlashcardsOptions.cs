@@ -1,11 +1,10 @@
-﻿namespace Flashcards.Dejmenek.Enums
+﻿namespace Flashcards.Dejmenek.Enums;
+
+public enum ManageFlashcardsOptions
 {
-    public enum ManageFlashcardsOptions
-    {
-        Exit,
-        ViewAllFlashcards,
-        DeleteFlashcard,
-        EditFlashcard,
-        AddFlashcard
-    }
+    Exit,
+    ViewAllFlashcards,
+    DeleteFlashcard,
+    EditFlashcard,
+    AddFlashcard
 }

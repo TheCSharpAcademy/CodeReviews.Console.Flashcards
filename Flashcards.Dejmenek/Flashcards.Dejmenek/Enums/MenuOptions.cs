@@ -1,13 +1,12 @@
-﻿namespace Flashcards.Dejmenek.Enums
+﻿namespace Flashcards.Dejmenek.Enums;
+
+public enum MenuOptions
 {
-    public enum MenuOptions
-    {
-        Exit,
-        ManageStacks,
-        ManageFlashcards,
-        Study,
-        ViewStudySessions,
-        MonthlyStudySessionsReport,
-        MonthlyStudySessionsScoreReport
-    }
+    Exit,
+    ManageStacks,
+    ManageFlashcards,
+    Study,
+    ViewStudySessions,
+    MonthlyStudySessionsReport,
+    MonthlyStudySessionsScoreReport
 }

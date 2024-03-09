@@ -4,43 +4,43 @@ using Flashcards.Dejmenek.Models;
 using System.Configuration;
 using System.Data.SqlClient;
 
-namespace Flashcards.Dejmenek.DataAccess.Repositories
-{
-    public class StudySessionsRepository : IStudySessionsRepository
-    {
-        private static readonly string _connectionString = ConfigurationManager.ConnectionStrings["LocalDbConnection"].ConnectionString;
+namespace Flashcards.Dejmenek.DataAccess.Repositories;
 
-        public void AddStudySession(int stackId, DateTime date, int score)
+public class StudySessionsRepository : IStudySessionsRepository
+{
+    private static readonly string _connectionString = ConfigurationManager.ConnectionStrings["LocalDbConnection"].ConnectionString;
+
+    public void AddStudySession(int stackId, DateTime date, int score)
+    {
+        using (var connection = new SqlConnection(_connectionString))
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                string sql = @"INSERT INTO StudySessions (StackId, Date, Score) VALUES
+            string sql = @"INSERT INTO StudySessions (StackId, Date, Score) VALUES
                                (@StackId, @Date, @Score)";
 
-                connection.Execute(sql, new
-                {
-                    StackId = stackId,
-                    Date = date,
-                    Score = score
-                });
-            }
-        }
-
-        public IEnumerable<StudySession> GetAllStudySessions()
-        {
-            using (var connection = new SqlConnection(_connectionString))
+            connection.Execute(sql, new
             {
-                string sql = @"SELECT * FROM StudySessions";
-
-                return connection.Query<StudySession>(sql);
-            }
+                StackId = stackId,
+                Date = date,
+                Score = score
+            });
         }
+    }
 
-        public IEnumerable<MonthlyStudySessionsNumberData> GetMonthlyStudySessionReport(string year)
+    public IEnumerable<StudySession> GetAllStudySessions()
+    {
+        using (var connection = new SqlConnection(_connectionString))
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                string sql = @"SELECT
+            string sql = @"SELECT * FROM StudySessions";
+
+            return connection.Query<StudySession>(sql);
+        }
+    }
+
+    public IEnumerable<MonthlyStudySessionsNumberData> GetMonthlyStudySessionReport(string year)
+    {
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            string sql = @"SELECT
                                 Name AS StackName,
                                 ISNULL([January], 0) AS JanuaryNumber,
                                 ISNULL([February], 0) AS FebruaryNumber,
@@ -68,18 +68,18 @@ namespace Flashcards.Dejmenek.DataAccess.Repositories
                                  )
                                ) AS pivot_table";
 
-                return connection.Query<MonthlyStudySessionsNumberData>(sql, new
-                {
-                    Year = year
-                });
-            }
-        }
-
-        public IEnumerable<MonthlyStudySessionsAverageScoreData> GetMonthlyStudySessionAverageScoreReport(string year)
-        {
-            using (var connection = new SqlConnection(_connectionString))
+            return connection.Query<MonthlyStudySessionsNumberData>(sql, new
             {
-                string sql = @"SELECT 
+                Year = year
+            });
+        }
+    }
+
+    public IEnumerable<MonthlyStudySessionsAverageScoreData> GetMonthlyStudySessionAverageScoreReport(string year)
+    {
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            string sql = @"SELECT 
                                 Name AS StackName,
                                 ISNULL([January], 0) AS JanuaryAverageScore,
                                 ISNULL([February], 0) AS FebruaryAverageScore,
@@ -107,18 +107,18 @@ namespace Flashcards.Dejmenek.DataAccess.Repositories
                                 )
                                ) AS pivot_table";
 
-                return connection.Query<MonthlyStudySessionsAverageScoreData>(sql, new
-                {
-                    Year = year
-                });
-            }
-        }
-
-        public bool HasStudySession()
-        {
-            using (var connection = new SqlConnection(_connectionString))
+            return connection.Query<MonthlyStudySessionsAverageScoreData>(sql, new
             {
-                string sql = @"IF EXISTS (
+                Year = year
+            });
+        }
+    }
+
+    public bool HasStudySession()
+    {
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            string sql = @"IF EXISTS (
                                   SELECT 1 FROM StudySessions
                                )
                                BEGIN
@@ -129,8 +129,7 @@ namespace Flashcards.Dejmenek.DataAccess.Repositories
                                   SELECT 0;
                                END;";
 
-                return connection.QuerySingle<bool>(sql);
-            }
+            return connection.QuerySingle<bool>(sql);
         }
     }
 }
