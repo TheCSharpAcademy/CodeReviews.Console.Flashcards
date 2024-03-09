@@ -48,7 +48,7 @@ public class StudySessionsController
 
     public void RunStudySession(List<FlashcardDTO> studySessionFlashcards, int stackId)
     {
-        if (studySessionFlashcards is null)
+        if (studySessionFlashcards is [])
         {
             AnsiConsole.MarkupLine("No flashcards found to study.");
             return;
@@ -74,7 +74,7 @@ public class StudySessionsController
     {
         if (!_studySessionsRepository.HasStudySession())
         {
-            return null;
+            return [];
         }
 
         List<StudySessionDTO> studySessionDtos = new List<StudySessionDTO>();
@@ -93,7 +93,7 @@ public class StudySessionsController
 
         if (!_studySessionsRepository.HasStudySession())
         {
-            return null;
+            return Enumerable.Empty<MonthlyStudySessionsNumberData>();
         }
 
         string year = _userInteractionService.GetYear();
@@ -105,7 +105,7 @@ public class StudySessionsController
     {
         if (!_studySessionsRepository.HasStudySession())
         {
-            return null;
+            return Enumerable.Empty<MonthlyStudySessionsAverageScoreData>();
         }
 
         string year = _userInteractionService.GetYear();
