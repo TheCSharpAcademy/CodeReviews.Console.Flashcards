@@ -2,6 +2,7 @@
 using Flashcards.Dejmenek.Helpers;
 using Flashcards.Dejmenek.Models;
 using Flashcards.Dejmenek.Services;
+using Spectre.Console;
 
 namespace Flashcards.Dejmenek.Controllers;
 
@@ -23,6 +24,7 @@ public class StacksController
 
         while (_stacksRepository.StackExistsWithName(name))
         {
+            AnsiConsole.MarkupLine($"There is already a stack named {name}. Please try a different name.");
             name = _userInteractionService.GetStackName();
         }
 
