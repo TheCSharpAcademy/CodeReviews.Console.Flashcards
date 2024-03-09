@@ -12,7 +12,7 @@ public static class DataVisualizer
 
     public static void ShowFlashcards(List<FlashcardDTO> flashcards)
     {
-        if (flashcards is null)
+        if (flashcards is [])
         {
             AnsiConsole.MarkupLine("No flashcards found.");
             return;
@@ -36,7 +36,7 @@ public static class DataVisualizer
 
     public static void ShowStacks(List<StackDTO> stacks)
     {
-        if (stacks is null)
+        if (stacks is [])
         {
             AnsiConsole.MarkupLine("No stacks found.");
             return;
@@ -55,7 +55,7 @@ public static class DataVisualizer
 
     public static void ShowStudySessions(List<StudySessionDTO> studySessions)
     {
-        if (studySessions is null)
+        if (studySessions is [])
         {
             AnsiConsole.MarkupLine("No study sessions found.");
             return;
@@ -79,7 +79,7 @@ public static class DataVisualizer
 
     public static void ShowMonthlyStudySessionReport(IEnumerable<MonthlyStudySessionsNumberData> monthlyStudySessionsNumbers)
     {
-        if (monthlyStudySessionsNumbers is null)
+        if (!monthlyStudySessionsNumbers.Any())
         {
             AnsiConsole.MarkupLine("No study sessions found.");
             return;
@@ -111,7 +111,7 @@ public static class DataVisualizer
 
     public static void ShowMonthlyStudySessionAverageScoreReport(IEnumerable<MonthlyStudySessionsAverageScoreData> monthlyStudySessionsAverageScores)
     {
-        if (monthlyStudySessionsAverageScores is null)
+        if (!monthlyStudySessionsAverageScores.Any())
         {
             AnsiConsole.MarkupLine("No study sessions found.");
             return;

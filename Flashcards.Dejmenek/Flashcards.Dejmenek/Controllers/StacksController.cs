@@ -70,7 +70,7 @@ public class StacksController
     {
         if (!_stacksRepository.HasStackAnyFlashcards(CurrentStack.Id))
         {
-            return null;
+            return [];
         }
 
         List<FlashcardDTO> flashcardDtos = new List<FlashcardDTO>();
@@ -93,7 +93,7 @@ public class StacksController
     {
         if (!_stacksRepository.HasStack())
         {
-            return null;
+            return [];
         }
 
         List<StackDTO> stackDtos = new List<StackDTO>();
