@@ -32,16 +32,16 @@ public class UserInput
                     DatabaseController.DeleteStack();
                     break;
                 case "Add a Flash Card":
-                    DatabaseController.CreateFlashCard();
+                    DatabaseController.CreateFlashcard();
                     break;
                 case "Delete a Flash Card":
-                    DatabaseController.DeleteFlashCard();
+                    DatabaseController.DeleteFlashcard();
                     break;
                 case "Study Session":
-                    StudyFlashCards.NewStudySession();
+                    StudyFlashcards.NewStudySession();
                     break;
                 case "View Study Sessions":
-                    StudyFlashCards.GetStudySessions();
+                    StudyFlashcards.GetStudySessions();
                     break;
                 case "Exit":
                     appRunning = false;
