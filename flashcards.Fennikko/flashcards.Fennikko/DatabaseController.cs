@@ -1,6 +1,9 @@
-﻿using System.Configuration;
+﻿using System.Collections;
+using System.Configuration;
 using System.Data.SqlClient;
 using Dapper;
+using flashcards.Fennikko.Models;
+using Spectre.Console;
 
 namespace flashcards.Fennikko;
 
@@ -66,5 +69,59 @@ public class DatabaseController
             ON DELETE CASCADE
             )
             """);
+    }
+
+    public static int CreateStack()
+    {
+        AnsiConsole.Clear();
+        var stackName = AnsiConsole.Prompt(
+            new TextPrompt<string>("Please enter a [green]stack name[/]")
+                .PromptStyle("blue")
+                .AllowEmpty());
+        if(stackName == "0") UserInput.GetUserInput();
+        while (string.IsNullOrWhiteSpace(stackName))
+        {
+            stackName = AnsiConsole.Prompt(
+                new TextPrompt<string>("Please enter a [green]stack name[/]")
+                    .PromptStyle("blue")
+                    .AllowEmpty());
+            if(stackName == "0") UserInput.GetUserInput();
+        }
+
+        using var connection = new SqlConnection(ConnectionString);
+        var command = "INSERT INTO stacks (StackName) VALUES (@StackName)";
+        var stack = new Stacks { StackName = stackName };
+        var stackCreation = connection.Execute(command, stack);
+        AnsiConsole.MarkupLine($"[green]{stackCreation}[/] stack added.");
+        var getStackIdCommand = $"SELECT StackId from stacks WHERE StackName = '{stackName}'";
+        var stackIdQuery = connection.Query<Stacks>(getStackIdCommand);
+        var stackIdArray = stackIdQuery.Select(id => id.StackId).ToArray();
+        var stackId = stackIdArray[0];
+        return stackId;
+    }
+
+    public static void CreateFlashcard()
+    {
+
+    }
+
+    public static void DeleteStack()
+    {
+
+    }
+
+    public static void DeleteFlashcard()
+    {
+
+    }
+
+    public static int GetStacks(string function)
+    {
+
+    }
+
+    public static int GetFlashCards(string functions, int stackID)
+    {
+
     }
 }
