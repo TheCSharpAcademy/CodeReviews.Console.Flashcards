@@ -1,6 +1,6 @@
 ﻿namespace flashcards.Fennikko.Models;
 
-public class FlashCardDto
+public class FlashcardDto
 {
     public int FlashcardIndex { get; set; }
 
