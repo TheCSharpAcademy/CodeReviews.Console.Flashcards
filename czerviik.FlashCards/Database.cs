@@ -47,7 +47,7 @@ public class FlashcardDb : Database
                         Question VARCHAR(50), 
                         Answer VARCHAR(50), 
                         StackId INT,
-                        FOREIGN KEY(StackId) REFERENCES stacks(Id)
+                        FOREIGN KEY(StackId) REFERENCES stacks(Id) ON DELETE CASCADE
                         );
                 END";
 
@@ -88,7 +88,7 @@ public class FlashcardDb : Database
         ExecuteCommand(sql);
     }
 
-    public void Delete( int id)
+    public void Delete(int id)
     {
         var sql = @$"
         DELETE FROM flashcards
@@ -171,6 +171,15 @@ public class StackDb : Database
         ExecuteCommand(sql);
     }
 
+    public void Delete (int id)
+    {
+        var sql = @$"
+        DELETE FROM stacks
+        WHERE Id = {id}";
+
+        ExecuteCommand(sql);
+    }
+
     public List<Stack> GetAll()
     {
         var sql = "SELECT * FROM stacks";
@@ -192,7 +201,7 @@ public class StackDb : Database
     public bool NamePresent(string name)
     {
         var sql = $"SELECT * FROM stacks WHERE Name = @Name";
-        return ReadSingleCommand(sql, name) != null;
+        return ReadSingleCommand(sql, new { Name = name }) != null;
     }
 
 }

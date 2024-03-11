@@ -90,7 +90,7 @@ public class FlashCardMenu : Menu
 
     private void DisplayStackOptions()
     {
-        var stacksArray = GetStackNamesArray(stacksList);
+        var stacksArray = Operations.StackListToNamesArray(stacksList);
         UserInterface.NewFlashcard(stacksArray);
     }
 
@@ -144,16 +144,6 @@ public class FlashCardMenu : Menu
         MenuManager.DisplayCurrentMenu();
     }
 
-    protected static string[] GetStackNamesArray(List<Stack> stacks)
-    {
-        var stacksArray = new string[stacks.Count];
-        for (int i = 0; i < stacks.Count; i++)
-        {
-            stacksArray[i] = stacks[i].Name;
-        }
-        return stacksArray;
-    }
-
     private Stack CreateStack()
     {
         string stackName = HandleStackNameInput();
@@ -180,11 +170,13 @@ public class FlashCardMenu : Menu
     }
 }
 
-public class ShowStacksMenu : FlashCardMenu
+public class ShowStacksMenu : Menu
 {
-    private List<Flashcard> flashcards;
-    private List<FlashcardReviewDto> flashcardDtos;
-    private Stack userStack;
+
+    protected List<Stack> stacksList;
+    protected List<Flashcard> flashcards;
+    protected List<FlashcardReviewDto> flashcardDtos;
+    protected Stack userStack;
     public ShowStacksMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb) : base(menuManager, flashcardDb, stackDb) { }
 
     public override void Display()
@@ -217,18 +209,20 @@ public class ShowStacksMenu : FlashCardMenu
 
     private void DisplayStackOptions()
     {
-        var stacksArray = GetStackNamesArray(stacksList);
+        var stacksArray = Operations.StackListToNamesArray(stacksList);
+
         UserInterface.ShowStacks(stacksArray);
+
     }
 
     private void DisplayFlashcards(Stack stack)
     {
-        flashcardDtos = ConvertToDto(flashcards);
+        flashcardDtos = Operations.ConvertToDto(flashcards);
         UserInterface.ShowFlashcards(flashcardDtos, stack);
     }
     private void DisplayFlashcards(List<Stack> stacks)
     {
-        flashcardDtos = ConvertToDto(flashcards);
+        flashcardDtos = Operations.ConvertToDto(flashcards);
         UserInterface.ShowFlashcards(flashcardDtos, stacks);
     }
 
@@ -268,31 +262,41 @@ public class ShowStacksMenu : FlashCardMenu
                 MenuManager.GoBack();
                 break;
             case "Update a Flashcard":
-                try
-                {
-                    HandleFlashcardUpdate();
-                }
-                catch (KeyNotFoundException ex)
-                {
-                    UserInput.DisplayMessage(ex.Message + " Update failed.", "go back", true);
-                }
+                MenuManager.NewMenu(new UpdateFlashcardMenu(MenuManager, FlashcardDb, StackDb, flashcards, flashcardDtos, userStack));
                 break;
             case "Delete a Flashcard":
-                try
-                {
-                    HandleFlashcardDelete();
-                }
-                catch (KeyNotFoundException ex)
-                {
-                    UserInput.DisplayMessage(ex.Message + " Deletion failed.", "go back", true);
-                }
+                MenuManager.NewMenu(new DeleteFlashcardMenu(MenuManager, FlashcardDb, StackDb, flashcards, flashcardDtos, userStack));
                 break;
             case "Delete a Stack":
-            {
-                
-            }
+                {
+                    MenuManager.NewMenu(new DeleteStackMenu(MenuManager, FlashcardDb, StackDb, stacksList));
+                }
                 break;
         }
+    }
+}
+
+public class UpdateFlashcardMenu : ShowStacksMenu
+{
+    public UpdateFlashcardMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, List<Flashcard> flashcards, List<FlashcardReviewDto> flashcardDtos, Stack userStack) : base(menuManager, flashcardDb, stackDb)
+    {
+        this.flashcards = flashcards;
+        this.flashcardDtos = flashcardDtos;
+        this.userStack = userStack;
+    }
+
+    public override void Display()
+    {
+        try
+        {
+            HandleFlashcardUpdate();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            UserInput.DisplayMessage(ex.Message + " Update failed.", "go back", true);
+        }
+
+        MenuManager.GoBack();
     }
     private void HandleFlashcardUpdate()
     {
@@ -310,7 +314,7 @@ public class ShowStacksMenu : FlashCardMenu
             UserInterface.UpdateFlashcardConfirm(userId, userQuestion, userAnswer, userStack.Name);
             if (UserInterface.OptionChoice == "Confirm")
             {
-                var flashcardId = GetFlashcardDbId(userId, flashcards, flashcardDtos);
+                var flashcardId = Operations.GetFlashcardDbId(userId, flashcards, flashcardDtos);
                 if (flashcardId != -1)
                 {
                     FlashcardDb.Update(userQuestion, userAnswer, userStack.Id, flashcardId);
@@ -320,9 +324,31 @@ public class ShowStacksMenu : FlashCardMenu
                     throw new KeyNotFoundException("The specified id was not found in the collection.");
                 }
                 break;
-
             }
         }
+    }
+}
+
+public class DeleteFlashcardMenu : ShowStacksMenu
+{
+    public DeleteFlashcardMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, List<Flashcard> flashcards, List<FlashcardReviewDto> flashcardDtos, Stack userStack) : base(menuManager, flashcardDb, stackDb)
+    {
+        this.flashcards = flashcards;
+        this.flashcardDtos = flashcardDtos;
+        this.userStack = userStack;
+    }
+    public override void Display()
+    {
+        try
+        {
+            HandleFlashcardDelete();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            UserInput.DisplayMessage(ex.Message + " Deletion failed.", "go back", true);
+        }
+
+        MenuManager.GoBack();
     }
     private void HandleFlashcardDelete()
     {
@@ -334,7 +360,7 @@ public class ShowStacksMenu : FlashCardMenu
             UserInterface.DeleteFlashcardConfirm(userId);
             if (UserInterface.OptionChoice == "Yes")
             {
-                var flashcardId = GetFlashcardDbId(userId, flashcards, flashcardDtos);
+                var flashcardId = Operations.GetFlashcardDbId(userId, flashcards, flashcardDtos);
                 if (flashcardId != -1)
                 {
                     FlashcardDb.Delete(flashcardId);
@@ -344,44 +370,74 @@ public class ShowStacksMenu : FlashCardMenu
                     throw new KeyNotFoundException("The specified id was not found in the collection.");
                 }
                 break;
-
             }
         }
-
-
-
-    }
-    private int GetFlashcardDbId(int userId, List<Flashcard> flashcards, List<FlashcardReviewDto> flashcardDtos)
-    {
-        var index = flashcardDtos.FindIndex(f => f.DisplayId == userId);
-        return flashcards[index].Id;
-    }
-
-    private List<FlashcardReviewDto> ConvertToDto(List<Flashcard> flashcards)
-    {
-        var flashcardDtos = new List<FlashcardReviewDto>();
-        int startId = 1;
-        foreach (var flashcard in flashcards)
-        {
-            flashcardDtos.Add(new FlashcardReviewDto
-            {
-                DisplayId = startId++,
-                Question = flashcard.Question,
-                Answer = flashcard.Answer,
-                StackId = flashcard.StackId
-            });
-        }
-        return flashcardDtos;
     }
 }
-public class UpdateFlashcardMenu : Menu
+
+public class DeleteStackMenu : ShowStacksMenu
 {
-    public UpdateFlashcardMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb) : base(menuManager, flashcardDb, stackDb) { }
+    public DeleteStackMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, List<Stack> stacksList) : base(menuManager, flashcardDb, stackDb)
+    {
+        this.stacksList = stacksList;
+    }
 
     public override void Display()
     {
+        try
+        {
+            DisplayStacks();
+            HandleUserOptions();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            UserInput.DisplayMessage(ex.Message + " Deletion failed.", "go back", true);
+        }
+
+        MenuManager.GoBack();
     }
 
+    private void DisplayStacks()
+    {
+        var stacksArray = Operations.StackListToNamesArray(stacksList);
+        UserInterface.DeleteStack(stacksArray);
+    }
+    private void HandleUserOptions()
+    {
+        switch (UserInterface.OptionChoice)
+        {
+            case "Go back":
+                MenuManager.GoBack();
+                break;
+
+            default:
+                userStack = stacksList.FirstOrDefault(s => s.Name == UserInterface.OptionChoice);
+                if (userStack == null)
+                {
+                    throw new InvalidOperationException($"A stack with the name {UserInterface.OptionChoice}, does not exist in this context.");
+                }
+                else
+                {
+                    HandleStackDelete(userStack);
+                    MenuManager.DisplayCurrentMenu();
+                }
+                break;
+        }
+    }
+
+    private void HandleStackDelete(Stack userStack)
+    {
+        UserInterface.DeleteStackConfirm(userStack);
+
+        if (UserInterface.OptionChoice == "Yes")
+        {
+            StackDb.Delete(userStack.Id);
+            UserInput.DisplayMessage($"Stack '{userStack.Name}' and it's flashcards have been deleted.","go back",true);
+        }
+        else
+            MenuManager.DisplayCurrentMenu();
+
+    }
 }
 public class ShowStudySessionsMenu : Menu
 {

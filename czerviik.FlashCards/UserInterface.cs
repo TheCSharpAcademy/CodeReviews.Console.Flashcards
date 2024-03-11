@@ -49,21 +49,47 @@ public static class UserInterface
 
     public static void ShowStacks(string[] stacks)
     {
+        string[] modifiedStacks;
         Header("show stacks");
 
         if (stacks.Length != 0)
         {
             Console.WriteLine("Select a stack");
 
-            var modifiedStacks = new string[stacks.Length + 2];
+            modifiedStacks = new string[stacks.Length + 2];
             stacks.CopyTo(modifiedStacks, 0);
             modifiedStacks[^2] = "Show all";
+
             modifiedStacks[^1] = "Go back";
 
             ChooseOptions(modifiedStacks);
         }
     }
 
+    public static void DeleteStack(string[] stacks)
+    {
+        string[] modifiedStacks;
+        Header("delete a stack");
+
+        if (stacks.Length != 0)
+        {
+            Console.WriteLine("Select a stack");
+
+            modifiedStacks = new string[stacks.Length + 1];
+            stacks.CopyTo(modifiedStacks, 0);
+
+            modifiedStacks[^1] = "Go back";
+
+            ChooseOptions(modifiedStacks);
+        }
+    }
+
+    public static void DeleteStackConfirm(Stack stack)
+    {
+        Console.Clear();
+        Console.WriteLine($"Do you really want to delete {stack.Name}? (all stack's flashcards will be lost)\n");
+        ChooseOptions(["Yes","No"]);
+    }
     public static void ShowFlashcards(List<FlashcardReviewDto> flashcards, Stack stack)
     {
         string[] options = {
