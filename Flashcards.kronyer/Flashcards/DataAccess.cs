@@ -31,9 +31,7 @@ public class DataAcess
                         PRIMARY KEY (Id)
                     );";
 
-
                 connection.Execute(createStackTableSql);
-
 
                 string createFlashcardTableSql =
                     @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Flashcards')
@@ -75,7 +73,7 @@ public class DataAcess
         }
     }
 
-    internal List<StudySessionDto> GetStudySessionData()
+    internal List<StudySessionDTO> GetStudySessionData()
     {
         using (var connection = new SqlConnection(ConnectionString))
         {
@@ -95,7 +93,7 @@ public class DataAcess
             Stacks s ON ss.StackId = s.Id;";
 
 
-            return connection.Query<StudySessionDto>(getStudyQuery).ToList();
+            return connection.Query<StudySessionDTO>(getStudyQuery).ToList();
         }
     }
     internal void InsertStudySession(StudySession session)
@@ -201,6 +199,7 @@ public class DataAcess
             using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
+
                 string selectQuery = "SELECT * FROM flashcards WHERE StackId = @StackId";
 
                 var records = connection.Query<Flashcard>(selectQuery, new { StackId = stackId }).ToList();
@@ -232,8 +231,6 @@ public class DataAcess
             Console.WriteLine(e.Message);
         }
     }
-
-
 
     internal void UpdateFlashcard(int flashcardId, Dictionary<string, object> propertiesToUpdate)
     {
@@ -289,9 +286,16 @@ public class DataAcess
                 connection.Open();
                 string deleteQuery = "DELETE FROM flashcards WHERE Id = @Id";
 
-                connection.Execute(deleteQuery, new { Id = id });
+                int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
 
+                string resetQuery = @"
+                WITH CTE AS (
+                    SELECT Id, ROW_NUMBER() OVER (ORDER BY Id) AS NewId
+                    FROM flashcards
+                )
+                UPDATE CTE SET Id = NewId";
 
+                connection.Execute(resetQuery);
             }
         }
         catch (Exception ex)
@@ -308,7 +312,7 @@ public class DataAcess
             {
                 connection.Open();
                 string deleteQuery = "DELETE FROM stacks WHERE Id = @Id";
-                connection.Execute(deleteQuery, new { Id = id });
+                int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
             }
         }
         catch (Exception ex)
@@ -316,7 +320,4 @@ public class DataAcess
             Console.WriteLine(ex.Message);
         }
     }
-
-
-
 }
