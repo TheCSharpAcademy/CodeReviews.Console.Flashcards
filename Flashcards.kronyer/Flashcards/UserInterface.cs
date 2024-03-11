@@ -88,6 +88,11 @@ namespace Flashcards
         private static int ChooseStack(string message)
         {
             var dataAccess = new DataAcess();
+            if (dataAccess.GetAllStacks().IsNullOrEmpty())
+            {
+                Console.WriteLine("Nothing to see here");
+                MainMenu();
+            }
             var stacks = dataAccess.GetAllStacks();
 
             var stacksArray = stacks.Select(x => x.Name).ToArray();

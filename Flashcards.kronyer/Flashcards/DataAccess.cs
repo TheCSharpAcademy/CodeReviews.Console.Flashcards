@@ -286,16 +286,7 @@ public class DataAcess
                 connection.Open();
                 string deleteQuery = "DELETE FROM flashcards WHERE Id = @Id";
 
-                int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
-
-                string resetQuery = @"
-                WITH CTE AS (
-                    SELECT Id, ROW_NUMBER() OVER (ORDER BY Id) AS NewId
-                    FROM flashcards
-                )
-                UPDATE CTE SET Id = NewId";
-
-                connection.Execute(resetQuery);
+                connection.Execute(deleteQuery, new { Id = id });
             }
         }
         catch (Exception ex)
@@ -312,7 +303,7 @@ public class DataAcess
             {
                 connection.Open();
                 string deleteQuery = "DELETE FROM stacks WHERE Id = @Id";
-                int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
+                connection.Execute(deleteQuery, new { Id = id });
             }
         }
         catch (Exception ex)
