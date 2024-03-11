@@ -2,7 +2,6 @@
 {
     internal class Enums
     {
-
         internal enum MainMenuChoices
         {
             ManageStacks,
@@ -29,6 +28,5 @@
             UpdateFlashcard,
             Return
         }
-
     }
 }
