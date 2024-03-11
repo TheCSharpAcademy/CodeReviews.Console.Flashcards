@@ -73,7 +73,7 @@ public class DataAcess
         }
     }
 
-    internal List<StudySessionDTO> GetStudySessionData()
+    internal List<StudySessionDto> GetStudySessionData()
     {
         using (var connection = new SqlConnection(ConnectionString))
         {
@@ -92,8 +92,7 @@ public class DataAcess
         INNER JOIN
             Stacks s ON ss.StackId = s.Id;";
 
-
-            return connection.Query<StudySessionDTO>(getStudyQuery).ToList();
+            return connection.Query<StudySessionDto>(getStudyQuery).ToList();
         }
     }
     internal void InsertStudySession(StudySession session)
@@ -148,7 +147,6 @@ public class DataAcess
 
 
                 return connection.QueryFirstOrDefault<Stack>(selectQuery);
-
             }
         }
         catch (Exception ex)

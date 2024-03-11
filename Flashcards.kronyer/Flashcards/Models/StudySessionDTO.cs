@@ -1,6 +1,6 @@
 ﻿namespace Flashcards.Models
 {
-    internal class StudySessionDTO
+    internal class StudySessionDto
     {
         public string StackName { get; set; }
         public DateTime Date { get; set; }
