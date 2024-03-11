@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Spectre.Console;
 
 namespace FlashCards;
 
@@ -267,32 +268,95 @@ public class ShowStacksMenu : FlashCardMenu
                 MenuManager.GoBack();
                 break;
             case "Update a Flashcard":
-                HandleFlashcardUpdate();
+                try
+                {
+                    HandleFlashcardUpdate();
+                }
+                catch (KeyNotFoundException ex)
+                {
+                    UserInput.DisplayMessage(ex.Message + " Update failed.", "go back", true);
+                }
                 break;
             case "Delete a Flashcard":
+                try
+                {
+                    HandleFlashcardDelete();
+                }
+                catch (KeyNotFoundException ex)
+                {
+                    UserInput.DisplayMessage(ex.Message + " Deletion failed.", "go back", true);
+                }
                 break;
             case "Delete a Stack":
+            {
+                
+            }
                 break;
         }
     }
     private void HandleFlashcardUpdate()
     {
-        UserInterface.UpdateFlashcard(flashcardDtos, stacksList);
-        var userId = UserInput.FlashcardIdInput(MenuManager, flashcardDtos);
-
-        UserInterface.UpdateFlashcardQuestion(userId);
-        var userQuestion = UserInput.InputWithSpecialKeys(MenuManager, true, 50);
-
-        UserInterface.UpdateFlashcardAnswer(userId, userQuestion);
-        var userAnswer = UserInput.InputWithSpecialKeys(MenuManager, true, 50);
-
-        UserInterface.UpdateFlashcardConfirm(userId, userQuestion, userAnswer,userStack.Name); //obecně zajisti aby database classy plivaly jen listy svých objektů a pak upravit, aby to všude fungovalo
-        if (UserInterface.OptionChoice == "Confirm")
+        while (true)
         {
-            //FlashcardDb.Insert(userQuestion, userAnswer, currentStack.Id); dodělat tuhle methodu (možná přidat funkci pro přesouvání flashcards)
+            UserInterface.UpdateFlashcard(flashcardDtos, userStack);
+            var userId = UserInput.FlashcardIdInput(MenuManager, flashcardDtos);
+
+            UserInterface.UpdateFlashcardQuestion(userId);
+            var userQuestion = UserInput.InputWithSpecialKeys(MenuManager, true, 50);
+
+            UserInterface.UpdateFlashcardAnswer(userId, userQuestion);
+            var userAnswer = UserInput.InputWithSpecialKeys(MenuManager, true, 50);
+
+            UserInterface.UpdateFlashcardConfirm(userId, userQuestion, userAnswer, userStack.Name);
+            if (UserInterface.OptionChoice == "Confirm")
+            {
+                var flashcardId = GetFlashcardDbId(userId, flashcards, flashcardDtos);
+                if (flashcardId != -1)
+                {
+                    FlashcardDb.Update(userQuestion, userAnswer, userStack.Id, flashcardId);
+                }
+                else
+                {
+                    throw new KeyNotFoundException("The specified id was not found in the collection.");
+                }
+                break;
+
+            }
+        }
+    }
+    private void HandleFlashcardDelete()
+    {
+        while (true)
+        {
+            UserInterface.DeleteFlashcard(flashcardDtos, userStack);
+            var userId = UserInput.FlashcardIdInput(MenuManager, flashcardDtos);
+
+            UserInterface.DeleteFlashcardConfirm(userId);
+            if (UserInterface.OptionChoice == "Yes")
+            {
+                var flashcardId = GetFlashcardDbId(userId, flashcards, flashcardDtos);
+                if (flashcardId != -1)
+                {
+                    FlashcardDb.Delete(flashcardId);
+                }
+                else
+                {
+                    throw new KeyNotFoundException("The specified id was not found in the collection.");
+                }
+                break;
+
+            }
         }
 
+
+
     }
+    private int GetFlashcardDbId(int userId, List<Flashcard> flashcards, List<FlashcardReviewDto> flashcardDtos)
+    {
+        var index = flashcardDtos.FindIndex(f => f.DisplayId == userId);
+        return flashcards[index].Id;
+    }
+
     private List<FlashcardReviewDto> ConvertToDto(List<Flashcard> flashcards)
     {
         var flashcardDtos = new List<FlashcardReviewDto>();

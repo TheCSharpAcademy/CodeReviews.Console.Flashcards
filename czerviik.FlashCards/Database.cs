@@ -78,6 +78,24 @@ public class FlashcardDb : Database
 
         ExecuteCommand(sql);
     }
+    public void Update(string question, string answer, int stackId, int id)
+    {
+        var sql = @$"
+        UPDATE flashcards
+        SET Question = '{question}', Answer = '{answer}', StackId = {stackId}
+        WHERE Id = {id}";
+
+        ExecuteCommand(sql);
+    }
+
+    public void Delete( int id)
+    {
+        var sql = @$"
+        DELETE FROM flashcards
+        WHERE Id = {id}";
+
+        ExecuteCommand(sql);
+    }
 
     public List<Flashcard> GetAll()
     {

@@ -154,10 +154,19 @@ public static class UserInterface
         ChooseOptions(["Confirm", "Enter again"]);
     }
 
+    public static void DeleteFlashcardConfirm(int id)
+    {
+        Console.WriteLine();
+        Console.WriteLine($"Delete flashcard #{id}?");
+        ChooseOptions(["Yes", "No"]);
+    }
+
     public static void AnotherFlashcard()
     {
         Console.Clear();
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("Flashcard saved!");
+        Console.ResetColor();
         Console.WriteLine();
         ChooseOptions(["Add another flashcard", "Done"]);
     }
@@ -166,12 +175,20 @@ public static class UserInterface
         Header("create new stack");
         Console.WriteLine("Enter stack's name: ");
     }
-    public static void UpdateFlashcard(List<FlashcardReviewDto> flashcards, List<Stack> stacks)
+    public static void UpdateFlashcard(List<FlashcardReviewDto> flashcards, Stack stack)
     {
         Header("show stacks");
-        FlashcardsTable(flashcards, stacks);
+        FlashcardsTable(flashcards, stack);
         Console.WriteLine("Type a Flashcard Id to Update:\n");
     }
+
+    public static void DeleteFlashcard(List<FlashcardReviewDto> flashcards, Stack stack)
+    {
+        Header("show stacks");
+        FlashcardsTable(flashcards, stack);
+        Console.WriteLine("Type a Flashcard Id to Delete:\n");
+    }
+
     public static void ShowStudySessions()
     {
         Header("show study sessions");
