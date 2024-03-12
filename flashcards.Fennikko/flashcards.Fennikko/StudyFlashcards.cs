@@ -103,4 +103,75 @@ public class StudyFlashcards
 
         AnsiConsole.Write(table);
     }
+
+    public static void StudySessionReport()
+    {
+        AnsiConsole.Clear();
+        using var connection = new SqlConnection(ConnectionString);
+        var command = """
+                      SELECT 
+                          Year,
+                          ISNULL([1], 0) AS January,
+                          ISNULL([2], 0) AS February,
+                          ISNULL([3], 0) AS March,
+                          ISNULL([4], 0) AS April,
+                          ISNULL([5], 0) AS May,
+                          ISNULL([6], 0) AS June,
+                          ISNULL([7], 0) AS July,
+                          ISNULL([8], 0) AS August,
+                          ISNULL([9], 0) AS September,
+                          ISNULL([10], 0) AS October,
+                          ISNULL([11], 0) AS November,
+                          ISNULL([12], 0) AS December
+                      FROM (
+                          SELECT 
+                              YEAR(SessionDate) AS Year,
+                              MONTH(SessionDate) AS Month,
+                              AVG(SessionScore) AS AverageScore
+                          FROM 
+                              study_sessions
+                          GROUP BY 
+                              YEAR(SessionDate),
+                              MONTH(SessionDate)
+                      ) AS MonthlyAverages
+                      PIVOT (
+                          AVG(AverageScore)
+                          FOR Month IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
+                      ) AS PivotTable
+                      ORDER BY 
+                          Year;
+                      """;
+        var getReports = connection.Query(command);
+        var reportsList = getReports.ToList();
+        TableReport(reportsList);
+        AnsiConsole.MarkupLine("[blue]Press any key to return to main menu[/]");
+        Console.ReadKey();
+    }
+
+    public static void TableReport(List<dynamic> reports)
+    {
+        AnsiConsole.Clear();
+        var table = new Table();
+        table.Title(new TableTitle($"[blue]Study Sessions[/]"));
+        table.AddColumn(new TableColumn("[#1ABC9C]Year[/]").Centered());
+        table.AddColumn(new TableColumn("[#16A085]January[/]").Centered());
+        table.AddColumn(new TableColumn("[#27AE60]February[/]").Centered());
+        table.AddColumn(new TableColumn("[#2ECC71]March[/]").Centered());
+        table.AddColumn(new TableColumn("[#3498DB]April[/]").Centered());
+        table.AddColumn(new TableColumn("[#2980B9]May[/]").Centered());
+        table.AddColumn(new TableColumn("[#9B59B6]June[/]").Centered());
+        table.AddColumn(new TableColumn("[#8E44AD]July[/]").Centered());
+        table.AddColumn(new TableColumn("[#FF5733]August[/]").Centered());
+        table.AddColumn(new TableColumn("[#E74C3C]September[/]").Centered());
+        table.AddColumn(new TableColumn("[#D35400]October[/]").Centered());
+        table.AddColumn(new TableColumn("[#F39C12]November[/]").Centered());
+        table.AddColumn(new TableColumn("[#E67E22]December[/]").Centered());
+        var averageScoreList = new List<int>();
+        foreach (var report in reports)
+        {
+            table.AddRow($"[#3EB489]{report.Year}[/]", $"[#3EB489]{report.January}[/]", $"[#3EB489]{report.February}[/]", $"[#3EB489]{report.March}[/]", $"[#3EB489]{report.April}[/]", $"[#3EB489]{report.May}[/]", $"[#3EB489]{report.June}[/]", $"[#3EB489]{report.July}[/]", $"[#3EB489]{report.August}[/]", $"[#3EB489]{report.September}[/]", $"[#3EB489]{report.October}[/]", $"[#3EB489]{report.November}[/]", $"[#3EB489]{report.December}[/]");
+        }
+        AnsiConsole.Write(table);
+    }
+
 }

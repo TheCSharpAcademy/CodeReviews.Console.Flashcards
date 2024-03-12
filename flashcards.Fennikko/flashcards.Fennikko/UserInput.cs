@@ -21,7 +21,7 @@ public class UserInput
                     {
                         "Add a Stack", "Delete a Stack", "Add a Flash Card",
                         "Delete a Flash Card", "Study Session","View Study Sessions",
-                        "Exit"
+                        "Study Session Report","Exit"
                     }));
             switch (functionSelect)
             {
@@ -42,6 +42,9 @@ public class UserInput
                     break;
                 case "View Study Sessions":
                     StudyFlashcards.GetStudySessions();
+                    break;
+                case "Study Session Report":
+                    StudyFlashcards.StudySessionReport();
                     break;
                 case "Exit":
                     appRunning = false;
