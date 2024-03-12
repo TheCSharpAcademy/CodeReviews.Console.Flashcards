@@ -90,9 +90,20 @@ public class DatabaseController
         using var connection = new SqlConnection(ConnectionString);
         var command = "INSERT INTO stacks (StackName) VALUES (@StackName)";
         var stack = new Stacks { StackName = stackName };
-        var stackCreation = connection.Execute(command, stack);
-        AnsiConsole.MarkupLine($"[green]{stackCreation}[/] stack added. Press any key to continue.");
-        Console.ReadKey();
+
+        try
+        {
+            var stackCreation = connection.Execute(command, stack);
+            AnsiConsole.MarkupLine($"[green]{stackCreation}[/] stack added. Press any key to continue.");
+            Console.ReadKey();
+        }
+        catch (SqlException e)
+        {
+            var errorMessage = Convert.ToString(e.Message);
+            AnsiConsole.MarkupLine($"[red]{errorMessage}[/]. Press any key to continue: ");
+            Console.ReadKey();
+            CreateStack();
+        }
         var getStackIdCommand = $"SELECT StackId from stacks WHERE StackName = '{stackName}'";
         var stackIdQuery = connection.Query<Stacks>(getStackIdCommand);
         var stackIdArray = stackIdQuery.Select(id => id.StackId).ToArray();
@@ -148,9 +159,21 @@ public class DatabaseController
             var cardCreationCommand =
                 "INSERT INTO flash_cards (FlashcardIndex,CardFront,CardBack,StackId) VALUES (@FlashcardIndex,@CardFront,@CardBack,@StackId)";
             var flashcard = new Flashcards { FlashcardIndex = flashCardIndex,CardFront = cardFront,CardBack = cardBack,StackId = stackId};
-            var cardCreation = connection.Execute(cardCreationCommand, flashcard);
-            AnsiConsole.Write(new Markup($"[green]{cardCreation}[/] flashcard added. Press any key to continue."));
-            Console.ReadKey();
+
+            try
+            {
+                var cardCreation = connection.Execute(cardCreationCommand, flashcard);
+                AnsiConsole.Write(new Markup($"[green]{cardCreation}[/] flashcard added. Press any key to continue."));
+                Console.ReadKey();
+            }
+            catch (SqlException e)
+            {
+                var errorMessage = Convert.ToString(e.Message);
+                AnsiConsole.MarkupLine($"[red]{errorMessage}[/]. Press any key to continue: ");
+                Console.ReadKey();
+                CreateFlashcard();
+            }
+           
         }
         else
         {
@@ -192,9 +215,21 @@ public class DatabaseController
             var cardCreationCommand =
                 "INSERT INTO flash_cards (FlashcardIndex,CardFront,CardBack,StackId) VALUES (@FlashcardIndex,@CardFront,@CardBack,@StackId)";
             var flashcard = new Flashcards { FlashcardIndex = flashcardIndex, CardFront = cardFront, CardBack = cardBack, StackId = stackId };
-            var cardCreation = connection.Execute(cardCreationCommand, flashcard);
-            AnsiConsole.Write(new Markup($"[green]{cardCreation}[/] flashcard added. Press any key to continue."));
-            Console.ReadKey();
+
+            try
+            {
+                var cardCreation = connection.Execute(cardCreationCommand, flashcard);
+                AnsiConsole.Write(new Markup($"[green]{cardCreation}[/] flashcard added. Press any key to continue."));
+                Console.ReadKey();
+            }
+            catch (SqlException e)
+            {
+                var errorMessage = Convert.ToString(e.Message);
+                AnsiConsole.MarkupLine($"[red]{errorMessage}[/]. Press any key to continue: ");
+                Console.ReadKey();
+                CreateFlashcard();
+            }
+           
         }
     }
 
