@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.Data.SqlClient;
+using System.Globalization;
 using Dapper;
 using flashcards.Fennikko.Models;
 using Spectre.Console;
@@ -72,6 +73,12 @@ public class StudyFlashcards
         var stackId = DatabaseController.GetStacks("to view study sessions");
         var command = $"SELECT * FROM study_sessions WHERE StackId = '{stackId}'";
         var studySessions = connection.Query<StudySessions>(command);
+        if (studySessions.Count() == 0)
+        {
+            AnsiConsole.MarkupLine("[red]No study sessions found.[/] Press any key to return to main menu.");
+            Console.ReadKey();
+            UserInput.GetUserInput();
+        }
         var studySessionsList = studySessions.ToList();
         var stackNameQuery = $"SELECT StackName FROM stacks WHERE StackId = '{stackId}'";
         var getStackName = connection.Query<string>(stackNameQuery);
@@ -107,8 +114,21 @@ public class StudyFlashcards
     public static void StudySessionReport()
     {
         AnsiConsole.Clear();
+        var year = AnsiConsole.Prompt(
+            new TextPrompt<string>("Please enter a year in [green](Format: yyyy)[/]: ")
+                .PromptStyle("blue")
+                .AllowEmpty());
+        while (string.IsNullOrWhiteSpace(year) || !int.TryParse(year, out _) || year.Length < 4 || year.Length > 4)
+        {
+            year = AnsiConsole.Prompt(
+                new TextPrompt<string>("[red]Invalid entry.[/] Please enter a year in [green](Format: yyyy)[/]: ")
+                    .PromptStyle("blue")
+                    .AllowEmpty());
+        }
+
+        var intYear = Convert.ToInt32(year);
         using var connection = new SqlConnection(ConnectionString);
-        var command = """
+        var command = $"""
                       SELECT 
                           Year,
                           ISNULL([1], 0) AS January,
@@ -130,6 +150,8 @@ public class StudyFlashcards
                               AVG(SessionScore) AS AverageScore
                           FROM 
                               study_sessions
+                          WHERE
+                              YEAR(SessionDate) = '{intYear}'
                           GROUP BY 
                               YEAR(SessionDate),
                               MONTH(SessionDate)
@@ -142,6 +164,26 @@ public class StudyFlashcards
                           Year;
                       """;
         var getReports = connection.Query(command);
+        if (getReports.Count() == 0)
+        {
+            var tryAgain = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[red]No study sessions found.[/] Would you like to try again?")
+                    .PageSize(10)
+                    .AddChoices(new[]
+                    {
+                        "Yes","No"
+                    }));
+            if (tryAgain == "Yes")
+            {
+                StudySessionReport();
+            }
+
+            if (tryAgain == "No")
+            {
+                UserInput.GetUserInput();
+            }
+        }
         var reportsList = getReports.ToList();
         TableReport(reportsList);
         AnsiConsole.MarkupLine("[blue]Press any key to return to main menu[/]");
