@@ -23,22 +23,6 @@ public class StacksRepository : IStacksRepository
         }
     }
 
-    public void AddFlashcard(int stackId, string front, string back)
-    {
-        using (var connection = new SqlConnection(_connectionString))
-        {
-            string sql = @"INSERT INTO Flashcards (StackId, Front, Back) VALUES
-                               (@StackId, @Front, @Back)";
-
-            connection.Execute(sql, new
-            {
-                StackId = stackId,
-                Front = front,
-                Back = back
-            });
-        }
-    }
-
     public void DeleteFlashcardFromStack(int flashcardId, int stackId)
     {
         using (var connection = new SqlConnection(_connectionString))

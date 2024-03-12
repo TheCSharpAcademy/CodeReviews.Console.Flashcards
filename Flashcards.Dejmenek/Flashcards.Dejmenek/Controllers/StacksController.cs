@@ -10,12 +10,14 @@ public class StacksController
 {
     private readonly StacksRepository _stacksRepository;
     private readonly UserInteractionService _userInteractionService;
+    private readonly FlashcardsRepository _flashcardsRepository;
     public Stack? CurrentStack { get; private set; }
 
-    public StacksController(StacksRepository stacksRepository, UserInteractionService userInteractionService)
+    public StacksController(StacksRepository stacksRepository, UserInteractionService userInteractionService, FlashcardsRepository flashcardsRepository)
     {
         _stacksRepository = stacksRepository;
         _userInteractionService = userInteractionService;
+        _flashcardsRepository = flashcardsRepository;
     }
 
     public void AddStack()
@@ -36,7 +38,7 @@ public class StacksController
         string front = _userInteractionService.GetFlashcardFront();
         string back = _userInteractionService.GetFlashcardBack();
 
-        _stacksRepository.AddFlashcard(CurrentStack.Id, front, back);
+        _flashcardsRepository.AddFlashcard(CurrentStack.Id, front, back);
     }
 
     public void DeleteStack()
