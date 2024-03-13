@@ -84,7 +84,7 @@
 	![image](https://github.com/Fennikko/Images/blob/main/FlashcardDeletion2.png)
 
 - Users will get a message that the flashcard has been deleted, and that the indexes have been updated.
-- When a flash card is deleted, all flashcards with a higher Id value than it had, will be decreased by 1 each to get rid of any Id Gaps
+- When a flash card is deleted, all flashcard Id's will adjust to get rid of any gaps.
 	![image](https://github.com/Fennikko/Images/blob/main/FlashcardDeletion3.png)
 
 
