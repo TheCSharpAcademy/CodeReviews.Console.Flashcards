@@ -129,28 +129,28 @@ public class DatabaseController
             var flashCardIndex = 1;
             using var connection = new SqlConnection(ConnectionString);
             var cardFront = AnsiConsole.Prompt(
-                new TextPrompt<string>("Please enter the flash card [green]question[/] or press 0 to return to main menu: ")
+                new TextPrompt<string>("Please enter the [green]front[/] of the flashcard or press 0 to return to main menu: ")
                     .PromptStyle("blue")
                     .AllowEmpty());
             if (cardFront == "0") UserInput.GetUserInput();
             while (string.IsNullOrWhiteSpace(cardFront))
             {
                 cardFront = AnsiConsole.Prompt(
-                    new TextPrompt<string>("[red]Empty value not allowed.[/]Please enter the flash card [green]question[/] or press 0 to return to main menu: ")
+                    new TextPrompt<string>("[red]Empty value not allowed.[/]Please enter the [green]front[/] of the flashcard or press 0 to return to main menu: ")
                         .PromptStyle("blue")
                         .AllowEmpty());
                 if (cardFront == "0") UserInput.GetUserInput();
             }
             AnsiConsole.Clear();
             var cardBack = AnsiConsole.Prompt(
-                new TextPrompt<string>("Please enter the flash card [green]answer[/] or press 0 to return to main menu: ")
+                new TextPrompt<string>("Please enter the [green]back[/] of the flashcard or press 0 to return to main menu: ")
                     .PromptStyle("blue")
                     .AllowEmpty());
             if (cardBack == "0") UserInput.GetUserInput();
             while (string.IsNullOrWhiteSpace(cardBack))
             {
                 cardBack = AnsiConsole.Prompt(
-                    new TextPrompt<string>("[red]Empty value not allowed.[/]Please enter the flash card [green]answer[/] or press 0 to return to main menu: ")
+                    new TextPrompt<string>("[red]Empty value not allowed.[/]Please enter the [green]back[/] of the flashcard or press 0 to return to main menu: ")
                         .PromptStyle("blue")
                         .AllowEmpty());
                 if (cardBack == "0") UserInput.GetUserInput();
@@ -177,7 +177,7 @@ public class DatabaseController
         }
         else
         {
-            var stackId = GetStacks("to get ID");
+            var stackId = GetStacks("to add the flashcard to");
             using var connection = new SqlConnection(ConnectionString);
             var getFlashcardsCommand = $"SELECT FlashcardIndex FROM flash_cards WHERE StackId = '{stackId}'";
             var getFlashcards = connection.Query<Flashcards>(getFlashcardsCommand);
@@ -185,28 +185,28 @@ public class DatabaseController
             var flashcardIndex = flashcardIndexes.AsQueryable().LastOrDefault() + 1;
 
             var cardFront = AnsiConsole.Prompt(
-                new TextPrompt<string>("Please enter the flash card [green]question[/] or press 0 to return to main menu: ")
+                new TextPrompt<string>("Please enter the [green]front[/] of the flashcard or press 0 to return to main menu: ")
                     .PromptStyle("blue")
                     .AllowEmpty());
             if (cardFront == "0") UserInput.GetUserInput();
             while (string.IsNullOrWhiteSpace(cardFront))
             {
                 cardFront = AnsiConsole.Prompt(
-                    new TextPrompt<string>("[red]Empty value not allowed.[/]Please enter the flash card [green]question[/] or press 0 to return to main menu: ")
+                    new TextPrompt<string>("[red]Empty value not allowed.[/]Please enter the [green]front[/] of the flashcard or press 0 to return to main menu: ")
                         .PromptStyle("blue")
                         .AllowEmpty());
                 if (cardFront == "0") UserInput.GetUserInput();
             }
             AnsiConsole.Clear();
             var cardBack = AnsiConsole.Prompt(
-                new TextPrompt<string>("Please enter the flash card [green]answer[/] or press 0 to return to main menu: ")
+                new TextPrompt<string>("Please enter the [green]back[/] of the flashcard or press 0 to return to main menu: ")
                     .PromptStyle("blue")
                     .AllowEmpty());
             if (cardBack == "0") UserInput.GetUserInput();
             while (string.IsNullOrWhiteSpace(cardBack))
             {
                 cardBack = AnsiConsole.Prompt(
-                    new TextPrompt<string>("[red]Empty value not allowed.[/]Please enter the flash card [green]answer[/] or press 0 to return to main menu: ")
+                    new TextPrompt<string>("[red]Empty value not allowed.[/]Please enter the [green]back[/] of the flashcard or press 0 to return to main menu: ")
                         .PromptStyle("blue")
                         .AllowEmpty());
                 if (cardBack == "0") UserInput.GetUserInput();

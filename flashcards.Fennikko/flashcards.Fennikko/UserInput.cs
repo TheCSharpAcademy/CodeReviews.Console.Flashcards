@@ -20,8 +20,8 @@ public class UserInput
                     .AddChoices(new[]
                     {
                         "Add a Stack", "Delete a Stack", "Add a Flash Card",
-                        "Delete a Flash Card", "Study Session","View Study Sessions",
-                        "Study Session Report","Exit"
+                        "Delete a Flash Card", "Study Session","View Study Sessions by Stack",
+                        "Average Score Yearly Report","Exit"
                     }));
             switch (functionSelect)
             {
@@ -40,10 +40,10 @@ public class UserInput
                 case "Study Session":
                     StudyFlashcards.NewStudySession();
                     break;
-                case "View Study Sessions":
+                case "View Study Sessions by Stack":
                     StudyFlashcards.GetStudySessions();
                     break;
-                case "Study Session Report":
+                case "Average Score Yearly Report":
                     StudyFlashcards.StudySessionReport();
                     break;
                 case "Exit":
