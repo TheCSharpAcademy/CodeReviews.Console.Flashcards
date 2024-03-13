@@ -88,7 +88,7 @@ public class StudyFlashcards
         var stackId = DatabaseController.GetStacks("to view study sessions");
         var command = $"SELECT * FROM study_sessions WHERE StackId = '{stackId}'";
         var studySessions = connection.Query<StudySessions>(command);
-        if (studySessions.Count() == 0)
+        if (!studySessions.Any())
         {
             AnsiConsole.MarkupLine("[red]No study sessions found.[/] Press any key to return to main menu.");
             Console.ReadKey();
@@ -184,7 +184,7 @@ public class StudyFlashcards
                           StackName;
                       """;
         var getReports = connection.Query(command);
-        if (getReports.Count() == 0)
+        if (!getReports.Any())
         {
             var tryAgain = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
@@ -228,7 +228,6 @@ public class StudyFlashcards
         table.AddColumn(new TableColumn("[#D35400]October[/]").Centered());
         table.AddColumn(new TableColumn("[#F39C12]November[/]").Centered());
         table.AddColumn(new TableColumn("[#E67E22]December[/]").Centered());
-        var averageScoreList = new List<int>();
         foreach (var report in reports)
         {
             table.AddRow($"[#3EB489]{report.StackName}[/]", $"[#3EB489]{report.January}[/]", $"[#3EB489]{report.February}[/]", $"[#3EB489]{report.March}[/]", $"[#3EB489]{report.April}[/]", $"[#3EB489]{report.May}[/]", $"[#3EB489]{report.June}[/]", $"[#3EB489]{report.July}[/]", $"[#3EB489]{report.August}[/]", $"[#3EB489]{report.September}[/]", $"[#3EB489]{report.October}[/]", $"[#3EB489]{report.November}[/]", $"[#3EB489]{report.December}[/]");
