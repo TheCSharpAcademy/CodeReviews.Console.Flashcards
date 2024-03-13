@@ -13,9 +13,10 @@ public class Flashcard
     public int StackId { get; set; }
 }
 
-public class FlashcardQuestionDto
+public class FlashcardSessionDto
 {
     public string Question { get; set; }
+    public string Answer {get; set;}
 }
 
 public class FlashcardReviewDto

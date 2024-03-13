@@ -205,3 +205,4 @@ public class StackDb : Database
     }
 
 }
+//vytvořit study session databázi a v Menu.cs zavést ukládání. Pak vytvořit funkci, jestli opakovat study session. Poté zobrazení study session, atd.

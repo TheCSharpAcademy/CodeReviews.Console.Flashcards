@@ -23,11 +23,53 @@ public static class UserInterface
         ChooseOptions(options);
     }
 
-    public static void StudySession()
+    public static void StudySessionOptions(string[] stacks)
     {
         Header("new study session");
+        Console.WriteLine("Select a stack");
 
-        UserInput.DisplayMessage("Under construction.");
+        var modifiedStacks = new string[stacks.Length + 1];
+        stacks.CopyTo(modifiedStacks, 0);
+        modifiedStacks[^1] = "Go back";
+
+        ChooseOptions(modifiedStacks);
+    }
+
+    public static void StudySessionQuestion(Stack stack, FlashcardSessionDto flashcard, int roundNo)
+    {
+        Header($"{stack.Name} study session");
+        Console.WriteLine($"Round {roundNo}");
+        Console.WriteLine($"\nFront side:\n{flashcard.Question}");
+        Console.WriteLine("\nBack side:");
+    }
+
+    public static void CorrectAnswer(int score, int totalRounds)
+    {
+        Console.BackgroundColor = ConsoleColor.Green;
+        Console.ForegroundColor = ConsoleColor.Black;
+        Console.WriteLine($"Correct!({score}/{totalRounds})");
+        Console.ResetColor();
+        UserInput.DisplayMessage();
+    }
+
+    public static void WrongAnswer(int score, int totalRounds, FlashcardSessionDto flashcard)
+    {
+        Console.BackgroundColor = ConsoleColor.Red;
+        Console.ForegroundColor = ConsoleColor.Black;
+        Console.WriteLine($"\nWrong!({score}/{totalRounds})");
+        Console.ResetColor();
+        Console.WriteLine($"Correct answer was: {flashcard.Answer}");
+        UserInput.DisplayMessage();
+    }
+
+    public static void FinalizeSession(int score, int totalRounds, Stack stack)
+    {
+        Header($"{stack.Name} study session");
+        Console.WriteLine("Session over!");
+        Console.WriteLine($"You scored:{score}/{totalRounds}");
+        Console.WriteLine("\nTry again?");
+        ChooseOptions(["Yes","No"]);
+
     }
 
     public static void NewFlashcard(string[] stacks)
@@ -88,7 +130,7 @@ public static class UserInterface
     {
         Console.Clear();
         Console.WriteLine($"Do you really want to delete {stack.Name}? (all stack's flashcards will be lost)\n");
-        ChooseOptions(["Yes","No"]);
+        ChooseOptions(["Yes", "No"]);
     }
     public static void ShowFlashcards(List<FlashcardReviewDto> flashcards, Stack stack)
     {

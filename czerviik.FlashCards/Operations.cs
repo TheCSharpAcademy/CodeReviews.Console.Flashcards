@@ -30,6 +30,20 @@ namespace FlashCards
             return flashcardDtos;
         }
 
+        public static List<FlashcardSessionDto> ConvertToSessionDto(List<Flashcard> flashcards)
+        {
+            var flashcardSesDtos = new List<FlashcardSessionDto>();
+            foreach (var flashcard in flashcards)
+            {
+                flashcardSesDtos.Add(new FlashcardSessionDto
+                {
+                    Question = flashcard.Question,
+                    Answer = flashcard.Answer,
+                });
+            }
+            return flashcardSesDtos;
+        }
+
         public static string[] StackListToNamesArray(List<Stack> stacks)
         {
             var stacksArray = new string[stacks.Count];
