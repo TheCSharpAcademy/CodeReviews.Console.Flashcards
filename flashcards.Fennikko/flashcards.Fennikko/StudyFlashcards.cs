@@ -1,6 +1,5 @@
 ﻿using System.Configuration;
 using System.Data.SqlClient;
-using System.Globalization;
 using Dapper;
 using flashcards.Fennikko.Models;
 using Spectre.Console;
@@ -24,20 +23,20 @@ public class StudyFlashcards
             var table = new Table();
             table.Title(new TableTitle("[blue]Study Session[/]"));
             table.AddColumn(new TableColumn("[#FFA500]FlashcardId[/]").Centered());
-            table.AddColumn(new TableColumn("[#104E1D]Question[/]").Centered());
+            table.AddColumn(new TableColumn("[#104E1D]Front[/]").Centered());
 
             table.AddRow($"[#3EB489]{flashcard.FlashcardIndex}[/]", $"[#3EB489]{flashcard.CardFront}[/]");
             AnsiConsole.Write(table);
 
             var answer = flashcard.CardBack;
             var studyAnswer = AnsiConsole.Prompt(
-                new TextPrompt<string>("please enter your [green]answer[/] to the above question: ")
+                new TextPrompt<string>("please enter your [green]answer[/] to the above flashcard: ")
                     .PromptStyle("blue")
                     .AllowEmpty());
             while (string.IsNullOrWhiteSpace(studyAnswer))
             {
                 studyAnswer = AnsiConsole.Prompt(
-                    new TextPrompt<string>("[red]Invalid entry, cannot be empty.[/] Please enter your [green]answer[/] to the above question: ")
+                    new TextPrompt<string>("[red]Invalid entry, cannot be empty.[/] Please enter your [green]answer[/] to the above flashcard: ")
                         .PromptStyle("blue")
                         .AllowEmpty());
             }
@@ -45,11 +44,27 @@ public class StudyFlashcards
             if (studyAnswer.Trim().Equals(answer.Trim(), StringComparison.CurrentCultureIgnoreCase))
             {
                 score++;
+                AnsiConsole.Clear();
+                var correctTable = new Table();
+                correctTable.Title(new TableTitle("[blue]Study Session[/]"));
+                correctTable.AddColumn(new TableColumn("[#FFA500]FlashcardId[/]").Centered());
+                correctTable.AddColumn(new TableColumn("[#104E1D]Back[/]").Centered());
+
+                correctTable.AddRow($"[#3EB489]{flashcard.FlashcardIndex}[/]", $"[#3EB489]{flashcard.CardBack}[/]");
+                AnsiConsole.Write(correctTable);
                 AnsiConsole.MarkupLine($"Correct! your current score is [green]{score}[/]. Press any key to continue");
                 Console.ReadKey();
             }
             else
             {
+                AnsiConsole.Clear();
+                var incorrectTable = new Table();
+                incorrectTable.Title(new TableTitle("[blue]Study Session[/]"));
+                incorrectTable.AddColumn(new TableColumn("[#FFA500]FlashcardId[/]").Centered());
+                incorrectTable.AddColumn(new TableColumn("[#104E1D]Back[/]").Centered());
+
+                incorrectTable.AddRow($"[#3EB489]{flashcard.FlashcardIndex}[/]", $"[#3EB489]{flashcard.CardBack}[/]");
+                AnsiConsole.Write(incorrectTable);
                 AnsiConsole.MarkupLine("[red]Incorrect.[/] Press any key to continue");
                 Console.ReadKey();
             }
@@ -199,7 +214,7 @@ public class StudyFlashcards
     {
         AnsiConsole.Clear();
         var table = new Table();
-        table.Title(new TableTitle($"[blue]Study Sessions[/]"));
+        table.Title(new TableTitle($"[green]{year} [/][blue]Study Sessions[/]"));
         table.AddColumn(new TableColumn("[#1ABC9C]StackName[/]").Centered());
         table.AddColumn(new TableColumn("[#16A085]January[/]").Centered());
         table.AddColumn(new TableColumn("[#27AE60]February[/]").Centered());
