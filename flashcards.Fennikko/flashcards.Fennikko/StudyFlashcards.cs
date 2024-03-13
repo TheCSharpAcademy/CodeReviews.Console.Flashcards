@@ -130,7 +130,7 @@ public class StudyFlashcards
         using var connection = new SqlConnection(ConnectionString);
         var command = $"""
                       SELECT 
-                          Year,
+                          StackName,
                           ISNULL([1], 0) AS January,
                           ISNULL([2], 0) AS February,
                           ISNULL([3], 0) AS March,
@@ -145,23 +145,28 @@ public class StudyFlashcards
                           ISNULL([12], 0) AS December
                       FROM (
                           SELECT 
-                              YEAR(SessionDate) AS Year,
-                              MONTH(SessionDate) AS Month,
-                              AVG(SessionScore) AS AverageScore
+                              YEAR(ss.SessionDate) AS Year,
+                              MONTH(ss.SessionDate) AS Month,
+                              AVG(ss.SessionScore) AS AverageScore,
+                      		s.StackId,
+                      		s.StackName
                           FROM 
-                              study_sessions
-                          WHERE
-                              YEAR(SessionDate) = '{intYear}'
+                              study_sessions ss
+                      	INNER JOIN stacks s ON ss.StackId = s.StackId
+                      	WHERE
+                      		YEAR(SessionDate) = '{year}'
                           GROUP BY 
                               YEAR(SessionDate),
-                              MONTH(SessionDate)
+                              MONTH(SessionDate),
+                      		s.StackId,
+                      		s.StackName
                       ) AS MonthlyAverages
                       PIVOT (
                           AVG(AverageScore)
                           FOR Month IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
                       ) AS PivotTable
                       ORDER BY 
-                          Year;
+                          StackName;
                       """;
         var getReports = connection.Query(command);
         if (getReports.Count() == 0)
@@ -185,17 +190,17 @@ public class StudyFlashcards
             }
         }
         var reportsList = getReports.ToList();
-        TableReport(reportsList);
+        TableReport(reportsList,intYear);
         AnsiConsole.MarkupLine("[blue]Press any key to return to main menu[/]");
         Console.ReadKey();
     }
 
-    public static void TableReport(List<dynamic> reports)
+    public static void TableReport(List<dynamic> reports, int year)
     {
         AnsiConsole.Clear();
         var table = new Table();
         table.Title(new TableTitle($"[blue]Study Sessions[/]"));
-        table.AddColumn(new TableColumn("[#1ABC9C]Year[/]").Centered());
+        table.AddColumn(new TableColumn("[#1ABC9C]StackName[/]").Centered());
         table.AddColumn(new TableColumn("[#16A085]January[/]").Centered());
         table.AddColumn(new TableColumn("[#27AE60]February[/]").Centered());
         table.AddColumn(new TableColumn("[#2ECC71]March[/]").Centered());
@@ -211,8 +216,9 @@ public class StudyFlashcards
         var averageScoreList = new List<int>();
         foreach (var report in reports)
         {
-            table.AddRow($"[#3EB489]{report.Year}[/]", $"[#3EB489]{report.January}[/]", $"[#3EB489]{report.February}[/]", $"[#3EB489]{report.March}[/]", $"[#3EB489]{report.April}[/]", $"[#3EB489]{report.May}[/]", $"[#3EB489]{report.June}[/]", $"[#3EB489]{report.July}[/]", $"[#3EB489]{report.August}[/]", $"[#3EB489]{report.September}[/]", $"[#3EB489]{report.October}[/]", $"[#3EB489]{report.November}[/]", $"[#3EB489]{report.December}[/]");
+            table.AddRow($"[#3EB489]{report.StackName}[/]", $"[#3EB489]{report.January}[/]", $"[#3EB489]{report.February}[/]", $"[#3EB489]{report.March}[/]", $"[#3EB489]{report.April}[/]", $"[#3EB489]{report.May}[/]", $"[#3EB489]{report.June}[/]", $"[#3EB489]{report.July}[/]", $"[#3EB489]{report.August}[/]", $"[#3EB489]{report.September}[/]", $"[#3EB489]{report.October}[/]", $"[#3EB489]{report.November}[/]", $"[#3EB489]{report.December}[/]");
         }
+
         AnsiConsole.Write(table);
     }
 

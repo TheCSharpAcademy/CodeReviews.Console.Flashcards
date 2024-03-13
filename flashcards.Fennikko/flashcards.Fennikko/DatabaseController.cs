@@ -74,14 +74,14 @@ public class DatabaseController
     {
         AnsiConsole.Clear();
         var stackName = AnsiConsole.Prompt(
-            new TextPrompt<string>("Please enter a [green]stack name[/]: ")
+            new TextPrompt<string>("Please enter a [green]stack name[/] or enter 0 to return to main menu: ")
                 .PromptStyle("blue")
                 .AllowEmpty());
         if(stackName == "0") UserInput.GetUserInput();
         while (string.IsNullOrWhiteSpace(stackName))
         {
             stackName = AnsiConsole.Prompt(
-                new TextPrompt<string>("Please enter a [green]stack name[/]: ")
+                new TextPrompt<string>("Please enter a [green]stack name[/] or enter 0 to return to main menu: ")
                     .PromptStyle("blue")
                     .AllowEmpty());
             if(stackName == "0") UserInput.GetUserInput();
