@@ -122,6 +122,7 @@
 - Users will then be presented with a table with the name of the stack, the session dates, and the scores.
 - At the bottom will show the average study session score for all their sessions for that stack.
 - Pressing any key will return user to the main menu.
+
 	![image](https://github.com/Fennikko/Images/blob/main/FlashcardViewStudySessions2.png)
 
 
