@@ -54,8 +54,4 @@ public class BaseView
 
         return AnsiConsole.Prompt(prompt);
     }
-
-    public void Test()
-    {
-    }
 }
