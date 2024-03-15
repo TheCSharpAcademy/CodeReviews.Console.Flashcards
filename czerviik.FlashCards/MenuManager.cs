@@ -5,12 +5,14 @@ public class MenuManager
     private readonly Stack<Menu> _menuStack = new Stack<Menu>();
     private readonly FlashcardDb _flashcardDb;
     private readonly StackDb _stackDb;
+    private readonly StudySessionDb _sessionDb;
 
-    public MenuManager(FlashcardDb flashcardDb, StackDb stackDb)
+    public MenuManager(FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb)
     {
         _flashcardDb = flashcardDb;
         _stackDb = stackDb;
-        _menuStack.Push(new MainMenu(this, _flashcardDb, _stackDb));
+        _sessionDb = sessionDb;
+        _menuStack.Push(new MainMenu(this, _flashcardDb, _stackDb, _sessionDb));
     }
 
     public void DisplayCurrentMenu()

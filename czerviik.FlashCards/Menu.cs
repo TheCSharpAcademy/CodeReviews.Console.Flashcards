@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
+using Microsoft.Identity.Client;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
@@ -13,17 +14,19 @@ public abstract class Menu
     protected MenuManager MenuManager { get; }
     protected FlashcardDb FlashcardDb { get; }
     protected StackDb StackDb { get; }
-    protected Menu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb)
+    protected StudySessionDb SessionDb { get; }
+    protected Menu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb)
     {
         MenuManager = menuManager;
         FlashcardDb = flashcardDb;
         StackDb = stackDb;
+        SessionDb = sessionDb;
     }
     public abstract void Display();
 }
 public class MainMenu : Menu
 {
-    public MainMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb) : base(menuManager, flashcardDb, stackDb) { }
+    public MainMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb) : base(menuManager, flashcardDb, stackDb, sessionDb) { }
 
     public override void Display()
     {
@@ -32,13 +35,13 @@ public class MainMenu : Menu
         switch (UserInterface.OptionChoice)
         {
             case "New Study Session":
-                MenuManager.NewMenu(new StudySessionMenu(MenuManager, FlashcardDb, StackDb));
+                MenuManager.NewMenu(new StudySessionMenu(MenuManager, FlashcardDb, StackDb, SessionDb));
                 break;
             case "New Flashcard":
-                MenuManager.NewMenu(new FlashCardMenu(MenuManager, FlashcardDb, StackDb));
+                MenuManager.NewMenu(new FlashCardMenu(MenuManager, FlashcardDb, StackDb, SessionDb));
                 break;
             case "Show Stacks":
-                MenuManager.NewMenu(new ShowStacksMenu(MenuManager, FlashcardDb, StackDb));
+                MenuManager.NewMenu(new ShowStacksMenu(MenuManager, FlashcardDb, StackDb, SessionDb));
                 break;
             case "Show Study Sessions":
                 break;
@@ -51,7 +54,7 @@ public class MainMenu : Menu
 
 public class StudySessionMenu : Menu
 {
-    public StudySessionMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb) : base(menuManager, flashcardDb, stackDb) { }
+    public StudySessionMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb) : base(menuManager, flashcardDb, stackDb, sessionDb) { }
     private List<Stack> _stacksList;
 
     public override void Display()
@@ -103,7 +106,7 @@ public class StudySessionMenu : Menu
                 }
                 else
                 {
-                    MenuManager.NewMenu(new NewStudySession(MenuManager, FlashcardDb, StackDb, userStack));
+                    MenuManager.NewMenu(new NewStudySession(MenuManager, FlashcardDb, StackDb, SessionDb, userStack));
                 }
                 break;
         }
@@ -116,17 +119,21 @@ public class NewStudySession : Menu
     private Stack _userStack;
     private DateTime _startDateTime;
     private int _totalRounds;
-    public NewStudySession(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, Stack userStack) : base(menuManager, flashcardDb, stackDb)
+    public NewStudySession(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb, Stack userStack) : base(menuManager, flashcardDb, stackDb, sessionDb)
     {
         _userStack = userStack;
     }
 
     public override void Display()
     {
-        var flashcardSesDtos = GetFlashcardSesDtos();
         SetDateTime();
-        StartSession(flashcardSesDtos);
+        StartSession(GetFlashcardSesDtos());
         FinalizeSession();
+        
+        if (RepeatSession())
+            MenuManager.DisplayCurrentMenu();
+        else
+            MenuManager.ReturnToMainMenu();
     }
     private void SetDateTime()
     {
@@ -139,7 +146,7 @@ public class NewStudySession : Menu
         _totalRounds = flashcardSesDtos.Count;
         for (int i = 0; i < _totalRounds; i++)
         {
-            var round = new SessionRound(flashcardSesDtos, _userStack, MenuManager,_totalRounds);
+            var round = new SessionRound(flashcardSesDtos, _userStack, MenuManager, _totalRounds);
             round.Start();
         }
     }
@@ -147,7 +154,7 @@ public class NewStudySession : Menu
     private void FinalizeSession()
     {
         UserInterface.FinalizeSession(SessionRound.Score, _totalRounds, _userStack);
-
+        SessionDb.Insert(_startDateTime, SessionRound.Score, _totalRounds, _userStack.Id);
         SessionRound.Reset();
     }
 
@@ -156,11 +163,16 @@ public class NewStudySession : Menu
         var flashcards = FlashcardDb.GetByStackId(_userStack.Id);
         return Operations.ConvertToSessionDto(flashcards);
     }
+
+    private bool RepeatSession()
+    {
+        return UserInterface.OptionChoice == "Yes";
+    }
 }
 public class FlashCardMenu : Menu
 {
     protected List<Stack> stacksList;
-    public FlashCardMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb) : base(menuManager, flashcardDb, stackDb) { }
+    public FlashCardMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb) : base(menuManager, flashcardDb, stackDb, sessionDb) { }
 
     public override void Display()
     {
@@ -280,7 +292,7 @@ public class ShowStacksMenu : Menu
     protected List<Flashcard> flashcards;
     protected List<FlashcardReviewDto> flashcardDtos;
     protected Stack userStack;
-    public ShowStacksMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb) : base(menuManager, flashcardDb, stackDb) { }
+    public ShowStacksMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb) : base(menuManager, flashcardDb, stackDb, sessionDb) { }
 
     public override void Display()
     {
@@ -365,14 +377,14 @@ public class ShowStacksMenu : Menu
                 MenuManager.GoBack();
                 break;
             case "Update a Flashcard":
-                MenuManager.NewMenu(new UpdateFlashcardMenu(MenuManager, FlashcardDb, StackDb, flashcards, flashcardDtos, userStack));
+                MenuManager.NewMenu(new UpdateFlashcardMenu(MenuManager, FlashcardDb, StackDb, SessionDb, flashcards, flashcardDtos, userStack));
                 break;
             case "Delete a Flashcard":
-                MenuManager.NewMenu(new DeleteFlashcardMenu(MenuManager, FlashcardDb, StackDb, flashcards, flashcardDtos, userStack));
+                MenuManager.NewMenu(new DeleteFlashcardMenu(MenuManager, FlashcardDb, StackDb, SessionDb, flashcards, flashcardDtos, userStack));
                 break;
             case "Delete a Stack":
                 {
-                    MenuManager.NewMenu(new DeleteStackMenu(MenuManager, FlashcardDb, StackDb, stacksList));
+                    MenuManager.NewMenu(new DeleteStackMenu(MenuManager, FlashcardDb, StackDb, SessionDb, stacksList));
                 }
                 break;
         }
@@ -381,7 +393,7 @@ public class ShowStacksMenu : Menu
 
 public class UpdateFlashcardMenu : ShowStacksMenu
 {
-    public UpdateFlashcardMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, List<Flashcard> flashcards, List<FlashcardReviewDto> flashcardDtos, Stack userStack) : base(menuManager, flashcardDb, stackDb)
+    public UpdateFlashcardMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb, List<Flashcard> flashcards, List<FlashcardReviewDto> flashcardDtos, Stack userStack) : base(menuManager, flashcardDb, stackDb, sessionDb)
     {
         this.flashcards = flashcards;
         this.flashcardDtos = flashcardDtos;
@@ -434,7 +446,7 @@ public class UpdateFlashcardMenu : ShowStacksMenu
 
 public class DeleteFlashcardMenu : ShowStacksMenu
 {
-    public DeleteFlashcardMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, List<Flashcard> flashcards, List<FlashcardReviewDto> flashcardDtos, Stack userStack) : base(menuManager, flashcardDb, stackDb)
+    public DeleteFlashcardMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb, List<Flashcard> flashcards, List<FlashcardReviewDto> flashcardDtos, Stack userStack) : base(menuManager, flashcardDb, stackDb, sessionDb)
     {
         this.flashcards = flashcards;
         this.flashcardDtos = flashcardDtos;
@@ -480,7 +492,7 @@ public class DeleteFlashcardMenu : ShowStacksMenu
 
 public class DeleteStackMenu : ShowStacksMenu
 {
-    public DeleteStackMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, List<Stack> stacksList) : base(menuManager, flashcardDb, stackDb)
+    public DeleteStackMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb, List<Stack> stacksList) : base(menuManager, flashcardDb, stackDb, sessionDb)
     {
         this.stacksList = stacksList;
     }
@@ -544,7 +556,7 @@ public class DeleteStackMenu : ShowStacksMenu
 }
 public class ShowStudySessionsMenu : Menu
 {
-    public ShowStudySessionsMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb) : base(menuManager, flashcardDb, stackDb) { }
+    public ShowStudySessionsMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb) : base(menuManager, flashcardDb, stackDb, sessionDb) { }
 
     public override void Display()
     {

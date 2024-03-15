@@ -22,7 +22,6 @@ public abstract class Database
 
     }
     public abstract void InitializeDatabase();
-    public abstract object GetById(int id);
     protected void ExecuteCommand(string sql)
     {
         using (var connection = new SqlConnection(_connectionString))
@@ -103,7 +102,7 @@ public class FlashcardDb : Database
         return ReadRowsCommand(sql);
     }
 
-    public override Flashcard GetById(int id)
+    public Flashcard GetById(int id)
     {
         var sql = $"SELECT * FROM flashcards WHERE Id = @Id";
 
@@ -171,7 +170,7 @@ public class StackDb : Database
         ExecuteCommand(sql);
     }
 
-    public void Delete (int id)
+    public void Delete(int id)
     {
         var sql = @$"
         DELETE FROM stacks
@@ -186,7 +185,7 @@ public class StackDb : Database
         return ReadRowsCommand(sql);
     }
 
-    public override List<Stack> GetById(int id)
+    public List<Stack> GetById(int id)
     {
         var sql = $"SELECT * FROM stacks WHERE Id = @Id";
         return ReadRowsCommand(sql, new { Id = id });
@@ -203,6 +202,55 @@ public class StackDb : Database
         var sql = $"SELECT * FROM stacks WHERE Name = @Name";
         return ReadSingleCommand(sql, new { Name = name }) != null;
     }
+
+}
+
+public class StudySessionDb : Database
+{
+    public StudySessionDb(string connectionString, string fileName) : base(connectionString, fileName) { }
+
+    public override void InitializeDatabase()
+    {
+        var sql = @"
+                IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'study_sessions' AND type = 'U')
+                BEGIN
+                    CREATE TABLE study_sessions( 
+                        Id INT PRIMARY KEY IDENTITY(1,1), 
+                        Date DATE,
+                        Score INT,
+                        Rounds INT,
+                        StackId INT,
+                        FOREIGN KEY(StackId) REFERENCES stacks(Id) ON DELETE CASCADE
+                    );
+                END";
+
+        ExecuteCommand(sql);
+    }
+
+    public void Insert(DateTime sessionDate, int score, int rounds, int stackId)
+    {
+        var sql = @$"
+        INSERT INTO study_sessions (Date, Score, Rounds, StackId)
+        VALUES ('{sessionDate:yyyy-MM-dd}',{score},{rounds},{stackId})";
+
+        ExecuteCommand(sql);
+    }
+
+    private List<StudySession> ReadRowsCommand(string sql, object parameters = null)
+    {
+        var sessionsList = new List<StudySession>();
+
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            var sessions = connection.Query<StudySession>(sql, parameters);
+            foreach (var session in sessions)
+            {
+                sessionsList.Add(session);
+            }
+            return sessionsList;
+        }
+    }
+
 
 }
 //vytvořit study session databázi a v Menu.cs zavést ukládání. Pak vytvořit funkci, jestli opakovat study session. Poté zobrazení study session, atd.

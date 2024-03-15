@@ -12,8 +12,9 @@ internal class Program
 
             var stackDb = new StackDb(connectionString, fileName);
             var flashcardDb = new FlashcardDb(connectionString, fileName);
+            var sessionDb = new StudySessionDb(connectionString, fileName);
 
-            var menuManager = new MenuManager(flashcardDb, stackDb);
+            var menuManager = new MenuManager(flashcardDb, stackDb, sessionDb);
             menuManager.DisplayCurrentMenu();
         }
         catch (InvalidOperationException ex)
