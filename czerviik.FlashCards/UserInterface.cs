@@ -267,7 +267,7 @@ public static class UserInterface
     public static void ReportsMenu()
     {
         Header("reports");
-        ChooseOptions(["Number of sessions/month", "Average score/month","Go back"]);
+        ChooseOptions(["Number of sessions/month", "Average score/month", "Go back"]);
     }
 
     public static void ShowYears(string[] years)
@@ -282,10 +282,10 @@ public static class UserInterface
         ChooseOptions(modifiedYears);
     }
 
-    public static void NumberOfSessionsReport(List<StudySession> sessions, Dictionary<int, string> stackIdDict, string year)
+    public static void NumberOfSessionsReport(Dictionary<int, Dictionary<int, int>> sessionCount, Dictionary<int, string> stackIdDict, string year)
     {
         Header($"number of sessions per month of {year} per stack report");
-        NumberOfSessionsTable(sessions,stackIdDict);
+        NumberOfSessionsTable(sessionCount, stackIdDict);
     }
 
     private static void Header(string headerText)
@@ -349,30 +349,22 @@ public static class UserInterface
         AnsiConsole.Write(table);
     }
 
-    private static void NumberOfSessionsTable(List<StudySession> sessions, Dictionary<int, string> stackIdDict)
+    private static void NumberOfSessionsTable(Dictionary<int, Dictionary<int, int>> sessionCount, Dictionary<int, string> stackIdDict)
     {
         var table = new Table()
-        .AddColumns("Stack name", "Jan", "Feb'", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+        .AddColumns("Stack name", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
         .Border(TableBorder.Rounded);
 
         foreach (var stackIdPair in stackIdDict)
         {
-            table.AddRow(
-            stackIdPair.Value,
-            sessions.Where(s => s.Date.ToString("MMM") == "Jan" && s.StackId == stackIdPair.Key).Count().ToString(),
-            sessions.Where(s => s.Date.ToString("MMM") == "Feb" && s.StackId == stackIdPair.Key).Count().ToString(),
-            sessions.Where(s => s.Date.ToString("MMM") == "Mar" && s.StackId == stackIdPair.Key).Count().ToString(),
-            sessions.Where(s => s.Date.ToString("MMM") == "Apr" && s.StackId == stackIdPair.Key).Count().ToString(),
-            sessions.Where(s => s.Date.ToString("MMM") == "May" && s.StackId == stackIdPair.Key).Count().ToString(),
-            sessions.Where(s => s.Date.ToString("MMM") == "Jun" && s.StackId == stackIdPair.Key).Count().ToString(),
-            sessions.Where(s => s.Date.ToString("MMM") == "Jul" && s.StackId == stackIdPair.Key).Count().ToString(),
-            sessions.Where(s => s.Date.ToString("MMM") == "Aug" && s.StackId == stackIdPair.Key).Count().ToString(),
-            sessions.Where(s => s.Date.ToString("MMM") == "Sep" && s.StackId == stackIdPair.Key).Count().ToString(),
-            sessions.Where(s => s.Date.ToString("MMM") == "Oct" && s.StackId == stackIdPair.Key).Count().ToString(),
-            sessions.Where(s => s.Date.ToString("MMM") == "Nov" && s.StackId == stackIdPair.Key).Count().ToString(),
-            sessions.Where(s => s.Date.ToString("MMM") == "Dec" && s.StackId == stackIdPair.Key).Count().ToString()
-            );
-            //optimalizovat???
+            var row = new List<string> { stackIdPair.Value };
+            for (int month = 1; month <= 12; month++)
+            {
+                row.Add(sessionCount.ContainsKey(stackIdPair.Key) && sessionCount[stackIdPair.Key].ContainsKey(month)
+                        ? sessionCount[stackIdPair.Key][month].ToString()
+                        : "0");
+            }
+            table.AddRow(row.ToArray());
         }
         AnsiConsole.Write(table);
     }

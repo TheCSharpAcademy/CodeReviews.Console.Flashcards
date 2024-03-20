@@ -656,11 +656,10 @@ public class NumberOfSessionsMenu : ReportsMenu
     {
         var userYear = GetUserYear();
         var sessionsByYear = GetSessionsByYear(userYear);
-        var stacks = StackDb.GetAll();
-        var stackIdDict = Operations.CreateStackIdDict(stacks);
+        var stackIdDict = Operations.CreateStackIdDict(StackDb.GetAll());
+        var sessionCounts = GetSessionCounts(sessionsByYear);
 
-        UserInterface.NumberOfSessionsReport(sessionsByYear, stackIdDict, userYear);
-
+        UserInterface.NumberOfSessionsReport(sessionCounts, stackIdDict, userYear);
     }
 
     protected string GetUserYear()
@@ -690,5 +689,24 @@ public class NumberOfSessionsMenu : ReportsMenu
         .Select(session => session.Date.ToString("yyyy"))
         .Distinct()
         .ToArray();
+    }
+
+    protected Dictionary<int, Dictionary<int, int>> GetSessionCounts(List<StudySession> sessions)
+    {
+        var sessionCounts = new Dictionary<int, Dictionary<int, int>>(); //{stackId : {monthNumber : sessionCount}
+
+        foreach (var session in sessions)
+        {
+            if (!sessionCounts.ContainsKey(session.StackId))
+                sessionCounts[session.StackId] = new Dictionary<int, int>();
+
+            var month = session.Date.Month;
+            if (!sessionCounts[session.StackId].ContainsKey(month))
+            {
+                sessionCounts[session.StackId][month] = 0;
+            }
+            sessionCounts[session.StackId][month]++;
+        }
+        return sessionCounts;
     }
 }
