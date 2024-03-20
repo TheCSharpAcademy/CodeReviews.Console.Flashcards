@@ -18,6 +18,7 @@ public static class UserInterface
                 "New Flashcard",
                 "Show Stacks",
                 "Show Study Sessions",
+                "Reports",
                 "Exit"};
 
         ChooseOptions(options);
@@ -68,7 +69,7 @@ public static class UserInterface
         Console.WriteLine("Session over!");
         Console.WriteLine($"You scored:{score}/{totalRounds}");
         Console.WriteLine("\nTry again?");
-        ChooseOptions(["Yes","No"]);
+        ChooseOptions(["Yes", "No"]);
 
     }
 
@@ -257,11 +258,34 @@ public static class UserInterface
         Console.WriteLine("Type a Flashcard Id to Delete:\n");
     }
 
-    public static void ShowStudySessions()
+    public static void ShowStudySessions(List<StudySession> studySessions, Dictionary<int, string> stackIdDict)
     {
         Header("show study sessions");
+        SessionsTable(studySessions, stackIdDict);
+    }
 
-        UserInput.DisplayMessage("Under construction.");
+    public static void ReportsMenu()
+    {
+        Header("reports");
+        ChooseOptions(["Number of sessions/month", "Average score/month","Go back"]);
+    }
+
+    public static void ShowYears(string[] years)
+    {
+        Console.Clear();
+        Console.WriteLine("Choose a year of your Report:");
+
+        var modifiedYears = new string[years.Length + 1];
+        years.CopyTo(modifiedYears, 0);
+        modifiedYears[^1] = "Go back";
+
+        ChooseOptions(modifiedYears);
+    }
+
+    public static void NumberOfSessionsReport(List<StudySession> sessions, Dictionary<int, string> stackIdDict, string year)
+    {
+        Header($"number of sessions per month of {year} per stack report");
+        NumberOfSessionsTable(sessions,stackIdDict);
     }
 
     private static void Header(string headerText)
@@ -311,6 +335,46 @@ public static class UserInterface
             AnsiConsole.Write(table);
             Console.WriteLine();
         }
+    }
+
+    private static void SessionsTable(List<StudySession> sessions, Dictionary<int, string> stackIdDict)
+    {
+        var table = new Table()
+        .AddColumns("Id", "Stack", "Score", "Rounds", "Date")
+        .Border(TableBorder.Rounded);
+        foreach (var session in sessions)
+        {
+            table.AddRow(session.Id.ToString(), stackIdDict[session.StackId], session.Score.ToString(), session.Rounds.ToString(), session.Date.ToString("yyyy-MM-dd"));
+        }
+        AnsiConsole.Write(table);
+    }
+
+    private static void NumberOfSessionsTable(List<StudySession> sessions, Dictionary<int, string> stackIdDict)
+    {
+        var table = new Table()
+        .AddColumns("Stack name", "Jan", "Feb'", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+        .Border(TableBorder.Rounded);
+
+        foreach (var stackIdPair in stackIdDict)
+        {
+            table.AddRow(
+            stackIdPair.Value,
+            sessions.Where(s => s.Date.ToString("MMM") == "Jan" && s.StackId == stackIdPair.Key).Count().ToString(),
+            sessions.Where(s => s.Date.ToString("MMM") == "Feb" && s.StackId == stackIdPair.Key).Count().ToString(),
+            sessions.Where(s => s.Date.ToString("MMM") == "Mar" && s.StackId == stackIdPair.Key).Count().ToString(),
+            sessions.Where(s => s.Date.ToString("MMM") == "Apr" && s.StackId == stackIdPair.Key).Count().ToString(),
+            sessions.Where(s => s.Date.ToString("MMM") == "May" && s.StackId == stackIdPair.Key).Count().ToString(),
+            sessions.Where(s => s.Date.ToString("MMM") == "Jun" && s.StackId == stackIdPair.Key).Count().ToString(),
+            sessions.Where(s => s.Date.ToString("MMM") == "Jul" && s.StackId == stackIdPair.Key).Count().ToString(),
+            sessions.Where(s => s.Date.ToString("MMM") == "Aug" && s.StackId == stackIdPair.Key).Count().ToString(),
+            sessions.Where(s => s.Date.ToString("MMM") == "Sep" && s.StackId == stackIdPair.Key).Count().ToString(),
+            sessions.Where(s => s.Date.ToString("MMM") == "Oct" && s.StackId == stackIdPair.Key).Count().ToString(),
+            sessions.Where(s => s.Date.ToString("MMM") == "Nov" && s.StackId == stackIdPair.Key).Count().ToString(),
+            sessions.Where(s => s.Date.ToString("MMM") == "Dec" && s.StackId == stackIdPair.Key).Count().ToString()
+            );
+            //optimalizovat???
+        }
+        AnsiConsole.Write(table);
     }
 }
 

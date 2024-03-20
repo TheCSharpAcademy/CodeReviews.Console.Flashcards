@@ -53,5 +53,15 @@ namespace FlashCards
             }
             return stacksArray;
         }
+
+        public static Dictionary<int, string> CreateStackIdDict(List<Stack> stacks)
+    {
+        Dictionary<int, string> stackIdDict = new();
+        foreach (var stack in stacks)
+        {
+            stackIdDict.Add(stack.Id, stack.Name);
+        }
+        return stackIdDict;
+    }
     }
 }

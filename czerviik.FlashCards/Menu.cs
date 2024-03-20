@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using Microsoft.Identity.Client;
 using Spectre.Console;
@@ -44,6 +45,10 @@ public class MainMenu : Menu
                 MenuManager.NewMenu(new ShowStacksMenu(MenuManager, FlashcardDb, StackDb, SessionDb));
                 break;
             case "Show Study Sessions":
+                MenuManager.NewMenu(new ShowStudySessionsMenu(MenuManager, FlashcardDb, StackDb, SessionDb));
+                break;
+            case "Reports":
+                MenuManager.NewMenu(new ReportsMenu(MenuManager, FlashcardDb, StackDb, SessionDb));
                 break;
             default:
                 Environment.Exit(0);
@@ -129,7 +134,7 @@ public class NewStudySession : Menu
         SetDateTime();
         StartSession(GetFlashcardSesDtos());
         FinalizeSession();
-        
+
         if (RepeatSession())
             MenuManager.DisplayCurrentMenu();
         else
@@ -292,6 +297,7 @@ public class ShowStacksMenu : Menu
     protected List<Flashcard> flashcards;
     protected List<FlashcardReviewDto> flashcardDtos;
     protected Stack userStack;
+    private bool isAllOption;
     public ShowStacksMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb) : base(menuManager, flashcardDb, stackDb, sessionDb) { }
 
     public override void Display()
@@ -347,6 +353,7 @@ public class ShowStacksMenu : Menu
         {
             case "Show all":
                 flashcards = FlashcardDb.GetAll();
+                isAllOption = true;
                 DisplayFlashcards(stacksList);
                 break;
 
@@ -384,7 +391,12 @@ public class ShowStacksMenu : Menu
                 break;
             case "Delete a Stack":
                 {
-                    MenuManager.NewMenu(new DeleteStackMenu(MenuManager, FlashcardDb, StackDb, SessionDb, stacksList));
+                    if (isAllOption)
+                        MenuManager.NewMenu(new DeleteStackAllMenu(MenuManager, FlashcardDb, StackDb, SessionDb, stacksList));
+                    else
+                    {
+                        MenuManager.NewMenu(new DeleteStackMenu(MenuManager, FlashcardDb, StackDb, SessionDb));
+                    }
                 }
                 break;
         }
@@ -490,9 +502,9 @@ public class DeleteFlashcardMenu : ShowStacksMenu
     }
 }
 
-public class DeleteStackMenu : ShowStacksMenu
+public class DeleteStackAllMenu : ShowStacksMenu
 {
-    public DeleteStackMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb, List<Stack> stacksList) : base(menuManager, flashcardDb, stackDb, sessionDb)
+    public DeleteStackAllMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb, List<Stack> stacksList) : base(menuManager, flashcardDb, stackDb, sessionDb)
     {
         this.stacksList = stacksList;
     }
@@ -547,6 +559,32 @@ public class DeleteStackMenu : ShowStacksMenu
         if (UserInterface.OptionChoice == "Yes")
         {
             StackDb.Delete(userStack.Id);
+            stacksList.Remove(userStack);
+            UserInput.DisplayMessage($"Stack '{userStack.Name}' and it's flashcards have been deleted.", "go back", true);
+        }
+        else
+            MenuManager.DisplayCurrentMenu();
+
+    }
+}
+public class DeleteStackMenu : ShowStacksMenu
+{
+    public DeleteStackMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb) : base(menuManager, flashcardDb, stackDb, sessionDb) { }
+
+    public override void Display()
+    {
+        HandleStackDelete(userStack);
+        MenuManager.DisplayCurrentMenu();
+    }
+
+    protected void HandleStackDelete(Stack userStack)
+    {
+        UserInterface.DeleteStackConfirm(userStack);
+
+        if (UserInterface.OptionChoice == "Yes")
+        {
+            StackDb.Delete(userStack.Id);
+            stacksList.Remove(userStack);
             UserInput.DisplayMessage($"Stack '{userStack.Name}' and it's flashcards have been deleted.", "go back", true);
         }
         else
@@ -560,6 +598,97 @@ public class ShowStudySessionsMenu : Menu
 
     public override void Display()
     {
-        UserInterface.ShowStudySessions();
+        var studySessions = SessionDb.GetAll();
+        if (studySessions.Count != 0)
+        {
+            var stacks = StackDb.GetAll();
+            var stackIdDict = Operations.CreateStackIdDict(stacks);
+            UserInterface.ShowStudySessions(studySessions, stackIdDict);
+            UserInput.DisplayMessage("", "return to Main menu");
+        }
+        else
+        {
+            UserInput.DisplayMessage("No Study sessions yet", "return to Main menu");
+        }
+
+        MenuManager.ReturnToMainMenu();
+    }
+}
+
+public class ReportsMenu : Menu
+{
+    protected List<StudySession> _studySessions;
+    public ReportsMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb) : base(menuManager, flashcardDb, stackDb, sessionDb) { }
+
+    public override void Display()
+    {
+
+        _studySessions = SessionDb.GetAll();
+
+        if (_studySessions.Count != 0)
+        {
+            UserInterface.ReportsMenu();
+
+            if (UserInterface.OptionChoice == "Number of sessions/month")
+            {
+                MenuManager.NewMenu(new NumberOfSessionsMenu(MenuManager, FlashcardDb, StackDb, SessionDb, _studySessions));
+            }
+            else
+            {
+                //UserInterface.AverageScore();
+            }
+        }
+        else
+        {
+            UserInput.DisplayMessage("No Study sessions yet.", "return to Main menu", true);
+        }
+    }
+
+
+}
+public class NumberOfSessionsMenu : ReportsMenu
+{
+    public NumberOfSessionsMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb, List<StudySession> studySessions) : base(menuManager, flashcardDb, stackDb, sessionDb)
+    {
+        _studySessions = studySessions;
+    }
+    public override void Display()
+    {
+        var userYear = GetUserYear();
+        var sessionsByYear = GetSessionsByYear(userYear);
+        var stacks = StackDb.GetAll();
+        var stackIdDict = Operations.CreateStackIdDict(stacks);
+
+        UserInterface.NumberOfSessionsReport(sessionsByYear, stackIdDict, userYear);
+
+    }
+
+    protected string GetUserYear()
+    {
+        var sessionYears = GetSessionsYears(_studySessions);
+        string userYear = "";
+        UserInterface.ShowYears(sessionYears);
+
+        if (UserInterface.OptionChoice == "Go back")
+            MenuManager.GoBack();
+        else
+            userYear = UserInterface.OptionChoice;
+
+        return userYear;
+    }
+
+    protected List<StudySession> GetSessionsByYear(string userYear)
+    {
+        return _studySessions
+        .Where(session => session.Date.Year.ToString() == userYear)
+        .ToList();
+    }
+
+    protected static string[] GetSessionsYears(List<StudySession> studySessions)
+    {
+        return studySessions
+        .Select(session => session.Date.ToString("yyyy"))
+        .Distinct()
+        .ToArray();
     }
 }

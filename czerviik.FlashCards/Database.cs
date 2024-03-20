@@ -236,6 +236,14 @@ public class StudySessionDb : Database
         ExecuteCommand(sql);
     }
 
+    public List<StudySession> GetAll()
+    {
+        var sql = @$"
+        SELECT * FROM study_sessions";
+
+        return ReadRowsCommand(sql);
+    }
+
     private List<StudySession> ReadRowsCommand(string sql, object parameters = null)
     {
         var sessionsList = new List<StudySession>();
@@ -250,7 +258,4 @@ public class StudySessionDb : Database
             return sessionsList;
         }
     }
-
-
 }
-//vytvořit study session databázi a v Menu.cs zavést ukládání. Pak vytvořit funkci, jestli opakovat study session. Poté zobrazení study session, atd.
