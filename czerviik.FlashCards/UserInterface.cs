@@ -61,11 +61,15 @@ public static class UserInterface
 
     public static void FinalizeSession(int score, int totalRounds, Stack stack)
     {
+           string[] options = {
+            "Yes",
+            "No"};
+
         Header($"{stack.Name} study session");
         Console.WriteLine("Session over!");
         Console.WriteLine($"You scored:{score}/{totalRounds}");
         Console.WriteLine("\nTry again?");
-        ChooseOptions(["Yes", "No"]);
+        ChooseOptions(options);
 
     }
 
@@ -185,12 +189,17 @@ public static class UserInterface
 
     public static void NewFlashcardConfirm(string currentStack, string question, string answer)
     {
+        string[] options = {
+            "Confirm",
+            "Enter again"
+        };
+
         Header($"new {currentStack} flashcard");
         Console.WriteLine($"Stack: {currentStack}");
         Console.WriteLine($"Question: {question}");
         Console.WriteLine($"Answer: {answer}");
         Console.WriteLine();
-        ChooseOptions(["Confirm", "Enter again"]);
+        ChooseOptions(options);
     }
 
     public static void UpdateFlashcardQuestion(int id)
@@ -226,12 +235,17 @@ public static class UserInterface
 
     public static void AnotherFlashcard()
     {
+        string[] options = {
+          "Add another flashcard",
+          "Done"
+        };
+
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("Flashcard saved!");
         Console.ResetColor();
         Console.WriteLine();
-        ChooseOptions(["Add another flashcard", "Done"]);
+        ChooseOptions(options);
     }
 
     public static void NewStack()
@@ -262,8 +276,13 @@ public static class UserInterface
 
     public static void ReportsMenu()
     {
+        string[] options = {
+            "Number of sessions/month",
+            "Average score/month",
+            "Go back"};
+
         Header("reports");
-        ChooseOptions(["Number of sessions/month", "Average score/month", "Go back"]);
+        ChooseOptions(options);
     }
 
     public static void ShowYears(string[] years)
