@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.SqlClient;
-using Microsoft.VisualBasic;
 
 namespace FlashCards;
 
@@ -19,9 +12,10 @@ public abstract class Database
         _connectionString = connectionString;
         _fileName = fileName;
         InitializeDatabase();
-
     }
+
     public abstract void InitializeDatabase();
+
     protected void ExecuteCommand(string sql)
     {
         using (var connection = new SqlConnection(_connectionString))
@@ -53,7 +47,6 @@ public class FlashcardDb : Database
         ExecuteCommand(sql);
     }
 
-
     private List<Flashcard> ReadRowsCommand(string sql, object parameters = null)
     {
         var flashcardsList = new List<Flashcard>();
@@ -77,6 +70,7 @@ public class FlashcardDb : Database
 
         ExecuteCommand(sql);
     }
+
     public void Update(string question, string answer, int stackId, int id)
     {
         var sql = @$"
@@ -102,23 +96,12 @@ public class FlashcardDb : Database
         return ReadRowsCommand(sql);
     }
 
-    public Flashcard GetById(int id)
-    {
-        var sql = $"SELECT * FROM flashcards WHERE Id = @Id";
-
-        using (var connection = new SqlConnection(_connectionString))
-        {
-            return connection.QuerySingleOrDefault<Flashcard>(sql, new { Id = id });
-        }
-    }
-
     public List<Flashcard> GetByStackId(int id)
     {
         var sql = $"SELECT * FROM flashcards WHERE StackId = @Id";
         return ReadRowsCommand(sql, new { Id = id });
     }
 }
-
 
 public class StackDb : Database
 {
@@ -149,6 +132,7 @@ public class StackDb : Database
             {
                 stacksList.Add(stack);
             }
+            
             return stacksList;
         }
     }
@@ -185,12 +169,6 @@ public class StackDb : Database
         return ReadRowsCommand(sql);
     }
 
-    public List<Stack> GetById(int id)
-    {
-        var sql = $"SELECT * FROM stacks WHERE Id = @Id";
-        return ReadRowsCommand(sql, new { Id = id });
-    }
-
     public Stack GetByName(string name)
     {
         var sql = $"SELECT * FROM stacks WHERE Name = @Name";
@@ -202,7 +180,6 @@ public class StackDb : Database
         var sql = $"SELECT * FROM stacks WHERE Name = @Name";
         return ReadSingleCommand(sql, new { Name = name }) != null;
     }
-
 }
 
 public class StudySessionDb : Database
@@ -255,6 +232,7 @@ public class StudySessionDb : Database
             {
                 sessionsList.Add(session);
             }
+            
             return sessionsList;
         }
     }

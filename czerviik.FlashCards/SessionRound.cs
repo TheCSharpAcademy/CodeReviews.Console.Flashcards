@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace FlashCards;
 
 public class SessionRound
@@ -23,8 +18,8 @@ public class SessionRound
         _menuManager = menuManager;
         _totalRounds = totalRounds;
         RoundNo++;
-
     }
+    
     public void Start()
     {
         _currentFlashcard = GetRandomFlashcard(_flashcards);

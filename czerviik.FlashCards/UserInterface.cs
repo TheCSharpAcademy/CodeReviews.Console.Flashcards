@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Spectre.Console;
 
 namespace FlashCards;
@@ -151,7 +147,6 @@ public static class UserInterface
         }
         else
             ChooseOptions(options);
-
     }
 
     public static void ShowFlashcards(List<FlashcardReviewDto> flashcards, List<Stack> stacks)
@@ -170,7 +165,6 @@ public static class UserInterface
             UserInput.DisplayMessage("No Flashcards in this stack.");
             OptionChoice = "Go back";
         }
-
         else
             ChooseOptions(options);
     }
@@ -239,11 +233,13 @@ public static class UserInterface
         Console.WriteLine();
         ChooseOptions(["Add another flashcard", "Done"]);
     }
+
     public static void NewStack()
     {
         Header("create new stack");
         Console.WriteLine("Enter stack's name: ");
     }
+
     public static void UpdateFlashcard(List<FlashcardReviewDto> flashcards, Stack stack)
     {
         Header("show stacks");
@@ -395,5 +391,3 @@ public static class UserInterface
         AnsiConsole.Write(table);
     }
 }
-
-

@@ -1,12 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Reflection.Metadata.Ecma335;
-using System.Threading.Tasks;
-using Microsoft.Identity.Client;
 using Spectre.Console;
-using Spectre.Console.Rendering;
 
 namespace FlashCards;
 
@@ -23,6 +15,7 @@ public abstract class Menu
         StackDb = stackDb;
         SessionDb = sessionDb;
     }
+
     public abstract void Display();
 }
 public class MainMenu : Menu
@@ -51,7 +44,7 @@ public class MainMenu : Menu
                 MenuManager.NewMenu(new ReportsMenu(MenuManager, FlashcardDb, StackDb, SessionDb));
                 break;
             default:
-                Environment.Exit(0);
+                MenuManager.Close();
                 break;
         }
     }
@@ -60,13 +53,16 @@ public class MainMenu : Menu
 public class StudySessionMenu : Menu
 {
     public StudySessionMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb) : base(menuManager, flashcardDb, stackDb, sessionDb) { }
-    private List<Stack> _stacksList;
+    private List<Stack> __stacksList;
 
     public override void Display()
     {
-        _stacksList = StackDb.GetAll();
-
-        if (_stacksList.Count != 0)
+        __stacksList = StackDb.GetAll();
+        CheckAndDisplyStacks();
+    }
+    private void CheckAndDisplyStacks()
+    {
+        if (__stacksList.Count != 0)
         {
             DisplayStackOptions();
 
@@ -87,10 +83,9 @@ public class StudySessionMenu : Menu
             MenuManager.ReturnToMainMenu();
         }
     }
-
     private void DisplayStackOptions()
     {
-        var stacksArray = Operations.StackListToNamesArray(_stacksList);
+        var stacksArray = Operations.StackListToNamesArray(__stacksList);
         UserInterface.StudySessionOptions(stacksArray);
     }
 
@@ -104,20 +99,18 @@ public class StudySessionMenu : Menu
                 MenuManager.GoBack();
                 break;
             default:
-                userStack = _stacksList.FirstOrDefault(s => s.Name == UserInterface.OptionChoice);
+                userStack = __stacksList.FirstOrDefault(s => s.Name == UserInterface.OptionChoice);
+
                 if (userStack == null)
-                {
                     throw new InvalidOperationException($"A stack with the name {UserInterface.OptionChoice}, does not exist in this context.");
-                }
+
                 else
-                {
                     MenuManager.NewMenu(new NewStudySession(MenuManager, FlashcardDb, StackDb, SessionDb, userStack));
-                }
+
                 break;
         }
     }
 }
-
 
 public class NewStudySession : Menu
 {
@@ -140,6 +133,7 @@ public class NewStudySession : Menu
         else
             MenuManager.ReturnToMainMenu();
     }
+
     private void SetDateTime()
     {
         _startDateTime = new DateTime();
@@ -174,16 +168,21 @@ public class NewStudySession : Menu
         return UserInterface.OptionChoice == "Yes";
     }
 }
+
 public class FlashCardMenu : Menu
 {
-    protected List<Stack> stacksList;
+    protected List<Stack> _stacksList;
     public FlashCardMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb) : base(menuManager, flashcardDb, stackDb, sessionDb) { }
 
     public override void Display()
     {
-        stacksList = StackDb.GetAll();
+        _stacksList = StackDb.GetAll();
+        DisplayOrCreateStacks();
+    }
 
-        if (stacksList.Count != 0)
+    private void DisplayOrCreateStacks()
+    {
+        if (_stacksList.Count != 0)
         {
             DisplayStackOptions();
 
@@ -207,7 +206,7 @@ public class FlashCardMenu : Menu
 
     private void DisplayStackOptions()
     {
-        var stacksArray = Operations.StackListToNamesArray(stacksList);
+        var stacksArray = Operations.StackListToNamesArray(_stacksList);
         UserInterface.NewFlashcard(stacksArray);
     }
 
@@ -225,15 +224,12 @@ public class FlashCardMenu : Menu
                 MenuManager.GoBack();
                 break;
             default:
-                userStack = stacksList.FirstOrDefault(s => s.Name == UserInterface.OptionChoice);
+                userStack = _stacksList.FirstOrDefault(s => s.Name == UserInterface.OptionChoice);
                 if (userStack == null)
-                {
                     throw new InvalidOperationException($"A stack with the name {UserInterface.OptionChoice}, does not exist in this context.");
-                }
                 else
-                {
                     HandleFlashcardCreation(userStack);
-                }
+
                 break;
         }
     }
@@ -267,7 +263,6 @@ public class FlashCardMenu : Menu
     private Stack CreateStack()
     {
         string stackName = HandleStackNameInput();
-
         StackDb.Insert(stackName.ToLower());
 
         return StackDb.GetByName(stackName);
@@ -292,19 +287,22 @@ public class FlashCardMenu : Menu
 
 public class ShowStacksMenu : Menu
 {
-
-    protected List<Stack> stacksList;
-    protected List<Flashcard> flashcards;
-    protected List<FlashcardReviewDto> flashcardDtos;
-    protected Stack userStack;
-    private bool isAllOption;
+    protected List<Stack> _stacksList;
+    protected List<Flashcard> _flashcards;
+    protected List<FlashcardReviewDto> _flashcardDtos;
+    protected Stack _userStack;
+    private bool _isAllOption;
     public ShowStacksMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb) : base(menuManager, flashcardDb, stackDb, sessionDb) { }
 
     public override void Display()
     {
-        stacksList = StackDb.GetAll();
+        _stacksList = StackDb.GetAll();
+        CheckAndDisplyStacks();
+    }
 
-        if (stacksList.Count != 0)
+    private void CheckAndDisplyStacks()
+    {
+        if (_stacksList.Count != 0)
         {
             DisplayStackOptions();
 
@@ -330,7 +328,7 @@ public class ShowStacksMenu : Menu
 
     private void DisplayStackOptions()
     {
-        var stacksArray = Operations.StackListToNamesArray(stacksList);
+        var stacksArray = Operations.StackListToNamesArray(_stacksList);
 
         UserInterface.ShowStacks(stacksArray);
 
@@ -338,13 +336,14 @@ public class ShowStacksMenu : Menu
 
     private void DisplayFlashcards(Stack stack)
     {
-        flashcardDtos = Operations.ConvertToDto(flashcards);
-        UserInterface.ShowFlashcards(flashcardDtos, stack);
+        _flashcardDtos = Operations.ConvertToDto(_flashcards);
+        UserInterface.ShowFlashcards(_flashcardDtos, stack);
     }
+
     private void DisplayFlashcards(List<Stack> stacks)
     {
-        flashcardDtos = Operations.ConvertToDto(flashcards);
-        UserInterface.ShowFlashcards(flashcardDtos, stacks);
+        _flashcardDtos = Operations.ConvertToDto(_flashcards);
+        UserInterface.ShowFlashcards(_flashcardDtos, stacks);
     }
 
     private void HandleUserOptions()
@@ -352,9 +351,9 @@ public class ShowStacksMenu : Menu
         switch (UserInterface.OptionChoice)
         {
             case "Show all":
-                flashcards = FlashcardDb.GetAll();
-                isAllOption = true;
-                DisplayFlashcards(stacksList);
+                _flashcards = FlashcardDb.GetAll();
+                _isAllOption = true;
+                DisplayFlashcards(_stacksList);
                 break;
 
             case "Go back":
@@ -362,15 +361,15 @@ public class ShowStacksMenu : Menu
                 break;
 
             default:
-                userStack = stacksList.FirstOrDefault(s => s.Name == UserInterface.OptionChoice);
-                if (userStack == null)
+                _userStack = _stacksList.FirstOrDefault(s => s.Name == UserInterface.OptionChoice);
+                if (_userStack == null)
                 {
                     throw new InvalidOperationException($"A stack with the name {UserInterface.OptionChoice}, does not exist in this context.");
                 }
                 else
                 {
-                    flashcards = FlashcardDb.GetByStackId(userStack.Id);
-                    DisplayFlashcards(userStack);
+                    _flashcards = FlashcardDb.GetByStackId(_userStack.Id);
+                    DisplayFlashcards(_userStack);
                 }
                 break;
         }
@@ -384,15 +383,15 @@ public class ShowStacksMenu : Menu
                 MenuManager.GoBack();
                 break;
             case "Update a Flashcard":
-                MenuManager.NewMenu(new UpdateFlashcardMenu(MenuManager, FlashcardDb, StackDb, SessionDb, flashcards, flashcardDtos, userStack));
+                MenuManager.NewMenu(new UpdateFlashcardMenu(MenuManager, FlashcardDb, StackDb, SessionDb, _flashcards, _flashcardDtos, _userStack));
                 break;
             case "Delete a Flashcard":
-                MenuManager.NewMenu(new DeleteFlashcardMenu(MenuManager, FlashcardDb, StackDb, SessionDb, flashcards, flashcardDtos, userStack));
+                MenuManager.NewMenu(new DeleteFlashcardMenu(MenuManager, FlashcardDb, StackDb, SessionDb, _flashcards, _flashcardDtos, _userStack));
                 break;
             case "Delete a Stack":
                 {
-                    if (isAllOption)
-                        MenuManager.NewMenu(new DeleteStackAllMenu(MenuManager, FlashcardDb, StackDb, SessionDb, stacksList));
+                    if (_isAllOption)
+                        MenuManager.NewMenu(new DeleteStackAllMenu(MenuManager, FlashcardDb, StackDb, SessionDb, _stacksList));
                     else
                     {
                         MenuManager.NewMenu(new DeleteStackMenu(MenuManager, FlashcardDb, StackDb, SessionDb));
@@ -407,9 +406,9 @@ public class UpdateFlashcardMenu : ShowStacksMenu
 {
     public UpdateFlashcardMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb, List<Flashcard> flashcards, List<FlashcardReviewDto> flashcardDtos, Stack userStack) : base(menuManager, flashcardDb, stackDb, sessionDb)
     {
-        this.flashcards = flashcards;
-        this.flashcardDtos = flashcardDtos;
-        this.userStack = userStack;
+        _flashcards = flashcards;
+        _flashcardDtos = flashcardDtos;
+        _userStack = userStack;
     }
 
     public override void Display()
@@ -425,12 +424,13 @@ public class UpdateFlashcardMenu : ShowStacksMenu
 
         MenuManager.GoBack();
     }
+
     private void HandleFlashcardUpdate()
     {
         while (true)
         {
-            UserInterface.UpdateFlashcard(flashcardDtos, userStack);
-            var userId = UserInput.FlashcardIdInput(MenuManager, flashcardDtos);
+            UserInterface.UpdateFlashcard(_flashcardDtos, _userStack);
+            var userId = UserInput.FlashcardIdInput(MenuManager, _flashcardDtos);
 
             UserInterface.UpdateFlashcardQuestion(userId);
             var userQuestion = UserInput.InputWithSpecialKeys(MenuManager, true, 50);
@@ -438,13 +438,13 @@ public class UpdateFlashcardMenu : ShowStacksMenu
             UserInterface.UpdateFlashcardAnswer(userId, userQuestion);
             var userAnswer = UserInput.InputWithSpecialKeys(MenuManager, true, 50);
 
-            UserInterface.UpdateFlashcardConfirm(userId, userQuestion, userAnswer, userStack.Name);
+            UserInterface.UpdateFlashcardConfirm(userId, userQuestion, userAnswer, _userStack.Name);
             if (UserInterface.OptionChoice == "Confirm")
             {
-                var flashcardId = Operations.GetFlashcardDbId(userId, flashcards, flashcardDtos);
+                var flashcardId = Operations.GetFlashcardDbId(userId, _flashcards, _flashcardDtos);
                 if (flashcardId != -1)
                 {
-                    FlashcardDb.Update(userQuestion, userAnswer, userStack.Id, flashcardId);
+                    FlashcardDb.Update(userQuestion, userAnswer, _userStack.Id, flashcardId);
                 }
                 else
                 {
@@ -458,11 +458,11 @@ public class UpdateFlashcardMenu : ShowStacksMenu
 
 public class DeleteFlashcardMenu : ShowStacksMenu
 {
-    public DeleteFlashcardMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb, List<Flashcard> flashcards, List<FlashcardReviewDto> flashcardDtos, Stack userStack) : base(menuManager, flashcardDb, stackDb, sessionDb)
+    public DeleteFlashcardMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb, List<Flashcard> flashcards, List<FlashcardReviewDto> _flashcardDtos, Stack userStack) : base(menuManager, flashcardDb, stackDb, sessionDb)
     {
-        this.flashcards = flashcards;
-        this.flashcardDtos = flashcardDtos;
-        this.userStack = userStack;
+        _flashcards = flashcards;
+        this._flashcardDtos = _flashcardDtos;
+        _userStack = userStack;
     }
     public override void Display()
     {
@@ -477,17 +477,18 @@ public class DeleteFlashcardMenu : ShowStacksMenu
 
         MenuManager.GoBack();
     }
+
     private void HandleFlashcardDelete()
     {
         while (true)
         {
-            UserInterface.DeleteFlashcard(flashcardDtos, userStack);
-            var userId = UserInput.FlashcardIdInput(MenuManager, flashcardDtos);
+            UserInterface.DeleteFlashcard(_flashcardDtos, _userStack);
+            var userId = UserInput.FlashcardIdInput(MenuManager, _flashcardDtos);
 
             UserInterface.DeleteFlashcardConfirm(userId);
             if (UserInterface.OptionChoice == "Yes")
             {
-                var flashcardId = Operations.GetFlashcardDbId(userId, flashcards, flashcardDtos);
+                var flashcardId = Operations.GetFlashcardDbId(userId, _flashcards, _flashcardDtos);
                 if (flashcardId != -1)
                 {
                     FlashcardDb.Delete(flashcardId);
@@ -504,9 +505,9 @@ public class DeleteFlashcardMenu : ShowStacksMenu
 
 public class DeleteStackAllMenu : ShowStacksMenu
 {
-    public DeleteStackAllMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb, List<Stack> stacksList) : base(menuManager, flashcardDb, stackDb, sessionDb)
+    public DeleteStackAllMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb, List<Stack> _stacksList) : base(menuManager, flashcardDb, stackDb, sessionDb)
     {
-        this.stacksList = stacksList;
+        this._stacksList = _stacksList;
     }
 
     public override void Display()
@@ -526,7 +527,7 @@ public class DeleteStackAllMenu : ShowStacksMenu
 
     private void DisplayStacks()
     {
-        var stacksArray = Operations.StackListToNamesArray(stacksList);
+        var stacksArray = Operations.StackListToNamesArray(_stacksList);
         UserInterface.DeleteStack(stacksArray);
     }
     private void HandleUserOptions()
@@ -538,14 +539,14 @@ public class DeleteStackAllMenu : ShowStacksMenu
                 break;
 
             default:
-                userStack = stacksList.FirstOrDefault(s => s.Name == UserInterface.OptionChoice);
-                if (userStack == null)
+                _userStack = _stacksList.FirstOrDefault(s => s.Name == UserInterface.OptionChoice);
+                if (_userStack == null)
                 {
                     throw new InvalidOperationException($"A stack with the name {UserInterface.OptionChoice}, does not exist in this context.");
                 }
                 else
                 {
-                    HandleStackDelete(userStack);
+                    HandleStackDelete(_userStack);
                     MenuManager.DisplayCurrentMenu();
                 }
                 break;
@@ -559,21 +560,21 @@ public class DeleteStackAllMenu : ShowStacksMenu
         if (UserInterface.OptionChoice == "Yes")
         {
             StackDb.Delete(userStack.Id);
-            stacksList.Remove(userStack);
+            _stacksList.Remove(userStack);
             UserInput.DisplayMessage($"Stack '{userStack.Name}' and it's flashcards have been deleted.", "go back", true);
         }
         else
             MenuManager.DisplayCurrentMenu();
-
     }
 }
+
 public class DeleteStackMenu : ShowStacksMenu
 {
     public DeleteStackMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb) : base(menuManager, flashcardDb, stackDb, sessionDb) { }
 
     public override void Display()
     {
-        HandleStackDelete(userStack);
+        HandleStackDelete(_userStack);
         MenuManager.DisplayCurrentMenu();
     }
 
@@ -584,14 +585,14 @@ public class DeleteStackMenu : ShowStacksMenu
         if (UserInterface.OptionChoice == "Yes")
         {
             StackDb.Delete(userStack.Id);
-            stacksList.Remove(userStack);
+            _stacksList.Remove(userStack);
             UserInput.DisplayMessage($"Stack '{userStack.Name}' and it's flashcards have been deleted.", "go back", true);
         }
         else
             MenuManager.DisplayCurrentMenu();
-
     }
 }
+
 public class ShowStudySessionsMenu : Menu
 {
     public ShowStudySessionsMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb) : base(menuManager, flashcardDb, stackDb, sessionDb) { }
@@ -599,6 +600,7 @@ public class ShowStudySessionsMenu : Menu
     public override void Display()
     {
         var studySessions = SessionDb.GetAll();
+
         if (studySessions.Count != 0)
         {
             var stacks = StackDb.GetAll();
@@ -622,7 +624,6 @@ public class ReportsMenu : Menu
 
     public override void Display()
     {
-
         _studySessions = SessionDb.GetAll();
 
         if (_studySessions.Count != 0)
@@ -630,32 +631,26 @@ public class ReportsMenu : Menu
             UserInterface.ReportsMenu();
 
             if (UserInterface.OptionChoice == "Number of sessions/month")
-            {
                 MenuManager.NewMenu(new NumberOfSessionsMenu(MenuManager, FlashcardDb, StackDb, SessionDb, _studySessions));
-            }
+            
             else if (UserInterface.OptionChoice == "Go back")
-            {
                 MenuManager.ReturnToMainMenu();
-            }
+        
             else
-            {
                 MenuManager.NewMenu(new AverageScoreMenu(MenuManager, FlashcardDb, StackDb, SessionDb, _studySessions));
-            }
         }
         else
-        {
             UserInput.DisplayMessage("No Study sessions yet.", "return to Main menu", true);
-        }
     }
-
-
 }
+
 public class NumberOfSessionsMenu : ReportsMenu
 {
     public NumberOfSessionsMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb, List<StudySession> studySessions) : base(menuManager, flashcardDb, stackDb, sessionDb)
     {
         _studySessions = studySessions;
     }
+
     public override void Display()
     {
         var userYear = GetUserYear();
@@ -743,7 +738,6 @@ public class AverageScoreMenu : NumberOfSessionsMenu
                                     .ToDictionary(
                                         monthGroup => monthGroup.Key,
                                         monthGroup => monthGroup.Average(s => s.Score)));
-
 
         return sessionAverages;
     }

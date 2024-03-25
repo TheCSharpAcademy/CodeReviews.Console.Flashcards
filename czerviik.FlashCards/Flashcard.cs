@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace FlashCards;
 
 public class Flashcard
@@ -26,4 +21,3 @@ public class FlashcardReviewDto
     public string Answer { get; set; }
     public int StackId { get; set; }
 }
-//prostudovat DTOS v discordu (při nových indexech vytvořit nový list DTO a zpětné mapování bude probíhat na základě pořadí ID v daném listu. (hledej v discordu "Let's say you have 3 items in the db with indexes 10, 20 and 30" ))

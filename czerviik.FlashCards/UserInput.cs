@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace FlashCards;
@@ -53,8 +50,8 @@ public static class UserInput
                 userInput.Append(keyPress.KeyChar);
             }
         } while (true);
-
     }
+
     public static int FlashcardIdInput(MenuManager menuManager, List<FlashcardReviewDto> flashcardDtos)
     {
         bool idFound = false;
