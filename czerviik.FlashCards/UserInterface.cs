@@ -273,7 +273,7 @@ public static class UserInterface
     public static void ShowYears(string[] years)
     {
         Console.Clear();
-        Console.WriteLine("Choose a year of your Report:");
+        Console.WriteLine("Choose a year of your Report:\n");
 
         var modifiedYears = new string[years.Length + 1];
         years.CopyTo(modifiedYears, 0);
@@ -285,7 +285,13 @@ public static class UserInterface
     public static void NumberOfSessionsReport(Dictionary<int, Dictionary<int, int>> sessionCount, Dictionary<int, string> stackIdDict, string year)
     {
         Header($"number of sessions per month of {year} per stack report");
-        NumberOfSessionsTable(sessionCount, stackIdDict);
+        ReportTable(sessionCount, stackIdDict);
+    }
+
+    public static void AveragesReport(Dictionary<int, Dictionary<int, double>> sessionAverages, Dictionary<int, string> stackIdDict, string year)
+    {
+        Header($"monthly averages of {year} per stack report");
+        ReportTable(sessionAverages, stackIdDict);
     }
 
     private static void Header(string headerText)
@@ -349,7 +355,7 @@ public static class UserInterface
         AnsiConsole.Write(table);
     }
 
-    private static void NumberOfSessionsTable(Dictionary<int, Dictionary<int, int>> sessionCount, Dictionary<int, string> stackIdDict)
+    private static void ReportTable(Dictionary<int, Dictionary<int, int>> sessionCount, Dictionary<int, string> stackIdDict)
     {
         var table = new Table()
         .AddColumns("Stack name", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
@@ -362,6 +368,26 @@ public static class UserInterface
             {
                 row.Add(sessionCount.ContainsKey(stackIdPair.Key) && sessionCount[stackIdPair.Key].ContainsKey(month)
                         ? sessionCount[stackIdPair.Key][month].ToString()
+                        : "0");
+            }
+            table.AddRow(row.ToArray());
+        }
+        AnsiConsole.Write(table);
+    }
+
+    private static void ReportTable(Dictionary<int, Dictionary<int, double>> sessionAverages, Dictionary<int, string> stackIdDict)
+    {
+        var table = new Table()
+        .AddColumns("Stack name", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+        .Border(TableBorder.Rounded);
+
+        foreach (var stackIdPair in stackIdDict)
+        {
+            var row = new List<string> { stackIdPair.Value };
+            for (int month = 1; month <= 12; month++)
+            {
+                row.Add(sessionAverages.ContainsKey(stackIdPair.Key) && sessionAverages[stackIdPair.Key].ContainsKey(month)
+                        ? sessionAverages[stackIdPair.Key][month].ToString("N2")
                         : "0");
             }
             table.AddRow(row.ToArray());

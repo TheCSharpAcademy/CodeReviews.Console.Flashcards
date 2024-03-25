@@ -633,9 +633,13 @@ public class ReportsMenu : Menu
             {
                 MenuManager.NewMenu(new NumberOfSessionsMenu(MenuManager, FlashcardDb, StackDb, SessionDb, _studySessions));
             }
+            else if (UserInterface.OptionChoice == "Go back")
+            {
+                MenuManager.ReturnToMainMenu();
+            }
             else
             {
-                //UserInterface.AverageScore();
+                MenuManager.NewMenu(new AverageScoreMenu(MenuManager, FlashcardDb, StackDb, SessionDb, _studySessions));
             }
         }
         else
@@ -660,6 +664,8 @@ public class NumberOfSessionsMenu : ReportsMenu
         var sessionCounts = GetSessionCounts(sessionsByYear);
 
         UserInterface.NumberOfSessionsReport(sessionCounts, stackIdDict, userYear);
+        UserInput.DisplayMessage("", "return to go back");
+        MenuManager.GoBack();
     }
 
     protected string GetUserYear()
@@ -708,5 +714,37 @@ public class NumberOfSessionsMenu : ReportsMenu
             sessionCounts[session.StackId][month]++;
         }
         return sessionCounts;
+    }
+}
+
+public class AverageScoreMenu : NumberOfSessionsMenu
+{
+    public AverageScoreMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb, List<StudySession> studySessions) : base(menuManager, flashcardDb, stackDb, sessionDb, studySessions) { }
+
+    public override void Display()
+    {
+        var userYear = GetUserYear();
+        var sessionsByYear = GetSessionsByYear(userYear);
+        var stackIdDict = Operations.CreateStackIdDict(StackDb.GetAll());
+        var sessionAverages = GetSessionAverages(sessionsByYear);
+
+        UserInterface.AveragesReport(sessionAverages, stackIdDict, userYear);
+        UserInput.DisplayMessage("", "return to go back");
+        MenuManager.GoBack();
+    }
+
+    private Dictionary<int, Dictionary<int, double>> GetSessionAverages(List<StudySession> sessions) //přepsat do LINQ, porozumět mu
+    {
+        var sessionAverages = sessions
+        .GroupBy(s => s.StackId)
+        .ToDictionary(
+                        group => group.Key,
+                        group => group.GroupBy(s => s.Date.Month)
+                                    .ToDictionary(
+                                        monthGroup => monthGroup.Key,
+                                        monthGroup => monthGroup.Average(s => s.Score)));
+
+
+        return sessionAverages;
     }
 }
