@@ -6,7 +6,7 @@ namespace Flashcards.JaegerByte.Manager
 {
     internal class TrainingManager
     {
-        public DatabaseTrainingHandler  dbHandler { get; set; }
+        public DatabaseTrainingHandler  DbHandler { get; set; }
         public CardStack SelectedStack { get; set; }
         public int CorrectAnswers { get; set; }
         public int WrongAnswers { get; set; }
@@ -14,7 +14,7 @@ namespace Flashcards.JaegerByte.Manager
         public DateTime EndTime { get; set; }
         public void Init(TrainingMenuOption option)
         {
-            dbHandler = new DatabaseTrainingHandler();
+            DbHandler = new DatabaseTrainingHandler();
             while(true)
             {
                 switch (option)
@@ -93,7 +93,7 @@ namespace Flashcards.JaegerByte.Manager
         private void SaveSession()
         {
             TrainingSession newSession = new TrainingSession(SelectedStack.StackID, StartTime, EndTime, CorrectAnswers, WrongAnswers);
-            dbHandler.InsertSession(newSession);
+            DbHandler.InsertSession(newSession);
         }
     }
 }

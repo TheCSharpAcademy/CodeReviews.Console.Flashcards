@@ -11,11 +11,11 @@ namespace Flashcards.JaegerByte
     internal class Program
     {
         #region Prop
-        public static MainMenuManager mainMenuManager { get; set; }
-        public static FlashcardsManager flashcardsManager { get; set; }
-        public static StacksManager stacksManager { get; set; }
-        public static TrainingManager trainingManager { get; set; }
-        public static ViewAllTrainingsManager viewAllTrainingsManager { get; set; }
+        public static MainMenuManager MainMenuManager { get; set; }
+        public static FlashcardsManager FlashcardsManager { get; set; }
+        public static StacksManager StacksManager { get; set; }
+        public static TrainingManager TrainingManager { get; set; }
+        public static ViewAllTrainingsManager ViewAllTrainingsManager { get; set; }
         public static string ConnectionString { get; set; }
         #endregion
 
@@ -26,20 +26,20 @@ namespace Flashcards.JaegerByte
             while (true)
             {
                 Console.Clear();
-                MainMenuOption selection = mainMenuManager.GetMainMenuSelection();
+                MainMenuOption selection = MainMenuManager.GetMainMenuSelection();
                 switch (selection)
                 {
                     case MainMenuOption.ManageStacks:
-                        stacksManager.Init(mainMenuManager.GetManageStacksMenuSelection());
+                        StacksManager.Init(MainMenuManager.GetManageStacksMenuSelection());
                         break;
                     case MainMenuOption.ManageFlashcards:
-                        flashcardsManager.Init(mainMenuManager.GetManageFlashcardsMenuSelection());
+                        FlashcardsManager.Init(MainMenuManager.GetManageFlashcardsMenuSelection());
                         break;
                     case MainMenuOption.Training:
-                        trainingManager.Init(mainMenuManager.GetTrainingMenuSelection());
+                        TrainingManager.Init(MainMenuManager.GetTrainingMenuSelection());
                         break;
                     case MainMenuOption.ViewTrainingSessions:
-                        viewAllTrainingsManager.Init(mainMenuManager.GetAllTrainingsMenuSelection());
+                        ViewAllTrainingsManager.Init(MainMenuManager.GetAllTrainingsMenuSelection());
                         break;
                     case MainMenuOption.Exit:
                         System.Environment.Exit(0);
@@ -50,11 +50,11 @@ namespace Flashcards.JaegerByte
 
         static void ApplicationSetup()
         {
-            mainMenuManager = new MainMenuManager();
-            flashcardsManager = new FlashcardsManager();
-            stacksManager = new StacksManager();
-            trainingManager = new TrainingManager();
-            viewAllTrainingsManager = new ViewAllTrainingsManager();
+            MainMenuManager = new MainMenuManager();
+            FlashcardsManager = new FlashcardsManager();
+            StacksManager = new StacksManager();
+            TrainingManager = new TrainingManager();
+            ViewAllTrainingsManager = new ViewAllTrainingsManager();
             ConnectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString");
         }
     }

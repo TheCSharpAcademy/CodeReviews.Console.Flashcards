@@ -6,10 +6,10 @@ namespace Flashcards.JaegerByte.Manager
 {
     internal class ViewAllTrainingsManager
     {
-        public DatabaseTrainingHandler dbhandler { get; set; }
+        public DatabaseTrainingHandler DbHandler { get; set; }
         public void Init(ViewAllTrainingsMenuOption option)
         {
-            dbhandler = new DatabaseTrainingHandler();
+            DbHandler = new DatabaseTrainingHandler();
             while (true)
             {
                 switch (option)
@@ -26,7 +26,7 @@ namespace Flashcards.JaegerByte.Manager
 
         private void ViewAll()
         {
-            List<TrainingSession> trainingSessions = dbhandler.GetAll();
+            List<TrainingSession> trainingSessions = DbHandler.GetAll();
 
             Grid grid = new Grid();
             grid.AddColumn();

@@ -6,10 +6,10 @@ namespace Flashcards.JaegerByte.Manager
 {
     internal class FlashcardsManager
     {
-        public DatabaseFlashcardHandler dbhandler { get; set; }
+        public DatabaseFlashcardHandler DbHandler { get; set; }
         public void Init(FlashcardsMenuOption option)
         {
-            dbhandler = new DatabaseFlashcardHandler();
+            DbHandler = new DatabaseFlashcardHandler();
             while (true)
             {
                 switch (option)
@@ -33,7 +33,7 @@ namespace Flashcards.JaegerByte.Manager
         {
             string newQuestion = AnsiConsole.Ask<string>("Please insert new Question");
             string newAnswer = AnsiConsole.Ask<string>("Please insert new Answer");
-            if (dbhandler.CheckInsertInput(newQuestion, newAnswer))
+            if (DbHandler.CheckInsertInput(newQuestion, newAnswer))
             {
                 Flashcard newFlashcard = new Flashcard(newQuestion, newAnswer);
                 DatabaseStackHandler databaseStackHandler = new DatabaseStackHandler();
@@ -46,17 +46,17 @@ namespace Flashcards.JaegerByte.Manager
                 }
                 CardStack whereStack = AnsiConsole.Prompt(selectionprompt);
 
-                dbhandler.Insert(newFlashcard, whereStack);
+                DbHandler.Insert(newFlashcard, whereStack);
             }
             else
             {
-                AnsiConsole.Write(dbhandler.GetInvalidResponse());
+                AnsiConsole.Write(DbHandler.GetInvalidResponse());
                 Console.ReadKey();
             }
         }
         private void DeleteFlashcard()
         {
-            List<Flashcard> flashcards = dbhandler.GetAll();
+            List<Flashcard> flashcards = DbHandler.GetAll();
             SelectionPrompt<Flashcard> selectionprompt = new SelectionPrompt<Flashcard>();
             selectionprompt.Title = "Select Flashcard to delete";
             foreach (var item in flashcards)
@@ -64,12 +64,12 @@ namespace Flashcards.JaegerByte.Manager
                 selectionprompt.AddChoice(item);
             }
             Flashcard flashcardToDelete = AnsiConsole.Prompt(selectionprompt);
-            dbhandler.Delete(flashcardToDelete);
+            DbHandler.Delete(flashcardToDelete);
         }
         private void ViewFlashcard()
         {
             List<Flashcard> flashcards = new List<Flashcard>();
-            flashcards = dbhandler.GetAll();
+            flashcards = DbHandler.GetAll();
 
             Grid grid = new Grid();
             grid.AddColumn();

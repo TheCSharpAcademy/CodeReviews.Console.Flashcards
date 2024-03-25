@@ -6,10 +6,10 @@ namespace Flashcards.JaegerByte.Manager
 {
     internal class StacksManager
     {
-        public DatabaseStackHandler dbhandler { get; set; }
+        public DatabaseStackHandler DbHandler { get; set; }
         public void Init(StacksMenuOption option)
         {
-            dbhandler = new DatabaseStackHandler();
+            DbHandler = new DatabaseStackHandler();
             while (true)
             {
                 switch (option)
@@ -32,22 +32,22 @@ namespace Flashcards.JaegerByte.Manager
 
         private void AddStack()
         {
-            string newStackName = AnsiConsole.Ask<string>($"Insert new stack name ({dbhandler.MinChars} to {dbhandler.MaxChars} chars)");
+            string newStackName = AnsiConsole.Ask<string>($"Insert new stack name ({DbHandler.MinChars} to {DbHandler.MaxChars} chars)");
             CardStack newStack = new CardStack(newStackName);
-            if (dbhandler.CheckInsertInput(newStackName))
+            if (DbHandler.CheckInsertInput(newStackName))
             {
-                dbhandler.Insert(newStack);
+                DbHandler.Insert(newStack);
             }
             else
             {
-                Console.WriteLine(dbhandler.GetInvalidResponse());
+                Console.WriteLine(DbHandler.GetInvalidResponse());
                 Console.ReadKey();
             }
         }
 
         private void DeleteStack()
         {
-            List<CardStack> cardStacks = dbhandler.GetAll();
+            List<CardStack> cardStacks = DbHandler.GetAll();
             SelectionPrompt<CardStack> selectionprompt = new SelectionPrompt<CardStack>();
             selectionprompt.Title = "Select Stack to delete";
             foreach (var item in cardStacks)
@@ -55,12 +55,12 @@ namespace Flashcards.JaegerByte.Manager
                 selectionprompt.AddChoice(item);
             }
             CardStack stackToDelete =  AnsiConsole.Prompt(selectionprompt);
-            dbhandler.Delete(stackToDelete);
+            DbHandler.Delete(stackToDelete);
         }
 
         private void ViewStack()
         {
-            List<CardStack> cardStacks = dbhandler.GetAll();
+            List<CardStack> cardStacks = DbHandler.GetAll();
             SelectionPrompt<CardStack> selectionprompt = new SelectionPrompt<CardStack>();
             selectionprompt.Title = "Select Stack to view";
             foreach (var item in cardStacks)
