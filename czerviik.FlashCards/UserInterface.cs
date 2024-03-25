@@ -61,9 +61,10 @@ public static class UserInterface
 
     public static void FinalizeSession(int score, int totalRounds, Stack stack)
     {
-           string[] options = {
+        string[] options = {
             "Yes",
-            "No"};
+            "No"
+            };
 
         Header($"{stack.Name} study session");
         Console.WriteLine("Session over!");
@@ -129,9 +130,13 @@ public static class UserInterface
 
     public static void DeleteStackConfirm(Stack stack)
     {
+        string[] options = {
+            "Yes",
+            "No"};
+
         Console.Clear();
         Console.WriteLine($"Do you really want to delete {stack.Name}? (all stack's flashcards will be lost)\n");
-        ChooseOptions(["Yes", "No"]);
+        ChooseOptions(options);
     }
     public static void ShowFlashcards(List<FlashcardReviewDto> flashcards, Stack stack)
     {
@@ -218,19 +223,29 @@ public static class UserInterface
 
     public static void UpdateFlashcardConfirm(int id, string question, string answer, string currentStack)
     {
+        string[] options = {
+            "Confirm",
+            "Enter again"
+         };
+
         Header($"update flashcard #{id}");
         Console.WriteLine($"Stack: {currentStack}");
         Console.WriteLine($"Question: {question}");
         Console.WriteLine($"Answer: {answer}");
         Console.WriteLine();
-        ChooseOptions(["Confirm", "Enter again"]);
+        ChooseOptions(options);
     }
 
     public static void DeleteFlashcardConfirm(int id)
     {
+        string[] options = {
+            "Yes",
+            "No"
+         };
+
         Console.WriteLine();
         Console.WriteLine($"Delete flashcard #{id}?");
-        ChooseOptions(["Yes", "No"]);
+        ChooseOptions(options);
     }
 
     public static void AnotherFlashcard()
