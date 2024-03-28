@@ -4,47 +4,47 @@ namespace Flashcards;
 public class Enums { }
 public enum MainMenu
 {
-    [Description("Manage Stacks")]
+    [Description("Manage stacks")]
     ManageStacks,
 
-    [Description("Manage Flashcards")]
+    [Description("Manage flashcards")]
     ManageFlashcards,
 
     [Description("Start study session")]
     Study,
 
-    [Description("Show Study Report")]
+    [Description("Show study Report")]
     ShowStudyReport,
 
-    [Description("Quit Application")]
+    [Description("Quit application")]
     Quit
 }
 
 public enum FlashcardMenu
 {
-    [Description("Add Flashcard")]
+    [Description("Add flashcard")]
     AddFlashcard,
 
-    [Description("Remove Flashcard")]
+    [Description("Remove flashcard")]
     RemoveFlashcard,
-    [Description("Show Flashcards")]
+    [Description("Show flashcards")]
     ShowFlashcard,
 
-    [Description("Quit")]
+    [Description("Return to main menu")]
     Quit
 }
 
 public enum StackMenu
 {
-    [Description("Add Stack")]
+    [Description("Add stack")]
     AddStack,
 
-    [Description("Remove Stack")]
+    [Description("Remove stack")]
     RemoveStack,
 
-    [Description("Show Stacks")]
+    [Description("Show stacks")]
     ShowStack,
 
-    [Description("Quit")]
+    [Description("Return to main menu")]
     Quit
 }

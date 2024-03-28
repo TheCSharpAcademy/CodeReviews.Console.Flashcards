@@ -103,7 +103,7 @@ public static class UserInterface
 
         if (success)
         {
-            AnsiConsole.Markup($"\n[green]Added flascard: {flashcard.Question}.[/] Press enter to return...");
+            AnsiConsole.Markup($"\n[green]Added flascard: {flashcard.Question}.[/] Press enter to continue...");
         }
         else
         {
@@ -117,6 +117,15 @@ public static class UserInterface
     {
         DataAccess dataAccess = new();
         List<Stack> stacks = dataAccess.GetStacks().ToList();
+
+        if (stacks.Count == 0)
+        {
+            AnsiConsole.MarkupLine("[blue]Create a stack first.[/]\n");
+            AddStack();
+            stacks = dataAccess.GetStacks().ToList();
+            return stacks.First();
+        }
+
         ShowStacks(stacks);
 
         int id = AnsiConsole.Ask<int>("Select [green]stack[/]: ") - 1;
@@ -183,6 +192,7 @@ public static class UserInterface
 
     public static Flashcard CreateFlashcard(int stackId)
     {
+        AnsiConsole.MarkupLine("[blue]Create your flashcard[/]\n");
         string question = AnsiConsole.Ask<string>("Question: ");
         string answer = AnsiConsole.Ask<string>("Answer: ");
 
@@ -258,7 +268,7 @@ public static class UserInterface
 
         if (success)
         {
-            AnsiConsole.Markup($"\n[green]Added stack: {name}.[/] Press enter to return...");
+            AnsiConsole.Markup($"\n[green]Added stack: {name}.[/] Press enter to continue...");
         }
         else
         {
@@ -304,6 +314,15 @@ public static class UserInterface
     {
         DataAccess dataAccess = new();
         List<Stack> stacks = dataAccess.GetStacks().ToList();
+
+        if (stacks.Count == 0)
+        {
+            AnsiConsole.MarkupLine("[red]Create a stack first.[/] Press enter to return to menu...\n");
+            Console.ReadLine();
+            AnsiConsole.Clear();
+            return;
+        }
+
         ShowStacks(stacks);
         int id = AnsiConsole.Ask<int>("Which stack do you want to study: ") - 1;
 
@@ -317,6 +336,15 @@ public static class UserInterface
 
         Stack stack = stacks[id];
         IEnumerable<DTOs.Flashcard> flashcards = dataAccess.GetFlashcardsByStackId(stack.Id);
+
+        if (!flashcards.Any())
+        {
+            AnsiConsole.MarkupLine("[red]Create flashcards first.[/] Press enter to return to menu...\n");
+            Console.ReadLine();
+            AnsiConsole.Clear();
+            return;
+        }
+
         StudyFlashcards(flashcards, stack.Id);
     }
 

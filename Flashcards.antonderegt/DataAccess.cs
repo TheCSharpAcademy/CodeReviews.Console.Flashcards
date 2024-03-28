@@ -30,9 +30,17 @@ public class DataAccess
             END
         ";
 
-        using SqlConnection connection = new(InitialConnectionString);
-        connection.Open();
-        connection.Execute(sql);
+        try
+        {
+            using SqlConnection connection = new(InitialConnectionString);
+            connection.Open();
+            connection.Execute(sql);
+        }
+        catch
+        {
+            AnsiConsole.MarkupLine("[red]Unable to connect to database.[/] Exiting program...");
+            Environment.Exit(0);
+        }
     }
 
     public void InitializeTables()
@@ -72,7 +80,7 @@ public class DataAccess
                 Id INT PRIMARY KEY IDENTITY(1, 1),
                 Score INT NOT NULL,
                 Date DATETIME NOT NULL,
-                StackId INT NOT NULL FOREIGN KEY REFERENCES Stacks(Id) ON DELETE CASCADE 
+                StackId INT NOT NULL FOREIGN KEY REFERENCES Stacks(Id)
             );
             END;
         ";
@@ -259,7 +267,7 @@ public class DataAccess
             FROM
             (
                 SELECT StackId, Score, MONTH(Date) as Month
-                FROM [Flashcards].[dbo].[StudySessions]
+                FROM StudySessions
                 WHERE YEAR(Date) = @Year
             ) AS SourceTable
             PIVOT
