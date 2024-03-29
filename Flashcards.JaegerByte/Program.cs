@@ -60,9 +60,11 @@ namespace Flashcards.JaegerByte
             ViewAllTrainingsManager = new ViewAllTrainingsManager();
             ConnectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString");
             DatabaseName = System.Configuration.ConfigurationManager.AppSettings.Get("DatabaseName");
-            CreateTables();
+            CheckDatabaseExists();
+            CheckTablesExist();
         }
-        static void CreateTables()
+
+        static void CheckDatabaseExists()
         {
             using (SqlConnection initialConnection = new SqlConnection(ConnectionString))
             {
@@ -76,6 +78,9 @@ namespace Flashcards.JaegerByte
                 initialConnection.Close();
             }
             ConnectionString += DatabaseName;
+        }
+        static void CheckTablesExist()
+        {
             using SqlConnection connection = new SqlConnection(ConnectionString);
             {
                 connection.Open();
@@ -105,6 +110,7 @@ namespace Flashcards.JaegerByte
                                 CorrectAnswers INT,
                                 WrongAnswers INT
                                 )");
+                connection.Close();
             }
         }
     }
