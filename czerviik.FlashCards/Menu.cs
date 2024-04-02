@@ -394,7 +394,7 @@ public class ShowStacksMenu : Menu
                         MenuManager.NewMenu(new DeleteStackAllMenu(MenuManager, FlashcardDb, StackDb, SessionDb, _stacksList));
                     else
                     {
-                        MenuManager.NewMenu(new DeleteStackMenu(MenuManager, FlashcardDb, StackDb, SessionDb));
+                        MenuManager.NewMenu(new DeleteStackMenu(MenuManager, FlashcardDb, StackDb, SessionDb, _userStack));
                     }
                 }
                 break;
@@ -547,7 +547,7 @@ public class DeleteStackAllMenu : ShowStacksMenu
                 else
                 {
                     HandleStackDelete(_userStack);
-                    MenuManager.DisplayCurrentMenu();
+                    MenuManager.GoBack();
                 }
                 break;
         }
@@ -570,22 +570,21 @@ public class DeleteStackAllMenu : ShowStacksMenu
 
 public class DeleteStackMenu : ShowStacksMenu
 {
-    public DeleteStackMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb) : base(menuManager, flashcardDb, stackDb, sessionDb) { }
+    public DeleteStackMenu(MenuManager menuManager, FlashcardDb flashcardDb, StackDb stackDb, StudySessionDb sessionDb, Stack userStack) : base(menuManager, flashcardDb, stackDb, sessionDb) {_userStack = userStack; }
 
     public override void Display()
     {
         HandleStackDelete(_userStack);
-        MenuManager.DisplayCurrentMenu();
+        MenuManager.GoBack();
     }
 
-    protected void HandleStackDelete(Stack userStack)
+    private void HandleStackDelete(Stack userStack)
     {
         UserInterface.DeleteStackConfirm(userStack);
 
         if (UserInterface.OptionChoice == "Yes")
         {
             StackDb.Delete(userStack.Id);
-            _stacksList.Remove(userStack);
             UserInput.DisplayMessage($"Stack '{userStack.Name}' and it's flashcards have been deleted.", "go back", true);
         }
         else
@@ -632,10 +631,10 @@ public class ReportsMenu : Menu
 
             if (UserInterface.OptionChoice == "Number of sessions/month")
                 MenuManager.NewMenu(new NumberOfSessionsMenu(MenuManager, FlashcardDb, StackDb, SessionDb, _studySessions));
-            
+
             else if (UserInterface.OptionChoice == "Go back")
                 MenuManager.ReturnToMainMenu();
-        
+
             else
                 MenuManager.NewMenu(new AverageScoreMenu(MenuManager, FlashcardDb, StackDb, SessionDb, _studySessions));
         }
