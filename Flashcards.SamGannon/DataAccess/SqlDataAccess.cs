@@ -26,7 +26,9 @@ public class SqlDataAccess : IDataAccess
             catch (SqlException ex)
             {
                 Console.Clear();
-                Console.WriteLine($"Database connection error: {ex.Message}\n\nSuggestion: verify your connection string.\n\nAborting!");
+                Console.WriteLine($"Database connection error: {ex.Message}");
+                Console.WriteLine("Suggestion: verify your connection string. Ensure the Database exist.");
+                Console.WriteLine("Aborting!");
                 Environment.Exit(1);
             }
         });

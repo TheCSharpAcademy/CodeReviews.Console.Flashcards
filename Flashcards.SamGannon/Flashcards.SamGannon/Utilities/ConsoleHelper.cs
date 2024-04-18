@@ -65,14 +65,23 @@ public static class ConsoleHelper
         return choice;
     }
 
-    public static void Map(IDataAccess DataAccess, string title)
+    public static bool Map(IDataAccess DataAccess, string title)
     {
         Console.Clear();
         List<StackModel> lstAllStacks = new();
         lstAllStacks = DataAccess.GetAllStacks();
 
+        if(lstAllStacks.Count < 1)
+        {
+            Console.WriteLine("There are no stacks to study. Press a key to exit.");
+            Console.ReadLine();
+            return false;
+        }
+
         List<StackDto> stacks = StackDto.ToDto(lstAllStacks);
 
         TableVisualization.ShowTable(stacks, title);
+
+        return true;
     }
 }

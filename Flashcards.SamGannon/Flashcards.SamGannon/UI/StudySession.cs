@@ -17,6 +17,7 @@ public class StudySession
     public StudySession(IMenu mainMenu)
     {
         _MainMenu = mainMenu;
+        _dataAccess = mainMenu.DataAccess;
     }
 
     public void StartStudySession()
@@ -24,7 +25,9 @@ public class StudySession
         Console.Clear();
         Console.WriteLine("=== Start Study Session ===");
 
-        ConsoleHelper.Map(_dataAccess, "Study Session");
+        bool readyToStudy = ConsoleHelper.Map(_dataAccess, "Study Session");
+
+        if(!readyToStudy) { return ;}
 
         Console.WriteLine("Please select the stack you wish to study by name");
         var stackName = ConsoleHelper.ValidateStackName(_dataAccess);
