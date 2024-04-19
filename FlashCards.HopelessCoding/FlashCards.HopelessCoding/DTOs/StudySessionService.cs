@@ -12,9 +12,9 @@ namespace FlashCards.HopelessCoding.DTOs;
         _connectionString = connectionString;
     }
 
-    public List<StudySessionDTO> GetStudySession()
+    public List<StudySessionDto> GetStudySession()
     {
-        List<StudySessionDTO> studySessions = new List<StudySessionDTO>();
+        List<StudySessionDto> studySessions = new List<StudySessionDto>();
 
         string query = "SELECT * FROM StudySessions;";
 
@@ -28,7 +28,7 @@ namespace FlashCards.HopelessCoding.DTOs;
                 {
                     while (reader.Read())
                     {
-                        StudySessionDTO session = new StudySessionDTO
+                        StudySessionDto session = new StudySessionDto
                         {
                             Stack = reader.GetString(1),
                             Date = reader.GetDateTime(2).Date,
@@ -46,7 +46,7 @@ namespace FlashCards.HopelessCoding.DTOs;
     public void PrintAllStudySessions()
     {
         Console.Clear();
-        List<StudySessionDTO> studySessions = GetStudySession();
+        List<StudySessionDto> studySessions = GetStudySession();
 
         if (studySessions.Count > 0)
         {

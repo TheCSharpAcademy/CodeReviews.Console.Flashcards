@@ -13,12 +13,12 @@ internal class StudyCommands
         try
         {
             FlashcardService flashcardService = new FlashcardService(DatabaseHelpers.connectionString);
-            List<FlashcardDTO> flashcards = flashcardService.GetFlashcards(stackName, null);
+            List<FlashcardDto> flashcards = flashcardService.GetFlashcards(stackName, null);
             int score = 0;
 
             if (flashcards.Count > 0)
             {
-                foreach (FlashcardDTO flashcard in flashcards)
+                foreach (FlashcardDto flashcard in flashcards)
                 {
                     Console.Clear();
                     DisplayFlashcard(stackName, flashcard.Front);

@@ -1,6 +1,6 @@
 ﻿namespace FlashCards.HopelessCoding.DTOs;
 
-public class StackDTO
+public class StackDto
 {
     public string StackName {  get; set; }
 }

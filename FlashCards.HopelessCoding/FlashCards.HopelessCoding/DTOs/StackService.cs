@@ -12,9 +12,9 @@ public class StackService
         _connectionString = connectionString;
     }
 
-    public List<StackDTO> GetStacks()
+    public List<StackDto> GetStacks()
     {
-        List<StackDTO> stacks = new List<StackDTO>();
+        List<StackDto> stacks = new List<StackDto>();
 
         string query = "SELECT * FROM Stacks;";
 
@@ -28,7 +28,7 @@ public class StackService
                 {
                     while (reader.Read())
                     {
-                        StackDTO stack = new StackDTO
+                        StackDto stack = new StackDto
                         {
                             StackName = reader.GetString(0)
                         };
@@ -43,7 +43,7 @@ public class StackService
 
     public void PrintAllStacks()
     {
-        List<StackDTO> stacks = GetStacks();
+        List<StackDto> stacks = GetStacks();
 
         if (stacks.Count > 0)
         {

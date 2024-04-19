@@ -1,6 +1,6 @@
 ﻿namespace FlashCards.HopelessCoding.DTOs;
 
-public class StudySessionDTO
+public class StudySessionDto
 {
     public int Id { get; set; }
     public string Stack { get; set; }

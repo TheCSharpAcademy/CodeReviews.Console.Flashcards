@@ -18,9 +18,9 @@ public class FlashcardService
         return _displayIdToActualId;
     }
 
-    public List<FlashcardDTO> GetFlashcards(string stackName, int? amount)
+    public List<FlashcardDto> GetFlashcards(string stackName, int? amount)
     {
-        List<FlashcardDTO> flashcards = new List<FlashcardDTO>();
+        List<FlashcardDto> flashcards = new List<FlashcardDto>();
 
         string query = "SELECT " + (amount != null ? $"TOP {amount}" : "") + " * FROM FlashCards " +
                        "WHERE Stack = @StackName;";
@@ -40,7 +40,7 @@ public class FlashcardService
                         int displayedId = 1;
                         while (reader.Read())
                         {
-                            FlashcardDTO flashcard = new FlashcardDTO()
+                            FlashcardDto flashcard = new FlashcardDto()
                             {
                                 Id = reader.GetInt32(0),
                                 Stack = reader.GetString(1),
@@ -66,7 +66,7 @@ public class FlashcardService
     public void PrintFlashcards(string stackName, int? amount)
     {
         Console.Clear();
-        List<FlashcardDTO> flashcards = GetFlashcards(stackName, amount);
+        List<FlashcardDto> flashcards = GetFlashcards(stackName, amount);
 
         if (flashcards.Count > 0)
         {
