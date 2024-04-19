@@ -1,25 +1,27 @@
-# Flashcards Console App
+# Flashcards Console App  
 
-This is a one of the C# Academy projects. This application is used to create, manage and study stacks of flashcards.  
-Users can create, edit and delete stacks and flashcards. In the study are users can study different stacks and
-view records and data about their previous study sessions.
+This is a one of the C# Academy projects. This application is used to create, manage and 
+study stacks of flashcards. Users can create, edit and delete stacks and flashcards. 
+In the study are users can study different stacks and view records and data about 
+their previous study sessions.
 
 Below are the requirements, features, user manual, areas for improvement,  
 and additional challenges of the application.
 
 ## Requirements
 
-- [x] User capable to create stacks of flashcards.
-- [x] Two different tables for stacks and flashcards which should be linked by a foreign key.
-- [x] Stacks have unique name.
-- [x] Every flashcard needs to be part of a stack. If a stack is deleted, the same should happen with the flashcard.
-- [x] Use of DTOs to show the flashcards to the user without the Id of the stack it belongs to.
-- [x] The flashcard Ids should always start with 1 without gaps between them whren shown for the user.
-- [x] "Study sessions" are where the users can study the stacks. These should be stored with date and score.
-- [x] The study and stack tables should be linked. If a stack is deleted, it's study sessions should be deleted.
-- [x] The project should contain a call to the study table so the users can see all their study sessions.
-      This table receives insert calls upon each study session, but there shouldn't be update
-      and delete calls to it.
+- [x] User capable to create stacks of flashcards.  
+- [x] Two different tables for stacks and flashcards which should be linked
+      by a foreign key.  
+- [x] Stacks have unique name.  
+- [x] Every flashcard needs to be part of a stack. If a stack is deleted, the same should happen with the flashcard.  
+- [x] Use of DTOs to show the flashcards to the user without the Id of the stack it belongs to.  
+- [x] The flashcard Ids should always start with 1 without gaps between them whren shown for the user.  
+- [x] "Study sessions" are where the users can study the stacks. These should be stored with date and score.  
+- [x] The study and stack tables should be linked. If a stack is deleted, it's study sessions should be deleted.  
+- [x] The project should contain a call to the study table so the users can see all their study sessions. 
+      This table receives insert calls upon each study session, but there shouldn't be update 
+      and delete calls to it.  
 
 ## Features and validations
 
@@ -40,7 +42,6 @@ and additional challenges of the application.
 - Users navigate the Main Menu by selecting options using arrow keys and
   confirming their selection by pressing Enter
 ![MainMenu](https://github.com/HopelessCoding/learning/assets/161690352/e539a710-ef54-4daa-acda-9122c91f7774)
-
 - **Manage Stacks**: User can manage Stacks
 - **Manage Flashcards**: User can manage Flashcards in Stack
 - **Study**: Area where user can study Stacks and view records of the previous sessions
@@ -53,7 +54,7 @@ and additional challenges of the application.
 ![StacksMenu](https://github.com/HopelessCoding/learning/assets/161690352/332da256-1f64-47a5-8521-818dbbcdfca2)
 - When managing existing Stack user must choose the Stack by entering its name
 ![StackSelection](https://github.com/HopelessCoding/learning/assets/161690352/6960d850-271e-4885-af39-f62bc59badc1)
-- If the Stack is deleted it will delete also all the Flashcards and Study Sessions of that Stack too
+- If the Stack is deleted it will delete also all the Flashcards and Study Sessions of that Stack too  
 - If the Stack name is updated this will also update Stack name for Flashcards and Study Sessions of that Stack too  
 
 ### Flashcards Menu
@@ -74,12 +75,13 @@ and additional challenges of the application.
 ## Areas for Improvement and Lessons Learned
 
 - **Enhanced Code Quality and Structure**: This code is again a nice step forward for cleaner and better code.
-  Still there is multiple things which I would like to do differently if doing this project
-  again.
+  Still there is multiple things which I would like to do differently if doing this
+  project again.
 - **Spectre.Console -library**: Have been utilizing this now in three C# Academy projects
   and basic use starts to be easy. Still many things which I have never used in that library.
-- **SQL and SQL Server**: Learned to connect and use SQL Server in C# projects. Learned lot of new things about
-  SQL such as PIVOT. SQL is very powerful and nedd and want to learn it much more.
+- **SQL and SQL Server**: Learned to connect and use SQL Server in C# projects. Learned
+  lot of new things about SQL such as PIVOT. SQL is very powerful and I'm interested
+  in to learn it more.
 - **SQL Server Management Studio (SSMS)**: SMSS was already somewhat familiar for me but learned to
   use it much more. Especially use of queries for database management got much more familiar.
 
