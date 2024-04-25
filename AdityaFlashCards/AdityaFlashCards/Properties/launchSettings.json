@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AdityaFlashCards": {
+      "commandName": "Project",
+      "workingDirectory": "D:\\C#\\C# Academy\\CodeReviews.Console.Flashcards\\AdityaFlashCards"
+    }
+  }
+}
