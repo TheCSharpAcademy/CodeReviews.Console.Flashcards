@@ -10,7 +10,6 @@ namespace Flashcards
         
         internal List<StackModel> ViewStacks()
         {
-            GetUserInput getUserInput = new();
             var stacks = new List<StackModel>();
             TableVisualisation tableVisualisation = new();
             using(var connection = new SqlConnection(connectionString))
