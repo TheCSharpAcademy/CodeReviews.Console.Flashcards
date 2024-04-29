@@ -23,7 +23,15 @@ internal class FlashCardsTableClass
     {
         using SqlConnection conn = new SqlConnection(_connectionString);
         conn.Open();
-        conn.Execute("UPDATE FlashCards SET Question = @question, Answer = @answer WHERE Fk_StackID = @fK_StackID AND PositionInStack = @positionInStack", new { question, answer, fK_StackID, positionInStack });
+        conn.Execute("UPDATE TABLE FlashCards SET Question = @question, Answer = @answer WHERE Fk_StackID = @fK_StackID AND PositionInStack = @positionInStack", new { question, answer, fK_StackID, positionInStack });
+    }
+
+    internal void DeleteFlashCard(int fK_StackID, int positionInStack)
+    {
+        using SqlConnection conn = new SqlConnection(_connectionString);
+        conn.Open();
+        conn.Execute("DELETE FROM FlashCards WHERE FK_StackID = @fk_StackID and PositionInStack = @positionInStack", new { fK_StackID, positionInStack });
+        conn.Execute("UPDATE FlashCards SET PositionInStack = PositionInStack - 1 WHERE FK_StackID = @fk_StackID AND PositionInStack > @positionInStack", new {fK_StackID, positionInStack });
     }
 }
 
