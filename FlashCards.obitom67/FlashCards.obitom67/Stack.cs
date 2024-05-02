@@ -1,7 +1,8 @@
-﻿using System.Configuration;
+﻿
 using System.Data.SqlClient;
 using Dapper;
 using Spectre.Console;
+using System.Configuration;
 
 namespace FlashCards.obitom67
 {
@@ -79,7 +80,7 @@ namespace FlashCards.obitom67
                 string deleteStack = $"DELETE FROM dbo.Stack WHERE StackId = {stack.StackId}"; 
                 connection.Execute(deleteStack);
                 string deleteSessions = $"DELETE FROM dbo.StudySessions WHERE StackId = {stack.StackId}";
-
+                connection.Execute(deleteSessions);
             }
         }
 

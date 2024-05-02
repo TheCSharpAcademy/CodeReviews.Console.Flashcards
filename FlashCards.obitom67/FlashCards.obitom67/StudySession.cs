@@ -1,7 +1,8 @@
-﻿using System.Configuration;
+﻿
 using System.Data.SqlClient;
 using Dapper;
 using Spectre.Console;
+using System.Configuration;
 
 namespace FlashCards.obitom67
 {
