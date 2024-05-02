@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Spectre.Console;
-using Spectre.Console.Cli;
+﻿using Spectre.Console;
 
 namespace FlashCards.obitom67
 {
@@ -16,7 +10,6 @@ namespace FlashCards.obitom67
         public static void GetUserInput()
         {
             CloseApplication = false;
-            string currentStack;
             string[] selectionChoices =
             {
                 "Exit",
@@ -102,6 +95,10 @@ namespace FlashCards.obitom67
                 case "Delete Stack":
                     AnsiConsole.Clear();
                     Stack.DeleteStack(currentStack);
+                    break;
+                case "Change Stack Name":
+                    AnsiConsole.Clear();
+                    Stack.UpdateStack(currentStack);                    
                     break;
             }
         }

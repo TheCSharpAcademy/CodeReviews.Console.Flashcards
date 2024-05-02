@@ -1,5 +1,4 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Data.SqlClient;
 using Dapper;
 using Spectre.Console;
@@ -61,9 +60,14 @@ namespace FlashCards.obitom67
             
         }
 
-        public static void UpdateStack()
+        public static void UpdateStack(Stack stack)
         {
-
+            string connectionString = ConfigurationManager.AppSettings.Get("key1");
+            using (var connection = new SqlConnection(connectionString))
+            {
+                string stackSelect = $"UPDATE dbo.Stack SET StackName='{AnsiConsole.Ask<string>("Please input the new stack name.")}' WHERE StackId = {stack.StackId}";
+                connection.Execute(stackSelect);
+            }
         }
         public static void DeleteStack(Stack stack)
         {

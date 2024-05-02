@@ -1,7 +1,5 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Data.SqlClient;
-using System.Security.Cryptography;
 using Dapper;
 using Spectre.Console;
 
