@@ -1,6 +1,8 @@
 ﻿using Dapper;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using AdityaFlashCards.Database.Models;
+using System.Collections.Generic;
 
 namespace AdityaFlashCards.Database;
 
@@ -26,11 +28,32 @@ internal class StacksTableClass
         conn.Execute("INSERT INTO Stacks (Name) VALUES (@StackName)", new { StackName = stackName});
     }
 
-    internal void DeleteStack(int stackID)
+    internal void DeleteStack(string stackName)
     {
         using SqlConnection conn = new SqlConnection(_connectionString);
         conn.Open();
-        conn.Execute("DELETE FROM Stacks WHERE StackID = @stackID", new { stackID});
+        conn.Execute("DELETE FROM Stacks WHERE Name = @stackName", new { stackName });
+    }
+
+    internal int GetStackIdFromStackName(string stackName)
+    {
+        using SqlConnection conn = new SqlConnection(_connectionString);
+        conn.Open();
+        string sql = "SELECT StackID FROM Stacks WHERE Name = @stackName";
+        int result = conn.QueryFirstOrDefault<int>(sql, new { stackName });
+        return result;
+    }
+
+
+    internal List<Stack> GetAllStacks()
+    {
+        List<Stack> records = new List<Stack> ();
+        using SqlConnection conn = new SqlConnection(_connectionString);
+        conn.Open();
+        string sql = "SELECT * FROM Stacks ORDER BY StackID";
+        var result = conn.Query<Stack>(sql);
+        records.AddRange(result);
+        return records;
     }
 
 }
