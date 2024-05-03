@@ -26,28 +26,28 @@ internal class Display
         AnsiConsole.Write(table);
     }
 
-    internal static void DisplayFlashCards(string[] columns, List<FlashCardDTOStackView> flashCards)
+    internal static void DisplayFlashCards(string[] columns, List<FlashCardDtoStackView> flashCards)
     {
         var table = new Table();
         foreach (var column in columns)
         {
             table.AddColumn(column);
         }
-        foreach (FlashCardDTOStackView session in flashCards)
+        foreach (FlashCardDtoStackView session in flashCards)
         {
             table.AddRow(session.PositionInStack.ToString(), session.Question, session.Answer);
         }
         AnsiConsole.Write(table);
     }
 
-    internal static void DisplayFlashCards(string[] columns, List<FlashCardDTOFlashCardView> flashCards)
+    internal static void DisplayFlashCards(string[] columns, List<FlashCardDtoFlashCardView> flashCards)
     {
         var table = new Table();
         foreach (var column in columns)
         {
             table.AddColumn(column);
         }
-        foreach (FlashCardDTOFlashCardView session in flashCards)
+        foreach (FlashCardDtoFlashCardView session in flashCards)
         {
             table.AddRow(session.FlashCardId.ToString(), session.Question, session.Answer);
         }

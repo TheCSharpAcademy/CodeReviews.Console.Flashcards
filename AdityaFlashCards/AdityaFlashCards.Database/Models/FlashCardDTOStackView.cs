@@ -1,6 +1,6 @@
 ﻿namespace AdityaFlashCards.Database.Models;
 
-public class FlashCardDTOStackView
+public class FlashCardDtoStackView
 {
     public string? Question { get; set; }
     public string? Answer { get; set; }

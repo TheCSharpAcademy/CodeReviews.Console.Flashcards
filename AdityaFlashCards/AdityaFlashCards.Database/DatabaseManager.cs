@@ -89,12 +89,12 @@ public class DatabaseManager
         return _studySessionTableClass.GetAllStudySessions();
     }
 
-    public List<FlashCardDTOFlashCardView> GetFlashCards()
+    public List<FlashCardDtoFlashCardView> GetFlashCards()
     {
         return _flashCardsTableClass.GetFlashCards();
     }
 
-    public List<FlashCardDTOStackView> GetFlashCardsForGivenStack(string stackName)
+    public List<FlashCardDtoStackView> GetFlashCardsForGivenStack(string stackName)
     {
         return _flashCardsTableClass.GetFlashCardsForGivenStack(stackName);
     }

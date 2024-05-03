@@ -65,7 +65,7 @@ internal class Application
                 {
                     Console.WriteLine("----------Following are the flashcards in your stack ---------------");
                     Console.WriteLine("----------StackName: {0}---------- ", stackName);
-                    List <FlashCardDTOStackView> Flashcards = Db.GetFlashCardsForGivenStack(stackName);
+                    List <FlashCardDtoStackView> Flashcards = Db.GetFlashCardsForGivenStack(stackName);
                     if (Flashcards.Count > 0)
                     {
                         Display.DisplayFlashCards(new string[] { "PositionInStack", "Front Side", "Back Side" }, Flashcards);
@@ -154,7 +154,7 @@ internal class Application
             if (stackName != "Go to Main Menu")
             {
                 int score = 0;
-                List<FlashCardDTOStackView> Flashcards = Db.GetFlashCardsForGivenStack(stackName);
+                List<FlashCardDtoStackView> Flashcards = Db.GetFlashCardsForGivenStack(stackName);
                 if(Flashcards.Count > 0)
                 {
                     foreach (var flashcard in Flashcards)
@@ -199,7 +199,7 @@ internal class Application
         switch (selection)
         {
             case "View All FlashCards":
-                List<FlashCardDTOFlashCardView> Flashcards = Db.GetFlashCards();
+                List<FlashCardDtoFlashCardView> Flashcards = Db.GetFlashCards();
                 if (Flashcards.Count > 0)
                 {
                     Display.DisplayFlashCards(new string[] { "FlashCardId", "Front Side", "Back Side" }, Flashcards);

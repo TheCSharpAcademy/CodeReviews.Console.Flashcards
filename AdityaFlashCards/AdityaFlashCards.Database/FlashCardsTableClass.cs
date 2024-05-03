@@ -51,20 +51,20 @@ internal class FlashCardsTableClass
         return result;
     }
 
-    internal List<FlashCardDTOFlashCardView> GetFlashCards()
+    internal List<FlashCardDtoFlashCardView> GetFlashCards()
     {
-        List<FlashCardDTOFlashCardView> flashCards = new List<FlashCardDTOFlashCardView>();
+        List<FlashCardDtoFlashCardView> flashCards = new List<FlashCardDtoFlashCardView>();
         using SqlConnection conn = new SqlConnection(_connectionString);
         conn.Open();
         string sql = "SELECT FlashCardId, Question, Answer FROM FlashCards ORDER BY FK_StackID";
-        var result = conn.Query<FlashCardDTOFlashCardView>(sql);
+        var result = conn.Query<FlashCardDtoFlashCardView>(sql);
         flashCards.AddRange(result);
         return flashCards;
     }
 
-    internal List<FlashCardDTOStackView> GetFlashCardsForGivenStack(string name)
+    internal List<FlashCardDtoStackView> GetFlashCardsForGivenStack(string name)
     {
-        List<FlashCardDTOStackView> flashCards = new List<FlashCardDTOStackView>();
+        List<FlashCardDtoStackView> flashCards = new List<FlashCardDtoStackView>();
         using SqlConnection conn = new SqlConnection(_connectionString);
         conn.Open();
         string sql = @"
@@ -76,7 +76,7 @@ internal class FlashCardsTableClass
             WHERE Stacks.Name = @name
         )
         ORDER BY FlashCards.PositionInStack";
-        var result = conn.Query<FlashCardDTOStackView>(sql, new { name });
+        var result = conn.Query<FlashCardDtoStackView>(sql, new { name });
         flashCards.AddRange(result);
         return flashCards;
     }
