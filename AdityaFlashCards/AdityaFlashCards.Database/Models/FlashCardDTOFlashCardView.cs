@@ -6,4 +6,3 @@ public class FlashCardDTOFlashCardView
     public string? Answer { get; set; }
     public int FlashCardId { get; set; }
 }
-

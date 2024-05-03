@@ -6,7 +6,5 @@ public class Program
     {
         Application app = new Application();
         app.MainMenu();
-
     }
-
 }

@@ -1,8 +1,6 @@
 ﻿using Dapper;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using AdityaFlashCards.Database.Models;
-using System.Collections.Generic;
 
 namespace AdityaFlashCards.Database;
 
@@ -22,10 +20,18 @@ internal class StacksTableClass
         conn.Execute(@"CREATE TABLE Stacks (StackID INTEGER PRIMARY KEY IDENTITY(1000,1), Name Varchar(100) UNIQUE NOT NULL)");
     }
 
-    internal void InsertNewStack(string stackName) {
-        using SqlConnection conn = new SqlConnection(_connectionString);
-        conn.Open();
-        conn.Execute("INSERT INTO Stacks (Name) VALUES (@StackName)", new { StackName = stackName});
+    internal bool InsertNewStack(string stackName) {
+        try
+        {
+            using SqlConnection conn = new SqlConnection(_connectionString);
+            conn.Open();
+            conn.Execute("INSERT INTO Stacks (Name) VALUES (@StackName)", new { StackName = stackName });
+            return true;
+        }
+        catch(Exception ex) 
+        {
+            return false;
+        }
     }
 
     internal void DeleteStack(string stackName)
@@ -44,7 +50,6 @@ internal class StacksTableClass
         return result;
     }
 
-
     internal List<Stack> GetAllStacks()
     {
         List<Stack> records = new List<Stack> ();
@@ -55,6 +60,4 @@ internal class StacksTableClass
         records.AddRange(result);
         return records;
     }
-
 }
-

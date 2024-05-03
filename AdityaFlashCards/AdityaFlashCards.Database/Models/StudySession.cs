@@ -5,4 +5,5 @@ public class StudySession
     public string StackName { get; set; }
     public string SessionDate { get; set; }
     public int SessionScore { get; set; }
+    public int TotalScore { get; set; }
 }

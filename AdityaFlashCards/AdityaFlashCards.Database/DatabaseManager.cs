@@ -12,7 +12,6 @@ public class DatabaseManager
     private readonly FlashCardsTableClass _flashCardsTableClass;
     private readonly StudySessionTableClass _studySessionTableClass;
 
-
     public DatabaseManager(IConfiguration configuration)
     {
         _connectionString = configuration.GetConnectionString("DefaultConnection");
@@ -24,16 +23,14 @@ public class DatabaseManager
 
     public void CreateTables()
     {
-        using (SqlConnection conn = new SqlConnection(_connectionString))
+        using SqlConnection conn = new SqlConnection(_connectionString);
+        conn.Open();
+        if (!AreTablesCreated(conn))
         {
-            conn.Open();
-            if (!AreTablesCreated(conn))
-            {
-                _stacksTableClass.CreateTable();
-                _flashCardsTableClass.CreateTable();
-                _studySessionTableClass.CreateTable();
-                SeedData();
-            }
+            _stacksTableClass.CreateTable();
+            _flashCardsTableClass.CreateTable();
+            _studySessionTableClass.CreateTable();
+            SeedData();
         }
     }
 
@@ -44,28 +41,27 @@ public class DatabaseManager
         return count == 3; 
     }
 
-
     private void SeedData()
     {
         using SqlConnection conn = new SqlConnection(_connectionString);
         conn.Open();
         conn.Execute("INSERT INTO Stacks (Name) VALUES ('Capitals')");
-        conn.Execute("INSERT INTO FlashCards (Question, Answer, FK_StackID, PositionInStack) VALUES ('UK Capital ?', 'London', 1000, 1) ");
-        conn.Execute("INSERT INTO FlashCards (Question, Answer, FK_StackID, PositionInStack) VALUES ('India Capital?', 'Delhi', 1000, 2) ");
-        conn.Execute("INSERT INTO FlashCards (Question, Answer, FK_StackID, PositionInStack) VALUES ('Russia Capital?', 'Moscow', 1000, 3) ");
-        conn.Execute("INSERT INTO StudySessions(Fk_StackID, SessionDate, SessionScore) VALUES (1000, '2024-04-29', 1)");
-        conn.Execute("INSERT INTO StudySessions(Fk_StackID, SessionDate, SessionScore) VALUES (1000, '2024-04-29', 3)");
+        conn.Execute("INSERT INTO FlashCards (Question, Answer, FK_StackID, PositionInStack) VALUES ('UK Capital ?', 'london', 1000, 1) ");
+        conn.Execute("INSERT INTO FlashCards (Question, Answer, FK_StackID, PositionInStack) VALUES ('India Capital?', 'delhi', 1000, 2) ");
+        conn.Execute("INSERT INTO FlashCards (Question, Answer, FK_StackID, PositionInStack) VALUES ('Russia Capital?', 'moscow', 1000, 3) ");
+        conn.Execute("INSERT INTO StudySessions(Fk_StackID, SessionDate, SessionScore, TotalScore) VALUES (1000, '2024-04-29', 1, 3)");
+        conn.Execute("INSERT INTO StudySessions(Fk_StackID, SessionDate, SessionScore, TotalScore) VALUES (1000, '2024-04-29', 3, 3)");
 
         conn.Execute("INSERT INTO Stacks (Name) VALUES ('Currency')");
-        conn.Execute("INSERT INTO FlashCards (Question, Answer, FK_StackID, PositionInStack) VALUES ('UK Currency ?', 'Pound', 1001, 1) ");
-        conn.Execute("INSERT INTO FlashCards (Question, Answer, FK_StackID, PositionInStack) VALUES ('India Currency ?', 'Rupees', 1001, 2) ");
-        conn.Execute("INSERT INTO FlashCards (Question, Answer, FK_StackID, PositionInStack) VALUES ('Japan Currency?', 'Yen', 1001, 3) ");
-        conn.Execute("INSERT INTO StudySessions(Fk_StackID, SessionDate, SessionScore) VALUES (1001, '2024-04-30', 0)");
+        conn.Execute("INSERT INTO FlashCards (Question, Answer, FK_StackID, PositionInStack) VALUES ('UK Currency ?', 'pound', 1001, 1) ");
+        conn.Execute("INSERT INTO FlashCards (Question, Answer, FK_StackID, PositionInStack) VALUES ('India Currency ?', 'rupees', 1001, 2) ");
+        conn.Execute("INSERT INTO FlashCards (Question, Answer, FK_StackID, PositionInStack) VALUES ('Japan Currency?', 'yen', 1001, 3) ");
+        conn.Execute("INSERT INTO StudySessions(Fk_StackID, SessionDate, SessionScore, TotalScore) VALUES (1001, '2024-04-30', 0, 3)");
 
         conn.Execute("INSERT INTO Stacks (Name) VALUES ('National Animals')");
-        conn.Execute("INSERT INTO FlashCards (Question, Answer, FK_StackID, PositionInStack) VALUES ('India National Animal ?', 'BengalTiger', 1002, 1) ");
-        conn.Execute("INSERT INTO FlashCards (Question, Answer, FK_StackID, PositionInStack) VALUES ('Canada National Animal?', 'Beaver', 1002, 2) ");
-        conn.Execute("INSERT INTO FlashCards (Question, Answer, FK_StackID, PositionInStack) VALUES ('Australia National Animal??', 'Kangaroo', 1002, 3) ");
+        conn.Execute("INSERT INTO FlashCards (Question, Answer, FK_StackID, PositionInStack) VALUES ('India National Animal ?', 'tiger', 1002, 1) ");
+        conn.Execute("INSERT INTO FlashCards (Question, Answer, FK_StackID, PositionInStack) VALUES ('Canada National Animal?', 'beaver', 1002, 2) ");
+        conn.Execute("INSERT INTO FlashCards (Question, Answer, FK_StackID, PositionInStack) VALUES ('Australia National Animal?', 'kangaroo', 1002, 3) ");
     }
 
     public List<Stack> GetAllStacks()
@@ -74,14 +70,18 @@ public class DatabaseManager
         return AllStacks;
     }
 
-    public void CreateNewStack(string name)
+    public bool CreateNewStack(string stackName)
     {
-        _stacksTableClass.InsertNewStack(name);
+        if (!_stacksTableClass.InsertNewStack(stackName))
+        {
+            return false;
+        }
+        return true;
     }
 
-    public void DeleteStack(string name)
+    public void DeleteStack(string stackName)
     {
-        _stacksTableClass.DeleteStack(name);
+        _stacksTableClass.DeleteStack(stackName);
     }
 
     public List<StudySession> GetStudySessions()
@@ -94,14 +94,14 @@ public class DatabaseManager
         return _flashCardsTableClass.GetFlashCards();
     }
 
-    public List<FlashCardDTOStackView> GetFlashCardsForGivenStack(string name)
+    public List<FlashCardDTOStackView> GetFlashCardsForGivenStack(string stackName)
     {
-        return _flashCardsTableClass.GetFlashCardsForGivenStack(name);
+        return _flashCardsTableClass.GetFlashCardsForGivenStack(stackName);
     }
 
-    public bool IsFlashCardIdPresent(int id)
+    public bool IsFlashCardIdPresent(int flashCardId)
     {
-        return _flashCardsTableClass.IsFlashCardIdPresent(id);
+        return _flashCardsTableClass.IsFlashCardIdPresent(flashCardId);
     }
 
     public void UpdateFlashCard(int flashCardId, string question, string answer)
@@ -122,5 +122,9 @@ public class DatabaseManager
         _flashCardsTableClass.InsertFlashCard(question, answer, fK_StackID, positionInStack+ 1);
     }
 
-
+    public void InsertStudySession(string stackName, string date, int score, int totalScore)
+    {
+        int stackId = _stacksTableClass.GetStackIdFromStackName(stackName);
+        _studySessionTableClass.InsertStudySession(stackId, date, score, totalScore);
+    }
 }
