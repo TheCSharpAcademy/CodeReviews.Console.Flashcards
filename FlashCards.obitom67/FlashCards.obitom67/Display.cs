@@ -1,4 +1,6 @@
 ﻿using Spectre.Console;
+using System.Data.SqlClient;
+using Dapper;
 
 namespace FlashCards.obitom67
 {
@@ -100,6 +102,43 @@ namespace FlashCards.obitom67
                     AnsiConsole.Clear();
                     Stack.UpdateStack(currentStack);                    
                     break;
+            }
+        }
+
+        public static void CreateDatabase()
+        {
+            string connectionString = ConfigurationManager.AppSettings.Get("connectionString");
+            using (var connection = new SqlConnection(connectionString))
+            {
+                string dbCheck = "SELECT DB_ID('FlashCards')";
+                var dbNumber = connection.ExecuteScalar(dbCheck);
+
+                if(dbNumber == null )
+                {
+                    string dbCreate = "CREATE DATABASE FlashCards";
+                    string flashcardTable = "CREATE TABLE FlashCards.dbo.Flashcard(" +
+                        "FlashcardId int NOT NULL," +
+                        "FrontText varchar(50) NOT NULL," +
+                        "BackText varchar(50) NOT NULL," +
+                        "StackId int NOT NULL," +
+                        "FOREIGN KEY(StackId) REFERENCES FlashCards.dbo.Stack(StackId))";
+                    string stackTable = "CREATE TABLE  FlashCards.dbo.Stack(" +
+                        "StackId int NOT NULL PRIMARY KEY," +
+                        "StackName varchar(50) NOT NULL)";
+                    string seshTable = "CREATE TABLE FlashCards.dbo.StudySessions(" +
+                        "StudyId int NOT NULL PRIMARY KEY," +
+                        "StackId int NOT NULL REFERENCES FlashCards.dbo.Stack(StackId)," +
+                        "CorrectQ int NOT NULL," +
+                        "TotalQ int NOT NULL," +
+                        "Date varchar(50) NOT NULL," +
+                        "FOREIGN KEY(StackId) REFERENCES FlashCards.dbo.Stack(StackId))";
+                    connection.Execute(dbCreate);
+                    connection.Execute(stackTable);
+                    connection.Execute(flashcardTable);             
+                    connection.Execute(seshTable);
+                }
+
+
             }
         }
     }

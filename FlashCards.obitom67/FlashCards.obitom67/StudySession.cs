@@ -1,5 +1,4 @@
-﻿
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using Dapper;
 using Spectre.Console;
 
@@ -19,15 +18,15 @@ namespace FlashCards.obitom67
         public static void StartSession()
         {
             StudySession studySes = new StudySession();
-            string connectionString = ConfigurationManager.AppSettings.Get("key1");
+            string connectionString = ConfigurationManager.AppSettings.Get("connectionString");
             var currentStack = Stack.DisplayStacks();
             string answer;
             using (var connection = new SqlConnection(connectionString))
             {
 
-                string flashcardsSql = $"SELECT * FROM dbo.Flashcard WHERE StackId = {currentStack.StackId}";
+                string flashcardsSql = $"SELECT * FROM FlashCards.dbo.Flashcard WHERE StackId = {currentStack.StackId}";
                 var flashcardSelect = connection.Query(flashcardsSql);
-                string studySesSql = $"SELECT COUNT(*) FROM dbo.StudySessions";
+                string studySesSql = $"SELECT COUNT(*) FROM FlashCards.dbo.StudySessions";
                 var studySesCount = connection.ExecuteScalar(studySesSql);
                 studySes.StudyId = (int)studySesCount + 1;
                 studySes.StackId = currentStack.StackId;
@@ -57,10 +56,10 @@ namespace FlashCards.obitom67
 
         public static void RecordSession(StudySession studySes)
         {
-            string connectionString = ConfigurationManager.AppSettings.Get("key1");
+            string connectionString = ConfigurationManager.AppSettings.Get("connectionString");
             using(var connection = new SqlConnection(connectionString))
             {
-                string insertSes = $"INSERT INTO StudySessions(StudyId, StackId, CorrectQ, TotalQ, Date) VALUES ({studySes.StudyId},{studySes.StackId}, {studySes.CorrectQ},{studySes.TotalQ},'{DateTime.Now.Date.ToString("dd/MM/yyyy")}')";
+                string insertSes = $"INSERT INTO FlashCards.dbo.StudySessions(StudyId, StackId, CorrectQ, TotalQ, Date) VALUES ({studySes.StudyId},{studySes.StackId}, {studySes.CorrectQ},{studySes.TotalQ},'{DateTime.Now.Date.ToString("dd/MM/yyyy")}')";
                 connection.Execute(insertSes);
             }
         }
@@ -68,25 +67,30 @@ namespace FlashCards.obitom67
 
         public static void ShowRecords()
         {
-            string connectionString = ConfigurationManager.AppSettings.Get("key1");
+            string connectionString = ConfigurationManager.AppSettings.Get("connectionString");
             using(var connection = new SqlConnection(connectionString))
             {
-                string stacksRead = $"SELECT * FROM dbo.Stack";
+                string stacksRead = $"SELECT * FROM FlashCards.dbo.Stack";
                 var stackObj = connection.Query<Stack>(stacksRead);
 
-                string sesRead = $"SELECT * FROM dbo.StudySessions";
+                string sesRead = $"SELECT * FROM FlashCards.dbo.StudySessions";
                 var sesObj = connection.Query<StudySession>(sesRead);
                 AnsiConsole.WriteLine(" ");
-                AnsiConsole.Write(new Columns(new Text("Stack Name"),new Text("Score"),new Text("Date")));
+                var table = new Table();
+                table.AddColumn("Stack Name");
+                table.AddColumn("Score");
+                table.AddColumn("Date");
+                //AnsiConsole.Write(new Columns(new Text("Stack Name"),new Text("Score"),new Text("Date")));
 
                 foreach(StudySession s in sesObj)
                 {
                     Stack studyStack = stackObj.Where(x => x.StackId == s.StackId).First();
                     string score = $"{s.CorrectQ}/{s.TotalQ}";
-                    AnsiConsole.Write(new Columns(new Text(studyStack.StackName),new Text(score), new Text(s.Date)));
+                    table.AddRow(new Text(studyStack.StackName), new Text(score), new Text(s.Date));
+                    //AnsiConsole.Write(new Columns(new Text(studyStack.StackName),new Text(score), new Text(s.Date)));
                 }
-                AnsiConsole.WriteLine(" ");
-
+                //AnsiConsole.WriteLine(" ");
+                AnsiConsole.Write(table);
             }
         }
     }

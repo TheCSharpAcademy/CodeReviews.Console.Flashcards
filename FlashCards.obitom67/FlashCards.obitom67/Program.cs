@@ -2,6 +2,7 @@
 
 while (!Display.CloseApplication)
 {
+    Display.CreateDatabase();
     Display.GetUserInput();
 }
     
