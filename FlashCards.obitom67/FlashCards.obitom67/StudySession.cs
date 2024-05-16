@@ -80,16 +80,16 @@ namespace FlashCards.obitom67
                 table.AddColumn("Stack Name");
                 table.AddColumn("Score");
                 table.AddColumn("Date");
-                //AnsiConsole.Write(new Columns(new Text("Stack Name"),new Text("Score"),new Text("Date")));
+                
 
                 foreach(StudySession s in sesObj)
                 {
                     Stack studyStack = stackObj.Where(x => x.StackId == s.StackId).First();
                     string score = $"{s.CorrectQ}/{s.TotalQ}";
                     table.AddRow(new Text(studyStack.StackName), new Text(score), new Text(s.Date));
-                    //AnsiConsole.Write(new Columns(new Text(studyStack.StackName),new Text(score), new Text(s.Date)));
+                    
                 }
-                //AnsiConsole.WriteLine(" ");
+                
                 AnsiConsole.Write(table);
             }
         }

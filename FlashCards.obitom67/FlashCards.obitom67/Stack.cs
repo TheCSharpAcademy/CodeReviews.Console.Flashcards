@@ -57,7 +57,7 @@ namespace FlashCards.obitom67
                 foreach(var flashcard in sortSelect)
                 {
                     table.AddRow(new Text(flashcard.FlashcardId.ToString()),new Text(flashcard.FrontText.ToString()),new Text(flashcard.BackText.ToString()));
-                    //AnsiConsole.WriteLine($"{flashcard.FlashcardId} |{flashcard.FrontText} | {flashcard.BackText}");
+                    
                 }
                 AnsiConsole.Write(table);
             }
