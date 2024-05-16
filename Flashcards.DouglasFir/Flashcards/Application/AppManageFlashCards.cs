@@ -76,6 +76,7 @@ public class AppManageFlashCards
         catch (Exception ex)
         {
             Utilities.DisplayExceptionErrorMessage("Error retrieving flashcards.", ex.Message);
+            _inputHandler.PauseForContinueInput();
             return;
         }
 

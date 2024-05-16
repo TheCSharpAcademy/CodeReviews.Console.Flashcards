@@ -27,8 +27,8 @@ public class InputHandler
     public TEnum PromptMenuSelection<TEnum>() where TEnum : struct, Enum
     {
         string selectedOption = AnsiConsole.Prompt(new SelectionPrompt<string>()
-            .Title(ConfigSettings.menuTitle)
-            .PageSize(ConfigSettings.pageSize)
+            .Title(ConfigSettings.MenuTitle)
+            .PageSize(ConfigSettings.PageSize)
             .AddChoices(
                 Enum.GetNames(typeof(TEnum))
                     .Select(Utilities.SplitCamelCase)));

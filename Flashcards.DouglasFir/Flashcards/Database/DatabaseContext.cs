@@ -10,8 +10,8 @@ public class DatabaseContext
 
     public DatabaseContext()
     {
-        _masterConnectionString = ConfigSettings.dbMasterConnectionString;
-        _flashcardsConnectionString = ConfigSettings.dbFlashcardsConnectionString;
+        _masterConnectionString = ConfigSettings.DatabaseMasterConnectionString;
+        _flashcardsConnectionString = ConfigSettings.DatabaseFlashcardsConnectionString;
     }
 
     public SqlConnection GetConnectionToMaster()

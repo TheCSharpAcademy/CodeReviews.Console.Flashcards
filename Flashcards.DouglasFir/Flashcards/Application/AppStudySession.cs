@@ -65,7 +65,15 @@ public class AppStudySession
 
     private void HandleStartNewStudySessionSelection()
     {
-        StackDto selectedStack = _inputHandler.PromptForSelectionListStacks(_stackDao.GetAllStacks(), "Select a stack to study:");
+        var stacks = _stackDao.GetAllStacks();
+        if (stacks == null || !stacks.Any())
+        {
+            Utilities.DisplayWarningMessage("No stacks found.");
+            _inputHandler.PauseForContinueInput();
+            return;
+        }
+
+        StackDto selectedStack = _inputHandler.PromptForSelectionListStacks(stacks, "Select a stack to study:");
         if (selectedStack == null)
         {
             _manageStacksHelper.HandleNoStacksFound();
@@ -132,78 +140,6 @@ public class AppStudySession
             Utilities.DisplayExceptionErrorMessage("Error saving study session.", ex.Message);
         }
 
-        _inputHandler.PauseForContinueInput();
-    }
-
-    private void HandleViewPreviousStudySessionsSelection()
-    {
-        AnsiConsole.Clear();
-        int year = _inputHandler.PromptForPositiveInteger("Please enter a year to view study sessions for:");
-        var data = _studySessionDao.GetStudySessionReportData(year);
-        if (data == null || !data.Any())
-        {
-            AnsiConsole.WriteLine("No data available for the selected year.");
-            _inputHandler.PauseForContinueInput();
-            return;
-        }
-
-        DisplayStudySessionReport(data);
-    }
-
-    private void DisplayStudySessionReport(IEnumerable<dynamic> data)
-    {
-        AnsiConsole.Clear();
-        Utilities.DisplayPageHeader("Study Session Report");
-        var table = new Table();
-        table.AddColumn("Stack Name");
-        table.AddColumn("Jan");
-        table.AddColumn("Feb");
-        table.AddColumn("Mar");
-        table.AddColumn("Apr");
-        table.AddColumn("May");
-        table.AddColumn("Jun");
-        table.AddColumn("Jul");
-        table.AddColumn("Aug");
-        table.AddColumn("Sep");
-        table.AddColumn("Oct");
-        table.AddColumn("Nov");
-        table.AddColumn("Dec");
-
-        foreach (var row in data)
-        {
-            string stackName = row.StackName;
-            string jan = row.Jan?.ToString() ?? "0";
-            string feb = row.Feb?.ToString() ?? "0";
-            string mar = row.Mar?.ToString() ?? "0";
-            string apr = row.Apr?.ToString() ?? "0";
-            string may = row.May?.ToString() ?? "0";
-            string jun = row.Jun?.ToString() ?? "0";
-            string jul = row.Jul?.ToString() ?? "0";
-            string aug = row.Aug?.ToString() ?? "0";
-            string sep = row.Sep?.ToString() ?? "0";
-            string oct = row.Oct?.ToString() ?? "0";
-            string nov = row.Nov?.ToString() ?? "0";
-            string dec = row.Dec?.ToString() ?? "0";
-
-            table.AddRow(
-                stackName,
-                jan,
-                feb,
-                mar,
-                apr,
-                may,
-                jun,
-                jul,
-                aug,
-                sep,
-                oct,
-                nov,
-                dec
-            );
-        }
-
-        AnsiConsole.Write(table);
-        Utilities.PrintNewLines(2);
         _inputHandler.PauseForContinueInput();
     }
 }

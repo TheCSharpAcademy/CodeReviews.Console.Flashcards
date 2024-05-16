@@ -3,17 +3,17 @@
 public class ConfigSettings
 {
     // <!--' Connection Strings '-->
-    public static string DbMasterConnectionString => System.Configuration.ConfigurationManager.ConnectionStrings["dbMasterConnectionString"].ConnectionString;
-    public static string DbFlashcardsConnectionString => System.Configuration.ConfigurationManager.ConnectionStrings["dbFlashcardsConnectionString"].ConnectionString;
+    public static string DatabaseMasterConnectionString => System.Configuration.ConfigurationManager.ConnectionStrings["DatabaseMasterConnectionString"].ConnectionString;
+    public static string DatabaseFlashcardsConnectionString => System.Configuration.ConfigurationManager.ConnectionStrings["DatabaseFlashcardsConnectionString"].ConnectionString;
 
     // <!--' Database Constants | Database, Table, and View names '-->
-    public static string DbName => System.Configuration.ConfigurationManager.AppSettings["DbName"]!;
-    public static string TbStackName => System.Configuration.ConfigurationManager.AppSettings["TblStackName"]!;
-    public static string TbFlashCardsName => System.Configuration.ConfigurationManager.AppSettings["TblFlashCardsName"]!;
-    public static string TbStudySessionsName => System.Configuration.ConfigurationManager.AppSettings["TblStudySessionsName"]!;
-    public static string VwFlashCardsName => System.Configuration.ConfigurationManager.AppSettings["VwFlashCardsName"]!;
-    public static string VwStudySessionsName => System.Configuration.ConfigurationManager.AppSettings["VwStudySessionsName"]!;
-    public static string VwFlashCardsRenumberedName => System.Configuration.ConfigurationManager.AppSettings["VwFlashCardsRenumberedName"]!;
+    public static string DatabaseName => System.Configuration.ConfigurationManager.AppSettings["DatabaseName"]!;
+    public static string TableNameStack => System.Configuration.ConfigurationManager.AppSettings["TableNameStack"]!;
+    public static string TableNameFlashCards => System.Configuration.ConfigurationManager.AppSettings["TableNameFlashCards"]!;
+    public static string TableNameStudySessions => System.Configuration.ConfigurationManager.AppSettings["TableNameStudySessions"]!;
+    public static string ViewNameFlashCards => System.Configuration.ConfigurationManager.AppSettings["ViewNameFlashCards"]!;
+    public static string ViewNameStudySessions => System.Configuration.ConfigurationManager.AppSettings["ViewNameStudySessions"]!;
+    public static string ViewNameFlashCardsRenumbered => System.Configuration.ConfigurationManager.AppSettings["ViewNameFlashCardsRenumbered"]!;
 
     // <!--' Spectre Console Menu Constants '-->
     public static string MenuTitle => System.Configuration.ConfigurationManager.AppSettings["MenuTitle"]!;

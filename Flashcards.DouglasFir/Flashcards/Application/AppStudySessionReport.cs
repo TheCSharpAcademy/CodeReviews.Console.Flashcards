@@ -1,7 +1,8 @@
-﻿using Flashcards.Application.Helpers;
+﻿
 using Flashcards.DAO;
 using Flashcards.Database;
 using Flashcards.Enums;
+using Flashcards.Models;
 using Flashcards.Services;
 using Spectre.Console;
 
@@ -9,22 +10,15 @@ namespace Flashcards.Application;
 
 public class AppStudySessionReport
 {
-    private readonly StackDao _stackDao;
-    private readonly FlashCardDao _flashCardDao;
     private readonly StudySessionDao _studySessionDao;
     private readonly InputHandler _inputHandler;
-    private readonly ManageStacksHelper _manageStacksHelper;
     private readonly string _pageHeader = "Study Session";
     private bool _running;
 
     public AppStudySessionReport(DatabaseContext databaseContext, InputHandler inputHandler)
     {
         _inputHandler = inputHandler;
-        _stackDao = new StackDao(databaseContext);
-        _flashCardDao = new FlashCardDao(databaseContext);
         _studySessionDao = new StudySessionDao(databaseContext);
-        _manageStacksHelper = new ManageStacksHelper(_stackDao, _flashCardDao, _inputHandler);
-
         _running = true;
     }
 
@@ -72,7 +66,7 @@ public class AppStudySessionReport
         var data = _studySessionDao.GetStudySessionReportData(year);
         if (data == null || !data.Any())
         {
-            AnsiConsole.WriteLine("No data available for the selected year.");
+            Utilities.DisplayInformationConsoleMessage("No data available for the selected year.");
             _inputHandler.PauseForContinueInput();
             return;
         }
@@ -80,7 +74,7 @@ public class AppStudySessionReport
         DisplayStudySessionReport(data);
     }
 
-    private void DisplayStudySessionReport(IEnumerable<dynamic> data)
+    private void DisplayStudySessionReport(IEnumerable<ReportMonthlySessionCount> data)
     {
         AnsiConsole.Clear();
         Utilities.DisplayPageHeader("Study Session Report");
@@ -101,34 +95,20 @@ public class AppStudySessionReport
 
         foreach (var row in data)
         {
-            string stackName = row.StackName;
-            string jan = row.Jan?.ToString() ?? "0";
-            string feb = row.Feb?.ToString() ?? "0";
-            string mar = row.Mar?.ToString() ?? "0";
-            string apr = row.Apr?.ToString() ?? "0";
-            string may = row.May?.ToString() ?? "0";
-            string jun = row.Jun?.ToString() ?? "0";
-            string jul = row.Jul?.ToString() ?? "0";
-            string aug = row.Aug?.ToString() ?? "0";
-            string sep = row.Sep?.ToString() ?? "0";
-            string oct = row.Oct?.ToString() ?? "0";
-            string nov = row.Nov?.ToString() ?? "0";
-            string dec = row.Dec?.ToString() ?? "0";
-
             table.AddRow(
-                stackName,
-                jan,
-                feb,
-                mar,
-                apr,
-                may,
-                jun,
-                jul,
-                aug,
-                sep,
-                oct,
-                nov,
-                dec
+                row.StackName!,
+                row.Jan.ToString(),
+                row.Feb.ToString(),
+                row.Mar.ToString(),
+                row.Apr.ToString(),
+                row.May.ToString(),
+                row.Jun.ToString(),
+                row.Jul.ToString(),
+                row.Aug.ToString(),
+                row.Sep.ToString(),
+                row.Oct.ToString(),
+                row.Nov.ToString(),
+                row.Dec.ToString()
             );
         }
 
@@ -144,7 +124,7 @@ public class AppStudySessionReport
         var data = _studySessionDao.GetAverageScoreReportData(year);
         if (data == null || !data.Any())
         {
-            AnsiConsole.WriteLine("No data available for the selected year.");
+            Utilities.DisplayInformationConsoleMessage("No data available for the selected year.");
             _inputHandler.PauseForContinueInput();
             return;
         }
@@ -153,7 +133,7 @@ public class AppStudySessionReport
 
     }
 
-    public void DisplayAverageScoreReport(IEnumerable<dynamic> data)
+    public void DisplayAverageScoreReport(IEnumerable<ReportAverageSessionScore> data)
     {
         var table = new Table();
         table.AddColumn("Stack Name");
@@ -172,34 +152,20 @@ public class AppStudySessionReport
 
         foreach (var row in data)
         {
-            string stackName = row.StackName;
-            string jan = row.Jan?.ToString("N2") ?? "-";
-            string feb = row.Feb?.ToString("N2") ?? "-";
-            string mar = row.Mar?.ToString("N2") ?? "-";
-            string apr = row.Apr?.ToString("N2") ?? "-";
-            string may = row.May?.ToString("N2") ?? "-";
-            string jun = row.Jun?.ToString("N2") ?? "-";
-            string jul = row.Jul?.ToString("N2") ?? "-";
-            string aug = row.Aug?.ToString("N2") ?? "-";
-            string sep = row.Sep?.ToString("N2") ?? "-";
-            string oct = row.Oct?.ToString("N2") ?? "-";
-            string nov = row.Nov?.ToString("N2") ?? "-";
-            string dec = row.Dec?.ToString("N2") ?? "-";
-
             table.AddRow(
-               stackName,
-                jan,
-                feb,
-                mar,
-                apr,
-                may,
-                jun,
-                jul,
-                aug,
-                sep,
-                oct,
-                nov,
-                dec
+                row.StackName!,
+                row.Jan.ToString("N2"),
+                row.Feb.ToString("N2"),
+                row.Mar.ToString("N2"),
+                row.Apr.ToString("N2"),
+                row.May.ToString("N2"),
+                row.Jun.ToString("N2"),
+                row.Jul.ToString("N2"),
+                row.Aug.ToString("N2"),
+                row.Sep.ToString("N2"),
+                row.Oct.ToString("N2"),
+                row.Nov.ToString("N2"),
+                row.Dec.ToString("N2")
             );
         }
 

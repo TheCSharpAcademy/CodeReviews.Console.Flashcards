@@ -28,12 +28,13 @@ public class FlashCardDao
 
             using (var dbConnection = _dbContext.GetConnectionToFlashCards())
             {
-                string sql = $"INSERT INTO {ConfigSettings.tbFlashCardsName} (StackID, Front, Back) VALUES (@StackID, @Front, @Back)";
-                dbConnection.Execute(sql, new { flashCard.StackID, flashCard.Front, flashCard.Back });
+                string sql = $"INSERT INTO tb_FlashCards (StackID, Front, Back) VALUES (@StackID, @Front, @Back)";
+                dbConnection.Execute(sql, new {flashCard.StackID, flashCard.Front, flashCard.Back });
             }
         }
-        catch
+        catch (Exception ex)
         {
+            Utilities.DisplayExceptionErrorMessage("Unable to insert new flash card.", ex.Message);
             throw;
         }
     }
@@ -44,12 +45,13 @@ public class FlashCardDao
         {
             using (var dbConnection = _dbContext.GetConnectionToFlashCards())
             {
-                string sql = $"SELECT CardID, Front, Back FROM {ConfigSettings.tbFlashCardsName} WHERE StackID = @StackID";
+                string sql = $"SELECT CardID, Front, Back FROM tb_FlashCards WHERE StackID = @StackID";
                 return dbConnection.Query<FlashCardDto>(sql, new { stack.StackID });
             }
         }
-        catch
+        catch (Exception ex)
         {
+            Utilities.DisplayExceptionErrorMessage("Unable to retrieve flash cards.", ex.Message);
             throw;
         }
     }
@@ -60,15 +62,16 @@ public class FlashCardDao
         {
             using (var dbConnection = _dbContext.GetConnectionToFlashCards())
             {
-                string sql = $"DELETE FROM {ConfigSettings.tbFlashCardsName} WHERE CardID = @CardID";
+                string sql = $"DELETE FROM tb_FlashCards WHERE CardID = @CardID";
                 int rowsAffected = dbConnection.Execute(sql, new { flashCard.CardID });
 
                 return rowsAffected > 0;
             }
         }
-        catch
+        catch (Exception ex)
         {
-            throw;
+            Utilities.DisplayExceptionErrorMessage("Unable to delete flash card.", ex.Message);
+            return false;
         }
     }
 
@@ -78,31 +81,33 @@ public class FlashCardDao
         {
             using (var dbConnection = _dbContext.GetConnectionToFlashCards())
             {
-                string sql = $"UPDATE {ConfigSettings.tbFlashCardsName} SET Front = @Front, Back = @Back WHERE CardID = @CardID";
+                string sql = $"UPDATE tb_FlashCards SET Front = @Front, Back = @Back WHERE CardID = @CardID";
                 int rowsAffected = dbConnection.Execute(sql, new { flashCard.Front, flashCard.Back, flashCard.CardID });
 
                 return rowsAffected > 0;
             }
         }
-        catch
+        catch (Exception ex)
         {
-            throw;
+            Utilities.DisplayExceptionErrorMessage("Unable to update flash card.", ex.Message);
+            return false;
         }
     }
 
-    public IEnumerable<FlashCardDto> GetAllFlashCards()
+    public IEnumerable<FlashCardDto>? GetAllFlashCards()
     {
         try
         {
             using (var dbConnection = _dbContext.GetConnectionToFlashCards())
             {
-                string sql = $"SELECT CardID, Front, Back FROM {ConfigSettings.tbFlashCardsName}";
+                string sql = $"SELECT CardID, Front, Back FROM tb_FlashCards";
                 return dbConnection.Query<FlashCardDto>(sql);
             }
         }
-        catch
+        catch (Exception ex)
         {
-            throw;
+            Utilities.DisplayExceptionErrorMessage("Unable to retrieve flash card.", ex.Message);
+            return null;
         }
     }   
 }

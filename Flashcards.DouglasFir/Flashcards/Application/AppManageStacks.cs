@@ -83,7 +83,7 @@ public class AppManageStacks
         AnsiConsole.Clear();
         IEnumerable<StackDto>? stacks = _manageStacksHelper.GetAllStacks();
 
-        if (stacks == null)
+        if (stacks == null || !stacks.Any())
         {
            _manageStacksHelper.HandleNoStacksFound();
             return;
@@ -99,7 +99,7 @@ public class AppManageStacks
         AnsiConsole.Clear();
         IEnumerable<StackDto>? stacks = _manageStacksHelper.GetAllStacks();
 
-        if (stacks == null)
+        if (stacks == null || !stacks.Any())
         {
             _manageStacksHelper.HandleNoStacksFound();
             return;
@@ -127,6 +127,7 @@ public class AppManageStacks
         catch (Exception ex)
         {
             Utilities.DisplayExceptionErrorMessage("Error creating stack.", ex.Message);
+            _inputHandler.PauseForContinueInput();
         }
     }
 }

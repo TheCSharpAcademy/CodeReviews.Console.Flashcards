@@ -34,7 +34,7 @@ public class ManageStacksHelper
 
     public void DisplayStacks(IEnumerable<StackDto>? stacks)
     {
-        if (stacks == null)
+        if (stacks == null || !stacks.Any())
         {
             HandleNoStacksFound();
             return;

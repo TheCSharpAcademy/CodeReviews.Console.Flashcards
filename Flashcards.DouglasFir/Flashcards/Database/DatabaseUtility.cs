@@ -25,7 +25,7 @@ public class DatabaseUtility
             using (SqlConnection connection = _dbContext.GetConnectionToMaster())
             {
                 var sql = "SELECT COUNT(*) FROM sys.databases WHERE name = @DbName";
-                int result = connection.ExecuteScalar<int>(sql, new { DbName = ConfigSettings.dbName });
+                int result = connection.ExecuteScalar<int>(sql, new { DbName = ConfigSettings.DatabaseName });
 
                 return result > 0;
             }
@@ -40,9 +40,9 @@ public class DatabaseUtility
     public bool CheckTablesExist()
     {
         string[] tableNames = new string[] {
-            ConfigSettings.tbStackName,
-            ConfigSettings.tbFlashCardsName,
-            ConfigSettings.tbStudySessionsName
+            ConfigSettings.TableNameStack,
+            ConfigSettings.TableNameFlashCards,
+            ConfigSettings.TableNameStudySessions
         };
 
         try
@@ -73,9 +73,9 @@ public class DatabaseUtility
     public bool CheckViewsExist()
     {
         string[] viewNames = new string[] {
-            ConfigSettings.vwFlashCardsName,
-            ConfigSettings.vwFlashCardsRenumberedName,
-            ConfigSettings.vwStudySessionsName
+            ConfigSettings.ViewNameFlashCards,
+            ConfigSettings.ViewNameFlashCardsRenumbered,
+            ConfigSettings.ViewNameStudySessions
         };
 
         try

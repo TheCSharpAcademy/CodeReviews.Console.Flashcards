@@ -3,7 +3,7 @@ using Flashcards.Models;
 using Flashcards.DTO;
 using Flashcards.Services;
 using Dapper;
-using Spectre.Console;
+using System.Data.SqlClient;
 
 namespace Flashcards.DAO;
 
@@ -22,12 +22,13 @@ public class StudySessionDao
         {
             using (var dbConnection = _dbContext.GetConnectionToFlashCards())
             {
-                string sql = $"INSERT INTO {ConfigSettings.tbStudySessionsName} (StackID, SessionDate, Score) VALUES (@StackID, @SessionDate, @Score)";
+                string sql = $"INSERT INTO {ConfigSettings.TableNameStudySessions} (StackID, SessionDate, Score) VALUES (@StackID, @SessionDate, @Score)";
                 dbConnection.Execute(sql, new { studySession.StackID, studySession.SessionDate, studySession.Score });
             }
         }
-        catch
+        catch (Exception ex)
         {
+            Utilities.DisplayExceptionErrorMessage("Unable to insert new study session.", ex.Message);
             throw;
         }
     }
@@ -38,18 +39,19 @@ public class StudySessionDao
         {
             using (var dbConnection = _dbContext.GetConnectionToFlashCards())
             {
-                string sql = $"DELETE FROM {ConfigSettings.tbStudySessionsName} WHERE SessionID = @SessionID";
+                string sql = $"DELETE FROM {ConfigSettings.TableNameStudySessions} WHERE SessionID = @SessionID";
                 dbConnection.Execute(sql, new { studySession.SessionID });
                 return true;
             }
         }
-        catch
+        catch (Exception ex)
         {
+            Utilities.DisplayExceptionErrorMessage("Unable to delete study session.", ex.Message);
             return false;
         }
     }
 
-    public IEnumerable<dynamic>? GetStudySessionReportData(int year)
+    public IEnumerable<ReportMonthlySessionCount>? GetStudySessionReportData(int year)
     {
         try
         {
@@ -58,11 +60,65 @@ public class StudySessionDao
                 string sql = $@"
                     DECLARE @Year int = @SelectedYear;
 
-                    ;WITH MonthlySessions AS (
+                    WITH MonthlySessions AS (
+	                    SELECT 
+		                    StackName,
+		                    MONTH(SessionDate) AS SessionMonth,
+		                    COUNT(*) AS SessionCount
+	                    FROM vw_StudySessionsWithStacks
+	                    WHERE YEAR(SessionDate) = @Year
+	                    GROUP BY 
+		                    StackName,
+		                    MONTH(SessionDate)
+                    )
+
+                    SELECT 
+	                    StackName
+	                    ,COALESCE([1], 0) AS Jan
+	                    ,COALESCE([2], 0) AS Feb
+	                    ,COALESCE([3], 0) AS Mar
+	                    ,COALESCE([4], 0) AS Apr
+	                    ,COALESCE([5], 0) AS May
+	                    ,COALESCE([6], 0) AS Jun
+	                    ,COALESCE([7], 0) AS Jul
+	                    ,COALESCE([8], 0) AS Aug
+	                    ,COALESCE([9], 0) AS Sep
+	                    ,COALESCE([10], 0) AS Oct
+	                    ,COALESCE([11], 0) AS Nov
+	                    ,COALESCE([12], 0) AS Dec
+                    FROM MonthlySessions
+                        PIVOT
+                        (
+                            SUM(SessionCount)
+                            FOR SessionMonth IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
+                        ) AS PivotTable;
+                 ";
+                
+                var result = dbConnection.Query<ReportMonthlySessionCount>(sql, new { SelectedYear = year });
+                return result;
+            }
+        }
+        catch (Exception ex)
+        {
+            Utilities.DisplayExceptionErrorMessage("Error retrieving report data.", ex.Message);
+            return null;
+        }
+    }
+
+    public IEnumerable<ReportAverageSessionScore>? GetAverageScoreReportData(int year)
+    {
+        try
+        {
+            using (var dbConnection = _dbContext.GetConnectionToFlashCards())
+            {
+                string sql = $@"
+                    DECLARE @Year int = @SelectedYear;
+
+                    WITH MonthlyAverages AS (
                         SELECT
                             StackName,
                             MONTH(SessionDate) AS SessionMonth,
-                            COUNT(*) AS SessionCount
+                            AVG(CAST(Score AS FLOAT)) AS AvgScore  -- Ensure the division is done in floating-point arithmetic
                         FROM
                             vw_StudySessionsWithStacks
                         WHERE
@@ -72,70 +128,36 @@ public class StudySessionDao
                     )
 
                     SELECT
-                        StackName,
-                        [1] AS Jan, [2] AS Feb, [3] AS Mar, [4] AS Apr, [5] AS May, [6] AS Jun,
-                        [7] AS Jul, [8] AS Aug, [9] AS Sep, [10] AS Oct, [11] AS Nov, [12] AS Dec
+                        StackName
+	                    ,COALESCE([1], 0) AS Jan
+                        ,COALESCE([2], 0) AS Feb
+                        ,COALESCE([3], 0) AS Mar
+                        ,COALESCE([4], 0) AS Apr
+                        ,COALESCE([5], 0) AS May
+                        ,COALESCE([6], 0) AS Jun
+                        ,COALESCE([7], 0) AS Jul
+                        ,COALESCE([8], 0) AS Aug
+                        ,COALESCE([9], 0) AS Sep
+                        ,COALESCE([10], 0)  AS Oct
+                        ,COALESCE([11], 0)  AS Nov
+                        ,COALESCE([12], 0)  AS Dec
                     FROM
-                        MonthlySessions
+                        MonthlyAverages
                     PIVOT
                     (
-                        SUM(SessionCount)
+                        AVG(AvgScore)
                         FOR SessionMonth IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
                     ) AS PivotTable;
-                    ";
-                
-                var result = dbConnection.Query(sql, new { SelectedYear = year });
-                return result;
-            }
-        }
-        catch
-        {
-            throw;
-        }
-    }
-
-    public IEnumerable<dynamic>? GetAverageScoreReportData(int year)
-    {
-        try
-        {
-            using (var dbConnection = _dbContext.GetConnectionToFlashCards())
-            {
-                string sql = $@"
-                DECLARE @Year int = @SelectedYear;
-
-                ;WITH MonthlyAverages AS (
-                    SELECT
-                        StackName,
-                        MONTH(SessionDate) AS SessionMonth,
-                        AVG(CAST(Score AS FLOAT)) AS AvgScore  -- Ensure the division is done in floating-point arithmetic
-                    FROM
-                        vw_StudySessionsWithStacks
-                    WHERE
-                        YEAR(SessionDate) = @Year
-                    GROUP BY
-                        StackName, MONTH(SessionDate)
-                )
-
-                SELECT
-                    StackName,
-                    [1] AS Jan, [2] AS Feb, [3] AS Mar, [4] AS Apr, [5] AS May, [6] AS Jun,
-                    [7] AS Jul, [8] AS Aug, [9] AS Sep, [10] AS Oct, [11] AS Nov, [12] AS Dec
-                FROM
-                    MonthlyAverages
-                PIVOT
-                (
-                    AVG(AvgScore)
-                    FOR SessionMonth IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
-                ) AS PivotTable;
                 ";
 
-                var result = dbConnection.Query(sql, new { SelectedYear = year });
+                var result = dbConnection.Query<ReportAverageSessionScore>(sql, new { SelectedYear = year });
                 return result;
             }
         }
-        catch
+        catch (Exception ex)
         {
-            throw;
+            Utilities.DisplayExceptionErrorMessage("Error retrieving report data.", ex.Message);
+            return null;
         }
     }
 

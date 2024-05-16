@@ -24,7 +24,7 @@ public class DatabaseInitializer
 
     private void CreateDatabase()
     {
-        string sql = $"CREATE DATABASE [{ConfigSettings.dbName}]";
+        string sql = $"CREATE DATABASE [{ConfigSettings.DatabaseName}]";
 
         try
         {
@@ -57,7 +57,7 @@ public class DatabaseInitializer
     private void CreateStacksTable()
     {
         string sql = $@"
-            CREATE TABLE {ConfigSettings.tbStackName} (
+            CREATE TABLE {ConfigSettings.TableNameStack} (
             StackID INT PRIMARY KEY IDENTITY(1,1),
 	        StackName VARCHAR(255) UNIQUE NOT NULL
         );";
@@ -68,7 +68,7 @@ public class DatabaseInitializer
         }
         catch (SqlException ex)
         {
-            Utilities.DisplayExceptionErrorMessage($"Failed to create database table {ConfigSettings.tbStackName}", ex.Message);
+            Utilities.DisplayExceptionErrorMessage($"Failed to create database table {ConfigSettings.TableNameStack}", ex.Message);
             Utilities.DisplayInformationConsoleMessage("Application cannot start without the database. Please check the error and restart the application.");
             Environment.Exit(1); // Exit the application with an error code
         }
@@ -77,12 +77,12 @@ public class DatabaseInitializer
     private void CreateFlashCardsTable()
     {
         string sql = $@"
-            CREATE TABLE {ConfigSettings.tbFlashCardsName} (
+            CREATE TABLE {ConfigSettings.TableNameFlashCards} (
                 CardID INT PRIMARY KEY IDENTITY,
                 Front TEXT NOT NULL,
                 Back TEXT NOT NULL,
                 StackID INT NOT NULL,
-                FOREIGN KEY (StackID) REFERENCES {ConfigSettings.tbStackName}(StackID) ON DELETE CASCADE
+                FOREIGN KEY (StackID) REFERENCES {ConfigSettings.TableNameStack}(StackID) ON DELETE CASCADE
             )";
 
         try
@@ -91,7 +91,7 @@ public class DatabaseInitializer
         }
         catch (SqlException ex)
         {
-            Utilities.DisplayExceptionErrorMessage($"Failed to create database table {ConfigSettings.tbFlashCardsName}", ex.Message);
+            Utilities.DisplayExceptionErrorMessage($"Failed to create database table {ConfigSettings.TableNameFlashCards}", ex.Message);
             Utilities.DisplayInformationConsoleMessage("Application cannot start without the database. Please check the error and restart the application.");
             Environment.Exit(1); // Exit the application with an error code
         }
@@ -100,12 +100,12 @@ public class DatabaseInitializer
     private void CreateStudySessionsTable()
     {
         string sql = $@"
-            CREATE TABLE {ConfigSettings.tbStudySessionsName} (
+            CREATE TABLE {ConfigSettings.TableNameStudySessions} (
                 SessionID INT PRIMARY KEY IDENTITY(1,1),
                 StackID INT NOT NULL,
                 SessionDate DATETIME NOT NULL,
                 Score INT NOT NULL,                       
-                FOREIGN KEY (StackID) REFERENCES {ConfigSettings.tbStackName}(StackID) ON DELETE CASCADE
+                FOREIGN KEY (StackID) REFERENCES {ConfigSettings.TableNameStack}(StackID) ON DELETE CASCADE
             );";
 
         try 
@@ -114,7 +114,7 @@ public class DatabaseInitializer
         }
         catch (SqlException ex)
         {
-            Utilities.DisplayExceptionErrorMessage($"Failed to create database table {ConfigSettings.tbStudySessionsName}", ex.Message);
+            Utilities.DisplayExceptionErrorMessage($"Failed to create database table {ConfigSettings.TableNameStudySessions}", ex.Message);
             Utilities.DisplayInformationConsoleMessage("Application cannot start without the database. Please check the error and restart the application.");
             Environment.Exit(1); // Exit the application with an error code
         }
@@ -123,13 +123,13 @@ public class DatabaseInitializer
     private void CreateFlashCardsView()
     {
         string sql = $@"
-            CREATE VIEW {ConfigSettings.vwFlashCardsName} AS
+            CREATE VIEW {ConfigSettings.ViewNameFlashCards} AS
             SELECT
                 CardID,
                 Front,
                 Back
             FROM
-                {ConfigSettings.tbFlashCardsName};";
+                {ConfigSettings.TableNameFlashCards};";
 
         try
         {
@@ -137,7 +137,7 @@ public class DatabaseInitializer
         }
         catch (SqlException ex)
         {
-            Utilities.DisplayExceptionErrorMessage($"Failed to create database views {ConfigSettings.vwFlashCardsName}", ex.Message);
+            Utilities.DisplayExceptionErrorMessage($"Failed to create database views {ConfigSettings.ViewNameFlashCards}", ex.Message);
             Utilities.DisplayInformationConsoleMessage("Application cannot start without the database. Please check the error and restart the application.");
             Environment.Exit(1); // Exit the application with an error code
         }
@@ -146,14 +146,14 @@ public class DatabaseInitializer
     private void CreateFlashCardsRenumberedView()
     {
         string sql = $@"
-            CREATE VIEW {ConfigSettings.vwFlashCardsRenumberedName} AS
+            CREATE VIEW {ConfigSettings.ViewNameFlashCardsRenumbered} AS
             SELECT
                 ROW_NUMBER() OVER (PARTITION BY StackID ORDER BY CardID) AS DisplayCardID,
                 Front,
                 Back,
                 StackID
             FROM
-                {ConfigSettings.tbFlashCardsName};";
+                {ConfigSettings.TableNameFlashCards};";
 
         try
         {
@@ -161,7 +161,7 @@ public class DatabaseInitializer
         }
         catch (SqlException ex)
         {
-            Utilities.DisplayExceptionErrorMessage($"Failed to create database views {ConfigSettings.vwFlashCardsRenumberedName}", ex.Message);
+            Utilities.DisplayExceptionErrorMessage($"Failed to create database views {ConfigSettings.ViewNameFlashCardsRenumbered}", ex.Message);
             Utilities.DisplayInformationConsoleMessage("Application cannot start without the database. Please check the error and restart the application.");
             Environment.Exit(1); // Exit the application with an error code
         }
@@ -170,16 +170,16 @@ public class DatabaseInitializer
     private void CreateStudySessionsView()
     {
         string sql = $@"
-            CREATE VIEW {ConfigSettings.vwStudySessionsName} AS
+            CREATE VIEW {ConfigSettings.ViewNameStudySessions} AS
             SELECT
                 s.SessionID,
                 st.StackName,
                 s.SessionDate,
                 s.Score
             FROM
-                {ConfigSettings.tbStudySessionsName} s
+                {ConfigSettings.TableNameStudySessions} s
             JOIN
-                {ConfigSettings.tbStackName} st ON s.StackID = st.StackID;";
+                {ConfigSettings.TableNameStack} st ON s.StackID = st.StackID;";
 
         try
         {
@@ -187,7 +187,7 @@ public class DatabaseInitializer
         }
         catch (SqlException ex)
         {
-            Utilities.DisplayExceptionErrorMessage($"Failed to create database views {ConfigSettings.vwFlashCardsRenumberedName}", ex.Message);
+            Utilities.DisplayExceptionErrorMessage($"Failed to create database views {ConfigSettings.ViewNameFlashCardsRenumbered}", ex.Message);
             Utilities.DisplayInformationConsoleMessage("Application cannot start without the database. Please check the error and restart the application.");
             Environment.Exit(1); // Exit the application with an error code
         }

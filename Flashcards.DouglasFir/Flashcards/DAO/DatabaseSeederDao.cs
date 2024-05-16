@@ -24,7 +24,7 @@ public class DatabaseSeederDao
                 {
                         
                     var stackId = transaction.Connection.Query<int>(@$"
-                        INSERT INTO {ConfigSettings.tbStackName} (StackName) VALUES (@StackName);
+                        INSERT INTO {ConfigSettings.TableNameStack} (StackName) VALUES (@StackName);
                         SELECT CAST(SCOPE_IDENTITY() as int);",
                         new { stack.StackName },
                         transaction).Single();
@@ -33,7 +33,7 @@ public class DatabaseSeederDao
                     {
                         card.StackID = stackId;
                         transaction.Connection.Execute(@$"
-                            INSERT INTO {ConfigSettings.tbFlashCardsName} (Front, Back, StackID) VALUES (@Front, @Back, @StackID);",
+                            INSERT INTO {ConfigSettings.TableNameFlashCards} (Front, Back, StackID) VALUES (@Front, @Back, @StackID);",
                             card,
                             transaction);
                     }
