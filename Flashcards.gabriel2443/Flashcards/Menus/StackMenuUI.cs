@@ -75,9 +75,7 @@ internal class StackMenuUI
             foreach (var card in cardStacks)
             {
                 AnsiConsole.Write(new Rows(
-         new Text($"   {card.CardstackName}\n")
-
-     ));
+         new Text($"   {card.CardstackName}\n")));
             }
         }
         else
