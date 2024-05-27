@@ -6,7 +6,7 @@ internal class CardStack
     public string CardstackName { get; set; }
 }
 
-internal class CardStackDTO
+internal class CardStackDto
 {
     public int CardstackId { get; set; }
 }

@@ -18,12 +18,12 @@ internal class FlashcardDatabaseManager
         }
     }
 
-    internal List<FlashCardsDTO> ReadFlashcardsDTO(CardStack stack)
+    internal List<FlashCardsDto> ReadFlashcardsDTO(CardStack stack)
     {
         var sql = $"SELECT * FROM Flashcards WHERE StackId = {stack.CardstackId}";
         using (var connection = new SqlConnection(connectionStr))
         {
-            var flashcards = connection.Query<FlashCardsDTO>(sql).ToList();
+            var flashcards = connection.Query<FlashCardsDto>(sql).ToList();
             return flashcards;
         }
     }

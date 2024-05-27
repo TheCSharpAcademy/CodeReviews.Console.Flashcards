@@ -8,7 +8,7 @@ internal class FlashCards
     public int CardstackId { get; set; }
 }
 
-internal class FlashCardsDTO
+internal class FlashCardsDto
 {
     public int CardstackId { get; set; }
     public string Question { get; set; } = string.Empty;

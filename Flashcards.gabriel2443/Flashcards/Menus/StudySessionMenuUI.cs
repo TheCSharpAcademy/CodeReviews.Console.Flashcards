@@ -91,10 +91,9 @@ internal class StudySessionMenuUI
                     Console.Clear();
                     AnsiConsole.WriteLine("You are correct ");
                     score++;
-                };
+                }
             }
         }
-
         var stackId = selectedCardStack.CardstackId;
         studySession.DateEnd = DateTime.Now;
         studySession.Score = score;
