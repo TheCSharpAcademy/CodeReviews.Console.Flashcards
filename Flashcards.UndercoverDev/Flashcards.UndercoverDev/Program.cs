@@ -1,2 +1,7 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using Flashcards.UndercoverDev.DataConfig;
+
+DatabaseManager dataConfig = new("FlashcardDB");
+
+dataConfig.InitializeDatabase();
+dataConfig.CreateStacksTables();
+dataConfig.CreateFlashcardsTables();
