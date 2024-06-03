@@ -24,5 +24,11 @@ namespace Flashcards.UndercoverDev.UserInteraction
                     )
             );
         }
+
+        public string GetUserInput()
+        {
+            var input = AnsiConsole.Ask<string>("[green]Input: [/]?");
+            return input;
+        }
     }
 }
