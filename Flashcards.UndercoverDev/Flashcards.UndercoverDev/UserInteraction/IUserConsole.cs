@@ -2,7 +2,8 @@ namespace Flashcards.UndercoverDev.UserInteraction
 {
     public interface IUserConsole
     {
-        string GetUserInput();
-        void MainMenu();
+        string GetUserInput(string message);
+        string MainMenu();
+        void PrintMessage(string message, string color);
     }
 }

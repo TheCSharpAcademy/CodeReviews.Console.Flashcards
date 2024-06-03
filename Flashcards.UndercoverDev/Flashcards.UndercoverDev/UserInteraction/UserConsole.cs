@@ -4,13 +4,12 @@ namespace Flashcards.UndercoverDev.UserInteraction
 {
     public class UserConsole : IUserConsole
     {
-        public void MainMenu()
+        public string MainMenu()
         {
             var menu = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("Welcome. Select a [blue]function[/]?")
                     .PageSize(10)
-                    .MoreChoicesText("[grey](Move up and down to reveal more fruits)[/]")
                     .AddChoices([
                         "Add a Stack",
                         "Delete a Stack",
@@ -23,12 +22,19 @@ namespace Flashcards.UndercoverDev.UserInteraction
                         ]
                     )
             );
+
+            return menu;
         }
 
-        public string GetUserInput()
+        public string GetUserInput(string message)
         {
-            var input = AnsiConsole.Ask<string>("[green]Input: [/]?");
+            var input = AnsiConsole.Ask<string>($"[green]{message}: [/]?");
             return input;
+        }
+
+        public void PrintMessage(string message, string color)
+        {
+            AnsiConsole.Write($"[{color}]{message}[/]");
         }
     }
 }
