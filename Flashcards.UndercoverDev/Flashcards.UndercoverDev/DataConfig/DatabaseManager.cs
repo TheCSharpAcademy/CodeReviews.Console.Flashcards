@@ -4,7 +4,7 @@ using Dapper;
 
 namespace Flashcards.UndercoverDev.DataConfig
 {
-    public class DatabaseManager
+    public class DatabaseManager : IDatabaseManager
     {
         private readonly string _databaseName;
         private readonly string _connectionStringTemplate = ConfigurationManager.AppSettings.Get("ConnectionString") ?? "";
