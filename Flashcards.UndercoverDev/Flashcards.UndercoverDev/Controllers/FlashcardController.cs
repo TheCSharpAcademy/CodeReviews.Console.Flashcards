@@ -1,4 +1,5 @@
 using Flashcards.UndercoverDev.DataConfig;
+using Flashcards.UndercoverDev.Services;
 using Flashcards.UndercoverDev.UserInteraction;
 
 namespace Flashcards.UndercoverDev.Controllers
@@ -7,12 +8,14 @@ namespace Flashcards.UndercoverDev.Controllers
     {
         private readonly IUserConsole? _userConsole;
         private readonly IDatabaseManager _databaseManager;
+        private readonly IStackServices _stackServices;
         bool closeApp;
 
-        public FlashcardController(IUserConsole? userConsole, IDatabaseManager databaseManager)
+        public FlashcardController(IUserConsole? userConsole, IDatabaseManager databaseManager, IStackServices stackServices)
         {
             _userConsole = userConsole;
             _databaseManager = databaseManager;
+            _stackServices = stackServices;
         }
 
         public void RunProgram()
@@ -25,9 +28,7 @@ namespace Flashcards.UndercoverDev.Controllers
             while (!closeApp)
             {
                 // Display Main Menu
-                _userConsole.MainMenu();
-                // Get User Input
-                var userInput = _userConsole.GetUserInput();
+                var userInput = _userConsole.MainMenu();
                 // Process User Input
                 ProcessUserInput(userInput);
             }
@@ -39,6 +40,7 @@ namespace Flashcards.UndercoverDev.Controllers
             switch (input)
             {
                 case "Add a Stack":
+                    _stackServices.AddStack();
                     break;
                 case "Delete a Stack":
                     break;
