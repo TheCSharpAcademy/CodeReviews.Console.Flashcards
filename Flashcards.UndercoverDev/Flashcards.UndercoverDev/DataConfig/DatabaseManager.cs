@@ -6,14 +6,13 @@ namespace Flashcards.UndercoverDev.DataConfig
 {
     public class DatabaseManager : IDatabaseManager
     {
-        private readonly string _databaseName;
+        const string _databaseName = "FlashcardDB";
         private readonly string _connectionStringTemplate = ConfigurationManager.AppSettings.Get("ConnectionString") ?? "";
         private readonly string _masterConnectionString;
         private readonly string _connectionString;
 
-        public DatabaseManager(string databaseName)
+        public DatabaseManager()
         {
-            _databaseName = databaseName;
             _masterConnectionString = string.Format(_connectionStringTemplate, "master");
             _connectionString = string.Format(_connectionStringTemplate.Replace("Database=master;", $"Database={_databaseName};"), _databaseName);
         }
