@@ -11,14 +11,14 @@ internal class FlashcardDatabaseManager
 
     internal void AddFlashard(FlashCards flashCard)
     {
-        var sql = $"INSERT INTO Flashcards VALUES(@Question, @Answer, @CardstackId)";
+        var sql = $"INSERT INTO Flashcards VALUES(@Question, @Answer, @StackId)";
         using (var connection = new SqlConnection(connectionStr))
         {
             connection.Execute(sql, flashCard);
         }
     }
 
-    internal List<FlashCardsDto> ReadFlashcardsDTO(CardStack stack)
+    internal List<FlashCardsDto> ReadFlashcardsDto(CardStack stack)
     {
         var sql = $"SELECT * FROM Flashcards WHERE StackId = {stack.CardstackId}";
         using (var connection = new SqlConnection(connectionStr))
@@ -28,7 +28,7 @@ internal class FlashcardDatabaseManager
         }
     }
 
-    internal List<FlashCards> ReadFlahcards(CardStack stack)
+    internal List<FlashCards> ReadFlashcards(CardStack stack)
     {
         var sql = $"SELECT * FROM Flashcards WHERE StackId = {stack.CardstackId}";
         using (var connection = new SqlConnection(connectionStr))

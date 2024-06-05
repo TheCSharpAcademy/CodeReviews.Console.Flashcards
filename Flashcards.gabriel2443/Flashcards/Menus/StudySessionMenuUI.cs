@@ -65,8 +65,8 @@ internal class StudySessionMenuUI
         var selectedCardStack = AnsiConsole.Prompt(select);
         if (selectedCardStack.CardstackName == "Go back to menu") return;
 
-        var getFlashcards = flashDatabaseManager.ReadFlashcardsDTO(selectedCardStack);
-        AnsiConsole.WriteLine($"In the stack {selectedCardStack.CardstackName.ToUpper()} are {getFlashcards.Count()} flashcards, press S to start or 0 to go back to menu");
+        var getFlashcards = flashDatabaseManager.ReadFlashcardsDto(selectedCardStack);
+        AnsiConsole.WriteLine($"In the stack {selectedCardStack.CardstackName.ToUpper()} are {getFlashcards.Count()} flashcards, press 'S' to start or 0 to go back to menu");
         var input = Console.ReadLine();
         if (string.IsNullOrEmpty(input)) return;
         if (input == "0") return;
@@ -77,13 +77,13 @@ internal class StudySessionMenuUI
             {
                 var randomFlashcard = random.Next(getFlashcards.Count);
                 var flashcard = getFlashcards[randomFlashcard];
-                AnsiConsole.WriteLine($" {++counter}.What is the answer to this flashcard {flashcard.Question} ");
+                AnsiConsole.WriteLine($" {++counter}.What is the answer to this flashcard '{flashcard.Question}' ");
                 var answer = AnsiConsole.Prompt(new TextPrompt<string>("Please type your answer or press 0 to go back to study menu "));
                 if (answer == "0") StudySessionMenu();
                 if (answer.ToLower() != flashcard.Answer.ToLower())
                 {
                     Console.Clear();
-                    AnsiConsole.WriteLine($"You are incorrect, the answer to the quesstion is {flashcard.Answer}.");
+                    AnsiConsole.WriteLine($"You are incorrect, the answer to the quesstion is '{flashcard.Answer}'.");
                 }
 
                 if (answer.ToLower() == flashcard.Answer.ToLower())
@@ -93,6 +93,8 @@ internal class StudySessionMenuUI
                     score++;
                 }
             }
+            AnsiConsole.MarkupLine($"Study session is over your score is [green]{score}[/] press any key to go back to menu.");
+            Console.ReadLine();
         }
         var stackId = selectedCardStack.CardstackId;
         studySession.DateEnd = DateTime.Now;

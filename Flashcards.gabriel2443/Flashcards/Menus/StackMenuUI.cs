@@ -57,7 +57,7 @@ internal class StackMenuUI
         Console.Clear();
         var cardStack = new CardStack();
 
-        var stack = AnsiConsole.Prompt(new TextPrompt<string>("Please enter the name of the stack you want to add or type 0 to go back to main menu").Validate(stackName => !ValidateFlashcardsStacks.StackExists(stackName.Trim()), "This stack already exists"));
+        var stack = AnsiConsole.Prompt(new TextPrompt<string>("Please enter the name of the stack you want to add or type 0 to go back to main menu").Validate(stackName => !ValidateStack.StackExists(stackName.Trim()), "This stack already exists"));
         if (stack == "0") StackMenu();
         cardStack.CardstackName = stack;
 
@@ -94,8 +94,8 @@ internal class StackMenuUI
         select.AddChoice(new CardStack { CardstackName = "Go back to menu" });
         select.UseConverter(stackName => stackName.CardstackName);
         var selectedStack = AnsiConsole.Prompt(select);
-
-        var stackName = AnsiConsole.Prompt(new TextPrompt<string>($"Please enter the updated name").Validate(name => !ValidateFlashcardsStacks.StackExists(name), "This stack already exists please enter another stack"));
+        if (selectedStack.CardstackName == "Go back to menu") return;
+        var stackName = AnsiConsole.Prompt(new TextPrompt<string>($"Please enter the updated name").Validate(name => !ValidateStack.StackExists(name), "This stack already exists please enter another stack"));
 
         stackDatabaseManager.UpdateStack(selectedStack, stackName);
     }
