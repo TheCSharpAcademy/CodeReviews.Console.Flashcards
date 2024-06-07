@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using Flashcards.Models;
 using Spectre.Console;
 
@@ -160,7 +161,6 @@ internal class ActionManager
         if (choice != Menu.CancelOperation)
         {
             Stack stack = DbContext.GetStackByName(choice);
-            var oldStackName = stack.StackName;
             stack.StackName = UserInputs.GetStringInput("Please enter a [bold blue]Stack Name[/]");
             if (stack.StackName != null)
             {
@@ -274,6 +274,6 @@ internal class ActionManager
 
     private void Exit() => runApplication = false;
 
-    private void Cancel() { }
+    private void Cancel() {return;}
 
 }

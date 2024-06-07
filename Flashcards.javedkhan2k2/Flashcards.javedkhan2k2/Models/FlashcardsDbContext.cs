@@ -22,7 +22,6 @@ internal class FlashcardsDbContext
     {
         CreateDatabase();
         CreateTables();
-        //SeedData();
     }
 
     private void CreateDatabase()
@@ -135,7 +134,7 @@ internal class FlashcardsDbContext
         using (var connection = GetConnection())
         {
             connection.Open();
-            int result = connection.Execute(sql, new { OldStackName = stackName, StackName = parameters.StackName });
+            connection.Execute(sql, new { OldStackName = stackName, StackName = parameters.StackName });
         }
     }
 
@@ -145,7 +144,7 @@ internal class FlashcardsDbContext
         using (var connection = GetConnection())
         {
             connection.Open();
-            int result = connection.Execute(sql, new { Id = id });
+            connection.Execute(sql, new { Id = id });
         }
     }
 
@@ -312,7 +311,7 @@ internal class FlashcardsDbContext
         using (var connection = GetConnection())
         {
             connection.Open();
-            int result = connection.Execute(sql, parameters);
+            connection.Execute(sql, parameters);
         }
     }
 
