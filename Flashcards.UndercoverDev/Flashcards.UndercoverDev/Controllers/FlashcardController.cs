@@ -9,13 +9,15 @@ namespace Flashcards.UndercoverDev.Controllers
         private readonly IUserConsole? _userConsole;
         private readonly IDatabaseManager _databaseManager;
         private readonly IStackServices _stackServices;
+        private readonly IFlashcardServices _flashcardServices;
         bool closeApp;
 
-        public FlashcardController(IUserConsole? userConsole, IDatabaseManager databaseManager, IStackServices stackServices)
+        public FlashcardController(IUserConsole? userConsole, IDatabaseManager databaseManager, IStackServices stackServices, IFlashcardServices flashcardServices)
         {
             _userConsole = userConsole;
             _databaseManager = databaseManager;
             _stackServices = stackServices;
+            _flashcardServices = flashcardServices;
         }
 
         public void RunProgram()
@@ -47,6 +49,7 @@ namespace Flashcards.UndercoverDev.Controllers
                     _stackServices.DeleteStack();
                     break;
                 case "Add a Flashcard":
+                    _flashcardServices.AddFlashcard();
                     break;
                 case "Delete a Flashcard":
                     break;
