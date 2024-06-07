@@ -41,23 +41,23 @@ namespace Flashcards.UndercoverDev.UserInteraction
 
         public string GetUserInput(string message)
         {
-            var input = AnsiConsole.Ask<string>($"[green]{message}: [/]?");
+            var input = AnsiConsole.Ask<string>($"[blue]{message}: [/]?");
             return input;
         }
 
-        public async Task PrintMessage(string message, string color)
+        public void PrintMessage(string message, string color)
         {
-            await Task.Delay(1000);
+            Thread.Sleep(1000);
             switch (color)
             {
                 case "green":
-                    AnsiConsole.Write($"\n[green]{message}[/]\n\n");
+                    AnsiConsole.Write(new Markup($"\n[green]{message}[/]\n\n"));
                     break;
                 case "red":
-                    AnsiConsole.Write($"\n[red]{message}[/]\n\n");
+                    AnsiConsole.Write(new Markup($"\n[red]{message}[/]\n\n"));
                     break;
                 default:
-                    AnsiConsole.Write($"\n[blue]{message}[/]\n\n");
+                    AnsiConsole.Write(new Markup($"\n[blue]{message}[/]\n\n"));
                     break;
             }
         }

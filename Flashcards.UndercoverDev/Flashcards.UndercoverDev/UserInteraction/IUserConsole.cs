@@ -7,6 +7,6 @@ namespace Flashcards.UndercoverDev.UserInteraction
         string GetUserInput(string message);
         string MainMenu();
         string DeleteStackMenu(List<string> stacks);
-        Task PrintMessage(string message, string color);
+        void PrintMessage(string message, string color);
     }
 }
