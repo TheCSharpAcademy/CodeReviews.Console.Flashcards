@@ -1,8 +1,9 @@
 # Flashcards
-In this Project we created A Flashcards App. This App is developed
+- In this Project we created A Flashcards App. This App is developed
 using MSSQL Server in [Docker](https://www.docker.com/) and
 [Dapper](https://www.learndapper.com/) is
-used as mini ORM. In this simple app users can create Stacks and
+used as mini ORM.
+- In this simple app users can create Stacks and
 insert flashcards and study the Stacks. Users can also generate
 some basic and advance reports. This Project is a part of
 [CSharpAcademy](https://thecsharpacademy.com/) Console Projects.
