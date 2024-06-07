@@ -1,0 +1,113 @@
+using Flashcards.UndercoverDev.Models;
+using Flashcards.UndercoverDev.Repository;
+using Flashcards.UndercoverDev.UserInteraction;
+
+namespace Flashcards.UndercoverDev.Services
+{
+    public class FlashcardServices : IFlashcardServices
+    {
+        private readonly IUserConsole _userConsole;
+        private readonly IFlashcardRepository _flashcardRepository;
+        private readonly IStackRepository _stackRepository;
+        private readonly IStackServices _stackServices;
+
+        public FlashcardServices(IUserConsole userConsole, IFlashcardRepository flashcardRepository, IStackRepository stackRepository, IStackServices stackServices)
+        {
+            _userConsole = userConsole;
+            _flashcardRepository = flashcardRepository;
+            _stackServices = stackServices;
+            _stackRepository = stackRepository;
+        }
+
+        public void AddFlashcard()
+        {
+            var IsForNewStack = IsFlashcardForNewStack();
+            if (IsForNewStack)
+            {
+                var newStackName = _userConsole.GetUserInput("Please enter the name of the Stack you would like to add the Flashcard to (or press 0 to cancel) ");
+
+                if (newStackName == "0")
+                    return;
+
+                if (!_stackServices.CheckIfStackExists(newStackName))
+                {
+                    _userConsole.PrintMessage("No Stack with that name exists.", "red");
+                    return;
+                }
+
+                var retrievedStack = _stackRepository.GetStackByName(newStackName);
+                var newFlashcard = new FlashcardDTO
+                {
+                    StackId = retrievedStack.Id,
+                    Question = ValidateQuestion(),
+                    Answer = ValidateAnswer(),
+                };
+
+                _flashcardRepository.Post(newFlashcard);
+
+                _userConsole.PrintMessage("1 Flashcard added successfully. Press any key to continue.", "green");
+                _userConsole.WaitForAnyKey();
+            }
+        }
+
+        public void DeleteFlashcard()
+        {
+            throw new NotImplementedException();
+        }
+
+        // Helper Methods
+        public bool IsFlashcardForNewStack()
+        {
+            string userInput;
+            do
+            {
+                userInput = _userConsole.GetUserInput("Is the Flashcard for a new stack? Y/N").ToLower();
+            }
+            while (userInput != "y" && userInput != "n");
+
+            return userInput == "y";
+        }
+
+        public bool IfQuestionExists(string question)
+        {
+            var currentFlashcards = _flashcardRepository.GetFlashcards();
+            var questionFound = false;
+
+            foreach (var flashcard in currentFlashcards)
+            {
+                if (flashcard.Question.ToLower() == question.ToLower())
+                {
+                    _userConsole.PrintMessage("Question already exists.", "red");
+                    questionFound = true;
+                    break;
+                }
+            }
+
+            return questionFound;
+        }
+
+        public string ValidateQuestion()
+        {
+            string question;
+            do
+            {
+                question = _userConsole.GetUserInput("Please enter the question for the Flashcard: ");
+            }
+            while (question == "" || IfQuestionExists(question));
+
+            return question;
+        }
+
+        public string ValidateAnswer()
+        {
+            string answer;
+            do
+            {
+                answer = _userConsole.GetUserInput("Please enter the answer for the Flashcard: ");
+            }
+            while (answer == "");
+
+            return answer;
+        }
+    }
+}

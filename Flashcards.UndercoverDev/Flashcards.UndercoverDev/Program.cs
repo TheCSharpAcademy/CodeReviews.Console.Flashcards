@@ -7,7 +7,9 @@ using Flashcards.UndercoverDev.UserInteraction;
 UserConsole userConsole = new();
 DatabaseManager dataConfig = new();
 StackRepository stackRepository= new();
+FlashcardRepository flashcardRepository = new();
 StackServices stackServices = new(userConsole, stackRepository);
-FlashcardController flashcardController = new(userConsole, dataConfig, stackServices);
+FlashcardServices flashcardServices = new(userConsole, flashcardRepository, stackRepository, stackServices);
+FlashcardController flashcardController = new(userConsole, dataConfig, stackServices, flashcardServices);
 
 flashcardController.RunProgram();
