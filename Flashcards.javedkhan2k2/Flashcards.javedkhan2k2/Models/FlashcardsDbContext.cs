@@ -119,7 +119,7 @@ internal class FlashcardsDbContext
         }
     }
 
-    internal void UpdateStackById(Stack parameters)
+    internal int UpdateStackById(Stack parameters)
     {
         var sql = @$"UPDATE Stacks 
                         SET StackName = @StackName 
@@ -127,7 +127,7 @@ internal class FlashcardsDbContext
         using (var connection = GetConnection())
         {
             connection.Open();
-            int result = connection.Execute(sql, parameters);
+            return connection.Execute(sql, parameters);
         }
     }
 
@@ -210,7 +210,7 @@ internal class FlashcardsDbContext
         }
     }
 
-    internal void UpdateFlashcard(Flashcard parameters)
+    internal int UpdateFlashcard(Flashcard parameters)
     {
         var sql = @$"UPDATE Flashcards 
                         SET
@@ -221,7 +221,7 @@ internal class FlashcardsDbContext
         using (var connection = GetConnection())
         {
             connection.Open();
-            int result = connection.Execute(sql, parameters);
+            return connection.Execute(sql, parameters);
         }
     }
 
@@ -234,7 +234,6 @@ internal class FlashcardsDbContext
             int result = connection.Execute(sql, new { Id = id });
         }
     }
-
 
     internal int DeleteFlashcardByFront(string front, int stackId)
     {
@@ -361,7 +360,7 @@ internal class FlashcardsDbContext
 
     internal IEnumerable<StudySession>? GetAllStudySessionsByStackId(int stackId)
     {
-        var sql = @$"SELECT * FROM StudySessions where StackId = @StackId ORDER BY Id";
+        var sql = @$"SELECT * FROM StudySessions where StackId = @StackId ORDER BY StudyDate";
         using (var connection = GetConnection())
         {
             connection.Open();
@@ -442,6 +441,48 @@ internal class FlashcardsDbContext
                     PIVOT
                     (
                         AVG(TScore)
+                        FOR [MONTH] in ([January], [February], [March], [April], [May], [June], 
+                                            [July], [August], [September], [October], [November], [December])
+                    ) AS PVT
+                ";
+        using (var connection = GetConnection())
+        {
+            connection.Open();
+            IEnumerable<AllStackYearlyReport>? report = connection.Query<AllStackYearlyReport>(sql, new { Year = year });
+            return report;
+        }
+    }
+
+    internal IEnumerable<AllStackYearlyReport>? GetAllStacksSessionsReportByYear(int year)
+    {
+        var sql = @$"
+                    Select 
+                        Stack AS StackName,
+                        COALESCE([January], 0) AS [January], 
+                        COALESCE([February], 0) AS [February], 
+                        COALESCE([March], 0) AS [March],
+                        COALESCE([April], 0) AS [April], 
+                        COALESCE([May], 0) AS [May], 
+                        COALESCE([June], 0) AS [June], 
+                        COALESCE([July], 0) AS [July], 
+                        COALESCE([August], 0) AS [August], 
+                        COALESCE([September], 0) AS [September], 
+                        COALESCE([October], 0) AS [October], 
+                        COALESCE([November], 0) AS [November], 
+                        COALESCE([December], 0) AS [December]
+                    FROM
+                    (
+                        SELECT 
+                            ss.StackId as CNT,
+                            DATENAME(MONTH, ss.StudyDate) AS [Month],
+                            st.StackName as Stack
+                        FROM dbo.StudySessions AS ss JOIN Stacks as st on ss.StackId = st.Id 
+                        WHERE 
+                            YEAR(ss.StudyDate) = @Year
+                    ) AS SRC
+                    PIVOT
+                    (
+                        SUM(CNT)
                         FOR [MONTH] in ([January], [February], [March], [April], [May], [June], 
                                             [July], [August], [September], [October], [November], [December])
                     ) AS PVT

@@ -6,11 +6,18 @@ namespace Flashcards;
 
 internal static class VisualizationEngine
 {
-    internal static void DisplayAllStacksYearlySessionReport(IEnumerable<AllStackYearlyReport> reports, string title)
+    public static Table CreateTable(string title="")
     {
         var table = new Table();
-        table.Title(title);
+        table.Title(title.ToUpper());
         table.Border = TableBorder.Square;
+        table.ShowRowSeparators = true;
+        return table;
+    }
+    
+    internal static void DisplayAllStacksYearlySessionReport(IEnumerable<AllStackYearlyReport> reports, string title)
+    {
+        var table = CreateTable(title);
         table.AddColumns(["Stack Name", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]);
         foreach (var report in reports)
         {
@@ -21,15 +28,13 @@ internal static class VisualizationEngine
 
     internal static void DisplayContinueMessage()
     {
-        AnsiConsole.Markup($"Press [bold blue]Enter[/] to continue\n");
+        AnsiConsole.Markup($"Press [bold blue]Enter[/] to continue\n".ToUpper());
         Console.ReadLine();
     }
 
     internal static void DisplayStudySessions(IEnumerable<StudySession>? studies, string stackName)
     {
-        var table = new Table();
-        table.Title($"Study Sessions for [green]{stackName}[/] Stack");
-        table.Border = TableBorder.Square;
+        var table = CreateTable($"Study Sessions for [green]{stackName}[/] Stack");
         table.AddColumns(["Id", "Date", "Score", "Total Questions"]);
         foreach (var study in studies)
         {
@@ -40,9 +45,7 @@ internal static class VisualizationEngine
 
     internal static void DisplayYearlySessionReport(StackYearlyReport report, string title)
     {
-        var table = new Table();
-        table.Title(title);
-        table.Border = TableBorder.Square;
+        var table = CreateTable(title);
         table.AddColumns(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]);
         table.AddRow(report.January, report.February, report.March, report.April, report.May, report.June, report.July, report.August, report.September, report.October, report.November, report.December);
         AnsiConsole.Write(table);
@@ -52,11 +55,11 @@ internal static class VisualizationEngine
     {
         if (result == 0)
         {
-            AnsiConsole.Markup($"{message} [bold maroon]unsuccessfully[/]. Please read the errors.\n");
+            AnsiConsole.Markup($"{message} [bold maroon]unsuccessfully[/]. Please read the errors.\n".ToUpper());
         }
         else
         {
-            AnsiConsole.Markup($"{message} [bold green]successfully[/].\n");
+            AnsiConsole.Markup($"{message} [bold green]successfully[/].\n".ToUpper());
         }
         VisualizationEngine.DisplayContinueMessage();
     }
