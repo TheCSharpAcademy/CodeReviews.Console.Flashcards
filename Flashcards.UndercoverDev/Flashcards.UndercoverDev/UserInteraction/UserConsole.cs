@@ -14,8 +14,8 @@ namespace Flashcards.UndercoverDev.UserInteraction
                     .AddChoices([
                         "Add a Stack",
                         "Delete a Stack",
-                        "Add a Flashcard to a Stack",
-                        "Delete a Flashcard from a Stack",
+                        "Add a Flashcard",
+                        "Delete a Flashcard",
                         "Study Session",
                         "View Study Session by Stack",
                         "Average Score Yearly Report",
@@ -41,7 +41,7 @@ namespace Flashcards.UndercoverDev.UserInteraction
 
         public string GetUserInput(string message)
         {
-            var input = AnsiConsole.Ask<string>($"[blue]{message}: [/]?");
+            var input = AnsiConsole.Ask<string>($"[blue]{message}: [/] ");
             return input;
         }
 
