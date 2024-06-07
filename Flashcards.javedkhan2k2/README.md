@@ -1,4 +1,3 @@
-
 # Flashcards
 
 In this Project we created A Flashcards App. This App is developed
