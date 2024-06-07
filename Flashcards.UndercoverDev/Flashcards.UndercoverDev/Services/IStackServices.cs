@@ -4,5 +4,6 @@ namespace Flashcards.UndercoverDev.Services
     {
         void AddStack();
         void DeleteStack();
+        public bool CheckIfStackExists(string stackName);
     }
 }

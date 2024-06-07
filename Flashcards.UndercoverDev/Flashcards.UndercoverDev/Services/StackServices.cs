@@ -69,7 +69,7 @@ namespace Flashcards.UndercoverDev.Services
 
             foreach (var stack in currentStacks)
             {
-                if (stack.Name == stackName)
+                if (stack.Name.ToLower() == stackName.ToLower())
                 {
                     stackFound = true;
                     break;
