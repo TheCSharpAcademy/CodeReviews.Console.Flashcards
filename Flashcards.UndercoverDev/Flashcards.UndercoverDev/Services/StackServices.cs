@@ -27,20 +27,51 @@ namespace Flashcards.UndercoverDev.Services
                 _userConsole.PrintMessage("Stack already exists", "red");
                 return;
             }
+            
+            _stackRepository.Post(new StackDTO
+            {
+                Name = newStackName
+            });
+            _userConsole.PrintMessage("1 added successfully", "green");
+
+        }
+
+        public void DeleteStack()
+        {
+            var stackName = _stackRepository.GetStackNames();
+
+            var selectedStackName = _userConsole.DeleteStackMenu(stackName);
+
+            if (CheckIfStackExists(selectedStackName))
+            {
+                _stackRepository.Delete(new Stack
+                {
+                    Name = selectedStackName
+                });
+
+                _userConsole.PrintMessage($"{selectedStackName} deleted successfully", "green");
+            }
             else
             {
-                _stackRepository.Post(new StackDTO
-                {
-                    Name = newStackName
-                });
+                _userConsole.PrintMessage("Stack does not exist", "red");
             }
-
         }
 
         public bool CheckIfStackExists(string stackName)
         {
-            // Check if Stack Name already exists
-            return false;
+            var currentStacks = _stackRepository.GetStacks();
+            var stackFound = false;
+
+            foreach (var stack in currentStacks)
+            {
+                if (stack.Name == stackName)
+                {
+                    stackFound = true;
+                    break;
+                }
+            }
+
+            return stackFound;
         }
     }
 }
