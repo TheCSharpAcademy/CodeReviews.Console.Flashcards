@@ -24,16 +24,17 @@ namespace Flashcards.UndercoverDev.Services
 
             if (CheckIfStackExists(newStackName))
             {
-                _userConsole.PrintMessage("Stack already exists", "red");
-                return;
+                _userConsole.PrintMessage("Stack already exists. Press any key to continue.", "red");
             }
-            
-            _stackRepository.Post(new StackDTO
+            else
             {
-                Name = newStackName
-            });
-            _userConsole.PrintMessage("1 added successfully", "green");
-
+                _stackRepository.Post(new StackDTO
+                {
+                    Name = newStackName
+                });
+                _userConsole.PrintMessage("1 added successfully. Press any key to continue.", "green");
+            }
+            _userConsole.WaitForAnyKey();
         }
 
         public void DeleteStack()
@@ -49,18 +50,22 @@ namespace Flashcards.UndercoverDev.Services
                     Name = selectedStackName
                 });
 
-                _userConsole.PrintMessage($"{selectedStackName} deleted successfully", "green");
+                _userConsole.PrintMessage($"{selectedStackName} deleted successfully. Press any key to continue", "green");
             }
             else
             {
-                _userConsole.PrintMessage("Stack does not exist", "red");
+                _userConsole.PrintMessage("Stack does not exist. Press any key to continue.", "red");
             }
+            _userConsole.WaitForAnyKey();
         }
 
         public bool CheckIfStackExists(string stackName)
         {
             var currentStacks = _stackRepository.GetStacks();
             var stackFound = false;
+
+            if (stackName == "None")
+                return true;
 
             foreach (var stack in currentStacks)
             {

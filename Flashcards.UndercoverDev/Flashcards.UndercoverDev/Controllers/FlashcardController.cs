@@ -27,6 +27,7 @@ namespace Flashcards.UndercoverDev.Controllers
 
             while (!closeApp)
             {
+                Console.Clear();
                 // Display Main Menu
                 var userInput = _userConsole.MainMenu();
                 // Process User Input
@@ -43,6 +44,7 @@ namespace Flashcards.UndercoverDev.Controllers
                     _stackServices.AddStack();
                     break;
                 case "Delete a Stack":
+                    _stackServices.DeleteStack();
                     break;
                 case "Add a Flashcard":
                     break;

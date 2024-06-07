@@ -61,5 +61,10 @@ namespace Flashcards.UndercoverDev.UserInteraction
                     break;
             }
         }
+
+        public void WaitForAnyKey()
+        {
+            Console.ReadKey(true);
+        }
     }
 }
