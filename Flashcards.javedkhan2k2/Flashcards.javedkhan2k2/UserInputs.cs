@@ -1,7 +1,6 @@
 
 using System.Globalization;
 using Flashcards.Models;
-using Microsoft.IdentityModel.Tokens;
 using Spectre.Console;
 
 namespace Flashcards;
@@ -51,4 +50,5 @@ internal static class UserInputs
         }
         return input.Trim().ToLower();
     }
+    
 }

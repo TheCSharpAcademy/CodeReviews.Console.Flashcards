@@ -1,7 +1,6 @@
-﻿using System.Configuration;
-using Flashcards;
+﻿using Flashcards;
 
-string? connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+string? connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString");
 
 if (connectionString == null)
 {

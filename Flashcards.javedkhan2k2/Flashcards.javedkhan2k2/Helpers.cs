@@ -1,4 +1,3 @@
-using System.Text;
 using Flashcards.Models;
 
 namespace Flashcards;

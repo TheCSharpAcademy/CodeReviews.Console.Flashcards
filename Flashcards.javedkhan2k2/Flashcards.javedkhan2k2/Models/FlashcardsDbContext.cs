@@ -1,7 +1,3 @@
-
-
-using System.Data.Common;
-using System.Globalization;
 using Dapper;
 using Microsoft.Data.SqlClient;
 
