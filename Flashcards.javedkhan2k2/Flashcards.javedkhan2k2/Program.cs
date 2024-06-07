@@ -1,6 +1,7 @@
 ﻿using Flashcards;
 
-string? connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString");
+string? connectionString =  Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+//System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString");
 
 if (connectionString == null)
 {
