@@ -226,7 +226,7 @@ internal class FlashcardsDbContext
         using (var connection = GetConnection())
         {
             connection.Open();
-            int result = connection.Execute(sql, new { Id = id });
+            connection.Execute(sql, new { Id = id });
         }
     }
 
@@ -328,7 +328,7 @@ internal class FlashcardsDbContext
         using (var connection = GetConnection())
         {
             connection.Open();
-            int result = connection.Execute(sql, parameters);
+            connection.Execute(sql, parameters);
         }
     }
 
@@ -338,7 +338,7 @@ internal class FlashcardsDbContext
         using (var connection = GetConnection())
         {
             connection.Open();
-            int result = connection.Execute(sql, new { Id = id });
+            connection.Execute(sql, new { Id = id });
         }
     }
 

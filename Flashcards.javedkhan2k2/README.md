@@ -1,4 +1,6 @@
+
 # Flashcards
+
 In this Project we created A Flashcards App. This App is developed
 using MSSQL Server in [Docker](https://www.docker.com/) and
 [Dapper](https://www.learndapper.com/) is
@@ -57,6 +59,8 @@ visualize the reports in tables.
 
 ## Tools Used
 
-- [x] [Docker](https://www.docker.com/) because I don't have windows PC and ease of use
+- [x] [Docker](https://www.docker.com/) because I don't have
+windows PC and ease of use
 - [x] [Azure Data Studio](https://azure.microsoft.com/en-us/products/data-studio/)
-- [x] [Spectre Console](https://spectreconsole.net/) can be used to create very beautiful console apps.
+- [x] [Spectre Console](https://spectreconsole.net/) can be used to create very
+beautiful console apps.
