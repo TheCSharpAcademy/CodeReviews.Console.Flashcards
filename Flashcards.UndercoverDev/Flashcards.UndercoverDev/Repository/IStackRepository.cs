@@ -8,5 +8,6 @@ namespace Flashcards.UndercoverDev.Repository
         void Delete(Stack stack);
         List<Stack> GetStacks();
         List<string> GetStackNames();
+        Stack GetStackByName(string name);
     }
 }

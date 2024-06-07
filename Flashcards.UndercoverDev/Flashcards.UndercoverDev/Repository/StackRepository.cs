@@ -49,5 +49,13 @@ namespace Flashcards.UndercoverDev.Repository
             stackNames.Add("None");
             return stackNames;
         }
+
+        public Stack GetStackByName(string name)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
+            string getStackQuery = $"SELECT * FROM Stack WHERE Name = '{name}';";
+            return connection.Query<Stack>(getStackQuery).FirstOrDefault();
+        }
     }
 }
