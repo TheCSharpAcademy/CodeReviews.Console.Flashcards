@@ -1,3 +1,4 @@
+using System.Collections;
 using Spectre.Console;
 
 namespace Flashcards.UndercoverDev.UserInteraction
@@ -26,15 +27,39 @@ namespace Flashcards.UndercoverDev.UserInteraction
             return menu;
         }
 
+        public string DeleteStackMenu(List<string> stackNames)
+        {
+            var menu = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Welcome. Select a [blue]function[/]?")
+                    .PageSize(10)
+                    .AddChoices(stackNames)
+            );
+
+            return menu;
+        }
+
         public string GetUserInput(string message)
         {
             var input = AnsiConsole.Ask<string>($"[green]{message}: [/]?");
             return input;
         }
 
-        public void PrintMessage(string message, string color)
+        public async Task PrintMessage(string message, string color)
         {
-            AnsiConsole.Write($"[{color}]{message}[/]");
+            await Task.Delay(1000);
+            switch (color)
+            {
+                case "green":
+                    AnsiConsole.Write($"\n[green]{message}[/]\n\n");
+                    break;
+                case "red":
+                    AnsiConsole.Write($"\n[red]{message}[/]\n\n");
+                    break;
+                default:
+                    AnsiConsole.Write($"\n[blue]{message}[/]\n\n");
+                    break;
+            }
         }
     }
 }
