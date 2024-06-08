@@ -34,7 +34,28 @@ namespace Flashcards.UndercoverDev.Services
 
         public void DeleteFlashcard()
         {
-            throw new NotImplementedException();
+            var stackName = _stackRepository.GetStackNames();
+
+            var selectedStackName = _userConsole.ShowMenu("Select a [blue]Stack[/] where your flashcard resides.\n", stackName);
+
+            // Get the flashcards associated with the selected stack
+            var retrievedStack = _stackRepository.GetStackByName(selectedStackName);
+
+            var flashcards = _flashcardRepository.GetFlashcardsByStackId(retrievedStack.Id);
+            var questions = flashcards.Select(f => f.Question).ToList();
+
+            var selectedFlashcard = _userConsole.ShowMenu("Select a [blue]Flashcard[/] to delete", questions);
+            
+            var flashcardToBeDeleted = flashcards.FirstOrDefault(f => f.Question == selectedFlashcard);
+
+            _flashcardRepository.Delete(new Flashcard
+            {
+                Id = flashcardToBeDeleted.Id,
+            });
+
+            _userConsole.PrintMessage($"{selectedFlashcard} deleted successfully. Press any key to continue", "green");
+            
+            _userConsole.WaitForAnyKey();
         }
 
         // Helper Methods
@@ -42,7 +63,7 @@ namespace Flashcards.UndercoverDev.Services
         {
             var stackName = _stackRepository.GetStackNames();
 
-            var selectedStackName = _userConsole.ShowMenu(stackName);
+            var selectedStackName = _userConsole.ShowMenu("Select a [blue]Stack[/] to add the flashcard to.\n",stackName);
 
             if (_stackServices.CheckIfStackExists(selectedStackName))
             {

@@ -8,5 +8,7 @@ namespace Flashcards.UndercoverDev.Services
         string ValidateQuestion();
         string ValidateAnswer();
         bool IsFlashcardForNewStack();
+        void AddFlashcardToOldStack();
+        void AddFlashcardToNewStack();
     }
 }
