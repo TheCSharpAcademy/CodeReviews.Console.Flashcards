@@ -46,7 +46,6 @@ namespace Flashcards.UndercoverDev.Repository
             using var connection = new SqlConnection(_connectionString);
             connection.Open();
             var stackNames = connection.Query<string>("SELECT Name FROM Stack").ToList();
-            stackNames.Add("None");
             return stackNames;
         }
 
