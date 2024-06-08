@@ -1,4 +1,6 @@
-﻿public class Valiadation()
+﻿using System.Linq;
+
+public class Valiadation()
 {
     public int GetValidInt(int min, int max)
     {
@@ -14,5 +16,24 @@
         }
 
         return result-resultOffset;
+    }
+
+    public Stack GetValisStack(List<Stack> stacks)
+    {
+        string? input = "";
+
+        while (stacks.FirstOrDefault(x => x.Name.ToLower() == input) is null)
+        {
+            input = Console.ReadLine()?.ToLower();
+            if (stacks.FirstOrDefault(x => x.Name.ToLower() == input) is null)
+            {
+                Console.Beep();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("That stack does not exist. Please try again.");
+                Console.ResetColor();
+            }
+        }
+
+        return stacks.First(s => s.Name.ToLower() == input);
     }
 }

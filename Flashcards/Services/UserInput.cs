@@ -17,4 +17,23 @@ public class UserInput()
 
         return (MainMenuOptions)number;
     }
+
+    public Stack SelectStack(List<Stack> stacks)
+    {
+        Console.Clear();
+
+        Console.WriteLine("List of stacks:");
+
+        Console.ForegroundColor = ConsoleColor.Green;
+        foreach (var item in stacks)
+        {
+            Console.WriteLine(item.Name);
+        }
+        Console.ResetColor();
+
+
+        Console.WriteLine("\nPlace pick a Stack by entering it's name: \n");
+
+        return _valiadation.GetValisStack(stacks);
+    }
 }

@@ -22,7 +22,6 @@ public class App
         switch (mainMenuOption)
         {
             case MainMenuOptions.Stacks:
-                Console.WriteLine("??");
                 ManageStacks();
                 break;
             case MainMenuOptions.Flashcards:
@@ -41,12 +40,11 @@ public class App
 
         if (stackList.Count == 0)
         {
-            // TODO handle this
+            // TODO call Create Stack here...
         }
         else
         {
-            // Place pick a Stack by entering it's name:
-            // valiadate: empty, stack exists etc.
+            var stack = _userInput.SelectStack(stackList);
         }
 
     }
