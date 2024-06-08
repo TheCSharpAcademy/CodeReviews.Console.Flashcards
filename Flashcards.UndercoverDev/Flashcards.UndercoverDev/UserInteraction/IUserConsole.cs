@@ -9,5 +9,6 @@ namespace Flashcards.UndercoverDev.UserInteraction
         string DeleteStackMenu(List<string> stacks);
         void PrintMessage(string message, string color);
         void WaitForAnyKey();
+        string ShowMenu(List<string> list);
     }
 }

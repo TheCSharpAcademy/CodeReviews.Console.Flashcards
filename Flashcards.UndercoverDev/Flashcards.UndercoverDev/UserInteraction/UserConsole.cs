@@ -27,6 +27,18 @@ namespace Flashcards.UndercoverDev.UserInteraction
             return menu;
         }
 
+        public string ShowMenu(List<string> list)
+        {
+            var menu = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Welcome. Select a [blue]function[/]?")
+                    .PageSize(10)
+                    .AddChoices(list)
+            );
+
+            return menu;
+        }
+
         public string DeleteStackMenu(List<string> stackNames)
         {
             var menu = AnsiConsole.Prompt(
@@ -41,13 +53,13 @@ namespace Flashcards.UndercoverDev.UserInteraction
 
         public string GetUserInput(string message)
         {
-            var input = AnsiConsole.Ask<string>($"[blue]{message}: [/] ");
+            var input = AnsiConsole.Ask<string>($"[blue]{message} [/] ");
             return input;
         }
 
         public void PrintMessage(string message, string color)
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
             switch (color)
             {
                 case "green":
@@ -60,6 +72,7 @@ namespace Flashcards.UndercoverDev.UserInteraction
                     AnsiConsole.Write(new Markup($"\n[blue]{message}[/]\n\n"));
                     break;
             }
+            Thread.Sleep(1000);
         }
 
         public void WaitForAnyKey()
