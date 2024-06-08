@@ -4,6 +4,7 @@
     {
         bool IsValidInt = false;
         int result = 0;
+        const int resultOffset = 1;
 
         while (!IsValidInt)
         {
@@ -12,6 +13,6 @@
             else IsValidInt = true;
         }
 
-        return result;
+        return result-resultOffset;
     }
 }

@@ -68,12 +68,12 @@ public class DatabaseManager
         string[] createTableQueries = new string[]
         {
             @"CREATE TABLE Stacks (
-            Id INT PRIMARY KEY, 
+            Id INT PRIMARY KEY IDENTITY(1,1), 
             Name NVARCHAR(100) UNIQUE NOT NULL
         )",
 
             @"CREATE TABLE Flashcards ( 
-            Id INT PRIMARY KEY, 
+            Id INT PRIMARY KEY IDENTITY(1,1), 
             Question NVARCHAR(1000) NOT NULL, 
             Answer NVARCHAR(1000) NOT NULL, 
             StackId INT, 
@@ -81,7 +81,7 @@ public class DatabaseManager
         )",
 
             @"CREATE TABLE StudySessions ( 
-            Id INT PRIMARY KEY, 
+            Id INT PRIMARY KEY IDENTITY(1,1), 
             StackId INT, 
             Date DATETIME NOT NULL, 
             Score INT NOT NULL, 

@@ -5,11 +5,15 @@ public class App
 {
     private UserInput _userInput;
     private DatabaseManager _databaseManager;
+    private IManageStacks _stackRepo;
+    private IManageStacks _stackController;
 
     public void Run()
     {
         _userInput = new UserInput();
         _databaseManager = new DatabaseManager(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
+        _stackRepo =  new StackRepository(_databaseManager);
+        _stackController = new StackController(_stackRepo);
 
         _databaseManager.InitializeDB();
 
@@ -18,7 +22,8 @@ public class App
         switch (mainMenuOption)
         {
             case MainMenuOptions.Stacks:
-
+                Console.WriteLine("??");
+                ManageStacks();
                 break;
             case MainMenuOptions.Flashcards:
                 break;
@@ -32,10 +37,17 @@ public class App
 
     public void ManageStacks() // TODO would it be better to have a ManageStacks class?
     {
-        var stackList = ""; // controller.GetAllStacks();
+        var stackList = _stackController.GetStacks();
 
-        // Place pick a Stack by entering it's name:
-        // valiadate: empty, stack exists etc.
+        if (stackList.Count == 0)
+        {
+            // TODO handle this
+        }
+        else
+        {
+            // Place pick a Stack by entering it's name:
+            // valiadate: empty, stack exists etc.
+        }
 
     }
 }
