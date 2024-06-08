@@ -25,12 +25,30 @@ namespace Flashcards.UndercoverDev.Repository
             connection.Execute(createFlashcardQuery);
         }
 
+        public void Delete(Flashcard flashcard)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
+            string deleteFlashcardQuery = $"DELETE FROM Flashcards WHERE Id = '{flashcard.Id}';";
+            connection.Execute(deleteFlashcardQuery);
+        }
+
         public List<Flashcard> GetFlashcards()
         {
             using var connection = new SqlConnection(_connectionString);
             connection.Open();
 
             string getFlashcardsQuery = $"SELECT * FROM Flashcards;";
+
+            return connection.Query<Flashcard>(getFlashcardsQuery).ToList();
+        }
+
+        public List<Flashcard> GetFlashcardsByStackId(int id)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
+
+            string getFlashcardsQuery = $"SELECT * FROM Flashcards WHERE StackId = '{id}';";
 
             return connection.Query<Flashcard>(getFlashcardsQuery).ToList();
         }
