@@ -18,14 +18,17 @@ public class Valiadation()
         return result-resultOffset;
     }
 
-    public Stack GetValisStack(List<Stack> stacks)
+    public Stack GetValidStack(List<Stack> stacks)
     {
-        string? input = "";
+        string? input = null;
+        Stack? validStack = null;
 
-        while (stacks.FirstOrDefault(x => x.Name.ToLower() == input) is null)
+        while (validStack is null)
         {
             input = Console.ReadLine()?.ToLower();
-            if (stacks.FirstOrDefault(x => x.Name.ToLower() == input) is null)
+            validStack = stacks.FirstOrDefault(x => x.Name.ToLower() == input);
+
+            if (validStack is null)
             {
                 Console.Beep();
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -34,6 +37,6 @@ public class Valiadation()
             }
         }
 
-        return stacks.First(s => s.Name.ToLower() == input);
+        return validStack;
     }
 }

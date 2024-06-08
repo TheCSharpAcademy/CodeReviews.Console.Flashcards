@@ -31,9 +31,8 @@ public class UserInput()
         }
         Console.ResetColor();
 
-
         Console.WriteLine("\nPlace pick a Stack by entering it's name: \n");
 
-        return _valiadation.GetValisStack(stacks);
+        return _valiadation.GetValidStack(stacks);
     }
 }
