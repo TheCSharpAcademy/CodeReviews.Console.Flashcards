@@ -41,7 +41,7 @@ namespace Flashcards.UndercoverDev.Services
         {
             var stackName = _stackRepository.GetStackNames();
 
-            var selectedStackName = _userConsole.DeleteStackMenu(stackName);
+            var selectedStackName = _userConsole.ShowMenu("Select a [blue]Stack[/] to delete", stackName);
 
             if (CheckIfStackExists(selectedStackName))
             {

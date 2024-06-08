@@ -52,6 +52,7 @@ namespace Flashcards.UndercoverDev.Controllers
                     _flashcardServices.AddFlashcard();
                     break;
                 case "Delete a Flashcard":
+                    _flashcardServices.DeleteFlashcard();
                     break;
                 case "Study Session":
                     break;
