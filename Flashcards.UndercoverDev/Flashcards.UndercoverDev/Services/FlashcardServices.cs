@@ -24,18 +24,29 @@ namespace Flashcards.UndercoverDev.Services
             var IsForNewStack = IsFlashcardForNewStack();
             if (IsForNewStack)
             {
-                var newStackName = _userConsole.GetUserInput("Please enter the name of the Stack you would like to add the Flashcard to (or press 0 to cancel) ");
+                AddFlashcardToNewStack();
+            }
+            else
+            {
+                AddFlashcardToOldStack();
+            }
+        }
 
-                if (newStackName == "0")
-                    return;
+        public void DeleteFlashcard()
+        {
+            throw new NotImplementedException();
+        }
 
-                if (!_stackServices.CheckIfStackExists(newStackName))
-                {
-                    _userConsole.PrintMessage("No Stack with that name exists.", "red");
-                    return;
-                }
+        // Helper Methods
+        public void AddFlashcardToOldStack()
+        {
+            var stackName = _stackRepository.GetStackNames();
 
-                var retrievedStack = _stackRepository.GetStackByName(newStackName);
+            var selectedStackName = _userConsole.ShowMenu(stackName);
+
+            if (_stackServices.CheckIfStackExists(selectedStackName))
+            {
+                var retrievedStack = _stackRepository.GetStackByName(selectedStackName);
                 var newFlashcard = new FlashcardDTO
                 {
                     StackId = retrievedStack.Id,
@@ -48,14 +59,45 @@ namespace Flashcards.UndercoverDev.Services
                 _userConsole.PrintMessage("1 Flashcard added successfully. Press any key to continue.", "green");
                 _userConsole.WaitForAnyKey();
             }
+            else
+            {
+                _userConsole.PrintMessage("No Stack with that name exists.", "red");
+            }
         }
 
-        public void DeleteFlashcard()
+        public void AddFlashcardToNewStack()
         {
-            throw new NotImplementedException();
+            var newStackName = _userConsole.GetUserInput("Please enter the name of the Stack you would like to add the Flashcard to (or press 0 to cancel) ");
+
+            if (newStackName == "0")
+                return;
+
+            if (_stackServices.CheckIfStackExists(newStackName))
+            {
+                _userConsole.PrintMessage("Stack with that name already exists.", "red");
+                return;
+            }
+
+            _stackRepository.Post(new StackDTO
+            {
+                Name = newStackName
+            });
+            _userConsole.PrintMessage("Stack added successfully.", "green");
+            
+            var retrievedStack = _stackRepository.GetStackByName(newStackName);
+            var newFlashcard = new FlashcardDTO
+            {
+                StackId = retrievedStack.Id,
+                Question = ValidateQuestion(),
+                Answer = ValidateAnswer(),
+            };
+
+            _flashcardRepository.Post(newFlashcard);
+
+            _userConsole.PrintMessage("1 Flashcard added successfully. Press any key to continue.", "green");
+            _userConsole.WaitForAnyKey();
         }
 
-        // Helper Methods
         public bool IsFlashcardForNewStack()
         {
             string userInput;
