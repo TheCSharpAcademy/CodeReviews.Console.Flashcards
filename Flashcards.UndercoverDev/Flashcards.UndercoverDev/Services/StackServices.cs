@@ -8,11 +8,13 @@ namespace Flashcards.UndercoverDev.Services
     {
         private readonly IUserConsole _userConsole;
         private readonly IStackRepository _stackRepository;
+        private readonly IFlashcardRepository _flashcardRepository;
 
-        public StackServices(IUserConsole userConsole, IStackRepository stackRepository)
+        public StackServices(IUserConsole userConsole, IStackRepository stackRepository, IFlashcardRepository flashcardRepository)
         {
             _userConsole = userConsole;
             _stackRepository = stackRepository;
+            _flashcardRepository = flashcardRepository;
         }
 
         public void AddStack()
@@ -43,6 +45,15 @@ namespace Flashcards.UndercoverDev.Services
 
             var selectedStackName = _userConsole.ShowMenu("Select a [blue]Stack[/] to delete", stackName);
 
+            // Delete flashcards in the selected stack
+            var retrievedStack = _stackRepository.GetStackByName(selectedStackName);
+            var flashcards = _flashcardRepository.GetFlashcardsByStackId(retrievedStack.Id);
+
+            foreach (var flashcard in flashcards)
+            {
+                _flashcardRepository.Delete(flashcard);
+            }
+
             if (CheckIfStackExists(selectedStackName))
             {
                 _stackRepository.Delete(new Stack
@@ -50,7 +61,7 @@ namespace Flashcards.UndercoverDev.Services
                     Name = selectedStackName
                 });
 
-                _userConsole.PrintMessage($"{selectedStackName} deleted successfully. Press any key to continue", "green");
+                _userConsole.PrintMessage($"{selectedStackName} and flashcards deleted successfully. Press any key to continue", "green");
             }
             else
             {
