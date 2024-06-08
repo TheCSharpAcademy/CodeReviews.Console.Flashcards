@@ -18,6 +18,7 @@ public class App
         switch (mainMenuOption)
         {
             case MainMenuOptions.Stacks:
+
                 break;
             case MainMenuOptions.Flashcards:
                 break;
@@ -27,5 +28,14 @@ public class App
                 Environment.Exit(0);
                 break;
         }
+    }
+
+    public void ManageStacks() // TODO would it be better to have a ManageStacks class?
+    {
+        var stackList = ""; // controller.GetAllStacks();
+
+        // Place pick a Stack by entering it's name:
+        // valiadate: empty, stack exists etc.
+
     }
 }

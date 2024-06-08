@@ -18,11 +18,3 @@ public class UserInput()
         return (MainMenuOptions)number;
     }
 }
-
-public enum MainMenuOptions
-{
-    Stacks,
-    Flashcards,
-    Study,
-    Exit,
-}
