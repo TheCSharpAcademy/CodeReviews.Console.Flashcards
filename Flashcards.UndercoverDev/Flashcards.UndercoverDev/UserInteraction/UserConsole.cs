@@ -27,25 +27,13 @@ namespace Flashcards.UndercoverDev.UserInteraction
             return menu;
         }
 
-        public string ShowMenu(List<string> list)
+        public string ShowMenu(string message, List<string> list)
         {
             var menu = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title("Welcome. Select a [blue]function[/]?")
+                    .Title(message)
                     .PageSize(10)
                     .AddChoices(list)
-            );
-
-            return menu;
-        }
-
-        public string DeleteStackMenu(List<string> stackNames)
-        {
-            var menu = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                    .Title("Welcome. Select a [blue]function[/]?")
-                    .PageSize(10)
-                    .AddChoices(stackNames)
             );
 
             return menu;
