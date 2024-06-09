@@ -1,3 +1,4 @@
+using Flashcards.UndercoverDev.Extensions;
 using Flashcards.UndercoverDev.Repository;
 using Flashcards.UndercoverDev.Repository.Session;
 using Flashcards.UndercoverDev.UserInteraction;
@@ -54,10 +55,10 @@ namespace Flashcards.UndercoverDev.Services.Session
                 }
                 while (string.IsNullOrEmpty(userAnswer));
 
-                if (userAnswer.ToLower() == flashcard.Answer.ToLower())
+                if (userAnswer.TrimAndLower() == flashcard.Answer.TrimAndLower())
                 {
                     score++;
-                    _userConsole.PrintMessage("Correct!", "green");
+                    _userConsole.PrintMessage($"Correct! Your current score is {score}", "green");
                 }
                 else
                 {
@@ -67,6 +68,13 @@ namespace Flashcards.UndercoverDev.Services.Session
                 _userConsole.PrintMessage("Press any key to continue.", "blue");
                 _userConsole.WaitForAnyKey();
             }
+            _userConsole.PrintMessage($"[bold]Study session completed. Your final score: {score}/{flashcards.Count}[/]", "green");
+            
+            _sessionRepository.Post(retrievedStack.Id, score, flashcards.Count);
+            _userConsole.PrintMessage("Press any key to continue.", "blue");
+            _userConsole.WaitForAnyKey();
+
+
         }
 
         // Helper functions

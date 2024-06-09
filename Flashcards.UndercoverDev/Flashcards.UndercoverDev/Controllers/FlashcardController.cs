@@ -29,6 +29,7 @@ namespace Flashcards.UndercoverDev.Controllers
             _databaseManager.InitializeDatabase();
             _databaseManager.CreateFlashcardsTables();
             _databaseManager.CreateStacksTables();
+            _databaseManager.CreateSessionsTables();
 
             while (!closeApp)
             {

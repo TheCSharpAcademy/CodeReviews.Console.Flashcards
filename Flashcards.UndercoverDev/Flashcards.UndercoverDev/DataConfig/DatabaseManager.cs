@@ -69,7 +69,7 @@ namespace Flashcards.UndercoverDev.DataConfig
                     SessionDate DATETIME NOT NULL,
                     Score INT NOT NULL,
                     TotalQuestions INT NOT NULL,
-                    FOREIGN KEY (StackId) REFERENCES Stacks (Id) ON DELETE CASCADE
+                    FOREIGN KEY (StackId) REFERENCES Stack (Id) ON DELETE CASCADE
         );";
             connection.Execute(createStudySessionsTableQuery);
         }

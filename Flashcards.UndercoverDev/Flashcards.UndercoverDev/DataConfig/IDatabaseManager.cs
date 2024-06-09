@@ -5,5 +5,6 @@ namespace Flashcards.UndercoverDev.DataConfig
         void InitializeDatabase();
         void CreateFlashcardsTables();
         void CreateStacksTables();
+        void CreateSessionsTables();
     }
 }
