@@ -63,6 +63,11 @@ namespace Flashcards.UndercoverDev.UserInteraction
             Thread.Sleep(1000);
         }
 
+        public void WritTable(Table table)
+        {
+            AnsiConsole.Write(table);
+        }
+
         public void WaitForAnyKey()
         {
             Console.ReadKey(true);

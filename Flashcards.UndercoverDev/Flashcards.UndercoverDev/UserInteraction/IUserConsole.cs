@@ -1,4 +1,4 @@
-using System.Collections;
+using Spectre.Console;
 
 namespace Flashcards.UndercoverDev.UserInteraction
 {
@@ -9,5 +9,6 @@ namespace Flashcards.UndercoverDev.UserInteraction
         void PrintMessage(string message, string color);
         void WaitForAnyKey();
         string ShowMenu(string message, List<string> list);
+        void WritTable(Table table);
     }
 }

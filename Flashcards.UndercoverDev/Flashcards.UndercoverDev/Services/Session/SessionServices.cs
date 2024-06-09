@@ -1,4 +1,5 @@
 using Flashcards.UndercoverDev.Extensions;
+using Flashcards.UndercoverDev.Models;
 using Flashcards.UndercoverDev.Repository;
 using Flashcards.UndercoverDev.Repository.Session;
 using Flashcards.UndercoverDev.UserInteraction;
@@ -42,23 +43,20 @@ namespace Flashcards.UndercoverDev.Services.Session
             
             foreach (var flashcard in flashcards)
             {
-                var table = new Table() {Border = TableBorder.Double};
-                table.AddColumn(new TableColumn("Flashcard Id").RightAligned());
-                table.AddColumn("Question");
-                table.AddRow(index++.ToString(), flashcard.Question);
-                AnsiConsole.Write(table);
+                CreateTable(index, "Question", flashcard.Question);
 
                 string userAnswer;
                 do
                 {
-                    userAnswer = _userConsole.GetUserInput("\nWhat is the answer? ");
+                    userAnswer = _userConsole.GetUserInput("\nPlease enter your answer to the above flashcard: ");
                 }
                 while (string.IsNullOrEmpty(userAnswer));
 
                 if (userAnswer.TrimAndLower() == flashcard.Answer.TrimAndLower())
                 {
-                    score++;
+                    CreateTable(index, "Answer", flashcard.Answer);
                     _userConsole.PrintMessage($"Correct! Your current score is {score}", "green");
+                    score++;
                 }
                 else
                 {
@@ -69,7 +67,7 @@ namespace Flashcards.UndercoverDev.Services.Session
                 _userConsole.WaitForAnyKey();
             }
             _userConsole.PrintMessage($"[bold]Study session completed. Your final score: {score}/{flashcards.Count}[/]", "green");
-            
+
             _sessionRepository.Post(retrievedStack.Id, score, flashcards.Count);
             _userConsole.PrintMessage("Press any key to continue.", "blue");
             _userConsole.WaitForAnyKey();
@@ -78,5 +76,13 @@ namespace Flashcards.UndercoverDev.Services.Session
         }
 
         // Helper functions
+        public void CreateTable(int index, string columnName, string flashcardString)
+        {
+            var table = new Table() {Border = TableBorder.Double};
+            table.AddColumn(new TableColumn("Flashcard Id").RightAligned());
+            table.AddColumn(columnName);
+            table.AddRow(index++.ToString(), flashcardString);
+            _userConsole.WritTable(table);
+        }
     }
 }
