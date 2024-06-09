@@ -11,11 +11,12 @@ namespace Flashcards.UndercoverDev.Extensions
 
         public static string? ToTitleCase(this string str)
         {
-            if (str == null)
+            if (str == null || str.Length == 0)
             {
-                return null;
+                return str;
             }
-            return CultureInfo.InvariantCulture.TextInfo.ToTitleCase(str);
+
+            return char.ToUpper(str[0]) + str[1..];
         }
     }
 }

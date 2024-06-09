@@ -1,3 +1,4 @@
+using Flashcards.UndercoverDev.Extensions;
 using Flashcards.UndercoverDev.Models;
 using Flashcards.UndercoverDev.Repository;
 using Flashcards.UndercoverDev.UserInteraction;
@@ -32,7 +33,7 @@ namespace Flashcards.UndercoverDev.Services
             {
                 _stackRepository.Post(new StackDTO
                 {
-                    Name = newStackName
+                    Name = newStackName.ToTitleCase()
                 });
                 _userConsole.PrintMessage("1 added successfully. Press any key to continue.", "green");
             }
@@ -80,7 +81,7 @@ namespace Flashcards.UndercoverDev.Services
 
             foreach (var stack in currentStacks)
             {
-                if (stack.Name.ToLower() == stackName.ToLower())
+                if (stack.Name.TrimAndLower() == stackName.TrimAndLower())
                 {
                     stackFound = true;
                     break;

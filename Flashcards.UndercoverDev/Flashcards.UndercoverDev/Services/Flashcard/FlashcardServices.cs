@@ -1,3 +1,4 @@
+using Flashcards.UndercoverDev.Extensions;
 using Flashcards.UndercoverDev.Models;
 using Flashcards.UndercoverDev.Repository;
 using Flashcards.UndercoverDev.UserInteraction;
@@ -71,8 +72,8 @@ namespace Flashcards.UndercoverDev.Services
                 var newFlashcard = new FlashcardDTO
                 {
                     StackId = retrievedStack.Id,
-                    Question = ValidateQuestion(),
-                    Answer = ValidateAnswer(),
+                    Question = ValidateQuestion().ToTitleCase(),
+                    Answer = ValidateAnswer().ToTitleCase()
                 };
 
                 _flashcardRepository.Post(newFlashcard);
@@ -138,7 +139,7 @@ namespace Flashcards.UndercoverDev.Services
 
             foreach (var flashcard in currentFlashcards)
             {
-                if (flashcard.Question.ToLower() == question.ToLower())
+                if (flashcard.Question.TrimAndLower() == question.TrimAndLower())
                 {
                     _userConsole.PrintMessage("Question already exists.", "red");
                     questionFound = true;

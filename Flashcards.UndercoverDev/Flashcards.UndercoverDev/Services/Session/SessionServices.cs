@@ -55,8 +55,8 @@ namespace Flashcards.UndercoverDev.Services.Session
                 if (userAnswer.TrimAndLower() == flashcard.Answer.TrimAndLower())
                 {
                     CreateTable(index, "Answer", flashcard.Answer);
-                    _userConsole.PrintMessage($"Correct! Your current score is {score}", "green");
                     score++;
+                    _userConsole.PrintMessage($"Correct! Your current score is {score}", "green");
                 }
                 else
                 {
