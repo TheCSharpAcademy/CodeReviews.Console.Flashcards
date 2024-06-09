@@ -1,5 +1,6 @@
 using Flashcards.UndercoverDev.DataConfig;
 using Flashcards.UndercoverDev.Services;
+using Flashcards.UndercoverDev.Services.Session;
 using Flashcards.UndercoverDev.UserInteraction;
 
 namespace Flashcards.UndercoverDev.Controllers
@@ -10,14 +11,16 @@ namespace Flashcards.UndercoverDev.Controllers
         private readonly IDatabaseManager _databaseManager;
         private readonly IStackServices _stackServices;
         private readonly IFlashcardServices _flashcardServices;
+        private readonly ISessionServices _sessionServices;
         bool closeApp;
 
-        public FlashcardController(IUserConsole? userConsole, IDatabaseManager databaseManager, IStackServices stackServices, IFlashcardServices flashcardServices)
+        public FlashcardController(IUserConsole? userConsole, IDatabaseManager databaseManager, IStackServices stackServices, IFlashcardServices flashcardServices, ISessionServices sessionServices)
         {
             _userConsole = userConsole;
             _databaseManager = databaseManager;
             _stackServices = stackServices;
             _flashcardServices = flashcardServices;
+            _sessionServices = sessionServices;
         }
 
         public void RunProgram()
@@ -55,6 +58,7 @@ namespace Flashcards.UndercoverDev.Controllers
                     _flashcardServices.DeleteFlashcard();
                     break;
                 case "Study Session":
+                    _sessionServices.StartSession();
                     break;
                 case "View Study Session by Stack":
                     break;

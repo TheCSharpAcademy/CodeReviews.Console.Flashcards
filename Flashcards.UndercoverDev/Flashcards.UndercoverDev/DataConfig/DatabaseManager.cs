@@ -55,5 +55,23 @@ namespace Flashcards.UndercoverDev.DataConfig
                 );";
             connection.Execute(createStackTableQuery);
         }
+
+        public void CreateSessionsTables()
+        {
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
+
+            string createStudySessionsTableQuery = @"
+                IF OBJECT_ID('StudySessions') IS NULL
+                CREATE TABLE StudySessions(
+                    Id INT IDENTITY(1,1) PRIMARY KEY,
+                    StackId INT NOT NULL,
+                    SessionDate DATETIME NOT NULL,
+                    Score INT NOT NULL,
+                    TotalQuestions INT NOT NULL,
+                    FOREIGN KEY (StackId) REFERENCES Stacks (Id) ON DELETE CASCADE
+        );";
+            connection.Execute(createStudySessionsTableQuery);
+        }
     }
 }
