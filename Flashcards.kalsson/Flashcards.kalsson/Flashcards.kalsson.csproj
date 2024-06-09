@@ -9,9 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Data Access\" />
       <Folder Include="DTOs\" />
-      <Folder Include="Models\" />
       <Folder Include="Services\" />
       <Folder Include="Controllers\" />
     </ItemGroup>
@@ -23,6 +21,12 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="appsettings.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>
