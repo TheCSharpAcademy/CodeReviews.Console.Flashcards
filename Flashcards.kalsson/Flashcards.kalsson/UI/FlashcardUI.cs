@@ -26,9 +26,9 @@ public class FlashcardUI
             return;
         }
 
-        var flashcards = _flashcardService.GetAllFlashcards(stack.Id).Select((f, index) => new FlashcardDTO
+        var flashcards = _flashcardService.GetAllFlashcards(stack.Id).Select(f => new FlashcardDTO
         {
-            Id = index + 1,
+            Id = f.Id,
             Question = f.Question,
             Answer = f.Answer
         });
@@ -48,7 +48,13 @@ public class FlashcardUI
 
     public void AddFlashcard()
     {
-        var stackName = AnsiConsole.Ask<string>("Enter stack name:");
+        var stackName = AnsiConsole.Ask<string>("Enter stack name (type 'back' to return to menu):");
+
+        if (stackName.ToLower() == "back")
+        {
+            return;
+        }
+
         var stack = _stackService.GetAllStacks().FirstOrDefault(s => s.Name == stackName);
         if (stack == null)
         {
@@ -56,24 +62,111 @@ public class FlashcardUI
             return;
         }
 
-        var question = AnsiConsole.Ask<string>("Enter question:");
-        var answer = AnsiConsole.Ask<string>("Enter answer:");
-        var flashcard = new Flashcard { StackId = stack.Id, Question = question, Answer = answer };
-        _flashcardService.AddFlashcard(flashcard);
+        var question = AnsiConsole.Ask<string>("Enter question (type 'back' to return to menu):");
+
+        if (question.ToLower() == "back")
+        {
+            return;
+        }
+
+        var answer = AnsiConsole.Ask<string>("Enter answer (type 'back' to return to menu):");
+
+        if (answer.ToLower() == "back")
+        {
+            return;
+        }
+
+        try
+        {
+            var flashcard = new Flashcard { StackId = stack.Id, Question = question, Answer = answer };
+            _flashcardService.AddFlashcard(flashcard);
+            AnsiConsole.MarkupLine("[green]Flashcard has been successfully added![/]");
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[red]Failed to add the flashcard: {ex.Message}[/]");
+        }
     }
 
     public void UpdateFlashcard()
     {
-        var id = AnsiConsole.Ask<int>("Enter flashcard ID to update:");
-        var question = AnsiConsole.Ask<string>("Enter new question:");
-        var answer = AnsiConsole.Ask<string>("Enter new answer:");
-        var flashcard = new Flashcard { Id = id, Question = question, Answer = answer };
-        _flashcardService.UpdateFlashcard(flashcard);
+        var idInput = AnsiConsole.Ask<string>("Enter flashcard ID to update (type 'back' to return to menu):");
+
+        if (idInput.ToLower() == "back")
+        {
+            return;
+        }
+
+        if (!Int32.TryParse(idInput, out var id))
+        {
+            AnsiConsole.MarkupLine($"[red]Invalid input: {idInput}. Please enter a valid ID.[/]");
+            return;
+        }
+
+        // Check if the Flashcard with this ID exists
+        var flashcard = _flashcardService.GetFlashcardById(id);
+        if (flashcard == null)
+        {
+            AnsiConsole.MarkupLine($"[red]Flashcard with ID {id} does not exist.[/]");
+            return;
+        }
+
+        var question = AnsiConsole.Ask<string>("Enter new question (type 'back' to return to menu):");
+
+        if (question.ToLower() == "back")
+        {
+            return;
+        }
+
+        var answer = AnsiConsole.Ask<string>("Enter new answer (type 'back' to return to menu):");
+
+        if (answer.ToLower() == "back")
+        {
+            return;
+        }
+
+        flashcard.Question = question;
+        flashcard.Answer = answer;
+
+        try
+        {
+            _flashcardService.UpdateFlashcard(flashcard);
+            Console.Clear();
+            AnsiConsole.MarkupLine("[green]Flashcard has been successfully updated![/]");
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[red]Failed to update the flashcard: {ex.Message}[/]");
+        }
     }
 
     public void DeleteFlashcard()
     {
-        var id = AnsiConsole.Ask<int>("Enter flashcard ID to delete:");
-        _flashcardService.DeleteFlashcard(id);
+        var idInput = AnsiConsole.Ask<string>("Enter flashcard ID to delete (type 'back' to return to menu):");
+
+        if (idInput.ToLower() == "back")
+        {
+            return;
+        }
+
+        var id = Convert.ToInt32(idInput);
+        var flashcard = _flashcardService.GetFlashcardById(id);
+
+        if (flashcard == null)
+        {
+            AnsiConsole.MarkupLine($"[red]Flashcard with ID {id} does not exist.[/]");
+            return;
+        }
+
+        try
+        {
+            _flashcardService.DeleteFlashcard(id);
+            Console.Clear();
+            AnsiConsole.MarkupLine("[green]Flashcard has been successfully deleted![/]");
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[red]Failed to delete the flashcard: {ex.Message}[/]");
+        }
     }
 }

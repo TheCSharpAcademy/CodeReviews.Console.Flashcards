@@ -49,15 +49,20 @@ while (true)
             stackUI.DeleteStack();
             break;
         case "5. Show all flashcards":
+            stackUI.ShowAllStacks();
             flashcardUI.ShowAllFlashcards();
             break;
         case "6. Add a flashcard":
+            stackUI.ShowAllStacks();
             flashcardUI.AddFlashcard();
             break;
         case "7. Update a flashcard":
+            flashcardUI.ShowAllFlashcards();
             flashcardUI.UpdateFlashcard();
             break;
         case "8. Delete a flashcard":
+            stackUI.ShowAllStacks();
+            flashcardUI.ShowAllFlashcards();
             flashcardUI.DeleteFlashcard();
             break;
         case "9. Show all study sessions":
