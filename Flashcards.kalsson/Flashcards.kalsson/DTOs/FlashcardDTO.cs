@@ -1,9 +1,8 @@
-﻿namespace Flashcards.kalsson.Models;
+﻿namespace Flashcards.kalsson.DTOs;
 
-public class Flashcard
+public class FlashcardDTO
 {
     public int Id { get; set; }
-    public int StackId { get; set; }
     public string Question { get; set; }
     public string Answer { get; set; }
 }
