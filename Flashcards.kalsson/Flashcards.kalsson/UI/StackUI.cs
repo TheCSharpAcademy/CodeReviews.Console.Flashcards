@@ -31,22 +31,86 @@ public class StackUI
 
     public void AddStack()
     {
-        var name = AnsiConsole.Ask<string>("Enter stack name:");
+        var name = AnsiConsole.Ask<string>("Enter stack name (type 'back' to return to menu):");
+
+        if (name.ToLower() == "back")
+        {
+            return;
+        }
+        
         var stack = new Stack { Name = name };
-        _stackService.AddStack(stack);
+        try
+        {
+            _stackService.AddStack(stack);
+            Console.Clear();
+            AnsiConsole.MarkupLine("[green]Stack has been successfully added![/]");
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[red]Failed to add the stack: {ex.Message}[/]");
+        }
     }
 
     public void UpdateStack()
     {
-        var id = AnsiConsole.Ask<int>("Enter stack ID to update:");
-        var name = AnsiConsole.Ask<string>("Enter new stack name:");
+        var idInput = AnsiConsole.Ask<string>("Enter stack ID to update (type 'back' to return to menu):");
+
+        if (idInput.ToLower() == "back")
+        {
+            return;
+        }
+
+        var id = Convert.ToInt32(idInput);
+
+        var name = AnsiConsole.Ask<string>("Enter new stack name (type 'back' to return to menu):");
+
+        if (name.ToLower() == "back")
+        {
+            return;
+        }
+    
         var stack = new Stack { Id = id, Name = name };
-        _stackService.UpdateStack(stack);
+    
+        try
+        {
+            _stackService.UpdateStack(stack);
+            Console.Clear();
+            AnsiConsole.MarkupLine("[green]Stack has been successfully updated![/]");
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[red]Failed to update the stack: {ex.Message}[/]");
+        }
     }
 
     public void DeleteStack()
     {
-        var id = AnsiConsole.Ask<int>("Enter stack ID to delete:");
-        _stackService.DeleteStack(id);
+        var idInput = AnsiConsole.Ask<string>("Enter stack ID to delete (type 'back' to return to menu):");
+
+        if (idInput.ToLower() == "back")
+        {
+            return;
+        }
+
+        var id = Convert.ToInt32(idInput);
+
+        // Check if the Stack with this ID exists
+        var stack = _stackService.GetStackById(id);
+        if(stack == null)
+        {
+            AnsiConsole.MarkupLine($"[red]Stack with ID {id} does not exist.[/]");
+            return;
+        }
+
+        try
+        {
+            _stackService.DeleteStack(id);
+            Console.Clear();
+            AnsiConsole.MarkupLine("[green]Stack has been successfully deleted![/]");
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[red]Failed to delete the stack: {ex.Message}[/]");
+        }
     }
 }
