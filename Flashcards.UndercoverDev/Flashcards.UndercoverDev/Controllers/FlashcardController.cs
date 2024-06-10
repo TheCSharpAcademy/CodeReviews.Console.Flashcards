@@ -62,6 +62,7 @@ namespace Flashcards.UndercoverDev.Controllers
                     _sessionServices.StartSession();
                     break;
                 case "View Study Session by Stack":
+                    _sessionServices.ViewSession();
                     break;
                 case "Average Score Yearly Report":
                     break;
