@@ -30,9 +30,12 @@ public class App
                     break;
                 case MainMenuOptions.Study:
                     break;
+                case MainMenuOptions.InsertTestData: // TODO before flashcards. Delete current table when we do this.
+                    break;
                 case MainMenuOptions.Exit:
                     Environment.Exit(0);
                     break;
+
             }
         }
 
@@ -44,7 +47,7 @@ public class App
 
         if (stackList.Count == 0)
         {
-            Console.WriteLine("No stacs to show. Press any key to continue to create a new stack.");
+            Console.WriteLine("No stacks to show. Press any key to continue to create a new stack.");
             Console.ReadKey(true);
         }
         else
@@ -91,8 +94,10 @@ public class App
             case ManageStackOption.DeleteCard:
                 break;
             case ManageStackOption.DeleteStack:
+                _stackController.DeleteStack(stack.Name);
                 break;
             case ManageStackOption.Exit:
+                Console.Clear();
                 break;
         }
     }

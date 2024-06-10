@@ -21,7 +21,14 @@
 
     public void DeleteStack(string name)
     {
-        throw new NotImplementedException();
+        if (_stackRepo.GetStacks().FirstOrDefault(x => x.Name.ToLower() == name.ToLower()) == null)
+        {
+            Console.WriteLine("That stack does not exist, cannot delete.");
+        }
+        else
+        {
+            _stackRepo.DeleteStack(name);
+        }
     }
 
     public List<Stack> GetStacks() => _stackRepo.GetStacks();

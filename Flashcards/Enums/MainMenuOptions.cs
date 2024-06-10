@@ -3,5 +3,6 @@
     Stacks = 1,
     Flashcards = 2,
     Study = 3,
-    Exit = 4,
+    InsertTestData = 4,
+    Exit = 5,
 }

@@ -77,7 +77,7 @@ public class DatabaseManager
             Question NVARCHAR(1000) NOT NULL, 
             Answer NVARCHAR(1000) NOT NULL, 
             StackId INT, 
-            FOREIGN KEY (StackId) REFERENCES Stacks(Id) 
+            FOREIGN KEY (StackId) REFERENCES Stacks(Id) ON DELETE CASCADE
         )",
 
             @"CREATE TABLE StudySessions ( 
@@ -85,7 +85,7 @@ public class DatabaseManager
             StackId INT, 
             Date DATETIME NOT NULL, 
             Score INT NOT NULL, 
-            FOREIGN KEY (StackId) REFERENCES Stacks(Id) 
+            FOREIGN KEY (StackId) REFERENCES Stacks(Id) ON DELETE CASCADE 
         )"
         };
 

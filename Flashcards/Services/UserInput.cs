@@ -10,9 +10,10 @@ public class UserInput()
     {
         Console.WriteLine("Please choose an option below by typing the number next to it: \n");
 
-        Console.WriteLine($"{(int)MainMenuOptions.Stacks}. Manager Stacks");
-        Console.WriteLine($"{(int)MainMenuOptions.Flashcards}. Manager Flashcards");
-        Console.WriteLine($"{(int)MainMenuOptions.Study}. Manager Study Sessions");
+        Console.WriteLine($"{(int)MainMenuOptions.Stacks}. Manage Stacks");
+        Console.WriteLine($"{(int)MainMenuOptions.Flashcards}. Manage Flashcards");
+        Console.WriteLine($"{(int)MainMenuOptions.Study}. Manage Study Sessions");
+        Console.WriteLine($"{(int)MainMenuOptions.InsertTestData}. Insert Test Data");
         Console.WriteLine($"{(int)MainMenuOptions.Exit}. Exit");
 
         var number = _valiadation.GetValidInt(1, Enum.GetNames(typeof(MainMenuOptions)).Length);

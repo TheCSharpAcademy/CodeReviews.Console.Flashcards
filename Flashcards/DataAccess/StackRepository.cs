@@ -36,7 +36,24 @@ public class StackRepository : IManageStacks
 
     public void DeleteStack(string name)
     {
-        throw new NotImplementedException();
+        using (var conn = _databaseManager.GetConnection())
+        {
+            try
+            {
+                var query = "DELETE FROM Stacks Where Name = @Name";
+                conn.Execute(query, new { Name = name });
+                Console.WriteLine("Stack deleted. \n");
+            }
+            catch (SqlException ex)
+            {
+                Console.Beep();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("SQL error occured while trying to delete data. Could not delete stack. Program will crash after your next key press.");
+                Console.ReadKey();
+                throw;
+            }
+
+        }
     }
 
     public List<Stack> GetStacks()
