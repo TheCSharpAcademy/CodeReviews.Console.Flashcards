@@ -56,5 +56,13 @@ namespace Flashcards.UndercoverDev.Repository
             string getStackQuery = $"SELECT * FROM Stack WHERE Name = '{name}';";
             return connection.Query<Stack>(getStackQuery).FirstOrDefault();
         }
+
+        public Stack GetStackById(int id)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
+            string getStackQuery = $"SELECT * FROM Stack WHERE Id = '{id}';";
+            return connection.Query<Stack>(getStackQuery).FirstOrDefault();
+        }
     }
 }

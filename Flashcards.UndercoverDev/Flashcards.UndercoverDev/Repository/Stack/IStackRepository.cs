@@ -9,5 +9,6 @@ namespace Flashcards.UndercoverDev.Repository
         List<Stack> GetStacks();
         List<string> GetStackNames();
         Stack GetStackByName(string name);
+        Stack GetStackById(int id);
     }
 }
