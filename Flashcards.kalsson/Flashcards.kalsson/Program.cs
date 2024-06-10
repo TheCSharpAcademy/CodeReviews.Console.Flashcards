@@ -69,6 +69,7 @@ while (true)
             studySessionUI.ShowAllStudySessions();
             break;
         case "10. Add a study session":
+            stackUI.ShowAllStacks();
             studySessionUI.AddStudySession();
             break;
         case "11. Exit":

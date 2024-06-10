@@ -53,6 +53,15 @@ public class StudySessionUI
             Score = score
         };
 
-        _studySessionService.AddStudySession(studySession);
+        try
+        {
+            _studySessionService.AddStudySession(studySession);
+            Console.Clear();
+            AnsiConsole.MarkupLine("[green]Study session has been successfully added![/]");
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[red]Failed to add the study session: {ex.Message}[/]");
+        }
     }
 }
