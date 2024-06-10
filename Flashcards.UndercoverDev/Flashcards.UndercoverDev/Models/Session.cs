@@ -11,7 +11,7 @@ namespace Flashcards.UndercoverDev.Models
 
     public class YearlyStudySessionReport
     {
-        public string StackName { get; set; }
+        public string? StackName { get; set; }
         public Dictionary<string, int> MonthlyScores { get; set; }
 
         public YearlyStudySessionReport()
