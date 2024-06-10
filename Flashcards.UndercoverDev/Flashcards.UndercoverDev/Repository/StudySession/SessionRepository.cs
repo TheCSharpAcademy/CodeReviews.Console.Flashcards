@@ -51,5 +51,15 @@ namespace Flashcards.UndercoverDev.Repository.StudySessions
             string deleteSessionQuery = $"DELETE FROM StudySessions WHERE Id = '{session.Id}';";
             connection.Execute(deleteSessionQuery);
         }
+
+        public List<Session> GetSessionsByYear(int year)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
+
+            string getSessionsQuery = $"SELECT * FROM StudySessions WHERE YEAR(SessionDate) = @Year;";
+
+            return connection.Query<Session>(getSessionsQuery, new {Year = year}).ToList();
+        }
     }
 }
