@@ -4,5 +4,6 @@ namespace Flashcards.UndercoverDev.Services.Session
     {
         void StartSession();
         void ViewSession();
+        void DeleteSession(int stackId);
     }
 }

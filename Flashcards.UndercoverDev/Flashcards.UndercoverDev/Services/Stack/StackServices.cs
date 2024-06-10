@@ -1,6 +1,8 @@
 using Flashcards.UndercoverDev.Extensions;
 using Flashcards.UndercoverDev.Models;
 using Flashcards.UndercoverDev.Repository;
+using Flashcards.UndercoverDev.Repository.StudySessions;
+using Flashcards.UndercoverDev.Services.Session;
 using Flashcards.UndercoverDev.UserInteraction;
 
 namespace Flashcards.UndercoverDev.Services
@@ -10,12 +12,14 @@ namespace Flashcards.UndercoverDev.Services
         private readonly IUserConsole _userConsole;
         private readonly IStackRepository _stackRepository;
         private readonly IFlashcardRepository _flashcardRepository;
+        private readonly ISessionServices _sessionServices;
 
-        public StackServices(IUserConsole userConsole, IStackRepository stackRepository, IFlashcardRepository flashcardRepository)
+        public StackServices(IUserConsole userConsole, IStackRepository stackRepository, IFlashcardRepository flashcardRepository, ISessionServices sessionServices)
         {
             _userConsole = userConsole;
             _stackRepository = stackRepository;
             _flashcardRepository = flashcardRepository;
+            _sessionServices = sessionServices;
         }
 
         public void AddStack()
@@ -54,6 +58,9 @@ namespace Flashcards.UndercoverDev.Services
             {
                 _flashcardRepository.Delete(flashcard);
             }
+
+            // Delete Sessions
+            _sessionServices.DeleteSession(retrievedStack.Id);
 
             if (CheckIfStackExists(selectedStackName))
             {
