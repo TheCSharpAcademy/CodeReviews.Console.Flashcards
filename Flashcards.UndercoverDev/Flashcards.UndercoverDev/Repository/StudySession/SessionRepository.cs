@@ -1,8 +1,9 @@
 using System.Configuration;
 using System.Data.SqlClient;
 using Dapper;
+using Flashcards.UndercoverDev.Models;
 
-namespace Flashcards.UndercoverDev.Repository.Session
+namespace Flashcards.UndercoverDev.Repository.StudySessions
 {
     public class SessionRepository : ISessionRepository
     {
@@ -31,6 +32,16 @@ namespace Flashcards.UndercoverDev.Repository.Session
                 Score = score,
                 TotalQuestions = totalQuestions,
             });
+        }
+
+        public List<Session> GetSessionsByStackId(int id)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
+
+            string getSessionsQuery = $"SELECT * FROM StudySessions WHERE StackId = '{id}';";
+
+            return connection.Query<Session>(getSessionsQuery).ToList();
         }
     }
 }
