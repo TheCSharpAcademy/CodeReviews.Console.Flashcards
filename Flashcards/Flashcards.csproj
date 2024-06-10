@@ -17,4 +17,12 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\JMumm\OneDrive\Documents\Career\Projects\CSharpAcad\Flashcards\Flashcards\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\JMumm\OneDrive\Documents\Career\Projects\CSharpAcad\Flashcards\Flashcards\.editorconfig" />
+  </ItemGroup>
+
 </Project>

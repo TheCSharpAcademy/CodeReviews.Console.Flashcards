@@ -9,7 +9,14 @@
 
     public void CreateStack(string name)
     {
-        throw new NotImplementedException();
+        if (_stackRepo.GetStacks().FirstOrDefault(x => x.Name.ToLower() == name) != null)
+        {
+            Console.WriteLine("That stack name already exists. Cannot insert.");
+        }
+        else
+        {
+            _stackRepo.CreateStack(name);
+        }
     }
 
     public void DeleteStack(string name)

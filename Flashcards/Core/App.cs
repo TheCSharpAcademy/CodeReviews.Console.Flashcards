@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using System.Configuration;
+﻿using System.Configuration;
 
 public class App
 {
@@ -12,39 +11,58 @@ public class App
     {
         _userInput = new UserInput();
         _databaseManager = new DatabaseManager(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
-        _stackRepo =  new StackRepository(_databaseManager);
+        _stackRepo = new StackRepository(_databaseManager);
         _stackController = new StackController(_stackRepo);
 
         _databaseManager.InitializeDB();
 
-        var mainMenuOption = _userInput.MainMenu();
-
-        switch (mainMenuOption)
+        while (true)
         {
-            case MainMenuOptions.Stacks:
-                ManageStacks();
-                break;
-            case MainMenuOptions.Flashcards:
-                break;
-            case MainMenuOptions.Study:
-                break;
-            case MainMenuOptions.Exit:
-                Environment.Exit(0);
-                break;
+            var mainMenuOption = _userInput.MainMenu();
+
+            switch (mainMenuOption)
+            {
+                case MainMenuOptions.Stacks:
+                    ManageStacks();
+                    break;
+                case MainMenuOptions.Flashcards:
+                    break;
+                case MainMenuOptions.Study:
+                    break;
+                case MainMenuOptions.Exit:
+                    Environment.Exit(0);
+                    break;
+            }
         }
+
     }
 
-    public void ManageStacks() // TODO would it be better to have a ManageStacks class?
+    public void ManageStacks() // TODO: Have a manage stacks class?
     {
         var stackList = _stackController.GetStacks();
 
         if (stackList.Count == 0)
         {
-            // TODO call Create Stack here...
+            Console.WriteLine("No stacs to show. Press any key to continue to create a new stack.");
+            Console.ReadKey(true);
         }
         else
         {
-            var stack = _userInput.SelectStack(stackList);
+            Stack stackOption;
+            var option = _userInput.StacksManu();
+            switch (option)
+            {
+                case StackOptions.Insert:
+                    stackOption = _userInput.InsertStack(stackList);
+                    _stackController.CreateStack(stackOption.Name);
+                    break;
+                case StackOptions.Select:
+                    stackOption = _userInput.SelectStack(stackList);
+                    break;
+                case StackOptions.Exit:
+                    Console.Clear();
+                    break;
+            }
         }
 
     }

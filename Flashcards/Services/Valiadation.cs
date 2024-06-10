@@ -39,4 +39,31 @@ public class Valiadation()
 
         return validStack;
     }
+
+    public Stack CreateStack(List<Stack> stacks)
+    {
+        string? input = null;
+        Stack? validStack = null;
+
+        while (validStack is null)
+        {
+            input = Console.ReadLine();
+
+            if (stacks.FirstOrDefault(x => x.Name.ToLower() == input.ToLower()) != null)
+            {
+                Console.WriteLine("That stack name already exists.");
+            }
+            else if (input.Count(char.IsLetter) < 3)
+            {
+                Console.WriteLine("Your stack must contain at least 3 characters.");
+            }
+            else
+            {
+                validStack = new Stack();
+                validStack.Name = input;
+            }
+        }
+
+        return validStack;
+    }
 }
