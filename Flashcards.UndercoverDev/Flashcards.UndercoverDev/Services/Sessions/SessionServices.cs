@@ -187,7 +187,7 @@ namespace Flashcards.UndercoverDev.Services.Session
 
             _userConsole.WritTable(table);
 
-            _userConsole.PrintMessage("Press any key to continue.", "blue");
+            _userConsole.PrintMessage("Press any key to go to Main Menu", "blue");
             _userConsole.WaitForAnyKey();
         }
 
