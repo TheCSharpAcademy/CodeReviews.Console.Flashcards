@@ -1,0 +1,27 @@
+﻿CREATE
+DATABASE FlashcardsDb;
+
+USE
+FlashcardsDb;
+
+CREATE TABLE Stacks
+(
+    Id   INT PRIMARY KEY IDENTITY(1,1),
+    Name NVARCHAR(100) UNIQUE NOT NULL
+);
+
+CREATE TABLE Flashcards
+(
+    Id       INT PRIMARY KEY IDENTITY(1,1),
+    StackId  INT FOREIGN KEY REFERENCES Stacks(Id) ON DELETE CASCADE,
+    Question NVARCHAR(255) NOT NULL,
+    Answer   NVARCHAR(255) NOT NULL
+);
+
+CREATE TABLE StudySessions
+(
+    Id        INT PRIMARY KEY IDENTITY(1,1),
+    StackId   INT FOREIGN KEY REFERENCES Stacks(Id) ON DELETE CASCADE,
+    StudyDate DATETIME NOT NULL,
+    Score     INT      NOT NULL
+);

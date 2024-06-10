@@ -2,6 +2,8 @@
 using Flashcards.kalsson.Data;
 using Flashcards.kalsson.Services;
 using Flashcards.kalsson.UI;
+using Flashcards.kalsson.Utilities;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Spectre.Console;
 using StudySessionService = Flashcards.kalsson.StudySessionService;
@@ -12,6 +14,9 @@ var builder = new ConfigurationBuilder()
 
 IConfiguration config = builder.Build();
 var connectionString = config.GetConnectionString("DefaultConnection");
+
+// Check if the database exists and create it if it does not
+EnsureDatabaseExists(connectionString);
 
 var stackRepository = new StackRepository(connectionString);
 var stackService = new StackService(stackRepository);
@@ -74,5 +79,27 @@ while (true)
             break;
         case "11. Exit":
             return;
+    }
+}
+
+void EnsureDatabaseExists(string connectionString)
+{
+    string masterConnectionString = connectionString.Replace("Database=FlashcardsDb;", "Database=master;");
+    try
+    {
+        using (var connection = new SqlConnection(masterConnectionString))
+        {
+            connection.Open();
+            using (var command = new SqlCommand("IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'FlashcardsDb') CREATE DATABASE [FlashcardsDb];", connection))
+            {
+                command.ExecuteNonQuery();
+                Console.WriteLine("Database checked/created successfully.");
+            }
+        }
+        DatabaseInitializer.InitializeDatabase(connectionString);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"An error occurred while checking the database: {ex.Message}");
     }
 }
