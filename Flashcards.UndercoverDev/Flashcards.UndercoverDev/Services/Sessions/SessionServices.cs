@@ -1,4 +1,6 @@
+using System.Globalization;
 using Flashcards.UndercoverDev.Extensions;
+using Flashcards.UndercoverDev.Models;
 using Flashcards.UndercoverDev.Repository;
 using Flashcards.UndercoverDev.Repository.StudySessions;
 using Flashcards.UndercoverDev.UserInteraction;
@@ -129,6 +131,78 @@ namespace Flashcards.UndercoverDev.Services.Session
             table.AddRow(index++.ToString(), flashcardString);
 
             return table;
+        }
+
+        public List<YearlyStudySessionReport> GenerateYearlyReport()
+        {
+            // var date = _userConsole.GetUserInput("Please enter a year in [darkgreen](Format: yyyy)[/]");
+
+            var validDate = CheckIfYearIsValid();
+
+            var studySessions = _sessionRepository.GetSessionsByYear(validDate);
+
+            // Initialize a dictionary to store report data with stack names as keys
+            var reportData = new Dictionary<string, YearlyStudySessionReport>();
+
+            foreach (var session in studySessions)
+            {
+                var stackId = session.StackId;
+                DateTime sessionDate = session.SessionDate;
+                var score = session.Score;
+
+                var month = sessionDate.ToString("MMMM");
+                var stack = _stackRepository.GetStackById(stackId);
+                var stackName = stack.Name;
+
+                if (!reportData.ContainsKey(stackName))
+                {
+                    reportData[stackName] = new YearlyStudySessionReport{StackName = stackName};
+                }
+                reportData[stackName].MonthlyScores[month] += score;
+            }
+
+            return [.. reportData.Values]; ;
+        }
+
+        public void DisplayYearlyReport()
+        {
+            var reportData = GenerateYearlyReport();
+
+            var table = new Table() {Border = TableBorder.Double};
+            table.AddColumn("Stack Name");
+
+            var months = new[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+
+            foreach (var month in months)
+            {
+                table.AddColumn(month);
+            }
+
+            foreach (var report in reportData)
+            {
+                var row = new List<string> {report.StackName};
+                row.AddRange(months.Select(month => report.MonthlyScores[month].ToString()));
+                table.AddRow(row.ToArray());
+            }
+
+            _userConsole.WritTable(table);
+
+            _userConsole.PrintMessage("Press any key to continue.", "blue");
+            _userConsole.WaitForAnyKey();
+        }
+
+        public int CheckIfYearIsValid()
+        {
+            int finalDate;
+            var year = _userConsole.GetUserInput("Please enter a year in [darkgreen](Format: yyyy)[/]");
+
+            while (!int.TryParse(year, out finalDate) || year.Length != 4)
+            {
+                _userConsole.PrintMessage("Invalid year format. Please enter a valid year.", "red");
+                year = _userConsole.GetUserInput("Please enter a year in [darkgreen](Format: yyyy)[/]");
+            }
+
+            return finalDate;
         }
     }
 }
