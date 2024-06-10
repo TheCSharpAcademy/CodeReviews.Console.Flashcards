@@ -36,6 +36,14 @@ public class StackUI
         _stackService.AddStack(stack);
     }
 
+    public void UpdateStack()
+    {
+        var id = AnsiConsole.Ask<int>("Enter stack ID to update:");
+        var name = AnsiConsole.Ask<string>("Enter new stack name:");
+        var stack = new Stack { Id = id, Name = name };
+        _stackService.UpdateStack(stack);
+    }
+
     public void DeleteStack()
     {
         var id = AnsiConsole.Ask<int>("Enter stack ID to delete:");

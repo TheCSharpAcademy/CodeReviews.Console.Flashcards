@@ -27,6 +27,11 @@ public class StackService
         _stackRepository.AddStack(stack);
     }
 
+    public void UpdateStack(Stack stack)
+    {
+        _stackRepository.UpdateStack(stack);
+    }
+
     public void DeleteStack(int id)
     {
         _stackRepository.DeleteStack(id);

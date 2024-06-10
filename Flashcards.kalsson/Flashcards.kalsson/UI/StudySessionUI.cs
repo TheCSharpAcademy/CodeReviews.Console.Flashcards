@@ -28,7 +28,8 @@ public class StudySessionUI
         foreach (var session in studySessions)
         {
             var stack = _stackService.GetStackById(session.StackId);
-            table.AddRow(session.Id.ToString(), stack?.Name ?? "Unknown", session.StudyDate.ToString(), session.Score.ToString());
+            table.AddRow(session.Id.ToString(), stack?.Name ?? "Unknown", session.StudyDate.ToString(),
+                session.Score.ToString());
         }
 
         AnsiConsole.Write(table);

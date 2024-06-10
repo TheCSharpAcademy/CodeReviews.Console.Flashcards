@@ -27,6 +27,11 @@ public class FlashcardService
         _flashcardRepository.AddFlashcard(flashcard);
     }
 
+    public void UpdateFlashcard(Flashcard flashcard)
+    {
+        _flashcardRepository.UpdateFlashcard(flashcard);
+    }
+
     public void DeleteFlashcard(int id)
     {
         _flashcardRepository.DeleteFlashcard(id);

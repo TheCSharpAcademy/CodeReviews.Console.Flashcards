@@ -4,6 +4,7 @@ using Flashcards.kalsson.Services;
 using Flashcards.kalsson.UI;
 using Microsoft.Extensions.Configuration;
 using Spectre.Console;
+using StudySessionService = Flashcards.kalsson.StudySessionService;
 
 var builder = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -29,35 +30,43 @@ while (true)
     var option = AnsiConsole.Prompt(
         new SelectionPrompt<string>()
             .Title("Choose an option:")
-            .AddChoices(new[] { "Show all stacks", "Add a stack", "Delete a stack", "Show all flashcards", "Add a flashcard", "Delete a flashcard", "Show all study sessions", "Add a study session", "Exit" }));
+            .AddChoices(new[] { "1. Show all stacks", "2. Add a stack", "3. Update a stack", "4. Delete a stack", 
+                "5. Show all flashcards", "6. Add a flashcard", "7. Update a flashcard", "8. Delete a flashcard", 
+                "9. Show all study sessions", "10. Add a study session", "11. Exit" }));
 
     switch (option)
     {
-        case "Show all stacks":
+        case "1. Show all stacks":
             stackUI.ShowAllStacks();
             break;
-        case "Add a stack":
+        case "2. Add a stack":
             stackUI.AddStack();
             break;
-        case "Delete a stack":
+        case "3. Update a stack":
+            stackUI.UpdateStack();
+            break;
+        case "4. Delete a stack":
             stackUI.DeleteStack();
             break;
-        case "Show all flashcards":
+        case "5. Show all flashcards":
             flashcardUI.ShowAllFlashcards();
             break;
-        case "Add a flashcard":
+        case "6. Add a flashcard":
             flashcardUI.AddFlashcard();
             break;
-        case "Delete a flashcard":
+        case "7. Update a flashcard":
+            flashcardUI.UpdateFlashcard();
+            break;
+        case "8. Delete a flashcard":
             flashcardUI.DeleteFlashcard();
             break;
-        case "Show all study sessions":
+        case "9. Show all study sessions":
             studySessionUI.ShowAllStudySessions();
             break;
-        case "Add a study session":
+        case "10. Add a study session":
             studySessionUI.AddStudySession();
             break;
-        case "Exit":
+        case "11. Exit":
             return;
     }
 }
