@@ -6,6 +6,7 @@ public class App
     private DatabaseManager _databaseManager;
     private IManageStacks _stackRepo;
     private IManageStacks _stackController;
+    private List<Stack> stackList;
 
     public void Run()
     {
@@ -23,7 +24,7 @@ public class App
             switch (mainMenuOption)
             {
                 case MainMenuOptions.Stacks:
-                    ManageStacks();
+                    StackMenu();
                     break;
                 case MainMenuOptions.Flashcards:
                     break;
@@ -37,9 +38,9 @@ public class App
 
     }
 
-    public void ManageStacks() // TODO: Have a manage stacks class?
+    public void StackMenu()
     {
-        var stackList = _stackController.GetStacks();
+        stackList = _stackController.GetStacks();
 
         if (stackList.Count == 0)
         {
@@ -48,22 +49,51 @@ public class App
         }
         else
         {
-            Stack stackOption;
+            Stack stack;
             var option = _userInput.StacksManu();
             switch (option)
             {
                 case StackOptions.Insert:
-                    stackOption = _userInput.InsertStack(stackList);
-                    _stackController.CreateStack(stackOption.Name);
+                    stack = _userInput.InsertStack(stackList);
+                    _stackController.CreateStack(stack.Name);
                     break;
                 case StackOptions.Select:
-                    stackOption = _userInput.SelectStack(stackList);
+                    stack = _userInput.SelectStack(stackList);
+                    ManageStack(stack);
                     break;
                 case StackOptions.Exit:
                     Console.Clear();
                     break;
             }
         }
+    }
 
+    public void ManageStack(Stack stack)
+    {
+        stackList = _stackController.GetStacks();
+
+        var option = _userInput.ManageStacksManu(stack);
+
+        switch (option)
+        {
+            case ManageStackOption.ChangeStack:
+                stack = _userInput.SelectStack(stackList);
+                ManageStack(stack);
+                break;
+            case ManageStackOption.ViewCardsAll:
+                break;
+            case ManageStackOption.ViewCardsAmount:
+                break;
+            case ManageStackOption.CreateCard:
+                break;
+            case ManageStackOption.EditCard:
+                break;
+            case ManageStackOption.DeleteCard:
+                break;
+            case ManageStackOption.DeleteStack:
+                break;
+            case ManageStackOption.Exit:
+                break;
+        }
     }
 }

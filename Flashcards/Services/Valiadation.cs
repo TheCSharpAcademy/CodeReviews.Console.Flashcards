@@ -6,7 +6,6 @@ public class Valiadation()
     {
         bool IsValidInt = false;
         int result = 0;
-        const int resultOffset = 1;
 
         while (!IsValidInt)
         {
@@ -15,7 +14,7 @@ public class Valiadation()
             else IsValidInt = true;
         }
 
-        return result-resultOffset;
+        return result;
     }
 
     public Stack GetValidStack(List<Stack> stacks)

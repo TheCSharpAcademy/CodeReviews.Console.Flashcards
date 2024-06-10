@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 
 public class UserInput()
 {
@@ -9,10 +10,10 @@ public class UserInput()
     {
         Console.WriteLine("Please choose an option below by typing the number next to it: \n");
 
-        Console.WriteLine("1. Manager Stacks");
-        Console.WriteLine("2. Manager Flashcards");
-        Console.WriteLine("3. Manager Study Sessions");
-        Console.WriteLine("4. Exit");
+        Console.WriteLine($"{(int)MainMenuOptions.Stacks}. Manager Stacks");
+        Console.WriteLine($"{(int)MainMenuOptions.Flashcards}. Manager Flashcards");
+        Console.WriteLine($"{(int)MainMenuOptions.Study}. Manager Study Sessions");
+        Console.WriteLine($"{(int)MainMenuOptions.Exit}. Exit");
 
         var number = _valiadation.GetValidInt(1, Enum.GetNames(typeof(MainMenuOptions)).Length);
 
@@ -53,9 +54,9 @@ public class UserInput()
 
         Console.WriteLine("Please choose an option below by typing the number next to it: \n");
 
-        Console.WriteLine("1. Select a Stack");
-        Console.WriteLine("2. Insert a new Stack");
-        Console.WriteLine("3. Return to main menu");
+        Console.WriteLine($"{(int)StackOptions.Select}. Select a Stack");
+        Console.WriteLine($"{(int)StackOptions.Insert}. Insert a new Stack");
+        Console.WriteLine($"{(int)StackOptions.Exit}. Return to main menu");
 
         var number = _valiadation.GetValidInt(1, 3);
 
@@ -73,9 +74,26 @@ public class UserInput()
         return _valiadation.CreateStack(stacks);
     }
 
-    public StackOptions ManageStacksManu()
+    public ManageStackOption ManageStacksManu(Stack stack)
     {
-        throw new NotImplementedException();
+        Console.Clear();
+
+        Console.WriteLine($"Current Stack: {stack.Name}\n");
+
+        Console.WriteLine("Please choose an option below by typing the number next to it: \n");
+
+        Console.WriteLine($"{(int)ManageStackOption.ChangeStack}. Change current Stack");
+        Console.WriteLine($"{(int)ManageStackOption.ViewCardsAll}. View all flashcards in stack");
+        Console.WriteLine($"{(int)ManageStackOption.ViewCardsAmount}. View x amount of cards in stack");
+        Console.WriteLine($"{(int)ManageStackOption.CreateCard}. Create a flashcard in current stack");
+        Console.WriteLine($"{(int)ManageStackOption.EditCard}. Edit a flashcard");
+        Console.WriteLine($"{(int)ManageStackOption.DeleteCard}. Delete a flashcard");
+        Console.WriteLine($"{(int)ManageStackOption.DeleteStack}. Delete current Stack");
+        Console.WriteLine($"{(int)ManageStackOption.Exit}. Return to main menu");
+
+        var number = _valiadation.GetValidInt(1, Enum.GetNames(typeof(ManageStackOption)).Length);
+
+        return (ManageStackOption)number;
     }
 }
 
