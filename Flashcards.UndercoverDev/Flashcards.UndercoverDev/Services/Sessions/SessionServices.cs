@@ -84,6 +84,13 @@ namespace Flashcards.UndercoverDev.Services.Session
             var retrievedStack = _stackRepository.GetStackByName(selectedStackName);
             var sessions = _sessionRepository.GetSessionsByStackId(retrievedStack.Id);
 
+            if (sessions.Count == 0)
+            {
+                _userConsole.PrintMessage("There are no study sessions in this stack. Press any key to continue.", "red");
+                _userConsole.WaitForAnyKey();
+                return;
+            }
+
             _userConsole.PrintMessage($"{selectedStackName} [blue]Study Sessions[/]", "green");
             var table = new Table() {Border = TableBorder.Double};
             table.AddColumn("Session Date");
@@ -101,6 +108,16 @@ namespace Flashcards.UndercoverDev.Services.Session
             _userConsole.PrintMessage($"Average study session score: {averageScore}", "lightblue");
             _userConsole.PrintMessage("Press any key to continue.", "blue");
             _userConsole.WaitForAnyKey();
+        }
+
+        public void DeleteSession(int stackId)
+        {
+            var sessions = _sessionRepository.GetSessionsByStackId(stackId);
+
+            foreach (var session in sessions)
+            {
+                _sessionRepository.Delete(session);
+            }
         }
 
         // Helper functions

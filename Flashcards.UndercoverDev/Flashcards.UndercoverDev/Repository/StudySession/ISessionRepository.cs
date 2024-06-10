@@ -6,5 +6,6 @@ namespace Flashcards.UndercoverDev.Repository.StudySessions
     {
         public void Post(int stackId, int score, int totalQuestions);
         List<Session> GetSessionsByStackId(int id);
+        void Delete(Session session);
     }
 }

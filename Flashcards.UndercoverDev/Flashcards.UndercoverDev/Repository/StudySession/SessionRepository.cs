@@ -43,5 +43,13 @@ namespace Flashcards.UndercoverDev.Repository.StudySessions
 
             return connection.Query<Session>(getSessionsQuery).ToList();
         }
+
+        public void Delete(Session session)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
+            string deleteSessionQuery = $"DELETE FROM StudySessions WHERE Id = '{session.Id}';";
+            connection.Execute(deleteSessionQuery);
+        }
     }
 }
