@@ -1,7 +1,7 @@
 ﻿using Flashcards.UndercoverDev.Controllers;
 using Flashcards.UndercoverDev.DataConfig;
 using Flashcards.UndercoverDev.Repository;
-using Flashcards.UndercoverDev.Repository.Session;
+using Flashcards.UndercoverDev.Repository.StudySessions;
 using Flashcards.UndercoverDev.Services;
 using Flashcards.UndercoverDev.Services.Session;
 using Flashcards.UndercoverDev.UserInteraction;

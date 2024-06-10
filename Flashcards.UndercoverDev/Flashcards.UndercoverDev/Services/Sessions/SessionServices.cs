@@ -1,7 +1,6 @@
 using Flashcards.UndercoverDev.Extensions;
-using Flashcards.UndercoverDev.Models;
 using Flashcards.UndercoverDev.Repository;
-using Flashcards.UndercoverDev.Repository.Session;
+using Flashcards.UndercoverDev.Repository.StudySessions;
 using Flashcards.UndercoverDev.UserInteraction;
 using Spectre.Console;
 
@@ -43,7 +42,9 @@ namespace Flashcards.UndercoverDev.Services.Session
             
             foreach (var flashcard in flashcards)
             {
-                CreateTable(index, "Question", flashcard.Question);
+                var table = CreateTable(index,"Flashcard Id", "Question", flashcard.Question);
+
+                _userConsole.WritTable(table);
 
                 string userAnswer;
                 do
@@ -54,7 +55,8 @@ namespace Flashcards.UndercoverDev.Services.Session
 
                 if (userAnswer.TrimAndLower() == flashcard.Answer.TrimAndLower())
                 {
-                    CreateTable(index, "Answer", flashcard.Answer);
+                    table = CreateTable(index,"Flashcard Id", "Answer", flashcard.Answer);
+                    _userConsole.WritTable(table);
                     score++;
                     _userConsole.PrintMessage($"Correct! Your current score is {score}", "green");
                 }
@@ -71,18 +73,45 @@ namespace Flashcards.UndercoverDev.Services.Session
             _sessionRepository.Post(retrievedStack.Id, score, flashcards.Count);
             _userConsole.PrintMessage("Press any key to continue.", "blue");
             _userConsole.WaitForAnyKey();
+        }
 
+        public void ViewSession()
+        {
+            var stackName = _stackRepository.GetStackNames();
 
+            var selectedStackName = _userConsole.ShowMenu("Select a [blue]Stack[/] to study", stackName);
+
+            var retrievedStack = _stackRepository.GetStackByName(selectedStackName);
+            var sessions = _sessionRepository.GetSessionsByStackId(retrievedStack.Id);
+
+            _userConsole.PrintMessage($"{selectedStackName} [blue]Study Sessions[/]", "green");
+            var table = new Table() {Border = TableBorder.Double};
+            table.AddColumn("Session Date");
+            table.AddColumn("Score");
+
+            int averageScore = 0;
+            foreach (var session in sessions)
+            {
+                averageScore += session.Score;
+                table.AddRow(session.SessionDate.ToString(), $"{session.Score}/{session.TotalQuestions}");
+            }
+            averageScore /= sessions.Count;
+
+            _userConsole.WritTable(table);
+            _userConsole.PrintMessage($"Average study session score: {averageScore}", "lightblue");
+            _userConsole.PrintMessage("Press any key to continue.", "blue");
+            _userConsole.WaitForAnyKey();
         }
 
         // Helper functions
-        public void CreateTable(int index, string columnName, string flashcardString)
+        public Table CreateTable(int index, string column1, string column2, string flashcardString)
         {
             var table = new Table() {Border = TableBorder.Double};
-            table.AddColumn(new TableColumn("Flashcard Id").RightAligned());
-            table.AddColumn(columnName);
+            table.AddColumn(new TableColumn(column1).RightAligned());
+            table.AddColumn(column2);
             table.AddRow(index++.ToString(), flashcardString);
-            _userConsole.WritTable(table);
+
+            return table;
         }
     }
 }
