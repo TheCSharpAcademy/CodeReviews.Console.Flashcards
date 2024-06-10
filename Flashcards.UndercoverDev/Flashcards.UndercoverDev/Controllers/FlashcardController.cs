@@ -65,6 +65,7 @@ namespace Flashcards.UndercoverDev.Controllers
                     _sessionServices.ViewSession();
                     break;
                 case "Average Score Yearly Report":
+                    _sessionServices.DisplayYearlyReport();
                     break;
                 case "Exit":
                     closeApp = true;
