@@ -141,6 +141,17 @@ namespace Flashcards.UndercoverDev.Services.Session
 
             var studySessions = _sessionRepository.GetSessionsByYear(validDate);
 
+            if (studySessions.Count == 0)
+            {
+                _userConsole.PrintMessage("There are no study sessions in this year. [white]Would you like to try again?.[/]", "red");
+                var userInput = _userConsole.ShowMenu("", ["Yes", "No"]);
+
+                if (userInput == "Yes")
+                    GenerateYearlyReport();
+                else
+                    return [];
+            }
+
             // Initialize a dictionary to store report data with stack names as keys
             var reportData = new Dictionary<string, YearlyStudySessionReport>();
 
@@ -167,6 +178,9 @@ namespace Flashcards.UndercoverDev.Services.Session
         public void DisplayYearlyReport()
         {
             var reportData = GenerateYearlyReport();
+
+            if (reportData.Count == 0)
+                return;
 
             var table = new Table() {Border = TableBorder.Double};
             table.AddColumn("Stack Name");
