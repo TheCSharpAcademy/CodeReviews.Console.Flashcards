@@ -77,7 +77,7 @@ namespace Flashcards.UndercoverDev.Services.Session
             _userConsole.WaitForAnyKey();
 
             _sessionRepository.Post(retrievedStack.Id, score, flashcards.Count);
-            _userConsole.PrintMessage("[bold][green]1[/] study session added. Press any key to continue.[/][/]", "");
+            _userConsole.PrintMessage("[bold]1 [green]study session added[/]. Press any key to continue.[/]", "");
             _userConsole.WaitForAnyKey();
         }
 
