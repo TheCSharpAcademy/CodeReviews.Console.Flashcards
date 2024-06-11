@@ -2,14 +2,6 @@
 - A console based CRUD application to create flashcards for study.
 - Developed using C# and SQL Service with running in Docker container.
 
-# Given Requirements:
-- [x] When application starts, it creates a MSSQL database if one is not present
-- [x] Creates a database where flashcard stacks are made and studied
-- [x] Shows a menu of options
-- [x] Allows user to Add and delete a stack, add and delete a flashcard, do a study session, view all study sessions, and get a report on study sessions for the last year.
-- [x] Handles all errors so application doesn't crash
-- [x] Only exits when user selects Exit
-
 # Features
 
 - SQL Server database connection to store, read, update, and delete information.
