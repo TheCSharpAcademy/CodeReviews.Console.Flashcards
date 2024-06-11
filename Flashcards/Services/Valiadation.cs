@@ -65,4 +65,17 @@ public class Valiadation()
 
         return validStack;
     }
+
+    public string GetValidString(int minNumberOfChars)
+    {
+        string input = Console.ReadLine();
+
+        while (input.Count(char.IsLetter) <= minNumberOfChars)
+        {
+            Console.WriteLine($"That input is not valid, needs to be at least {minNumberOfChars} characters long");
+            input = Console.ReadLine();
+        }
+
+        return input;
+    }
 }

@@ -96,5 +96,20 @@ public class UserInput()
 
         return (ManageStackOption)number;
     }
+
+    public Flashcard CreateFlashcard(Stack stack)
+    {
+        Flashcard flashcard = new Flashcard
+        {
+            StackId = stack.Id
+        };
+
+        Console.WriteLine("Type a question for your flashcard");
+        flashcard.Question = _valiadation.GetValidString(10);
+
+        Console.WriteLine("Type a answer for your flashcard");
+        flashcard.Answer = _valiadation.GetValidString(10);
+        return flashcard;
+    }
 }
 

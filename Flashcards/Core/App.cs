@@ -6,6 +6,8 @@ public class App
     private DatabaseManager _databaseManager;
     private IManageStacks _stackRepo;
     private IManageStacks _stackController;
+    private IHandleFlashcards _flashcardRepo;
+    private IHandleFlashcards _flashcardController;
     private List<Stack> stackList;
 
     public void Run()
@@ -14,6 +16,8 @@ public class App
         _databaseManager = new DatabaseManager(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
         _stackRepo = new StackRepository(_databaseManager);
         _stackController = new StackController(_stackRepo);
+        _flashcardRepo = new FlashcardRepository(_databaseManager);
+        _flashcardController = new FlashcardController(_flashcardRepo);
 
         _databaseManager.InitializeDB();
 
@@ -30,7 +34,7 @@ public class App
                     break;
                 case MainMenuOptions.Study:
                     break;
-                case MainMenuOptions.InsertTestData: // TODO before flashcards. Delete current table when we do this.
+                case MainMenuOptions.InsertTestData: // TODO after flashcard repo insert. Delete current table when we do this.
                     break;
                 case MainMenuOptions.Exit:
                     Environment.Exit(0);
@@ -88,6 +92,9 @@ public class App
             case ManageStackOption.ViewCardsAmount:
                 break;
             case ManageStackOption.CreateCard:
+                var flashcard = _userInput.CreateFlashcard(stack);
+                _flashcardController.CreateFlashcard(flashcard);
+                Console.WriteLine("Entry added");
                 break;
             case ManageStackOption.EditCard:
                 break;
