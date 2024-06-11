@@ -92,11 +92,20 @@ public class StackUI
             return;
         }
 
-        var id = Convert.ToInt32(idInput);
+        if (!int.TryParse(idInput, out int id))
+        {
+            AnsiConsole.MarkupLine("[red]Invalid ID input. Please enter an integer.[/]");
+            return;
+        }
 
-        // Check if the Stack with this ID exists
+        if (_stackService == null)
+        {
+            AnsiConsole.MarkupLine("[red]Error: Stack service is not initialized.[/]");
+            return;
+        }
+
         var stack = _stackService.GetStackById(id);
-        if(stack == null)
+        if (stack == null)
         {
             AnsiConsole.MarkupLine($"[red]Stack with ID {id} does not exist.[/]");
             return;
