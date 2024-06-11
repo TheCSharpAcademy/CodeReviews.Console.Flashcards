@@ -54,7 +54,7 @@ namespace Flashcards.UndercoverDev.Services
                 Id = flashcardToBeDeleted.Id,
             });
 
-            _userConsole.PrintMessage($"{selectedFlashcard} deleted successfully. Press any key to continue", "green");
+            _userConsole.PrintMessage($"[green]{selectedFlashcard}[/] deleted successfully. Press any key to continue", "");
             
             _userConsole.WaitForAnyKey();
         }
@@ -69,11 +69,19 @@ namespace Flashcards.UndercoverDev.Services
             if (_stackServices.CheckIfStackExists(selectedStackName))
             {
                 var retrievedStack = _stackRepository.GetStackByName(selectedStackName);
+
+                var question = ValidateQuestion().ToTitleCase();
+                if (question == "0")
+                    return;
+                var answer = ValidateAnswer().ToTitleCase();
+                if (answer == "0")
+                    return;
+
                 var newFlashcard = new FlashcardDTO
                 {
                     StackId = retrievedStack.Id,
-                    Question = ValidateQuestion().ToTitleCase(),
-                    Answer = ValidateAnswer().ToTitleCase()
+                    Question = question,
+                    Answer = answer
                 };
 
                 _flashcardRepository.Post(newFlashcard);
@@ -104,19 +112,27 @@ namespace Flashcards.UndercoverDev.Services
             {
                 Name = newStackName
             });
-            _userConsole.PrintMessage("Stack added successfully.", "green");
+            _userConsole.PrintMessage($"[green]{newStackName}[/] added successfully.", "");
             
             var retrievedStack = _stackRepository.GetStackByName(newStackName);
+
+            var question = ValidateQuestion().ToTitleCase();
+            if (question == "0")
+                return;
+            var answer = ValidateAnswer().ToTitleCase();
+            if (answer == "0")
+                return;
+
             var newFlashcard = new FlashcardDTO
             {
                 StackId = retrievedStack.Id,
-                Question = ValidateQuestion(),
-                Answer = ValidateAnswer(),
+                Question = question,
+                Answer = answer,
             };
 
             _flashcardRepository.Post(newFlashcard);
 
-            _userConsole.PrintMessage("1 Flashcard added successfully. Press any key to continue.", "green");
+            _userConsole.PrintMessage("[green]Flashcard[/] added successfully. Press any key to continue.", "");
             _userConsole.WaitForAnyKey();
         }
 
@@ -155,7 +171,7 @@ namespace Flashcards.UndercoverDev.Services
             string question;
             do
             {
-                question = _userConsole.GetUserInput("Please enter the question for the Flashcard: ");
+                question = _userConsole.GetUserInput("Please enter the [green]question[/] for the Flashcard or press 0 to return to Main Menu: ");
             }
             while (question == "" || IfQuestionExists(question));
 
@@ -167,7 +183,7 @@ namespace Flashcards.UndercoverDev.Services
             string answer;
             do
             {
-                answer = _userConsole.GetUserInput("Please enter the answer for the Flashcard: ");
+                answer = _userConsole.GetUserInput("Please enter the [green]answer[/] for the Flashcard or press 0 to return to Main Menu: ");
             }
             while (answer == "");
 
