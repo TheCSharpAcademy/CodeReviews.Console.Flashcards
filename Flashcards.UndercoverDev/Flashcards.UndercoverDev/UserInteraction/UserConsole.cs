@@ -41,7 +41,7 @@ namespace Flashcards.UndercoverDev.UserInteraction
 
         public string GetUserInput(string message)
         {
-            var input = AnsiConsole.Ask<string>($"[blue]{message} [/] ");
+            var input = AnsiConsole.Ask<string>($"[bold]{message} [/] ");
             return input;
         }
 
@@ -57,7 +57,7 @@ namespace Flashcards.UndercoverDev.UserInteraction
                     AnsiConsole.Write(new Markup($"\n[red]{message}[/]\n\n"));
                     break;
                 default:
-                    AnsiConsole.Write(new Markup($"\n[blue]{message}[/]\n\n"));
+                    AnsiConsole.Write(new Markup($"\n[white]{message}[/]\n\n"));
                     break;
             }
             Thread.Sleep(1000);

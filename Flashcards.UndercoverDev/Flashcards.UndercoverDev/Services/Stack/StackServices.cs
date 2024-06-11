@@ -24,14 +24,14 @@ namespace Flashcards.UndercoverDev.Services
 
         public void AddStack()
         {
-            var newStackName = _userConsole.GetUserInput("Please enter the name of the Stack you would like to add (or press 0 to cancel) ");
+            var newStackName = _userConsole.GetUserInput("Please enter a [green]stack name[/] or enter 0 to return to Main Menu: ");
 
             if (newStackName == "0")
                 return;
 
             if (CheckIfStackExists(newStackName))
             {
-                _userConsole.PrintMessage("Stack already exists. Press any key to continue.", "red");
+                _userConsole.PrintMessage($"Stack name [green]{newStackName}[/] already exists. Press any key to continue.", "red");
             }
             else
             {
@@ -39,7 +39,7 @@ namespace Flashcards.UndercoverDev.Services
                 {
                     Name = newStackName.ToTitleCase()
                 });
-                _userConsole.PrintMessage("1 added successfully. Press any key to continue.", "green");
+                _userConsole.PrintMessage($"Stack name [green]{newStackName}[/] added successfully. Press any key to continue.", "white");
             }
             _userConsole.WaitForAnyKey();
         }
@@ -48,7 +48,7 @@ namespace Flashcards.UndercoverDev.Services
         {
             var stackName = _stackRepository.GetStackNames();
 
-            var selectedStackName = _userConsole.ShowMenu("Select a [blue]Stack[/] to delete", stackName);
+            var selectedStackName = _userConsole.ShowMenu("[bold]Select a [blue]Stack[/] to delete[/]", stackName);
 
             // Delete flashcards in the selected stack
             var retrievedStack = _stackRepository.GetStackByName(selectedStackName);
@@ -69,11 +69,11 @@ namespace Flashcards.UndercoverDev.Services
                     Name = selectedStackName
                 });
 
-                _userConsole.PrintMessage($"{selectedStackName} and flashcards deleted successfully. Press any key to continue", "green");
+                _userConsole.PrintMessage($"{selectedStackName}, it's flashcards and study sessions deleted successfully. [white]Press any key to continue[/]", "green");
             }
             else
             {
-                _userConsole.PrintMessage("Stack does not exist. Press any key to continue.", "red");
+                _userConsole.PrintMessage("[green]Stack[green] does not exist. [white]Press any key to continue.[/]", "red");
             }
             _userConsole.WaitForAnyKey();
         }

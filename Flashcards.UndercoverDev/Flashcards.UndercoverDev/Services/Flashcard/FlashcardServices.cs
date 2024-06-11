@@ -64,7 +64,7 @@ namespace Flashcards.UndercoverDev.Services
         {
             var stackName = _stackRepository.GetStackNames();
 
-            var selectedStackName = _userConsole.ShowMenu("Select a [blue]Stack[/] to add the flashcard to.\n",stackName);
+            var selectedStackName = _userConsole.ShowMenu("[bold]Select a [blue]Stack[/] to add the flashcard to[/].\n",stackName);
 
             if (_stackServices.CheckIfStackExists(selectedStackName))
             {
