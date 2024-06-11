@@ -9,7 +9,7 @@ namespace Flashcards.UndercoverDev.UserInteraction
         {
             var menu = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title("Welcome. Select a [blue]function[/]?")
+                    .Title("[bold]Welcome. Select a [blue]function[/]?[/]")
                     .PageSize(10)
                     .AddChoices([
                         "Add a Stack",

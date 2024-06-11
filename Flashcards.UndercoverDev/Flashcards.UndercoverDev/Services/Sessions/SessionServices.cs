@@ -82,34 +82,34 @@ namespace Flashcards.UndercoverDev.Services.Session
         {
             var stackName = _stackRepository.GetStackNames();
 
-            var selectedStackName = _userConsole.ShowMenu("Select a [blue]Stack[/] to study", stackName);
+            var selectedStackName = _userConsole.ShowMenu("[bold]Select a [blue]Stack[/] to view study sessions[/]", stackName);
 
             var retrievedStack = _stackRepository.GetStackByName(selectedStackName);
             var sessions = _sessionRepository.GetSessionsByStackId(retrievedStack.Id);
 
             if (sessions.Count == 0)
             {
-                _userConsole.PrintMessage("There are no study sessions in this stack. Press any key to continue.", "red");
+                _userConsole.PrintMessage("[bold]There are no study sessions in this stack. [white]Press any key to continue.[/][/]", "red");
                 _userConsole.WaitForAnyKey();
                 return;
             }
 
             _userConsole.PrintMessage($"{selectedStackName} [blue]Study Sessions[/]", "green");
             var table = new Table() {Border = TableBorder.Double};
-            table.AddColumn("Session Date");
-            table.AddColumn("Score");
+            table.AddColumn("[orange1]Session Date[/]");
+            table.AddColumn("[green]Score[/]");
 
             int averageScore = 0;
             foreach (var session in sessions)
             {
                 averageScore += session.Score;
-                table.AddRow(session.SessionDate.ToString(), $"{session.Score}/{session.TotalQuestions}");
+                table.AddRow($"[lime]{session.SessionDate}[/]", $"[lime]{session.Score}/{session.TotalQuestions}[/]");
             }
             averageScore /= sessions.Count;
 
             _userConsole.WritTable(table);
-            _userConsole.PrintMessage($"Average study session score: {averageScore}", "lightblue");
-            _userConsole.PrintMessage("Press any key to continue.", "blue");
+            _userConsole.PrintMessage($"[bold][skyblue1]Average study session score: {averageScore}[/][/]", "");
+            _userConsole.PrintMessage("[bold][blue]Press any key to continue.[/][/]", "");
             _userConsole.WaitForAnyKey();
         }
 
@@ -129,7 +129,7 @@ namespace Flashcards.UndercoverDev.Services.Session
             var table = new Table() {Border = TableBorder.Double};
             table.AddColumn(new TableColumn(column1).RightAligned());
             table.AddColumn(column2);
-            table.AddRow(index++.ToString(), flashcardString);
+            table.AddRow($"[lime]{index++}[/]", $"[lime]{flashcardString}[/]");
 
             return table;
         }
