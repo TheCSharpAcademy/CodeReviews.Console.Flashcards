@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 
 public class UserInput()
 {
-    private Valiadation _valiadation = new Valiadation();
+    private Validation _validation = new Validation();
 
     public MainMenuOptions MainMenu()
     {
@@ -16,7 +16,7 @@ public class UserInput()
         Console.WriteLine($"{(int)MainMenuOptions.InsertTestData}. Insert Test Data");
         Console.WriteLine($"{(int)MainMenuOptions.Exit}. Exit");
 
-        var number = _valiadation.GetValidInt(1, Enum.GetNames(typeof(MainMenuOptions)).Length);
+        var number = _validation.GetValidInt(1, Enum.GetNames(typeof(MainMenuOptions)).Length);
 
         return (MainMenuOptions)number;
     }
@@ -46,7 +46,7 @@ public class UserInput()
 
         Console.WriteLine("\nPlace pick a Stack by entering it's name: \n");
 
-        return _valiadation.GetValidStack(stacks);
+        return _validation.GetValidStack(stacks);
     }
 
     public StackOptions StacksManu()
@@ -59,7 +59,7 @@ public class UserInput()
         Console.WriteLine($"{(int)StackOptions.Insert}. Insert a new Stack");
         Console.WriteLine($"{(int)StackOptions.Exit}. Return to main menu");
 
-        var number = _valiadation.GetValidInt(1, 3);
+        var number = _validation.GetValidInt(1, 3);
 
         return (StackOptions)number;
     }
@@ -72,7 +72,7 @@ public class UserInput()
 
         Console.WriteLine("Please type a name to create a stack. The stack name must be unique and not empty.");
 
-        return _valiadation.CreateStack(stacks);
+        return _validation.CreateStack(stacks);
     }
 
     public ManageStackOption ManageStacksManu(Stack stack)
@@ -92,7 +92,7 @@ public class UserInput()
         Console.WriteLine($"{(int)ManageStackOption.DeleteStack}. Delete current Stack");
         Console.WriteLine($"{(int)ManageStackOption.Exit}. Return to main menu");
 
-        var number = _valiadation.GetValidInt(1, Enum.GetNames(typeof(ManageStackOption)).Length);
+        var number = _validation.GetValidInt(1, Enum.GetNames(typeof(ManageStackOption)).Length);
 
         return (ManageStackOption)number;
     }
@@ -105,11 +105,29 @@ public class UserInput()
         };
 
         Console.WriteLine("Type a question for your flashcard");
-        flashcard.Question = _valiadation.GetValidString(10);
+        flashcard.Question = _validation.GetValidString(10);
 
         Console.WriteLine("Type a answer for your flashcard");
-        flashcard.Answer = _valiadation.GetValidString(10);
+        flashcard.Answer = _validation.GetValidString(10);
         return flashcard;
     }
-}
 
+    /// <summary>
+    /// Prompts the user to input the number of random Stacks and Flashcards to add per stack.
+    /// </summary>
+    /// <returns>
+    /// A tuple containing two integers: the first integer represents the number of random Stacks to add,
+    /// and the second integer represents the number of random Flashcards to add per stack.
+    /// </returns>
+    public Tuple<int, int> InsertTestData()
+    {
+        Console.WriteLine("How many random Stacks do you want to add");
+        var stacks = _validation.GetValidInt(5, 100);
+
+        Console.WriteLine("How many random Flashcards do you want to add per stack?");
+        var flashcards = _validation.GetValidInt(5, 100);
+
+        return Tuple.Create(stacks, flashcards);
+    }
+
+}

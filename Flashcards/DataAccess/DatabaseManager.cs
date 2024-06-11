@@ -6,6 +6,7 @@ public class DatabaseManager
 {
     private string ConnectionString { get; }
 
+    private readonly string masterConnectionString = ConfigurationManager.ConnectionStrings["MasterConnection"].ConnectionString;
     private string? dbName = ConfigurationManager.AppSettings["DatabaseName"];
 
     public DatabaseManager(string connectionString)
@@ -14,6 +15,8 @@ public class DatabaseManager
     }
 
     public SqlConnection GetConnection() => new(ConnectionString);
+
+    private SqlConnection GetMasterConnection() => new(masterConnectionString);
 
     public void InitializeDB(){
 
@@ -33,7 +36,7 @@ public class DatabaseManager
     {
         string query = "SELECT COUNT(1) FROM sys.databases WHERE name = @DbName";
 
-        using (var conn = GetConnection())
+        using (var conn = GetMasterConnection())
         {
             conn.Open();
             int count = conn.ExecuteScalar<int>(query, new { DbName = dbName });
@@ -44,7 +47,7 @@ public class DatabaseManager
     private void CreateDb()
     {
         string query = $"CREATE DATABASE {dbName}";
-        using (var conn = GetConnection())
+        using (var conn = GetMasterConnection())
         {
             conn.Open();
             conn.Execute(query);

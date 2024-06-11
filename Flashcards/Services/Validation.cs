@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-public class Valiadation()
+public class Validation()
 {
     public int GetValidInt(int min, int max)
     {
