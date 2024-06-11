@@ -1,6 +1,6 @@
 ﻿using Dapper;
 
-public class FlashcardRepository : IHandleFlashcards
+public class FlashcardRepository
 {
     private DatabaseManager _databaseManager;
 
@@ -25,6 +25,10 @@ public class FlashcardRepository : IHandleFlashcards
 
     public List<Flashcard> GetFlashcardsByStack(int stackId)
     {
-        throw new NotImplementedException();
+        using (var conn = _databaseManager.GetConnection())
+        {
+            var query = "SELECT * FROM Flashcards WHERE StackId = @stackId";
+            return conn.Query<Flashcard>(query, new { StackId = stackId }).ToList();
+        }
     }
 }

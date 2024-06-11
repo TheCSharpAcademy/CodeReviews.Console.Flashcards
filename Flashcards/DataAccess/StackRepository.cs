@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using System.Data.SqlClient;
 
-public class StackRepository : IManageStacks
+public class StackRepository
 {
 
     private DatabaseManager _databaseManager;

@@ -4,10 +4,10 @@ public class App
 {
     private UserInput _userInput;
     private DatabaseManager _databaseManager;
-    private IManageStacks _stackRepo;
-    private IManageStacks _stackController;
-    private IHandleFlashcards _flashcardRepo;
-    private IHandleFlashcards _flashcardController;
+    private StackRepository _stackRepo;
+    private StackController _stackController;
+    private FlashcardRepository _flashcardRepo;
+    private FlashcardController _flashcardController;
     private List<Stack> stackList;
 
     public void Run()
@@ -92,8 +92,12 @@ public class App
                 ManageStack(stack);
                 break;
             case ManageStackOption.ViewCardsAll:
+                // TODO handle no cards
+                var currentCards = _flashcardController.GetFlashcardsByStack(stack);
+                Console.ReadKey();
                 break;
             case ManageStackOption.ViewCardsAmount:
+                // TODO handle no cards
                 break;
             case ManageStackOption.CreateCard:
                 var flashcard = _userInput.CreateFlashcard(stack);
@@ -148,3 +152,4 @@ public class App
         }
     }
 }
+

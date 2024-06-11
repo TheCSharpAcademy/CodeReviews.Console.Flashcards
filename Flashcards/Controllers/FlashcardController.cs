@@ -1,8 +1,8 @@
-﻿public class FlashcardController : IHandleFlashcards
+﻿public class FlashcardController
 {
-    private IHandleFlashcards _flashcardRepo;
+    private FlashcardRepository _flashcardRepo;
 
-    public FlashcardController(IHandleFlashcards flashcardRepo)
+    public FlashcardController(FlashcardRepository flashcardRepo)
     {
         _flashcardRepo = flashcardRepo;
     }
@@ -24,8 +24,13 @@
         throw new NotImplementedException();
     }
 
-    public List<Flashcard> GetFlashcardsByStack(int stackId)
+    public StackDto GetFlashcardsByStack(Stack stack)
     {
-        throw new NotImplementedException();
+        return new StackDto()
+        {
+            Id = stack.Id,
+            Name = stack.Name,
+            Flashcards = new List<Flashcard>(_flashcardRepo.GetFlashcardsByStack(stack.Id))
+        };
     }
 }

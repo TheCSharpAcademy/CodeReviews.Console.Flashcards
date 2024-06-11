@@ -1,8 +1,8 @@
-﻿public class StackController : IManageStacks
+﻿public class StackController
 {
-    private IManageStacks _stackRepo;
+    private StackRepository _stackRepo;
 
-    public StackController(IManageStacks stackRepo)
+    public StackController(StackRepository stackRepo)
     {
         _stackRepo = stackRepo;
     }
