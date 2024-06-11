@@ -39,6 +39,9 @@ namespace Flashcards.UndercoverDev.Services
 
             var selectedStackName = _userConsole.ShowMenu("[bold]Select a [blue]Stack[/] where your flashcard resides[/].\n", stackName);
 
+            if (selectedStackName == "Back")
+                return;
+
             // Get the flashcards associated with the selected stack
             var retrievedStack = _stackRepository.GetStackByName(selectedStackName);
 
@@ -72,6 +75,9 @@ namespace Flashcards.UndercoverDev.Services
             var stackName = _stackRepository.GetStackNames();
 
             var selectedStackName = _userConsole.ShowMenu("[bold]Select a [blue]Stack[/] to add the flashcard to[/].\n",stackName);
+
+            if (selectedStackName == "Back")
+                return;
 
             if (_stackServices.CheckIfStackExists(selectedStackName))
             {

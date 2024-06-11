@@ -44,11 +44,30 @@ namespace Flashcards.UndercoverDev.Services
             _userConsole.WaitForAnyKey();
         }
 
+        public void UpdateStack()
+        {
+            var stackName = _stackRepository.GetStackNames();
+
+            var selectedStackName = _userConsole.ShowMenu("[bold]Select a [blue]Stack[/] to update[/]", stackName);
+
+            if (selectedStackName == "Back")
+                return;
+
+            var newStackName = _userConsole.GetUserInput("Write the name of the [green]new stack[/]:");
+
+            _stackRepository.Put(selectedStackName, newStackName);
+            _userConsole.PrintMessage($"Stack name [green]{newStackName}[/] updated successfully. Press any key to continue.", "white");
+            _userConsole.WaitForAnyKey();
+        }
+
         public void DeleteStack()
         {
             var stackName = _stackRepository.GetStackNames();
 
             var selectedStackName = _userConsole.ShowMenu("[bold]Select a [blue]Stack[/] to delete[/]", stackName);
+
+            if (selectedStackName == "Back")
+                return;
 
             // Delete flashcards in the selected stack
             var retrievedStack = _stackRepository.GetStackByName(selectedStackName);

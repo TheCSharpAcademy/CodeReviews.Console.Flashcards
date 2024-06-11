@@ -52,6 +52,9 @@ namespace Flashcards.UndercoverDev.Controllers
                 case "Delete a Stack":
                     _stackServices.DeleteStack();
                     break;
+                case "Update a Stack":
+                    _stackServices.UpdateStack();
+                    break;
                 case "Add a Flashcard":
                     _flashcardServices.AddFlashcard();
                     break;

@@ -29,6 +29,9 @@ namespace Flashcards.UndercoverDev.Services.Session
 
             var selectedStackName = _userConsole.ShowMenu("[bold]Select a [blue]Stack[/] to study[/]", stackName);
 
+            if (selectedStackName == "Back")
+                return;
+
             var retrievedStack = _stackRepository.GetStackByName(selectedStackName);
             var flashcards = _flashcardRepository.GetFlashcardsByStackId(retrievedStack.Id);
 
@@ -83,6 +86,9 @@ namespace Flashcards.UndercoverDev.Services.Session
             var stackName = _stackRepository.GetStackNames();
 
             var selectedStackName = _userConsole.ShowMenu("[bold]Select a [blue]Stack[/] to view study sessions[/]", stackName);
+
+            if (selectedStackName == "Back")
+                return;
 
             var retrievedStack = _stackRepository.GetStackByName(selectedStackName);
             var sessions = _sessionRepository.GetSessionsByStackId(retrievedStack.Id);
@@ -148,7 +154,7 @@ namespace Flashcards.UndercoverDev.Services.Session
                 var userInput = _userConsole.ShowMenu("", ["Yes", "No"]);
 
                 if (userInput == "Yes")
-                    GenerateYearlyReport();
+                    DisplayYearlyReport();
                 else
                     return [];
             }
@@ -220,7 +226,7 @@ namespace Flashcards.UndercoverDev.Services.Session
             while (!int.TryParse(year, out finalDate) || year.Length != 4)
             {
                 _userConsole.PrintMessage("[bold]Invalid year format. [white]Please enter a year in [chartreuse3_1](Format: yyyy)[/][/][/].", "red");
-                year = _userConsole.GetUserInput("[bold]Please enter a year in [chartreuse3_1](Format: yyyy)[/[/]");
+                year = _userConsole.GetUserInput("[bold]Please enter a year in [chartreuse3_1](Format: yyyy)[/][/]");
             }
 
             return finalDate;

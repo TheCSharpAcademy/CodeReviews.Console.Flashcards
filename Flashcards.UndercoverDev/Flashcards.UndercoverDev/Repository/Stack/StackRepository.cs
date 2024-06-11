@@ -23,6 +23,14 @@ namespace Flashcards.UndercoverDev.Repository
             connection.Execute(createStackQuery);
         }
 
+        public void Put(string stackName, string newStackName)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
+            string updateStackQuery = $"UPDATE Stack SET Name = '{newStackName}' WHERE Name = '{stackName}';";
+            connection.Execute(updateStackQuery);
+        }
+
         public void Delete(Stack stack)
         {
             using var connection = new SqlConnection(_connectionString);
@@ -46,6 +54,7 @@ namespace Flashcards.UndercoverDev.Repository
             using var connection = new SqlConnection(_connectionString);
             connection.Open();
             var stackNames = connection.Query<string>("SELECT Name FROM Stack").ToList();
+            stackNames.Insert(0, "Back");
             return stackNames;
         }
 
