@@ -8,6 +8,8 @@ public class UserInput()
 
     public MainMenuOptions MainMenu()
     {
+        Console.Clear();
+
         Console.WriteLine("Please choose an option below by typing the number next to it: \n");
 
         Console.WriteLine($"{(int)MainMenuOptions.Stacks}. Manage Stacks");
@@ -128,6 +130,28 @@ public class UserInput()
         var flashcards = _validation.GetValidInt(5, 100);
 
         return Tuple.Create(stacks, flashcards);
+    }
+
+    public void ShowFlashcards(List<Flashcard> flashcards)
+    {
+        Console.Clear();
+
+        Console.WriteLine($"{"ID", 0} {"Question", 25} {"Answer", 45}");
+        Console.WriteLine(new string('-', 100));
+        var customId = 1;
+        foreach (Flashcard flashcard in flashcards)
+        {
+            Console.WriteLine($"{customId, 0} {flashcard.Question, 25} {flashcard.Answer, 45}");
+            customId++;
+        }
+
+        Console.WriteLine(new string('-', 100));
+    }
+
+    public int FlashcardAmount(List<Flashcard> flashcards)
+    {
+        Console.WriteLine("Whats the maximum flashcards you would like to see?");
+        return _validation.GetValidInt(1, flashcards.Count());
     }
 
 }

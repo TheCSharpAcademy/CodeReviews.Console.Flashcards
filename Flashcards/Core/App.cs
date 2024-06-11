@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.Linq;
 
 public class App
 {
@@ -34,7 +35,7 @@ public class App
                     break;
                 case MainMenuOptions.Study:
                     break;
-                case MainMenuOptions.InsertTestData: // TODO after flashcard repo insert. Delete current table when we do this.
+                case MainMenuOptions.InsertTestData:
                     InsertTestData();
                     break;
                 case MainMenuOptions.Exit:
@@ -84,6 +85,7 @@ public class App
         stackList = _stackController.GetStacks();
 
         var option = _userInput.ManageStacksManu(stack);
+        var currentCards = _flashcardController.GetFlashcardsByStack(stack);
 
         switch (option)
         {
@@ -92,12 +94,11 @@ public class App
                 ManageStack(stack);
                 break;
             case ManageStackOption.ViewCardsAll:
-                // TODO handle no cards
-                var currentCards = _flashcardController.GetFlashcardsByStack(stack);
-                Console.ReadKey();
+                ShowFlashcardsOption(currentCards.Flashcards);
                 break;
             case ManageStackOption.ViewCardsAmount:
-                // TODO handle no cards
+                List<Flashcard> flashCards = new List<Flashcard>(currentCards.Flashcards.Take(_userInput.FlashcardAmount(currentCards.Flashcards)));
+                ShowFlashcardsOption(flashCards);
                 break;
             case ManageStackOption.CreateCard:
                 var flashcard = _userInput.CreateFlashcard(stack);
@@ -123,11 +124,15 @@ public class App
         List<string> randomStacks = new List<string> { "Introduction to C#", "Object-Oriented Programming", "Data Structures in C#", "Algorithms", "LINQ", "Entity Framework", "ASP.NET Core", "Blazor", "Xamarin", "Design Patterns", "SOLID Principles", "Unit Testing with xUnit", "Dependency Injection", "Multithreading and Asynchronous Programming", "RESTful Services with ASP.NET", "Microservices Architecture", "Azure DevOps", "Continuous Integration/Continuous Deployment (CI/CD)", "Docker for .NET Developers", "Kubernetes", "Security in .NET", "Performance Tuning", "C# 9 and Newer Features", "Code Refactoring", "Clean Code", "Version Control with Git", "Agile Development Practices", "Testing and Mocking", "Debugging Techniques", "Memory Management in C#" };
         Dictionary<string, string> randomFlashcards = new()
         {
-            { "What are the OOP principles.", "Encapsulation, inheritance, polymorphism, and abstraction" },
-            { "What does LINQ stand for?", "Language Integrated Query" },
-            { "What does ORM stand for?", "Object-Relational Mapper" },
-            { "What is ASP.NET Core?", "ASP.NET Core is a cross-platform, high-performance framework for building modern, cloud-based web applications." },
-            { "What are the SOLID principles?", "Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion." },
+            { "LINQ?", "Query tool" },
+            { "ORM?", "Mapper" },
+            { "ASP.NET Core?", "Web framework" },
+            { "SOLID?", "Design rules" },
+            { "Inheritance?", "Code reuse" },
+            { "Polymorphism?", "Method override" },
+            { "Encapsulation?", "Data hiding" },
+            { "Abstraction?", "Simplification" },
+            { "Interface?", "Contract" },
         };
 
         for (int i = 0; i < numbers.Item1; i++)
@@ -150,6 +155,20 @@ public class App
             }
 
         }
+    }
+
+    private void ShowFlashcardsOption(List<Flashcard> flashcards)
+    {
+        if (flashcards.Count == 0)
+        {
+            Console.WriteLine("No cards to show for this stack. Press any key to continue");
+            Console.ReadKey();
+            return;
+        }
+
+        _userInput.ShowFlashcards(flashcards);
+        Console.WriteLine("Press any key to go back to main menu.");
+        Console.ReadKey();
     }
 }
 
