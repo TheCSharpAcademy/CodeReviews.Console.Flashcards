@@ -27,14 +27,14 @@ namespace Flashcards.UndercoverDev.Services.Session
         {
             var stackName = _stackRepository.GetStackNames();
 
-            var selectedStackName = _userConsole.ShowMenu("Select a [blue]Stack[/] to study", stackName);
+            var selectedStackName = _userConsole.ShowMenu("[bold]Select a [blue]Stack[/] to study[/]", stackName);
 
             var retrievedStack = _stackRepository.GetStackByName(selectedStackName);
             var flashcards = _flashcardRepository.GetFlashcardsByStackId(retrievedStack.Id);
 
             if (flashcards.Count == 0)
             {
-                _userConsole.PrintMessage("There are no flashcards in this stack. Press any key to continue.", "red");
+                _userConsole.PrintMessage("[bold]There are no flashcards in this stack.[/] [white]Press any key to continue.[/]", "red");
                 _userConsole.WaitForAnyKey();
                 return;
             }
@@ -44,36 +44,37 @@ namespace Flashcards.UndercoverDev.Services.Session
             
             foreach (var flashcard in flashcards)
             {
-                var table = CreateTable(index,"Flashcard Id", "Question", flashcard.Question);
+                var table = CreateTable(index,"[orange1]FlashcardId[/]", "[lime]Question[/]", flashcard.Question);
 
                 _userConsole.WritTable(table);
 
                 string userAnswer;
                 do
                 {
-                    userAnswer = _userConsole.GetUserInput("\nPlease enter your answer to the above flashcard: ");
+                    userAnswer = _userConsole.GetUserInput("\nPlease enter your [green]answer[/] to the above flashcard: ");
                 }
                 while (string.IsNullOrEmpty(userAnswer));
 
                 if (userAnswer.TrimAndLower() == flashcard.Answer.TrimAndLower())
                 {
-                    table = CreateTable(index,"Flashcard Id", "Answer", flashcard.Answer);
+                    table = CreateTable(index,"[orange1]FlashcardId[/]", "[lime]Answer[/]", flashcard.Answer);
                     _userConsole.WritTable(table);
                     score++;
-                    _userConsole.PrintMessage($"Correct! Your current score is {score}", "green");
+                    _userConsole.PrintMessage($"[bold]Correct! Your current score is [green]{score}[/]. Press any key to continue.[/]", "");
                 }
                 else
                 {
-                    _userConsole.PrintMessage("Incorrect!", "red");
+                    table = CreateTable(index,"[orange1]FlashcardId[/]", "[lime]Answer[/]", flashcard.Answer);
+                    _userConsole.WritTable(table);
+                    _userConsole.PrintMessage("[bold]Incorrect! [white]Press any key to continue.[/][/]", "red");
                 }
-
-                _userConsole.PrintMessage("Press any key to continue.", "blue");
                 _userConsole.WaitForAnyKey();
             }
-            _userConsole.PrintMessage($"[bold]Study session completed. Your final score: {score}/{flashcards.Count}[/]", "green");
+            _userConsole.PrintMessage($"[bold]Study session completed. Your final score: [green]{score}/{flashcards.Count}[/]. Press any key to continue.[/]", "");
+            _userConsole.WaitForAnyKey();
 
             _sessionRepository.Post(retrievedStack.Id, score, flashcards.Count);
-            _userConsole.PrintMessage("Press any key to continue.", "blue");
+            _userConsole.PrintMessage("[bold][green]1[/] study session added. Press any key to continue.[/][/]", "");
             _userConsole.WaitForAnyKey();
         }
 
