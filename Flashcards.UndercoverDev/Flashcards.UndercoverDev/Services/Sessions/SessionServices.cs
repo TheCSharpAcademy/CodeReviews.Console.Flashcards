@@ -144,7 +144,7 @@ namespace Flashcards.UndercoverDev.Services.Session
 
             if (studySessions.Count == 0)
             {
-                _userConsole.PrintMessage("There are no study sessions in this year. [white]Would you like to try again?.[/]", "red");
+                _userConsole.PrintMessage("[bold]No study sessions found. [white]Would you like to try again?.[/][/]", "red");
                 var userInput = _userConsole.ShowMenu("", ["Yes", "No"]);
 
                 if (userInput == "Yes")
@@ -184,20 +184,26 @@ namespace Flashcards.UndercoverDev.Services.Session
                 return;
 
             var table = new Table() {Border = TableBorder.Double};
-            table.AddColumn("Stack Name");
+            table.AddColumn("[bold yellow]Stack Name[/]");
 
             var months = new[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
             foreach (var month in months)
             {
-                table.AddColumn(month);
+                table.AddColumn(new TableColumn($"[bold green]{month}[/]"));
             }
 
+            bool isAlternateRow = false;
             foreach (var report in reportData)
             {
-                var row = new List<string> {report.StackName};
-                row.AddRange(months.Select(month => report.MonthlyScores[month].ToString()));
+                var row = new List<string> { $"[bold cyan]{report.StackName}[/]" };
+                row.AddRange(months.Select(month => 
+                {
+                    string color = isAlternateRow ? "royalblue1" : "chartreuse3_1";
+                    return $"[{color}]{report.MonthlyScores[month]}[/]";
+                }));
                 table.AddRow(row.ToArray());
+                isAlternateRow = !isAlternateRow;
             }
 
             _userConsole.WritTable(table);
@@ -209,12 +215,12 @@ namespace Flashcards.UndercoverDev.Services.Session
         public int CheckIfYearIsValid()
         {
             int finalDate;
-            var year = _userConsole.GetUserInput("Please enter a year in [darkgreen](Format: yyyy)[/]");
+            var year = _userConsole.GetUserInput("[bold]Please enter a year in [chartreuse3_1](Format: yyyy)[/][/]");
 
             while (!int.TryParse(year, out finalDate) || year.Length != 4)
             {
-                _userConsole.PrintMessage("Invalid year format. Please enter a valid year.", "red");
-                year = _userConsole.GetUserInput("Please enter a year in [darkgreen](Format: yyyy)[/]");
+                _userConsole.PrintMessage("[bold]Invalid year format. [white]Please enter a year in [chartreuse3_1](Format: yyyy)[/][/][/].", "red");
+                year = _userConsole.GetUserInput("[bold]Please enter a year in [chartreuse3_1](Format: yyyy)[/[/]");
             }
 
             return finalDate;
