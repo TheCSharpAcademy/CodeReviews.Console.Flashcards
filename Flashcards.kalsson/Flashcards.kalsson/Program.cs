@@ -93,13 +93,24 @@ void EnsureDatabaseExists(string connectionString)
             using (var command = new SqlCommand("IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'FlashcardsDb') CREATE DATABASE [FlashcardsDb];", connection))
             {
                 command.ExecuteNonQuery();
-                Console.WriteLine("Database checked/created successfully.");
             }
         }
+        Console.WriteLine("Database checked/created successfully.");
         DatabaseInitializer.InitializeDatabase(connectionString);
+    }
+    catch (SqlException ex)
+    {
+        if (ex.Number != 1801) // Error number 1801: "Database already exists"
+        {
+            Console.WriteLine($"An error occurred while checking the database: {ex.Message}");
+        }
+        else
+        {
+            Console.WriteLine("Database already exists. Changed database context to 'FlashcardsDb'.");
+        }
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"An error occurred while checking the database: {ex.Message}");
+        Console.WriteLine($"An unexpected error occurred: {ex.Message}");
     }
 }
