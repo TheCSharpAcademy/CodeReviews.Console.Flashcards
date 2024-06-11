@@ -30,7 +30,7 @@
 
 - User enter stack name or press '0' to exit.
 
-	![image](https://github.com/Fennikko/Images/blob/main/StackName.png)
+	![image](Flashcards.UndercoverDev/Flashcards.UndercoverDev/img/stack%20exist.png)
 
 - If a stack name already exists, user receives an error message and can press any key to try again.
 
@@ -43,7 +43,7 @@
 
 - User select a stack to delete from the available stacks, or select back for Main Menu.
 
-	![image](https://github.com/Fennikko/Images/blob/main/StackDeletion.png)
+	![image](Flashcards.UndercoverDev/Flashcards.UndercoverDev/img/stack%20delete.png)
 
 - User gets a message on screen saying that the stack has been deleted, and they can press any key to continue.
 - When a stack is deleted, all flashcards and study sessions for that stack are also deleted from the database.
@@ -53,6 +53,9 @@
 ### Add a flashcard
 
 - User will be prompted if the flashcard will be for a new stack. If yes, user will be prompted to create a new stack.
+
+	![image](Flashcards.UndercoverDev/Flashcards.UndercoverDev/img/new%20flashcard.png)
+
 - If no, user will select the stack that the flashcard will be added to.
 
 	![image](https://github.com/Fennikko/Images/blob/main/AddFlashcardStackSelect.png)
@@ -68,7 +71,7 @@
 
 - The front of flashcards **MUST** be unique, or users gets an error message.
 
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardAddError.png)
+	![image](Flashcards.UndercoverDev/Flashcards.UndercoverDev/img/question%20exist.png)
 
 
 
