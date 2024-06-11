@@ -37,7 +37,7 @@ namespace Flashcards.UndercoverDev.Services
         {
             var stackName = _stackRepository.GetStackNames();
 
-            var selectedStackName = _userConsole.ShowMenu("Select a [blue]Stack[/] where your flashcard resides.\n", stackName);
+            var selectedStackName = _userConsole.ShowMenu("[bold]Select a [blue]Stack[/] where your flashcard resides[/].\n", stackName);
 
             // Get the flashcards associated with the selected stack
             var retrievedStack = _stackRepository.GetStackByName(selectedStackName);
@@ -45,7 +45,14 @@ namespace Flashcards.UndercoverDev.Services
             var flashcards = _flashcardRepository.GetFlashcardsByStackId(retrievedStack.Id);
             var questions = flashcards.Select(f => f.Question).ToList();
 
-            var selectedFlashcard = _userConsole.ShowMenu("Select a [blue]Flashcard[/] to delete", questions);
+            if (flashcards.Count == 0)
+            {
+                _userConsole.PrintMessage("[bold]There are no flashcards in this stack.[/] [white]Press any key to continue.[/]", "red");
+                _userConsole.WaitForAnyKey();
+                return;
+            }
+
+            var selectedFlashcard = _userConsole.ShowMenu("[bold]Select a [blue]Flashcard[/] to delete[/]", questions);
             
             var flashcardToBeDeleted = flashcards.FirstOrDefault(f => f.Question == selectedFlashcard);
 
@@ -54,7 +61,7 @@ namespace Flashcards.UndercoverDev.Services
                 Id = flashcardToBeDeleted.Id,
             });
 
-            _userConsole.PrintMessage($"[green]{selectedFlashcard}[/] deleted successfully. Press any key to continue", "");
+            _userConsole.PrintMessage($"[bold][green]{selectedFlashcard}[/] deleted successfully. Press any key to continue[/]", "");
             
             _userConsole.WaitForAnyKey();
         }
@@ -157,7 +164,7 @@ namespace Flashcards.UndercoverDev.Services
             {
                 if (flashcard.Question.TrimAndLower() == question.TrimAndLower())
                 {
-                    _userConsole.PrintMessage("Question already exists.", "red");
+                    _userConsole.PrintMessage("[bold]Question already exists.[/]", "red");
                     questionFound = true;
                     break;
                 }
