@@ -66,8 +66,6 @@ while (true)
             flashcardUI.UpdateFlashcard();
             break;
         case "8. Delete a flashcard":
-            stackUI.ShowAllStacks();
-            flashcardUI.ShowAllFlashcards();
             flashcardUI.DeleteFlashcard();
             break;
         case "9. Show all study sessions":

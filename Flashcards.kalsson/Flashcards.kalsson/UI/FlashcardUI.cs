@@ -139,34 +139,75 @@ public class FlashcardUI
             AnsiConsole.MarkupLine($"[red]Failed to update the flashcard: {ex.Message}[/]");
         }
     }
-
     public void DeleteFlashcard()
     {
-        var idInput = AnsiConsole.Ask<string>("Enter flashcard ID to delete (type 'back' to return to menu):");
+        var stackName = AnsiConsole.Ask<string>("Enter stack name (type 'back' to return to menu):");
 
-        if (idInput.ToLower() == "back")
+        if (stackName.ToLower() == "back")
         {
             return;
         }
 
-        var id = Convert.ToInt32(idInput);
-        var flashcard = _flashcardService.GetFlashcardById(id);
-
-        if (flashcard == null)
+        var stack = _stackService.GetAllStacks().FirstOrDefault(s => s.Name == stackName);
+        if (stack == null)
         {
-            AnsiConsole.MarkupLine($"[red]Flashcard with ID {id} does not exist.[/]");
+            AnsiConsole.MarkupLine("[red]Stack not found.[/]");
             return;
         }
 
-        try
+        var flashcards = _flashcardService.GetAllFlashcards(stack.Id).ToList();
+        if (!flashcards.Any())
         {
-            _flashcardService.DeleteFlashcard(id);
-            Console.Clear();
-            AnsiConsole.MarkupLine("[green]Flashcard has been successfully deleted![/]");
+            AnsiConsole.MarkupLine("[yellow]No flashcards found in this stack.[/]");
+            return;
         }
-        catch (Exception ex)
+
+        var table = new Table();
+        table.AddColumn("ID");
+        table.AddColumn("Question");
+        table.AddColumn("Answer");
+
+        foreach (var flashcard in flashcards)
         {
-            AnsiConsole.MarkupLine($"[red]Failed to delete the flashcard: {ex.Message}[/]");
+            table.AddRow(flashcard.Id.ToString(), flashcard.Question, flashcard.Answer);
+        }
+
+        AnsiConsole.Write(table);
+
+        while (true)
+        {
+            var idInput = AnsiConsole.Ask<string>("Enter flashcard ID to delete (type 'back' to return to menu):");
+
+            if (idInput.ToLower() == "back")
+            {
+                return;
+            }
+
+            if (!int.TryParse(idInput, out var id))
+            {
+                AnsiConsole.MarkupLine($"[red]Invalid input: {idInput}. Please enter a valid numeric ID.[/]");
+                continue;
+            }
+
+            var flashcard = flashcards.FirstOrDefault(f => f.Id == id);
+            if (flashcard == null)
+            {
+                AnsiConsole.MarkupLine($"[red]Flashcard with ID {id} does not exist in the specified stack.[/]");
+                continue;
+            }
+
+            try
+            {
+                _flashcardService.DeleteFlashcard(id);
+                Console.Clear();
+                AnsiConsole.MarkupLine("[green]Flashcard has been successfully deleted![/]");
+                break;
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red]Failed to delete the flashcard: {ex.Message}[/]");
+            }
         }
     }
+
 }
