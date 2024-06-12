@@ -20,7 +20,20 @@ public class FlashcardRepository
 
     public void DeleteFlashcard(int flashcardId)
     {
-        throw new NotImplementedException();
+        using (var conn = _databaseManager.GetConnection())
+        {
+            var query = "DELETE FROM Flashcards WHERE Id = @id";
+            conn.Execute(query, new { Id = flashcardId });
+        }
+    }
+
+    public void UpdateCard(Flashcard flashcard)
+    {
+        using (var conn = _databaseManager.GetConnection())
+        {
+            var query = "UPDATE Flashcards SET Question = @question, Answer = @answer WHERE Id = @id";
+            conn.Execute(query, flashcard);
+        }
     }
 
     public List<Flashcard> GetFlashcardsByStack(int stackId)

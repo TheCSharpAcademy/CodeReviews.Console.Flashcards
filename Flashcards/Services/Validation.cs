@@ -78,4 +78,35 @@ public class Validation()
 
         return input;
     }
+
+    public Flashcard GetValidFlashcard(List<Flashcard> flashcards)
+    {
+        string? input = null;
+        Flashcard? validFlashcard = null;
+
+        while (validFlashcard is null)
+        {
+            input = Console.ReadLine();
+
+            if (!int.TryParse(input, out int res))
+            {
+                Console.WriteLine("Please type an id.");
+                continue;
+            }
+
+            var index = res - 1;
+
+            validFlashcard = flashcards.ElementAtOrDefault(index);
+
+            if (validFlashcard is null)
+            {
+                Console.Beep();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("That flashcard does not exist. Please try again.");
+                Console.ResetColor();
+            }
+        }
+
+        return validFlashcard;
+    }
 }

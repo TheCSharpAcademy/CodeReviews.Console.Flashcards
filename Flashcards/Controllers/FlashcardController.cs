@@ -19,9 +19,14 @@
         }
     }
 
-    public void DeleteFlashcard(int flashcardId)
+    public void DeleteFlashcard(int flashcardId) => _flashcardRepo.DeleteFlashcard(flashcardId);
+
+    public void UpdateFlashcard(Flashcard newFlashcard, Flashcard oldFlashcard)
     {
-        throw new NotImplementedException();
+        if (newFlashcard != oldFlashcard && newFlashcard.Question.Length >= 0 && newFlashcard.Answer.Length >= 0)
+        {
+            _flashcardRepo.UpdateCard(newFlashcard);
+        }
     }
 
     public StackDto GetFlashcardsByStack(Stack stack)
@@ -33,4 +38,7 @@
             Flashcards = new List<Flashcard>(_flashcardRepo.GetFlashcardsByStack(stack.Id))
         };
     }
+
+    
+
 }

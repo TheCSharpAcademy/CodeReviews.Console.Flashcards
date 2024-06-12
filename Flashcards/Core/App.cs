@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 public class App
 {
@@ -32,6 +33,7 @@ public class App
                     StackMenu();
                     break;
                 case MainMenuOptions.Flashcards:
+                    ManageFlashcardMenu();
                     break;
                 case MainMenuOptions.Study:
                     break;
@@ -95,24 +97,73 @@ public class App
                 break;
             case ManageStackOption.ViewCardsAll:
                 ShowFlashcardsOption(currentCards.Flashcards);
+                Console.WriteLine("Press any key to go back to main menu.");
+                Console.ReadKey(true);
                 break;
             case ManageStackOption.ViewCardsAmount:
                 List<Flashcard> flashCards = new List<Flashcard>(currentCards.Flashcards.Take(_userInput.FlashcardAmount(currentCards.Flashcards)));
                 ShowFlashcardsOption(flashCards);
+                Console.WriteLine("Press any key to go back to main menu.");
+                Console.ReadKey(true);
                 break;
             case ManageStackOption.CreateCard:
                 var flashcard = _userInput.CreateFlashcard(stack);
                 _flashcardController.CreateFlashcard(flashcard);
                 Console.WriteLine("Entry added");
                 break;
-            case ManageStackOption.EditCard:
-                break;
-            case ManageStackOption.DeleteCard:
-                break;
             case ManageStackOption.DeleteStack:
                 _stackController.DeleteStack(stack.Name);
                 break;
             case ManageStackOption.Exit:
+                Console.Clear();
+                break;
+        }
+    }
+
+    public void ManageFlashcardMenu()
+    {
+        var option = _userInput.ViewFlashCardsMainMenu();
+
+        switch (option)
+        {
+            case FlashcardsMenuOptions.ViewFlashcardByStack:
+                stackList = _stackController.GetStacks();
+
+                if (stackList.Count == 0)
+                {
+                    Console.WriteLine("No stacks to show. Press any key to return.");
+                    Console.ReadKey(true);
+                }
+                else
+                {
+                    var stack = _userInput.SelectStack(stackList);
+                    var currentCards = _flashcardController.GetFlashcardsByStack(stack);
+                    if (currentCards.Flashcards.Count == 0) break;
+                    ShowFlashcardsOption(currentCards.Flashcards);
+                    var flashcard = _userInput.GetFlashcard(currentCards.Flashcards);
+                    ManagerFlashcard(flashcard);
+                }
+                break;
+            case FlashcardsMenuOptions.Exit:
+                Console.Clear();
+                break;
+        }
+    }
+
+    public void ManagerFlashcard(Flashcard flashcard)
+    {
+        var option = _userInput.ManageeFlashcard(flashcard);
+
+        switch (option)
+        {
+            case FlashcardsManageOptions.Delete:
+                _flashcardController.DeleteFlashcard(flashcard.Id);
+                break;
+            case FlashcardsManageOptions.Edit:
+                var newCard = _userInput.UpdateCard(flashcard);
+                _flashcardController.UpdateFlashcard(newCard, flashcard);
+                break;
+            case FlashcardsManageOptions.Exit:
                 Console.Clear();
                 break;
         }
@@ -167,8 +218,6 @@ public class App
         }
 
         _userInput.ShowFlashcards(flashcards);
-        Console.WriteLine("Press any key to go back to main menu.");
-        Console.ReadKey();
     }
 }
 
