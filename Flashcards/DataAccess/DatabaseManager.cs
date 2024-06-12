@@ -88,6 +88,7 @@ public class DatabaseManager
             StackId INT, 
             Date DATETIME NOT NULL, 
             Score INT NOT NULL, 
+            TotalQuestions INT NOT NULL, 
             FOREIGN KEY (StackId) REFERENCES Stacks(Id) ON DELETE CASCADE 
         )"
         };

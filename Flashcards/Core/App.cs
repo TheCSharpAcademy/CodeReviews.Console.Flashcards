@@ -10,6 +10,8 @@ public class App
     private StackController _stackController;
     private FlashcardRepository _flashcardRepo;
     private FlashcardController _flashcardController;
+    private StudyRepository _studyRepo;
+    private StudyController _studyController;
     private List<Stack> stackList;
 
     public void Run()
@@ -20,12 +22,15 @@ public class App
         _stackController = new StackController(_stackRepo);
         _flashcardRepo = new FlashcardRepository(_databaseManager);
         _flashcardController = new FlashcardController(_flashcardRepo);
+        _studyRepo = new StudyRepository(_databaseManager);
+        _studyController = new StudyController(_studyRepo);
 
         _databaseManager.InitializeDB();
 
         while (true)
         {
             var mainMenuOption = _userInput.MainMenu();
+            stackList = _stackController.GetStacks();
 
             switch (mainMenuOption)
             {
@@ -36,6 +41,7 @@ public class App
                     ManageFlashcardMenu();
                     break;
                 case MainMenuOptions.Study:
+                    ManageStudySession();
                     break;
                 case MainMenuOptions.InsertTestData:
                     InsertTestData();
@@ -51,8 +57,6 @@ public class App
 
     public void StackMenu()
     {
-        stackList = _stackController.GetStacks();
-
         if (stackList.Count == 0)
         {
             Stack stack;
@@ -84,8 +88,6 @@ public class App
 
     public void ManageStack(Stack stack)
     {
-        stackList = _stackController.GetStacks();
-
         var option = _userInput.ManageStacksManu(stack);
         var currentCards = _flashcardController.GetFlashcardsByStack(stack);
 
@@ -127,7 +129,6 @@ public class App
         switch (option)
         {
             case FlashcardsMenuOptions.ViewFlashcardByStack:
-                stackList = _stackController.GetStacks();
 
                 if (stackList.Count == 0)
                 {
@@ -166,6 +167,38 @@ public class App
             case FlashcardsManageOptions.Exit:
                 Console.Clear();
                 break;
+        }
+    }
+
+    public void ManageStudySession()
+    {
+        var options = _userInput.StudySessionMenu();
+
+        switch (options)
+        {
+            case StudySessionOptions.SelectStack:
+                var stack = _userInput.SelectStack(stackList);
+                var flashcards = _flashcardController.GetFlashcardsByStack(stack);
+
+                if (flashcards.Flashcards.Count > 0)
+                {
+                    var studySession = _userInput.NewStudySession(flashcards);
+                    _studyController.AddStudy(studySession);
+                }
+                else
+                {
+                    Console.WriteLine("Cannot study, there are no flashcards in this stack. Press any key to continue.");
+                    Console.ReadKey(true);
+                }
+
+                // save study to StudyController/Repo
+                break;
+            case StudySessionOptions.PreviousSessions:
+                break;
+            case StudySessionOptions.Exit:
+                Console.Clear();
+                break;
+
         }
     }
 

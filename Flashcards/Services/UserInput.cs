@@ -232,4 +232,62 @@ public class UserInput()
 
         return newFlashcard;
     }
+
+    public StudySessionOptions StudySessionMenu()
+    {
+        Console.Clear();
+
+        Console.WriteLine("Please choose an option below by typing the number next to it: \n");
+
+        Console.WriteLine($"{(int)StudySessionOptions.SelectStack}. Select a stack to study");
+        Console.WriteLine($"{(int)StudySessionOptions.PreviousSessions}. View previous sessions");
+        Console.WriteLine($"{(int)StudySessionOptions.Exit}. Return to main menu");
+
+        var number = _validation.GetValidInt(1, Enum.GetNames(typeof(StudySessionOptions)).Length);
+
+        return (StudySessionOptions)number;
+    }
+
+    public StudySession NewStudySession(StackDto stack)
+    {
+        var newSession = new StudySession
+        {
+            Date = DateTime.Now,
+            StackId = stack.Id,
+            TotalQuestions = stack.Flashcards.Count,
+        };
+
+        Console.Clear();
+
+        Console.WriteLine($"Stack: {stack.Name}");
+
+        foreach (var item in stack.Flashcards)
+        {
+            Console.WriteLine($"Question: {item.Question} \n");
+
+            Console.WriteLine("Whats your answer?");
+            var answer = Console.ReadLine();
+
+            if (item.Answer.Trim().ToLower() == answer.Trim().ToLower())
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("That is correct!");
+                newSession.Score++;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"That is incorrect. The correct answer is: {item.Answer}");
+            }
+            Console.ResetColor();
+            Console.WriteLine("Press any key to continue.");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        Console.WriteLine($"You scored: {newSession.Score}/{newSession.TotalQuestions}. That is {newSession.PercentageScore}% correct answers.");
+        Console.WriteLine("Press any key to return to main menu.");
+        Console.ReadKey(true);
+        return newSession;
+    }
 }
