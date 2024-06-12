@@ -55,22 +55,32 @@ public class StackUI
     {
         var idInput = AnsiConsole.Ask<string>("Enter stack ID to update (type 'back' to return to menu):");
 
-        if (idInput.ToLower() == "back")
+        if (string.IsNullOrWhiteSpace(idInput) || idInput.ToLower() == "back")
         {
             return;
         }
 
-        var id = Convert.ToInt32(idInput);
+        if (!int.TryParse(idInput, out var id))
+        {
+            AnsiConsole.MarkupLine("[red]Invalid ID input. Please enter an integer.[/]");
+            return;
+        }
+
+        if (_stackService.GetStackById(id) == null)
+        {
+            AnsiConsole.MarkupLine("[red]Stack with the entered ID does not exist. Please enter a valid stack ID.[/]");
+            return;
+        }
 
         var name = AnsiConsole.Ask<string>("Enter new stack name (type 'back' to return to menu):");
 
-        if (name.ToLower() == "back")
+        if (string.IsNullOrWhiteSpace(name) || name.ToLower() == "back")
         {
             return;
         }
-    
+
         var stack = new Stack { Id = id, Name = name };
-    
+
         try
         {
             _stackService.UpdateStack(stack);
@@ -79,7 +89,7 @@ public class StackUI
         }
         catch (Exception ex)
         {
-            AnsiConsole.MarkupLine($"[red]Failed to update the stack: {ex.Message}[/]");
+            AnsiConsole.MarkupLine($"[red]An error occurred while updating the stack: {ex.Message}[/]");
         }
     }
 
