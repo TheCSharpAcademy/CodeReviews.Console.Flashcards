@@ -21,6 +21,10 @@ public class StudyRepository
 
     public List<StudySession> GetStudySessions()
     {
-        throw new NotImplementedException();
+        using (var conn = _databaseManager.GetConnection())
+        {
+            var query = "SELECT * FROM StudySessions";
+            return conn.Query<StudySession>(query).ToList();
+        }
     }
 }

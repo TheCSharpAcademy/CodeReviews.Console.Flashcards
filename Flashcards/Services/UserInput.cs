@@ -290,4 +290,16 @@ public class UserInput()
         Console.ReadKey(true);
         return newSession;
     }
+
+    public void ViewPreviousStudySessions(List<StudyDto> studySessions)
+    {
+        Console.Clear();
+        Console.WriteLine($"{"Id", -5} {"Stack", -25} {"Date", -15} {"Score"}");
+        foreach (var item in studySessions)
+        {
+            Console.WriteLine(item);
+        }
+
+        Console.WriteLine();
+    }
 }

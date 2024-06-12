@@ -17,7 +17,23 @@
         {
             Console.WriteLine("Ran into a error adding study session to DB.");
         }
+    }
 
-        
+    public List<StudyDto> GetStudySessions(List<Stack> stacks)
+    {
+        var studySessions = new List<StudyDto>();
+        foreach (var item in _studyRepo.GetStudySessions())
+        {
+            var session = new StudyDto
+            {
+                Id = item.Id,
+                StackName = stacks.First(x => x.Id == item.StackId).Name,
+                Date = item.Date,
+                PercentageScore = item.PercentageScore
+            };
+            studySessions.Add(session);
+        }
+
+        return studySessions;
     }
 }

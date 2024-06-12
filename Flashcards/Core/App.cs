@@ -1,6 +1,4 @@
 ﻿using System.Configuration;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 
 public class App
 {
@@ -190,10 +188,13 @@ public class App
                     Console.WriteLine("Cannot study, there are no flashcards in this stack. Press any key to continue.");
                     Console.ReadKey(true);
                 }
-
-                // save study to StudyController/Repo
                 break;
             case StudySessionOptions.PreviousSessions:
+                var studySessions = _studyController.GetStudySessions(stackList);
+                _userInput.ViewPreviousStudySessions(studySessions);
+                Console.WriteLine("Press any key to go back to main menu");
+                Console.ReadKey();
+
                 break;
             case StudySessionOptions.Exit:
                 Console.Clear();
