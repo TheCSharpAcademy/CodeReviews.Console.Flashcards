@@ -18,7 +18,7 @@ public class StackRepository
         {
             try
             {
-                var query = "INSERT INTO Stacks (Name) VALUES (@Name)";
+                var query = @"INSERT INTO Stacks (Name) SELECT @Name WHERE NOT EXISTS (SELECT 1 FROM Stacks WHERE Name = @Name)";
                 conn.Execute(query, new { Name = name });
                 Console.WriteLine("Stack inserted. \n");
             }
