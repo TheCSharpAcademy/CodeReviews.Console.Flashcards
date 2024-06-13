@@ -44,10 +44,12 @@ public class App
                 case MainMenuOptions.InsertTestData:
                     InsertTestData();
                     break;
+                case MainMenuOptions.Reports:
+                    ManageStudyReport();
+                    break;
                 case MainMenuOptions.Exit:
                     Environment.Exit(0);
                     break;
-
             }
         }
 
@@ -240,6 +242,16 @@ public class App
             }
 
         }
+    }
+
+    public void ManageStudyReport()
+    {
+        var year = _userInput.GetReportYear();
+        var reports= _studyController.GetMonthlyReports(year, stackList);
+        _userInput.ViewReportByYear(reports);
+
+        Console.WriteLine("\nPress any key to go back to main menu.");
+        Console.ReadKey();
     }
 
     private void ShowFlashcardsOption(List<Flashcard> flashcards)

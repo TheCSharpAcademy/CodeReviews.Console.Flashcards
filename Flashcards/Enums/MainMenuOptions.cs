@@ -4,5 +4,6 @@
     Flashcards = 2,
     Study = 3,
     InsertTestData = 4,
-    Exit = 5,
+    Reports = 5,
+    Exit = 6,
 }

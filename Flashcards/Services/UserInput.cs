@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
+using System.Text;
 
 public class UserInput()
 {
@@ -17,6 +20,7 @@ public class UserInput()
         Console.WriteLine($"{(int)MainMenuOptions.Flashcards}. Manage Flashcards");
         Console.WriteLine($"{(int)MainMenuOptions.Study}. Manage Study Sessions");
         Console.WriteLine($"{(int)MainMenuOptions.InsertTestData}. Insert Test Data");
+        Console.WriteLine($"{(int)MainMenuOptions.Reports}. Study Reports");
         Console.WriteLine($"{(int)MainMenuOptions.Exit}. Exit");
 
         var number = _validation.GetValidInt(1, Enum.GetNames(typeof(MainMenuOptions)).Length);
@@ -301,5 +305,22 @@ public class UserInput()
         }
 
         Console.WriteLine();
+    }
+
+    public int GetReportYear()
+    {
+        Console.Clear();
+
+        Console.WriteLine("Type a year in which you want to view reports:");
+        return _validation.GetValidInt(DateTime.Now.Year - 10, DateTime.Now.Year);
+    }
+    public void ViewReportByYear(List<MonthlySessionsPivot> monthlyReports) 
+    {
+        Console.WriteLine($"\n{"Stack Name", -20} {"Jan", -5} {"Feby", -5} {"Mar", -5} {"Apr", -5} {"May", -5} {"Jun", -5} {"Jul", -5} {"Aug", -5} {"Sep", -5} {"Oct", -5} {"Nov", -5} {"Dec", -5}");
+
+        foreach (var item in monthlyReports)
+        {
+            Console.WriteLine(item);
+        }
     }
 }
