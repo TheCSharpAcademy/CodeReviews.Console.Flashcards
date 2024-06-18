@@ -110,10 +110,10 @@ public class UserInput()
         };
 
         Console.WriteLine("Type a question for your flashcard");
-        flashcard.Question = _validation.GetValidString(10);
+        flashcard.Question = _validation.GetValidString(3);
 
         Console.WriteLine("Type a answer for your flashcard");
-        flashcard.Answer = _validation.GetValidString(10);
+        flashcard.Answer = _validation.GetValidString(3);
         return flashcard;
     }
 
@@ -285,7 +285,7 @@ public class UserInput()
             }
             Console.ResetColor();
             Console.WriteLine("Press any key to continue.");
-            Console.ReadKey();
+            Console.ReadKey(true);
             Console.Clear();
         }
 

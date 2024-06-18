@@ -27,7 +27,7 @@ public class StackRepository
                 Console.Beep();
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("SQL error occured while trying to insert data. Could not insert new stack. Program will crash after your next key press.");
-                Console.ReadKey();
+                Console.ReadKey(true);
                 throw;
             }
 
@@ -49,7 +49,7 @@ public class StackRepository
                 Console.Beep();
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("SQL error occured while trying to delete data. Could not delete stack. Program will crash after your next key press.");
-                Console.ReadKey();
+                Console.ReadKey(true);
                 throw;
             }
 

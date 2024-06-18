@@ -139,7 +139,12 @@ public class App
                 {
                     var stack = _userInput.SelectStack(stackList);
                     var currentCards = _flashcardController.GetFlashcardsByStack(stack);
-                    if (currentCards.Flashcards.Count == 0) break;
+                    if (currentCards.Flashcards.Count == 0)
+                    {
+                        Console.WriteLine("No flash cards connected to this stack. Press any key to return to main menu.");
+                        Console.ReadKey(true);
+                        break;
+                    }
                     ShowFlashcardsOption(currentCards.Flashcards);
                     var flashcard = _userInput.GetFlashcard(currentCards.Flashcards);
                     ManagerFlashcard(flashcard);
@@ -195,7 +200,7 @@ public class App
                 var studySessions = _studyController.GetStudySessions(stackList);
                 _userInput.ViewPreviousStudySessions(studySessions);
                 Console.WriteLine("Press any key to go back to main menu");
-                Console.ReadKey();
+                Console.ReadKey(true);
 
                 break;
             case StudySessionOptions.Exit:
@@ -224,9 +229,22 @@ public class App
 
         for (int i = 0; i < numbers.Item1; i++)
         {
-            var stackName = randomStacks[Random.Shared.Next(0, randomStacks.Count)];
+            var randomStacksCount = randomStacks.Count;
+
+            if (randomStacksCount == 0) return;
+            
+            var stackName = randomStacks[Random.Shared.Next(0, randomStacksCount)];
             randomStacks.Remove(stackName);
-            _stackController.CreateStack(stackName);
+
+            if (!_stackController.GetStacks().Any(n => n.Name.ToLower() == stackName.ToLower()))
+            {
+                _stackController.CreateStack(stackName);
+            }
+            else
+            {
+                continue;
+            }
+            
 
             var list = _stackController.GetStacks();
             var currentStack = list.First(s => s.Name == stackName);
@@ -247,11 +265,11 @@ public class App
     public void ManageStudyReport()
     {
         var year = _userInput.GetReportYear();
-        var reports= _studyController.GetMonthlyReports(year, stackList);
+        var reports = _studyController.GetMonthlyReports(year, stackList);
         _userInput.ViewReportByYear(reports);
 
         Console.WriteLine("\nPress any key to go back to main menu.");
-        Console.ReadKey();
+        Console.ReadKey(true);
     }
 
     private void ShowFlashcardsOption(List<Flashcard> flashcards)
@@ -259,7 +277,7 @@ public class App
         if (flashcards.Count == 0)
         {
             Console.WriteLine("No cards to show for this stack. Press any key to continue");
-            Console.ReadKey();
+            Console.ReadKey(true);
             return;
         }
 
