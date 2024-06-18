@@ -28,7 +28,7 @@ internal class FlashcardsDbContext
     {
         var sql = @$"IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'Flashcards')
                     BEGIN
-                        CREATE DATABASE Flashcards1;
+                        CREATE DATABASE Flashcards;
                     END;
                     ";
         using (var connection = GetConnection())

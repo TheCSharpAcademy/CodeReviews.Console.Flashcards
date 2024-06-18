@@ -72,7 +72,7 @@ internal class ActionManager
         }
         else
         {
-            AnsiConsole.Markup($"[marron] No session found for the year {year}");
+            AnsiConsole.Markup($"[maroon] No session found for the year {year}");
         }
         VisualizationEngine.DisplayContinueMessage();
     }
@@ -89,7 +89,7 @@ internal class ActionManager
         }
         else
         {
-            AnsiConsole.Markup($"[marron] No session found for the year {year}");
+            AnsiConsole.Markup($"[maroon] No session found for the year {year}");
         }
         VisualizationEngine.DisplayContinueMessage();
     }
@@ -110,7 +110,7 @@ internal class ActionManager
         }
         else
         {
-            AnsiConsole.Markup($"[marron] No session found for Stack {stackName} in year {year}");
+            AnsiConsole.Markup($"[maroon] No session found for Stack {stackName} in year {year}");
         }
         VisualizationEngine.DisplayContinueMessage();
 
