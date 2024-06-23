@@ -6,7 +6,7 @@ public class Menu
 {
     public const string CREATE_SESSION = "Start [bold][green]Study session[/][/]";
     public const string VIEW_SESSIONS = "View [bold][green]past study sessions[/][/]";
-    public const string MANAGE_STACK = "Manage [bold][green]stacks[/][/]";
+    public const string MANAGE_STACK = "View/Edit/Delete [bold][green]stacks[/][/]";
     public const string CREATE_STACK = "Create [bold][green]new stack[/][/]";
     public const string EXIT = "[red]Exit[/]";
 

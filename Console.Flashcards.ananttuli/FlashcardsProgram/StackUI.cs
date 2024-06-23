@@ -77,43 +77,60 @@ public class StackUI(StacksRepository stacksRepository, FlashcardUI flashUI)
         }
     }
 
-    public void ManageStack(StackDAO stack)
+    public bool ManageStack(StackDAO stack)
     {
-        Console.WriteLine($"ManageSTACKKKKKKK {stack.Name}");
-        string selectedChoice = AnsiConsole.Prompt(
-           new SelectionPrompt<string>()
-           .Title($"Manage Stack - {stack.Name}")
-           .AddChoices([
-                ManageStackMenuChoice.Back,
-                ManageStackMenuChoice.EditStackName,
-                ManageStackMenuChoice.DeleteStack,
-                ManageStackMenuChoice.AddFlashcard,
-                ManageStackMenuChoice.VEDFlashcard
-           ])
+        bool showMenu = true;
 
-       );
-
-        switch (selectedChoice)
+        AnsiConsole.MarkupLine($"Manage Stack - {stack.Name}");
+        do
         {
-            case ManageStackMenuChoice.EditStackName:
-                CreateOrUpdateStack(stack.Id);
-                break;
-            case ManageStackMenuChoice.DeleteStack:
-                DeleteStack(stack.Id);
-                break;
-            case ManageStackMenuChoice.AddFlashcard:
-                flashcardUI.CreateOrUpdateFlashcard(stack.Id, null);
-                break;
-            case ManageStackMenuChoice.VEDFlashcard:
-                var selectedFlashcard = flashcardUI.SelectFlashcardFromList();
-                if (selectedFlashcard != null)
-                {
-                    flashcardUI.ManageFlashcard(selectedFlashcard, stack.Id);
-                }
-                break;
-            default:
-                return;
-        }
+            string selectedChoice = AnsiConsole.Prompt(
+               new SelectionPrompt<string>()
+               .AddChoices([
+                    ManageStackMenuChoice.Back,
+                    ManageStackMenuChoice.EditStackName,
+                    ManageStackMenuChoice.DeleteStack,
+                    ManageStackMenuChoice.AddFlashcard,
+                    ManageStackMenuChoice.VEDFlashcard
+               ])
+           );
+
+            AnsiConsole.MarkupLine(selectedChoice);
+
+            switch (selectedChoice)
+            {
+                case ManageStackMenuChoice.EditStackName:
+                    CreateOrUpdateStack(stack.Id);
+                    break;
+                case ManageStackMenuChoice.DeleteStack:
+                    DeleteStack(stack.Id);
+                    showMenu = false;
+                    break;
+                case ManageStackMenuChoice.AddFlashcard:
+                    flashcardUI.CreateOrUpdateFlashcard(stack.Id, null);
+                    break;
+                case ManageStackMenuChoice.VEDFlashcard:
+                    bool showList = true;
+                    do
+                    {
+                        var selectedFlashcard = flashcardUI.SelectFlashcardFromList();
+                        if (selectedFlashcard != null && selectedFlashcard.Id != -1)
+                        {
+                            showList = flashcardUI.ManageFlashcard(selectedFlashcard, stack.Id);
+                        }
+                        else
+                            showList = false;
+                    }
+                    while (showList);
+                    break;
+                case ManageStackMenuChoice.Back:
+                    return false;
+                default:
+                    break;
+            }
+        } while (showMenu);
+
+        return true;
     }
 }
 

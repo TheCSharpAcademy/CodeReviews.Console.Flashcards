@@ -25,7 +25,7 @@ public class FlashcardUI(BaseRepository<FlashcardDAO> flashcardRepository)
             .Title("FLASHCARDS")
             .PageSize(10)
             .MoreChoicesText("[grey](Move up and down to reveal more)[/]")
-            .AddChoices(flashcards)
+            .AddChoices([new FlashcardDAO(-1, "<- Go back", "", -1), .. flashcards])
             .EnableSearch()
         );
 
@@ -60,7 +60,7 @@ public class FlashcardUI(BaseRepository<FlashcardDAO> flashcardRepository)
         return upsertedFlashcard;
     }
 
-    public void DeleteFlashcard(int id)
+    private void DeleteFlashcard(int id)
     {
         bool success = flashcardRepo.Delete(id);
 
@@ -72,31 +72,44 @@ public class FlashcardUI(BaseRepository<FlashcardDAO> flashcardRepository)
         }
     }
 
-    public void ManageFlashcard(FlashcardDAO flashcard, int currentStackId)
+    public bool ManageFlashcard(FlashcardDAO flashcard, int currentStackId)
     {
-        string selectedChoice = AnsiConsole.Prompt(
-           new SelectionPrompt<string>()
-           .Title($"Manage Flashcard\nFront: {flashcard.Front}\nBack: {flashcard.Back}")
-           .AddChoices([
-                ManageFlashcardMenuChoice.Back,
-                ManageFlashcardMenuChoice.EditFrontBack,
-                ManageFlashcardMenuChoice.DeleteFlashcard
-           ])
+        bool showMenu = true;
 
-       );
-
-        switch (selectedChoice)
+        do
         {
-            case ManageFlashcardMenuChoice.EditFrontBack:
-                CreateOrUpdateFlashcard(currentStackId, flashcard.Id);
-                break;
-            case ManageFlashcardMenuChoice.DeleteFlashcard:
-                DeleteFlashcard(flashcard.Id);
-                break;
-            default:
-                break;
+            string selectedChoice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                .Title($"Manage Flashcard (Front: {flashcard.Front}\nBack: {flashcard.Back})")
+                .AddChoices([
+                    ManageFlashcardMenuChoice.Back,
+                    ManageFlashcardMenuChoice.EditFrontBack,
+                    ManageFlashcardMenuChoice.DeleteFlashcard
+                ])
+            );
+
+            switch (selectedChoice)
+            {
+                case ManageFlashcardMenuChoice.EditFrontBack:
+                    CreateOrUpdateFlashcard(currentStackId, flashcard.Id);
+                    showMenu = true;
+                    break;
+                case ManageFlashcardMenuChoice.DeleteFlashcard:
+                    DeleteFlashcard(flashcard.Id);
+                    showMenu = false;
+                    break;
+                case ManageFlashcardMenuChoice.Back:
+                    showMenu = false;
+                    break;
+                default:
+                    return true;
+            }
         }
+        while (showMenu);
+
+        return true;
     }
+
 }
 
 public static class ManageFlashcardMenuChoice

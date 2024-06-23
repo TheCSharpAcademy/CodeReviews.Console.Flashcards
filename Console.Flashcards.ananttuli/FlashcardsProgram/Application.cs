@@ -38,13 +38,18 @@ public class Application(StacksRepository stacksRepository, BaseRepository<Flash
             case Menu.VIEW_SESSIONS:
                 break;
             case Menu.MANAGE_STACK:
-                var selectedStack = stackUI.SelectStackFromList();
-                if (selectedStack == null || selectedStack.Id == -1)
-                {
-                    return true;
-                }
+                bool showManageStacksMenu = true;
 
-                stackUI.ManageStack(selectedStack);
+                do
+                {
+                    var selectedStack = stackUI.SelectStackFromList();
+                    if (selectedStack == null || selectedStack.Id == -1)
+                    {
+                        return true;
+                    }
+
+                    showManageStacksMenu = stackUI.ManageStack(selectedStack);
+                } while (showManageStacksMenu);
                 break;
             case Menu.CREATE_STACK:
                 stackUI.CreateOrUpdateStack();
