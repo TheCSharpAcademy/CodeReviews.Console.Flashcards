@@ -15,4 +15,9 @@ public class StackDAO(
             return "Stacks";
         }
     }
+
+    public override string ToString()
+    {
+        return Name;
+    }
 }

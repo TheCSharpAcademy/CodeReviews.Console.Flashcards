@@ -80,7 +80,6 @@ public class ConnectionManager
 
             Connection.Open();
 
-            DropTables();
             Migration.CreateTablesIfNotExists(Connection);
         }
         catch (Exception ex)

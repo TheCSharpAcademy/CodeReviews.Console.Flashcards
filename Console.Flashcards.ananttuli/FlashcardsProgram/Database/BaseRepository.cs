@@ -33,7 +33,7 @@ public class BaseRepository<Entity>
                     OUTPUT INSERTED.*
                     VALUES ({valueParams})
                 ";
-
+            Console.WriteLine($"\n\nCREATE FLASHCARD {sql}");
             var output = ConnectionManager.Connection.QuerySingleOrDefault<Entity>(sql, createPayload);
 
             return output;
@@ -100,7 +100,6 @@ public class BaseRepository<Entity>
                     WHERE Id = {id}
                 ";
 
-            Console.WriteLine("\n\nUPDATE QUERY: " + sql);
             var output = ConnectionManager.Connection.QuerySingleOrDefault<Entity>(sql, updatePayload);
 
             return output;

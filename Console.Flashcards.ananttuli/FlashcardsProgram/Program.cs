@@ -70,48 +70,16 @@ public class Program
 {
     public static void Main()
     {
-        bool isAppRunning = true;
+        ConnectionManager.Init();
 
-        ShowWelcomeMessage();
-        do
-        {
-            isAppRunning = StartApp();
-        } while (isAppRunning);
+        var flashCardsRepo = new BaseRepository<FlashcardDAO>(FlashcardDAO.TableName);
+        var stacksRepo = new StacksRepository(StackDAO.TableName);
 
-        ShowExitMessage();
+        var app = new Application(stacksRepo, flashCardsRepo);
+
+        app.Start();
     }
 
-    public static void ShowExitMessage()
-    {
-        Console.WriteLine("Bye!");
-    }
 
-    public static void ShowWelcomeMessage()
-    {
-        Console.WriteLine("Welcome");
-    }
 
-    public static bool StartApp()
-    {
-        bool isRunning = true;
-
-        var selected = Menu.ShowMainMenu();
-
-        switch (selected)
-        {
-            case Menu.CREATE_SESSION:
-                break;
-            case Menu.VIEW_SESSIONS:
-                break;
-            case Menu.MANAGE_STACK:
-                break;
-            case Menu.CREATE_STACK:
-                break;
-            case Menu.EXIT:
-                isRunning = false;
-                break;
-        }
-
-        return isRunning;
-    }
 }

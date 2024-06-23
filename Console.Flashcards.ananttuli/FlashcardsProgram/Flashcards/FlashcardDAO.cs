@@ -19,4 +19,9 @@ public class FlashcardDAO(
             return "Flashcards";
         }
     }
+
+    public override string ToString()
+    {
+        return $"{Front}";
+    }
 }

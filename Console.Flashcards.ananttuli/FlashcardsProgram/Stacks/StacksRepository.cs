@@ -15,8 +15,6 @@ public class StacksRepository : BaseRepository<StackDAO>
     {
         try
         {
-            Console.WriteLine("FIND  BY NAME CONN STRING:" + ConnectionManager.Connection.Database);
-
             string sql = $@"
                 SELECT * FROM {StackDAO.TableName}
                 WHERE LOWER(Name) = LOWER(@Name)
