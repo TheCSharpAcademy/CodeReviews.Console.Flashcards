@@ -1,8 +1,9 @@
 namespace FlashcardsProgram.StudySession;
 
-class StudySessionDAO
+public class StudySessionDAO
 {
-    public DateTime Date { get; set; }
+    public int Id { get; set; }
+    public DateTime DateTime { get; set; }
     public decimal Score { get; set; }
     public int StackId { get; set; }
 
@@ -14,9 +15,10 @@ class StudySessionDAO
         }
     }
 
-    public StudySessionDAO(DateTime date, decimal score, int stackId)
+    public StudySessionDAO(int id, decimal score, DateTime dateTime, int stackId)
     {
-        Date = date;
+        Id = id;
+        DateTime = dateTime;
         Score = score;
         StackId = stackId;
     }

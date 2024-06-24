@@ -1,17 +1,16 @@
 using FlashcardsProgram.Database;
 using FlashcardsProgram.Flashcards;
 using FlashcardsProgram.Stacks;
+using FlashcardsProgram.StudySession;
+using Spectre.Console;
 
 namespace FlashcardsProgram;
 
-public class Application(StacksRepository stacksRepository, BaseRepository<FlashcardDAO> flashcardsRepository)
+public class Application(
+    StacksController stacksController,
+    StudySessionsController sessionsController
+)
 {
-
-    // public FlashcardUI flashcardUI = new FlashcardUI(flashcardsRepository);
-
-    public StackUI stackUI = new StackUI(stacksRepository, new FlashcardUI(flashcardsRepository));
-
-
     public void Start()
     {
         bool isAppRunning = true;
@@ -20,6 +19,7 @@ public class Application(StacksRepository stacksRepository, BaseRepository<Flash
         do
         {
             isAppRunning = ShowMainMenu();
+            Console.Clear();
         } while (isAppRunning);
 
         ShowExitMessage();
@@ -27,45 +27,42 @@ public class Application(StacksRepository stacksRepository, BaseRepository<Flash
 
     public bool ShowMainMenu()
     {
-        bool isRunning = true;
+        bool keepAppRunning = true;
+        bool waitForKeyInputToClear = true;
 
         var selected = Menu.ShowMainMenu();
+
+        AnsiConsole.MarkupLine(selected);
 
         switch (selected)
         {
             case Menu.CREATE_SESSION:
+                sessionsController.Study();
                 break;
             case Menu.VIEW_SESSIONS:
+                sessionsController.ShowSessionsList();
                 break;
-            case Menu.MANAGE_STACK:
-                bool showManageStacksMenu = true;
-
-                do
-                {
-                    var selectedStack = stackUI.SelectStackFromList();
-                    if (selectedStack == null || selectedStack.Id == -1)
-                    {
-                        return true;
-                    }
-
-                    showManageStacksMenu = stackUI.ManageStack(selectedStack);
-                } while (showManageStacksMenu);
+            case Menu.MANAGE_STACKS_CARDS:
+                var didPressBack = stacksController.ManageStacksCards();
+                waitForKeyInputToClear = !didPressBack;
                 break;
             case Menu.CREATE_STACK:
-                stackUI.CreateOrUpdateStack();
+                stacksController.CreateOrUpdateStack();
                 break;
             case Menu.EXIT:
-                isRunning = false;
+                keepAppRunning = false;
+                waitForKeyInputToClear = false;
                 break;
         }
 
-        if (isRunning)
+        if (keepAppRunning && waitForKeyInputToClear)
         {
             Utils.ConsoleUtil.PressAnyKeyToClear();
         }
 
-        return isRunning;
+        return keepAppRunning;
     }
+
     public static void ShowExitMessage()
     {
         Console.WriteLine("Bye!");

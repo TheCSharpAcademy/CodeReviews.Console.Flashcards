@@ -1,13 +1,13 @@
 using FlashcardsProgram.Database;
 using FlashcardsProgram.Flashcards;
-using FlashcardsProgram.Stacks;
+using FlashcardsProgram.StudySession;
 using Spectre.Console;
 
 namespace FlashcardsProgram;
 
-public class FlashcardUI(BaseRepository<FlashcardDAO> flashcardRepository)
+public class FlashcardsController(FlashcardsRepository flashcardRepository)
 {
-    public BaseRepository<FlashcardDAO> flashcardRepo = flashcardRepository;
+    public FlashcardsRepository flashcardRepo = flashcardRepository;
 
     public FlashcardDAO? SelectFlashcardFromList()
     {
@@ -20,16 +20,22 @@ public class FlashcardUI(BaseRepository<FlashcardDAO> flashcardRepository)
             return null;
         }
 
-        FlashcardDAO selectedFlashcard = AnsiConsole.Prompt(
-            new SelectionPrompt<FlashcardDAO>()
-            .Title("FLASHCARDS")
+        FlashcardUiDto selectedFlashcard = AnsiConsole.Prompt(
+            new SelectionPrompt<FlashcardUiDto>()
+            .Title("Flashcards")
             .PageSize(10)
             .MoreChoicesText("[grey](Move up and down to reveal more)[/]")
-            .AddChoices([new FlashcardDAO(-1, "<- Go back", "", -1), .. flashcards])
+            .AddChoices([
+                new FlashcardUiDto(
+                    new FlashcardDAO(-1, "[red]<- Go back[/]", "", -1),
+                    ""
+                ),
+                .. flashcards.Select((card, index) => new FlashcardUiDto(card, (index + 1).ToString()))
+            ])
             .EnableSearch()
         );
 
-        return selectedFlashcard;
+        return selectedFlashcard.Card;
     }
 
     public FlashcardDAO? CreateOrUpdateFlashcard(int stackId, int? id = null)
@@ -78,9 +84,12 @@ public class FlashcardUI(BaseRepository<FlashcardDAO> flashcardRepository)
 
         do
         {
+            var fetchedFlashcard = flashcardRepo.GetById(flashcard.Id);
+            Console.Clear();
+
             string selectedChoice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                .Title($"Manage Flashcard (Front: {flashcard.Front}\nBack: {flashcard.Back})")
+                .Title($"Manage Flashcard \n(\tFront: {fetchedFlashcard.Front}\tBack: {fetchedFlashcard.Back}\t)")
                 .AddChoices([
                     ManageFlashcardMenuChoice.Back,
                     ManageFlashcardMenuChoice.EditFrontBack,
@@ -91,11 +100,11 @@ public class FlashcardUI(BaseRepository<FlashcardDAO> flashcardRepository)
             switch (selectedChoice)
             {
                 case ManageFlashcardMenuChoice.EditFrontBack:
-                    CreateOrUpdateFlashcard(currentStackId, flashcard.Id);
+                    CreateOrUpdateFlashcard(currentStackId, fetchedFlashcard.Id);
                     showMenu = true;
                     break;
                 case ManageFlashcardMenuChoice.DeleteFlashcard:
-                    DeleteFlashcard(flashcard.Id);
+                    DeleteFlashcard(fetchedFlashcard.Id);
                     showMenu = false;
                     break;
                 case ManageFlashcardMenuChoice.Back:
@@ -117,4 +126,15 @@ public static class ManageFlashcardMenuChoice
     public const string EditFrontBack = "[blue]Edit[/] Front/Back text";
     public const string DeleteFlashcard = "[red]Delete[/] Flashcard";
     public const string Back = "[red]<- Go back[/]";
+}
+
+class FlashcardUiDto(FlashcardDAO card, string order)
+{
+    public FlashcardDAO Card = card;
+    public string Order = order;
+
+    public override string ToString()
+    {
+        return $"#{Order}\t{Card.Front}\t{Card.Back}";
+    }
 }

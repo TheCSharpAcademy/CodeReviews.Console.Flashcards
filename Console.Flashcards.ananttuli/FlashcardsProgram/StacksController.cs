@@ -3,10 +3,31 @@ using Spectre.Console;
 
 namespace FlashcardsProgram;
 
-public class StackUI(StacksRepository stacksRepository, FlashcardUI flashUI)
+public class StacksController(StacksRepository stacksRepository, FlashcardsController cardsController)
 {
     public StacksRepository stacksRepo = stacksRepository;
-    public FlashcardUI flashcardUI = flashUI;
+    public FlashcardsController flashcardsController = cardsController;
+
+    public bool ManageStacksCards()
+    {
+        bool showManageStacksMenu = true;
+        bool didPressBack = false;
+
+        do
+        {
+            Console.Clear();
+            var selectedStack = SelectStackFromList();
+            if (selectedStack == null || selectedStack.Id == -1)
+            {
+                didPressBack = true;
+                break;
+            }
+
+            showManageStacksMenu = ManageStack(selectedStack);
+        } while (showManageStacksMenu);
+
+        return didPressBack;
+    }
 
     public StackDAO? SelectStackFromList()
     {
@@ -21,7 +42,7 @@ public class StackUI(StacksRepository stacksRepository, FlashcardUI flashUI)
 
         StackDAO selectedStack = AnsiConsole.Prompt(
             new SelectionPrompt<StackDAO>()
-            .Title("S T A C K S")
+            .Title("Stacks")
             .PageSize(10)
             .MoreChoicesText("[grey](Move up and down to reveal more stacks)[/]")
             .AddChoices([new StackDAO(-1, Utils.Text.Markup("<- Go back", "red")), .. stacks])
@@ -37,6 +58,8 @@ public class StackUI(StacksRepository stacksRepository, FlashcardUI flashUI)
         string stackName;
         do
         {
+            Console.Clear();
+
             stackName = AnsiConsole.Ask<string>("\nStack name? ");
             var existingStack = stacksRepo.FindByName(stackName);
             if (existingStack != null)
@@ -80,10 +103,13 @@ public class StackUI(StacksRepository stacksRepository, FlashcardUI flashUI)
     public bool ManageStack(StackDAO stack)
     {
         bool showMenu = true;
-
-        AnsiConsole.MarkupLine($"Manage Stack - {stack.Name}");
         do
         {
+            var fetchedStack = stacksRepo.GetById(stack.Id);
+
+            Console.Clear();
+
+            AnsiConsole.MarkupLine($"Manage Stack - {fetchedStack.Name}");
             string selectedChoice = AnsiConsole.Prompt(
                new SelectionPrompt<string>()
                .AddChoices([
@@ -100,23 +126,23 @@ public class StackUI(StacksRepository stacksRepository, FlashcardUI flashUI)
             switch (selectedChoice)
             {
                 case ManageStackMenuChoice.EditStackName:
-                    CreateOrUpdateStack(stack.Id);
+                    CreateOrUpdateStack(fetchedStack.Id);
                     break;
                 case ManageStackMenuChoice.DeleteStack:
-                    DeleteStack(stack.Id);
+                    DeleteStack(fetchedStack.Id);
                     showMenu = false;
                     break;
                 case ManageStackMenuChoice.AddFlashcard:
-                    flashcardUI.CreateOrUpdateFlashcard(stack.Id, null);
+                    flashcardsController.CreateOrUpdateFlashcard(fetchedStack.Id, null);
                     break;
                 case ManageStackMenuChoice.VEDFlashcard:
                     bool showList = true;
                     do
                     {
-                        var selectedFlashcard = flashcardUI.SelectFlashcardFromList();
+                        var selectedFlashcard = flashcardsController.SelectFlashcardFromList();
                         if (selectedFlashcard != null && selectedFlashcard.Id != -1)
                         {
-                            showList = flashcardUI.ManageFlashcard(selectedFlashcard, stack.Id);
+                            showList = flashcardsController.ManageFlashcard(selectedFlashcard, fetchedStack.Id);
                         }
                         else
                             showList = false;
@@ -124,7 +150,7 @@ public class StackUI(StacksRepository stacksRepository, FlashcardUI flashUI)
                     while (showList);
                     break;
                 case ManageStackMenuChoice.Back:
-                    return false;
+                    return true;
                 default:
                     break;
             }
@@ -138,7 +164,7 @@ public static class ManageStackMenuChoice
 {
     public const string EditStackName = "[blue]Edit[/] Stack Name";
     public const string DeleteStack = "[blue]Delete[/] Stack";
-    public const string AddFlashcard = "[blue]Add Flashcard[/]";
-    public const string VEDFlashcard = "[blue]View/Edit/Delete flashcards[/]";
+    public const string AddFlashcard = "Add new [yellow]Flashcard[/]";
+    public const string VEDFlashcard = "Manage [yellow]flashcards[/]";
     public const string Back = "[red]<- Go back[/]";
 }

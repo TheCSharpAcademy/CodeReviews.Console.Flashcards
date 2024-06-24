@@ -119,10 +119,10 @@ public class BaseRepository<Entity>
             string sql =
                 $@"
                     DELETE FROM {TableName}
-                    WHERE Id = {id}
+                    WHERE Id = @Id
                 ";
 
-            int rowsAffected = ConnectionManager.Connection.Execute(sql);
+            int rowsAffected = ConnectionManager.Connection.Execute(sql, new { Id = id });
 
             return rowsAffected > 0;
         }
@@ -132,5 +132,24 @@ public class BaseRepository<Entity>
         }
 
         return default;
+    }
+
+    public Entity GetById(int id)
+    {
+        try
+        {
+            string sql =
+                $@"
+                    SELECT * FROM {TableName}
+                    WHERE Id = @Id
+                ";
+
+            return ConnectionManager.Connection.QuerySingle<Entity>(sql, new { Id = id });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Could not get {TableName} ID {id}. {ex.Message}");
+            throw;
+        }
     }
 }
