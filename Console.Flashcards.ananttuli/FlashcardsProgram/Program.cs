@@ -1,5 +1,6 @@
 ﻿using FlashcardsProgram.Database;
 using FlashcardsProgram.Flashcards;
+using FlashcardsProgram.Reports;
 using FlashcardsProgram.Stacks;
 using FlashcardsProgram.StudySession;
 
@@ -14,6 +15,7 @@ public class Program
         var cardsRepo = new FlashcardsRepository(FlashcardDAO.TableName);
         var stacksRepo = new StacksRepository(StackDAO.TableName);
         var sessionsRepo = new StudySessionsRepository(StudySessionDAO.TableName);
+        var reportsRepo = new ReportsRepository();
 
         var flashcardsController = new FlashcardsController(cardsRepo);
 
@@ -29,7 +31,9 @@ public class Program
             flashcardsController
         );
 
-        var app = new Application(stacksController, sessionsController);
+        ReportsController reportsController = new(reportsRepo);
+
+        var app = new Application(stacksController, sessionsController, reportsController);
 
         app.Start();
     }

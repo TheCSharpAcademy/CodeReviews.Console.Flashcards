@@ -5,6 +5,17 @@ namespace FlashcardsProgram.Flashcards;
 
 public class FlashcardsRepository(string tableName) : BaseRepository<FlashcardDAO>(tableName)
 {
+    public List<FlashcardDAO> GetByStackId(int stackId)
+    {
+        string sql = $@"
+            SELECT * FROM Flashcards
+            WHERE StackId = @StackId
+        ";
+
+        return ConnectionManager.Connection
+            .Query<FlashcardDAO>(sql, new { StackId = stackId }).ToList();
+    }
+
     public int GetNumCardsInStack(int stackId)
     {
         string sql = $@"
@@ -12,12 +23,13 @@ public class FlashcardsRepository(string tableName) : BaseRepository<FlashcardDA
             WHERE StackId = @StackId
         ";
 
-        var result = ConnectionManager.Connection.QuerySingle<CountQueryResult>(sql, new { StackId = stackId });
+        var result = ConnectionManager.Connection
+            .QuerySingle<CountQueryResult>(sql, new { StackId = stackId });
         return result.Count;
     }
 }
 
-class CountQueryResult
+internal class CountQueryResult
 {
     public int Count = 0;
 }

@@ -1,5 +1,6 @@
 using FlashcardsProgram.Database;
 using FlashcardsProgram.Flashcards;
+using FlashcardsProgram.Reports;
 using FlashcardsProgram.Stacks;
 using FlashcardsProgram.StudySession;
 using Spectre.Console;
@@ -8,7 +9,8 @@ namespace FlashcardsProgram;
 
 public class Application(
     StacksController stacksController,
-    StudySessionsController sessionsController
+    StudySessionsController sessionsController,
+    ReportsController reportsController
 )
 {
     public void Start()
@@ -49,6 +51,9 @@ public class Application(
             case Menu.CREATE_STACK:
                 stacksController.CreateOrUpdateStack();
                 break;
+            case Menu.VIEW_REPORT:
+                reportsController.AverageScorePerMonthPerStack();
+                break;
             case Menu.EXIT:
                 keepAppRunning = false;
                 waitForKeyInputToClear = false;
@@ -65,12 +70,18 @@ public class Application(
 
     public static void ShowExitMessage()
     {
-        Console.WriteLine("Bye!");
+        AnsiConsole.MarkupLine("[green]Thanks[/] for using Flashcards app!");
     }
 
     public static void ShowWelcomeMessage()
     {
-        Console.WriteLine("Welcome");
-    }
+        AnsiConsole.Write(
+            new FigletText("Flashcards")
+                .Centered()
+                .Color(Color.Yellow)
+        );
 
+        AnsiConsole.MarkupLine("[green]Welcome![/]");
+
+    }
 }

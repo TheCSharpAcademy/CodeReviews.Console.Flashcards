@@ -1,6 +1,4 @@
-using FlashcardsProgram.Database;
 using FlashcardsProgram.Flashcards;
-using FlashcardsProgram.StudySession;
 using Spectre.Console;
 
 namespace FlashcardsProgram;
@@ -9,9 +7,9 @@ public class FlashcardsController(FlashcardsRepository flashcardRepository)
 {
     public FlashcardsRepository flashcardRepo = flashcardRepository;
 
-    public FlashcardDAO? SelectFlashcardFromList()
+    public FlashcardDAO? SelectFlashcardFromList(int stackId)
     {
-        var flashcards = flashcardRepo.List();
+        var flashcards = flashcardRepo.GetByStackId(stackId);
 
         if (flashcards == null || flashcards.Count == 0)
         {
@@ -147,7 +145,7 @@ public static class ManageFlashcardMenuChoice
     public const string Back = "[red]<- Go back[/]";
 }
 
-class FlashcardUiDto(FlashcardDAO card, string order)
+internal class FlashcardUiDto(FlashcardDAO card, string order)
 {
     public FlashcardDAO Card = card;
     public string Order = order;

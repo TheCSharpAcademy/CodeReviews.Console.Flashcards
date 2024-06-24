@@ -26,7 +26,11 @@ public class StudySessionsController(
 
         var table = new Table();
 
-        table.AddColumns(["Date", "Num correct", "Num attempted"]);
+        table.AddColumns([
+            "Date time (dd-mm-yyyy hh:mm AM/PM)",
+            "Num correct",
+            "Num attempted"
+        ]);
 
         for (int i = 0; i < sessions.Count; i++)
         {

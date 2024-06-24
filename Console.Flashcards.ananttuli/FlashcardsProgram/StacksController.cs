@@ -144,7 +144,7 @@ public class StacksController(StacksRepository stacksRepository, FlashcardsContr
                     bool showList = true;
                     do
                     {
-                        var selectedFlashcard = flashcardsController.SelectFlashcardFromList();
+                        var selectedFlashcard = flashcardsController.SelectFlashcardFromList(fetchedStack.Id);
                         if (selectedFlashcard != null && selectedFlashcard.Id != -1)
                         {
                             showList = flashcardsController.ManageFlashcard(selectedFlashcard, fetchedStack.Id);
