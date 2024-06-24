@@ -33,7 +33,7 @@ public class BaseRepository<Entity>
                     OUTPUT INSERTED.*
                     VALUES ({valueParams})
                 ";
-            Console.WriteLine($"\n\nCREATE FLASHCARD {sql}");
+
             var output = ConnectionManager.Connection.QuerySingleOrDefault<Entity>(sql, createPayload);
 
             return output;
@@ -46,13 +46,19 @@ public class BaseRepository<Entity>
         return default;
     }
 
-    public List<Entity> List()
+    public List<Entity> List(int? limit = null)
     {
         try
         {
+            if (limit.HasValue && limit < 0)
+            {
+                throw new Exception("List limit must be a positive number");
+            }
+
+            string limitSql = limit.HasValue ? $"TOP {limit.Value}" : "";
             string sql =
                 $@"
-                    SELECT * FROM {TableName};
+                    SELECT {limitSql} * FROM {TableName};
                 ";
 
             var output = ConnectionManager.Connection.Query<Entity>(sql).ToList();

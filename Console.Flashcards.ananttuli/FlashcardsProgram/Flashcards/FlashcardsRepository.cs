@@ -19,5 +19,5 @@ public class FlashcardsRepository(string tableName) : BaseRepository<FlashcardDA
 
 class CountQueryResult
 {
-    public int Count;
+    public int Count = 0;
 }

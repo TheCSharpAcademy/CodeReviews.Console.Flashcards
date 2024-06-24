@@ -43,7 +43,8 @@ public class Migration
                 BEGIN
                    CREATE TABLE {StudySessionDAO.TableName} (
                         Id INT PRIMARY KEY IDENTITY(1,1),
-                        Score DECIMAL NOT NULL,
+                        NumAttempted INT NOT NULL,
+                        NumCorrect INT NOT NULL,
                         DateTime  DATETIME2 NULL,
                         StackId INT NOT NULL,
                         FOREIGN KEY (StackId) REFERENCES {StackDAO.TableName}(Id) ON DELETE CASCADE
@@ -53,4 +54,15 @@ public class Migration
 
         connection.Execute(sql);
     }
+
+
+    public static void DropTables(SqlConnection connection)
+    {
+        connection.Execute($@"
+            DROP TABLE {FlashcardDAO.TableName};
+            DROP TABLE {StudySessionDAO.TableName};
+            DROP TABLE {StackDAO.TableName};
+        ");
+    }
+
 }

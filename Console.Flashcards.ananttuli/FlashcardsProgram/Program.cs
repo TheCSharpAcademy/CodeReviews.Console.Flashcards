@@ -1,14 +1,7 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-
-using Flashcards;
-using FlashcardsProgram.Database;
+﻿using FlashcardsProgram.Database;
 using FlashcardsProgram.Flashcards;
 using FlashcardsProgram.Stacks;
 using FlashcardsProgram.StudySession;
-
-// FlashcardService.Display("Spanish practice", new FlashcardDTO(1, "hola amigos in the asdasd asdasd asdasd world", "hello"), 1);
-// FlashcardService.Display("Spanish practice", new FlashcardDTO(1, "hola", "hello"), 1, true);
 
 namespace FlashcardsProgram;
 
@@ -32,7 +25,8 @@ public class Program
         StudySessionsController sessionsController = new StudySessionsController(
             sessionsRepo,
             cardsRepo,
-            stacksController
+            stacksController,
+            flashcardsController
         );
 
         var app = new Application(stacksController, sessionsController);

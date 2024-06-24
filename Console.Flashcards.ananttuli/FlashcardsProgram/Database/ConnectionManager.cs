@@ -55,16 +55,6 @@ public class ConnectionManager
                 $"TrustServerCertificate=True;";
     }
 
-    private static void DropTables()
-    {
-        Connection.Execute($@"
-            DROP TABLE Flashcards;
-            DROP TABLE Stacks;
-        ");
-    }
-
-
-
     public static void Init()
     {
         try

@@ -17,7 +17,7 @@ public class StacksController(StacksRepository stacksRepository, FlashcardsContr
         {
             Console.Clear();
             var selectedStack = SelectStackFromList();
-            if (selectedStack == null || selectedStack.Id == -1)
+            if (selectedStack == null)
             {
                 didPressBack = true;
                 break;
@@ -48,6 +48,11 @@ public class StacksController(StacksRepository stacksRepository, FlashcardsContr
             .AddChoices([new StackDAO(-1, Utils.Text.Markup("<- Go back", "red")), .. stacks])
             .EnableSearch()
         );
+
+        if (selectedStack.Id == -1)
+        {
+            return null;
+        }
 
         return selectedStack;
     }

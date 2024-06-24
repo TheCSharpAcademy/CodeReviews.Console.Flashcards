@@ -1,11 +1,15 @@
+using Spectre.Console;
+
 namespace FlashcardsProgram.Utils;
 
 public class ConsoleUtil
 {
-    public static void PressAnyKeyToClear()
+    public static ConsoleKeyInfo PressAnyKeyToClear(string message = "Press any key to continue")
     {
-        Console.WriteLine("Press any key to continue");
-        Console.ReadKey();
+        AnsiConsole.MarkupLine(message);
+        var key = Console.ReadKey();
         Console.Clear();
+
+        return key;
     }
 }

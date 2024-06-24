@@ -35,6 +35,11 @@ public class FlashcardsController(FlashcardsRepository flashcardRepository)
             .EnableSearch()
         );
 
+        if (selectedFlashcard.Card.Id == -1)
+        {
+            return null;
+        }
+
         return selectedFlashcard.Card;
     }
 
@@ -119,6 +124,20 @@ public class FlashcardsController(FlashcardsRepository flashcardRepository)
         return true;
     }
 
+    public void DisplayCard(string stackName, FlashcardDTO flashcard, int order, bool showBack = false)
+    {
+        string backContents = showBack ? $"[bold][green]{flashcard.Back}[/][/]" : "";
+        string frontContents = !showBack ? $"[blue]{flashcard.Front}[/]" : "";
+        string frontOrBack = showBack ? "[green]Answer[/]" : "Question";
+        string contents = $"{frontContents}{backContents}";
+
+        var table = new Table();
+
+        table.AddColumn(new TableColumn($"{stackName} {frontOrBack} #{order}").Centered().Width(30));
+        table.AddRow(contents);
+
+        AnsiConsole.Write(table);
+    }
 }
 
 public static class ManageFlashcardMenuChoice

@@ -7,35 +7,12 @@ using Spectre.Console;
 namespace FlashcardsProgram;
 
 public class StudySessionsController(
-    StudySessionsRepository sessionsRepository,
-    FlashcardsRepository cardsRepository,
-    StacksController stacksController
+    StudySessionsRepository sessionsRepo,
+    FlashcardsRepository cardsRepo,
+    StacksController stacksController,
+    FlashcardsController cardsController
 )
 {
-    public StudySessionsRepository sessionsRepo = sessionsRepository;
-    public FlashcardsRepository cardsRepo = cardsRepository;
-
-    // public bool ManageStacksCards()
-    // {
-    //     bool showManageStacksMenu = true;
-    //     bool didPressBack = false;
-
-    //     do
-    //     {
-    //         Console.Clear();
-    //         var selectedStack = SelectStackFromList();
-    //         if (selectedStack == null || selectedStack.Id == -1)
-    //         {
-    //             didPressBack = true;
-    //             break;
-    //         }
-
-    //         showManageStacksMenu = ManageStack(selectedStack);
-    //     } while (showManageStacksMenu);
-
-    //     return didPressBack;
-    // }
-
     public void ShowSessionsList()
     {
         List<StudySessionDAO> sessions = sessionsRepo.List();
@@ -49,11 +26,15 @@ public class StudySessionsController(
 
         var table = new Table();
 
-        table.AddColumns(["#", "Date", "Score"]);
+        table.AddColumns(["Date", "Num correct", "Num attempted"]);
 
         for (int i = 0; i < sessions.Count; i++)
         {
-            table.AddRow([$"{i + 1}", sessions[i].DateTime.ToString("g"), sessions[i].Score.ToString()]);
+            table.AddRow([
+                sessions[i].DateTime.ToString("g"),
+                sessions[i].NumCorrect.ToString(),
+                sessions[i].NumAttempted.ToString()
+            ]);
         }
 
         AnsiConsole.Write(table);
@@ -63,12 +44,75 @@ public class StudySessionsController(
     {
         var selectedStack = stacksController.SelectStackFromList();
 
-        if (selectedStack == null || selectedStack.Id == -1)
+        if (selectedStack == null)
         {
             return;
         }
 
+        var (isValidNumCards, numCards) = ReadValidNumCardsForSession(selectedStack);
+
+        if (!isValidNumCards)
+        {
+            return;
+        }
+
+        AnsiConsole.MarkupLine($"Starting session with {numCards} cards.");
+
+        var cards = cardsRepo.List(numCards);
+
+        int numAttempted = 0;
+        int numCorrect = 0;
+
+        for (int i = 0; i < cards.Count; i++)
+        {
+            bool isResponseCorrect = PlayCard(selectedStack, cards[i], i + 1);
+
+            numAttempted++;
+            numCorrect += isResponseCorrect ? 1 : 0;
+
+            var key = Utils.ConsoleUtil.PressAnyKeyToClear(
+                "Press [red]0 to exit[/] or [blue]another key to continue[/] session."
+            );
+
+            if ($"{key.KeyChar}".ToLower().Equals("0"))
+            {
+                break;
+            }
+        }
+
+        CreateStudySessionForStack(selectedStack, numCorrect, numAttempted);
+    }
+
+    private bool PlayCard(StackDAO selectedStack, FlashcardDAO card, int order)
+    {
+
+        cardsController.DisplayCard(selectedStack.Name, FlashcardMapping.ToDTO(card), order);
+
+        var response = AnsiConsole.Ask<string>("Response?");
+
+        var isResponseCorrect = response.ToLower().Trim().Equals(card.Back.ToLower().Trim());
+
+        AnsiConsole.MarkupLine(
+            isResponseCorrect ?
+                "[green]Correct! +1[/]" :
+                $"[red]Incorrect. The answer was '{card.Back}'[/]"
+        );
+
+        return isResponseCorrect;
+    }
+
+    private Tuple<bool, int> ReadValidNumCardsForSession(StackDAO selectedStack)
+    {
         int numCardsInStack = cardsRepo.GetNumCardsInStack(selectedStack.Id);
+        if (numCardsInStack < 1)
+        {
+            AnsiConsole.MarkupLine(
+                $"[red]No cards in stack.[/]Please [blue]add cards[/] to practice with this stack."
+            );
+
+            return new Tuple<bool, int>(false, 0);
+        }
+
         int numCards = AnsiConsole.Prompt(
             new TextPrompt<int>($"How many cards for this session? (Min: 1, Max: {numCardsInStack})")
                 .Validate(input =>
@@ -77,7 +121,7 @@ public class StudySessionsController(
                     {
                         return ValidationResult.Error(
                             $"Stack has {numCardsInStack} card(s)." +
-                            $"Please enter value between 1 & {numCardsInStack}."
+                            $"Please enter value between 1 & {numCardsInStack} to start session."
                         );
                     }
 
@@ -86,116 +130,24 @@ public class StudySessionsController(
             )
         );
 
-        Console.WriteLine($"SELECT first {numCards} cards.");
+        return new Tuple<bool, int>(true, numCards);
     }
 
-    // public void Study()
-    // {
-    //     bool stackWithSameNameExists = false;
-    //     string stackName;
-    //     do
-    //     {
-    //         stacksC
-    //         Console.Clear();
 
-    //         stackName = AnsiConsole.Ask<string>("\nStack name? ");
-    //         var existingStack = stacksRepo.FindByName(stackName);
-    //         if (existingStack != null)
-    //         {
-    //             AnsiConsole.MarkupLine(
-    //                 Utils.Text.Markup($"\nStack with name {stackName} already exists. Please use a different name.", "red")
-    //             );
-    //             stackWithSameNameExists = true;
-    //         }
-    //     } while (stackWithSameNameExists);
 
-    //     var upsertedStack = id.HasValue ?
-    //         stacksRepo.Update(id.Value, new UpdateStackDTO(stackName)) :
-    //         stacksRepo.Create(new CreateStackDTO(stackName));
+    private void CreateStudySessionForStack(StackDAO stack, int numCorrect, int numAttempted)
+    {
+        AnsiConsole.MarkupLine($"You scored {numCorrect}/{numAttempted}");
 
-    //     if (upsertedStack == null)
-    //     {
-    //         AnsiConsole.MarkupLine(Utils.Text.Markup($"Could not perform operation", "red"));
-    //         return null;
-    //     }
-
-    //     AnsiConsole.MarkupLine(
-    //         Utils.Text.Markup($"Done", "green")
-    //     );
-
-    //     return upsertedStack;
-    // }
-
-    // public void DeleteStack(int id)
-    // {
-    //     bool success = stacksRepo.Delete(id);
-
-    //     if (success)
-    //     {
-    //         AnsiConsole.MarkupLine(
-    //          success ? Utils.Text.Markup($"Done", "green") : Utils.Text.Markup($"Failed to delete", "red")
-    //         );
-    //     }
-    // }
-
-    // public bool ManageStack(StackDAO stack)
-    // {
-    //     bool showMenu = true;
-    //     do
-    //     {
-    //         var fetchedStack = stacksRepo.GetById(stack.Id);
-
-    //         Console.Clear();
-
-    //         AnsiConsole.MarkupLine($"Manage Stack - {fetchedStack.Name}");
-    //         string selectedChoice = AnsiConsole.Prompt(
-    //            new SelectionPrompt<string>()
-    //            .AddChoices([
-    //                 ManageStackMenuChoice.Back,
-    //                 ManageStackMenuChoice.EditStackName,
-    //                 ManageStackMenuChoice.DeleteStack,
-    //                 ManageStackMenuChoice.AddFlashcard,
-    //                 ManageStackMenuChoice.VEDFlashcard
-    //            ])
-    //        );
-
-    //         AnsiConsole.MarkupLine(selectedChoice);
-
-    //         switch (selectedChoice)
-    //         {
-    //             case ManageStackMenuChoice.EditStackName:
-    //                 CreateOrUpdateStack(fetchedStack.Id);
-    //                 break;
-    //             case ManageStackMenuChoice.DeleteStack:
-    //                 DeleteStack(fetchedStack.Id);
-    //                 showMenu = false;
-    //                 break;
-    //             case ManageStackMenuChoice.AddFlashcard:
-    //                 flashcardsController.CreateOrUpdateFlashcard(fetchedStack.Id, null);
-    //                 break;
-    //             case ManageStackMenuChoice.VEDFlashcard:
-    //                 bool showList = true;
-    //                 do
-    //                 {
-    //                     var selectedFlashcard = flashcardsController.SelectFlashcardFromList();
-    //                     if (selectedFlashcard != null && selectedFlashcard.Id != -1)
-    //                     {
-    //                         showList = flashcardsController.ManageFlashcard(selectedFlashcard, fetchedStack.Id);
-    //                     }
-    //                     else
-    //                         showList = false;
-    //                 }
-    //                 while (showList);
-    //                 break;
-    //             case ManageStackMenuChoice.Back:
-    //                 return true;
-    //             default:
-    //                 break;
-    //         }
-    //     } while (showMenu);
-
-    //     return true;
-    // }
+        sessionsRepo.Create(
+            new CreateStudySessionDTO(
+                numAttempted: numAttempted,
+                numCorrect: numCorrect,
+                dateTime: DateTime.Now,
+                stackId: stack.Id
+            )
+        );
+    }
 }
 
 public static class StudySessionMenuChoice
