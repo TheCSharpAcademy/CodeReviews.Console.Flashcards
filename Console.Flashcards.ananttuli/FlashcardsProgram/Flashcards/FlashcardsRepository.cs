@@ -3,9 +3,9 @@ using FlashcardsProgram.Database;
 
 namespace FlashcardsProgram.Flashcards;
 
-public class FlashcardsRepository(string tableName) : BaseRepository<FlashcardDAO>(tableName)
+public class FlashcardsRepository(string tableName) : BaseRepository<FlashcardDao>(tableName)
 {
-    public List<FlashcardDAO> GetByStackId(int stackId)
+    public List<FlashcardDao> GetByStackId(int stackId)
     {
         string sql = $@"
             SELECT * FROM Flashcards
@@ -13,7 +13,7 @@ public class FlashcardsRepository(string tableName) : BaseRepository<FlashcardDA
         ";
 
         return ConnectionManager.Connection
-            .Query<FlashcardDAO>(sql, new { StackId = stackId }).ToList();
+            .Query<FlashcardDao>(sql, new { StackId = stackId }).ToList();
     }
 
     public int GetNumCardsInStack(int stackId)

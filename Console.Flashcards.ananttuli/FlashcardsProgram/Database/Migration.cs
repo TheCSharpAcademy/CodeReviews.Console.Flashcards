@@ -13,10 +13,10 @@ public class Migration
         string sql = $@"
             IF NOT EXISTS (
                 SELECT * FROM sys.tables
-                WHERE name = '{StackDAO.TableName}' AND schema_id = SCHEMA_ID('dbo')
+                WHERE name = '{StackDao.TableName}' AND schema_id = SCHEMA_ID('dbo')
             )
                 BEGIN
-                   CREATE TABLE {StackDAO.TableName} (
+                   CREATE TABLE {StackDao.TableName} (
                         Id INT PRIMARY KEY IDENTITY(1,1),
                         Name NVARCHAR(255) UNIQUE NOT NULL
                     );
@@ -24,15 +24,15 @@ public class Migration
 
             IF NOT EXISTS (
                 SELECT * FROM sys.tables
-                WHERE name = '{FlashcardDAO.TableName}' AND schema_id = SCHEMA_ID('dbo')
+                WHERE name = '{FlashcardDao.TableName}' AND schema_id = SCHEMA_ID('dbo')
             )
                 BEGIN
-                   CREATE TABLE {FlashcardDAO.TableName} (
+                   CREATE TABLE {FlashcardDao.TableName} (
                         Id INT PRIMARY KEY IDENTITY(1,1),
                         Front NVARCHAR(1024) NOT NULL,
                         Back NVARCHAR(1024) NOT NULL,
                         StackId INT NOT NULL,
-                        FOREIGN KEY (StackId) REFERENCES {StackDAO.TableName}(Id) ON DELETE CASCADE
+                        FOREIGN KEY (StackId) REFERENCES {StackDao.TableName}(Id) ON DELETE CASCADE
                     );
                 END
 
@@ -47,7 +47,7 @@ public class Migration
                         NumCorrect INT NOT NULL,
                         DateTime  DATETIME2 NULL,
                         StackId INT NOT NULL,
-                        FOREIGN KEY (StackId) REFERENCES {StackDAO.TableName}(Id) ON DELETE CASCADE
+                        FOREIGN KEY (StackId) REFERENCES {StackDao.TableName}(Id) ON DELETE CASCADE
                     );
                 END
         ";
@@ -59,9 +59,9 @@ public class Migration
     public static void DropTables(SqlConnection connection)
     {
         connection.Execute($@"
-            DROP TABLE {FlashcardDAO.TableName};
+            DROP TABLE {FlashcardDao.TableName};
             DROP TABLE {StudySessionDAO.TableName};
-            DROP TABLE {StackDAO.TableName};
+            DROP TABLE {StackDao.TableName};
         ");
     }
 

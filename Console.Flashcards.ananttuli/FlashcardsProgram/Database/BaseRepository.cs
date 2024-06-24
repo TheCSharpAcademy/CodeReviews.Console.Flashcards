@@ -11,7 +11,7 @@ public class BaseRepository<Entity>
     {
         TableName = tableName;
     }
-    public Entity? Create<CreateDTO>(CreateDTO createPayload)
+    public Entity? Create<CreateDto>(CreateDto createPayload)
     {
         try
         {
@@ -20,7 +20,7 @@ public class BaseRepository<Entity>
                 throw new Exception("Payload must be provided");
             }
 
-            PropertyInfo[] properties = typeof(CreateDTO).GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            PropertyInfo[] properties = typeof(CreateDto).GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
             List<string> fieldNames = properties.Select(field => field.Name).ToList();
 
@@ -73,7 +73,7 @@ public class BaseRepository<Entity>
         return [];
     }
 
-    public Entity? Update<UpdateDTO>(int id, UpdateDTO updatePayload)
+    public Entity? Update<UpdateDto>(int id, UpdateDto updatePayload)
     {
         try
         {
@@ -82,7 +82,7 @@ public class BaseRepository<Entity>
                 throw new Exception("Payload must be provided");
             }
 
-            PropertyInfo[] properties = typeof(UpdateDTO).GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            PropertyInfo[] properties = typeof(UpdateDto).GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
             List<string> fieldNames = properties.Select(field => field.Name).ToList();
 

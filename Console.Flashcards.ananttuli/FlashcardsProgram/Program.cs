@@ -12,8 +12,8 @@ public class Program
     {
         ConnectionManager.Init();
 
-        var cardsRepo = new FlashcardsRepository(FlashcardDAO.TableName);
-        var stacksRepo = new StacksRepository(StackDAO.TableName);
+        var cardsRepo = new FlashcardsRepository(FlashcardDao.TableName);
+        var stacksRepo = new StacksRepository(StackDao.TableName);
         var sessionsRepo = new StudySessionsRepository(StudySessionDAO.TableName);
         var reportsRepo = new ReportsRepository();
 

@@ -1,6 +1,6 @@
 namespace FlashcardsProgram.Stacks;
 
-public class StackDAO(
+public class StackDao(
     int id,
     string name
 )

@@ -1,8 +1,8 @@
 namespace FlashcardsProgram.Flashcards;
 
-public class FlashcardUiDTO(FlashcardDAO card, string order)
+public class FlashcardUiDto(FlashcardDao card, string order)
 {
-    public FlashcardDAO Card = card;
+    public FlashcardDao Card = card;
     public string Order = order;
 
     public override string ToString()

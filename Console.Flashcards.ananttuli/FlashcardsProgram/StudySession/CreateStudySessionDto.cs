@@ -1,6 +1,6 @@
 namespace FlashcardsProgram.StudySession;
 
-public class CreateStudySessionDTO(decimal numAttempted, decimal numCorrect, DateTime dateTime, int stackId)
+public class CreateStudySessionDto(decimal numAttempted, decimal numCorrect, DateTime dateTime, int stackId)
 {
     public DateTime DateTime { get; set; } = dateTime;
     public decimal NumAttempted { get; set; } = numAttempted;

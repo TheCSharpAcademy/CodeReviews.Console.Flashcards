@@ -7,7 +7,7 @@ public class FlashcardsController(FlashcardsRepository flashcardRepository)
 {
     public FlashcardsRepository flashcardRepo = flashcardRepository;
 
-    public FlashcardDAO? SelectFlashcardFromList(int stackId)
+    public FlashcardDao? SelectFlashcardFromList(int stackId)
     {
         var flashcards = flashcardRepo.GetByStackId(stackId);
 
@@ -18,18 +18,18 @@ public class FlashcardsController(FlashcardsRepository flashcardRepository)
             return null;
         }
 
-        FlashcardUiDTO selectedFlashcard = AnsiConsole.Prompt(
-            new SelectionPrompt<FlashcardUiDTO>()
+        FlashcardUiDto selectedFlashcard = AnsiConsole.Prompt(
+            new SelectionPrompt<FlashcardUiDto>()
             .Title("Flashcards")
             .PageSize(10)
             .MoreChoicesText("[grey](Move up and down to reveal more)[/]")
             .AddChoices([
-                new FlashcardUiDTO(
-                    new FlashcardDAO(-1, "[red]<- Go back[/]", "", -1),
+                new FlashcardUiDto(
+                    new FlashcardDao(-1, "[red]<- Go back[/]", "", -1),
                     ""
                 ),
                 .. flashcards.Select((card, index) =>
-                    new FlashcardUiDTO(card, (index + 1).ToString())
+                    new FlashcardUiDto(card, (index + 1).ToString())
                 )
             ])
             .EnableSearch()
@@ -43,7 +43,7 @@ public class FlashcardsController(FlashcardsRepository flashcardRepository)
         return selectedFlashcard.Card;
     }
 
-    public FlashcardDAO? CreateOrUpdateFlashcard(int stackId, int? id = null)
+    public FlashcardDao? CreateOrUpdateFlashcard(int stackId, int? id = null)
     {
         string front;
         string back;
@@ -55,8 +55,8 @@ public class FlashcardsController(FlashcardsRepository flashcardRepository)
         back = AnsiConsole.Ask<string>("\nBack? ");
 
         var upsertedFlashcard = id.HasValue ?
-            flashcardRepo.Update(id.Value, new UpdateFlashcardDTO(front, back)) :
-            flashcardRepo.Create(new CreateFlashcardDTO(front, back, stackId));
+            flashcardRepo.Update(id.Value, new UpdateFlashcardDto(front, back)) :
+            flashcardRepo.Create(new CreateFlashcardDto(front, back, stackId));
 
         if (upsertedFlashcard == null)
         {
@@ -85,7 +85,7 @@ public class FlashcardsController(FlashcardsRepository flashcardRepository)
         }
     }
 
-    public bool ManageFlashcard(FlashcardDAO flashcard, int currentStackId)
+    public bool ManageFlashcard(FlashcardDao flashcard, int currentStackId)
     {
         bool showMenu = true;
 
@@ -126,7 +126,7 @@ public class FlashcardsController(FlashcardsRepository flashcardRepository)
         return true;
     }
 
-    public void DisplayCard(string stackName, FlashcardDAO flashcard, int order)
+    public void DisplayCard(string stackName, FlashcardDao flashcard, int order)
     {
         var table = new Table();
 

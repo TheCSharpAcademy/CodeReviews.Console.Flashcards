@@ -29,7 +29,7 @@ public class StacksController(StacksRepository stacksRepository, FlashcardsContr
         return didPressBack;
     }
 
-    public StackDAO? SelectStackFromList()
+    public StackDao? SelectStackFromList()
     {
         var stacks = stacksRepo.List();
 
@@ -40,12 +40,12 @@ public class StacksController(StacksRepository stacksRepository, FlashcardsContr
             return null;
         }
 
-        StackDAO selectedStack = AnsiConsole.Prompt(
-            new SelectionPrompt<StackDAO>()
+        StackDao selectedStack = AnsiConsole.Prompt(
+            new SelectionPrompt<StackDao>()
             .Title("Stacks")
             .PageSize(10)
             .MoreChoicesText("[grey](Move up and down to reveal more stacks)[/]")
-            .AddChoices([new StackDAO(-1, Utils.Text.Markup("<- Go back", "red")), .. stacks])
+            .AddChoices([new StackDao(-1, Utils.Text.Markup("<- Go back", "red")), .. stacks])
             .EnableSearch()
         );
 
@@ -57,7 +57,7 @@ public class StacksController(StacksRepository stacksRepository, FlashcardsContr
         return selectedStack;
     }
 
-    public StackDAO? CreateOrUpdateStack(int? id = null)
+    public StackDao? CreateOrUpdateStack(int? id = null)
     {
         bool stackWithSameNameExists = false;
         string stackName;
@@ -77,8 +77,8 @@ public class StacksController(StacksRepository stacksRepository, FlashcardsContr
         } while (stackWithSameNameExists);
 
         var upsertedStack = id.HasValue ?
-            stacksRepo.Update(id.Value, new UpdateStackDTO(stackName)) :
-            stacksRepo.Create(new CreateStackDTO(stackName));
+            stacksRepo.Update(id.Value, new UpdateStackDto(stackName)) :
+            stacksRepo.Create(new CreateStackDto(stackName));
 
         if (upsertedStack == null)
         {
@@ -105,7 +105,7 @@ public class StacksController(StacksRepository stacksRepository, FlashcardsContr
         }
     }
 
-    public bool ManageStack(StackDAO stack)
+    public bool ManageStack(StackDao stack)
     {
         bool showMenu = true;
         do

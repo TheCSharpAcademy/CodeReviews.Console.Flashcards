@@ -1,6 +1,6 @@
 namespace FlashcardsProgram.Stacks;
 
-public class UpdateStackDTO(
+public class UpdateStackDto(
     string name
 )
 {

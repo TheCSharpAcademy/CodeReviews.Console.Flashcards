@@ -1,6 +1,6 @@
 namespace FlashcardsProgram.Stacks;
 
-public class CreateStackDTO(
+public class CreateStackDto(
     string name
 )
 {

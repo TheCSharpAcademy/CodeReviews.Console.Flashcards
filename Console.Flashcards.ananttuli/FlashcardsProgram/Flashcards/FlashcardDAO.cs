@@ -1,6 +1,6 @@
 namespace FlashcardsProgram.Flashcards;
 
-public class FlashcardDAO(
+public class FlashcardDao(
     int id,
     string front,
     string back,

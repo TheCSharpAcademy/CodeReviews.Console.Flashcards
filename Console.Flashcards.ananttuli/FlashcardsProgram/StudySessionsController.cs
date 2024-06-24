@@ -89,7 +89,7 @@ public class StudySessionsController(
         CreateStudySessionForStack(selectedStack, numCorrect, numAttempted);
     }
 
-    private bool PlayCard(StackDAO selectedStack, FlashcardDAO card, int order)
+    private bool PlayCard(StackDao selectedStack, FlashcardDao card, int order)
     {
 
         cardsController.DisplayCard(selectedStack.Name, card, order);
@@ -107,7 +107,7 @@ public class StudySessionsController(
         return isResponseCorrect;
     }
 
-    private Tuple<bool, int> ReadValidNumCardsForSession(StackDAO selectedStack)
+    private Tuple<bool, int> ReadValidNumCardsForSession(StackDao selectedStack)
     {
         int numCardsInStack = cardsRepo.GetNumCardsInStack(selectedStack.Id);
         if (numCardsInStack < 1)
@@ -141,12 +141,12 @@ public class StudySessionsController(
 
 
 
-    private void CreateStudySessionForStack(StackDAO stack, int numCorrect, int numAttempted)
+    private void CreateStudySessionForStack(StackDao stack, int numCorrect, int numAttempted)
     {
         AnsiConsole.MarkupLine($"You scored {numCorrect}/{numAttempted}");
 
         sessionsRepo.Create(
-            new CreateStudySessionDTO(
+            new CreateStudySessionDto(
                 numAttempted: numAttempted,
                 numCorrect: numCorrect,
                 dateTime: DateTime.Now,

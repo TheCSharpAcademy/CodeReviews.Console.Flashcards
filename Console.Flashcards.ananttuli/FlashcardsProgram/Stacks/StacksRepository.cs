@@ -4,23 +4,23 @@ using Microsoft.Data.SqlClient;
 
 namespace FlashcardsProgram.Stacks;
 
-public class StacksRepository : BaseRepository<StackDAO>
+public class StacksRepository : BaseRepository<StackDao>
 {
 
     public StacksRepository(string tableName) : base(tableName)
     {
     }
 
-    public StackDAO? FindByName(string name)
+    public StackDao? FindByName(string name)
     {
         try
         {
             string sql = $@"
-                SELECT * FROM {StackDAO.TableName}
+                SELECT * FROM {StackDao.TableName}
                 WHERE LOWER(Name) = LOWER(@Name)
             ";
 
-            return ConnectionManager.Connection.QuerySingleOrDefault<StackDAO>(sql, new { Name = name });
+            return ConnectionManager.Connection.QuerySingleOrDefault<StackDao>(sql, new { Name = name });
         }
         catch (Exception ex)
         {

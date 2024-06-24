@@ -13,7 +13,7 @@ public class ReportsRepository
             SELECT *
             FROM
             (
-                SELECT {StackDAO.TableName}.Name as Name,
+                SELECT {StackDao.TableName}.Name as Name,
                 DATENAME(MONTH, StudySessions.DateTime) as Month,
                 (
                     CONVERT(FLOAT, SUM(NumCorrect))/
@@ -21,10 +21,10 @@ public class ReportsRepository
                     * 100
                 ) AS Score
                 FROM {StudySessionDAO.TableName}
-                INNER JOIN {StackDAO.TableName}
-                    ON {StudySessionDAO.TableName}.StackId = {StackDAO.TableName}.Id
+                INNER JOIN {StackDao.TableName}
+                    ON {StudySessionDAO.TableName}.StackId = {StackDao.TableName}.Id
                 WHERE YEAR(StudySessions.DateTime) = @Year
-                GROUP BY {StackDAO.TableName}.Name, DATENAME(MONTH, StudySessions.DateTime)
+                GROUP BY {StackDao.TableName}.Name, DATENAME(MONTH, StudySessions.DateTime)
             ) AS SourceTable
             PIVOT
             (
