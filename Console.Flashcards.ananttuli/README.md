@@ -2,8 +2,19 @@
 
 ## Summary
 
-Flashcards App helps users learn effectively by allowing them to undertake study
-sessions where they can practice with flash cards and track their scores.
+Flashcards App helps users learn effectively by allowing them to undertake
+study sessions where they can practice with flash cards and track their
+study session scores. A flashcard is a learning tool where information
+is presented as a question or term on one side, with its corresponding answer
+on the reverse side, used for quick study and recall.
+
+## Feature overview
+
+- Conduct study sessions
+- View past study sessions
+- Manage stacks and flashcards
+- Create new stacks
+- View average score report per month per stack
 
 ## Run application locally
 
@@ -15,13 +26,14 @@ sessions where they can practice with flash cards and track their scores.
 ### Steps to run
 
 - Clone this repository and `cd` into it
+- If required, change `appsettings.json` values
 - `cd FlashcardsProgram && dotnet run`
 
 ## Tech stack
 
-- SQL server
-- Dapper
 - C#
+- SQL server
+- Dapper ORM
 
 ## Database details
 
