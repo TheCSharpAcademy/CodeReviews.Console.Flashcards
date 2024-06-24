@@ -14,7 +14,7 @@ public class Program
 
         var cardsRepo = new FlashcardsRepository(FlashcardDao.TableName);
         var stacksRepo = new StacksRepository(StackDao.TableName);
-        var sessionsRepo = new StudySessionsRepository(StudySessionDAO.TableName);
+        var sessionsRepo = new StudySessionsRepository(StudySessionDao.TableName);
         var reportsRepo = new ReportsRepository();
 
         var flashcardsController = new FlashcardsController(cardsRepo);

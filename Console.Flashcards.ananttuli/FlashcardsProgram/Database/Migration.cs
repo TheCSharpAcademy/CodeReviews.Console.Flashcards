@@ -38,10 +38,10 @@ public class Migration
 
             IF NOT EXISTS (
                 SELECT * FROM sys.tables
-                WHERE name = '{StudySessionDAO.TableName}' AND schema_id = SCHEMA_ID('dbo')
+                WHERE name = '{StudySessionDao.TableName}' AND schema_id = SCHEMA_ID('dbo')
             )
                 BEGIN
-                   CREATE TABLE {StudySessionDAO.TableName} (
+                   CREATE TABLE {StudySessionDao.TableName} (
                         Id INT PRIMARY KEY IDENTITY(1,1),
                         NumAttempted INT NOT NULL,
                         NumCorrect INT NOT NULL,
@@ -60,7 +60,7 @@ public class Migration
     {
         connection.Execute($@"
             DROP TABLE {FlashcardDao.TableName};
-            DROP TABLE {StudySessionDAO.TableName};
+            DROP TABLE {StudySessionDao.TableName};
             DROP TABLE {StackDao.TableName};
         ");
     }

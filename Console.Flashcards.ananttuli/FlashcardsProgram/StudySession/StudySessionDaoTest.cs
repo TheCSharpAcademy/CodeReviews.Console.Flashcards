@@ -1,6 +1,6 @@
 namespace FlashcardsProgram.StudySession;
 
-public class StudySessionDAO(
+public class StudySessionDao(
     int id, int numAttempted, int numCorrect, DateTime dateTime, int stackId
 )
 {

@@ -57,7 +57,8 @@ public class ReportsController(ReportsRepository reportsRepository)
                         average, out decimal parsedValue
                     );
 
-                    return parseSuccess ? parsedValue.ToString("0.0") :
+                    return parseSuccess ?
+                        (parsedValue.ToString("0.0") + "%") :
                         "-";
                 });
 

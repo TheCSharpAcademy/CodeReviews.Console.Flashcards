@@ -4,6 +4,6 @@ using FlashcardsProgram.Stacks;
 
 namespace FlashcardsProgram.StudySession;
 
-public class StudySessionsRepository(string tableName) : BaseRepository<StudySessionDAO>(tableName)
+public class StudySessionsRepository(string tableName) : BaseRepository<StudySessionDao>(tableName)
 {
 }

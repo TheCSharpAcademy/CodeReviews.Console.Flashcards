@@ -1,4 +1,3 @@
-using System.Security;
 using Dapper;
 using FlashcardsProgram.Stacks;
 using Microsoft.Data.SqlClient;

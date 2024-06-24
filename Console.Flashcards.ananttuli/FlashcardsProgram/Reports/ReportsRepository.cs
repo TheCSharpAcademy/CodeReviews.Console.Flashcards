@@ -20,9 +20,9 @@ public class ReportsRepository
                     NULLIF(CONVERT(FLOAT, SUM(NumAttempted)), 0)
                     * 100
                 ) AS Score
-                FROM {StudySessionDAO.TableName}
+                FROM {StudySessionDao.TableName}
                 INNER JOIN {StackDao.TableName}
-                    ON {StudySessionDAO.TableName}.StackId = {StackDao.TableName}.Id
+                    ON {StudySessionDao.TableName}.StackId = {StackDao.TableName}.Id
                 WHERE YEAR(StudySessions.DateTime) = @Year
                 GROUP BY {StackDao.TableName}.Name, DATENAME(MONTH, StudySessions.DateTime)
             ) AS SourceTable

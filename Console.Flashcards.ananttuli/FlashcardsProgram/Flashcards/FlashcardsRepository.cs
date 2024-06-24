@@ -29,7 +29,7 @@ public class FlashcardsRepository(string tableName) : BaseRepository<FlashcardDa
     }
 }
 
-internal class CountQueryResult
+internal class CountQueryResult(int count)
 {
-    public int Count = 0;
+    public int Count = count;
 }

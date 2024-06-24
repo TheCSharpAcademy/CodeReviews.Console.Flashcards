@@ -15,7 +15,7 @@ public class StudySessionsController(
 {
     public void ShowSessionsList()
     {
-        List<StudySessionDAO> sessions = sessionsRepo.List();
+        List<StudySessionDao> sessions = sessionsRepo.List();
 
         if (sessions == null || sessions.Count == 0)
         {
