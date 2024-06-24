@@ -18,17 +18,19 @@ public class FlashcardsController(FlashcardsRepository flashcardRepository)
             return null;
         }
 
-        FlashcardUiDto selectedFlashcard = AnsiConsole.Prompt(
-            new SelectionPrompt<FlashcardUiDto>()
+        FlashcardUiDTO selectedFlashcard = AnsiConsole.Prompt(
+            new SelectionPrompt<FlashcardUiDTO>()
             .Title("Flashcards")
             .PageSize(10)
             .MoreChoicesText("[grey](Move up and down to reveal more)[/]")
             .AddChoices([
-                new FlashcardUiDto(
+                new FlashcardUiDTO(
                     new FlashcardDAO(-1, "[red]<- Go back[/]", "", -1),
                     ""
                 ),
-                .. flashcards.Select((card, index) => new FlashcardUiDto(card, (index + 1).ToString()))
+                .. flashcards.Select((card, index) =>
+                    new FlashcardUiDTO(card, (index + 1).ToString())
+                )
             ])
             .EnableSearch()
         );
@@ -76,7 +78,9 @@ public class FlashcardsController(FlashcardsRepository flashcardRepository)
         if (success)
         {
             AnsiConsole.MarkupLine(
-             success ? Utils.Text.Markup($"Done", "green") : Utils.Text.Markup($"Failed to delete", "red")
+             success ?
+                Utils.Text.Markup($"Done", "green") :
+                Utils.Text.Markup($"Failed to delete", "red")
             );
         }
     }
@@ -122,17 +126,15 @@ public class FlashcardsController(FlashcardsRepository flashcardRepository)
         return true;
     }
 
-    public void DisplayCard(string stackName, FlashcardDTO flashcard, int order, bool showBack = false)
+    public void DisplayCard(string stackName, FlashcardDAO flashcard, int order)
     {
-        string backContents = showBack ? $"[bold][green]{flashcard.Back}[/][/]" : "";
-        string frontContents = !showBack ? $"[blue]{flashcard.Front}[/]" : "";
-        string frontOrBack = showBack ? "[green]Answer[/]" : "Question";
-        string contents = $"{frontContents}{backContents}";
-
         var table = new Table();
 
-        table.AddColumn(new TableColumn($"{stackName} {frontOrBack} #{order}").Centered().Width(30));
-        table.AddRow(contents);
+        table.AddColumn(
+            new TableColumn(
+                $"{stackName} Question #{order}").Centered().Width(30)
+        );
+        table.AddRow($"[blue]{flashcard.Front}[/]");
 
         AnsiConsole.Write(table);
     }
@@ -143,15 +145,4 @@ public static class ManageFlashcardMenuChoice
     public const string EditFrontBack = "[blue]Edit[/] Front/Back text";
     public const string DeleteFlashcard = "[red]Delete[/] Flashcard";
     public const string Back = "[red]<- Go back[/]";
-}
-
-internal class FlashcardUiDto(FlashcardDAO card, string order)
-{
-    public FlashcardDAO Card = card;
-    public string Order = order;
-
-    public override string ToString()
-    {
-        return $"#{Order}\t{Card.Front}\t{Card.Back}";
-    }
 }

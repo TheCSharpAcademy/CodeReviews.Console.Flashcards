@@ -62,7 +62,9 @@ public class StudySessionsController(
 
         AnsiConsole.MarkupLine($"Starting session with {numCards} cards.");
 
-        var cards = cardsRepo.List(numCards);
+        var cards = cardsRepo.GetByStackId(selectedStack.Id)
+            .Where((_, index) => index < numCards)
+            .ToList();
 
         int numAttempted = 0;
         int numCorrect = 0;
@@ -90,7 +92,7 @@ public class StudySessionsController(
     private bool PlayCard(StackDAO selectedStack, FlashcardDAO card, int order)
     {
 
-        cardsController.DisplayCard(selectedStack.Name, FlashcardMapping.ToDTO(card), order);
+        cardsController.DisplayCard(selectedStack.Name, card, order);
 
         var response = AnsiConsole.Ask<string>("Response?");
 
