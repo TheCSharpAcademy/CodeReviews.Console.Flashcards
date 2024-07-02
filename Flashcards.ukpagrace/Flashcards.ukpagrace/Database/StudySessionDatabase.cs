@@ -121,11 +121,11 @@ namespace Flashcards.ukpagrace.Database
             }
         }
 
-        public List<NumberOfSessionPerMonthDTO> NumberofSessionPerMonth()
+        public List<NumberOfSessionPerMonthDto> NumberOfSessionPerMonth()
         {
             try
             {
-                List<NumberOfSessionPerMonthDTO> records = new();
+                List<NumberOfSessionPerMonthDto> records = new();
                 using SqlConnection sqlConnection = new(connectionString);
                 using SqlCommand cmd = sqlConnection.CreateCommand();
                 cmd.CommandText = "SELECT count(id), MONTH(EndDate) FROM studySession group by MONTH(EndDate);";
@@ -135,7 +135,7 @@ namespace Flashcards.ukpagrace.Database
                 {
                     while (table.Read())
                     {
-                        records.Add(new NumberOfSessionPerMonthDTO()
+                        records.Add(new NumberOfSessionPerMonthDto()
                         {
                             Count = table.GetInt32(0),
                             Month = table.GetInt32(1)
@@ -153,11 +153,11 @@ namespace Flashcards.ukpagrace.Database
         }
 
 
-        public List<AverageScorePerMonthDTO> AverageScorePerMonth()
+        public List<AverageScorePerMonthDto> AverageScorePerMonth()
         {
             try
             {
-                List<AverageScorePerMonthDTO> records = new();
+                List<AverageScorePerMonthDto> records = new();
                 using SqlConnection sqlConnection = new(connectionString);
                 using SqlCommand cmd = sqlConnection.CreateCommand();
                 cmd.CommandText = @"
@@ -176,7 +176,7 @@ namespace Flashcards.ukpagrace.Database
                 {
                     while (table.Read())
                     {
-                        records.Add(new AverageScorePerMonthDTO()
+                        records.Add(new AverageScorePerMonthDto()
                         {
                             AverageScore = table.GetInt32(0),
                             Month = table.GetInt32(1)

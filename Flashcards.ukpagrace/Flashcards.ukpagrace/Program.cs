@@ -7,7 +7,7 @@ namespace Flashcards.ukpagrace
         StackController stackController = new();
         FlashcardController flashcardController = new();
         StudySessionController studySessionController = new();
-        bool exitApp = false;
+        bool exitApp;
         static void Main(string[] args)
         {
  
@@ -49,7 +49,7 @@ namespace Flashcards.ukpagrace
                     break;
             }
         }
-        string StackSwitch()
+        void StackSwitch()
         {
         
         var input = AnsiConsole.Prompt(
@@ -76,10 +76,9 @@ namespace Flashcards.ukpagrace
                     break;
                 default: break;
             }
-            return input;
         }
 
-        string FlashcardSwitch()
+        void FlashcardSwitch()
         {
             var input = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
@@ -108,7 +107,6 @@ namespace Flashcards.ukpagrace
                     break;
                 default: break;
             }
-            return input;
         }
 
         void ExitApp()
@@ -116,7 +114,7 @@ namespace Flashcards.ukpagrace
             exitApp = true; 
         }
 
-        string StudySessionSwitch()
+        void StudySessionSwitch()
         {
             var input = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
@@ -137,7 +135,7 @@ namespace Flashcards.ukpagrace
                     studySessionController.ListStudySession();
                     break;
                 case "sessioncountpermonth":
-                    studySessionController.GetNumberofSessionPerMonth();
+                    studySessionController.GetNumberOfSessionPerMonth();
                     break;
                 case "averagescorepermonth":
                     studySessionController.GetAverageScorePerMonth();
@@ -147,7 +145,6 @@ namespace Flashcards.ukpagrace
                     break;
                 default: break;
             }
-            return input;
         }
     }
 }

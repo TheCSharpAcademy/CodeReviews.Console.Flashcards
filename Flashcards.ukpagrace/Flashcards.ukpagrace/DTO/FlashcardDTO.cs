@@ -1,6 +1,6 @@
 namespace Flashcards.ukpagrace.DTO
 {
-    class FlashcardDTO
+    class FlashcardDto
     {
         public int? Id { get; set; }
         public int FlashcardId { get; set; }

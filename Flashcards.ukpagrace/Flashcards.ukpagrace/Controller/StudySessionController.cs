@@ -26,7 +26,7 @@ namespace Flashcards.ukpagrace.Controller
             try
             {
                 string stackName = userInput.GetStackOption();
-                List<FlashcardDTO> records = new List<FlashcardDTO>();
+                List<FlashcardDto> records = new List<FlashcardDto>();
                 int stackId = stackDatabase.GetStackId(stackName);
                 records = flashCardDatabase.GetFlashcards(stackId);
                 if (records.Count > 0) {
@@ -34,7 +34,7 @@ namespace Flashcards.ukpagrace.Controller
 
                     DateTime startDate = DateTime.Now;
 
-                    foreach (FlashcardDTO record in records)
+                    foreach (FlashcardDto record in records)
                     {
                         
                         var panel = new Panel(record.Question);
@@ -104,9 +104,9 @@ namespace Flashcards.ukpagrace.Controller
         }
 
 
-        public void GetNumberofSessionPerMonth()
+        public void GetNumberOfSessionPerMonth()
         {
-            List <NumberOfSessionPerMonthDTO> sessions = studySessionDatabase.NumberofSessionPerMonth();
+            List <NumberOfSessionPerMonthDto> sessions = studySessionDatabase.NumberOfSessionPerMonth();
             List <string> sessionCount = new ();
             var table = new Table();
             table.Centered();
@@ -132,7 +132,7 @@ namespace Flashcards.ukpagrace.Controller
 
         public void GetAverageScorePerMonth()
         {
-            List<AverageScorePerMonthDTO> sessions = studySessionDatabase.AverageScorePerMonth();
+            List<AverageScorePerMonthDto> sessions = studySessionDatabase.AverageScorePerMonth();
             List<string> sessionCount = new();
             var table = new Table();
             table.Centered();

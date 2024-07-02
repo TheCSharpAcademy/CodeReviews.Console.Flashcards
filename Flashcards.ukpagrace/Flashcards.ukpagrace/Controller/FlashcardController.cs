@@ -11,15 +11,13 @@ namespace Flashcards.ukpagrace.Controller
         FlashCardDatabase flashcardDatabase = new ();
         StackDatabase stackDatabase = new ();
         UserInput userInput = new();
-        bool hasFlashcards = false;
-        List<FlashcardDTO> records = new List<FlashcardDTO>();
+        bool hasFlashcards;
+        List<FlashcardDto> records = new List<FlashcardDto>();
         public void ShowFlashCards()
         {
             try
             {
                 var stackName = userInput.GetStackOption();
-
-                //List<FlashcardDTO> records = new List<FlashcardDTO>();
                 int stackId = stackDatabase.GetStackId(stackName);
                 records = flashcardDatabase.GetFlashcards(stackId);
 
@@ -34,7 +32,7 @@ namespace Flashcards.ukpagrace.Controller
                 
                 if(records.Count > 0)
                 {
-                    foreach (FlashcardDTO record in records)
+                    foreach (FlashcardDto record in records)
                     {
                         record.Id = count++;
                         table.AddRow(
@@ -86,11 +84,7 @@ namespace Flashcards.ukpagrace.Controller
                 }
                 flashcardId = flashcard.FlashcardId;
 
-                if (!flashcardDatabase.IdExists(flashcardId))
-                {
-                    AnsiConsole.MarkupLine("[red]Id does not exists[/]");
-                    return;
-                }
+
                 var updateOption = userInput.GetUpdateInput();
                 FlashcardEntity record = flashcardDatabase.GetOne(flashcardId);
                 if (updateOption.ToLower() == "question")
@@ -120,12 +114,14 @@ namespace Flashcards.ukpagrace.Controller
             if (hasFlashcards)
             {
                 int id = userInput.GetFlashCardInput();
-                int flashcardId = records.Find(x => x.Id == id).FlashcardId;
-                if (!flashcardDatabase.IdExists(flashcardId))
+                var flashcard = records.Find(x => x.Id == id);
+                int flashcardId;
+                if (flashcard == null)
                 {
                     AnsiConsole.MarkupLine("[red]Id does not exists[/]");
                     return;
                 }
+                flashcardId = flashcard.FlashcardId;
                 flashcardDatabase.Delete(flashcardId);
             }
         }

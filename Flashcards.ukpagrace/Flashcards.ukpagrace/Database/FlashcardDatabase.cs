@@ -139,31 +139,11 @@ namespace Flashcards.ukpagrace.Database
             }
         }
 
-        public bool IdExists(int id)
+        public List<FlashcardDto> GetFlashcards(int stackId)
         {
             try
             {
-                using SqlConnection sqlConnection = new(connectionString);
-                using SqlCommand cmd = sqlConnection.CreateCommand();
-                cmd.CommandText = @"SELECT * FROM flashcard WHERE Id=@Id ";
-                cmd.Parameters.AddWithValue("@Id", id);
-                sqlConnection.Open();
-                SqlDataReader table = cmd.ExecuteReader();
-                return table.HasRows;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
-        }
-
-
-        public List<FlashcardDTO> GetFlashcards(int stackId)
-        {
-            try
-            {
-                List<FlashcardDTO> records = new List<FlashcardDTO>();
+                List<FlashcardDto> records = new List<FlashcardDto>();
                 using SqlConnection sqlConnection = new(connectionString);
                 using SqlCommand cmd = sqlConnection.CreateCommand();
                 cmd.CommandText = "SELECT * FROM flashcard where @StackId=StackId";
@@ -175,7 +155,7 @@ namespace Flashcards.ukpagrace.Database
                 {
                     while (table.Read())
                     {
-                        records.Add(new FlashcardDTO()
+                        records.Add(new FlashcardDto()
                         {
                             FlashcardId = table.GetInt32(0),
                             Question = table.GetString(2),

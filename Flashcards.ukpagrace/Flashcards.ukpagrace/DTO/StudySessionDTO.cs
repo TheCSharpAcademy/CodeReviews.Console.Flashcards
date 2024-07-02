@@ -1,13 +1,13 @@
 namespace Flashcards.ukpagrace.DTO
 {
-    class NumberOfSessionPerMonthDTO
+    class NumberOfSessionPerMonthDto
     {
         public int Count { get; set; }
 
         public int Month { get; set; }
     }
 
-    class AverageScorePerMonthDTO
+    class AverageScorePerMonthDto
     {
         public int AverageScore { get; set; }
 
