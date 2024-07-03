@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace jollejonas.Flashcards.Data
 {
@@ -25,13 +24,6 @@ namespace jollejonas.Flashcards.Data
             using var command = new SqlCommand(query, connection);
             command.ExecuteNonQuery();
 
-        }
-        public void ExecuteQuery(string query)
-        {
-            using var connection = GetConnection();
-            connection.Open();
-            using var command = new SqlCommand(query, connection);
-            command.ExecuteNonQuery();
         }
 
         public List<CardStack> GetCardStacks()
@@ -81,11 +73,11 @@ namespace jollejonas.Flashcards.Data
             return cards;
         }
 
-        public CardStackDetailsDTO GetCardStackDTOs(int stackId)
+        public CardStackDetailsDto GetCardStackDTOs(int stackId)
         {
-            var cardStackDetails = new CardStackDetailsDTO
+            var cardStackDetails = new CardStackDetailsDto
             {
-                Cards = new List<CardsDTO>()
+                Cards = new List<CardsDto>()
             };
 
             var query = $@"
@@ -112,7 +104,7 @@ namespace jollejonas.Flashcards.Data
                 {
                     cardStackDetails.CardStackName = reader.GetString(0);
                 }
-                var cards = new CardsDTO
+                var cards = new CardsDto
                 {
                     Id = reader.GetInt32(1),
                     PresentationId = presentationId++,
@@ -124,9 +116,9 @@ namespace jollejonas.Flashcards.Data
             return cardStackDetails;
         }
 
-        public List<StudySessionPivotDTO> GetStudySessionsPerMonth(int year)
+        public List<StudySessionPivotDto> GetStudySessionsPerMonth(int year)
         {
-            var studySessions = new List<StudySessionPivotDTO>();
+            var studySessions = new List<StudySessionPivotDto>();
             string query = $@"
             WITH SessionData AS (
                 SELECT
@@ -183,7 +175,7 @@ namespace jollejonas.Flashcards.Data
 
             while (reader.Read())
             {
-                var session = new StudySessionPivotDTO
+                var session = new StudySessionPivotDto
                 {
                     StackName = reader.GetString(0),
                     January = reader.IsDBNull(1) ? 0 : reader.GetInt32(1),
@@ -203,9 +195,9 @@ namespace jollejonas.Flashcards.Data
             }
             return studySessions;
         }
-        public List<StudySessionPivotDTO> GetAverageCorrectAnswersPerStudySessionPerMonth(int year)
+        public List<StudySessionPivotDto> GetAverageCorrectAnswersPerStudySessionPerMonth(int year)
         {
-            var studySessions = new List<StudySessionPivotDTO>();
+            var studySessions = new List<StudySessionPivotDto>();
             string query = $@"
             WITH SessionData AS (
                 SELECT
@@ -263,7 +255,7 @@ namespace jollejonas.Flashcards.Data
 
             while (reader.Read())
             {
-                var session = new StudySessionPivotDTO
+                var session = new StudySessionPivotDto
                 {
                     StackName = reader.GetString(0),
                     January = reader.IsDBNull(1) ? 0 : reader.GetInt32(1),

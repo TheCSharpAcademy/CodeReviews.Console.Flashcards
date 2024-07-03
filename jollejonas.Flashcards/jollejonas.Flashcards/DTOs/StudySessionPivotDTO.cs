@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace jollejonas.Flashcards.DTOs
+﻿namespace jollejonas.Flashcards.DTOs
 {
-    public class StudySessionPivotDTO
+    public class StudySessionPivotDto
     {
         public int Id { get; set; }
         public string StackName { get; set; }

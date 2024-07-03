@@ -69,7 +69,7 @@ namespace jollejonas.Flashcards.Services
         public void DisplaySessionsPerMonth()
         {
             int selectedYear = 0;
-            var studySessions = new List<StudySessionPivotDTO>();
+            var studySessions = new List<StudySessionPivotDto>();
             string displayType = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                 .Title("What data you want to see?")

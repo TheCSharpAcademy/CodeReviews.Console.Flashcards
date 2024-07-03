@@ -1,7 +1,6 @@
 ﻿using jollejonas.Flashcards.Data;
 using jollejonas.Flashcards.DTOs;
 using jollejonas.Flashcards.Models;
-using jollejonas.Flashcards.Services;
 using Spectre.Console;
 
 namespace jollejonas.Flashcards.Services
@@ -127,12 +126,12 @@ namespace jollejonas.Flashcards.Services
                 }
             }
         }
-        public CardsDTO DisplayCardsAndSelectId(int stackId)
+        public CardsDto DisplayCardsAndSelectId(int stackId)
         {
             var cards = _databaseManager.GetCardStackDTOs(stackId).Cards;
 
             var menuSelection = AnsiConsole.Prompt(
-                new SelectionPrompt<CardsDTO>()
+                new SelectionPrompt<CardsDto>()
                 .Title("Select a card")
                 .PageSize(10)
                 .AddChoices(cards)

@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace jollejonas.Flashcards.DTOs
+﻿namespace jollejonas.Flashcards.DTOs
 {
-    public class CardStackDetailsDTO
+    public class CardStackDetailsDto
     {
         public string CardStackName { get; set; }
-        public List<CardsDTO> Cards { get; set; }
+        public List<CardsDto> Cards { get; set; }
     }
 }
