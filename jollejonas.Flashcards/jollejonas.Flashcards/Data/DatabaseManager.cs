@@ -1,10 +1,6 @@
 ﻿using jollejonas.Flashcards.DTOs;
 using jollejonas.Flashcards.Models;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace jollejonas.Flashcards.Data
 {
