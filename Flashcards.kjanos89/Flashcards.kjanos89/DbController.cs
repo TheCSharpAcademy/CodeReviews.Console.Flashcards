@@ -2,7 +2,7 @@
 using Microsoft.Data.SqlClient;
 using Dapper;
 using Spectre.Console;
-using System;
+using System.Collections.Generic;
 
 namespace Flashcards.kjanos89
 {
@@ -10,6 +10,7 @@ namespace Flashcards.kjanos89
     {
         private readonly string _connectionString;
         Menu menu;
+        Stack stack;
 
         public DbController(Menu _menu)
         {
@@ -69,7 +70,6 @@ namespace Flashcards.kjanos89
 
                     connection.Execute(checkFlashcardTable);
                     AnsiConsole.MarkupLine("[yellow bold]Checked for Flashcard table existence and created if not present.[/]");
-
                     AnsiConsole.MarkupLine("[yellow bold]Database and tables initialization complete.[/]");
                     connection.Close();
                 }
@@ -79,6 +79,48 @@ namespace Flashcards.kjanos89
                 AnsiConsole.MarkupLine($"[red bold]Error initializing database: {ex.Message}[/]");
             }
         }
+        public string GetStack(int id)
+        {
+            using( var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var records = connection.Query<Stack>("SELECT * FROM Stack").ToList();
+
+                if (records.Any())
+                {
+                    foreach (var record in records)
+                    {
+                        AnsiConsole.MarkupLine($"[bold]Id: {record.StackId}, Name: {record.Name}, Description: {record.Description}[/]");
+                    }
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[bold]No records found.[/]");
+                    Thread.Sleep(1000);
+                    menu.DisplayMenu();
+                }
+                connection.Close();
+            }
+            return "";
+        }
+        public void AddStack()
+        {
+            AnsiConsole.MarkupLine("[bold]Please give me a name:[/]");
+                string name = Console.ReadLine();
+                AnsiConsole.MarkupLine("[bold]Please give me a short description:[/]");
+                string description = Console.ReadLine();
+
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    connection.ChangeDatabase("Flashcards");
+                    string insertCommand = "INSERT INTO Stack (Name, Description) VALUES (@Name, @Description)";
+                    var parameters = new { Name = name, Description = description };
+                    connection.Execute(insertCommand, parameters);
+                    AnsiConsole.MarkupLine("[green bold]Stack added successfully![/]");
+                }
+         }
+
         public void ManageFlashcards()
         {
             using(var connection = new SqlConnection(_connectionString))
@@ -88,14 +130,6 @@ namespace Flashcards.kjanos89
 
 
 
-                connection.Close();
-            }
-        }
-        public void ManageStacks()
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
                 connection.Close();
             }
         }
