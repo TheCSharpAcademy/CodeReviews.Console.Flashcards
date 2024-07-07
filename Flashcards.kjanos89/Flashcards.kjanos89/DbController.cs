@@ -3,6 +3,9 @@ using Microsoft.Data.SqlClient;
 using Dapper;
 using Spectre.Console;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Collections.Concurrent;
+using System.Collections;
 
 namespace Flashcards.kjanos89
 {
@@ -79,18 +82,21 @@ namespace Flashcards.kjanos89
                 AnsiConsole.MarkupLine($"[red bold]Error initializing database: {ex.Message}[/]");
             }
         }
-        public string GetStack(int id)
+        public void ViewStacks()
         {
             using( var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
+                connection.ChangeDatabase("Flashcards");
                 var records = connection.Query<Stack>("SELECT * FROM Stack").ToList();
-
                 if (records.Any())
                 {
+                    AnsiConsole.Clear();
+                    AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
                     foreach (var record in records)
                     {
                         AnsiConsole.MarkupLine($"[bold]Id: {record.StackId}, Name: {record.Name}, Description: {record.Description}[/]");
+                        AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
                     }
                 }
                 else
@@ -101,11 +107,13 @@ namespace Flashcards.kjanos89
                 }
                 connection.Close();
             }
-            return "";
+            AnsiConsole.MarkupLine("[bold]Press any key to return to the Stack menu.[/]");
+            Console.ReadLine();
+            menu.StackMenu();
         }
         public void AddStack()
         {
-            AnsiConsole.MarkupLine("[bold]Please give me a name:[/]");
+                AnsiConsole.MarkupLine("[bold]Please give me a name:[/]");
                 string name = Console.ReadLine();
                 AnsiConsole.MarkupLine("[bold]Please give me a short description:[/]");
                 string description = Console.ReadLine();
@@ -118,8 +126,58 @@ namespace Flashcards.kjanos89
                     var parameters = new { Name = name, Description = description };
                     connection.Execute(insertCommand, parameters);
                     AnsiConsole.MarkupLine("[green bold]Stack added successfully![/]");
+                    connection.Close();
                 }
-         }
+            AnsiConsole.MarkupLine("[bold]Press any key to return to the Stack menu.[/]");
+            Console.ReadLine();
+            menu.StackMenu();
+        }
+        public void ChangeStack()
+        {
+            AnsiConsole.Clear();
+            AnsiConsole.MarkupLine("[bold]Please give me an id of the stack you want to change to:[/]");
+            Int32.TryParse(Console.ReadLine(), out int id);
+            string result = "no";
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                connection.ChangeDatabase("Flashcards");
+                var stack = connection.QueryFirstOrDefault<Stack>("SELECT StackId, Name FROM Stack WHERE StackId = @Id", new { Id = id });
+                connection.Close();
+               menu.currentStack= stack?.Name??"Stack not found.";
+            }
+            AnsiConsole.MarkupLine("[bold]Press any key to return to the Stack menu.[/]");
+            Console.ReadLine();
+            menu.StackMenu();
+        }
+        public void DeleteStack()
+        {
+            AnsiConsole.Clear();
+            AnsiConsole.MarkupLine("[bold]Please give me the id of the stack you want to delete:[/]");
+            if (!int.TryParse(Console.ReadLine(), out int id)) //validation required
+            {
+                AnsiConsole.MarkupLine("[red bold]Invalid input. Please enter a valid integer ID.[/]");
+                DeleteStack();
+            }
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                connection.ChangeDatabase("Flashcards");
+                string deleteCommand = "DELETE FROM Stack WHERE StackId = @Id";
+                int rowsAffected = connection.Execute(deleteCommand, new { Id = id });
+                if (rowsAffected > 0)
+                {
+                    AnsiConsole.MarkupLine("[green bold]Stack deleted successfully![/]");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[yellow bold]No stack found with the provided ID.[/]");
+                }
+            }
+            AnsiConsole.MarkupLine("[bold]Press any key to return to the Stack menu.[/]");
+            Console.ReadLine();
+            menu.StackMenu();
+        }
 
         public void ManageFlashcards()
         {

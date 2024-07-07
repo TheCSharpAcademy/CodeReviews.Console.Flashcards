@@ -2,7 +2,7 @@
 namespace Flashcards.kjanos89;
 public class Menu
 {
-    string currentStack="no";
+    public string currentStack="no";
     DbController dbController;
     public void SetDbController(DbController _dbController)
     {
@@ -44,7 +44,7 @@ public class Menu
     public void FlashcardMenu()
     {
         AnsiConsole.Clear();
-        AnsiConsole.MarkupLine($"[bold]Currently working in {currentStack} stack.[/]");
+        AnsiConsole.MarkupLine($"[bold]Currently working in {currentStack} stack.[/bold]");
         AnsiConsole.MarkupLine("1 - [bold underline blue]Change stack[/]");
         AnsiConsole.MarkupLine("2 - [bold underline green]View all flashcards in stack[/]");
         AnsiConsole.MarkupLine("3 - [bold underline yellow]Create a new flashcard in stack[/]");
@@ -82,22 +82,25 @@ public class Menu
     {
         AnsiConsole.Clear();
         AnsiConsole.MarkupLine($"[bold]Currently working in {currentStack} stack.[/]");
-        AnsiConsole.MarkupLine("1 - [bold underline blue]Change stack[/]");
+        AnsiConsole.MarkupLine("1 - [bold underline blue]View stacks[/]");
         AnsiConsole.MarkupLine("2 - [bold underline green]Add stack[/]");
-        AnsiConsole.MarkupLine("3 - [bold underline yellow]Delete a stack[/]");
+        AnsiConsole.MarkupLine("3 - [bold underline yellow]Change stack[/]");
+        AnsiConsole.MarkupLine("4 - [bold underline blue]Delete a stack[/]");
         AnsiConsole.MarkupLine("0 - [bold red]Return to main menu[/]");
         string choice = Console.ReadLine();
         switch (choice[0])
         {
             case '1':
-                dbController.GetStack(1);
+                dbController.ViewStacks();
                 break;
             case '2':
                 dbController.AddStack();
                 break;
             case '3':
-                AnsiConsole.MarkupLine($"{dbController.GetStack(1)}");
-                //StudyMenu();
+                dbController.ChangeStack();
+                break;
+            case '4':
+                dbController.DeleteStack();
                 break;
             case '0':
                 DisplayMenu();
