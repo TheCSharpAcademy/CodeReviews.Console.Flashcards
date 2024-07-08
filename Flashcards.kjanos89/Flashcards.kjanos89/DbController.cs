@@ -154,29 +154,58 @@ namespace Flashcards.kjanos89
         {
             AnsiConsole.Clear();
             AnsiConsole.MarkupLine("[bold]Please give me the id of the stack you want to delete:[/]");
-            if (!int.TryParse(Console.ReadLine(), out int id)) //validation required
+            string input = Console.ReadLine();
+
+            if (int.TryParse(input, out int id))
+            {
+                if (DoesStackIdExist(id))
+                {
+                    using (var connection = new SqlConnection(_connectionString))
+                    {
+                        connection.Open();
+                        connection.ChangeDatabase("Flashcards");
+                        string deleteCommand = "DELETE FROM Stack WHERE StackId = @Id";
+                        int rowsAffected = connection.Execute(deleteCommand, new { Id = id });
+                        if (rowsAffected > 0)
+                        {
+                            AnsiConsole.MarkupLine("[green bold]Stack deleted successfully![/]");
+                        }
+                        else
+                        {
+                            AnsiConsole.MarkupLine("[red bold]No stack found with the provided ID.[/]");
+                            menu.StackMenu();
+                        }
+                    }
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[red bold]No stack found with the provided ID.[/]");
+                }
+            }
+            else
             {
                 AnsiConsole.MarkupLine("[red bold]Invalid input. Please enter a valid integer ID.[/]");
-                DeleteStack();
+                menu.StackMenu();
             }
+
+            AnsiConsole.MarkupLine("[bold]Press any key to return to the Stack menu.[/]");
+            Console.ReadLine();
+            menu.StackMenu();
+        }
+
+        private bool DoesStackIdExist(int stackId)
+        {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 connection.ChangeDatabase("Flashcards");
-                string deleteCommand = "DELETE FROM Stack WHERE StackId = @Id";
-                int rowsAffected = connection.Execute(deleteCommand, new { Id = id });
-                if (rowsAffected > 0)
-                {
-                    AnsiConsole.MarkupLine("[green bold]Stack deleted successfully![/]");
-                }
-                else
-                {
-                    AnsiConsole.MarkupLine("[yellow bold]No stack found with the provided ID.[/]");
-                }
+                var exists = connection.ExecuteScalar<int>(
+                    "SELECT COUNT(1) FROM Stack WHERE StackId = @Id",
+                    new { Id = stackId }
+                );
+                connection.Close();
+                return exists > 0;
             }
-            AnsiConsole.MarkupLine("[bold]Press any key to return to the Stack menu.[/]");
-            Console.ReadLine();
-            menu.StackMenu();
         }
 
         public void ManageFlashcards()
