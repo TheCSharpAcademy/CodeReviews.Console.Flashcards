@@ -144,7 +144,7 @@ namespace Flashcards.kjanos89
                 connection.ChangeDatabase("Flashcards");
                 var stack = connection.QueryFirstOrDefault<Stack>("SELECT StackId, Name FROM Stack WHERE StackId = @Id", new { Id = id });
                 connection.Close();
-               menu.currentStack= stack?.Name??"Stack not found.";
+               menu.currentStack= stack?.Name??"no";
             }
             AnsiConsole.MarkupLine("[bold]Press any key to return to the Stack menu.[/]");
             Console.ReadLine();
