@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using Spectre.Console;
 using System.Configuration;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Flashcards.kjanos89
 {
@@ -201,6 +202,18 @@ namespace Flashcards.kjanos89
                 return exists > 0;
             }
         }
+        private bool DoesFlashcardIdExist(int stackId, int flashcardId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                connection.ChangeDatabase("Flashcards");
+                var flashcard = connection.QueryFirstOrDefault<Flashcard>("SELECT TOP 1 * FROM Flashcard WHERE StackId = @StackId AND FlashcardId = @FlashcardId",new { StackId = stackId, FlashcardId = flashcardId });
+                connection.Close();
+                return flashcard != null;
+            }
+        }
+
 
         public void ViewFlashcards()
         {
@@ -215,7 +228,7 @@ namespace Flashcards.kjanos89
                     { 
                         connection.Open();
                         connection.ChangeDatabase("Flashcards");
-                        var records = connection.Query<Flashcard>("SELECT * FROM Flashcard").ToList();
+                        var records = connection.Query<Flashcard>("SELECT * FROM Flashcard WHERE StackId=@StackId", new { StackId=id }).ToList();
                         if(records.Any())
                         {
                             AnsiConsole.Clear();
@@ -303,7 +316,41 @@ namespace Flashcards.kjanos89
 
         public void DeleteFlashcard()
         {
-
+            AnsiConsole.MarkupLine("[yellow bold]Enter the ID of the stack where you want to delete the flashcard:[/]");
+            string input = Console.ReadLine();
+            AnsiConsole.MarkupLine("[yellow bold]Enter the ID of the flashcard which you want to delete:[/]");
+            string input2 = Console.ReadLine();
+            if (int.TryParse(input2, out int fcId))
+            {
+                if (int.TryParse(input, out int id))
+                {
+                    if (DoesStackIdExist(id) && DoesFlashcardIdExist(id, fcId))
+                    {
+                        using (var connection = new SqlConnection(_connectionString))
+                        {
+                            connection.Open();
+                            connection.ChangeDatabase("Flashcards");
+                            connection.Execute("DELETE FROM Flashcard WHERE StackId=@StackId AND FlashcardId=@FlashcardId", new { StackId = id, FlashcardId = fcId });
+                            connection.Close();
+                        }
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine("[bold]Either the stack or the flashcard does not exist.[/]");
+                    }
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[bold]Invalid id for stack.[/]");
+                }
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[bold]Invalid id for flashcard.[/]");
+            }
+            AnsiConsole.MarkupLine("[bold]Press any key to return to the menu.[/]");
+            Console.ReadLine();
+            menu.FlashcardMenu();
         }
         public void Study()
         {
