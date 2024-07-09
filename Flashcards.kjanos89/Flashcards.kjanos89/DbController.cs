@@ -1,11 +1,7 @@
-﻿using System.Configuration;
+﻿using Dapper;
 using Microsoft.Data.SqlClient;
-using Dapper;
 using Spectre.Console;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Collections.Concurrent;
-using System.Collections;
+using System.Configuration;
 
 namespace Flashcards.kjanos89
 {
@@ -148,7 +144,7 @@ namespace Flashcards.kjanos89
             }
             AnsiConsole.MarkupLine("[bold]Press any key to return to the Stack menu.[/]");
             Console.ReadLine();
-            menu.StackMenu();
+            menu.DisplayMenu();
         }
         public void DeleteStack()
         {
@@ -175,6 +171,7 @@ namespace Flashcards.kjanos89
                             AnsiConsole.MarkupLine("[red bold]No stack found with the provided ID.[/]");
                             menu.StackMenu();
                         }
+                        connection.Close();
                     }
                 }
                 else
@@ -199,26 +196,114 @@ namespace Flashcards.kjanos89
             {
                 connection.Open();
                 connection.ChangeDatabase("Flashcards");
-                var exists = connection.ExecuteScalar<int>(
-                    "SELECT COUNT(1) FROM Stack WHERE StackId = @Id",
-                    new { Id = stackId }
-                );
+                var exists = connection.ExecuteScalar<int>("SELECT COUNT(1) FROM Stack WHERE StackId = @Id",new { Id = stackId });
                 connection.Close();
                 return exists > 0;
             }
         }
 
-        public void ManageFlashcards()
+        public void ViewFlashcards()
         {
-            using(var connection = new SqlConnection(_connectionString))
+            AnsiConsole.MarkupLine("[yellow bold]Enter the ID of the stack where you want to check the flashcards:[/]");
+            string input = Console.ReadLine();
+
+            if (int.TryParse(input, out int id))
             {
-                connection.Open();
-                
+                if (DoesStackIdExist(id))
+                {
+                    using(var connection = new SqlConnection(_connectionString))
+                    { 
+                        connection.Open();
+                        connection.ChangeDatabase("Flashcards");
+                        var records = connection.Query<Flashcard>("SELECT * FROM Flashcard").ToList();
+                        if(records.Any())
+                        {
+                            AnsiConsole.Clear();
+                            AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
+                            foreach (var record in records)
+                            {
+                                AnsiConsole.MarkupLine($"[bold]Id: {record.FlashcardId}, Question: {record.Question}, Answer: {record.Answer}[/]");
+                                AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
+                            }
 
-
-
-                connection.Close();
+                        }
+                        else
+                        {
+                            AnsiConsole.MarkupLine("[bold]No records found.[/]");
+                        }
+                        connection.Close();
+                    }
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[bold]Invalid id.[/]");
+                }
             }
+            else
+            {
+                AnsiConsole.MarkupLine("[bold]Invalid id.[/]");
+            }
+            AnsiConsole.MarkupLine("[bold]Press any key to return to the menu.[/]");
+            Console.ReadLine();
+            menu.FlashcardMenu();
+        }
+        public void AddFlashcard()
+        {
+            AnsiConsole.MarkupLine("[yellow bold]Enter the ID of the stack you want the flashcard to belong to:[/]");
+            string input = Console.ReadLine();
+
+            if (int.TryParse(input, out int id))
+            {
+                if (DoesStackIdExist(id))
+                {
+                    Flashcard flashcard = new Flashcard();
+                    flashcard.StackId = id; 
+
+                    AnsiConsole.MarkupLine("[bold]The ID exists! Now please enter the question of the flashcard:[/]");
+                    flashcard.Question = Console.ReadLine();
+
+                    AnsiConsole.MarkupLine("[bold]And now please enter the answer to that question.[/]");
+                    AnsiConsole.MarkupLine($"[bold]The question was: {flashcard.Question}[/]");
+                    flashcard.Answer = Console.ReadLine();
+
+                    using (var connection = new SqlConnection(_connectionString))
+                    {
+                        try
+                        {
+                            connection.Open();
+                            connection.ChangeDatabase("Flashcards");
+
+                            string query = "INSERT INTO Flashcard (StackId, Question, Answer) VALUES (@StackId, @Question, @Answer)";
+                            connection.Execute(query, new { flashcard.StackId, flashcard.Question, flashcard.Answer });
+                        }
+                        catch (Exception ex)
+                        {
+                            AnsiConsole.MarkupLine($"[red bold]An error occurred: {ex.Message}[/]");
+                        }
+                        finally
+                        {
+                            connection.Close();
+                        }
+                    }
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[red bold]No stack found with the provided ID.[/]");
+                }
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[red bold]Invalid input. Please enter a valid integer ID.[/]");
+            }
+
+            AnsiConsole.MarkupLine("[bold]Press any key to return to the Flashcard menu.[/]");
+            Console.ReadLine();
+            menu.FlashcardMenu();
+        }
+
+        public void DeleteFlashcard()
+        {
+
         }
         public void Study()
         {

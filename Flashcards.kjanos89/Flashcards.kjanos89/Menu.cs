@@ -44,37 +44,33 @@ public class Menu
     public void FlashcardMenu()
     {
         AnsiConsole.Clear();
-        AnsiConsole.MarkupLine($"[bold]Currently working in {currentStack} stack.[/bold]");
+        AnsiConsole.MarkupLine($"[bold]Currently working in {currentStack} stack.[/]");
         AnsiConsole.MarkupLine("1 - [bold underline blue]Change stack[/]");
         AnsiConsole.MarkupLine("2 - [bold underline green]View all flashcards in stack[/]");
         AnsiConsole.MarkupLine("3 - [bold underline yellow]Create a new flashcard in stack[/]");
-        AnsiConsole.MarkupLine("3 - [bold underline blue]Edit a flashcard[/]");
-        AnsiConsole.MarkupLine("5 - [bold underline green]Delete a flashcard[/]");
+        AnsiConsole.MarkupLine("4 - [bold underline blue]Delete a flashcard[/]");
         AnsiConsole.MarkupLine("0 - [bold red]Return to main menu[/]");
         string choice = Console.ReadLine();
         switch (choice[0])
         {
             case '1':
-                FlashcardMenu();
+                dbController.ChangeStack();
                 break;
             case '2':
-                StackMenu();
+                dbController.ViewFlashcards();
                 break;
             case '3':
-                StudyMenu();
+                dbController.AddFlashcard();
                 break;
             case '4':
-                StudyMenu();
-                break;
-            case '5':
-                DisplayMenu();
+                dbController.DeleteFlashcard();
                 break;
             case '0':
                 DisplayMenu();
                 break;
             default:
                 AnsiConsole.MarkupLine("Please try again!");
-                DisplayMenu();
+                FlashcardMenu();
                 break;
         }
     }
@@ -107,7 +103,7 @@ public class Menu
                 break;
             default:
                 AnsiConsole.MarkupLine("Please try again!");
-                DisplayMenu();
+                StackMenu();
                 break;
         }
     }
