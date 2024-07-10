@@ -152,27 +152,48 @@ namespace Flashcards.kjanos89
             AnsiConsole.Clear();
             AnsiConsole.MarkupLine("[bold]Please give me the id of the stack you want to delete:[/]");
             string input = Console.ReadLine();
-
             if (int.TryParse(input, out int id))
             {
                 if (DoesStackIdExist(id))
                 {
-                    using (var connection = new SqlConnection(_connectionString))
+                    try
                     {
-                        connection.Open();
-                        connection.ChangeDatabase("Flashcards");
-                        string deleteCommand = "DELETE FROM Stack WHERE StackId = @Id";
-                        int rowsAffected = connection.Execute(deleteCommand, new { Id = id });
-                        if (rowsAffected > 0)
+                        using (var connection = new SqlConnection(_connectionString))
                         {
-                            AnsiConsole.MarkupLine("[green bold]Stack deleted successfully![/]");
+                            connection.Open();
+                            connection.ChangeDatabase("Flashcards");
+
+                            using (var transaction = connection.BeginTransaction())
+                            {
+                                try
+                                {
+                                    string deleteFlashcardsCommand = "DELETE FROM Flashcard WHERE StackId = @StackId";
+                                    int flashcardsDeleted = connection.Execute(deleteFlashcardsCommand, new { StackId = id }, transaction);
+                                    string deleteStackCommand = "DELETE FROM Stack WHERE StackId = @Id";
+                                    int rowsAffected = connection.Execute(deleteStackCommand, new { Id = id }, transaction);
+                                    if (rowsAffected > 0)
+                                    {
+                                        transaction.Commit();
+                                        AnsiConsole.MarkupLine("[green bold]Stack and associated flashcards deleted successfully![/]");
+                                    }
+                                    else
+                                    {
+                                        transaction.Rollback();
+                                        AnsiConsole.MarkupLine("[red bold]No stack found with the provided ID.[/]");
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    transaction.Rollback();
+                                    AnsiConsole.MarkupLine($"[red bold]An error occurred: {ex.Message}[/]");
+                                }
+                            }
+                            connection.Close();
                         }
-                        else
-                        {
-                            AnsiConsole.MarkupLine("[red bold]No stack found with the provided ID.[/]");
-                            menu.StackMenu();
-                        }
-                        connection.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        AnsiConsole.MarkupLine($"[red bold]An error occurred while connecting to the database: {ex.Message}[/]");
                     }
                 }
                 else
@@ -183,13 +204,12 @@ namespace Flashcards.kjanos89
             else
             {
                 AnsiConsole.MarkupLine("[red bold]Invalid input. Please enter a valid integer ID.[/]");
-                menu.StackMenu();
             }
-
             AnsiConsole.MarkupLine("[bold]Press any key to return to the Stack menu.[/]");
             Console.ReadLine();
             menu.StackMenu();
         }
+
 
         private bool DoesStackIdExist(int stackId)
         {
@@ -213,8 +233,6 @@ namespace Flashcards.kjanos89
                 return flashcard != null;
             }
         }
-
-
         public void ViewFlashcards()
         {
             AnsiConsole.MarkupLine("[yellow bold]Enter the ID of the stack where you want to check the flashcards:[/]");
@@ -231,14 +249,15 @@ namespace Flashcards.kjanos89
                         var records = connection.Query<Flashcard>("SELECT * FROM Flashcard WHERE StackId=@StackId", new { StackId=id }).ToList();
                         if(records.Any())
                         {
+                            int counter = 1;
                             AnsiConsole.Clear();
                             AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
                             foreach (var record in records)
                             {
-                                AnsiConsole.MarkupLine($"[bold]Id: {record.FlashcardId}, Question: {record.Question}, Answer: {record.Answer}[/]");
+                                AnsiConsole.MarkupLine($"[bold]Id: {counter}, Question: {record.Question}, Answer: {record.Answer}[/]");
                                 AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
+                                counter++;
                             }
-
                         }
                         else
                         {
@@ -352,6 +371,7 @@ namespace Flashcards.kjanos89
             Console.ReadLine();
             menu.FlashcardMenu();
         }
+        
         public void Study()
         {
             using (var connection = new SqlConnection(_connectionString))
