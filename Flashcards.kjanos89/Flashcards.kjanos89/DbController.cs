@@ -11,6 +11,7 @@ namespace Flashcards.kjanos89
         private readonly string _connectionString;
         Menu menu;
         Stack stack;
+        List<string> stackNames;
 
         public DbController(Menu _menu)
         {
@@ -69,6 +70,7 @@ namespace Flashcards.kjanos89
                         END";
 
                     connection.Execute(checkFlashcardTable);
+                    stackNames = connection.Query<string>("SELECT Name FROM Stack").ToList();
                     AnsiConsole.MarkupLine("[yellow bold]Checked for Flashcard table existence and created if not present.[/]");
                     AnsiConsole.MarkupLine("[yellow bold]Database and tables initialization complete.[/]");
                     connection.Close();
@@ -110,25 +112,44 @@ namespace Flashcards.kjanos89
         }
         public void AddStack()
         {
-                AnsiConsole.MarkupLine("[bold]Please give me a name:[/]");
-                string name = Console.ReadLine();
-                AnsiConsole.MarkupLine("[bold]Please give me a short description:[/]");
-                string description = Console.ReadLine();
+            string name = "";
+            string description = "";
 
-                using (var connection = new SqlConnection(_connectionString))
+            while (true)
+            {
+                AnsiConsole.MarkupLine("[bold]Please give me a name:[/]");
+                string helper = Console.ReadLine();
+
+                if (!stackNames.Contains(helper) && !string.IsNullOrEmpty(helper))
                 {
-                    connection.Open();
-                    connection.ChangeDatabase("Flashcards");
-                    string insertCommand = "INSERT INTO Stack (Name, Description) VALUES (@Name, @Description)";
-                    var parameters = new { Name = name, Description = description };
-                    connection.Execute(insertCommand, parameters);
-                    AnsiConsole.MarkupLine("[green bold]Stack added successfully![/]");
-                    connection.Close();
+                    name = helper;
+                    break;
                 }
+                else
+                {
+                    AnsiConsole.MarkupLine("Name is taken or invalid! Try another one.");
+                }
+            }
+
+            AnsiConsole.MarkupLine("[bold]Please give me a short description:[/]");
+            description = Console.ReadLine();
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                connection.ChangeDatabase("Flashcards");
+                string insertCommand = "INSERT INTO Stack (Name, Description) VALUES (@Name, @Description)";
+                var parameters = new { Name = name, Description = description };
+                connection.Execute(insertCommand, parameters);
+                AnsiConsole.MarkupLine("[green bold]Stack added successfully![/]");
+                connection.Close();
+            }
+
             AnsiConsole.MarkupLine("[bold]Press any key to return to the Stack menu.[/]");
             Console.ReadLine();
             menu.StackMenu();
         }
+
         public void ChangeStack()
         {
             AnsiConsole.Clear();
@@ -373,6 +394,22 @@ namespace Flashcards.kjanos89
         }
         
         public void Study()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                connection.Close();
+            }
+        }
+        public void CheckSessions()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                connection.Close();
+            }
+        }
+        public void DeleteSessions()
         {
             using (var connection = new SqlConnection(_connectionString))
             {

@@ -109,7 +109,41 @@ public class Menu
     }
     public void StudyMenu()
     {
-
+        AnsiConsole.Clear();
+        AnsiConsole.MarkupLine($"[bold]Currently working in {currentStack} stack.[/]");
+        AnsiConsole.MarkupLine("1 - [bold underline blue]View stacks[/]");
+        AnsiConsole.MarkupLine("2 - [bold underline green]Choose a Stack to study[/]");
+        AnsiConsole.MarkupLine("3 - [bold underline yellow]Start studying[/]");
+        AnsiConsole.MarkupLine("4 - [bold underline blue]Check sessions[/]");
+        AnsiConsole.MarkupLine("5 - [bold underline blue]Delete a study session along with its used stack and flashcards[/]");
+        AnsiConsole.MarkupLine("0 - [bold red]Return to main menu[/]");
+        string choice = Console.ReadLine();
+        switch (choice[0])
+        {
+            case '1':
+                dbController.ViewStacks();
+                break;
+            case '2':
+                dbController.ChangeStack();
+                break;
+            case '3':
+                dbController.Study();
+                break;
+            case '4':
+                dbController.CheckSessions();
+                break;
+            case '5':
+                dbController.DeleteSessions();
+                break;
+                
+            case '0':
+                DisplayMenu();
+                break;
+            default:
+                AnsiConsole.MarkupLine("Please try again!");
+                StackMenu();
+                break;
+        }
     }
 
     public void QuitApplication()
