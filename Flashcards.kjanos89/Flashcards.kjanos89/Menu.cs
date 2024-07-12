@@ -14,7 +14,7 @@ public class Menu
         AnsiConsole.MarkupLine("[bold]Choose from the options below:[/]");
         AnsiConsole.MarkupLine("1 - [bold underline blue]Flashcards[/]");
         AnsiConsole.MarkupLine("2 - [bold underline green]Stacks[/]");
-        AnsiConsole.MarkupLine("3 - [bold underline yellow]Study[/] area");
+        AnsiConsole.MarkupLine("3 - [bold underline yellow]Study area[/]");
         AnsiConsole.MarkupLine("0 - [bold red]Quit[/]");
         string choice = Console.ReadLine();
         MenuOption(choice[0]);
@@ -115,7 +115,6 @@ public class Menu
         AnsiConsole.MarkupLine("2 - [bold underline green]Choose a Stack to study[/]");
         AnsiConsole.MarkupLine("3 - [bold underline yellow]Start studying[/]");
         AnsiConsole.MarkupLine("4 - [bold underline blue]Check sessions[/]");
-        AnsiConsole.MarkupLine("5 - [bold underline blue]Delete a study session along with its used stack and flashcards[/]");
         AnsiConsole.MarkupLine("0 - [bold red]Return to main menu[/]");
         string choice = Console.ReadLine();
         switch (choice[0])
@@ -132,12 +131,8 @@ public class Menu
             case '4':
                 dbController.CheckSessions();
                 break;
-            case '5':
-                dbController.DeleteSessions();
-                break;
-                
             case '0':
-                DisplayMenu();
+                StudyMenu();
                 break;
             default:
                 AnsiConsole.MarkupLine("Please try again!");

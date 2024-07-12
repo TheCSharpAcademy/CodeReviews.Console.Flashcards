@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using Spectre.Console;
 using System.Configuration;
+using System.Diagnostics.Eventing.Reader;
 using System.Reflection.Metadata.Ecma335;
 
 namespace Flashcards.kjanos89
@@ -12,6 +13,7 @@ namespace Flashcards.kjanos89
         Menu menu;
         Stack stack;
         List<string> stackNames;
+        int points;
 
         public DbController(Menu _menu)
         {
@@ -70,6 +72,19 @@ namespace Flashcards.kjanos89
                         END";
 
                     connection.Execute(checkFlashcardTable);
+                    string checkStudyTable = @"
+                        IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Study]') AND type in (N'U'))
+                        BEGIN
+                            CREATE TABLE Study (
+                                Id INT IDENTITY(1,1) PRIMARY KEY,
+                                StackId INT NOT NULL,
+                                Date DATETIME NOT NULL,
+                                Points INT
+                            )
+                        END";
+
+                    connection.Execute(checkStudyTable);
+                    AnsiConsole.MarkupLine("[yellow bold]Checked for Study table existence and created if not present.[/]");
                     stackNames = connection.Query<string>("SELECT Name FROM Stack").ToList();
                     AnsiConsole.MarkupLine("[yellow bold]Checked for Flashcard table existence and created if not present.[/]");
                     AnsiConsole.MarkupLine("[yellow bold]Database and tables initialization complete.[/]");
@@ -395,26 +410,97 @@ namespace Flashcards.kjanos89
         
         public void Study()
         {
-            using (var connection = new SqlConnection(_connectionString))
+            AnsiConsole.MarkupLine("[yellow bold]Enter the ID of the stack you want to study:[/]");
+            string input = Console.ReadLine();
+            points = 0;
+            if (int.TryParse(input, out int id))
             {
-                connection.Open();
-                connection.Close();
+                if (DoesStackIdExist(id))
+                {
+                    using (var connection = new SqlConnection(_connectionString))
+                    {
+                        connection.Open();
+                        connection.ChangeDatabase("Flashcards");
+                        List<Flashcard> flashcards = connection.Query<Flashcard>("SELECT * FROM Flashcard WHERE StackId=@StackId", new { StackId = id }).ToList();
+                        StudySession(flashcards, 0, 0);
+                        DateTime date = DateTime.Now;
+                        string insertCommand = "INSERT INTO Study (Date, StackId, Points) VALUES (@Date, @StackId, @Points)";
+                        var parameters = new { Date = date, StackId=id, Points=points };
+                        connection.Execute(insertCommand, parameters);
+                        connection.Close();
+                    }
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[bold]Either the stack or the flashcard does not exist.[/]");
+                }
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[bold]Invalid id for stack.[/]");
+            }
+            AnsiConsole.MarkupLine("[bold]Press any key to return to the menu.[/]");
+            Console.ReadLine();
+            menu.StudyMenu();
+        }
+        public void StudySession(List<Flashcard> fc, int id, int points)
+        {
+            AnsiConsole.Clear();
+            AnsiConsole.Markup($"You've earned {points} points so far this session.");
+            if (id >= fc.Count)
+            {
+                this.points = points;
+                return; 
+            }
+
+            string question = fc[id].Question;
+            string answer = fc[id].Answer;
+            AnsiConsole.MarkupLine("Type 'Exit' to return to the Study menu.");
+            AnsiConsole.MarkupLine(question);
+            string input = Console.ReadLine();
+
+            if (answer == input)
+            {
+                points++;
+                id++;
+                StudySession(fc, id, points);
+            }
+            else if (input.ToLower() == "exit")
+            {
+                this.points = points; 
+                menu.StudyMenu(); // Needs to save points, date of current session here.
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"[red bold]Wrong answer! The right answer was {fc[id].Answer}.[/]");
+                id++;
+                StudySession(fc, id, points);
             }
         }
+
         public void CheckSessions()
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
+                connection.ChangeDatabase("Flashcards");
+                var records=connection.Query<Study>("SELECT * FROM Study").ToList();
+                if(records.Any())
+                {
+                    foreach (var record in records)
+                    {
+                        AnsiConsole.MarkupLine($"Date: {record.Date}, Points: {record.Points}");
+                    }
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("No sessions saved so far!");
+                    Thread.Sleep(1500);
+                }
                 connection.Close();
-            }
-        }
-        public void DeleteSessions()
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                connection.Close();
+                AnsiConsole.MarkupLine("Press any key to return to the Study menu...");
+                Console.ReadLine();
+                menu.StudyMenu();
             }
         }
     }
