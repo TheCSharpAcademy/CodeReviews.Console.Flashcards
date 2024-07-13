@@ -132,11 +132,11 @@ public class Menu
                 dbController.CheckSessions();
                 break;
             case '0':
-                StudyMenu();
+                DisplayMenu();
                 break;
             default:
                 AnsiConsole.MarkupLine("Please try again!");
-                StackMenu();
+                StudyMenu();
                 break;
         }
     }

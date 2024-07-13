@@ -2,8 +2,6 @@
 using Microsoft.Data.SqlClient;
 using Spectre.Console;
 using System.Configuration;
-using System.Diagnostics.Eventing.Reader;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Flashcards.kjanos89
 {
@@ -205,12 +203,14 @@ namespace Flashcards.kjanos89
                                 {
                                     string deleteFlashcardsCommand = "DELETE FROM Flashcard WHERE StackId = @StackId";
                                     int flashcardsDeleted = connection.Execute(deleteFlashcardsCommand, new { StackId = id }, transaction);
+                                    string deleteStudyCommand = "DELETE FROM Study WHERE StackId = @StackId";
+                                    int studiesDeleted = connection.Execute(deleteStudyCommand, new { StackId = id }, transaction);
                                     string deleteStackCommand = "DELETE FROM Stack WHERE StackId = @Id";
                                     int rowsAffected = connection.Execute(deleteStackCommand, new { Id = id }, transaction);
                                     if (rowsAffected > 0)
                                     {
                                         transaction.Commit();
-                                        AnsiConsole.MarkupLine("[green bold]Stack and associated flashcards deleted successfully![/]");
+                                        AnsiConsole.MarkupLine("[green bold]Stack, studies and associated flashcards deleted successfully![/]");
                                     }
                                     else
                                     {
@@ -455,12 +455,15 @@ namespace Flashcards.kjanos89
 
             string question = fc[id].Question;
             string answer = fc[id].Answer;
-            AnsiConsole.MarkupLine("Type 'Exit' to return to the Study menu.");
+            AnsiConsole.MarkupLine("Type 'Exit' to return to the Study menu.\n");
             AnsiConsole.MarkupLine(question);
             string input = Console.ReadLine();
 
             if (answer == input)
             {
+                AnsiConsole.MarkupLine("[bold green]Good Answer! +1 point earned![/]");
+                AnsiConsole.MarkupLine("[bold green]Next question incoming (if there's any left...)[/]");
+                Thread.Sleep(1500);
                 points++;
                 id++;
                 StudySession(fc, id, points);
@@ -468,11 +471,12 @@ namespace Flashcards.kjanos89
             else if (input.ToLower() == "exit")
             {
                 this.points = points; 
-                menu.StudyMenu(); // Needs to save points, date of current session here.
+                menu.StudyMenu(); 
             }
             else
             {
                 AnsiConsole.MarkupLine($"[red bold]Wrong answer! The right answer was {fc[id].Answer}.[/]");
+                Thread.Sleep(1500);
                 id++;
                 StudySession(fc, id, points);
             }
