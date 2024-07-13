@@ -168,7 +168,6 @@ namespace Flashcards.kjanos89
             AnsiConsole.Clear();
             AnsiConsole.MarkupLine("[bold]Please give me an id of the stack you want to change to:[/]");
             Int32.TryParse(Console.ReadLine(), out int id);
-            string result = "no";
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -202,9 +201,9 @@ namespace Flashcards.kjanos89
                                 try
                                 {
                                     string deleteFlashcardsCommand = "DELETE FROM Flashcard WHERE StackId = @StackId";
-                                    int flashcardsDeleted = connection.Execute(deleteFlashcardsCommand, new { StackId = id }, transaction);
+                                    connection.Execute(deleteFlashcardsCommand, new { StackId = id }, transaction);
                                     string deleteStudyCommand = "DELETE FROM Study WHERE StackId = @StackId";
-                                    int studiesDeleted = connection.Execute(deleteStudyCommand, new { StackId = id }, transaction);
+                                    connection.Execute(deleteStudyCommand, new { StackId = id }, transaction);
                                     string deleteStackCommand = "DELETE FROM Stack WHERE StackId = @Id";
                                     int rowsAffected = connection.Execute(deleteStackCommand, new { Id = id }, transaction);
                                     if (rowsAffected > 0)
