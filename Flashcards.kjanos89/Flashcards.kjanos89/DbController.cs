@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using Spectre.Console;
-using System.Configuration;
 
 namespace Flashcards.kjanos89
 {
@@ -16,7 +15,7 @@ namespace Flashcards.kjanos89
         public DbController(Menu _menu)
         {
             menu = _menu;
-            _connectionString = ConfigurationManager.AppSettings["connectionString"] ?? "Server=.;Integrated Security=True;TrustServerCertificate=True;";
+            _connectionString = System.Configuration.ConfigurationManager.AppSettings["connectionString"] ?? "Server=.;Integrated Security=True;TrustServerCertificate=True;";
             InitializeDatabase();
         }
 
