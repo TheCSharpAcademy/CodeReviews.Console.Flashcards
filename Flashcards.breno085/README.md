@@ -1,6 +1,11 @@
 # Flashcards
 
-## Project built with C#, Dapper, and SQL Server
+## Project Overview
+
+### Description
+Project built with C#, Dapper, and SQL Server.
+
+## Features
 
 - I separated the user input logic from the database connection by creating the
   Controller and Repositories folders, each containing specific classes for these
