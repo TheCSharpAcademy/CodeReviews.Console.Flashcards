@@ -2,12 +2,13 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using flashcards.Models;
 using flashcards.Utils;
+using System.Configuration;
 
 namespace flashcards.Repositories
 {
     public class UserRepository
     {
-        private readonly string connectionString = "Server=localhost,1433;Database=Flashcards;User Id=sa;Password=S3cureP@ssw0rd2024#;TrustServerCertificate=true";
+        private readonly string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
 
         public void InsertFlashcardsDataForTests(List<Flashcards> flashcardsList)
         {
