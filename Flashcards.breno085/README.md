@@ -1,3 +1,5 @@
+# Flashcards
+
 Project built with C#, Dapper and SQL Server
 
 - I separated the user input logic from the database connection by creating the
