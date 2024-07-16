@@ -1,4 +1,9 @@
-﻿namespace Flashcards.MainView;
+﻿using System.ComponentModel.Design;
+using Flashcards.StackView;
+using Flashcards.StudyView;
+using Flashcards.CardView;
+
+namespace Flashcards.MainView;
 
 public static class MainViewController
 {
@@ -12,10 +17,12 @@ public static class MainViewController
         Console.WriteLine("-Press q to quit");
 
         var option = GetMainViewInput();
-        Console.WriteLine("\nYou chose: " + option);
-        Console.ReadKey();
 
-        return null;
+        if (option == 's') StackViewController.InitStackView();
+        else if (option == 'f') CardViewController.InitCardView();
+        else if (option == 'b') StudyViewController.InitStudyView();
+
+        return true;
     }
 
     public static char GetMainViewInput()
