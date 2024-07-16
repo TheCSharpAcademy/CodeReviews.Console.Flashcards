@@ -1,2 +1,3 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿global using Microsoft.Data.SqlClient;
+global using Spectre.Console;
+global using Dapper;
