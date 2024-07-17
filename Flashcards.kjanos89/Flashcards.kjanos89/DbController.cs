@@ -95,6 +95,8 @@ namespace Flashcards.kjanos89
         }
         public void ViewStacks()
         {
+            AnsiConsole.Clear();
+            ShowStacksForMenu();
             using( var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -120,12 +122,14 @@ namespace Flashcards.kjanos89
             }
             AnsiConsole.MarkupLine("[bold]Press any key to return to the Stack menu.[/]");
             Console.ReadLine();
-            menu.StackMenu();
+            menu.DisplayMenu();
         }
         public void AddStack()
         {
             string name = "";
             string description = "";
+            AnsiConsole.Clear();
+            ShowStacksForMenu();
 
             while (true)
             {
@@ -161,27 +165,10 @@ namespace Flashcards.kjanos89
             Console.ReadLine();
             menu.StackMenu();
         }
-
-        public void ChangeStack()
-        {
-            AnsiConsole.Clear();
-            AnsiConsole.MarkupLine("[bold]Please give me an id of the stack you want to change to:[/]");
-            Int32.TryParse(Console.ReadLine(), out int id);
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                connection.ChangeDatabase("Flashcards");
-                var stack = connection.QueryFirstOrDefault<Stack>("SELECT StackId, Name FROM Stack WHERE StackId = @Id", new { Id = id });
-                connection.Close();
-               menu.currentStack= stack?.Name??"no";
-            }
-            AnsiConsole.MarkupLine("[bold]Press any key to return to the Stack menu.[/]");
-            Console.ReadLine();
-            menu.DisplayMenu();
-        }
         public void DeleteStack()
         {
             AnsiConsole.Clear();
+            ShowStacksForMenu();
             AnsiConsole.MarkupLine("[bold]Please give me the id of the stack you want to delete:[/]");
             string input = Console.ReadLine();
             if (int.TryParse(input, out int id))
@@ -269,6 +256,8 @@ namespace Flashcards.kjanos89
         }
         public void ViewFlashcards()
         {
+            AnsiConsole.Clear();
+            ShowStacksForMenu();
             AnsiConsole.MarkupLine("[yellow bold]Enter the ID of the stack where you want to check the flashcards:[/]");
             string input = Console.ReadLine();
 
@@ -283,14 +272,12 @@ namespace Flashcards.kjanos89
                         var records = connection.Query<Flashcard>("SELECT * FROM Flashcard WHERE StackId=@StackId", new { StackId=id }).ToList();
                         if(records.Any())
                         {
-                            int counter = 1;
                             AnsiConsole.Clear();
                             AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
                             foreach (var record in records)
                             {
-                                AnsiConsole.MarkupLine($"[bold]Id: {counter}, Question: {record.Question}, Answer: {record.Answer}[/]");
+                                AnsiConsole.MarkupLine($"[bold]Id: {record.FlashcardId}, Question: {record.Question}, Answer: {record.Answer}[/]");
                                 AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
-                                counter++;
                             }
                         }
                         else
@@ -315,6 +302,8 @@ namespace Flashcards.kjanos89
         }
         public void AddFlashcard()
         {
+            AnsiConsole.Clear();
+            ShowStacksForMenu();
             AnsiConsole.MarkupLine("[yellow bold]Enter the ID of the stack you want the flashcard to belong to:[/]");
             string input = Console.ReadLine();
 
@@ -366,11 +355,22 @@ namespace Flashcards.kjanos89
             Console.ReadLine();
             menu.FlashcardMenu();
         }
-
         public void DeleteFlashcard()
         {
+            AnsiConsole.Clear();
+            ShowStacksForMenu();
             AnsiConsole.MarkupLine("[yellow bold]Enter the ID of the stack where you want to delete the flashcard:[/]");
             string input = Console.ReadLine();
+            if (Int32.TryParse(input, out var inputInt))
+            {
+                ShowFlashcardsForMenu(inputInt);
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[bold red]Wrong input, try again![/]");
+                Thread.Sleep(1000);
+                DeleteFlashcard();
+            }
             AnsiConsole.MarkupLine("[yellow bold]Enter the ID of the flashcard which you want to delete:[/]");
             string input2 = Console.ReadLine();
             if (int.TryParse(input2, out int fcId))
@@ -383,8 +383,42 @@ namespace Flashcards.kjanos89
                         {
                             connection.Open();
                             connection.ChangeDatabase("Flashcards");
-                            connection.Execute("DELETE FROM Flashcard WHERE StackId=@StackId AND FlashcardId=@FlashcardId", new { StackId = id, FlashcardId = fcId });
+                            using (var transaction = connection.BeginTransaction())
+                            {
+                                try
+                                {
+                                    connection.Execute("DELETE FROM Flashcard WHERE StackId=@StackId AND FlashcardId=@FlashcardId",
+                                        new { StackId = id, FlashcardId = fcId }, transaction);
+                                    string createTempTable = @"
+                                    CREATE TABLE TempFlashcard (
+                                        FlashcardId INT IDENTITY(1,1) NOT NULL,
+                                        StackId INT NOT NULL,
+                                        Question NVARCHAR(500) NOT NULL,
+                                        Answer NVARCHAR(500) NOT NULL
+                                    )";
+                                    connection.Execute(createTempTable, transaction: transaction);
+                                    string insertTempTable = @"
+                                    SET IDENTITY_INSERT TempFlashcard ON;
+                                    INSERT INTO TempFlashcard (FlashcardId, StackId, Question, Answer)
+                                    SELECT ROW_NUMBER() OVER (ORDER BY FlashcardId) AS FlashcardId, StackId, Question, Answer
+                                    FROM Flashcard
+                                    WHERE StackId = @StackId;
+                                    SET IDENTITY_INSERT TempFlashcard OFF;";
+                                    connection.Execute(insertTempTable, new { StackId = id }, transaction);
+                                    connection.Execute("DROP TABLE Flashcard", transaction: transaction);
+                                    connection.Execute("EXEC sp_rename 'TempFlashcard', 'Flashcard'", transaction: transaction);
+                                    transaction.Commit();
+                                    AnsiConsole.MarkupLine("[green bold]Flashcard deleted and IDs rearranged successfully![/]");
+                                }
+                                catch (Exception ex)
+                                {
+                                    transaction.Rollback();
+                                    AnsiConsole.MarkupLine($"[red bold]An error occurred: {ex.Message}[/]");
+                                }
+                            }
                             connection.Close();
+                            Thread.Sleep(1000);
+                            menu.FlashcardMenu();
                         }
                     }
                     else
@@ -394,20 +428,18 @@ namespace Flashcards.kjanos89
                 }
                 else
                 {
-                    AnsiConsole.MarkupLine("[bold]Invalid id for stack.[/]");
+                    AnsiConsole.MarkupLine("[bold]Invalid ID for stack.[/]");
                 }
             }
             else
             {
-                AnsiConsole.MarkupLine("[bold]Invalid id for flashcard.[/]");
+                AnsiConsole.MarkupLine("[bold]Invalid ID for flashcard.[/]");
             }
-            AnsiConsole.MarkupLine("[bold]Press any key to return to the menu.[/]");
-            Console.ReadLine();
-            menu.FlashcardMenu();
         }
-        
         public void Study()
         {
+            AnsiConsole.Clear();
+            ShowStacksForMenu();
             AnsiConsole.MarkupLine("[yellow bold]Enter the ID of the stack you want to study:[/]");
             string input = Console.ReadLine();
             points = 0;
@@ -457,7 +489,7 @@ namespace Flashcards.kjanos89
             AnsiConsole.MarkupLine(question);
             string input = Console.ReadLine();
 
-            if (answer == input)
+            if (answer.ToLower() == input.ToLower())
             {
                 AnsiConsole.MarkupLine("[bold green]Good Answer! +1 point earned![/]");
                 AnsiConsole.MarkupLine("[bold green]Next question incoming (if there's any left...)[/]");
@@ -503,6 +535,62 @@ namespace Flashcards.kjanos89
                 AnsiConsole.MarkupLine("Press any key to return to the Study menu...");
                 Console.ReadLine();
                 menu.StudyMenu();
+            }
+        }
+        public void ShowStacksForMenu ()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                AnsiConsole.Clear();
+                AnsiConsole.MarkupLine("[bold yellow]Stacks:[/]");
+                connection.Open();
+                connection.ChangeDatabase("Flashcards");
+                var records = connection.Query<Stack>("SELECT * FROM Stack").ToList();
+                if (records.Any())
+                {
+                    AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
+                    foreach (var record in records)
+                    {
+                        AnsiConsole.MarkupLine($"[bold]Id: {record.StackId}, Name: {record.Name}, Description: {record.Description}[/]");
+                        AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
+                    }
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[bold]No records found.[/]");
+                    Thread.Sleep(500);
+                    connection.Close();
+                    menu.DisplayMenu();
+                }
+                connection.Close();
+            }
+        }
+        public void ShowFlashcardsForMenu(int id)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                AnsiConsole.Clear();
+                AnsiConsole.MarkupLine("[bold yellow]Flashcards:[/]");
+                connection.Open();
+                connection.ChangeDatabase("Flashcards");
+                var records = connection.Query<Flashcard>("SELECT * FROM Flashcard WHERE StackId=@StackId", new {StackId = id}).ToList();
+                if (records.Any())
+                {
+                    AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
+                    foreach (var record in records)
+                    {
+                        AnsiConsole.MarkupLine($"[bold]Id: {record.FlashcardId}, Question: {record.Question}[/]");
+                        AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
+                    }
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[bold]No records found.[/]");
+                    Thread.Sleep(500);
+                    connection.Close();
+                    menu.DisplayMenu();
+                }
+                connection.Close();
             }
         }
     }
