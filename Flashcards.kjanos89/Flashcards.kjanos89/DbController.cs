@@ -97,6 +97,7 @@ namespace Flashcards.kjanos89
         {
             AnsiConsole.Clear();
             ShowStacksForMenu();
+            int counter = 1;
             using( var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -108,8 +109,9 @@ namespace Flashcards.kjanos89
                     AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
                     foreach (var record in records)
                     {
-                        AnsiConsole.MarkupLine($"[bold]Id: {record.StackId}, Name: {record.Name}, Description: {record.Description}[/]");
+                        AnsiConsole.MarkupLine($"[bold]Id: {counter}, Name: {record.Name}, Description: {record.Description}[/]");
                         AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
+                        counter++;
                     }
                 }
                 else
@@ -167,13 +169,15 @@ namespace Flashcards.kjanos89
         }
         public void DeleteStack()
         {
+            int realId;
             AnsiConsole.Clear();
-            ShowStacksForMenu();
+            Dictionary<int, int> realStacks = ShowStacksForMenu();
             AnsiConsole.MarkupLine("[bold]Please give me the id of the stack you want to delete:[/]");
             string input = Console.ReadLine();
             if (int.TryParse(input, out int id))
             {
-                if (DoesStackIdExist(id))
+                realId = realStacks[id - 1];
+                if (DoesStackIdExist(realId))
                 {
                     try
                     {
@@ -187,11 +191,11 @@ namespace Flashcards.kjanos89
                                 try
                                 {
                                     string deleteFlashcardsCommand = "DELETE FROM Flashcard WHERE StackId = @StackId";
-                                    connection.Execute(deleteFlashcardsCommand, new { StackId = id }, transaction);
+                                    connection.Execute(deleteFlashcardsCommand, new { StackId = realId }, transaction);
                                     string deleteStudyCommand = "DELETE FROM Study WHERE StackId = @StackId";
-                                    connection.Execute(deleteStudyCommand, new { StackId = id }, transaction);
+                                    connection.Execute(deleteStudyCommand, new { StackId = realId }, transaction);
                                     string deleteStackCommand = "DELETE FROM Stack WHERE StackId = @Id";
-                                    int rowsAffected = connection.Execute(deleteStackCommand, new { Id = id }, transaction);
+                                    int rowsAffected = connection.Execute(deleteStackCommand, new { Id = realId }, transaction);
                                     if (rowsAffected > 0)
                                     {
                                         transaction.Commit();
@@ -257,27 +261,31 @@ namespace Flashcards.kjanos89
         public void ViewFlashcards()
         {
             AnsiConsole.Clear();
-            ShowStacksForMenu();
+            Dictionary<int,int> dict = ShowStacksForMenu();
+            int realId;
             AnsiConsole.MarkupLine("[yellow bold]Enter the ID of the stack where you want to check the flashcards:[/]");
             string input = Console.ReadLine();
 
             if (int.TryParse(input, out int id))
             {
-                if (DoesStackIdExist(id))
+                realId = dict[id-1];
+                if (DoesStackIdExist(realId))
                 {
+                    int counter = 1;
                     using(var connection = new SqlConnection(_connectionString))
                     { 
                         connection.Open();
                         connection.ChangeDatabase("Flashcards");
-                        var records = connection.Query<Flashcard>("SELECT * FROM Flashcard WHERE StackId=@StackId", new { StackId=id }).ToList();
+                        var records = connection.Query<Flashcard>("SELECT * FROM Flashcard WHERE StackId=@StackId", new { StackId=realId }).ToList();
                         if(records.Any())
                         {
                             AnsiConsole.Clear();
                             AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
                             foreach (var record in records)
                             {
-                                AnsiConsole.MarkupLine($"[bold]Id: {record.FlashcardId}, Question: {record.Question}, Answer: {record.Answer}[/]");
+                                AnsiConsole.MarkupLine($"[bold]Id: {counter}, Question: {record.Question}, Answer: {record.Answer}[/]");
                                 AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
+                                counter++;
                             }
                         }
                         else
@@ -303,16 +311,18 @@ namespace Flashcards.kjanos89
         public void AddFlashcard()
         {
             AnsiConsole.Clear();
-            ShowStacksForMenu();
+            int realId;
+            Dictionary<int,int> dict=ShowStacksForMenu();
             AnsiConsole.MarkupLine("[yellow bold]Enter the ID of the stack you want the flashcard to belong to:[/]");
             string input = Console.ReadLine();
 
             if (int.TryParse(input, out int id))
             {
-                if (DoesStackIdExist(id))
+                realId = dict[id-1];
+                if (DoesStackIdExist(realId))
                 {
                     Flashcard flashcard = new Flashcard();
-                    flashcard.StackId = id; 
+                    flashcard.StackId = realId; 
 
                     AnsiConsole.MarkupLine("[bold]The ID exists! Now please enter the question of the flashcard:[/]");
                     flashcard.Question = Console.ReadLine();
@@ -358,26 +368,24 @@ namespace Flashcards.kjanos89
         public void DeleteFlashcard()
         {
             AnsiConsole.Clear();
-            ShowStacksForMenu();
+            int realId;
+            int realId2;
+            Dictionary<int,int>dict=ShowStacksForMenu();
+            Dictionary<int, int> dict2=new Dictionary<int, int>();
             AnsiConsole.MarkupLine("[yellow bold]Enter the ID of the stack where you want to delete the flashcard:[/]");
             string input = Console.ReadLine();
-            if (Int32.TryParse(input, out var inputInt))
+            
+            if (int.TryParse(input, out int id))
             {
-                ShowFlashcardsForMenu(inputInt);
-            }
-            else
-            {
-                AnsiConsole.MarkupLine("[bold red]Wrong input, try again![/]");
-                Thread.Sleep(1000);
-                DeleteFlashcard();
-            }
-            AnsiConsole.MarkupLine("[yellow bold]Enter the ID of the flashcard which you want to delete:[/]");
-            string input2 = Console.ReadLine();
-            if (int.TryParse(input2, out int fcId))
-            {
-                if (int.TryParse(input, out int id))
+                realId = dict[id - 1];
+                dict2 = ShowFlashcardsForMenu(realId);
+                AnsiConsole.MarkupLine("[yellow bold]Enter the ID of the flashcard which you want to delete:[/]");
+                string input2 = Console.ReadLine();
+                
+                if (int.TryParse(input2, out int fcId))
                 {
-                    if (DoesStackIdExist(id) && DoesFlashcardIdExist(id, fcId))
+                    realId2 = dict2[fcId - 1];
+                    if (DoesStackIdExist(realId) && DoesFlashcardIdExist(realId, realId2))
                     {
                         using (var connection = new SqlConnection(_connectionString))
                         {
@@ -388,25 +396,7 @@ namespace Flashcards.kjanos89
                                 try
                                 {
                                     connection.Execute("DELETE FROM Flashcard WHERE StackId=@StackId AND FlashcardId=@FlashcardId",
-                                        new { StackId = id, FlashcardId = fcId }, transaction);
-                                    string createTempTable = @"
-                                    CREATE TABLE TempFlashcard (
-                                        FlashcardId INT IDENTITY(1,1) NOT NULL,
-                                        StackId INT NOT NULL,
-                                        Question NVARCHAR(500) NOT NULL,
-                                        Answer NVARCHAR(500) NOT NULL
-                                    )";
-                                    connection.Execute(createTempTable, transaction: transaction);
-                                    string insertTempTable = @"
-                                    SET IDENTITY_INSERT TempFlashcard ON;
-                                    INSERT INTO TempFlashcard (FlashcardId, StackId, Question, Answer)
-                                    SELECT ROW_NUMBER() OVER (ORDER BY FlashcardId) AS FlashcardId, StackId, Question, Answer
-                                    FROM Flashcard
-                                    WHERE StackId = @StackId;
-                                    SET IDENTITY_INSERT TempFlashcard OFF;";
-                                    connection.Execute(insertTempTable, new { StackId = id }, transaction);
-                                    connection.Execute("DROP TABLE Flashcard", transaction: transaction);
-                                    connection.Execute("EXEC sp_rename 'TempFlashcard', 'Flashcard'", transaction: transaction);
+                                    new { StackId = realId, FlashcardId = realId2 }, transaction);
                                     transaction.Commit();
                                     AnsiConsole.MarkupLine("[green bold]Flashcard deleted and IDs rearranged successfully![/]");
                                 }
@@ -435,27 +425,31 @@ namespace Flashcards.kjanos89
             {
                 AnsiConsole.MarkupLine("[bold]Invalid ID for flashcard.[/]");
             }
+            Thread.Sleep(1000);
+            menu.FlashcardMenu();
         }
         public void Study()
         {
             AnsiConsole.Clear();
-            ShowStacksForMenu();
+            int realId;
+            Dictionary<int,int> dict = ShowStacksForMenu();
             AnsiConsole.MarkupLine("[yellow bold]Enter the ID of the stack you want to study:[/]");
             string input = Console.ReadLine();
             points = 0;
             if (int.TryParse(input, out int id))
             {
-                if (DoesStackIdExist(id))
+                realId = dict[id-1];
+                if (DoesStackIdExist(realId))
                 {
                     using (var connection = new SqlConnection(_connectionString))
                     {
                         connection.Open();
                         connection.ChangeDatabase("Flashcards");
-                        List<Flashcard> flashcards = connection.Query<Flashcard>("SELECT * FROM Flashcard WHERE StackId=@StackId", new { StackId = id }).ToList();
+                        List<Flashcard> flashcards = connection.Query<Flashcard>("SELECT * FROM Flashcard WHERE StackId=@StackId", new { StackId = realId }).ToList();
                         StudySession(flashcards, 0, 0);
                         DateTime date = DateTime.Now;
                         string insertCommand = "INSERT INTO Study (Date, StackId, Points) VALUES (@Date, @StackId, @Points)";
-                        var parameters = new { Date = date, StackId=id, Points=points };
+                        var parameters = new { Date = date, StackId=realId, Points=points };
                         connection.Execute(insertCommand, parameters);
                         connection.Close();
                     }
@@ -537,8 +531,10 @@ namespace Flashcards.kjanos89
                 menu.StudyMenu();
             }
         }
-        public void ShowStacksForMenu ()
+        public Dictionary<int,int> ShowStacksForMenu ()
         {
+            Dictionary<int,int> stackIds = new Dictionary<int, int>();
+            int counter = 1;
             using (var connection = new SqlConnection(_connectionString))
             {
                 AnsiConsole.Clear();
@@ -551,8 +547,10 @@ namespace Flashcards.kjanos89
                     AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
                     foreach (var record in records)
                     {
-                        AnsiConsole.MarkupLine($"[bold]Id: {record.StackId}, Name: {record.Name}, Description: {record.Description}[/]");
+                        stackIds.Add(counter-1,record.StackId);
+                        AnsiConsole.MarkupLine($"[bold]Id: {counter}, Name: {record.Name}, Description: {record.Description}[/]");
                         AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
+                        counter++;
                     }
                 }
                 else
@@ -562,11 +560,16 @@ namespace Flashcards.kjanos89
                     connection.Close();
                     menu.DisplayMenu();
                 }
+                
                 connection.Close();
+                
             }
+            return stackIds;
         }
-        public void ShowFlashcardsForMenu(int id)
+        public Dictionary<int,int> ShowFlashcardsForMenu(int id)
         {
+
+            Dictionary<int, int> fcs = new Dictionary<int, int>();
             using (var connection = new SqlConnection(_connectionString))
             {
                 AnsiConsole.Clear();
@@ -576,11 +579,14 @@ namespace Flashcards.kjanos89
                 var records = connection.Query<Flashcard>("SELECT * FROM Flashcard WHERE StackId=@StackId", new {StackId = id}).ToList();
                 if (records.Any())
                 {
+                    int counter = 1;
                     AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
                     foreach (var record in records)
                     {
-                        AnsiConsole.MarkupLine($"[bold]Id: {record.FlashcardId}, Question: {record.Question}[/]");
+                        fcs.Add(counter-1,record.FlashcardId);
+                        AnsiConsole.MarkupLine($"[bold]Id: {counter}, Question: {record.Question}[/]");
                         AnsiConsole.MarkupLine("[red]__________________________________________________________________________[/]");
+                        counter++;
                     }
                 }
                 else
@@ -590,8 +596,11 @@ namespace Flashcards.kjanos89
                     connection.Close();
                     menu.DisplayMenu();
                 }
+                
                 connection.Close();
+                
             }
+            return fcs;
         }
     }
 }
