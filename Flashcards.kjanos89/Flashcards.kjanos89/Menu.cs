@@ -33,24 +33,33 @@ public class Menu
     }
     public void MenuOption(char option)
     {
-        switch (option)
+        if (validation.ValidateInputForMenu(option))
         {
-            case '1':
-                FlashcardMenu();
-                break;
-            case '2':
-                StackMenu();
-                break;
-            case '3':
-                StudyMenu();
-                break;
-            case '0':
-                QuitApplication();
-                break;
-            default:
-                AnsiConsole.MarkupLine("Please try again!");
-                DisplayMenu();
-                break;
+            switch (option)
+            {
+                case '1':
+                    FlashcardMenu();
+                    break;
+                case '2':
+                    StackMenu();
+                    break;
+                case '3':
+                    StudyMenu();
+                    break;
+                case '0':
+                    QuitApplication();
+                    break;
+                default:
+                    AnsiConsole.MarkupLine("Please try again!");
+                    DisplayMenu();
+                    break;
+            }
+        }
+        else
+        {
+            AnsiConsole.MarkupLine("Please try again after 1 second.");
+            Thread.Sleep(1000);
+            DisplayMenu();
         }
     }
     public void FlashcardMenu()

@@ -6,5 +6,9 @@
         {
             return !String.IsNullOrEmpty(input);
         }
+        public bool ValidateInputForMenu(char input)
+        {
+            return !char.IsLetter(input);
+        }
     }
 }
