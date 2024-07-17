@@ -1,11 +1,10 @@
 ﻿namespace Flashcards.Models;
 
-public class Stack
+public class StackDTO
 {
-    public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
 
-    public Stack()
+    public StackDTO()
     {
 
     }
