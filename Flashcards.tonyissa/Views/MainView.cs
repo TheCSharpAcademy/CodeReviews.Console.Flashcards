@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Design;
-using Flashcards.StackView;
+﻿using Flashcards.StackView;
 using Flashcards.StudyView;
 using Flashcards.CardView;
 
@@ -21,8 +20,9 @@ public static class MainViewController
         if (option == 's') StackViewController.InitStackView();
         else if (option == 'f') CardViewController.InitCardView();
         else if (option == 'b') StudyViewController.InitStudyView();
+        else return true;
 
-        return true;
+        return false;
     }
 
     public static char GetMainViewInput()
