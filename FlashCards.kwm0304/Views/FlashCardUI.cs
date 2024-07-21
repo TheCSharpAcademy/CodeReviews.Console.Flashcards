@@ -1,0 +1,6 @@
+namespace FlashCards.kwm0304.Views;
+
+public class FlashCardUI
+{
+    
+}

@@ -36,13 +36,17 @@ public static class AppConfiguration
   }
   public static string GetConnectionString(string name)
   {
-      return Configuration.GetConnectionString(name) ?? "Configuration is not being acknowledged";
+    return Configuration.GetConnectionString(name) ?? "Configuration is not being acknowledged";
   }
 }
 public class Program
 {
   public static void Main(string[] args)
   {
-    
+    while (true)
+    {
+      SessionLoop loop = new();
+      loop.OnStart();
+    }
   }
 }
