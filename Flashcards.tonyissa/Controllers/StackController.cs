@@ -7,12 +7,12 @@ public static class StackController
 {
     private static readonly string ConnectionString = ConfigurationManager.AppSettings.Get("ConnectionString")!;
 
-    public static List<StackDTO> GetAllStacks()
+    public static List<Stack> GetAllStacks()
     {
         using var connection = new SqlConnection(ConnectionString);
 
         string sql = "SELECT * FROM stacks;";
-        var results = connection.Query<StackDTO>(sql);
+        var results = connection.Query<Stack>(sql);
 
         return results.ToList();
     }

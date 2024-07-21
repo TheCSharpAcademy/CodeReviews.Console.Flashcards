@@ -2,6 +2,7 @@
 using Flashcards.Controllers;
 using Flashcards.StudyView;
 using Microsoft.IdentityModel.Tokens;
+using Flashcards.Models;
 
 namespace Flashcards.StackView;
 
@@ -17,7 +18,7 @@ public static class StackViewController
         var stacks = StackController.GetAllStacks();
         int i = 1;
 
-        foreach (var stack in stacks) table.AddRow([i++.ToString(), stack.Name]);
+        foreach (var stack in stacks) table.AddRow(i++.ToString(), stack.Name);
 
         Console.WriteLine("List of stacks:");
         AnsiConsole.Write(table);
@@ -26,7 +27,7 @@ public static class StackViewController
         var option = GetStackViewInput();
 
         if (option == 'c') InitStackCreateView();
-        else if (option == 'd') return;
+        else if (option == 'd') InitStackDeleteView();
         else return;
 
     }
@@ -46,23 +47,28 @@ public static class StackViewController
     public static void InitStackCreateView()
     {
         Console.WriteLine("Enter the name for your stack:");
-        var input = GetStackName();
+        var input = GetNewStackName();
 
         StackController.CreateStack(input);
         Console.WriteLine($"Stack \"{input}\" created successfully.");
         Console.ReadKey();
     }
 
-    public static string GetStackName()
+    public static string GetNewStackName()
     {
         var name = Console.ReadLine();
 
         if (name.IsNullOrEmpty() || name!.Length > 20)
         {
             Console.WriteLine($"Invalid name. Stack names must have a length of at least one character and under 40 characters total");
-            return GetStackName();
+            return GetNewStackName();
         }
 
         return name;
+    }
+
+    public static void InitStackDeleteView()
+    {
+        var stacks = StackController.GetAllStacks();
     }
 }
