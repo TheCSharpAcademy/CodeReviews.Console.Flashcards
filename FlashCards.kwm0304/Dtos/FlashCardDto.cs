@@ -13,3 +13,4 @@ public class FlashCardDto
         Answer = answer;
     }
 }
+//Server=localhost;Database=localdb;Trusted_Connection=True;
