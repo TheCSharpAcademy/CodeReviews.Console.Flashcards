@@ -15,62 +15,62 @@ namespace Flashcards.Arashi256.Controllers
             _stackController = new StackController();
         }
 
-        public bool AddStudySession(StudySession_DTO dtoStudySession)
+        public bool AddStudySession(StudySessionDto dtoStudySession)
         {
             StudySession newStudySession = new StudySession() { Id = dtoStudySession.Id, StackId = dtoStudySession.StackId, TotalCards = dtoStudySession.TotalCards, Score = dtoStudySession.Score, DateStudied = dtoStudySession.DateStudied };
             int rows = _studysessionDatabase.AddNewStudySession(newStudySession);
             return rows > 0 ? true : false;
         }
 
-        public List<StudySession_DTO> GetAllStackStudySessionsForDate(int StackId, DateTime d)
+        public List<StudySessionDto> GetAllStackStudySessionsForDate(int StackId, DateTime d)
         {
-            List<StudySession_DTO> viewSessions = new List<StudySession_DTO>();
+            List<StudySessionDto> viewSessions = new List<StudySessionDto>();
             var parameters = new DynamicParameters();
             parameters.Add("@DateStudied", d);
             parameters.Add("@StackId", StackId);
             List<StudySession> sessions = _studysessionDatabase.GetStudySessionResults("SELECT * FROM dbo.studysessions WHERE DateStudied = @DateStudied AND StackId = @StackId ORDER BY DateStudied ASC", parameters);
             for (int i = 0; i < sessions.Count; i++)
             {
-                viewSessions.Add(new StudySession_DTO() { DisplayId = i + 1, Id = sessions[i].Id, TotalCards = sessions[i].TotalCards, Score = sessions[i].Score, DateStudied = sessions[i].DateStudied, Subject = GetSubjectFromStackID(sessions[i].StackId) });
+                viewSessions.Add(new StudySessionDto() { DisplayId = i + 1, Id = sessions[i].Id, TotalCards = sessions[i].TotalCards, Score = sessions[i].Score, DateStudied = sessions[i].DateStudied, Subject = GetSubjectFromStackID(sessions[i].StackId) });
             }
             return viewSessions;
         }
 
-        public List<StudySession_DTO> GetAllStackStudySessionsForStack(int StackId)
+        public List<StudySessionDto> GetAllStackStudySessionsForStack(int StackId)
         {
-            List<StudySession_DTO> viewSessions = new List<StudySession_DTO>();
+            List<StudySessionDto> viewSessions = new List<StudySessionDto>();
             var parameters = new DynamicParameters();
             parameters.Add("@StackId", StackId);
             List<StudySession> sessions = _studysessionDatabase.GetStudySessionResults("SELECT * FROM dbo.studysessions WHERE StackId = @StackId ORDER BY DateStudied ASC", parameters);
             for (int i = 0; i < sessions.Count; i++)
             {
-                viewSessions.Add(new StudySession_DTO() { DisplayId = i + 1, Id = sessions[i].Id, TotalCards = sessions[i].TotalCards, Score = sessions[i].Score, DateStudied = sessions[i].DateStudied, Subject = GetSubjectFromStackID(sessions[i].StackId) });
+                viewSessions.Add(new StudySessionDto() { DisplayId = i + 1, Id = sessions[i].Id, TotalCards = sessions[i].TotalCards, Score = sessions[i].Score, DateStudied = sessions[i].DateStudied, Subject = GetSubjectFromStackID(sessions[i].StackId) });
             }
             return viewSessions;
         }
 
-        public List<StudySession_DTO> GetAllStudySessionsForDate(DateTime d)
+        public List<StudySessionDto> GetAllStudySessionsForDate(DateTime d)
         {
-            List<StudySession_DTO> viewSessions = new List<StudySession_DTO>();
+            List<StudySessionDto> viewSessions = new List<StudySessionDto>();
             var parameters = new DynamicParameters();
             parameters.Add("@Date", d);
             List<StudySession> sessions = _studysessionDatabase.GetStudySessionResults("SELECT * FROM dbo.studysessions WHERE DateStudied = @DateStudied ORDER BY DateStudied ASC", parameters);
             for (int i = 0; i < sessions.Count; i++)
             {
-                viewSessions.Add(new StudySession_DTO() { DisplayId = i + 1, Id = sessions[i].Id, TotalCards = sessions[i].TotalCards, Score = sessions[i].Score, DateStudied = sessions[i].DateStudied, Subject = GetSubjectFromStackID(sessions[i].StackId) });
+                viewSessions.Add(new StudySessionDto() { DisplayId = i + 1, Id = sessions[i].Id, TotalCards = sessions[i].TotalCards, Score = sessions[i].Score, DateStudied = sessions[i].DateStudied, Subject = GetSubjectFromStackID(sessions[i].StackId) });
             }
             return viewSessions;
         }
 
         private string GetSubjectFromStackID(int sid)
         {
-            Stack_DTO dtoStack = _stackController.GetStack(sid);
+            StackDto dtoStack = _stackController.GetStack(sid);
             return dtoStack.Subject;
         }
 
-        public StudySessionReportPerStack_DTO StudySessionsPerMonthStackReport(int stackid, string year)
+        public StudySessionReportPerStackDto StudySessionsPerMonthStackReport(int stackid, string year)
         {
-            StudySessionReportPerStack_DTO report = new StudySessionReportPerStack_DTO();
+            StudySessionReportPerStackDto report = new StudySessionReportPerStackDto();
             var parameters = new DynamicParameters();
             parameters.Add("@StackId", stackid);
             parameters.Add("@Year", year);
@@ -84,9 +84,9 @@ namespace Flashcards.Arashi256.Controllers
             return report;
         }
 
-        public StudySessionReportPerStack_DTO StudySessionsAveragesStackReport(int stackid, string year)
+        public StudySessionReportPerStackDto StudySessionsAveragesStackReport(int stackid, string year)
         {
-            StudySessionReportPerStack_DTO report = new StudySessionReportPerStack_DTO();
+            StudySessionReportPerStackDto report = new StudySessionReportPerStackDto();
             var parameters = new DynamicParameters();
             parameters.Add("@StackId", stackid);
             parameters.Add("@Year", year);

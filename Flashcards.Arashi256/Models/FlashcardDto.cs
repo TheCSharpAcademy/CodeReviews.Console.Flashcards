@@ -1,6 +1,6 @@
 ﻿namespace Flashcards.Arashi256.Models
 {
-    internal class Flashcard_DTO
+    internal class FlashcardDto
     {
         public int? DisplayId = null;
         public int? Id = null;

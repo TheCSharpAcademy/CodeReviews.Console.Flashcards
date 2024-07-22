@@ -29,7 +29,7 @@ namespace Flashcards.Arashi256.Views
                 }
                 else
                 {
-                    var newStack = new Stack_DTO() { Subject = subject };
+                    var newStack = new StackDto() { Subject = subject };
                     if (StackController.AddStack(newStack))
                         AnsiConsole.MarkupLine($"[yellow]New stack labelled '{subject}' added[/].");
                     else
@@ -41,12 +41,12 @@ namespace Flashcards.Arashi256.Views
             } while (error);
         }
 
-        public List<Stack_DTO> ViewStacks()
+        public List<StackDto> ViewStacks()
         {
             Table tblStackList = new Table();
             tblStackList.AddColumn(new TableColumn("[yellow]ID[/]").LeftAligned());
             tblStackList.AddColumn(new TableColumn("[yellow]Subject[/]").RightAligned());
-            List<Stack_DTO> stacks = StackController.GetAllStacks();
+            List<StackDto> stacks = StackController.GetAllStacks();
             if (stacks.Count > 0)
             {
                 for (int i = 0; i < stacks.Count; i++)
@@ -68,8 +68,8 @@ namespace Flashcards.Arashi256.Views
             bool error = false;
             string? subject = string.Empty;
             int id = 0;
-            List<Stack_DTO> stacks = ViewStacks();
-            Stack_DTO? selectedStack = null;
+            List<StackDto> stacks = ViewStacks();
+            StackDto? selectedStack = null;
             if (stacks != null && stacks.Count > 0)
             {
                 id = CommonUI.GetNumberInput("Please select a Stack ID to update: ", 0, stacks.Count);
@@ -110,8 +110,8 @@ namespace Flashcards.Arashi256.Views
         public void DeleteStack()
         {
             int id = 0;
-            List<Stack_DTO> stacks = ViewStacks();
-            Stack_DTO? selectedStack = null;
+            List<StackDto> stacks = ViewStacks();
+            StackDto? selectedStack = null;
             if (stacks != null && stacks.Count > 0)
             {
                 id = CommonUI.GetNumberInput("Please select a Stack ID to delete: ", 0, stacks.Count);
@@ -143,7 +143,7 @@ namespace Flashcards.Arashi256.Views
             }
         }
 
-        public void ViewStack(Stack_DTO theStack)
+        public void ViewStack(StackDto theStack)
         {
             Table tblStack = new Table();
             tblStack.AddColumn(new TableColumn($"[yellow]ID[/]").LeftAligned());

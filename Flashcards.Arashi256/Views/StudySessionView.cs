@@ -2,7 +2,6 @@
 using Flashcards.Arashi256.Controllers;
 using Flashcards.Arashi256.Models;
 using Spectre.Console;
-using System.Threading.Tasks.Sources;
 
 namespace Flashcards.Arashi256.Views
 {
@@ -80,9 +79,9 @@ namespace Flashcards.Arashi256.Views
         private void DoStudySession()
         {
             int stackId = 0;
-            Stack_DTO? selectedStack = null;
-            List<Flashcard_DTO> flashcards;
-            List<Stack_DTO> stacks = _stackView.ViewStacks();
+            StackDto? selectedStack = null;
+            List<FlashcardDto> flashcards;
+            List<StackDto> stacks = _stackView.ViewStacks();
             if (stacks != null && stacks.Count > 0)
             {
                 stackId = CommonUI.GetNumberInput("Please select a Stack ID to get flashcards from: ", 0, stacks.Count);
@@ -107,7 +106,7 @@ namespace Flashcards.Arashi256.Views
             }
         }
 
-        private void AskFlashcardsQuestions(List<Flashcard_DTO> flashcards, int stackid)
+        private void AskFlashcardsQuestions(List<FlashcardDto> flashcards, int stackid)
         {
             int totalCards = flashcards.Count;
             int score = 0;
@@ -131,7 +130,7 @@ namespace Flashcards.Arashi256.Views
             }
             AnsiConsole.MarkupLine("[yellow]You have finished this stack.[/]");
             AnsiConsole.MarkupLine($"[yellow]Your score is:[/] [white]{score} out of {totalCards}[/]");
-            StudySession_DTO studySession = new StudySession_DTO();
+            StudySessionDto studySession = new StudySessionDto();
             studySession.StackId = stackid;
             studySession.TotalCards = totalCards;
             studySession.Score = score;
@@ -150,9 +149,9 @@ namespace Flashcards.Arashi256.Views
         private void ListStudySessions()
         {
             int stackId = 0;
-            Stack_DTO? selectedStack = null;
-            List<StudySession_DTO> studysessions;
-            List<Stack_DTO> stacks = _stackView.ViewStacks();
+            StackDto? selectedStack = null;
+            List<StudySessionDto> studysessions;
+            List<StackDto> stacks = _stackView.ViewStacks();
             if (stacks != null && stacks.Count > 0)
             {
                 stackId = CommonUI.GetNumberInput("Please select a Stack ID to get study sessions for: ", 0, stacks.Count);
@@ -177,7 +176,7 @@ namespace Flashcards.Arashi256.Views
             }
         }
 
-        private void DisplayStudySessions(List<StudySession_DTO> studysessions, int stackid)
+        private void DisplayStudySessions(List<StudySessionDto> studysessions, int stackid)
         {
             string subject = _stackView.StackController.GetStack(stackid).Subject;
             Table tblSessionList = new Table();
@@ -188,7 +187,7 @@ namespace Flashcards.Arashi256.Views
             tblSessionList.Alignment(Justify.Center);
             if (studysessions.Count > 0)
             {
-                foreach (StudySession_DTO session in studysessions)
+                foreach (StudySessionDto session in studysessions)
                 {
                     tblSessionList.AddRow($"[white]{session.DisplayId}[/]", $"[darkorange]{subject}[/]", $"[white]{session.DateStudied.ToString("dd-MM-yyyy")}[/]", $"[white]{session.Score}/{session.TotalCards}[/]");
                 }
@@ -203,8 +202,8 @@ namespace Flashcards.Arashi256.Views
         private void StudySessionsPerMonthReport()
         {
             int stackId = 0;
-            Stack_DTO? selectedStack = null;
-            List<Stack_DTO> stacks = _stackView.ViewStacks();
+            StackDto? selectedStack = null;
+            List<StackDto> stacks = _stackView.ViewStacks();
             if (stacks != null && stacks.Count > 0)
             {
                 stackId = CommonUI.GetNumberInput("Please select a Stack ID: ", 0, stacks.Count);
@@ -216,7 +215,7 @@ namespace Flashcards.Arashi256.Views
                 {
                     selectedStack = stacks[stackId - 1];
                     string year = GetInputYear();
-                    StudySessionReportPerStack_DTO report = _studySessionController.StudySessionsPerMonthStackReport((int)selectedStack.Id, year);
+                    StudySessionReportPerStackDto report = _studySessionController.StudySessionsPerMonthStackReport((int)selectedStack.Id, year);
                     if (report != null)
                         DisplayStudySessionReport($"Study Sessions Per Month Report for '{report.Subject}'", report);
                     else
@@ -228,8 +227,8 @@ namespace Flashcards.Arashi256.Views
         private void AverageStudySessionsPerMonthReport()
         {
             int stackId = 0;
-            Stack_DTO? selectedStack = null;
-            List<Stack_DTO> stacks = _stackView.ViewStacks();
+            StackDto? selectedStack = null;
+            List<StackDto> stacks = _stackView.ViewStacks();
             if (stacks != null && stacks.Count > 0)
             {
                 stackId = CommonUI.GetNumberInput("Please select a Stack ID: ", 0, stacks.Count);
@@ -241,7 +240,7 @@ namespace Flashcards.Arashi256.Views
                 {
                     selectedStack = stacks[stackId - 1];
                     string year = GetInputYear();
-                    StudySessionReportPerStack_DTO report = _studySessionController.StudySessionsAveragesStackReport((int)selectedStack.Id, year);
+                    StudySessionReportPerStackDto report = _studySessionController.StudySessionsAveragesStackReport((int)selectedStack.Id, year);
                     if (report != null)
                         DisplayStudySessionReport($"Average Study Sessions Per Month Report for '{report.Subject}'", report);
                     else
@@ -269,7 +268,7 @@ namespace Flashcards.Arashi256.Views
         );
         }
 
-        private void DisplayStudySessionReport(string title, StudySessionReportPerStack_DTO report)
+        private void DisplayStudySessionReport(string title, StudySessionReportPerStackDto report)
         {
             Table tblSessionReport = new Table();
             tblSessionReport.AddColumn(new TableColumn("[yellow]Subject[/]").LeftAligned());

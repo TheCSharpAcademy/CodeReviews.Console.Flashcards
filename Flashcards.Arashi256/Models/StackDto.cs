@@ -1,7 +1,7 @@
 ﻿
 namespace Flashcards.Arashi256.Models
 {
-    internal class Stack_DTO
+    internal class StackDto
     {
         public int? DisplayId = null;
         public int? Id = null;

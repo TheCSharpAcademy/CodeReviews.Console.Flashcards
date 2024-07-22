@@ -22,9 +22,9 @@ namespace Flashcards.Arashi256.Views
             int stackId = 0;
             string flashcardFront = string.Empty;
             string flashcardBack = string.Empty;
-            Stack_DTO? selectedStack = null;
-            Flashcard_DTO newFlashcard = null;
-            List<Stack_DTO> stacks = _stackView.ViewStacks();
+            StackDto? selectedStack = null;
+            FlashcardDto newFlashcard = null;
+            List<StackDto> stacks = _stackView.ViewStacks();
             if (stacks != null && stacks.Count > 0)
             {
                 stackId = CommonUI.GetNumberInput("Please select a Stack ID to add a flashcard to: ", 0, stacks.Count);
@@ -50,7 +50,7 @@ namespace Flashcards.Arashi256.Views
                             AnsiConsole.MarkupLine("[orange1]Operation cancelled[/].");
                             break;
                         }
-                        newFlashcard = new Flashcard_DTO();
+                        newFlashcard = new FlashcardDto();
                         newFlashcard.StackId = (int)selectedStack.Id;
                         newFlashcard.Subject = selectedStack.Subject;
                         newFlashcard.Front = flashcardFront;
@@ -71,7 +71,7 @@ namespace Flashcards.Arashi256.Views
             }
         }
 
-        private void ViewFlashcard(Flashcard_DTO flashcard)
+        private void ViewFlashcard(FlashcardDto flashcard)
         {
             Table tblFlashcard = new Table();
             tblFlashcard.AddColumn(new TableColumn($"[yellow]Subject[/]").LeftAligned());
@@ -85,9 +85,9 @@ namespace Flashcards.Arashi256.Views
         public void ViewFlashcardsInStack()
         {
             int stackId = 0;
-            Stack_DTO? selectedStack = null;
-            List<Stack_DTO> stacks = _stackView.ViewStacks();
-            List<Flashcard_DTO> flashcards;
+            StackDto? selectedStack = null;
+            List<StackDto> stacks = _stackView.ViewStacks();
+            List<FlashcardDto> flashcards;
             if (stacks != null && stacks.Count > 0)
             {
                 stackId = CommonUI.GetNumberInput("Please select a Stack ID to get flashcards: ", 0, stacks.Count);
@@ -104,7 +104,7 @@ namespace Flashcards.Arashi256.Views
             }
         }
 
-        public void ViewFlashcards(List<Flashcard_DTO> flashcards)
+        public void ViewFlashcards(List<FlashcardDto> flashcards)
         {
             Table tblFlashcardList = new Table();
             tblFlashcardList.AddColumn(new TableColumn("[yellow]ID[/]").LeftAligned());
@@ -133,10 +133,10 @@ namespace Flashcards.Arashi256.Views
             int flashcardId = 0;
             string flashcardFront = string.Empty;
             string flashcardBack = string.Empty;
-            Stack_DTO? selectedStack = null;
-            Flashcard_DTO updatedFlashcard = null;
-            List<Flashcard_DTO> flashcards;
-            List<Stack_DTO> stacks = _stackView.ViewStacks();
+            StackDto? selectedStack = null;
+            FlashcardDto updatedFlashcard = null;
+            List<FlashcardDto> flashcards;
+            List<StackDto> stacks = _stackView.ViewStacks();
             if (stacks != null && stacks.Count > 0)
             {
                 stackId = CommonUI.GetNumberInput("Please select a Stack ID to get flashcards from: ", 0, stacks.Count);
@@ -199,11 +199,11 @@ namespace Flashcards.Arashi256.Views
         public void DeleteFlashcard()
         {
             int stackId = 0;
-            Stack_DTO? selectedStack = null;
-            Flashcard_DTO deleteFlashcard = null;
-            List<Flashcard_DTO> flashcards;
+            StackDto? selectedStack = null;
+            FlashcardDto deleteFlashcard = null;
+            List<FlashcardDto> flashcards;
             int flashcardId = 0;
-            List<Stack_DTO> stacks = _stackView.ViewStacks();
+            List<StackDto> stacks = _stackView.ViewStacks();
             if (stacks != null && stacks.Count > 0)
             {
                 stackId = CommonUI.GetNumberInput("Please select a Stack ID to get flashcards from: ", 0, stacks.Count);

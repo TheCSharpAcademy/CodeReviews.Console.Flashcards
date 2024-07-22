@@ -53,14 +53,14 @@ namespace Flashcards.Arashi256.Classes
             return results;
         }
 
-        public List<StudySessionReportPerStack_DTO> GetStudySessionReportForStack(string query, DynamicParameters? parameters = null)
+        public List<StudySessionReportPerStackDto> GetStudySessionReportForStack(string query, DynamicParameters? parameters = null)
         {
-            List<StudySessionReportPerStack_DTO> report = new List<StudySessionReportPerStack_DTO>();
+            List<StudySessionReportPerStackDto> report = new List<StudySessionReportPerStackDto>();
             using (var connection = new SqlConnection(_connection.DatabaseConnectionString))
             {
                 try
                 {
-                    report = connection.Query<StudySessionReportPerStack_DTO>(query, parameters).AsList();
+                    report = connection.Query<StudySessionReportPerStackDto>(query, parameters).AsList();
                 }
                 catch (SqlException sqlEx)
                 {
