@@ -15,10 +15,9 @@ public static class StackViewController
         Table table = new();
         table.AddColumns(["ID", "name"]);
 
-        var stacks = StackController.GetAllStacks();
-        int i = 1;
+        var stackList = StackController.GetAllStacks();
 
-        foreach (var stack in stacks) table.AddRow(i++.ToString(), stack.Name);
+        foreach (var stack in stackList) table.AddRow(stack.Id.ToString(), stack.Name);
 
         Console.WriteLine("List of stacks:");
         AnsiConsole.Write(table);
@@ -27,7 +26,7 @@ public static class StackViewController
         var option = GetStackViewInput();
 
         if (option == 'c') InitStackCreateView();
-        else if (option == 'd') InitStackDeleteView();
+        else if (option == 'd') InitStackDeleteView(stackList);
         else return;
 
     }
@@ -46,11 +45,13 @@ public static class StackViewController
 
     public static void InitStackCreateView()
     {
-        Console.WriteLine("Enter the name for your stack:");
+        Console.WriteLine("Enter the name for your stack, or type 0 to quit:");
         var input = GetNewStackName();
 
+        if (input == "0") return;
+
         StackController.CreateStack(input);
-        Console.WriteLine($"Stack \"{input}\" created successfully.");
+        Console.WriteLine($"Stack \"{input}\" created successfully. Press any key to continue...");
         Console.ReadKey();
     }
 
@@ -67,8 +68,34 @@ public static class StackViewController
         return name;
     }
 
-    public static void InitStackDeleteView()
+    public static void InitStackDeleteView(List<Stack> stackList)
     {
-        var stacks = StackController.GetAllStacks();
+        Console.WriteLine("Enter the number of the stack you would like to delete, or type 0 to quit: ");
+        Console.WriteLine("WARNING: This also deletes all associated flashcards");
+        var stackToDelete = GetStackDeleteInput(stackList);
+
+        if (stackToDelete == 0) return;
+
+        StackController.DeleteStack(stackToDelete);
+        Console.WriteLine($"Stack {stackToDelete} deleted successfully. Press any key to continue...");
+        Console.ReadKey();
+    }
+
+    public static int GetStackDeleteInput(List<Stack> stackList)
+    {
+        var input = Console.ReadLine();
+
+        if (!int.TryParse(input, out int index))
+        {
+            Console.WriteLine("Invalid input. Please input the number of the stack you would like to delete.");
+            return GetStackDeleteInput(stackList);
+        }
+        else if (!stackList.Exists(stack => stack.Id == index) && index != 0)
+        {
+            Console.WriteLine("Stack not found. Try again.");
+            return GetStackDeleteInput(stackList);
+        }
+
+        return index;
     }
 }

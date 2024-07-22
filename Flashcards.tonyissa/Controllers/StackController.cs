@@ -26,4 +26,14 @@ public static class StackController
 
         connection.Execute(sql, parameters);
     }
+
+    public static void DeleteStack(int id)
+    {
+        using var connection = new SqlConnection(ConnectionString);
+
+        string sql = "DELETE FROM stacks WHERE id = @Id;";
+        var parameters = new { Id = id };
+
+        connection.Execute(sql, parameters);
+    }
 }
