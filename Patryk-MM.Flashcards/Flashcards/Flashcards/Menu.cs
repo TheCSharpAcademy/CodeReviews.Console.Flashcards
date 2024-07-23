@@ -33,14 +33,17 @@ namespace Flashcards {
                 switch (choice) {
                     case "Test":
                         try {
-                            var flashcard = await _flashcardRepository.GetByIdAsync(1);
-                            if (flashcard != null) {
+                            //var flashcard = await _flashcardRepository.GetByIdAsync(1);
+                            //if (flashcard != null) {
+                            //    AnsiConsole.WriteLine(flashcard.ToString());
+                            //} else {
+                            //    AnsiConsole.WriteLine("Flashcard not found.");
+                            //}
+                            var flashcards = await _flashcardRepository.GetAsync(f => f.Stack.Name == "Questions");
+                            foreach (var flashcard in flashcards) {
                                 AnsiConsole.WriteLine(flashcard.ToString());
-                            } else {
-                                AnsiConsole.WriteLine("Flashcard not found.");
                             }
-                        }
-                        catch (Exception ex) {
+                        } catch (Exception ex) {
                             AnsiConsole.WriteLine($"Failed to run {ex.Message}");
                         }
                         break;
