@@ -23,8 +23,8 @@ AS
 			,DATENAME(month, ss.[DateTime]) AS [StudyMonth]
 			,ss.[Score]
 		FROM
-			[Stack]			AS st JOIN
-			[StudySession]	AS ss ON st.[Id] = ss.[StackId]
+			[dbo].[Stack]			AS st JOIN
+			[dbo].[StudySession]	AS ss ON st.[Id] = ss.[StackId]
 	) AS s
 	PIVOT
 	(

@@ -11,15 +11,13 @@ This is a C# project designed to demostrate working with SQL Server and Data Tra
 
 ## Requirements
 
-1. **Stacks and Flashcards**: 
+1. **Stacks and Flashcards**:
     - [x] Users can create stacks of flashcards.
     - [x] Two tables are required: one for stacks and one for flashcards, linked by a foreign key.
     - [x] Stacks must have a unique name.
     - [x] Each flashcard must belong to a stack. Deleting a stack should also delete its flashcards.
-    
 2. **Data Transfer Objects (DTOs)**:
     - [x] Use DTOs to display flashcards to users without including the stack ID.
-    
 3. **Study Sessions**:
     - [x] Create a "Study Session" area where users can study stacks.
     - [x] Record all study sessions with date and score.
@@ -35,20 +33,20 @@ This is a C# project designed to demostrate working with SQL Server and Data Tra
 ## Features
 
 - **Studying**
- 
-	Study your stacks of flashcards. A study session will be added to the database after to record the date and score.
+
+    Study your stacks of flashcards. A study session will be added to the database after to record the date and score.
 
 - **Reporting**
 
-	View all study session entries from the database, or view a total/average monthly report for a year.
+    View all study session entries from the database, or view a total/average monthly report for a year.
 
 - **Management**
 
-	Add, update or delete stack and flashcard entries in the database.
+    Add, update or delete stack and flashcard entries in the database.
 
 - **Database Seeding**
 
-	Set `SeedDatabase` to `true` in the appsettings.json file if you wish to generate mocked up seed data on initial database creation.
+    Set `SeedDatabase` to `true` in the appsettings.json file if you wish to generate mocked up seed data on initial database creation.
 
 ## Getting Started
 
@@ -62,26 +60,26 @@ This is a C# project designed to demostrate working with SQL Server and Data Tra
 ### Installation
 
 1. Clone the repository:
-	- `git clone https://github.com/cjc-sweatbox/flashcards.git`
+    - `git clone https://github.com/cjc-sweatbox/flashcards.git`
 
 2. **EITHER**: Open SSMS and run database publish script
     - `.\_resources\Flashcards.Database.publish.sql`
 
 3. **OR**: Open the solution in visual studio and publish the database:
-	- `.\src\Flashcards.sln`
-   - Right click the Flashcards.Database project and publish to your Local SQL Server instance.
+    - `.\src\Flashcards.sln`
+    - Right click the ``Flashcards.Database`` project and publish to your Local SQL Server instance.
 
 4. Configure the application:
     - Navigate to `.\src\Flashcards.ConsoleApp\`
     - Update the `App.config` file with your database connection string.
 
 5. Build the application:
-    `dotnet build`
+    - `dotnet build`
 
 ### Running the Application
 
 1. Run the application using the .NET CLI in the ConsoleApp project directory:
-	- `dotnet run`
+    - `dotnet run`
 
 ### Usage
 
