@@ -1,6 +1,4 @@
-﻿using Flashcards.CardView;
-using Flashcards.Controllers;
-using Flashcards.StudyView;
+﻿using Flashcards.Controllers;
 using Microsoft.IdentityModel.Tokens;
 using Flashcards.Models;
 
@@ -8,7 +6,7 @@ namespace Flashcards.StackView;
 
 public static class StackViewController
 {
-    public static void InitStackMainView()
+    public static void InitMainStackView()
     {
         Console.Clear();
 

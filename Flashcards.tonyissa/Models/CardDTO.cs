@@ -1,12 +1,8 @@
 ﻿namespace Flashcards.Models;
 
-public class CardDTO
+public class CardDTO(string front, string back, string stackName)
 {
-    public string Front { get; set; } = String.Empty;
-    public string Back { get; set; } = String.Empty;
-
-    public CardDTO()
-    {
-
-    }
+    public string Front { get; } = front;
+    public string Back { get; } = back;
+    public string StackName { get; set; } = stackName;
 }

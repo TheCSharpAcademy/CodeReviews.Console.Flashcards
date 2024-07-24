@@ -12,7 +12,7 @@ while (true)
     }
     catch (Exception ex)
     {
-        Console.WriteLine(ex.ToString());
+        AnsiConsole.WriteException(ex);
         Console.ReadKey();
     }
 }
