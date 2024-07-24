@@ -1,8 +1,5 @@
-﻿
-using Flashcards;
+﻿using Flashcards.Menu;
 
-var menu = new Menu();
-
-menu.DisplayName();
-await menu.RunAsync();
+MainMenu.DisplayName();
+await MainMenu.RunAsync();
 
