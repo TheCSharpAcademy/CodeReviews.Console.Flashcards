@@ -6,7 +6,7 @@ namespace Flashcards.StackView;
 
 public static class StackViewController
 {
-    public static void InitMainStackView()
+    public static void InitMainView()
     {
         Console.Clear();
 

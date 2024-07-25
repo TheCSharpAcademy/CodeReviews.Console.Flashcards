@@ -5,7 +5,7 @@ namespace Flashcards.CardView;
 
 public static class CardViewController
 {
-    public static void InitMainCardView()
+    public static void InitMainView()
     {
         Console.Clear();
 
@@ -23,7 +23,7 @@ public static class CardViewController
 
         if (input == -1) InitCardCreateView(stackList);
         else if (input == 0) return;
-        else InitCardStackView(input);
+        else InitCardView(input);
     }
 
     public static void InitCardCreateView(List<Stack> stackList)
@@ -40,7 +40,7 @@ public static class CardViewController
         Console.ReadKey();
     }
 
-    public static void InitCardStackView(int input)
+    public static void InitCardView(int input)
     {
         var results = CardController.GetCardDTOList(input);
 

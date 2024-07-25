@@ -11,7 +11,7 @@ public static class StudyController
     {
         using var connection = new SqlConnection(ConnectionString);
 
-        var sql = "SELECT study_sessions.*,stacks.name AS stackname FROM study_sessions JOIN stacks ON stackid = stacks.id;";
+        var sql = "SELECT startedat,endedat,stacks.name AS stackname FROM study_sessions JOIN stacks ON stackid = stacks.id;";
         var results = connection.Query<StudySessionDTO>(sql);
 
         return results.ToList();

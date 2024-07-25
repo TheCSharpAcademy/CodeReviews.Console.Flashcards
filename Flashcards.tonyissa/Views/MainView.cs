@@ -17,8 +17,8 @@ public static class MainViewController
 
         var option = GetMainViewInput();
 
-        if (option == 's') StackViewController.InitMainStackView();
-        else if (option == 'f') CardViewController.InitMainCardView();
+        if (option == 's') StackViewController.InitMainView();
+        else if (option == 'f') CardViewController.InitMainView();
         else if (option == 'b') StudyViewController.InitStudyView();
         else return true;
 
