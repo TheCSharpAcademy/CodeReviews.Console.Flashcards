@@ -1,5 +1,4 @@
-﻿using Flashcards.Repositories;
-using Flashcards.Services;
+﻿using Flashcards.Services;
 using Spectre.Console;
 
 namespace Flashcards.Menu;
@@ -15,8 +14,8 @@ public class StackManager {
             var choice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
             .Title("Choose an option:")
-            .AddChoices(new[] { "Test",
-                    "View stacks", "Go back to main menu"
+            .AddChoices(new[] {
+                    "View stacks", "Manage a stack", "Go back to main menu"
             }));
 
             AnsiConsole.Clear();
@@ -25,6 +24,9 @@ public class StackManager {
             switch (choice) {
                 case "View stacks":
                     await _service.ViewStacks();
+                    break;
+                case "Manage a stack":
+                    await _service.ManageStack();
                     break;
                 case "Go back to main menu":
                     return false;

@@ -1,6 +1,7 @@
 ﻿using Flashcards.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Spectre.Console;
 
 namespace Flashcards;
 public class AppDbContext : DbContext {
@@ -9,7 +10,7 @@ public class AppDbContext : DbContext {
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Flashcards;Trusted_Connection=True;");
-        optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
+        //optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {

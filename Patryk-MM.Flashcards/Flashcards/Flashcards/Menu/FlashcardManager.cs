@@ -1,5 +1,4 @@
-﻿using Flashcards.Repositories;
-using Flashcards.Services;
+﻿using Flashcards.Services;
 using Spectre.Console;
 
 namespace Flashcards.Menu;

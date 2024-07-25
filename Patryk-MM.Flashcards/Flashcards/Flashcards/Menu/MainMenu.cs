@@ -1,7 +1,4 @@
-﻿using Flashcards.Models;
-using Flashcards.Repositories;
-using Spectre.Console;
-using System.Runtime.CompilerServices;
+﻿using Spectre.Console;
 
 namespace Flashcards.Menu;
 public class MainMenu {
