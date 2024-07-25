@@ -9,6 +9,10 @@
   <EmbeddedResource Include="scripts\**\*.sql" />
 </ItemGroup>
 <ItemGroup>
+  <PackageReference Include="Dapper" Version="2.1.35" />
   <PackageReference Include="DbUp" Version="5.0.41" />
+</ItemGroup>
+<ItemGroup>
+  <ProjectReference Include="..\Models\Models.csproj" />
 </ItemGroup>
 </Project>
