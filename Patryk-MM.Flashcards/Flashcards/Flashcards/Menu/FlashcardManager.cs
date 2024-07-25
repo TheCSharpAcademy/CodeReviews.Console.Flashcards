@@ -1,8 +1,16 @@
-﻿using Spectre.Console;
+﻿using Flashcards.Repositories;
+using Flashcards.Services;
+using Spectre.Console;
 
 namespace Flashcards.Menu;
-public static class FlashcardManager {
-    public static bool Run() {
+public class FlashcardManager {
+    private readonly FlashcardService _service;
+
+    public FlashcardManager(FlashcardService service) {
+        _service = service;
+    }
+
+    public bool Run() {
         while (true) {
             var choice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()

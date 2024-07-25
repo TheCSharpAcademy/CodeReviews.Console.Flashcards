@@ -22,6 +22,10 @@ public class AppDbContext : DbContext {
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Stack>()
+            .HasIndex(s => s.Name)
+            .IsUnique();
+
+        modelBuilder.Entity<Stack>()
             .HasData(
             new Stack {
                 Id = 1,

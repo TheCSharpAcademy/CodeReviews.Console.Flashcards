@@ -1,20 +1,21 @@
 ﻿using Flashcards.Repositories;
+using Flashcards.Services;
 using Spectre.Console;
 
 namespace Flashcards.Menu;
-public static class StackManager {
-    private static readonly StackRepository _stackRepository;
+public class StackManager {
+    private readonly StackService _service;
 
-    static StackManager() {
-        _stackRepository = new StackRepository(new AppDbContext());
+    public StackManager(StackService service) {
+        _service = service;
     }
 
-    public static bool Run() {
+    public async Task<bool> RunAsync() {
         while (true) {
             var choice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
             .Title("Choose an option:")
-            .AddChoices(new[] {
+            .AddChoices(new[] { "Test",
                     "View stacks", "Go back to main menu"
             }));
 
@@ -23,10 +24,7 @@ public static class StackManager {
 
             switch (choice) {
                 case "View stacks":
-                    var list = _stackRepository.GetStackNamesAsync();
-                    foreach (var item in list) {
-                        AnsiConsole.WriteLine(item);
-                    }
+                    await _service.ViewStacks();
                     break;
                 case "Go back to main menu":
                     return false;

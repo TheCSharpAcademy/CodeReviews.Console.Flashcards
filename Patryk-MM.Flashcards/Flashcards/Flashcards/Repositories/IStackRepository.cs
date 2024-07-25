@@ -2,6 +2,6 @@
 
 namespace Flashcards.Repositories;
 public interface IStackRepository : IBaseRepository<Stack> {
-    List<string> GetStackNamesAsync();
+    Task<List<string>> GetStackNamesAsync();
 }
 

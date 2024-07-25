@@ -1,16 +1,18 @@
 ﻿using Flashcards.Models;
 using Flashcards.Repositories;
 using Spectre.Console;
+using System.Runtime.CompilerServices;
 
 namespace Flashcards.Menu;
-public static class MainMenu {
-    private static readonly AppDbContext _appDbContext;
-    private static readonly FlashcardRepository _flashcardRepository;
+public class MainMenu {
+    private readonly FlashcardManager _flashcardManager;
+    private readonly StackManager _stackManager;
 
-    static MainMenu() {
-        _appDbContext = new AppDbContext();
-        _flashcardRepository = new FlashcardRepository(_appDbContext);
+    public MainMenu(FlashcardManager flashcardManager, StackManager stackManager) {
+        _flashcardManager = flashcardManager;
+        _stackManager = stackManager;
     }
+
     public static void DisplayName() {
         AnsiConsole.Write(
             new FigletText("Flashcards")
@@ -18,7 +20,7 @@ public static class MainMenu {
             .Color(Color.Aqua));
     }
 
-    public static async Task<bool> RunAsync() {
+    public async Task<bool> Run() {
         while (true) {
             var choice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -31,25 +33,14 @@ public static class MainMenu {
             DisplayName();
 
             switch (choice) {
-                case "Test":
-                    try {
-                        var flashcards = await _flashcardRepository.GetAsync(f => f.Stack.Name == "Questions");
-                        foreach (var flashcard in flashcards) {
-                            AnsiConsole.WriteLine(flashcard.ToString());
-                        }
-                    }
-                    catch (Exception ex) {
-                        AnsiConsole.WriteLine($"Failed to run {ex.Message}");
-                    }
-                    break;
                 case "Study":
                     StudySessionManager.Run();
                     break;
                 case "Manage flashcards":
-                    FlashcardManager.Run();
+                    _flashcardManager.Run();
                     break;
                 case "Manage stacks":
-                    StackManager.Run();
+                    await _stackManager.RunAsync();
                     break;
                 case "Exit":
                     return false;
