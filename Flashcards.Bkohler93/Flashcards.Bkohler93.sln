@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Database\Database.csproj", "{F3B2FB5F-3439-4E33-A518-E8B16D3C3CD4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flashcards.Console", "Flashcards.Console\Flashcards.Console.csproj", "{F68D1960-DD11-4AD6-894A-FC032C6185D1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F3B2FB5F-3439-4E33-A518-E8B16D3C3CD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3B2FB5F-3439-4E33-A518-E8B16D3C3CD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3B2FB5F-3439-4E33-A518-E8B16D3C3CD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3B2FB5F-3439-4E33-A518-E8B16D3C3CD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F68D1960-DD11-4AD6-894A-FC032C6185D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F68D1960-DD11-4AD6-894A-FC032C6185D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F68D1960-DD11-4AD6-894A-FC032C6185D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F68D1960-DD11-4AD6-894A-FC032C6185D1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
