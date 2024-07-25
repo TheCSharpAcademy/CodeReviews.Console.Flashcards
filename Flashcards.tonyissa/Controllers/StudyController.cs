@@ -17,12 +17,12 @@ public static class StudyController
         return results.ToList();
     }
 
-    public static void CreateStudySession(int id, int stackId, DateTime startedAt)
+    public static void CreateStudySession(int stackId, DateTime startedAt)
     {
         using var connection = new SqlConnection(ConnectionString);
 
-        var sql = "INSERT INTO study_sessions (id, stackid, startedat, endedat) VALUES (@Id, @StackId, @StartedAt, @EndedAt)";
-        var parameters = new { Id = id, StackId = stackId, StartedAt = startedAt, EndedAt = DateTime.Now };
+        var sql = "INSERT INTO study_sessions (stackid, startedat, endedat) VALUES (@StackId, @StartedAt, @EndedAt)";
+        var parameters = new { StackId = stackId, StartedAt = startedAt, EndedAt = DateTime.Now };
 
         connection.Execute(sql, parameters);
     }
