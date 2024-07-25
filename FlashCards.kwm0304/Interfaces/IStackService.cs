@@ -1,12 +1,13 @@
 using FlashCards.kwm0304.Dtos;
+using FlashCards.kwm0304.Models;
 
 namespace FlashCards.kwm0304.Interfaces;
 
 public interface IStackService
 {
-  Task<StackDto> GetStackAsync(int id);
+  Task<Stack> GetStackAsync(int id);
   Task<List<StackDto>> GetAllStacksAsync();
-  Task CreateStackAsync(string name);
-  Task UpdateStackAsync(int id, string name);
+  Task<int> CreateStackAsync(string name);
+  Task UpdateStackAsync(int id);
   Task DeleteStackAsync(int id);
 }

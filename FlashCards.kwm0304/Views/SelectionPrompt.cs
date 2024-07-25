@@ -1,4 +1,5 @@
-using System.Collections;
+using FlashCards.kwm0304.Dtos;
+using FlashCards.kwm0304.Models;
 
 namespace FlashCards.kwm0304.Views;
 
@@ -29,8 +30,17 @@ public class SelectionPrompt
 
   public static Stack StudyMenu(List<Stack> stacks)
   {
-    var title = "Select a stack you would like to study: ";
-    var menu = new PromptContainer<Stack>(title, stacks);
+    var menu = new PromptContainer<Stack>("Select a stack you would like to study: ", stacks);
+    return menu.Show();
+  }
+  public static StackDto StackSelection(List<StackDto> stacks)
+  {
+    var menu = new PromptContainer<StackDto>("Which stack would you like to select?", stacks);
+    return menu.Show();
+  }
+  public static FlashCard FlashCardSelection(List<FlashCard> cards)
+  {
+    var menu = new PromptContainer<FlashCard>("Which flashcard would you like to select?", cards);
     return menu.Show();
   }
 }
