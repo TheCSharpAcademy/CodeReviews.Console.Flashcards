@@ -81,7 +81,7 @@ public static class CardViewController
 
     public static int GetStackSelection(List<Stack> stackList)
     {
-        Console.WriteLine("Enter the ID of the stack you would like to create a card for.");
+        Console.WriteLine("Enter the ID of the stack you would like to create a card for, or type 0 to go back.");
         var input = Console.ReadLine() ?? "";
 
         if (!int.TryParse(input, out int index))
