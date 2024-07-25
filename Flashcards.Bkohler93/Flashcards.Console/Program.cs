@@ -11,13 +11,7 @@ DatabaseService.MigrateUp(dbConnString);
 
 var db = new DbContext(dbConnString);
 
-var stackDto = new UpdateStackDto
-{
-    Id = 4,
-    Name = "Germannn"
-};
-
-await db.UpdateStackAsync(stackDto);
+await db.DeleteStackAsync(1);
 
 var app = new App(db);
 

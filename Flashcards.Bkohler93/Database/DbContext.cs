@@ -13,7 +13,7 @@ public class DbContext(string dbConnString)
         using var conn = new SqlConnection(dbConnString);
 
         var sql = @"
-            INSERT INTO stacks(name)
+            INSERT INTO stacks(Name)
             VALUES (@Name);
         ";
 
@@ -28,8 +28,8 @@ public class DbContext(string dbConnString)
 
         var sql = @"
             UPDATE stacks
-            SET name = @Name
-            WHERE id = @Id;
+            SET Name = @Name
+            WHERE Id = @Id;
         ";
 
         await conn.OpenAsync();
@@ -38,6 +38,16 @@ public class DbContext(string dbConnString)
     }
 
     // DELETE STACK
+    public async Task DeleteStackAsync(int id)
+    {
+        using var conn = new SqlConnection(dbConnString);
+
+        var sql = "DELETE FROM stacks WHERE Id = @Id";
+
+        await conn.OpenAsync();
+        await conn.ExecuteAsync(sql, new {Id = id});
+        await conn.CloseAsync();
+    }
 
     // GET STACK
 

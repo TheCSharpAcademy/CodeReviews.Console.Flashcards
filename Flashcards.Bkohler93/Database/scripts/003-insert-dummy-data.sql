@@ -1,16 +1,16 @@
-INSERT INTO Stacks (name) VALUES
+INSERT INTO Stacks (Name) VALUES
 ('Science'),
 ('History'),
 ('Mathematics');
 
-INSERT INTO Flashcards (stack_id, front, back) VALUES
+INSERT INTO Flashcards (StackId, Front, Back) VALUES
 (1, 'What is photosynthesis?', 'The process by which green plants and some other organisms use sunlight to synthesize foods with the help of chlorophyll.'),
 (1, 'Name the planets in our solar system.', 'Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune'),
 (2, 'Who was the first President of the United States?', 'George Washington'),
 (2, 'When was the Declaration of Independence signed?', 'July 4, 1776'),
 (3, 'What is the value of pi (π)?', '3.14159');
 
-INSERT INTO StudySessions (stack_id, study_time, score) VALUES
+INSERT INTO StudySessions (StackId, StudyTime, Score) VALUES
 (1, '2024-07-24 09:00:00', 85),
 (1, '2024-07-25 14:30:00', 92),
 (2, '2024-07-23 18:00:00', 88),
