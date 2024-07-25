@@ -6,16 +6,22 @@ public class StackRepository : BaseRepository<Stack>, IStackRepository {
     public StackRepository(AppDbContext _dbContext) : base(_dbContext) {
     }
 
+    public async Task<Stack> GetStackByIdAsync(int id) {
+        return await _dbSet
+            .Include(x => x.Flashcards)
+            .FirstAsync(x => x.Id == id);
+    }
+
     public async Task<Stack> GetStackByNameAsync(string name) {
-        return await _dbContext.Stacks
+        return await _dbSet
             .Include(x => x.Flashcards)
             .FirstAsync(x => x.Name == name);
     }
 
     public async Task<List<string>> GetStackNamesAsync() {
-        return await _dbContext.Stacks
-                               .Select(x => x.Name)
-                               .ToListAsync();
+        return await _dbSet
+            .Select(x => x.Name)
+            .ToListAsync();
     }
 
 }

@@ -18,12 +18,13 @@ public class MainMenu {
     }
 
     public async Task<bool> Run() {
+        DisplayName();
         while (true) {
             var choice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-            .Title("Choose an option:")
+            .Title("[bold]Choose an option:[/]")
             .AddChoices(new[] {
-                    "Test", "Study", "Manage flashcards", "Manage stacks", "Exit"
+                    "Study", "Manage flashcards", "Manage stacks", "Exit"
             }));
 
             AnsiConsole.Clear();
@@ -42,8 +43,8 @@ public class MainMenu {
                 case "Exit":
                     return false;
             }
-            AnsiConsole.WriteLine("\n");
-            AnsiConsole.Write(new Rule().RuleStyle("aqua")); //Aquamarine bar across the console
+            //AnsiConsole.WriteLine("\n");
+            //AnsiConsole.Write(new Rule().RuleStyle("aqua")); //Aquamarine bar across the console
         }
     }
 }

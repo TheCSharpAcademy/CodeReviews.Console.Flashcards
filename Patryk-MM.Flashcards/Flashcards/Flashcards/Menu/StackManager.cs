@@ -13,9 +13,9 @@ public class StackManager {
         while (true) {
             var choice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-            .Title("Choose an option:")
+            .Title("\nChoose an option:")
             .AddChoices(new[] {
-                    "View stacks", "Manage a stack", "Go back to main menu"
+                    "View stacks", "Add a stack", "Manage a stack", "Go back to main menu"
             }));
 
             AnsiConsole.Clear();
@@ -24,6 +24,9 @@ public class StackManager {
             switch (choice) {
                 case "View stacks":
                     await _service.ViewStacks();
+                    break;
+                case "Add a stack":
+                    await _service.AddStack();
                     break;
                 case "Manage a stack":
                     await _service.ManageStack();
