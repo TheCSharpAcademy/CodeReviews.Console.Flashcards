@@ -11,8 +11,6 @@ DatabaseService.MigrateUp(dbConnString);
 
 var db = new DbContext(dbConnString);
 
-await db.DeleteStackAsync(1);
-
 var app = new App(db);
 
 app.Run();
