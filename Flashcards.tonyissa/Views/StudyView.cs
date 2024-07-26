@@ -48,7 +48,7 @@ public static class StudyViewController
         Console.WriteLine("List of stacks:");
         AnsiConsole.Write(table);
 
-        var stackId = CardViewController.GetStackSelection(stackList);
+        var stackId = CardViewController.GetMainInput(stackList, false);
         if (stackId == 0) return;
 
         var results = CardController.GetCardDTOList(stackId).ToArray();

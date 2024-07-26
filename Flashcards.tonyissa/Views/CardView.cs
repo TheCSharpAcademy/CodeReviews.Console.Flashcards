@@ -28,7 +28,7 @@ public static class CardViewController
 
     public static void InitCardCreateView(List<Stack> stackList)
     {
-        var stack = GetStackSelection(stackList);
+        var stack = GetMainInput(stackList, false);
         if (stack == 0) return;
         var front = GetNewCardFront();
         if (front == "0") return;
@@ -55,44 +55,25 @@ public static class CardViewController
         Console.ReadKey();
     }
 
-    public static int GetMainInput(List<Stack> stackList)
+    public static int GetMainInput(List<Stack> stackList, bool cardView=true)
     {
-        Console.WriteLine("Enter the ID of the stack you would like to see the cards for, enter C to create a card, or enter 0 to go back.");
+        Console.WriteLine($"Enter the ID of the stack you would like to select, {(cardView ? "type c to create a card, " : "")}or enter 0 to go back.");
         var input = Console.ReadLine() ?? "";
 
-        if (input.Equals("c", StringComparison.CurrentCultureIgnoreCase))
+        if (cardView && input.Equals("c", StringComparison.CurrentCultureIgnoreCase))
         {
             return -1;
         }
 
         if (!int.TryParse(input, out int index))
         {
-            Console.WriteLine("Invalid input. Please input the number of the stack you would like to select, or press C to create a card.");
+            Console.WriteLine("Invalid input. Please input the number of the stack you would like to select.");
             return GetMainInput(stackList);
         }
         else if (!stackList.Exists(stack => stack.Id == index) && index != 0)
         {
             Console.WriteLine("Stack not found. Try again.");
             return GetMainInput(stackList);
-        }
-
-        return index;
-    }
-
-    public static int GetStackSelection(List<Stack> stackList)
-    {
-        Console.WriteLine("Enter the ID of the stack you would like to select, or type 0 to go back.");
-        var input = Console.ReadLine() ?? "";
-
-        if (!int.TryParse(input, out int index))
-        {
-            Console.WriteLine("Invalid input. Please input the number of the stack you would like to select, or press C to create a card.");
-            return GetStackSelection(stackList);
-        }
-        else if (!stackList.Exists(stack => stack.Id == index) && index != 0)
-        {
-            Console.WriteLine("Stack not found. Try again.");
-            return GetStackSelection(stackList);
         }
 
         return index;
