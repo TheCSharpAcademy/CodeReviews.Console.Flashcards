@@ -1,6 +1,8 @@
 ﻿using Flashcards.Handlers.Stack;
 using Flashcards.Models;
 using Flashcards.Repositories;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Spectre.Console;
 
 namespace Flashcards.Services;
@@ -25,8 +27,7 @@ public class StackService {
 
     public async Task AddStack() {
         string name = AnsiConsole.Ask<string>("Provide a stack name or input [red]cancel[/]:");
-        if (name == "cancel")
-        {
+        if (name == "cancel") {
             AnsiConsole.MarkupLine("[yellow]Operation cancelled.[/]");
             return;
         }
@@ -35,8 +36,9 @@ public class StackService {
 
         try {
             await _repository.AddAsync(stack);
-        } catch (Exception ex) {
-            AnsiConsole.WriteLine(ex.Message);
+        }
+        catch (DbUpdateException ex) when (ex.InnerException is SqlException sqlEx && sqlEx.Number == 2601) {
+            AnsiConsole.MarkupLine("[red]A stack with the same name already exists. Pick a different name.[/]");
         }
     }
 
