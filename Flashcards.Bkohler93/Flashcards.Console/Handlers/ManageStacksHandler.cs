@@ -1,4 +1,6 @@
+using System.Xml.Linq;
 using Flashcards.Database;
+using Models;
 
 namespace Flashcards.Handlers;
 
@@ -32,5 +34,22 @@ public class ManageStackHandler(DbContext dbContext) {
                     break;
             }
         }
+    }
+
+    private void HandleCreateStack()
+    {
+        // enter name of stack
+        var stackName = UI.StringResponse("Enter the [green]name[/] of the new stack");
+d
+        var stack = new CreateStackDto();
+        // while (true)
+            // display menu to "Add Flashcard" or "Finish Creating Stack"
+            // case 0
+                // get front of flash card
+                // get back of flash card
+                // create flashcard
+            // case 1
+                // save stack to database
+                // add stack to cache
     }
 }
