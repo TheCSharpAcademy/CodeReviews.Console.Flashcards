@@ -19,7 +19,7 @@ public class SessionLoop
     _reportUI = new ReportUI();
     _dbConfig = dbConfig;
   }
-  internal void OnStart()
+  internal async Task OnStart()
   {
     _dbConfig.DatabaseActionsOnStart();
 
@@ -27,16 +27,16 @@ public class SessionLoop
     {
       Console.Clear();
       string choice = SelectionPrompt.MainMenu();
-      HandleChoice(choice);
+      await HandleChoice(choice);
     }
   }
 
-  private void HandleChoice(string choice)
+  private async Task HandleChoice(string choice)
   {
     switch (choice)
     {
       case "Go to stacks":
-        _stackService.HandleStack();
+        await _stackService.HandleStack();
         break;
       case "Study":
         _studyService.HandleStudy();

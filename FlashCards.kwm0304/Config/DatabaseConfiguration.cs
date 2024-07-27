@@ -13,7 +13,7 @@ public class DatabaseConfiguration
 
   public bool DatabaseExists()
   {
-    var sql = "SELECT database_id FROM sys.databases WHERE Name = localdb";
+    var sql = "SELECT database_id FROM sys.databases WHERE Name = 'localdb'";
     using var connection = new SqlConnection(_connString);
     using var command = new SqlCommand(sql, connection);
     try

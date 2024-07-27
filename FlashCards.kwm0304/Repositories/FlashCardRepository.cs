@@ -37,7 +37,7 @@ public class FlashCardRepository
         return flashcards;
     }
 
-    public void CreateFlashcard(FlashCard flashcard)
+    public async Task CreateFlashcard(FlashCard flashcard)
     {
         var sql = "INSERT INTO Flashcards (Question, Answer, StackId) VALUES (@Question, @Answer, @StackId)";
         using var connection = new SqlConnection(_connString);
@@ -47,8 +47,8 @@ public class FlashCardRepository
         command.Parameters.AddWithValue("@StackId", flashcard.StackId);
         try
         {
-            connection.Open();
-            command.ExecuteNonQuery();
+            await connection.OpenAsync();
+            await command.ExecuteNonQueryAsync();
             AnsiConsole.WriteLine("Flashcard created successfully");
         }
         catch (Exception e)

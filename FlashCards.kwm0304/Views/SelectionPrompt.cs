@@ -16,7 +16,7 @@ public class SelectionPrompt
 
   public static string StacksMenu()
   {
-    var menuOptions = new List<string> { "Create", "Edit", "Delete", "Back" };
+    var menuOptions = new List<string> { "Create Stack", "Edit Stack", "Delete Stack", "Back" };
     var menu = new PromptContainer<string>(genericPrompt, menuOptions);
     return menu.Show();
   }
@@ -48,6 +48,13 @@ public class SelectionPrompt
   public static FlashCard FlashCardSelection(List<FlashCard> cards)
   {
     var menu = new PromptContainer<FlashCard>("Which flashcard would you like to select?", cards);
+    return menu.Show();
+  }
+
+  public static string ReportsSelection()
+  {
+    var menuOptions = new List<string> {"View monthly score", "View monthly attempts", "Back"};
+    var menu = new PromptContainer<string>(genericPrompt, menuOptions);
     return menu.Show();
   }
 }

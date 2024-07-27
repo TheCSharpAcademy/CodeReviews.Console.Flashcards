@@ -26,14 +26,11 @@ namespace FlashCards.kwm0304;
 
 public class Program
 {
-  public static void Main(string[] args)
+  public static async Task Main(string[] args)
   {
     var connString = AppConfiguration.GetConnectionString("DefaultConnection");
     var dbConfig = new DatabaseConfiguration(connString);
     var loop = new SessionLoop(dbConfig);
-    while (true)
-    {
-      loop.OnStart();
-    }
+    await loop.OnStart();
   }
 }

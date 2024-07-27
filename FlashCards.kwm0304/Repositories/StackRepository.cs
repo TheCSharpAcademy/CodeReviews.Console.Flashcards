@@ -15,7 +15,7 @@ public class StackRepository
 
     internal async Task<Stack> GetStackAsync(int stackId)
     {
-        var sql = "SELECT StackName FROM Stacks WHERE StackId = @Id";
+        var sql = "SELECT StackId, StackName FROM Stacks WHERE StackId = @Id";
         using var connection = new SqlConnection(_connString);
         using var command = new SqlCommand(sql, connection);
         command.Parameters.AddWithValue("@Id", stackId);

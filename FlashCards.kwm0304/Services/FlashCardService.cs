@@ -12,21 +12,27 @@ public class FlashCardService
   {
     _repository = new FlashCardRepository();
   }
-  public FlashCard AddFlashCard(int stackId)
+  public async Task<FlashCard> AddFlashCard(int stackId)
   {
     string question = GetAndConfirmInput("front");
     string answer = GetAndConfirmInput("back");
     FlashCard card = new(question, answer, stackId);
-    _repository.CreateFlashcard(card);
+    await _repository.CreateFlashcard(card);
     return card;
+  }
+
+  public async Task<List<FlashCard>> GetShuffledCardsAsync(int stackId)
+  {
+    List<FlashCard> allCards = await _repository.GetAllFlashcardsAsync(stackId);
+    return ShuffleList(allCards);
   }
   private static string GetAndConfirmInput(string side)
   {
     string input = AnsiConsole.Ask<string>($"What do you want to put on the {side} of the flashcard?");
     if (!string.IsNullOrEmpty(input))
     {
-      bool confirmQuestion = AnsiConsole.Confirm($"Do you want to change the front before proceeding? \n [bold blue]{input}[/]");
-      if (confirmQuestion)
+      bool confirmQuestion = AnsiConsole.Confirm($"Do you want to change the {side} before proceeding? \n [bold blue]{input}[/]");
+      if (!confirmQuestion)
       {
         return input;
       }
@@ -68,10 +74,17 @@ public class FlashCardService
       flashcard.Answer = newAnswer;
     }
     await _repository.EditFlashardAsync(flashcard);
+    return;
   }
 
   private static void DisplayFlashcard(FlashCard card)
   {
     AnsiConsole.WriteLine($"Front of card: {card.Question}\n Back of card: {card.Answer}");
+  }
+
+  private List<FlashCard> ShuffleList(List<FlashCard> flashcards)
+  {
+    Random random = new();
+    return flashcards.OrderBy(x => random.Next()).ToList();
   }
 }

@@ -13,4 +13,8 @@ public class Stack
     Flashcards = [];
     StudySessions = [];
   }
+  public override string ToString()
+  {
+    return StackName ?? "N/A";
+  }
 }

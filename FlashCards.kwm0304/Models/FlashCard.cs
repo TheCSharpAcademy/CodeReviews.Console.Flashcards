@@ -13,4 +13,9 @@ public class FlashCard
     Answer = answer ?? throw new ArgumentNullException(nameof(answer));
     StackId = stackId;
   }
+
+    public override string ToString()
+    {
+        return "Front: " + Question + " Back: " + Answer;
+    }
 }

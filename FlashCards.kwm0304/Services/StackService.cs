@@ -15,7 +15,7 @@ public class StackService
     _repository = new StackRepository();
     _flashcardService = new FlashCardService();
   }
-  public async void HandleStack()
+  public async Task HandleStack()
   {
     while (true)
     {
@@ -23,14 +23,18 @@ public class StackService
       string choice = SelectionPrompt.StacksMenu();
       switch (choice)
       {
-        case "Create":
+        case "Create Stack":
           await CreateStackAsync();
           break;
-        case "Edit":
+        case "Edit Stack":
           await EditStack();
           break;
-        case "Delete":
+        case "Delete Stack":
           await DeleteStackAsync();
+          break;
+        case "Back":
+          return;
+        default:
           break;
       }
     }
@@ -44,11 +48,12 @@ public class StackService
     bool createFlashcard = AnsiConsole.Confirm("Do you want to add a flashcard to this stack?");
     while (createFlashcard)
     {
-      FlashCard card = _flashcardService.AddFlashCard(stackId);
+      FlashCard card = await _flashcardService.AddFlashCard(stackId);
       createdStack.Flashcards.Add(card);
       createFlashcard = AnsiConsole.Confirm("Do you want to add another flashcard to this stack?");
     }
   }
+
 
   private async Task DeleteStackAsync()
   {
@@ -65,31 +70,38 @@ public class StackService
 
   private async Task EditStack()
   {
-    List<Stack> stacks = await _repository.GetAllStacksAsync();
+    List<Stack> stacks = await GetAllStacks();
     Stack stack = SelectionPrompt.StackSelection(stacks);
     string editOption = SelectionPrompt.EditStackMenu();
     int id = stack.StackId;
     await HandleEditStack(editOption, id);
   }
+  public async Task<List<Stack>> GetAllStacks()
+  {
+    List<Stack> stacks = await _repository.GetAllStacksAsync();
+    return stacks;
+  }
 
-private static string ChangeStackName()
-{
-  string answer = AnsiConsole.Ask<string>("What would you like to change the stack's name to?");
-  if (!string.IsNullOrEmpty(answer))
+  private static string ChangeStackName()
   {
-    return answer;
+    string answer = AnsiConsole.Ask<string>("What would you like to change the stack's name to?");
+    if (!string.IsNullOrEmpty(answer))
+    {
+      return answer;
+    }
+    else
+    {
+      return ChangeStackName();
+    }
   }
-  else
-  {
-    return ChangeStackName();
-  }
-}
   private async Task HandleEditStack(string option, int stackId)
   {
+    while (true)
+    {
     switch (option)
     {
       case "Add a flashcard":
-        _flashcardService.AddFlashCard(stackId);
+        await _flashcardService.AddFlashCard(stackId);
         break;
       case "Edit a flashcard":
         await _flashcardService.EditFlashCard(stackId);
@@ -102,9 +114,10 @@ private static string ChangeStackName()
         await _repository.UpdateStackAsync(stackId, newName);
         break;
       case "Back":
-        break;
+        return;
       default:
         break;
+    }
     }
   }
 }
