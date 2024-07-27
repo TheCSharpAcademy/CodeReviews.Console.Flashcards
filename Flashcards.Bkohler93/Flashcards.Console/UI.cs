@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.Eventing.Reader;
+using Flashcards.Models;
 using Models;
 using Spectre.Console;
 
@@ -84,22 +85,6 @@ public static class UI
         AnsiConsole.Clear();
     }
 
-    // public static void DisplayCodingSessions(List<CodingSession> sessions)
-    // {
-    //     var table = new Table();
-
-    //     string[] columns = ["ID", "Task", "Start Time", "End Time", "Duration (min)"];
-    //     table.AddColumns(columns);
-
-    //     foreach (var session in sessions)
-    //     {
-    //         int durationMin = session.Duration / 60;
-    //         table.AddRow(session.Id.ToString(), session.Task, session.StartTime, session.EndTime, durationMin.ToString());
-    //     }
-
-    //     AnsiConsole.Write(table);
-    // }
-
     public static void InvalidationMessage(string message) => AnsiConsole.MarkupLine("[red]" + message + "[/]");
 
     public static void DisplayStudySessions(IEnumerable<StudySessionInfoDto> studySessions)
@@ -116,6 +101,40 @@ public static class UI
                 studySession.StudyTime.ToShortDateString(),
                 studySession.Score.ToString(),
                 studySession.StackName
+            );
+        }
+        AnsiConsole.Write(table);
+    }
+
+    public static void DisplayStackInfos(IEnumerable<StackInfoDto> stacks)
+    {
+        var table = new Table();
+
+        string[] columns = ["ID", "Name"];
+        table.AddColumns(columns);
+
+        foreach (var stack in stacks)
+        {
+            table.AddRow(
+                stack.Id.ToString(),
+                stack.Name
+            );
+        }
+        AnsiConsole.Write(table);
+    }
+    public static void DisplayFlashcardInfos(IEnumerable<FlashcardInfoDto> flashcards)
+    {
+        var table = new Table();
+
+        string[] columns = ["ID", "Front", "Back"];
+        table.AddColumns(columns);
+
+        foreach (var flashcard in flashcards)
+        {
+            table.AddRow(
+                flashcard.Id.ToString(),
+                flashcard.Front,
+                flashcard.Back
             );
         }
         AnsiConsole.Write(table);

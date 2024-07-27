@@ -12,6 +12,7 @@ public class ManageStackHandler(DbContext dbContext)
     {
         while (true)
         {
+            UI.Clear();
             string[] menuOptions = ["Back to main menu", "Delete Stack", "Create Stack", "Update Stack", "View Stack"];
             var choice = UI.MenuSelection("[green]Manage Stacks[/] [blue]Menu[/]. Select an option below:", menuOptions);
 
@@ -20,19 +21,35 @@ public class ManageStackHandler(DbContext dbContext)
                 case 0:
                     return;
                 case 1:
-                    // HandleDeleteStack();
+                    await HandleDeleteStack();
                     break;
                 case 2:
                     await HandleCreateStack();
                     break;
                 case 3:
-                    //HandleUpdateStack
+                    await HandleUpdateStack();
                     break;
                 case 4:
-                    //HandleViewStack
+                    await HandleViewStack();
                     break;
             }
         }
+    }
+
+    private async Task HandleViewStack()
+    {
+        UI.Clear();
+        var stack = await SelectStackById();
+
+        if (stack == null)
+        {
+            return;
+        }
+        UI.Clear();
+        var flashcards = await db.GetStackFlashcards(stack.Id);
+
+        UI.DisplayFlashcardInfos(flashcards);
+        UI.ConfirmationMessage("");
     }
 
     private async Task HandleCreateStack()
@@ -60,9 +77,180 @@ public class ManageStackHandler(DbContext dbContext)
                     var stack = new CreateStackDto(stackName, flashcards);
 
                     await db.CreateStackAsync(stack);
-                    
+
                     return;
             }
         }
+    }
+
+    private async Task HandleDeleteStack()
+    {
+        var stackInfos = await db.GetStacksInfos();
+
+        UI.DisplayStackInfos(stackInfos);
+
+        StackInfoDto? stack = null;
+        int stackId = -1;
+        while (stack == null)
+        {
+            stackId = UI.IntResponse("Enter the [green]id[/] of the stack you wish to delete. [grey]Or input '0' to exit[/]");
+
+            if (stackId == 0)
+            {
+                return;
+            }
+
+            stack = await db.GetStackById(stackId);
+        }
+
+        await db.DeleteStackAsync(stackId);
+
+        return;
+    }
+
+    private async Task HandleUpdateStack()
+    {
+        var stack = await SelectStackById();
+
+        if (stack == null)
+        {
+            return;
+        }
+
+        bool continueUpdating = true;
+        while (continueUpdating)
+        {
+            UI.Clear();
+            var choice = UI.MenuSelection($"Update '{stack.Name}' Stack Menu",
+                ["Change stack name",
+                "Update flashcard",
+                "Add flashcard",
+                "Delete flashcard",
+                "Finish updating stack"]);
+
+            switch (choice)
+            {
+                case 0:
+                    await HandleChangeStackName(stack);
+                    break;
+                case 1:
+                    await HandleUpdateStackFlashcard(stack);
+                    break;
+                case 2:
+                    await HandleAddStackFlashcard(stack);
+                    break;
+                case 3:
+                    await HandleDeleteStackFlashcard(stack);
+                    break;
+                case 4:
+                    continueUpdating = false;
+                    break;
+            }
+
+            if (!continueUpdating)
+            {
+                break;
+            }
+        }
+
+        return;
+    }
+
+    private async Task HandleChangeStackName(StackInfoDto stack)
+    {
+        var stackName = UI.StringResponseWithDefault("Enter the new name for the stack", stack.Name);
+        var dto = new UpdateStackDto
+        {
+            Name = stackName,
+            Id = stack.Id,
+        };
+
+        await db.UpdateStackAsync(dto);
+        stack.Name = stackName;
+    }
+
+    private async Task<StackInfoDto?> SelectStackById()
+    {
+        var stackInfos = await db.GetStacksInfos();
+
+        UI.DisplayStackInfos(stackInfos);
+
+        StackInfoDto? stack = null;
+        int stackId = -1;
+        while (stack == null)
+        {
+            stackId = UI.IntResponse("Enter the [green]id[/] of the stack you wish to update. [grey]Or input '0' to exit[/]");
+
+            if (stackId == 0)
+            {
+                return null;
+            }
+
+            stack = await db.GetStackById(stackId);
+        }
+        return stack;
+    }
+
+    private async Task HandleUpdateStackFlashcard(StackInfoDto stack)
+    {
+        var flashcards = await db.GetStackFlashcards(stack.Id);
+        UI.DisplayFlashcardInfos(flashcards);
+
+        FlashcardInfoDto? flashcard = null;
+        int flashcardId = -1;
+        while (flashcard == null)
+        {
+            flashcardId = UI.IntResponse("Enter the [green]id[/] of the flashcard you wish to update. [grey]Or input '0' to exit[/]");
+
+            if (flashcardId == 0)
+            {
+                return;
+            }
+
+            flashcard = await db.GetFlashcardFromStackByIdAsync(stack.Id, flashcardId);
+        }
+
+        var front = UI.StringResponseWithDefault("Enter new front for the flashcard", flashcard.Front);
+        var back = UI.StringResponseWithDefault("Enter new back for the flashcard", flashcard.Back);
+
+        var dto = new FlashcardInfoDto
+        {
+            Front = front,
+            Back = back,
+            Id = flashcardId,
+        };
+        await db.UpdateStackFlashcardAsync(dto);
+    }
+
+    private async Task HandleAddStackFlashcard(StackInfoDto stack)
+    {
+        var front = UI.StringResponse("Enter front for the flashcard");
+        var back = UI.StringResponse("Enter back for the flashcard");
+
+        var newFlashcard = new CreateStackFlashcardDto(front, back, stack.Id);
+
+        await db.CreateStackFlashcardAsync(newFlashcard);
+    }
+
+    private async Task HandleDeleteStackFlashcard(StackInfoDto stack)
+    {
+        var flashcards = await db.GetStackFlashcards(stack.Id);
+        UI.DisplayFlashcardInfos(flashcards);
+
+        FlashcardInfoDto? flashcard = null;
+        int flashcardId = -1;
+        while (flashcard == null)
+        {
+            flashcardId = UI.IntResponse("Enter the [green]id[/] of the flashcard you wish to delete. [grey]Or input '0' to exit[/]");
+
+            if (flashcardId == 0)
+            {
+                return;
+            }
+
+            flashcard = await db.GetFlashcardFromStackByIdAsync(stack.Id, flashcardId);
+        }
+
+        await db.DeleteFlashcard(flashcard);
     }
 }

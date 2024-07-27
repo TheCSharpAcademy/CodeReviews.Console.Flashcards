@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using Flashcards.Models;
 using Models;
+using System.Data.Common;
 
 namespace Flashcards.Database;
 
@@ -129,14 +130,124 @@ public class DbContext(string dbConnString)
         return dtos;
     }
 
-    // CREATE FLASHCARD
+    public async Task<StackInfoDto?> GetStackById(int id)
+    {
+        if (_stackCache.IsNullOrEmpty())
+        {
+            await UpdateCache();
+        }
 
-    // UPDATE FLASHCARD
+        var stack = _stackCache.FirstOrDefault(s => s.Id == id);
 
-    // DELETE FLASHCARD
+        if (stack == null)
+        {
+            return null;
+        }
 
-    // GET FLASHCARD
+        return new StackInfoDto(id, stack.Name);
+    }
 
+    public async Task CreateStackFlashcardAsync(CreateStackFlashcardDto flashcard)
+    {
+        var sql = @"
+            INSERT INTO flashcards(StackId, Front, Back)
+            VALUES (@StackId, @Front, @Back); 
+        ";
+
+        using var conn = new SqlConnection(dbConnString);
+
+        await conn.OpenAsync();
+        await conn.ExecuteAsync(sql, flashcard);
+        await conn.CloseAsync();
+
+        await UpdateCache();
+    }
+
+    public async Task UpdateStackFlashcardAsync(FlashcardInfoDto updatedFlashcard)
+    {
+        var sql = @"
+            UPDATE flashcards
+            SET Front = @Front, 
+                Back = @Back
+            WHERE
+                Id = @Id
+        ";
+
+        using var conn = new SqlConnection(dbConnString);
+
+        await conn.OpenAsync();
+        await conn.ExecuteAsync(sql, updatedFlashcard);
+        await conn.CloseAsync();
+
+        await UpdateCache();
+    }
+
+    public async Task DeleteFlashcard(FlashcardInfoDto flashcard)
+    {
+        var sql = @"
+            DELETE FROM flashcards WHERE Id = @Id;
+        ";
+
+        using var conn = new SqlConnection(dbConnString);
+
+        await conn.OpenAsync();
+        await conn.ExecuteAsync(sql, new { Id = flashcard.Id });
+        await conn.CloseAsync();
+
+        await UpdateCache();
+    }
+
+    public async Task<FlashcardInfoDto?> GetFlashcardFromStackByIdAsync(int stackId, int flashcardId)
+    {
+        await EnsureCache();
+
+        var flashcard = _stackCache.First(s => s.Id == stackId).Flashcards.First(f => f.Id == flashcardId);
+        if (flashcard == null)
+        {
+            return null;
+        }
+
+        return new FlashcardInfoDto
+        {
+            Front = flashcard.Front,
+            Back = flashcard.Back,
+            Id = flashcard.Id,
+        };
+    }
+
+    private async Task EnsureCache()
+    {
+        if (_stackCache.IsNullOrEmpty())
+        {
+            await UpdateCache();
+        }
+    }
+
+    public async Task<IEnumerable<FlashcardInfoDto>> GetStackFlashcards(int stackId)
+    {
+        List<FlashcardInfoDto> flashcards = [];
+
+        if (_stackCache.IsNullOrEmpty())
+        {
+            await UpdateCache();
+        }
+
+        var stack = _stackCache.First(s => s.Id == stackId);
+        ArgumentNullException.ThrowIfNull(stack);
+
+        foreach (var flashcard in stack.Flashcards)
+        {
+            var dto = new FlashcardInfoDto
+            {
+                Front = flashcard.Front,
+                Back = flashcard.Back,
+                Id = flashcard.Id,
+            };
+
+            flashcards.Add(dto);
+        }
+        return flashcards;
+    }
 
 
     // CREATE STUDYSESSION
