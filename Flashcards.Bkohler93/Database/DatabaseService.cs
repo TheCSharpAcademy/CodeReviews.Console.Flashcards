@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using DbUp;
 
-namespace Database;
+namespace Flashcards.Database;
 
 public static class DatabaseService
 {
@@ -13,7 +13,7 @@ public static class DatabaseService
             DeployChanges.To
                 .SqlDatabase(connectionString)
                 .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
-                .LogToConsole()
+                // .LogToConsole()
                 .Build();
 
         var result = upgrader.PerformUpgrade();
@@ -21,7 +21,7 @@ public static class DatabaseService
         if (result.Successful)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Database initialized");
+            Console.WriteLine("Database ready");
             Console.ResetColor();
         }
     }

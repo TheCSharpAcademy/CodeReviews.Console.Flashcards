@@ -1,14 +1,32 @@
-using Database;
+﻿using Flashcards.Database;
+using Flashcards.Handlers;
 
-namespace Flashcards
+namespace Flashcards;
+
+public class App
 {
-    public class App(DbContext dbContext)
+    private readonly DbContext db;
+    private MainMenuHandler mainMenuHandler;
+
+    public App(DbContext dbContext)
     {
-        private readonly DbContext db = dbContext;
+        db = dbContext;
+        mainMenuHandler = new(db);
+    }
 
-        public void Run()
+    public void Run()
+    {
+        UI.ConfirmationMessage("[yellow]Starting app[/]");
+
+        bool continueRunning = true;
+        while (continueRunning)
         {
+            continueRunning = mainMenuHandler.HandleChoice();
 
+            if (!continueRunning)
+            {
+                break;
+            }
         }
     }
 }

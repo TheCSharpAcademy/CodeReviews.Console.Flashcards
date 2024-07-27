@@ -1,10 +1,9 @@
-﻿using System.Collections.ObjectModel;
-using Dapper;
+﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using Models;
 
-namespace Database;
+namespace Flashcards.Database;
 
 public class DbContext(string dbConnString)
 {
