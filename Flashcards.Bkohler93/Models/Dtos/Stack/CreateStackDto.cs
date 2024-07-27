@@ -1,15 +1,9 @@
-﻿namespace Models;
+﻿namespace Flashcards.Models;
 
-public class CreateStackDto
+public class CreateStackDto(string name, IEnumerable<CreateFlashcardDto> flashcards)
 {
-    public CreateStackDto(string name)
-    {
-        Name = name;
-    }
+    public string Name { get; set; } = name;
 
-    public string Name { get; set; }
-
-
-    public required IEnumerable<CreateFlashcardDto> Flashcards { get; set; }
+    public IEnumerable<CreateFlashcardDto> Flashcards { get; set; } = flashcards;
 }
 

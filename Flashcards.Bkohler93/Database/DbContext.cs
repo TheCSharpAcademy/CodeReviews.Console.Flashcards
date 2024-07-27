@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
-using Models;
+using Flashcards.Models;
 
 namespace Flashcards.Database;
 

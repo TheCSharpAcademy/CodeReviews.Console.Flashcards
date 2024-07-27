@@ -1,27 +1,25 @@
 using System.Xml.Linq;
 using Flashcards.Database;
-using Models;
+using Flashcards.Models;
 
 namespace Flashcards.Handlers;
 
 public class ManageStackHandler(DbContext dbContext) {
     private readonly DbContext db = dbContext;
-
     public static string MenuName = "Manage Stacks";
-    private string[] MenuOptions = ["Back to main menu", "Delete Stack", "Create Stack", "Update Stack", "View Stack"];
 
     public void Handle()
     {
         while (true) {
-
-            var choice = UI.MenuSelection("[green]Manage Stacks[/] [blue]Menu[/]. Select an option below:", MenuOptions);
+            string[] menuOptions = ["Back to main menu", "Delete Stack", "Create Stack", "Update Stack", "View Stack"];
+            var choice = UI.MenuSelection("[green]Manage Stacks[/] [blue]Menu[/]. Select an option below:", menuOptions);
         
             switch (choice)
             {
                 case 0:
                     return;
                 case 1:
-                    //HandleDeleteStack
+                    // HandleDeleteStack();
                     break;
                 case 2:
                     HandleCreateStack();
@@ -38,18 +36,31 @@ public class ManageStackHandler(DbContext dbContext) {
 
     private void HandleCreateStack()
     {
-        // enter name of stack
         var stackName = UI.StringResponse("Enter the [green]name[/] of the new stack");
-d
-        var stack = new CreateStackDto();
-        // while (true)
-            // display menu to "Add Flashcard" or "Finish Creating Stack"
-            // case 0
-                // get front of flash card
-                // get back of flash card
-                // create flashcard
-            // case 1
-                // save stack to database
-                // add stack to cache
+
+        List<CreateFlashcardDto> flashcards = [];
+        
+        while(true) 
+        {
+            UI.Clear();
+            var choice = UI.MenuSelection("Create Stack Menu", ["Add flashcard", "Finish creating stack"]);
+
+            switch (choice)
+            {
+                case 0:
+                    var front = UI.StringResponse("Enter the [green]Front[/] of the flashcard");
+                    var back = UI.StringResponse("Enter the [yellow]Back[/] of the flashcard");
+
+                    var flashcard = new CreateFlashcardDto(front, back);
+
+                    flashcards.Add(flashcard);
+                    break;
+                case 1:
+                    var stack = new CreateStackDto(stackName, flashcards); 
+
+                    db.CreateStackAsync(stack);
+                    return;
+            }
+        }
     }
 }

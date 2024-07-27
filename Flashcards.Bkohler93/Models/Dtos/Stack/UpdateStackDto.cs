@@ -1,4 +1,4 @@
-﻿namespace Models;
+﻿namespace Flashcards.Models;
 
 public class UpdateStackDto()
 {
