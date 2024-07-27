@@ -20,32 +20,19 @@ This is an application where the users will create Stacks of Flashcards.
 
  Challenges - Create Report function where you see average uses per month and another one with average score per month
 */
-using Microsoft.Extensions.Configuration;
+using FlashCards.kwm0304.Config;
 
 namespace FlashCards.kwm0304;
 
-public static class AppConfiguration
-{
-  public static IConfigurationRoot Configuration { get; private set; }
-  static AppConfiguration()
-  {
-    Configuration = new ConfigurationBuilder()
-                    .SetBasePath(AppContext.BaseDirectory)
-                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                    .Build();
-  }
-  public static string GetConnectionString(string name)
-  {
-    return Configuration.GetConnectionString(name) ?? "Configuration is not being acknowledged";
-  }
-}
 public class Program
 {
   public static void Main(string[] args)
   {
+    var connString = AppConfiguration.GetConnectionString("DefaultConnection");
+    var dbConfig = new DatabaseConfiguration(connString);
+    var loop = new SessionLoop(dbConfig);
     while (true)
     {
-      SessionLoop loop = new();
       loop.OnStart();
     }
   }

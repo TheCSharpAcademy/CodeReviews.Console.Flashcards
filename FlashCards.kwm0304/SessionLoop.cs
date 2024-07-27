@@ -1,4 +1,5 @@
 
+using FlashCards.kwm0304.Config;
 using FlashCards.kwm0304.Services;
 using FlashCards.kwm0304.Views;
 using Spectre.Console;
@@ -7,17 +8,21 @@ namespace FlashCards.kwm0304;
 
 public class SessionLoop
 {
-  private readonly StackUI _stackUI;
-  private readonly StudySessionUI _studyUI;
+  private readonly StackService _stackService;
+  private readonly StudySessionService _studyService;
   private readonly ReportUI _reportUI;
-  public SessionLoop()
+  private readonly DatabaseConfiguration _dbConfig;
+  public SessionLoop(DatabaseConfiguration dbConfig)
   {
-    _stackUI = new StackUI();
-    _studyUI = new StudySessionUI();
+    _stackService = new StackService();
+    _studyService = new StudySessionService();
     _reportUI = new ReportUI();
+    _dbConfig = dbConfig;
   }
   internal void OnStart()
   {
+    _dbConfig.DatabaseActionsOnStart();
+
     while (true)
     {
       Console.Clear();
@@ -31,10 +36,10 @@ public class SessionLoop
     switch (choice)
     {
       case "Go to stacks":
-        _stackUI.HandleStack();
+        _stackService.HandleStack();
         break;
       case "Study":
-        _studyUI.HandleStudy();
+        _studyService.HandleStudy();
         break;
       case "Reports":
         _reportUI.HandleReports();

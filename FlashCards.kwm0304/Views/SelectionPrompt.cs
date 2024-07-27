@@ -21,9 +21,16 @@ public class SelectionPrompt
     return menu.Show();
   }
 
+  public static string FlashcardEditOptionMenu()
+  {
+    var menuOptions = new List<string> {"Question", "Answer", "Back"};
+    var menu = new PromptContainer<string>("What do you want to edit?", menuOptions);
+    return menu.Show();
+  }
+
   public static string EditStackMenu()
   {
-    var menuOptions = new List<string> {"Add a flashcard", "Edit a flashcard", "Delete a flashcard", "Back"};
+    var menuOptions = new List<string> {"Add a flashcard", "Edit a flashcard", "Delete a flashcard", "Change stack name", "Back"};
     var menu = new PromptContainer<string>(genericPrompt, menuOptions);
     return menu.Show();
   }
@@ -33,9 +40,9 @@ public class SelectionPrompt
     var menu = new PromptContainer<Stack>("Select a stack you would like to study: ", stacks);
     return menu.Show();
   }
-  public static StackDto StackSelection(List<StackDto> stacks)
+  public static Stack StackSelection(List<Stack> stacks)
   {
-    var menu = new PromptContainer<StackDto>("Which stack would you like to select?", stacks);
+    var menu = new PromptContainer<Stack>("Which stack would you like to select?", stacks);
     return menu.Show();
   }
   public static FlashCard FlashCardSelection(List<FlashCard> cards)

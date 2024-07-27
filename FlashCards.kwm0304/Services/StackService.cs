@@ -1,47 +1,110 @@
 using FlashCards.kwm0304.Dtos;
-using FlashCards.kwm0304.Interfaces;
 using FlashCards.kwm0304.Models;
 using FlashCards.kwm0304.Repositories;
+using FlashCards.kwm0304.Views;
+using Spectre.Console;
 
 namespace FlashCards.kwm0304.Services;
 
-public class StackService : IStackService
+public class StackService
 {
   private readonly StackRepository _repository;
+  private readonly FlashCardService _flashcardService;
   public StackService()
   {
     _repository = new StackRepository();
+    _flashcardService = new FlashCardService();
   }
-  public async Task<int> CreateStackAsync(string name)
+  public async void HandleStack()
   {
-    //fill out repository methods
-    return _repository.CreateStackAsync(name);
+    while (true)
+    {
+      Console.Clear();
+      string choice = SelectionPrompt.StacksMenu();
+      switch (choice)
+      {
+        case "Create":
+          await CreateStackAsync();
+          break;
+        case "Edit":
+          await EditStack();
+          break;
+        case "Delete":
+          await DeleteStackAsync();
+          break;
+      }
+    }
   }
 
-  public async Task DeleteStackAsync(int id)
+  private async Task CreateStackAsync()
   {
-    throw new NotImplementedException();
+    string stackName = AnsiConsole.Ask<string>("What name do you want to give this stack of flashcards?");
+    int stackId = await _repository.CreateStackAsync(stackName);
+    Stack createdStack = await _repository.GetStackAsync(stackId);
+    bool createFlashcard = AnsiConsole.Confirm("Do you want to add a flashcard to this stack?");
+    while (createFlashcard)
+    {
+      FlashCard card = _flashcardService.AddFlashCard(stackId);
+      createdStack.Flashcards.Add(card);
+      createFlashcard = AnsiConsole.Confirm("Do you want to add another flashcard to this stack?");
+    }
   }
 
-  public async Task<List<StackDto>> GetAllStacksAsync()
+  private async Task DeleteStackAsync()
   {
-    throw new NotImplementedException();
+    List<Stack> stacks = await _repository.GetAllStacksAsync();
+    Stack stack = SelectionPrompt.StackSelection(stacks);
+    int id = stack.StackId;
+    string name = stack.StackName ?? string.Empty;
+    bool confirmDelete = AnsiConsole.Confirm($"Are you sure you want to delete {name}?");
+    if (confirmDelete)
+    {
+      await _repository.DeleteStackAsync(id);
+    }
   }
 
-  public async Task<Stack> GetStackAsync(int id)
+  private async Task EditStack()
   {
-    throw new NotImplementedException();
+    List<Stack> stacks = await _repository.GetAllStacksAsync();
+    Stack stack = SelectionPrompt.StackSelection(stacks);
+    string editOption = SelectionPrompt.EditStackMenu();
+    int id = stack.StackId;
+    await HandleEditStack(editOption, id);
   }
 
-  public async Task UpdateStackAsync(int id)
+private static string ChangeStackName()
+{
+  string answer = AnsiConsole.Ask<string>("What would you like to change the stack's name to?");
+  if (!string.IsNullOrEmpty(answer))
   {
-    // pass generic field depending on what i update
-    await _repository.UpdateStackAsync(id);
+    return answer;
   }
-
-  public async Task AddFlashCardToStackAsync(FlashCard card)
+  else
   {
-    _repository.AddFlashCardToStackAsync(card);
+    return ChangeStackName();
   }
-
+}
+  private async Task HandleEditStack(string option, int stackId)
+  {
+    switch (option)
+    {
+      case "Add a flashcard":
+        _flashcardService.AddFlashCard(stackId);
+        break;
+      case "Edit a flashcard":
+        await _flashcardService.EditFlashCard(stackId);
+        break;
+      case "Delete a flashcard":
+        await _flashcardService.DeleteFlashCard(stackId);
+        break;
+      case "Change stack name":
+        string newName = ChangeStackName();
+        await _repository.UpdateStackAsync(stackId, newName);
+        break;
+      case "Back":
+        break;
+      default:
+        break;
+    }
+  }
 }
