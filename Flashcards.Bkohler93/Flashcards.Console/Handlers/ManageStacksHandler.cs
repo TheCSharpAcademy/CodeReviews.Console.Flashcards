@@ -1,4 +1,3 @@
-using System.Xml.Linq;
 using Flashcards.Database;
 using Flashcards.Models;
 
@@ -61,6 +60,7 @@ public class ManageStackHandler(DbContext dbContext)
                     var stack = new CreateStackDto(stackName, flashcards);
 
                     await db.CreateStackAsync(stack);
+                    
                     return;
             }
         }

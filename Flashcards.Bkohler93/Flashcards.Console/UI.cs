@@ -1,4 +1,6 @@
-﻿using Spectre.Console;
+﻿using System.Diagnostics.Eventing.Reader;
+using Models;
+using Spectre.Console;
 
 namespace Flashcards;
 
@@ -6,7 +8,7 @@ public static class UI
 {
 
     public static void Clear() => AnsiConsole.Clear();
-    
+
     public static int MenuSelection(string title, string[] options)
     {
         var response = AnsiConsole.Prompt(
@@ -99,4 +101,23 @@ public static class UI
     // }
 
     public static void InvalidationMessage(string message) => AnsiConsole.MarkupLine("[red]" + message + "[/]");
+
+    public static void DisplayStudySessions(IEnumerable<StudySessionInfoDto> studySessions)
+    {
+        var table = new Table();
+
+        string[] columns = ["ID", "StudyTime", "Score", "Stack"];
+        table.AddColumns(columns);
+
+        foreach (var studySession in studySessions)
+        {
+            table.AddRow(
+                studySession.Id.ToString(),
+                studySession.StudyTime.ToShortDateString(),
+                studySession.Score.ToString(),
+                studySession.StackName
+            );
+        }
+        AnsiConsole.Write(table);
+    }
 }

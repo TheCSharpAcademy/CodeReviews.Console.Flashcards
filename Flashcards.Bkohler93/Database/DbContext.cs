@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using Flashcards.Models;
+using Models;
 
 namespace Flashcards.Database;
 
@@ -35,12 +36,12 @@ public class DbContext(string dbConnString)
                     stackDictionary.Add(stackEntry.Id, stackEntry);
                 }
 
-                if (flashcard != null)
+                if (flashcard != null && !stackEntry.Flashcards.Any(f => f.Id == flashcard.Id))
                 {
                     stackEntry.Flashcards.Add(flashcard);
                 }
 
-                if (studySession != null)
+                if (studySession != null && !stackEntry.StudySessions.Any(s => s.Id == studySession.Id))
                 {
                     stackEntry.StudySessions.Add(studySession);
                 }
@@ -49,7 +50,7 @@ public class DbContext(string dbConnString)
             },
             splitOn: "Id,Id");
 
-        _stackCache = [.. stackDictionary.Values];
+        _stackCache = [.. stackDictionary.Values.Distinct()];
 
         await conn.CloseAsync();
     }
@@ -67,14 +68,14 @@ public class DbContext(string dbConnString)
         await conn.OpenAsync();
         var stackId = await conn.QuerySingleAsync<int>(sql, dto);
 
-        foreach(var flashcard in dto.Flashcards)
+        foreach (var flashcard in dto.Flashcards)
         {
             sql = @"
                 INSERT INTO flashcards(StackId, Front, Back)
                 VALUES (@StackId, @Front, @Back); 
             ";
 
-            await conn.ExecuteAsync(sql, new {StackId = stackId, flashcard.Front, flashcard.Back});
+            await conn.ExecuteAsync(sql, new { StackId = stackId, flashcard.Front, flashcard.Back });
         }
 
         await conn.CloseAsync();
@@ -104,20 +105,21 @@ public class DbContext(string dbConnString)
         var sql = "DELETE FROM stacks WHERE Id = @Id";
 
         await conn.OpenAsync();
-        await conn.ExecuteAsync(sql, new {Id = id});
+        await conn.ExecuteAsync(sql, new { Id = id });
         await conn.CloseAsync();
     }
 
 
     public async Task<IEnumerable<StackInfoDto>> GetStacksInfos()
     {
-        if (_stackCache.IsNullOrEmpty()) {
+        if (_stackCache.IsNullOrEmpty())
+        {
             await UpdateCache();
         }
 
         List<StackInfoDto> dtos = [];
 
-        foreach(var stack in _stackCache) 
+        foreach (var stack in _stackCache)
         {
             var newDto = new StackInfoDto(stack.Id, stack.Name);
 
@@ -142,6 +144,36 @@ public class DbContext(string dbConnString)
     // UPDATE STUDYSESSION
 
     // DELETE STUDYSESSION
+
+    // GET STUDYSESSIONS
+    public async Task<IEnumerable<StudySessionInfoDto>> GetStudySessions()
+    {
+        List<StudySessionInfoDto> studySessions = [];
+
+        if (_stackCache.IsNullOrEmpty())
+        {
+            await UpdateCache();
+        }
+
+        foreach (var stack in _stackCache)
+        {
+            foreach (var studySession in stack.StudySessions)
+            {
+                var dto = new StudySessionInfoDto
+                {
+                    StackName = stack.Name,
+                    Score = studySession.Score,
+                    StudyTime = studySession.StudyTime,
+                    Id = studySession.Id,
+                };
+
+                studySessions.Add(dto);
+            }
+        }
+        return studySessions;
+    }
+
+
 
     // GET STUDYSESSION
 }

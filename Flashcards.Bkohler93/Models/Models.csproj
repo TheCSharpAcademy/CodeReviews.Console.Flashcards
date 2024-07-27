@@ -9,7 +9,6 @@
   <ItemGroup>
     <Folder Include="Dtos/Flashcard/" />
     <Folder Include="Dtos/Stack/" />
-    <Folder Include="Dtos/StudySession/" />
   </ItemGroup>
 
 </Project>
