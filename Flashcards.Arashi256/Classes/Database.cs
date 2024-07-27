@@ -6,7 +6,7 @@ namespace Flashcards.Arashi256.Classes
 {
     internal class Database
     {
-        private bool hasError = false;
+        private bool hasError;
         private DatabaseConnection _connection;
 
         public Database()
