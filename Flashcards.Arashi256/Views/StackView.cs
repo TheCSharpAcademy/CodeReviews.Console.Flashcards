@@ -84,6 +84,7 @@ namespace Flashcards.Arashi256.Views
                     ViewStack(selectedStack);
                     do
                     {
+                        error = false;
                         AnsiConsole.MarkupLine("Enter 'Q' to cancel operation");
                         subject = AnsiConsole.Ask<string>("What is the new stack [orange1]label[/]? ");
                         if (subject.ToLower() == "q")

@@ -57,10 +57,11 @@ namespace Flashcards.Arashi256.Controllers
 
         public StackDto GetStack(int id)
         {
+            StackDto stack;
             var parameters = new DynamicParameters();
             parameters.Add("id", id);
             List<Stack> stacks = _stacksDatabase.GetStackResults("SELECT * FROM dbo.stacks WHERE Id = @Id", parameters);
-            StackDto stack = new StackDto() { DisplayId = 1, Id = stacks[0].Id, Subject = stacks[0].Subject };
+            stack = new StackDto() { DisplayId = 1, Id = stacks[0].Id, Subject = stacks[0].Subject };
             return stack;
         }
     }

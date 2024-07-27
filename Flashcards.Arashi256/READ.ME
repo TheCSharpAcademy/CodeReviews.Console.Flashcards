@@ -1,0 +1,27 @@
+Flashcard study aid application
+-------------------------------
+
+Console based CRUD application to aid study with stacks of flashcards. Developed using C# and SQL Server
+
+IMPORTANT: You must create the FLASHCARD database prior to running the application. An empty database and user credentials
+are sufficient to begin. Please replace the connection string in App.config file with your own database and user which 
+has sufficient permissions to perform table creation and CRUD operations. If the needed tables do not exist in the 
+database, the application will create them. 
+
+Quick Start Guide
+
+This application allows you to create stacks of flashcards for studying a subject or subjects of your choice. The general 
+method of use is as follows:-
+
+1. Create a stack or stacks. You will need to specify what the subject name is for each stack. 
+2. You may add stacks, modify the stack subject name or delete a stack. Deleting a stack will also delete any flashcards or 
+   logged study sessions for that stack.
+3. Choose a stack to add flashcards to. You can specify the challenge question on the FRONT of the flashcard and the answer
+   or solution on the BACK of the flashcard. You can add as many flashcards as you like to a given stack.
+   You can modify or delete existing flashcards for a given stack or display the list of flashcards for a given stack.
+4. Once you have the stacks and flashcards added for your given study subject, you can initiate a study session for a given 
+   stack. You will be asked the question from the FRONT of the flashcard and need to provide the exact answer on the BACK
+   of the flashcard. The answers you give are case insensitive. You will then be scored on the number of correct responses
+   for the number of flashcards as a study session. 
+5. Reports are provided for the study sessions for a given year where you can see the number of study sessions for a given 
+   stack broken down by month and the study session amount average for a given month per stack.

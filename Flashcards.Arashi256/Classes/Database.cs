@@ -6,6 +6,7 @@ namespace Flashcards.Arashi256.Classes
 {
     internal class Database
     {
+        private bool hasError = false;
         private DatabaseConnection _connection;
 
         public Database()
@@ -20,11 +21,41 @@ namespace Flashcards.Arashi256.Classes
 
         public bool TestConnection()
         {
-            if (CheckDatabase(false))
-                Console.WriteLine("Database initialised and ready.");
+            if (CheckTables(false))
+            {
+                if (!hasError)
+                {
+                    Console.WriteLine("Database initialised and ready.");
+                }
+                else
+                {
+                    HaltError();
+                }
+            }
             else
-                Console.WriteLine("Database already present and correct.");
+            {
+                if (!hasError)
+                {
+                    Console.WriteLine("Database already present and correct.");
+                }
+                else
+                {
+                    HaltError();
+                }
+            }
             return true;
+        }
+
+        private void HaltError()
+        {
+            Console.Clear();
+            Console.WriteLine("STOP ERROR: Application cannot continue operation.");
+            Console.WriteLine("Likely causes:-");
+            Console.WriteLine("- Database specified in the connection string doesn't exist");
+            Console.WriteLine("- Connection string user credentials are wrong");
+            Console.WriteLine("- User credentials are correct but the user permissions are insufficient to create the application tables");
+            Console.WriteLine("\nPlease check your connection string details in the App.config file!\n");
+            Environment.Exit(0);
         }
 
         public int TableExists(string tableName)
@@ -42,6 +73,7 @@ namespace Flashcards.Arashi256.Classes
         public int ExecuteQuery(string query, DynamicParameters? parameters = null)
         {
             int result = 0;
+            hasError = false;
             using (var connection = new SqlConnection(_connection.DatabaseConnectionString))
             {
                 try
@@ -51,6 +83,7 @@ namespace Flashcards.Arashi256.Classes
                 catch (Exception ex)
                 {
                     Console.WriteLine("GENERAL ERROR: " + ex.Message);
+                    hasError = true;
                 }
             }
             return result;
@@ -59,6 +92,7 @@ namespace Flashcards.Arashi256.Classes
         private int ExecuteScalarQuery(string query, DynamicParameters? parameters = null)
         {
             int result = 0;
+            hasError = false;
             using (var connection = new SqlConnection(_connection.DatabaseConnectionString))
             {
                 try
@@ -68,12 +102,13 @@ namespace Flashcards.Arashi256.Classes
                 catch (Exception ex)
                 {
                     Console.WriteLine("GENERAL ERROR: " + ex.Message);
+                    hasError = true; 
                 }
             }
             return result;
         }
 
-        public bool CheckDatabase(bool force)
+        public bool CheckTables(bool force)
         {
             int creationCount = 0;
             creationCount += TableExists("stacks");

@@ -4,6 +4,7 @@ namespace Flashcards.Arashi256.Config
 {
     internal class AppManager
     {
+        public string? InitialDatabaseConnectionString { get; private set; }
         public string? DatabaseConnectionString { get; private set; }
         private NameValueCollection? _appConfig;
 
@@ -18,6 +19,7 @@ namespace Flashcards.Arashi256.Config
                 }
                 else
                 {
+                    InitialDatabaseConnectionString = _appConfig.Get("InitialConnectionString");
                     DatabaseConnectionString = _appConfig.Get("ConnectionString");
                 }
             }

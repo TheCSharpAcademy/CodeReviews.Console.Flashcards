@@ -19,7 +19,7 @@ namespace Flashcards.Arashi256.Classes
 
         public bool CheckDuplicateFlashcard(int stackid, string front, string back)
         {
-            string query = "SELECT Id, Subject FROM dbo.flashcards WHERE LOWER(Front) = LOWER(@Front) OR LOWER(Back) = LOWER(@Back)";
+            string query = "SELECT Id FROM dbo.flashcards WHERE LOWER(Front) = LOWER(@Front) OR LOWER(Back) = LOWER(@Back)";
             var param = new DynamicParameters();
             param.Add("@StackId", stackid);
             param.Add("@Front", front);

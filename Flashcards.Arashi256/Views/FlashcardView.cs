@@ -159,6 +159,7 @@ namespace Flashcards.Arashi256.Views
                             // Enter new details.
                             do
                             {
+                                error = false;
                                 AnsiConsole.MarkupLine("Enter 'Q' to cancel operation");
                                 flashcardFront = AnsiConsole.Ask<string>("What is the flashcard [orange1]front[/] information? ");
                                 if (flashcardFront.ToLower() == "q")
@@ -217,7 +218,7 @@ namespace Flashcards.Arashi256.Views
                     flashcards = FlashcardController.GetAllFlashcardsForStack((int)selectedStack.Id);
                     ViewFlashcards(flashcards);
                     flashcardId = CommonUI.GetNumberInput("Please select a flashcard ID to delete: ", 0, flashcards.Count);
-                    if (flashcardId != 0)
+                    if (flashcardId != -1)
                     {
                         deleteFlashcard = flashcards[flashcardId - 1];
                         ViewFlashcard(deleteFlashcard);
