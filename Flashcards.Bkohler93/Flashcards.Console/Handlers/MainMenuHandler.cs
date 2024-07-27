@@ -13,17 +13,17 @@ public class MainMenuHandler
         manageStackHandler = new(db);
     }
 
-    public bool HandleChoice()
+    public async Task<bool> HandleChoice()
     {
         string[] options = ["Exit", ManageStackHandler.MenuName, "Study", "View Study History"];
         var choice = UI.MenuSelection("[green]Flash[/][red]cards![/] [blue]Menu[/]. Select an option below:", options);
-        
+
         switch (choice)
         {
             case 0:
                 return false;
             case 1:
-                manageStackHandler.Handle();
+                await manageStackHandler.Handle();
                 break;
             case 2:
                 break;
@@ -31,6 +31,6 @@ public class MainMenuHandler
                 break;
         }
 
-        return true; 
+        return true;
     }
 }

@@ -14,14 +14,14 @@ public class App
         mainMenuHandler = new(db);
     }
 
-    public void Run()
+    public async Task Run()
     {
         UI.ConfirmationMessage("[yellow]Starting app[/]");
 
         bool continueRunning = true;
         while (continueRunning)
         {
-            continueRunning = mainMenuHandler.HandleChoice();
+            continueRunning = await mainMenuHandler.HandleChoice();
 
             if (!continueRunning)
             {

@@ -4,16 +4,18 @@ using Flashcards.Models;
 
 namespace Flashcards.Handlers;
 
-public class ManageStackHandler(DbContext dbContext) {
+public class ManageStackHandler(DbContext dbContext)
+{
     private readonly DbContext db = dbContext;
-    public static string MenuName = "Manage Stacks";
+    public const string MenuName = "Manage Stacks";
 
-    public void Handle()
+    public async Task Handle()
     {
-        while (true) {
+        while (true)
+        {
             string[] menuOptions = ["Back to main menu", "Delete Stack", "Create Stack", "Update Stack", "View Stack"];
             var choice = UI.MenuSelection("[green]Manage Stacks[/] [blue]Menu[/]. Select an option below:", menuOptions);
-        
+
             switch (choice)
             {
                 case 0:
@@ -22,7 +24,7 @@ public class ManageStackHandler(DbContext dbContext) {
                     // HandleDeleteStack();
                     break;
                 case 2:
-                    HandleCreateStack();
+                    await HandleCreateStack();
                     break;
                 case 3:
                     //HandleUpdateStack
@@ -34,13 +36,13 @@ public class ManageStackHandler(DbContext dbContext) {
         }
     }
 
-    private void HandleCreateStack()
+    private async Task HandleCreateStack()
     {
         var stackName = UI.StringResponse("Enter the [green]name[/] of the new stack");
 
         List<CreateFlashcardDto> flashcards = [];
-        
-        while(true) 
+
+        while (true)
         {
             UI.Clear();
             var choice = UI.MenuSelection("Create Stack Menu", ["Add flashcard", "Finish creating stack"]);
@@ -56,9 +58,9 @@ public class ManageStackHandler(DbContext dbContext) {
                     flashcards.Add(flashcard);
                     break;
                 case 1:
-                    var stack = new CreateStackDto(stackName, flashcards); 
+                    var stack = new CreateStackDto(stackName, flashcards);
 
-                    db.CreateStackAsync(stack);
+                    await db.CreateStackAsync(stack);
                     return;
             }
         }

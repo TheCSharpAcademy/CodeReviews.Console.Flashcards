@@ -12,4 +12,4 @@ var db = new DbContext(dbConnString);
 
 var app = new App(db);
 
-app.Run();
+await app.Run();
