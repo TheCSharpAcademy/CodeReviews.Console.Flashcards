@@ -12,10 +12,4 @@ public class FlashCardDto
         Question = question;
         Answer = answer;
     }
-    public FlashCardDto(string question, string answer)
-    {
-      Question = question;
-      Answer = answer;
-    }
 }
-//Server=localhost;Database=localdb;Trusted_Connection=True;
