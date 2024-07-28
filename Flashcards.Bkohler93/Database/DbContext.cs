@@ -3,7 +3,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using Flashcards.Models;
 using Models;
-using System.Data.Common;
 
 namespace Flashcards.Database;
 
@@ -111,7 +110,7 @@ public class DbContext(string dbConnString)
     }
 
 
-    public async Task<IEnumerable<StackInfoDto>> GetStacksInfos()
+    public async Task<IEnumerable<StackInfoDto>> GetStacksInfosAsync()
     {
         if (_stackCache.IsNullOrEmpty())
         {
@@ -145,6 +144,22 @@ public class DbContext(string dbConnString)
         }
 
         return new StackInfoDto(id, stack.Name);
+    }
+
+    public async Task<PlayStack> GetPlayStackById(int id)
+    {
+        if (_stackCache.IsNullOrEmpty())
+        {
+            await UpdateCache();
+        }
+
+        var stack = _stackCache.First(s => s.Id == id);
+
+        return new PlayStack{
+            Id = stack.Id,
+            Name = stack.Name,
+            Flashcards = stack.Flashcards,
+        };
     }
 
     public async Task CreateStackFlashcardAsync(CreateStackFlashcardDto flashcard)
@@ -250,7 +265,21 @@ public class DbContext(string dbConnString)
     }
 
 
-    // CREATE STUDYSESSION
+    public async Task CreateNewStudySession(CreateStudySessionDto studySession)
+    {
+       var sql = @"
+            INSERT INTO StudySessions(StackId, StudyTime, Score)
+            VALUES (@StackId, @StudyTime, @Score); 
+        ";
+
+        using var conn = new SqlConnection(dbConnString);
+
+        await conn.OpenAsync();
+        await conn.ExecuteAsync(sql, studySession);
+        await conn.CloseAsync();
+
+        await UpdateCache(); 
+    }
 
     // UPDATE STUDYSESSION
 

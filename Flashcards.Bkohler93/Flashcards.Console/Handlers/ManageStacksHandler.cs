@@ -85,7 +85,7 @@ public class ManageStackHandler(DbContext dbContext)
 
     private async Task HandleDeleteStack()
     {
-        var stackInfos = await db.GetStacksInfos();
+        var stackInfos = await db.GetStacksInfosAsync();
 
         UI.DisplayStackInfos(stackInfos);
 
@@ -171,7 +171,7 @@ public class ManageStackHandler(DbContext dbContext)
 
     private async Task<StackInfoDto?> SelectStackById()
     {
-        var stackInfos = await db.GetStacksInfos();
+        var stackInfos = await db.GetStacksInfosAsync();
 
         UI.DisplayStackInfos(stackInfos);
 
