@@ -107,6 +107,8 @@ public class DbContext(string dbConnString)
         await conn.OpenAsync();
         await conn.ExecuteAsync(sql, new { Id = id });
         await conn.CloseAsync();
+
+        await UpdateCache();
     }
 
 
