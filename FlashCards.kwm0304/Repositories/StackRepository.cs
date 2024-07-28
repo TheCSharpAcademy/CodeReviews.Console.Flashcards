@@ -66,6 +66,34 @@ public class StackRepository
         return stacks;
     }
 
+    public async Task<List<string>> GetStackNamesByIdsAsync(List<int> stackIds)
+    {
+        if (stackIds == null || stackIds.Count == 0)
+        {
+            return [];
+        }
+        var stackNames = new List<string>();
+        var sql = $"SELECT StackId, StackName FROM Stacks WHERE StackId IN ({string.Join(",", stackIds)})";
+        using var connection = new SqlConnection(_connString);
+        using var command = new SqlCommand(sql, connection);
+        try
+        {
+            await connection.OpenAsync();
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                stackNames.Add(reader["StackName"].ToString() ?? "Unknown");
+            }
+        }
+        catch (Exception e)
+        {
+            AnsiConsole.WriteException(e);
+            throw;
+        }
+        return stackNames;
+    }
+
     public async Task<int> CreateStackAsync(string name)
     {
         var sql = "INSERT INTO Stacks (StackName) VALUES (@StackName); SELECT SCOPE_IDENTITY();";

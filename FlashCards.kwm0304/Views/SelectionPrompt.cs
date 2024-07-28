@@ -20,6 +20,13 @@ public class SelectionPrompt
     return menu.Show() ?? "Back";
   }
 
+  public static string StudyMenu()
+  {
+    var menuOptions = new List<string> {"Study", "View all study sessions", "Back"};
+    var menu = new PromptContainer<string>(genericPrompt, menuOptions);
+    return menu.Show() ?? "Back";
+  }
+
   public static string FlashcardEditOptionMenu()
   {
     var menuOptions = new List<string> {"Question", "Answer", "Back"};

@@ -54,6 +54,10 @@ public class StackService
     }
   }
 
+  public async Task<List<string>> GetAllStackNames(List<int> ids)
+  {
+    return await _repository.GetStackNamesByIdsAsync(ids);
+  }
 
   private async Task DeleteStackAsync()
   {
