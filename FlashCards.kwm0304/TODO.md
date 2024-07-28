@@ -1,4 +1,4 @@
 ## todo
-- create study session service and repository
 - incorporate dto's for stack's flashcards
-- handle back option in a lot of methods
+- getallstudysessions in ss service
+- if table/list is empty tell the user

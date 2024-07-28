@@ -26,6 +26,7 @@ public class FlashCardService
     List<FlashCard> allCards = await _repository.GetAllFlashcardsAsync(stackId);
     return ShuffleList(allCards);
   }
+  
   private static string GetAndConfirmInput(string side)
   {
     string input = AnsiConsole.Ask<string>($"What do you want to put on the {side} of the flashcard?");
@@ -46,7 +47,11 @@ public class FlashCardService
   public async Task DeleteFlashCard(int stackId)
   {
     List<FlashCard> flashcards = await _repository.GetAllFlashcardsAsync(stackId);
-    FlashCard flashcard = SelectionPrompt.FlashCardSelection(flashcards);
+    FlashCard? flashcard = SelectionPrompt.FlashCardSelection(flashcards);
+    if (flashcard == null)
+    {
+      return;
+    }
     int id = flashcard.FlashCardId;
     bool confirmDelete = AnsiConsole.Confirm($"Are you sure you want to delete this flashcard?");
     DisplayFlashcard(flashcard);
@@ -59,7 +64,11 @@ public class FlashCardService
   public async Task EditFlashCard(int stackId)
   {
     List<FlashCard> flashcards = await _repository.GetAllFlashcardsAsync(stackId);
-    FlashCard flashcard = SelectionPrompt.FlashCardSelection(flashcards);
+    FlashCard? flashcard = SelectionPrompt.FlashCardSelection(flashcards);
+    if (flashcard == null)
+    {
+      return;
+    }
     Console.Clear();
     DisplayFlashcard(flashcard);
     string choice = SelectionPrompt.FlashcardEditOptionMenu();
@@ -82,7 +91,7 @@ public class FlashCardService
     AnsiConsole.WriteLine($"Front of card: {card.Question}\n Back of card: {card.Answer}");
   }
 
-  private List<FlashCard> ShuffleList(List<FlashCard> flashcards)
+  private static List<FlashCard> ShuffleList(List<FlashCard> flashcards)
   {
     Random random = new();
     return flashcards.OrderBy(x => random.Next()).ToList();

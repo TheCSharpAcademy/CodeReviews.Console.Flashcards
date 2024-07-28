@@ -29,9 +29,14 @@ public class StudySessionService
     }
     public async Task HandleStudy()
     {
-        Stack stack = await ChooseTopic();
+        Stack? stack = await ChooseTopic();
+        if (stack == null)
+        {
+            return;
+        }
         int id = stack.StackId;
         List<FlashCard> flashcards = await _flashcardService.GetShuffledCardsAsync(id);
+        DisplayInstructions();
         int score = TakeQuiz(flashcards);
         await _repository.CreateSessionAsync(score, id);
     }
@@ -41,6 +46,7 @@ public class StudySessionService
         int score = 0;
         foreach (FlashCard card in flashcards)
         {
+            Console.Clear();
             string answer = AskQuestion(card);
             string correctAnswer = card.Answer;
             bool isCorrect = CheckAnswer(answer, correctAnswer);
@@ -75,15 +81,27 @@ public class StudySessionService
         return true;
     }
 
+    public static void DisplayInstructions()
+    {
+        AnsiConsole.WriteLine("Your attempt will be correct if the correct answer contains all of the words in your attempt.");
+        Thread.Sleep(2000);
+    }
+
     public static string AskQuestion(FlashCard card)
     {
-        AnsiConsole.WriteLine("[bold blud]What is your answer[/]");
+        AnsiConsole.MarkupLine("[bold blue]What is your answer[/]");
         return AnsiConsole.Ask<string>($"{card.Question}\n");
     }
 
-    private async Task<Stack> ChooseTopic()
+    private async Task<Stack?> ChooseTopic()
     {
         List<Stack> stacks = await _stackService.GetAllStacks();
-        return SelectionPrompt.StackSelection(stacks);
+        Stack? selectedStack = SelectionPrompt.StackSelection(stacks);
+        if (selectedStack == null)
+        {
+            AnsiConsole.WriteLine("No stacks to select");
+            return null;
+        }
+        return selectedStack;
     }
 }

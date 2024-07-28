@@ -58,7 +58,11 @@ public class StackService
   private async Task DeleteStackAsync()
   {
     List<Stack> stacks = await _repository.GetAllStacksAsync();
-    Stack stack = SelectionPrompt.StackSelection(stacks);
+    Stack? stack = SelectionPrompt.StackSelection(stacks);
+    if (stack == null)
+    {
+      return;
+    }
     int id = stack.StackId;
     string name = stack.StackName ?? string.Empty;
     bool confirmDelete = AnsiConsole.Confirm($"Are you sure you want to delete {name}?");
@@ -71,10 +75,13 @@ public class StackService
   private async Task EditStack()
   {
     List<Stack> stacks = await GetAllStacks();
-    Stack stack = SelectionPrompt.StackSelection(stacks);
-    string editOption = SelectionPrompt.EditStackMenu();
+    Stack? stack = SelectionPrompt.StackSelection(stacks);
+    if (stack == null)
+    {
+      return;
+    }
     int id = stack.StackId;
-    await HandleEditStack(editOption, id);
+    await HandleEditStack(id);
   }
   public async Task<List<Stack>> GetAllStacks()
   {
@@ -94,30 +101,31 @@ public class StackService
       return ChangeStackName();
     }
   }
-  private async Task HandleEditStack(string option, int stackId)
+  private async Task HandleEditStack(int stackId)
   {
     while (true)
     {
-    switch (option)
-    {
-      case "Add a flashcard":
-        await _flashcardService.AddFlashCard(stackId);
-        break;
-      case "Edit a flashcard":
-        await _flashcardService.EditFlashCard(stackId);
-        break;
-      case "Delete a flashcard":
-        await _flashcardService.DeleteFlashCard(stackId);
-        break;
-      case "Change stack name":
-        string newName = ChangeStackName();
-        await _repository.UpdateStackAsync(stackId, newName);
-        break;
-      case "Back":
-        return;
-      default:
-        break;
-    }
+      string option = SelectionPrompt.EditStackMenu();
+      switch (option)
+      {
+        case "Add a flashcard":
+          await _flashcardService.AddFlashCard(stackId);
+          break;
+        case "Edit a flashcard":
+          await _flashcardService.EditFlashCard(stackId);
+          break;
+        case "Delete a flashcard":
+          await _flashcardService.DeleteFlashCard(stackId);
+          break;
+        case "Change stack name":
+          string newName = ChangeStackName();
+          await _repository.UpdateStackAsync(stackId, newName);
+          break;
+        case "Back":
+          return;
+        default:
+          break;
+      }
     }
   }
 }

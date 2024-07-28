@@ -73,10 +73,11 @@ public class DatabaseConfiguration
                 StackId INT NOT NULL,
                 StudiedAt DATETIME NOT NULL,
                 Score INT NOT NULL,
-                FOREIGN KEY (StackId) REFERENCES Stacks(StackId)
+                FOREIGN KEY (StackId) REFERENCES Stacks(StackId) ON DELETE CASCADE
             )";
     Create(sql, "StudySessions table created successfully");
   }
+  
   public void CreateFlashcardTableIfNotExists()
   {
     var sql = @"
@@ -86,7 +87,7 @@ public class DatabaseConfiguration
                 StackId INT NOT NULL,
                 Question NVARCHAR(255) NOT NULL,
                 Answer NVARCHAR(255) NOT NULL,
-                FOREIGN KEY (StackId) REFERENCES Stacks(StackId)
+                FOREIGN KEY (StackId) REFERENCES Stacks(StackId) ON DELETE CASCADE
             )";
 
     Create(sql, "Flashcards table created successfully");
@@ -111,6 +112,7 @@ public class DatabaseConfiguration
   public void DatabaseActionsOnStart()
   {
     CreateDatabaseOnStart();
+    
     CreateStackTableIfNotExists();
     CreateStudySessionTableIfNotExists();
     CreateFlashcardTableIfNotExists();

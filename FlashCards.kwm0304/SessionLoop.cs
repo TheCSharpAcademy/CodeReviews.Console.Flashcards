@@ -1,4 +1,3 @@
-
 using FlashCards.kwm0304.Config;
 using FlashCards.kwm0304.Services;
 using FlashCards.kwm0304.Views;
@@ -39,10 +38,10 @@ public class SessionLoop
         await _stackService.HandleStack();
         break;
       case "Study":
-        _studyService.HandleStudy();
+        await _studyService.HandleStudy();
         break;
       case "Reports":
-        _reportUI.HandleReports();
+        await _reportUI.HandleReports();
         break;
       case "Exit":
         AnsiConsole.WriteLine("Goodbye");

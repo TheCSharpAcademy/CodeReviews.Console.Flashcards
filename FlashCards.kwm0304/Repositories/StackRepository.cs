@@ -114,12 +114,13 @@ public class StackRepository
         try
         {
             await connection.OpenAsync();
-            command.ExecuteNonQuery();
+            await command.ExecuteNonQueryAsync();
             AnsiConsole.WriteLine("Stack deleted successfully");
         }
         catch (Exception e)
         {
             AnsiConsole.WriteException(e);
+            Thread.Sleep(3000);
         }
     }
 }

@@ -12,37 +12,36 @@ public class ReportUI
   {
     _repository = new StudySessionRepository();
   }
-  public async void HandleReports()
+  public async Task HandleReports()
   {
     string choice = SelectionPrompt.ReportsSelection();
     if (choice == "View monthly score")
     {
       List<ReportData> reports = await _repository.GetReportByScore();
-            DisplayReport("score", reports);
+      DisplayReport("score", reports);
     }
     else if (choice == "View monthly attempts")
     {
       List<ReportData> reports = await _repository.GetReportsByAttempt();
-            DisplayReport("attempts", reports);
+      DisplayReport("attempts", reports);
     }
     else if (choice == "Back")
     {
-      //implement
-      AnsiConsole.WriteLine("todo");
+      return;
     }
   }
 
   private static void DisplayReport(string input, List<ReportData> reports)
   {
-    AnsiConsole.WriteLine("Press any key to return home\n");
-    string[] months =
+    Console.Clear();
+    string[] cols =
     [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Stack Name", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     ];
     var table = new Table();
     table.Title($"Average {input} Per Month");
-    table.AddColumns(months);
+    table.AddColumns(cols);
     foreach (var report in reports)
     {
       table.AddRow(
@@ -62,6 +61,7 @@ public class ReportUI
       );
     }
     AnsiConsole.Write(table);
-    Console.ReadKey();
+    Console.WriteLine("\nPress any key to return to the main menu...");
+    Console.ReadKey(true);
   }
 }
