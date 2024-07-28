@@ -16,10 +16,6 @@ public class App
 
     public async Task Run()
     {
-// #if DEBUG
-//         UI.ConfirmationMessage("[yellow]Starting app[/]");
-// #endif
-
         bool continueRunning = true;
         while (continueRunning)
         {

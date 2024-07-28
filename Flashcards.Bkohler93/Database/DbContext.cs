@@ -25,7 +25,7 @@ public class DbContext(string dbConnString)
 
         await conn.OpenAsync();
 
-        var stacks = await conn.QueryAsync<Stack, Flashcard, StudySession, Stack>(query,
+        await conn.QueryAsync<Stack, Flashcard, StudySession, Stack>(query,
             (stack, flashcard, studySession) =>
             {
                 if (!stackDictionary.TryGetValue(stack.Id, out var stackEntry))
