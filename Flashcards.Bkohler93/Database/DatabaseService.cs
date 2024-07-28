@@ -23,6 +23,7 @@ public static class DatabaseService
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Database ready");
             Console.ResetColor();
+            Console.Clear();
         }
     }
 }

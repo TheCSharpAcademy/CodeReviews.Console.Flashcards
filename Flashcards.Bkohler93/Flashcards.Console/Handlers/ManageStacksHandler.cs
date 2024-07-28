@@ -39,7 +39,7 @@ public class ManageStackHandler(DbContext dbContext)
     private async Task HandleViewStack()
     {
         UI.Clear();
-        var stack = await SelectStackById();
+        var stack = await SelectStackById(action: "view");
 
         if (stack == null)
         {
@@ -110,7 +110,7 @@ public class ManageStackHandler(DbContext dbContext)
 
     private async Task HandleUpdateStack()
     {
-        var stack = await SelectStackById();
+        var stack = await SelectStackById(action: "update");
 
         if (stack == null)
         {
@@ -169,7 +169,7 @@ public class ManageStackHandler(DbContext dbContext)
         stack.Name = stackName;
     }
 
-    private async Task<StackInfoDto?> SelectStackById()
+    private async Task<StackInfoDto?> SelectStackById(string action)
     {
         var stackInfos = await db.GetStacksInfosAsync();
 
@@ -179,7 +179,7 @@ public class ManageStackHandler(DbContext dbContext)
         int stackId = -1;
         while (stack == null)
         {
-            stackId = UI.IntResponse("Enter the [green]id[/] of the stack you wish to update. [grey]Or input '0' to exit[/]");
+            stackId = UI.IntResponse("Enter the [green]id[/] of the stack you wish to " + action + ". [grey]Or input '0' to exit[/]");
 
             if (stackId == 0)
             {
@@ -213,12 +213,7 @@ public class ManageStackHandler(DbContext dbContext)
         var front = UI.StringResponseWithDefault("Enter new front for the flashcard", flashcard.Front);
         var back = UI.StringResponseWithDefault("Enter new back for the flashcard", flashcard.Back);
 
-        var dto = new FlashcardInfoDto
-        {
-            Front = front,
-            Back = back,
-            Id = flashcardId,
-        };
+        var dto = new UpdateFlashcardDto(front, back, flashcardId);
         await db.UpdateStackFlashcardAsync(dto);
     }
 
@@ -251,6 +246,6 @@ public class ManageStackHandler(DbContext dbContext)
             flashcard = await db.GetFlashcardFromStackByIdAsync(stack.Id, flashcardId);
         }
 
-        await db.DeleteFlashcard(flashcard);
+        await db.DeleteFlashcard(flashcardId);
     }
 }

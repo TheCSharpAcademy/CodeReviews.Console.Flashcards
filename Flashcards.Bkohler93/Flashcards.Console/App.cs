@@ -16,7 +16,9 @@ public class App
 
     public async Task Run()
     {
-        UI.ConfirmationMessage("[yellow]Starting app[/]");
+// #if DEBUG
+//         UI.ConfirmationMessage("[yellow]Starting app[/]");
+// #endif
 
         bool continueRunning = true;
         while (continueRunning)

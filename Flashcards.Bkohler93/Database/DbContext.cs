@@ -178,7 +178,7 @@ public class DbContext(string dbConnString)
         await UpdateCache();
     }
 
-    public async Task UpdateStackFlashcardAsync(FlashcardInfoDto updatedFlashcard)
+    public async Task UpdateStackFlashcardAsync(UpdateFlashcardDto updatedFlashcard)
     {
         var sql = @"
             UPDATE flashcards
@@ -197,7 +197,7 @@ public class DbContext(string dbConnString)
         await UpdateCache();
     }
 
-    public async Task DeleteFlashcard(FlashcardInfoDto flashcard)
+    public async Task DeleteFlashcard(int id)
     {
         var sql = @"
             DELETE FROM flashcards WHERE Id = @Id;
@@ -206,7 +206,7 @@ public class DbContext(string dbConnString)
         using var conn = new SqlConnection(dbConnString);
 
         await conn.OpenAsync();
-        await conn.ExecuteAsync(sql, new { Id = flashcard.Id });
+        await conn.ExecuteAsync(sql, new { Id = id });
         await conn.CloseAsync();
 
         await UpdateCache();
@@ -226,7 +226,6 @@ public class DbContext(string dbConnString)
         {
             Front = flashcard.Front,
             Back = flashcard.Back,
-            Id = flashcard.Id,
         };
     }
 
@@ -256,7 +255,6 @@ public class DbContext(string dbConnString)
             {
                 Front = flashcard.Front,
                 Back = flashcard.Back,
-                Id = flashcard.Id,
             };
 
             flashcards.Add(dto);

@@ -125,17 +125,19 @@ public static class UI
     public static void DisplayFlashcardInfos(IEnumerable<FlashcardInfoDto> flashcards)
     {
         var table = new Table();
+        var count = 1;
 
-        string[] columns = ["ID", "Front", "Back"];
+        string[] columns = ["#", "Front", "Back"];
         table.AddColumns(columns);
 
         foreach (var flashcard in flashcards)
         {
             table.AddRow(
-                flashcard.Id.ToString(),
+                count.ToString(),
                 flashcard.Front,
                 flashcard.Back
             );
+            count++;
         }
         AnsiConsole.Write(table);
     }
