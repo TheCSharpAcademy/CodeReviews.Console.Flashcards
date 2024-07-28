@@ -32,12 +32,28 @@ public class StackService
         case "Delete Stack":
           await DeleteStackAsync();
           break;
+        case "View Stack":
+          await ViewStack();
+          break;
         case "Back":
           return;
         default:
           break;
       }
     }
+  }
+
+  private async Task ViewStack()
+  {
+    List<Stack> stacks = await GetAllStacks();
+    Stack? stack = SelectionPrompt.StackSelection(stacks);
+    if (stack == null)
+    {
+      return;
+    }
+    int id = stack.StackId;
+    AnsiConsole.WriteLine($"{stack.StackName}");
+    await _flashcardService.DisplayFlashCards(id);
   }
 
   private async Task CreateStackAsync()

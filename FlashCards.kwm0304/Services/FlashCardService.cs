@@ -1,3 +1,4 @@
+using FlashCards.kwm0304.Dtos;
 using FlashCards.kwm0304.Models;
 using FlashCards.kwm0304.Repositories;
 using FlashCards.kwm0304.Views;
@@ -21,12 +22,46 @@ public class FlashCardService
     return card;
   }
 
+  public async Task<List<FlashCardDto>> MapFlashcardsToDtos(int stackId)
+  {
+    List<FlashCard> flashcards = await _repository.GetAllFlashcardsAsync(stackId);
+    List<FlashCardDto> dtos = flashcards
+    .Select((c, i) => new FlashCardDto(i + 1, c.Question, c.Answer)).ToList();
+    return dtos;
+  }
+
+  public async Task DisplayFlashCards(int stackId)
+  {
+    List<FlashCardDto> dtos = await MapFlashcardsToDtos(stackId);
+    if (dtos.Count == 0)
+    {
+      AnsiConsole.WriteLine("No flashcards to display.");
+      return;
+    }
+
+    var flashCardOptions = dtos.Select(dto => $"{dto.FlashCardNumber}. {dto.Question}").ToList();
+    var selectedFlashCardOption = AnsiConsole.Prompt(
+        new SelectionPrompt<string>()
+            .Title("Select a flashcard to view")
+            .AddChoices(flashCardOptions)
+    );
+
+    var selectedFlashCard = dtos.FirstOrDefault(dto => $"{dto.FlashCardNumber}. {dto.Question}" == selectedFlashCardOption);
+    if (selectedFlashCard != null)
+    {
+      AnsiConsole.WriteLine($"Question: {selectedFlashCard.Question}");
+      AnsiConsole.WriteLine($"Answer: {selectedFlashCard.Answer}");
+    }
+    Console.WriteLine("\nPress any key to return to the main menu...");
+    Console.ReadKey(true);
+  }
+
   public async Task<List<FlashCard>> GetShuffledCardsAsync(int stackId)
   {
     List<FlashCard> allCards = await _repository.GetAllFlashcardsAsync(stackId);
     return ShuffleList(allCards);
   }
-  
+
   private static string GetAndConfirmInput(string side)
   {
     string input = AnsiConsole.Ask<string>($"What do you want to put on the {side} of the flashcard?");

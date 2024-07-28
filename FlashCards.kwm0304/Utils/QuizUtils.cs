@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 using FlashCards.kwm0304.Models;
 using Spectre.Console;
 
-namespace FlashCards.kwm0304;
+namespace FlashCards.kwm0304.Utils;
 
 public partial class QuizUtils
 {

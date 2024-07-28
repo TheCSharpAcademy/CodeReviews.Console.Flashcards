@@ -15,7 +15,7 @@ public class SelectionPrompt
 
   public static string StacksMenu()
   {
-    var menuOptions = new List<string> { "Create Stack", "Edit Stack", "Delete Stack", "Back" };
+    var menuOptions = new List<string> { "Create Stack", "Edit Stack", "Delete Stack", "View Stack", "Back" };
     var menu = new PromptContainer<string>(genericPrompt, menuOptions);
     return menu.Show() ?? "Back";
   }
