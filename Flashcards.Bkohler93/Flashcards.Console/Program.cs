@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using Flashcards.Database;
+﻿using Flashcards.Database;
 using Flashcards;
 
 var dbConnString = ConfigurationManager.AppSettings
