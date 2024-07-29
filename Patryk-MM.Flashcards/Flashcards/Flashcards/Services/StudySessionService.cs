@@ -100,4 +100,103 @@ public class StudySessionService {
 
         AnsiConsole.Write(table);
     }
+
+    public async Task GenerateReports() {
+        // Prompt the user for the year with validation
+        int year = AnsiConsole.Prompt(
+            new TextPrompt<int>("Enter the year for the report (e.g., 2024):")
+                .Validate(input => {
+                    // Check if the year is within a valid range
+                    if (input < 1900 || input > DateTime.Now.Year) {
+                        return ValidationResult.Error("Please enter a year between 1900 and the current year.");
+                    }
+                    return ValidationResult.Success();
+                })
+        );
+
+        // Fetch the monthly averages and sum of sessions from the repository
+        var monthlyAverages = await _studySessionRepository.GetMonthlyAveragesAsync(year);
+        var sumOfSessions = await _studySessionRepository.GetSumOfSessionsAsync(year);
+
+        // Create and configure the table for average scores
+        var avgTable = new Table()
+            .Title("Average score per Month per Stack");
+        avgTable.AddColumn("Stack Name");
+        avgTable.AddColumn("Jan");
+        avgTable.AddColumn("Feb");
+        avgTable.AddColumn("Mar");
+        avgTable.AddColumn("Apr");
+        avgTable.AddColumn("May");
+        avgTable.AddColumn("Jun");
+        avgTable.AddColumn("Jul");
+        avgTable.AddColumn("Aug");
+        avgTable.AddColumn("Sep");
+        avgTable.AddColumn("Oct");
+        avgTable.AddColumn("Nov");
+        avgTable.AddColumn("Dec");
+
+        // Add rows to the average scores table
+        foreach (var avg in monthlyAverages) {
+            avgTable.AddRow(
+                avg.StackName,
+                avg.Jan.ToString("F2"),
+                avg.Feb.ToString("F2"),
+                avg.Mar.ToString("F2"),
+                avg.Apr.ToString("F2"),
+                avg.May.ToString("F2"),
+                avg.Jun.ToString("F2"),
+                avg.Jul.ToString("F2"),
+                avg.Aug.ToString("F2"),
+                avg.Sep.ToString("F2"),
+                avg.Oct.ToString("F2"),
+                avg.Nov.ToString("F2"),
+                avg.Dec.ToString("F2")
+            );
+        }
+
+        // Write the average scores table to the console
+        AnsiConsole.Write(avgTable);
+
+        // Create and configure the table for sum of sessions
+        var sumTable = new Table()
+            .Title("Sum of Sessions per Month per Stack");
+        
+        sumTable.AddColumn("Stack Name");
+        sumTable.AddColumn("Jan");
+        sumTable.AddColumn("Feb");
+        sumTable.AddColumn("Mar");
+        sumTable.AddColumn("Apr");
+        sumTable.AddColumn("May");
+        sumTable.AddColumn("Jun");
+        sumTable.AddColumn("Jul");
+        sumTable.AddColumn("Aug");
+        sumTable.AddColumn("Sep");
+        sumTable.AddColumn("Oct");
+        sumTable.AddColumn("Nov");
+        sumTable.AddColumn("Dec");
+
+        // Add rows to the sum of sessions table
+        foreach (var sum in sumOfSessions) {
+            sumTable.AddRow(
+                sum.StackName,
+                sum.Jan.ToString(),
+                sum.Feb.ToString(),
+                sum.Mar.ToString(),
+                sum.Apr.ToString(),
+                sum.May.ToString(),
+                sum.Jun.ToString(),
+                sum.Jul.ToString(),
+                sum.Aug.ToString(),
+                sum.Sep.ToString(),
+                sum.Oct.ToString(),
+                sum.Nov.ToString(),
+                sum.Dec.ToString()
+            );
+        }
+
+        // Write the sum of sessions table to the console
+        AnsiConsole.Write(sumTable);
+    }
+
+
 }

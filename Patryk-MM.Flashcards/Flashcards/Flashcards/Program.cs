@@ -32,3 +32,4 @@ var serviceProvider = services.BuildServiceProvider();
 var mainMenu = serviceProvider.GetRequiredService<MainMenu>();
 await mainMenu.Run();
 
+//TODO: testing and code refactoring

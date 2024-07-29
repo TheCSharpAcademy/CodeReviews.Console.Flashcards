@@ -21,7 +21,7 @@ public class StudySessionManager {
             new SelectionPrompt<string>()
             .Title("Choose an option:")
             .AddChoices(new[] {
-                    "Start a study session", "View previous sessions", "Go back to main menu"
+                    "Start a study session", "View previous sessions", "Generate reports", "Go back to main menu"
             }));
 
             AnsiConsole.Clear();
@@ -33,6 +33,9 @@ public class StudySessionManager {
                     break;
                 case "View previous sessions":
                     await _service.ViewSessions();
+                    break;
+                case "Generate reports":
+                    await _service.GenerateReports();
                     break;
                 case "Go back to main menu":
                     return false;

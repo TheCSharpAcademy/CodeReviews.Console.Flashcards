@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Flashcards.Repositories;
 public class StackRepository : BaseRepository<Stack>, IStackRepository {
-    public StackRepository(AppDbContext _dbContext) : base(_dbContext) {
+    public StackRepository(AppDbContext dbContext) : base(dbContext) {
     }
 
     public async Task<Stack> GetStackByIdAsync(int id) {

@@ -1,7 +1,6 @@
 ﻿
 using Flashcards.DTOs;
 using Flashcards.Repositories;
-using Microsoft.EntityFrameworkCore.Storage.Json;
 using Spectre.Console;
 
 namespace Flashcards.Handlers.Stack;
