@@ -18,11 +18,13 @@ Run the application within `Flashcards.Bkholer93/Flashcards.Console` in
 Visual Studio or by using the CLI command `dotnet run`.
 
 ## Given Requirements
+s
 - [x] When application starts, it creates a MSSQL database if one is not present
 - [x] Creates a database where flashcard stacks are made and studied
 - [x] Shows a menu of options
-- [x] Allows user to Add and delete a stack, add and delete a flashcard, do a study session, view all study sessions, and get a report
-on study sessions for the last year.
+- [x] Allows user to Add and delete a stack, add and delete a flashcard, do a 
+study session, view all study sessions, and get a report on study sessions for 
+the last year.
 - [x] Handles all errors so application doesn't crash
 - [x] Only exits when user selects Exit
 
