@@ -4,10 +4,12 @@ namespace Flashcards.Menu;
 public class MainMenu {
     private readonly FlashcardManager _flashcardManager;
     private readonly StackManager _stackManager;
+    private readonly StudySessionManager _studySessionManager;
 
-    public MainMenu(FlashcardManager flashcardManager, StackManager stackManager) {
+    public MainMenu(FlashcardManager flashcardManager, StackManager stackManager, StudySessionManager studySessionManager) {
         _flashcardManager = flashcardManager;
         _stackManager = stackManager;
+        _studySessionManager = studySessionManager;
     }
 
     public static void DisplayName() {
@@ -24,7 +26,7 @@ public class MainMenu {
             new SelectionPrompt<string>()
             .Title("[bold]Choose an option:[/]")
             .AddChoices(new[] {
-                    "Study", "Manage flashcards", "Manage stacks", "Exit"
+                    "Study", "Manage stacks", "Exit"
             }));
 
             AnsiConsole.Clear();
@@ -32,11 +34,11 @@ public class MainMenu {
 
             switch (choice) {
                 case "Study":
-                    StudySessionManager.Run();
+                    await _studySessionManager.RunAsync();
                     break;
-                case "Manage flashcards":
-                    _flashcardManager.Run();
-                    break;
+                //case "Manage flashcards":
+                //    _flashcardManager.Run();
+                //    break;
                 case "Manage stacks":
                     await _stackManager.RunAsync();
                     break;

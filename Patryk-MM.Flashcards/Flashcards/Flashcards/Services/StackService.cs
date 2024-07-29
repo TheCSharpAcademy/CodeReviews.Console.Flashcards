@@ -73,11 +73,14 @@ public class StackService {
             var actionPrompt = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("\nChoose an action to perform:")
-                    .AddChoices(new[] { "Change stack's name", "Delete stack", "Cancel" })
+                    .AddChoices(new[] { "View flashcards", "Add a flashcard", "Delete a flashcard", "Change stack's name", "Delete stack", "Cancel" })
             );
             Utilities.ClearConsole();
 
             IStackActionHandler? handler = actionPrompt switch {
+                "View flashcards" => new ViewFlashcardsHandler(_repository),
+                "Add a flashcard" => new AddFlashcardHandler(_repository),
+                "Delete a flashcard" => new DeleteFlashcardHandler(_repository),
                 "Change stack's name" => new ChangeStackNameHandler(_repository),
                 "Delete stack" => new DeleteStackHandler(_repository),
                 _ => null

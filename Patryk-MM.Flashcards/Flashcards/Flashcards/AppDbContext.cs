@@ -1,16 +1,14 @@
 ﻿using Flashcards.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Spectre.Console;
 
 namespace Flashcards;
 public class AppDbContext : DbContext {
     public DbSet<Flashcard> Flashcards { get; set; }
     public DbSet<Stack> Stacks { get; set; }
+    public DbSet<StudySession> StudySessions { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Flashcards;Trusted_Connection=True;");
-        //optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
@@ -21,6 +19,12 @@ public class AppDbContext : DbContext {
             .WithMany(s => s.Flashcards)
             .HasForeignKey(f => f.StackId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<StudySession>()
+                .HasOne(s => s.Stack)
+                .WithMany()
+                .HasForeignKey(s => s.StackId)
+                .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Stack>()
             .HasIndex(s => s.Name)

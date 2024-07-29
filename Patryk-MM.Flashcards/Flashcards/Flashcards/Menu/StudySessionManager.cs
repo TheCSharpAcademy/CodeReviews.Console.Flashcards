@@ -1,4 +1,6 @@
-﻿using Spectre.Console;
+﻿using Flashcards.Repositories;
+using Flashcards.Services;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,14 +8,20 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Flashcards.Menu;
-public static class StudySessionManager {
-    public static bool Run() {
+public class StudySessionManager {
+    private readonly StudySessionService _service;
+
+    public StudySessionManager(StudySessionService service) {
+        _service = service;
+    }
+
+    public async Task<bool> RunAsync() {
         while (true) {
             var choice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
             .Title("Choose an option:")
             .AddChoices(new[] {
-                    "Start a study session", "Go back to main menu"
+                    "Start a study session", "View previous sessions", "Go back to main menu"
             }));
 
             AnsiConsole.Clear();
@@ -21,7 +29,10 @@ public static class StudySessionManager {
 
             switch (choice) {
                 case "Start a study session":
-                    AnsiConsole.WriteLine("Study session.");
+                    await _service.StartSession();
+                    break;
+                case "View previous sessions":
+
                     break;
                 case "Go back to main menu":
                     return false;
