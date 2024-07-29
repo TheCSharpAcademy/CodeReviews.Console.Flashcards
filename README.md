@@ -17,7 +17,7 @@ the `sqlConnectionString` appSetting.
 Run the application within `Flashcards.Bkholer93/Flashcards.Console` in 
 Visual Studio or by using the CLI command `dotnet run`.
 
-## Given Requirements:
+## Given Requirements
 - [x] When application starts, it creates a MSSQL database if one is not present
 - [x] Creates a database where flashcard stacks are made and studied
 - [x] Shows a menu of options
