@@ -1,6 +1,7 @@
 ﻿
 using Flashcards.DTOs;
 using Flashcards.Repositories;
+using Microsoft.EntityFrameworkCore.Storage.Json;
 using Spectre.Console;
 
 namespace Flashcards.Handlers.Stack;
@@ -12,19 +13,18 @@ public class ViewFlashcardsHandler : IStackActionHandler {
     }
 
     public async Task<bool> HandleAsync(Models.Stack stack) {
-        var dtos = new List<FlashcardDTO>();
+        var dtoList = stack.Flashcards.Select(flashcard => new FlashcardDTO { Question = flashcard.Question, Answer = flashcard.Answer }).ToList();
+        dtoList.Sort((a, b) => string.Compare(a.Question, b.Question, StringComparison.OrdinalIgnoreCase));
         var table = new Table();
         table.AddColumn("Question");
         table.AddColumn("Answer");
 
-        foreach (var flashcard in stack.Flashcards) {
-            var dto = new FlashcardDTO { Question = flashcard.Question, Answer = flashcard.Answer };
-            dtos.Add(dto);
-            table.AddRow(dto.Question, dto.Answer);
+        foreach (var dto in dtoList)
+        {
+            table.AddRow($"{dto.Question}", $"{dto.Answer}");
         }
 
         await Task.Delay(1); //Placeholder to make the function asynchronous
-
         AnsiConsole.Write(table);
 
         return true;

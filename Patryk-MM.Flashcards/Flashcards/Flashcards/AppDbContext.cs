@@ -30,6 +30,10 @@ public class AppDbContext : DbContext {
             .HasIndex(s => s.Name)
             .IsUnique();
 
+        modelBuilder.Entity<Flashcard>()
+            .HasIndex(f => f.Question)
+            .IsUnique();
+
         modelBuilder.Entity<Stack>()
             .HasData(
             new Stack {

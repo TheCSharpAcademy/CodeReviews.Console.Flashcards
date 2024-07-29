@@ -70,32 +70,32 @@ public class StudySessionService {
                 AnsiConsole.MarkupLine("[green]Correct![/]");
                 session.Score++; // Increase the score for a correct answer
             } else {
-                AnsiConsole.MarkupLine($"[red]Incorrect. The correct answer is: {flashcard.Answer}[/]");
+                AnsiConsole.MarkupLine($"[red]Incorrect. The correct answer is: [aqua]{flashcard.Answer}[/][/]");
             }
 
             AnsiConsole.MarkupLine($"Your score: [aqua]{session.Score}/{session.TotalQuestions}[/]");
 
         }
-
         session.DateTime = DateTime.Now;
 
         // Optionally, save session details to the repository
         await _studySessionRepository.AddAsync(session);
 
-        AnsiConsole.MarkupLine($"Session complete! Your score: [aqua]{session.Score}/{session.TotalQuestions}[/]\n");
+        AnsiConsole.MarkupLine($"\nSession complete! Your score: [aqua]{session.ScorePercentage:P}[/]\n");
 
     }
 
     public async Task ViewSessions() {
-        var sessions = await _studySessionRepository.GetAllAsync();
+        var sessions = await _studySessionRepository.GetAllAsync(session => session.Stack);
 
         var table = new Table();
         table.AddColumn("Date");
         table.AddColumn("Stack");
         table.AddColumn("Score");
+        table.AddColumn("Score%");
 
         foreach (var session in sessions) {
-            table.AddRow($"{session.DateTime:dd-MM-yyyy HH:mm}", $"{session.Stack.Name}", $"{session.Score}/{session.TotalQuestions}");
+            table.AddRow($"{session.DateTime:dd-MM-yyyy HH:mm}", $"{session.Stack.Name}", $"{session.Score}/{session.TotalQuestions}", $"{session.ScorePercentage:P}");
         }
 
         AnsiConsole.Write(table);
