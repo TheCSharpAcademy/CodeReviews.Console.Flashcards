@@ -58,27 +58,46 @@ public class StudySessionService {
         var selectedFlashcards = session.Stack.Flashcards.OrderBy(x => Guid.NewGuid()).Take(session.TotalQuestions).ToList();
 
         foreach (var flashcard in selectedFlashcards) {
+
             // Present the flashcard question
-            AnsiConsole.MarkupLine($"Question: [aqua]{flashcard.Question}[/]");
+            AnsiConsole.MarkupLine($"\nQuestion: [aqua]{flashcard.Question}[/]");
 
             // Optionally, prompt user for the answer
-            var userAnswer = AnsiConsole.Ask<string>("Your answer: ");
+            var userAnswer = AnsiConsole.Ask<string>("Your answer:");
 
             // Check the user's answer (optional)
             if (userAnswer.Equals(flashcard.Answer, StringComparison.OrdinalIgnoreCase)) {
                 AnsiConsole.MarkupLine("[green]Correct![/]");
                 session.Score++; // Increase the score for a correct answer
             } else {
-                AnsiConsole.MarkupLine($"[red]Incorrect. The correct answer is: {flashcard.Answer}[/]\n");
+                AnsiConsole.MarkupLine($"[red]Incorrect. The correct answer is: {flashcard.Answer}[/]");
             }
+
             AnsiConsole.MarkupLine($"Your score: [aqua]{session.Score}/{session.TotalQuestions}[/]");
 
         }
 
+        session.DateTime = DateTime.Now;
+
         // Optionally, save session details to the repository
-        // await _studySessionRepository.SaveAsync(session);
+        await _studySessionRepository.AddAsync(session);
 
         AnsiConsole.MarkupLine($"Session complete! Your score: [aqua]{session.Score}/{session.TotalQuestions}[/]\n");
 
+    }
+
+    public async Task ViewSessions() {
+        var sessions = await _studySessionRepository.GetAllAsync();
+
+        var table = new Table();
+        table.AddColumn("Date");
+        table.AddColumn("Stack");
+        table.AddColumn("Score");
+
+        foreach (var session in sessions) {
+            table.AddRow($"{session.DateTime:dd-MM-yyyy HH:mm}", $"{session.Stack.Name}", $"{session.Score}/{session.TotalQuestions}");
+        }
+
+        AnsiConsole.Write(table);
     }
 }

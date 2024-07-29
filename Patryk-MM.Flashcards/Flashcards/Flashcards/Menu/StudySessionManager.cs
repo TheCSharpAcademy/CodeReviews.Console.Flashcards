@@ -32,7 +32,7 @@ public class StudySessionManager {
                     await _service.StartSession();
                     break;
                 case "View previous sessions":
-
+                    await _service.ViewSessions();
                     break;
                 case "Go back to main menu":
                     return false;
