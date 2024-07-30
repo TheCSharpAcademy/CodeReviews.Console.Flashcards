@@ -15,7 +15,7 @@ internal class InputValidation
 
         
         AnsiConsole.MarkupLine("[yellow]CleanString is incomplete[/]");
-        Output.ReturnToMenu("");
+        OutputUtilities.ReturnToMenu("");
         return "";
     } // end of CleanString Method
 }

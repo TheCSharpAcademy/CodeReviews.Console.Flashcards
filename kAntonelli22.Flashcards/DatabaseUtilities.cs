@@ -33,7 +33,7 @@ internal class DatabaseHelper
         connection.Close();
 
         AnsiConsole.MarkupLine("[yellow]RunQuery is incomplete[/]");
-        Output.ReturnToMenu("");
+        OutputUtilities.ReturnToMenu("");
     } // end of RunQuery Method
 
     public static void GetStack()
@@ -48,13 +48,13 @@ internal class DatabaseHelper
         // CodingSession.Sessions = sessions;
         connection.Close();
         AnsiConsole.MarkupLine("[yellow]GetStack is incomplete[/]");
-        Output.ReturnToMenu("");
+        OutputUtilities.ReturnToMenu("");
     } // end of GetStack Method
 
     public static void GetCards()
     {
         AnsiConsole.MarkupLine("[yellow]GetCards is incomplete[/]");
-        Output.ReturnToMenu("");
+        OutputUtilities.ReturnToMenu("");
     } // end of GetCards Method
 
     public static void InsertStack(CardStack stack)

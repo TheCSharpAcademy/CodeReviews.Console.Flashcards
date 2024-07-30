@@ -5,13 +5,6 @@ namespace Flashcards;
 
 internal class Output
 {
-    public static void PracticeStack()
-    {
-        Console.Clear();
-        AnsiConsole.MarkupLine("[yellow]PracticeStack is incomplete[/]");
-        ReturnToMenu("");
-    } // end of PracticeStack Method
-
     public static void CreateStack()
     {
         Console.Clear();
@@ -35,59 +28,100 @@ internal class Output
             }
         }
         // insert into database
-        ReturnToMenu("");
+        ViewStacks(true);
     } // end of CreateStack Method
 
     public static void EditStack()
     {
         Console.Clear();
-        AnsiConsole.MarkupLine("[yellow]EditStack is incomplete[/]");
-        ReturnToMenu("");
+        AnsiConsole.MarkupLine("Which Stack do you want to edit?");
+        CardStack? stack = CardStack.Stacks.FirstOrDefault(stack => stack.name == input);
+        if (stack == null)
+            return;
+            
+        string input = OutputUtilities.DisplayList(CardStack.Stacks);
+        string name = AnsiConsole.Ask<string>($"What is the Stacks name? (Current name: {stack.name})");
+        int size = AnsiConsole.Ask<int>($"What is the Stacks size? (Current name: {stack.size})");
+
+        stack.name = name;
+        stack.size = size;
+        ViewStacks(true);
     } // end of EditStack Method
 
-    public static void ViewStacks()
+    public static void RemoveStack()
     {
         Console.Clear();
-        var options = new SelectionPrompt<string>();
-        for (int i = 0; i < CardStack.Stacks.Count; i++)
-        {
-            options.AddChoice($"{CardStack.Stacks[i].name}");
-        }
-        options.AddChoice("<-- Back");
-        var menu = AnsiConsole.Prompt(options);
+        AnsiConsole.MarkupLine("Which Stack do you want to remove?");
+        string input = OutputUtilities.DisplayList(CardStack.Stacks);
 
-        if (CardStack.Stacks.Any(stack => stack.name == menu))
-            ViewCards(menu);
-        else if (menu == "<-- Back")
-            return;
-
-    } // end of ViewStacks Method
-
-    public static void ViewCards(string stackName)
-    {
-        Console.Clear();
-        CardStack? stack = CardStack.Stacks.FirstOrDefault(stack => stack.name == stackName);
+        CardStack? stack = CardStack.Stacks.FirstOrDefault(stack => stack.name == input);
         if (stack == null)
             return;
 
-        string cards = "";
-        for (int i = 0; i < stack.Cards.Count(); i++)
-        {
-            cards += $"{stack.Cards[i].question.PadRight(10)} ......... {stack.Cards[i].answer.PadLeft(10)}\n";
-        }
-        var panel = new Panel(cards);
-        panel.Header = new PanelHeader(stackName);
+        CardStack.Stacks.Remove(stack);
+        ViewStacks(true);
+    } // end of EditStack Method
 
-        ReturnToMenu("");
-    } // end of ViewCards Method
-
-    public static void ReturnToMenu(string message)
+    public static void EditCards()
     {
-        if (message == "")
-            Console.WriteLine($"Press enter to return to menu.");
-        else
-            Console.WriteLine($"{message}. Press enter to return to menu.");
-        // InputValidator.CleanString();
-        Console.ReadLine();
-    } // end of ReturnToMenu Method
+        Console.Clear();
+        AnsiConsole.MarkupLine("[yellow]EditCards is incomplete[/]");
+        ViewStacks(true);
+    } // end of EditStack Method
+
+    public static void ViewStacks(bool displayMenu)
+    {
+        Console.Clear();
+
+        List<Panel> panels = [];
+
+        for (int i = 0; i < CardStack.Stacks.Count(); i++)
+        {
+            string cards = "";
+            CardStack stack = CardStack.Stacks[i];
+            for (int j = 0; j < stack.Cards.Count(); j++)
+            {
+                cards += $"\n{stack.Cards[j].question} = {stack.Cards[j].answer}";
+            }
+            var panel = new Panel(cards);
+            panel.Header = new PanelHeader(stack.name);
+            panels.Add(panel);
+        }
+
+        AnsiConsole.Write(new Columns(panels));
+        if (displayMenu)
+            StackOptions();
+    } // end of ViewStacks Method
+
+    public static void StackOptions()
+    {
+        AnsiConsole.WriteLine("Stack Options\n------------------------");
+        var menu = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .AddChoices([
+                "Exit Flashcard", "Create Stack", "Edit Stack",
+                "Remove Stack", "Edit Cards", "<-- Back"
+                ]));
+
+        switch (menu)
+        {
+            case "Exit Flashcard":
+                Environment.Exit(0);
+                break;
+            case "Create Stack":
+                CreateStack();
+                break;
+            case "Edit Stack":
+                EditStack();
+                break;
+            case "Remove Stack":
+                RemoveStack();
+                break;
+            case "Edit Cards":
+                EditCards();
+                break;
+            case "<-- Back":
+                return;
+        }
+    }
 }
