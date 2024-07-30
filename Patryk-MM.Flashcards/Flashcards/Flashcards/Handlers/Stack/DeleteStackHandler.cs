@@ -17,11 +17,11 @@ public class DeleteStackHandler : IStackActionHandler {
         if (confirm) {
             await _repository.DeleteAsync(stack);
             AnsiConsole.MarkupLine($"Stack '[aqua]{stack.Name}[/]' has been deleted.");
-            return true;
+            return false;
         }
 
         AnsiConsole.MarkupLine("[yellow]Operation cancelled.[/]");
-        return false;
+        return true;
 
     }
 }

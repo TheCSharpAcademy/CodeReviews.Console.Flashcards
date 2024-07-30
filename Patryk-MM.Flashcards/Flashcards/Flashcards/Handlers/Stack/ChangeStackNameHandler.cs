@@ -20,7 +20,7 @@ public class ChangeStackNameHandler : IStackActionHandler {
         }
 
         if (stackNames.Contains(newName)) {
-            AnsiConsole.WriteLine($"The name '{newName}' is already taken. [yellow]Operation cancelled.[/]");
+            AnsiConsole.MarkupLine($"The name '{newName}' is already taken. [yellow]Operation cancelled.[/]");
         } else {
             stack.Name = newName;
             await _repository.EditAsync(stack);

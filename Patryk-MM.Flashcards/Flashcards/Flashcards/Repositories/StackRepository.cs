@@ -12,10 +12,10 @@ public class StackRepository : BaseRepository<Stack>, IStackRepository {
             .FirstAsync(x => x.Id == id);
     }
 
-    public async Task<Stack> GetStackByNameAsync(string name) {
+    public async Task<Stack?> GetStackByNameAsync(string name) {
         return await DbSet
             .Include(x => x.Flashcards)
-            .FirstAsync(x => x.Name == name);
+            .FirstOrDefaultAsync(x => x.Name == name);
     }
 
     public async Task<List<string>> GetStackNamesAsync() {

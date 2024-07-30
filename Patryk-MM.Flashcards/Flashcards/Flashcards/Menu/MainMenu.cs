@@ -26,7 +26,7 @@ public class MainMenu {
             new SelectionPrompt<string>()
             .Title("[bold]Choose an option:[/]")
             .AddChoices(new[] {
-                    "Study", "Manage stacks", "Exit"
+                    "Study", "Manage stacks", "[red]Exit the app[/]"
             }));
 
             AnsiConsole.Clear();
@@ -42,7 +42,7 @@ public class MainMenu {
                 case "Manage stacks":
                     await _stackManager.RunAsync();
                     break;
-                case "Exit":
+                case "[red]Exit the app[/]":
                     return false;
             }
             //AnsiConsole.WriteLine("\n");

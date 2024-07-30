@@ -15,7 +15,7 @@ public class StackManager {
             new SelectionPrompt<string>()
             .Title("\nChoose an option:")
             .AddChoices(new[] {
-                    "View stacks", "Add a stack", "Manage a stack", "Go back to main menu"
+                    "View stacks", "Add a stack", "Manage a stack", "[red]Go back to main menu[/]"
             }));
 
             AnsiConsole.Clear();
@@ -31,7 +31,7 @@ public class StackManager {
                 case "Manage a stack":
                     await _service.ManageStack();
                     break;
-                case "Go back to main menu":
+                case "[red]Go back to main menu[/]":
                     return false;
             }
         }

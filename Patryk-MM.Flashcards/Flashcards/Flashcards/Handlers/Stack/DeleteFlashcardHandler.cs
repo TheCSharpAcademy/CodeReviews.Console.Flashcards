@@ -14,6 +14,11 @@ public class DeleteFlashcardHandler : IStackActionHandler {
     public async Task<bool> HandleAsync(Models.Stack stack) {
         AnsiConsole.MarkupLine($"Deleting flashcard from stack: [aqua]{stack.Name}[/]");
 
+        if (stack.Flashcards.Count == 0) {
+            AnsiConsole.MarkupLine($"[yellow]There are no flashcards in this stack.[/]");
+            return true;
+        }
+        
         var flashcard = AnsiConsole.Prompt(
             new SelectionPrompt<Flashcard>()
             .Title("Choose a flashcard to delete (to cancel choose any flashcard and then choose \"no\"): ")
