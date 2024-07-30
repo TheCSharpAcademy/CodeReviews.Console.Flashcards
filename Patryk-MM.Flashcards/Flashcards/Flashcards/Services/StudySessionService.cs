@@ -16,10 +16,10 @@ public class StudySessionService {
         var session = new StudySession();
 
         // Fetch the list of stack names from the repository
-        var stackNames = await _stackRepository.GetStackNamesAsync();
+        var stackNames = await _stackRepository.GetStackNamesAsync(s => s.Flashcards.Count >= 1);
 
         // Add the "Cancel" option to the list
-        var choices = stackNames.Concat(new[] { "Cancel" });
+        var choices = stackNames.Concat(new[] { "[red]Cancel[/]" });
 
         // Display the prompt to the user with the combined list of choices
         var stackName = AnsiConsole.Prompt(
@@ -29,7 +29,7 @@ public class StudySessionService {
         );
 
         // Handle the user's choice
-        if (stackName == "Cancel") {
+        if (stackName == "[red]Cancel[/]") {
             AnsiConsole.WriteLine("Operation cancelled.");
             return; // Exit the method or perform any other cancellation logic
         }
