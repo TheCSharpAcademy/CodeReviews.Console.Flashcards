@@ -2,14 +2,11 @@
 
 #nullable disable
 
-namespace Flashcards.Migrations
-{
+namespace Flashcards.Migrations {
     /// <inheritdoc />
-    public partial class EditScorePercentage : Migration
-    {
+    public partial class EditScorePercentage : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.AddColumn<double>(
                 name: "ScorePercentage",
                 table: "StudySessions",
@@ -19,8 +16,7 @@ namespace Flashcards.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropColumn(
                 name: "ScorePercentage",
                 table: "StudySessions");

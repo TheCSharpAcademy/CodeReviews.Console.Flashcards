@@ -2,14 +2,11 @@
 
 #nullable disable
 
-namespace Flashcards.Migrations
-{
+namespace Flashcards.Migrations {
     /// <inheritdoc />
-    public partial class InitialAfterDrop : Migration
-    {
+    public partial class InitialAfterDrop : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.RenameColumn(
                 name: "StackId",
                 table: "Stacks",
@@ -17,8 +14,7 @@ namespace Flashcards.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.RenameColumn(
                 name: "Id",
                 table: "Stacks",

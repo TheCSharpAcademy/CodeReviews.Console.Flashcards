@@ -4,10 +4,23 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace Flashcards.Repositories;
+
+/// <summary>
+/// Provides data access methods for managing <see cref="StudySession"/> entities.
+/// </summary>
 public class StudySessionRepository : BaseRepository<StudySession>, IStudySessionRepository {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StudySessionRepository"/> class.
+    /// </summary>
+    /// <param name="dbContext">The database context used to interact with the database.</param>
     public StudySessionRepository(AppDbContext dbContext) : base(dbContext) {
     }
 
+    /// <summary>
+    /// Retrieves monthly average scores for each stack for a specified year.
+    /// </summary>
+    /// <param name="year">The year for which to retrieve the monthly averages.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see cref="ReportDTO"/> objects representing the monthly averages.</returns>
     public async Task<List<ReportDTO>> GetMonthlyAveragesAsync(int year) {
         var result = new List<ReportDTO>();
 
@@ -65,10 +78,8 @@ public class StudySessionRepository : BaseRepository<StudySession>, IStudySessio
         await connection.OpenAsync();
 
         await using var reader = await command.ExecuteReaderAsync();
-        while (await reader.ReadAsync())
-        {
-            result.Add(new ReportDTO
-            {
+        while (await reader.ReadAsync()) {
+            result.Add(new ReportDTO {
                 StackName = reader.GetString(reader.GetOrdinal("StackName")),
                 Jan = reader.GetDouble(reader.GetOrdinal("Jan")),
                 Feb = reader.GetDouble(reader.GetOrdinal("Feb")),
@@ -88,8 +99,12 @@ public class StudySessionRepository : BaseRepository<StudySession>, IStudySessio
         return result;
     }
 
-    public async Task<List<ReportDTO>> GetSumOfSessionsAsync(int year)
-    {
+    /// <summary>
+    /// Retrieves the total number of study sessions for each stack for a specified year.
+    /// </summary>
+    /// <param name="year">The year for which to retrieve the total number of sessions.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see cref="ReportDTO"/> objects representing the total number of sessions.</returns>
+    public async Task<List<ReportDTO>> GetSumOfSessionsAsync(int year) {
         var result = new List<ReportDTO>();
 
         // Define the SQL query

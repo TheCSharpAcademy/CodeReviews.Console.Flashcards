@@ -22,7 +22,6 @@ services.AddScoped<StackService>();
 services.AddScoped<StudySessionService>();
 
 //Register menu managers
-services.AddScoped<FlashcardManager>();
 services.AddScoped<StackManager>();
 services.AddScoped<StudySessionManager>();
 
@@ -53,6 +52,4 @@ using (var scope = serviceProvider.CreateScope()) {
 AnsiConsole.Clear();
 
 var mainMenu = serviceProvider.GetRequiredService<MainMenu>();
-await mainMenu.Run();
-
-//TODO: testing and code refactoring
+await mainMenu.RunAsync();

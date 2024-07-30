@@ -3,15 +3,28 @@ using Flashcards.Repositories;
 using Spectre.Console;
 
 namespace Flashcards.Services;
+
+/// <summary>
+/// Provides operations related to study sessions, including starting a new session, viewing past sessions, and generating reports.
+/// </summary>
 public class StudySessionService {
     private readonly IStudySessionRepository _studySessionRepository;
     private readonly IStackRepository _stackRepository;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StudySessionService"/> class.
+    /// </summary>
+    /// <param name="studySessionRepository">The repository used to access study session data.</param>
+    /// <param name="stackRepository">The repository used to access stack data.</param>
     public StudySessionService(IStudySessionRepository studySessionRepository, IStackRepository stackRepository) {
         _studySessionRepository = studySessionRepository;
         _stackRepository = stackRepository;
     }
 
+    /// <summary>
+    /// Starts a new study session by selecting a stack and asking the user a series of flashcard questions.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task StartSession() {
         var session = new StudySession();
 
@@ -36,8 +49,8 @@ public class StudySessionService {
 
         session.Stack = await _stackRepository.GetStackByNameAsync(stackName);
 
-        AnsiConsole.MarkupLine($"Managing stack: [aqua]{session.Stack.Name}[/]");
-        AnsiConsole.MarkupLine($"Cards in stack: [aqua]{session.Stack.Flashcards.Count}[/]\n");
+        AnsiConsole.MarkupLine($"Managing stack: [aqua]{session.Stack?.Name}[/]");
+        AnsiConsole.MarkupLine($"Cards in stack: [aqua]{session.Stack?.Flashcards.Count}[/]\n");
 
         session.TotalQuestions = AnsiConsole.Prompt(
             new TextPrompt<int>("How many questions do you want to answer?")
@@ -46,45 +59,47 @@ public class StudySessionService {
                 .Validate(number => {
                     if (number <= 0) {
                         return ValidationResult.Error("[red]Value must be at least 1[/]");
-                    } else if (number > session.Stack.Flashcards.Count) {
-                        return ValidationResult.Error($"[red]Value cannot be higher than the amount of flashcards in the stack ({session.Stack.Flashcards.Count})[/]");
-                    } else {
-                        return ValidationResult.Success();
                     }
+                    if (number > session.Stack?.Flashcards.Count) {
+                        return ValidationResult.Error($"[red]Value cannot be higher than the amount of flashcards in the stack ({session.Stack.Flashcards.Count})[/]");
+                    }
+                    return ValidationResult.Success();
                 })
         );
 
         // Ensure we do not select more flashcards than available
-        var selectedFlashcards = session.Stack.Flashcards.OrderBy(x => Guid.NewGuid()).Take(session.TotalQuestions).ToList();
+        var selectedFlashcards = session.Stack?.Flashcards.OrderBy(x => Guid.NewGuid()).Take(session.TotalQuestions).ToList();
 
-        foreach (var flashcard in selectedFlashcards) {
+        if (selectedFlashcards != null)
+            foreach (var flashcard in selectedFlashcards) {
+                // Present the flashcard question
+                AnsiConsole.MarkupLine($"\nQuestion: [aqua]{flashcard.Question}[/]");
 
-            // Present the flashcard question
-            AnsiConsole.MarkupLine($"\nQuestion: [aqua]{flashcard.Question}[/]");
+                // Optionally, prompt user for the answer
+                var userAnswer = AnsiConsole.Ask<string>("Your answer:");
 
-            // Optionally, prompt user for the answer
-            var userAnswer = AnsiConsole.Ask<string>("Your answer:");
+                // Check the user's answer (optional)
+                if (userAnswer.Equals(flashcard.Answer, StringComparison.OrdinalIgnoreCase)) {
+                    AnsiConsole.MarkupLine("[green]Correct![/]");
+                    session.Score++; // Increase the score for a correct answer
+                } else {
+                    AnsiConsole.MarkupLine($"[red]Incorrect. The correct answer is: [aqua]{flashcard.Answer}[/][/]");
+                }
 
-            // Check the user's answer (optional)
-            if (userAnswer.Equals(flashcard.Answer, StringComparison.OrdinalIgnoreCase)) {
-                AnsiConsole.MarkupLine("[green]Correct![/]");
-                session.Score++; // Increase the score for a correct answer
-            } else {
-                AnsiConsole.MarkupLine($"[red]Incorrect. The correct answer is: [aqua]{flashcard.Answer}[/][/]");
+                AnsiConsole.MarkupLine($"Your score: [aqua]{session.Score}/{session.TotalQuestions}[/]");
             }
 
-            AnsiConsole.MarkupLine($"Your score: [aqua]{session.Score}/{session.TotalQuestions}[/]");
-
-        }
         session.DateTime = DateTime.Now;
 
-        // Optionally, save session details to the repository
         await _studySessionRepository.AddAsync(session);
 
         AnsiConsole.MarkupLine($"\nSession complete! Your score: [aqua]{session.ScorePercentage:P}[/]\n");
-
     }
 
+    /// <summary>
+    /// Displays a table of past study sessions, including date, stack name, score, and percentage.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ViewSessions() {
         var sessions = await _studySessionRepository.GetAllAsync(session => session.Stack);
 
@@ -101,6 +116,10 @@ public class StudySessionService {
         AnsiConsole.Write(table);
     }
 
+    /// <summary>
+    /// Generates and displays reports for the specified year, including average scores and total number of sessions per month.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task GenerateReports() {
         // Prompt the user for the year with validation
         int year = AnsiConsole.Prompt(
@@ -160,7 +179,7 @@ public class StudySessionService {
         // Create and configure the table for sum of sessions
         var sumTable = new Table()
             .Title("Sum of Sessions per Month per Stack");
-        
+
         sumTable.AddColumn("Stack Name");
         sumTable.AddColumn("Jan");
         sumTable.AddColumn("Feb");
@@ -197,6 +216,4 @@ public class StudySessionService {
         // Write the sum of sessions table to the console
         AnsiConsole.Write(sumTable);
     }
-
-
 }

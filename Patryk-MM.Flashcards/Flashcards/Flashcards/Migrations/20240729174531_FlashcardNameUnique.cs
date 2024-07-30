@@ -2,14 +2,11 @@
 
 #nullable disable
 
-namespace Flashcards.Migrations
-{
+namespace Flashcards.Migrations {
     /// <inheritdoc />
-    public partial class FlashcardNameUnique : Migration
-    {
+    public partial class FlashcardNameUnique : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropColumn(
                 name: "ScorePercentage",
                 table: "StudySessions");
@@ -30,8 +27,7 @@ namespace Flashcards.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropIndex(
                 name: "IX_Flashcards_Question",
                 table: "Flashcards");

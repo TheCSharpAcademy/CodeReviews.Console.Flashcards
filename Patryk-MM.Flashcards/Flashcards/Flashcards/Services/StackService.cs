@@ -6,13 +6,25 @@ using Microsoft.EntityFrameworkCore;
 using Spectre.Console;
 
 namespace Flashcards.Services;
+
+/// <summary>
+/// Provides operations for managing <see cref="Stack"/> entities, including viewing, adding, and modifying stacks.
+/// </summary>
 public class StackService {
     private readonly IStackRepository _repository;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StackService"/> class.
+    /// </summary>
+    /// <param name="repository">The repository used to access stack data.</param>
     public StackService(IStackRepository repository) {
         _repository = repository;
     }
 
+    /// <summary>
+    /// Displays the list of stack names to the user.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ViewStacks() {
         var stackList = await _repository.GetStackNamesAsync();
         var table = new Table();
@@ -25,6 +37,10 @@ public class StackService {
         AnsiConsole.Write(table);
     }
 
+    /// <summary>
+    /// Prompts the user to add a new stack. If the stack name already exists, an error message is displayed.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task AddStack() {
         string name = AnsiConsole.Ask<string>("Provide a stack name or input [red]cancel[/]:");
         if (name == "cancel") {
@@ -37,12 +53,16 @@ public class StackService {
 
         try {
             await _repository.AddAsync(stack);
-        }
-        catch (DbUpdateException ex) when (ex.InnerException is SqlException sqlEx && sqlEx.Number == 2601) {
+            AnsiConsole.MarkupLine($"[green]Stack [aqua]{stack.Name}[/] successfully created![/]");
+        } catch (DbUpdateException ex) when (ex.InnerException is SqlException sqlEx && sqlEx.Number == 2601) {
             AnsiConsole.MarkupLine("[red]A stack with the same name already exists. Pick a different name.[/]");
         }
     }
 
+    /// <summary>
+    /// Provides options for managing a selected stack, including viewing flashcards, adding, deleting flashcards, changing the stack's name, and deleting the stack.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ManageStack() {
         // Fetch the list of stack names from the repository
         var stackNames = await _repository.GetStackNamesAsync();
@@ -63,12 +83,9 @@ public class StackService {
             return; // Exit the method or perform any other cancellation logic
         }
 
-        Stack? stack = await _repository.GetStackByNameAsync(stackName);
-
-
         Utilities.ClearConsole();
         while (true) {
-            stack = await _repository.GetStackByNameAsync(stackName);
+            Stack? stack = await _repository.GetStackByNameAsync(stackName);
             if (stack is null) return;
             // Proceed with managing the selected stack
             AnsiConsole.MarkupLine($"Managing stack: [aqua]{stack.Name}[/]");
@@ -98,4 +115,3 @@ public class StackService {
         }
     }
 }
-

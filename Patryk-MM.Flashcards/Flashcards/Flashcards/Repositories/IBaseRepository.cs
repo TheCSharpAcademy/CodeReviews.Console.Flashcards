@@ -1,5 +1,5 @@
-﻿using System.Linq.Expressions;
-using Flashcards.Models;
+﻿using Flashcards.Models;
+using System.Linq.Expressions;
 
 namespace Flashcards.Repositories;
 public interface IBaseRepository<T> where T : BaseEntity {

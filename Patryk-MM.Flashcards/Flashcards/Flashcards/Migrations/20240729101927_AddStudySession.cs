@@ -1,20 +1,15 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Flashcards.Migrations
-{
+namespace Flashcards.Migrations {
     /// <inheritdoc />
-    public partial class AddStudySession : Migration
-    {
+    public partial class AddStudySession : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.CreateTable(
                 name: "StudySessions",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -22,8 +17,7 @@ namespace Flashcards.Migrations
                     TotalQuestions = table.Column<int>(type: "int", nullable: false),
                     Score = table.Column<int>(type: "int", nullable: false)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_StudySessions", x => x.Id);
                     table.ForeignKey(
                         name: "FK_StudySessions_Stacks_StackId",
@@ -40,8 +34,7 @@ namespace Flashcards.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropTable(
                 name: "StudySessions");
         }

@@ -2,14 +2,11 @@
 
 #nullable disable
 
-namespace Flashcards.Migrations
-{
+namespace Flashcards.Migrations {
     /// <inheritdoc />
-    public partial class StackNameConstraint : Migration
-    {
+    public partial class StackNameConstraint : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
                 table: "Stacks",
@@ -26,8 +23,7 @@ namespace Flashcards.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropIndex(
                 name: "IX_Stacks_Name",
                 table: "Stacks");
