@@ -1,5 +1,5 @@
 ﻿namespace Flashcards.DTOs {
-    public class StackDTO {
+    public class StackDto {
         public string Name { get; set; }
     }
 }

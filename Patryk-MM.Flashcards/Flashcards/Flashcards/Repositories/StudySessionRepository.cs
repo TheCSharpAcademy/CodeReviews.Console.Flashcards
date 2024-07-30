@@ -20,9 +20,9 @@ public class StudySessionRepository : BaseRepository<StudySession>, IStudySessio
     /// Retrieves monthly average scores for each stack for a specified year.
     /// </summary>
     /// <param name="year">The year for which to retrieve the monthly averages.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see cref="ReportDTO"/> objects representing the monthly averages.</returns>
-    public async Task<List<ReportDTO>> GetMonthlyAveragesAsync(int year) {
-        var result = new List<ReportDTO>();
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see cref="ReportDto"/> objects representing the monthly averages.</returns>
+    public async Task<List<ReportDto>> GetMonthlyAveragesAsync(int year) {
+        var result = new List<ReportDto>();
 
         // Define the SQL query
         const string sql = """
@@ -79,7 +79,7 @@ public class StudySessionRepository : BaseRepository<StudySession>, IStudySessio
 
         await using var reader = await command.ExecuteReaderAsync();
         while (await reader.ReadAsync()) {
-            result.Add(new ReportDTO {
+            result.Add(new ReportDto {
                 StackName = reader.GetString(reader.GetOrdinal("StackName")),
                 Jan = reader.GetDouble(reader.GetOrdinal("Jan")),
                 Feb = reader.GetDouble(reader.GetOrdinal("Feb")),
@@ -103,9 +103,9 @@ public class StudySessionRepository : BaseRepository<StudySession>, IStudySessio
     /// Retrieves the total number of study sessions for each stack for a specified year.
     /// </summary>
     /// <param name="year">The year for which to retrieve the total number of sessions.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see cref="ReportDTO"/> objects representing the total number of sessions.</returns>
-    public async Task<List<ReportDTO>> GetSumOfSessionsAsync(int year) {
-        var result = new List<ReportDTO>();
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see cref="ReportDto"/> objects representing the total number of sessions.</returns>
+    public async Task<List<ReportDto>> GetSumOfSessionsAsync(int year) {
+        var result = new List<ReportDto>();
 
         // Define the SQL query
         const string sql = """
@@ -162,7 +162,7 @@ public class StudySessionRepository : BaseRepository<StudySession>, IStudySessio
 
         await using var reader = await command.ExecuteReaderAsync();
         while (await reader.ReadAsync()) {
-            result.Add(new ReportDTO {
+            result.Add(new ReportDto {
                 StackName = reader.GetString(reader.GetOrdinal("StackName")),
                 Jan = reader.GetInt32(reader.GetOrdinal("Jan")),
                 Feb = reader.GetInt32(reader.GetOrdinal("Feb")),

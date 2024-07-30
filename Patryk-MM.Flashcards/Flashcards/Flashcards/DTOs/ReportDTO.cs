@@ -1,5 +1,5 @@
 ﻿namespace Flashcards.DTOs;
-public class ReportDTO {
+public class ReportDto {
     public string StackName { get; set; }
     public double Jan { get; set; }
     public double Feb { get; set; }
