@@ -35,11 +35,11 @@ internal class Output
     {
         Console.Clear();
         AnsiConsole.MarkupLine("Which Stack do you want to edit?");
+        string input = OutputUtilities.DisplayList(CardStack.Stacks);
         CardStack? stack = CardStack.Stacks.FirstOrDefault(stack => stack.name == input);
         if (stack == null)
             return;
             
-        string input = OutputUtilities.DisplayList(CardStack.Stacks);
         string name = AnsiConsole.Ask<string>($"What is the Stacks name? (Current name: {stack.name})");
         int size = AnsiConsole.Ask<int>($"What is the Stacks size? (Current name: {stack.size})");
 
