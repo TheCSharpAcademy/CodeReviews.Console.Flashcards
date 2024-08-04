@@ -5,18 +5,19 @@ namespace Flashcards;
 
 internal class Output
 {
+    public static CardStack? CurrentStack;
     public static void CreateStack()
     {
         Console.Clear();
         string name = AnsiConsole.Ask<string>("What is the Stacks name?");
         int size = AnsiConsole.Ask<int>("What is the Stacks size?");
-        CardStack stack = new(name, size);
+        CurrentStack = new(name, size);
 
         bool empty = AnsiConsole.Confirm("Do you want to leave the Stack empty?");
         if (empty)
         {
             for (int i = 0; i < size; i++)
-                new Card($"Card {i}", $"Card {i}", stack);
+                new Card($"Question {i}", $"Answer {i}", CurrentStack);
         }
         else if (!empty)
         {
@@ -24,49 +25,23 @@ internal class Output
             {
                 string question = AnsiConsole.Ask<string>("What is the cards question?");
                 string answer = AnsiConsole.Ask<string>("What is the answer?");
-                new Card(question, answer, stack);
+                new Card(question, answer, CurrentStack);
             }
         }
         // insert into database
-        ViewStacks(true);
     } // end of CreateStack Method
-
-    public static void EditStack()
-    {
-        Console.Clear();
-        AnsiConsole.MarkupLine("Which Stack do you want to edit?");
-        string input = OutputUtilities.DisplayList(CardStack.Stacks);
-        CardStack? stack = CardStack.Stacks.FirstOrDefault(stack => stack.name == input);
-        if (stack == null)
-            return;
-            
-        string name = AnsiConsole.Ask<string>($"What is the Stacks name? (Current name: {stack.name})");
-        int size = AnsiConsole.Ask<int>($"What is the Stacks size? (Current name: {stack.size})");
-
-        stack.name = name;
-        stack.size = size;
-        ViewStacks(true);
-    } // end of EditStack Method
 
     public static void RemoveStack()
     {
         Console.Clear();
         AnsiConsole.MarkupLine("Which Stack do you want to remove?");
-        string input = OutputUtilities.DisplayList(CardStack.Stacks);
+        string input = OutputUtilities.DisplayStack(CardStack.Stacks);
 
-        CardStack? stack = CardStack.Stacks.FirstOrDefault(stack => stack.name == input);
-        if (stack == null)
+        CurrentStack = CardStack.Stacks.FirstOrDefault(stack => stack.name == input);
+        if (CurrentStack == null)
             return;
 
-        CardStack.Stacks.Remove(stack);
-        ViewStacks(true);
-    } // end of EditStack Method
-
-    public static void EditCards()
-    {
-        Console.Clear();
-        AnsiConsole.MarkupLine("[yellow]EditCards is incomplete[/]");
-        ViewStacks(true);
+        CardStack.Stacks.Remove(CurrentStack);
     } // end of EditStack Method
 
     public static void ViewStacks(bool displayMenu)
@@ -100,7 +75,7 @@ internal class Output
             new SelectionPrompt<string>()
             .AddChoices([
                 "Exit Flashcard", "Create Stack", "Edit Stack",
-                "Remove Stack", "Edit Cards", "<-- Back"
+                "Remove Stack", "<-- Back"
                 ]));
 
         switch (menu)
@@ -112,16 +87,14 @@ internal class Output
                 CreateStack();
                 break;
             case "Edit Stack":
-                EditStack();
+                EditStack.EditMenu();
                 break;
             case "Remove Stack":
                 RemoveStack();
                 break;
-            case "Edit Cards":
-                EditCards();
-                break;
             case "<-- Back":
                 return;
         }
+        ViewStacks(true);
     }
 }

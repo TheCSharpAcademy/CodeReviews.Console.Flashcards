@@ -8,7 +8,7 @@ internal class Practice
     {
         Console.Clear();
         Output.ViewStacks(false);
-        string input = OutputUtilities.DisplayList(CardStack.Stacks);
+        string input = OutputUtilities.DisplayStack(CardStack.Stacks);
 
         if (CardStack.Stacks.Any(stack => stack.name == input))
             StartPractice(input);

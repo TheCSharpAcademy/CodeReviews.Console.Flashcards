@@ -4,12 +4,24 @@ namespace Flashcards;
 
 internal class OutputUtilities
 {
-    public static string DisplayList(List<CardStack> list)
+    public static string DisplayStack(List<CardStack> list)
     {
         var options = new SelectionPrompt<string>();
         for (int i = 0; i < list.Count; i++)
         {
             options.AddChoice($"{list[i].name}");
+        }
+        options.AddChoice("<-- Back To Menu");
+        var menu = AnsiConsole.Prompt(options);
+        return menu;
+    }
+
+    public static string DisplayCards(List<Card> list)
+    {
+        var options = new SelectionPrompt<string>();
+        for (int i = 0; i < list.Count; i++)
+        {
+            options.AddChoice($"{list[i].question}?    {list[i].answer}");
         }
         options.AddChoice("<-- Back To Menu");
         var menu = AnsiConsole.Prompt(options);

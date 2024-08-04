@@ -16,13 +16,13 @@ class Program
 
         CardStack stack1 = new CardStack("Stack 1", 5);
         for (int i = 0; i < 5; i++)
-            new Card($"question {i}", $"answer {i}", stack1);
+            new Card($"Question {i}", $"Answer {i}", stack1);
         CardStack stack2 = new CardStack("Stack 2", 8);
         for (int i = 0; i < 8; i++)
-            new Card($"question {i}", $"answer {i}", stack2);
+            new Card($"Question {i}", $"Answer {i}", stack2);
         CardStack stack3 = new CardStack("Stack 3", 2);
         for (int i = 0; i < 2; i++)
-            new Card($"question {i}", $"answer {i}", stack3);
+            new Card($"Question {i}", $"Answer {i}", stack3);
 
         MainMenu();
     }
@@ -33,14 +33,14 @@ class Program
         AnsiConsole.WriteLine("Flashcard Main Menu\n------------------------");
         var menu = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-            .AddChoices(["Exit Flashcard", "Practice Stack", "View Stacks"]));
+            .AddChoices(["Exit Flashcard", "Study Sessions", "View Stacks"]));
 
         switch (menu)
         {
             case "Exit Flashcard":
                 Environment.Exit(0);
                 break;
-            case "Practice Stack":
+            case "Study Sessions":
                 Practice.PracticeStack();
                 break;
             case "View Stacks":
