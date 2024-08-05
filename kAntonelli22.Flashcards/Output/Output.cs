@@ -1,5 +1,5 @@
 ﻿using Spectre.Console;
-using System.Linq;
+using Flashcards.DatabaseUtilities;
 
 namespace Flashcards;
 
@@ -8,8 +8,15 @@ internal class Output
     public static CardStack? CurrentStack;
     public static void CreateStack()
     {
-        Console.Clear();
-        string name = AnsiConsole.Ask<string>("What is the Stacks name?");
+        // Console.Clear();
+        string name;
+        while (true)
+        {
+            name = AnsiConsole.Ask<string>("What is the Stacks name?");
+            if (OutputUtilities.NameUnique(name, CardStack.Stacks))
+                break;
+            AnsiConsole.MarkupLine("[red]Stack names must be unique[/]");
+        }
         int size = AnsiConsole.Ask<int>("What is the Stacks size?");
         CurrentStack = new(name, size);
 
@@ -28,16 +35,16 @@ internal class Output
                 new Card(question, answer, CurrentStack);
             }
         }
-        // insert into database
+        DatabaseHelper.InsertStack(CurrentStack);
     } // end of CreateStack Method
 
     public static void RemoveStack()
     {
-        Console.Clear();
+        // Console.Clear();
         AnsiConsole.MarkupLine("Which Stack do you want to remove?");
         string input = OutputUtilities.DisplayStack(CardStack.Stacks);
 
-        CurrentStack = CardStack.Stacks.FirstOrDefault(stack => stack.name == input);
+        CurrentStack = CardStack.Stacks.FirstOrDefault(stack => stack.StackName == input);
         if (CurrentStack == null)
             return;
 
@@ -56,10 +63,10 @@ internal class Output
             CardStack stack = CardStack.Stacks[i];
             for (int j = 0; j < stack.Cards.Count(); j++)
             {
-                cards += $"\n{stack.Cards[j].question} = {stack.Cards[j].answer}";
+                cards += $"\n{stack.Cards[j].front} = {stack.Cards[j].back}";
             }
             var panel = new Panel(cards);
-            panel.Header = new PanelHeader(stack.name);
+            panel.Header = new PanelHeader(stack.StackName);
             panels.Add(panel);
         }
 

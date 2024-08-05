@@ -4,14 +4,14 @@ namespace Flashcards;
 
 internal class CardStack
 {
-    public string name;
-    public int size;
+    public string StackName { get; set; }
+    public int StackSize { get; set; }
     public static List<CardStack> Stacks { get; set; } = new List<CardStack>();
     public List<Card> Cards { get; set; } = new List<Card>();
-    public CardStack(string stackName, int stackSize)
+    public CardStack(string name, int size)
     {
-        name = stackName;
-        size = stackSize;
+        StackName = name;
+        StackSize = size;
         Stacks.Add(this);
     }
 

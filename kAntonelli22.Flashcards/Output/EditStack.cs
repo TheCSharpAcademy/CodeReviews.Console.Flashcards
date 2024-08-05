@@ -1,5 +1,4 @@
 using Spectre.Console;
-using System.Linq;
 
 namespace Flashcards;
 
@@ -26,8 +25,8 @@ internal class EditStack
     {
         if (Output.CurrentStack != null)
         {
-            string newName = AnsiConsole.Ask<string>($"What is the Stacks name? (Current name: [blue]{Output.CurrentStack.name}[/])");
-            Output.CurrentStack.name = newName;
+            string newName = AnsiConsole.Ask<string>($"What is the Stacks name? (Current name: [blue]{Output.CurrentStack.StackName}[/])");
+            Output.CurrentStack.StackName = newName;
         }
         else
             Environment.Exit(0);
@@ -37,16 +36,16 @@ internal class EditStack
     {
         if (Output.CurrentStack != null)
         {
-            int newSize = AnsiConsole.Ask<int>($"What is the Stacks size? (Current name: [blue]{Output.CurrentStack.size}[/])");
-            if (newSize > Output.CurrentStack.size)
+            int newSize = AnsiConsole.Ask<int>($"What is the Stacks size? (Current name: [blue]{Output.CurrentStack.StackSize}[/])");
+            if (newSize > Output.CurrentStack.StackSize)
             {
-                for (int i = Output.CurrentStack.size; i < newSize; i++)
+                for (int i = Output.CurrentStack.StackSize; i < newSize; i++)
                     new Card($"Question {i}", $"Answer {i}", Output.CurrentStack);
             }
-            else if (newSize < Output.CurrentStack.size)
+            else if (newSize < Output.CurrentStack.StackSize)
                 Output.CurrentStack.Cards.RemoveRange(newSize, Output.CurrentStack.Cards.Count - newSize);
             
-            Output.CurrentStack.size = newSize;
+            Output.CurrentStack.StackSize = newSize;
         }
         else
             Environment.Exit(0);
@@ -68,7 +67,7 @@ internal class EditStack
         Output.ViewStacks(false);
         AnsiConsole.MarkupLine("Which Stack do you want to edit?");
         string input = OutputUtilities.DisplayStack(CardStack.Stacks);
-        Output.CurrentStack = CardStack.Stacks.FirstOrDefault(stack => stack.name == input);
+        Output.CurrentStack = CardStack.Stacks.FirstOrDefault(stack => stack.StackName == input);
         if (Output.CurrentStack == null)
             return;
         

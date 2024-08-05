@@ -9,7 +9,7 @@ internal class OutputUtilities
         var options = new SelectionPrompt<string>();
         for (int i = 0; i < list.Count; i++)
         {
-            options.AddChoice($"{list[i].name}");
+            options.AddChoice($"{list[i].StackName}");
         }
         options.AddChoice("<-- Back To Menu");
         var menu = AnsiConsole.Prompt(options);
@@ -21,7 +21,7 @@ internal class OutputUtilities
         var options = new SelectionPrompt<string>();
         for (int i = 0; i < list.Count; i++)
         {
-            options.AddChoice($"{list[i].question}?    {list[i].answer}");
+            options.AddChoice($"{list[i].front}?    {list[i].back}");
         }
         options.AddChoice("<-- Back To Menu");
         var menu = AnsiConsole.Prompt(options);
@@ -44,6 +44,16 @@ internal class OutputUtilities
         // panel.Header = new PanelHeader(stackName);
         // AnsiConsole.Write(panel)
     } // end of ViewCards Method
+
+    public static bool NameUnique(string name, List<CardStack> list)
+    {
+        foreach(CardStack stack in list)
+        {
+            if (stack.StackName.Equals(name))
+                return false;
+        }
+        return true;
+    } // End of NameUnique Method
 
     public static void ReturnToMenu(string message)
     {

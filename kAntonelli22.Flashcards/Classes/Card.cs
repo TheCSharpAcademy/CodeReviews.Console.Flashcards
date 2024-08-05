@@ -4,13 +4,13 @@ namespace Flashcards;
 
 internal class Card
 {
-    public string question;
-    public string answer;
+    public string front;
+    public string back;
     public static List<Card> Cards { get; set; } = new List<Card>();
     public Card(string cardQuestion, string cardAnswer, CardStack stack)
     {
-        question = cardQuestion;
-        answer = cardAnswer;
+        front = cardQuestion;
+        back = cardAnswer;
         stack.Cards.Add(this);
     }
 

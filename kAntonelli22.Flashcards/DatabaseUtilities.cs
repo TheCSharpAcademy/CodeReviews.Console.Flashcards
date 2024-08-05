@@ -22,7 +22,7 @@ internal class DatabaseHelper
         }
     }
 
-    static void RunQuery(string query)
+    public static void RunQuery(string query)
     {
         DatabaseConnection(out IDbConnection? connection);
         if (connection == null)
@@ -43,9 +43,12 @@ internal class DatabaseHelper
             return;
         connection.Open();
 
-        // string query = "SELECT Start, End, Duration FROM Sessions";
-        // List<CodingSession> sessions = connection.Query<CodingSession>(query).ToList();
-        // CodingSession.Sessions = sessions;
+        string query = "SELECT StackName, StackSize, Duration FROM Sessions";
+        CardStack.Stacks = connection.Query<CardStack>(query).ToList();
+        foreach(CardStack stack in CardStack.Stacks)
+        {
+            // fill each stacks card array with the cards that match its id
+        }
         connection.Close();
         AnsiConsole.MarkupLine("[yellow]GetStack is incomplete[/]");
         OutputUtilities.ReturnToMenu("");
@@ -65,9 +68,19 @@ internal class DatabaseHelper
         connection.Open();
 
         string query = @"
-        INSERT INTO Sessions (Start, End, Duration)
-        VALUES (@Start, @End, @Duration)";
-        connection.Execute(query, stack);
+        INSERT INTO dbo.Stacks (StackName, StackSize)
+        VALUES (@StackName, @StackSize);
+        SELECT CAST(SCOPE_IDENTITY() as INT);";
+        int stackID = connection.QuerySingle<int>(query, stack);
+
+        query = @"
+        INSERT INTO dbo.Cards (Front, Back, Stack_ID)
+        VALUES (@Front, @Back, @Stack_ID)";
+        foreach(Card card in stack.Cards)
+        {
+            var parameters = new { Front = card.front, Back = card.back, Stack_ID = stackID };
+            connection.Execute(query, parameters);
+        }
         connection.Close();
     } // end of InsertStack Method
 }

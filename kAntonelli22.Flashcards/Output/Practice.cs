@@ -8,9 +8,10 @@ internal class Practice
     {
         Console.Clear();
         Output.ViewStacks(false);
+        AnsiConsole.WriteLine("Which Stack?");
         string input = OutputUtilities.DisplayStack(CardStack.Stacks);
 
-        if (CardStack.Stacks.Any(stack => stack.name == input))
+        if (CardStack.Stacks.Any(stack => stack.StackName == input))
             StartPractice(input);
         else if (input == "<-- Back")
             Program.MainMenu();
