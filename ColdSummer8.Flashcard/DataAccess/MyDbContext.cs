@@ -48,16 +48,5 @@ public class MyDbContext : DbContext
             .HasForeignKey(x => x.StackID)
             .OnDelete(DeleteBehavior.Restrict);
         #endregion
-
-        #region seed Stack
-        /*modelBuilder.Entity<Stack>().HasData(
-            new Stack { ID = 1, Name = "Stack_1" },
-            new Stack { ID = 2, Name = "Stack_2" }
-            );
-        modelBuilder.Entity<StackDTO>().HasData(
-            new Stack { ID = 1, Name = "Stack_1" },
-            new Stack { ID = 2, Name = "Stack_2" }
-            );*/
-        #endregion
     }
 }

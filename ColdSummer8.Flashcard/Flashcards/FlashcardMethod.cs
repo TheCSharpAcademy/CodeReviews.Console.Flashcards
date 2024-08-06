@@ -97,7 +97,6 @@ internal class FlashcardMethod
     }
     internal static void DeleteFlashcard()
     {
-        string? question = string.Empty, answer = string.Empty;
         Console.Clear();
 
         if (State.selectedStack == null) AnsiConsole.Write(new Markup("\n[red]No stack selected. Select a stack[/]\n"));
