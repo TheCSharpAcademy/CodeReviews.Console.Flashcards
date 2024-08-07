@@ -10,7 +10,7 @@ public class FlashCardRepository
     private readonly string _connString;
     public FlashCardRepository()
     {
-        _connString = AppConfiguration.GetConnectionString("DefaultConnection"); ;
+        _connString = AppConfiguration.GetConnectionString("DefaultConnection");
     }
 
     public async Task<List<FlashCard>> GetAllFlashcardsAsync(int stackId)
