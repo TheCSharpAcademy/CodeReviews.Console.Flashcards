@@ -194,7 +194,7 @@ public class ManageStackHandler(DbContext dbContext)
     private async Task HandleUpdateStackFlashcard(StackInfoDto stack)
     {
         var flashcards = await db.GetStackFlashcards(stack.Id);
-        UI.DisplayFlashcardInfos(flashcards);
+        UI.DisplayFlashcardWithIds(flashcards);
 
         FlashcardInfoDto? flashcard = null;
         int flashcardId = -1;

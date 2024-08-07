@@ -141,4 +141,23 @@ public static class UI
         }
         AnsiConsole.Write(table);
     }
+
+    public static void DisplayFlashcardWithIds(IEnumerable<FlashcardInfoDto> flashcards)
+    {
+        var table = new Table();
+
+        string[] columns = ["#", "Front", "Back"];
+        table.AddColumns(columns);
+
+        foreach (var flashcard in flashcards)
+        {
+            table.AddRow(
+                flashcard.Id.ToString(),
+                flashcard.Front,
+                flashcard.Back
+            );
+        }
+        AnsiConsole.Write(table);
+    }
+
 }

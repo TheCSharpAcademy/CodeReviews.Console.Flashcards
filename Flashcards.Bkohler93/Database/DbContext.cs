@@ -157,7 +157,8 @@ public class DbContext(string dbConnString)
 
         var stack = _stackCache.First(s => s.Id == id);
 
-        return new PlayStack{
+        return new PlayStack
+        {
             Id = stack.Id,
             Name = stack.Name,
             Flashcards = stack.Flashcards,
@@ -218,7 +219,16 @@ public class DbContext(string dbConnString)
     {
         await EnsureCache();
 
-        var flashcard = _stackCache.First(s => s.Id == stackId).Flashcards.First(f => f.Id == flashcardId);
+        var stack = _stackCache.FirstOrDefault(s => s.Id == stackId);
+
+        if (stack == null)
+        {
+            return null;
+        }
+
+
+        var flashcard = stack.Flashcards.FirstOrDefault(f => f.Id == flashcardId);
+
         if (flashcard == null)
         {
             return null;
@@ -257,6 +267,7 @@ public class DbContext(string dbConnString)
             {
                 Front = flashcard.Front,
                 Back = flashcard.Back,
+                Id = flashcard.Id
             };
 
             flashcards.Add(dto);
@@ -267,7 +278,7 @@ public class DbContext(string dbConnString)
 
     public async Task CreateNewStudySession(CreateStudySessionDto studySession)
     {
-       var sql = @"
+        var sql = @"
             INSERT INTO StudySessions(StackId, StudyTime, Score)
             VALUES (@StackId, @StudyTime, @Score); 
         ";
@@ -278,7 +289,7 @@ public class DbContext(string dbConnString)
         await conn.ExecuteAsync(sql, studySession);
         await conn.CloseAsync();
 
-        await UpdateCache(); 
+        await UpdateCache();
     }
 
     // UPDATE STUDYSESSION
