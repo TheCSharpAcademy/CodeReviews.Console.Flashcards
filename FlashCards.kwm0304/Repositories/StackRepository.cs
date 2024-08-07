@@ -119,7 +119,7 @@ public class StackRepository
         var sql = "UPDATE Stacks SET StackName = @Name WHERE StackId = @Id";
         using var connection = new SqlConnection(_connString);
         using var command = new SqlCommand(sql, connection);
-        command.Parameters.AddWithValue("@StackName", name);
+        command.Parameters.AddWithValue("@Name", name);
         command.Parameters.AddWithValue("@Id", id);
         try
         {
