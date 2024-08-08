@@ -21,7 +21,7 @@ internal class OutputUtilities
         var options = new SelectionPrompt<string>();
         for (int i = 0; i < list.Count; i++)
         {
-            options.AddChoice($"{list[i].front}?    {list[i].back}");
+            options.AddChoice($"{list[i].Front}?    {list[i].Back}");
         }
         options.AddChoice("<-- Back To Menu");
         var menu = AnsiConsole.Prompt(options);

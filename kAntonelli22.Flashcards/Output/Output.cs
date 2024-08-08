@@ -8,7 +8,7 @@ internal class Output
     public static CardStack? CurrentStack;
     public static void CreateStack()
     {
-        // Console.Clear();
+        Console.Clear();
         string name;
         while (true)
         {
@@ -40,7 +40,7 @@ internal class Output
 
     public static void RemoveStack()
     {
-        // Console.Clear();
+        Console.Clear();
         AnsiConsole.MarkupLine("Which Stack do you want to remove?");
         string input = OutputUtilities.DisplayStack(CardStack.Stacks);
 
@@ -55,22 +55,26 @@ internal class Output
     {
         Console.Clear();
 
-        List<Panel> panels = [];
+        List<Table> tables = [];
 
-        for (int i = 0; i < CardStack.Stacks.Count(); i++)
+        for (int i = 0; i < CardStack.Stacks.Count; i++)
         {
-            string cards = "";
             CardStack stack = CardStack.Stacks[i];
-            for (int j = 0; j < stack.Cards.Count(); j++)
+            var table = new Table();
+            table.Border = TableBorder.Markdown;
+            table.Title = new($"[blue]{stack.StackName} - {stack.StackSize}[/]");
+
+            TableColumn[] columns = [new(""), new("[blue]Card Front[/]"), new("[blue]Card Back[/]")];
+            table.AddColumns(columns);
+
+            for (int j = 0; j < stack.Cards.Count; j++)
             {
-                cards += $"\n{stack.Cards[j].front} = {stack.Cards[j].back}";
+                table.AddRow($"{j + 1}", $"{stack.Cards[j].Front}", $"{stack.Cards[j].Back}");
             }
-            var panel = new Panel(cards);
-            panel.Header = new PanelHeader(stack.StackName);
-            panels.Add(panel);
+            tables.Add(table);
         }
 
-        AnsiConsole.Write(new Columns(panels));
+        AnsiConsole.Write(new Columns(tables));
         if (displayMenu)
             StackOptions();
     } // end of ViewStacks Method

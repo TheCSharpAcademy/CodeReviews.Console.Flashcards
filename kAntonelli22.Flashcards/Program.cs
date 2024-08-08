@@ -1,4 +1,5 @@
 ﻿using Spectre.Console;
+using Flashcards.DatabaseUtilities;
 
 namespace Flashcards;
 class Program
@@ -14,15 +15,17 @@ class Program
             Environment.Exit(0);
         }
 
-        CardStack stack1 = new CardStack("Stack 1", 5);
-        for (int i = 0; i < 5; i++)
-            new Card($"Question {i}", $"Answer {i}", stack1);
-        CardStack stack2 = new CardStack("Stack 2", 8);
-        for (int i = 0; i < 8; i++)
-            new Card($"Question {i}", $"Answer {i}", stack2);
-        CardStack stack3 = new CardStack("Stack 3", 2);
-        for (int i = 0; i < 2; i++)
-            new Card($"Question {i}", $"Answer {i}", stack3);
+        DatabaseHelper.GetStacks();
+
+        // CardStack stack1 = new("Stack 1", 5);
+        // for (int i = 0; i < 5; i++)
+        //     new Card($"Question {i}", $"Answer {i}", stack1);
+        // CardStack stack2 = new("Stack 2", 8);
+        // for (int i = 0; i < 8; i++)
+        //     new Card($"Question {i}", $"Answer {i}", stack2);
+        // CardStack stack3 = new("Stack 3", 2);
+        // for (int i = 0; i < 2; i++)
+        //     new Card($"Question {i}", $"Answer {i}", stack3);
 
         MainMenu();
     }
@@ -33,8 +36,7 @@ class Program
         AnsiConsole.WriteLine("Flashcard Main Menu\n------------------------");
         var menu = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-            .AddChoices(["Exit Flashcard", "Study Sessions", "Manage Stacks"])
-        );
+            .AddChoices(["Exit Flashcard", "Study Sessions", "Manage Stacks"]));
 
         switch (menu)
         {

@@ -1,0 +1,26 @@
+USE FlashcardDB;
+
+GO
+
+DROP TABLE dbo.Cards;
+DROP TABLE dbo.Stacks;
+
+GO
+
+CREATE TABLE dbo.Stacks (
+    Id INT NOT NULL PRIMARY KEY IDENTITY,
+    StackName NVARCHAR(255) NOT NULL,
+    StackSize INT NOT NULL
+)
+
+GO
+
+CREATE TABLE dbo.Cards (
+    Id INT NOT NULL PRIMARY KEY IDENTITY,
+    Front NVARCHAR(255) NOT NULL,
+    Back NVARCHAR(255) NOT NULL,
+    Stack_Id INT NOT NULL,
+    FOREIGN KEY(Stack_Id) REFERENCES dbo.Stacks(Id)
+)
+
+GO

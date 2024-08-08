@@ -36,22 +36,24 @@ internal class DatabaseHelper
         OutputUtilities.ReturnToMenu("");
     } // end of RunQuery Method
 
-    public static void GetStack()
+    public static void GetStacks()
     {
         DatabaseConnection(out IDbConnection? connection);
         if (connection == null)
             return;
         connection.Open();
 
-        string query = "SELECT StackName, StackSize, Duration FROM Sessions";
+        string query = "SELECT StackName, StackSize, Id FROM Stacks";
         CardStack.Stacks = connection.Query<CardStack>(query).ToList();
+        query = "SELECT Front, Back, Stack_Id FROM Cards";
+        List<Card> cards = connection.Query<Card>(query).ToList();
+
         foreach(CardStack stack in CardStack.Stacks)
-        {
-            // fill each stacks card array with the cards that match its id
-        }
+            foreach(Card card in cards)
+                if (card.StackId == stack.Id)
+                    stack.Cards.Add(card);
+
         connection.Close();
-        AnsiConsole.MarkupLine("[yellow]GetStack is incomplete[/]");
-        OutputUtilities.ReturnToMenu("");
     } // end of GetStack Method
 
     public static void GetCards()
@@ -78,7 +80,7 @@ internal class DatabaseHelper
         VALUES (@Front, @Back, @Stack_ID)";
         foreach(Card card in stack.Cards)
         {
-            var parameters = new { Front = card.front, Back = card.back, Stack_ID = stackID };
+            var parameters = new { Front = card.Front, Back = card.Back, Stack_ID = stackID };
             connection.Execute(query, parameters);
         }
         connection.Close();
