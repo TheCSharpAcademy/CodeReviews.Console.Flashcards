@@ -98,7 +98,7 @@ public class StackService {
             Utilities.ClearConsole();
 
             IStackActionHandler? handler = actionPrompt switch {
-                "View flashcards" => new ViewFlashcardsHandler(_repository),
+                "View flashcards" => new ViewFlashcardsHandler(),
                 "Add a flashcard" => new AddFlashcardHandler(_repository),
                 "Delete a flashcard" => new DeleteFlashcardHandler(_repository),
                 "Change stack's name" => new ChangeStackNameHandler(_repository),

@@ -14,7 +14,7 @@ public class ViewFlashcardsHandler : IStackActionHandler {
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task HandleAsync(Models.Stack stack) {
         // Convert flashcards to DTOs and sort them by question
-        var dtoList = stack.Flashcards.Select(flashcard => new FlashcardDTO {
+        var dtoList = stack.Flashcards.Select(flashcard => new FlashcardDto {
             Question = flashcard.Question,
             Answer = flashcard.Answer
         }).ToList();

@@ -17,7 +17,6 @@ services.AddScoped<IStackRepository, StackRepository>();
 services.AddScoped<IStudySessionRepository, StudySessionRepository>();
 
 //Register services
-services.AddScoped<FlashcardService>();
 services.AddScoped<StackService>();
 services.AddScoped<StudySessionService>();
 
