@@ -1,10 +1,11 @@
+using System.Diagnostics;
 using Spectre.Console;
 
 namespace Flashcards;
 
 internal class Practice
 {
-    public static void PracticeStack()
+    public static void PracticeMenu()
     {
         Console.Clear();
         Output.ViewStacks(false);
@@ -12,21 +13,86 @@ internal class Practice
         string input = OutputUtilities.DisplayStack(CardStack.Stacks);
 
         if (CardStack.Stacks.Any(stack => stack.StackName == input))
-            StartPractice(input);
-        else if (input == "<-- Back")
+            PracticeStack(input);
+        else if (input == "<-- Back To Menu")
             Program.MainMenu();
-
-        PracticeMenu();
-    } // end of PracticeStack Method
-
-    public static void PracticeMenu()
-    {
-        AnsiConsole.MarkupLine("[yellow]PracticeMenu is incomplete[/]");
-        OutputUtilities.ReturnToMenu("");
     } // end of PracticeMenu Method
 
-    public static void StartPractice(string stackName)
+    public static void PracticeStack(string stackName)
     {
-        AnsiConsole.MarkupLine("[yellow]StartPractice is incomplete[/]");
-    } // end of StartPractice Method
+        Console.Clear();
+        for (int i = 3; i > 0; i--)
+        {
+            Console.Write(i);
+            Thread.Sleep(250);
+            for (int j = 0; j < 3; j++)
+            {
+                Console.Write(".");
+                Thread.Sleep(250);
+            }
+            Console.Write("\n");
+        }
+        Console.Clear();
+
+        Stopwatch stopwatch = new();
+        List<TimeSpan> times = [];
+        int numCorrect = 0;
+        int numComplete = 0;
+        CardStack? stack = CardStack.Stacks.FirstOrDefault(stack => stack.StackName == stackName);
+        if (stack == null)
+            return;
+
+        for(int i = 0; i < stack.Cards.Count; i++)
+        {
+            Card card = stack.Cards[i];
+            string answer = AnsiConsole.Ask<string>($"{card.Front}");
+            stopwatch.Start();
+            if (answer == card.Back)
+            {
+                numCorrect++;
+                AnsiConsole.MarkupLine("[green]Correct![/]");
+            }
+            else
+            {
+                AnsiConsole.MarkupLineInterpolated($"[red]Wrong![/] [blue]Correct Answer: {card.Back}[/]");
+            }
+            numComplete++;
+            times.Add(stopwatch.Elapsed);
+            stopwatch.Reset();
+            Thread.Sleep(500);
+            
+        }
+        double avgTime = 0;
+        for (int i = 0; i < times.Count; i++)
+            avgTime += times[i].TotalSeconds;
+
+        avgTime /= times.Count;
+        StudySession session = new(stackName, stack.StackSize, numComplete, numCorrect, avgTime, DateTime.Now);
+        DatabaseUtilities.DatabaseHelper.InsertSession(session);
+        PracticeOver(stackName);
+    } // end of PracticeStack Method
+
+    public static void PracticeOver(string stackName)
+    {
+        AnsiConsole.WriteLine("\n------------------------");
+        var menu = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .AddChoices(["Exit Flashcard", "Redo Stack", "Try Another", "<-- Back To Menu"]));
+
+        switch (menu)
+        {
+            case "Exit Flashcard":
+                Environment.Exit(0);
+                break;
+            case "Redo Stack":
+                PracticeStack(stackName);
+                break;
+            case "Try Another":
+                PracticeMenu();
+                break;
+            case "<-- Back To Menu":
+                Program.MainMenu();
+                break;
+        }
+    }
 }

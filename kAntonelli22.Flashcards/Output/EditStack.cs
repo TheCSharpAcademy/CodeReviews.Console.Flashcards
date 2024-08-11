@@ -4,39 +4,31 @@ namespace Flashcards;
 
 internal class EditStack
 {
-    // public static void EditStack()
-    // {
-    //     Console.Clear();
-    //     AnsiConsole.MarkupLine("Which Stack do you want to edit?");
-    //     string input = OutputUtilities.DisplayList(CardStack.Stacks);
-    //     CardStack? stack = CardStack.Stacks.FirstOrDefault(stack => stack.name == input);
-    //     if (stack == null)
-    //         return;
-            
-    //     EditMenu();
-    //     string name = AnsiConsole.Ask<string>($"What is the Stacks name? (Current name: {stack.name})");
-    //     int size = AnsiConsole.Ask<int>($"What is the Stacks size? (Current name: {stack.size})");
-
-    //     stack.name = name;
-    //     stack.size = size;
-    // } // end of EditStack Method
-
     public static void RenameStack()
     {
         if (Output.CurrentStack != null)
         {
-            string newName = AnsiConsole.Ask<string>($"What is the Stacks name? (Current name: [blue]{Output.CurrentStack.StackName}[/])");
+            string newName;
+            while (true)
+            {
+                newName = AnsiConsole.Ask<string>($"What is the Stacks name? (Current name: [blue]{Output.CurrentStack.StackName}[/])");
+                if (OutputUtilities.NameUnique(newName, CardStack.Stacks))
+                    break;
+                AnsiConsole.MarkupLine("[red]Stack names must be unique[/]");
+            }
+            string query = $"UPDATE dbo.Stacks SET StackName = '{newName}' WHERE StackName = '{Output.CurrentStack.StackName}'";
+            DatabaseUtilities.DatabaseHelper.RunQuery(query);
             Output.CurrentStack.StackName = newName;
         }
         else
-            Environment.Exit(0);
+            AnsiConsole.WriteLine("[red]Error: no stack selected.[/]");
     } // end of RenameStack Method
 
     public static void ResizeStack()
     {
         if (Output.CurrentStack != null)
         {
-            int newSize = AnsiConsole.Ask<int>($"What is the Stacks size? (Current name: [blue]{Output.CurrentStack.StackSize}[/])");
+            int newSize = AnsiConsole.Ask<int>($"What is the Stacks size? (Current size: [blue]{Output.CurrentStack.StackSize}[/])");
             if (newSize > Output.CurrentStack.StackSize)
             {
                 for (int i = Output.CurrentStack.StackSize; i < newSize; i++)
@@ -46,9 +38,12 @@ internal class EditStack
                 Output.CurrentStack.Cards.RemoveRange(newSize, Output.CurrentStack.Cards.Count - newSize);
             
             Output.CurrentStack.StackSize = newSize;
+            string query = $"UPDATE dbo.Stacks SET StackSize = '{newSize}' WHERE StackName = '{Output.CurrentStack.StackName}'";
+            DatabaseUtilities.DatabaseHelper.RunQuery(query);
+            // insert new cards or remove old cards
         }
         else
-            Environment.Exit(0);
+            AnsiConsole.WriteLine("[red]Error: no stack selected.[/]");
     } // end of ResizeStack Method
 
     public static void EditCards()

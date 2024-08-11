@@ -1,5 +1,3 @@
-using System.Data;
-
 namespace Flashcards;
 
 internal class CardStack
@@ -7,8 +5,8 @@ internal class CardStack
     public string StackName { get; set; }
     public int StackSize { get; set; }
     public int Id { get; set; }
-    public static List<CardStack> Stacks { get; set; } = new List<CardStack>();
-    public List<Card> Cards { get; set; } = new List<Card>();
+    public static List<CardStack> Stacks { get; set; } = [];
+    public List<Card> Cards { get; set; } = [];
     public CardStack(string name, int size)
     {
         StackName = name;

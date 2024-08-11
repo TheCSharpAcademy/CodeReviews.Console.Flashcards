@@ -24,7 +24,7 @@ internal class Output
         if (empty)
         {
             for (int i = 0; i < size; i++)
-                new Card($"Question {i}", $"Answer {i}", CurrentStack);
+                new Card($"Question {i + 1}", $"Answer {i + 1}", CurrentStack);
         }
         else if (!empty)
         {
@@ -49,8 +49,56 @@ internal class Output
             return;
 
         CardStack.Stacks.Remove(CurrentStack);
+        // string query = $"DELETE FROM dbo.Cards WHERE Stack_Id = '{CurrentStack.Id}'";
+        // DatabaseHelper.RunQuery(query);
+        string query = $"DELETE FROM dbo.Stacks WHERE StackName = '{CurrentStack.StackName}'";
+        DatabaseHelper.RunQuery(query);
     } // end of EditStack Method
 
+    public static void ViewSessions(bool displayMenu)
+    {
+        Console.Clear();
+        var table = new Table();
+        table.Border = TableBorder.Markdown;
+        table.Title = new($"[blue]Sessions[/]");
+
+        TableColumn[] columns = [
+        new TableColumn(""), 
+        new TableColumn("[blue]Session Date[/]").Centered(), 
+        new TableColumn("[blue]Stack Studdied[/]").Centered(), 
+        new TableColumn("[blue]Questions Attempted[/]").Centered(), 
+        new TableColumn("[blue]Questions Correct[/]").Centered(),
+        new TableColumn("[blue]Time Per Question[/]").Centered()
+        ];
+        table.AddColumns(columns);
+
+        for (int i = 0; i < StudySession.Sessions.Count; i++)
+        {
+            StudySession session = StudySession.Sessions[i];
+            table.AddRow($"{i + 1}", $"{session.Date}", $"{session.StackName}", $"{session.NumComplete}", $"{session.NumCorrect}", $"{session.AvgTime}");
+        }
+
+        AnsiConsole.Write(table);
+        
+        // Session Menu
+        AnsiConsole.WriteLine("Stack Options\n------------------------");
+        var menu = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .AddChoices([
+                "Exit Flashcard", "<-- Back"
+                ]));
+
+        switch (menu)
+        {
+            case "Exit Flashcard":
+                Environment.Exit(0);
+                break;
+            case "<-- Back":
+                return;
+        }
+        ViewSessions(true);
+    } // end of ViewStacks Method
+    
     public static void ViewStacks(bool displayMenu)
     {
         Console.Clear();
@@ -62,9 +110,9 @@ internal class Output
             CardStack stack = CardStack.Stacks[i];
             var table = new Table();
             table.Border = TableBorder.Markdown;
-            table.Title = new($"[blue]{stack.StackName} - {stack.StackSize}[/]");
+            table.Title = new($"[blue]{stack.StackName}[/][grey]({stack.StackSize})[/]");
 
-            TableColumn[] columns = [new(""), new("[blue]Card Front[/]"), new("[blue]Card Back[/]")];
+            TableColumn[] columns = [new TableColumn(""), new TableColumn("[blue]Card Front[/]").Centered(), new TableColumn("[blue]Card Back[/]").Centered()];
             table.AddColumns(columns);
 
             for (int j = 0; j < stack.Cards.Count; j++)

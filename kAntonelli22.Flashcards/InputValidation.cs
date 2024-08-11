@@ -3,7 +3,7 @@
 namespace Flashcards;
 internal class InputValidation
 {
-    static string CleanString()
+    public static string CleanString()
     {
         string input = Console.ReadLine() ?? "";
         input.Trim().ToLower();

@@ -8,7 +8,6 @@ class Program
     public static string ConnectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString") ?? "";
     static void Main(string[] args)
     {
-        // Console.SetWindowSize(100, Console.WindowHeight);
         if (DatabasePath == "" || ConnectionString == "")
         {
             AnsiConsole.MarkupLine("[red]Database Path or Connection String not found. Please specify a path in the App configuration file.[/]");
@@ -16,17 +15,7 @@ class Program
         }
 
         DatabaseHelper.GetStacks();
-
-        // CardStack stack1 = new("Stack 1", 5);
-        // for (int i = 0; i < 5; i++)
-        //     new Card($"Question {i}", $"Answer {i}", stack1);
-        // CardStack stack2 = new("Stack 2", 8);
-        // for (int i = 0; i < 8; i++)
-        //     new Card($"Question {i}", $"Answer {i}", stack2);
-        // CardStack stack3 = new("Stack 3", 2);
-        // for (int i = 0; i < 2; i++)
-        //     new Card($"Question {i}", $"Answer {i}", stack3);
-
+        DatabaseHelper.GetSessions();
         MainMenu();
     }
 
@@ -36,7 +25,7 @@ class Program
         AnsiConsole.WriteLine("Flashcard Main Menu\n------------------------");
         var menu = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-            .AddChoices(["Exit Flashcard", "Study Sessions", "Manage Stacks"]));
+            .AddChoices(["Exit Flashcard", "Study Sessions", "View Sessions", "Manage Stacks"]));
 
         switch (menu)
         {
@@ -44,7 +33,10 @@ class Program
                 Environment.Exit(0);
                 break;
             case "Study Sessions":
-                Practice.PracticeStack();
+                Practice.PracticeMenu();
+                break;
+            case "View Sessions":
+                Output.ViewSessions(true);
                 break;
             case "Manage Stacks":
                 Output.ViewStacks(true);
@@ -54,3 +46,16 @@ class Program
         MainMenu();
     } // end of MainMenu Method
 }
+
+// -- Todo List
+// - add or remove cards when changing stack size
+// - allow user to edit a stacks flashcard
+// - create study session functionality
+// - create study session table
+// - create study session viewer
+// - remove study sessions when its stack is deleted
+
+// -- Project Requirments
+// - After creating the flashcards functionalities, create a "Study Session" area, where the users will study the stacks. All study sessions should be stored, with date and score.
+// - The study and stack tables should be linked. If a stack is deleted, it's study sessions should be deleted.
+// - The project should contain a call to the study table so the users can see all their study sessions. This table receives insert calls upon each study session, but there shouldn't be update and delete calls to it.
