@@ -46,7 +46,7 @@ public class MyDbContext : DbContext
             .HasOne(x => x.Stacks)
             .WithMany(x => x.Studies)
             .HasForeignKey(x => x.StackID)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
         #endregion
     }
 }
