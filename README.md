@@ -11,10 +11,17 @@
 - [x]  When showing a stack to the user, the flashcard Ids should always start with 1 without gaps between them. If you have 10 cards and number 5 is deleted, the table should show Ids from 1 to 9.
 - [x]  After creating the flashcards functionalities, create a "Study Session" area, where the users will study the stacks. All study sessions should be stored, with date and score.
 - [x]  The study and stack tables should be linked. If a stack is deleted, it's study sessions should be deleted.
-- [ ]  The project should contain a call to the study table so the users can see all their study sessions. This table receives insert calls upon each study session, but there shouldn't be update and delete calls to it.
+- [x]  The project should contain a call to the study table so the users can see all their study sessions. This table receives insert calls upon each study session, but there shouldn't be update and delete calls to it.
 
 # Features
+* Application connects to a MSSQL server
+* If not present it will create a new database and tables
+* Easy to navigate console ui using Spectre.Console which allows users to navigate the application with their keyboard and arrow keys
+* View, create, modify, and delete stacks
+* Practice stacks and save them as study sessions
+* View Past study sessions
 
 # Resources Used
-* 
-* 
+* assorted stack overflow questions
+* Spectre.Console
+* Dapper ORM
