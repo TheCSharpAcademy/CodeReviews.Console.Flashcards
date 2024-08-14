@@ -49,9 +49,9 @@ internal class Output
             return;
 
         CardStack.Stacks.Remove(CurrentStack);
-        // string query = $"DELETE FROM dbo.Cards WHERE Stack_Id = '{CurrentStack.Id}'";
-        // DatabaseHelper.RunQuery(query);
-        string query = $"DELETE FROM dbo.Stacks WHERE StackName = '{CurrentStack.StackName}'";
+        string query = $"DELETE FROM dbo.Cards WHERE Stack_Id = '{CurrentStack.Id}'";
+        DatabaseHelper.RunQuery(query);
+        query = $"DELETE FROM dbo.Stacks WHERE StackName = '{CurrentStack.StackName}'";
         DatabaseHelper.RunQuery(query);
     } // end of EditStack Method
 

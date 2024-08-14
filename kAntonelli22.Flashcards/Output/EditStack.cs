@@ -1,4 +1,5 @@
 using Spectre.Console;
+using Flashcards.DatabaseUtilities;
 
 namespace Flashcards;
 
@@ -17,7 +18,7 @@ internal class EditStack
                 AnsiConsole.MarkupLine("[red]Stack names must be unique[/]");
             }
             string query = $"UPDATE dbo.Stacks SET StackName = '{newName}' WHERE StackName = '{Output.CurrentStack.StackName}'";
-            DatabaseUtilities.DatabaseHelper.RunQuery(query);
+            DatabaseHelper.RunQuery(query);
             Output.CurrentStack.StackName = newName;
         }
         else
@@ -39,7 +40,7 @@ internal class EditStack
             
             Output.CurrentStack.StackSize = newSize;
             string query = $"UPDATE dbo.Stacks SET StackSize = '{newSize}' WHERE StackName = '{Output.CurrentStack.StackName}'";
-            DatabaseUtilities.DatabaseHelper.RunQuery(query);
+            DatabaseHelper.RunQuery(query);
             // insert new cards or remove old cards
         }
         else
@@ -51,8 +52,34 @@ internal class EditStack
         Console.Clear();
         if (Output.CurrentStack != null)
         {
-            OutputUtilities.DisplayCards(Output.CurrentStack.Cards);
-            AnsiConsole.MarkupLine("[yellow]EditCards is incomplete[/]");
+            string input = OutputUtilities.DisplayCards(Output.CurrentStack.Cards);
+            Card card = Output.CurrentStack.Cards[int.Parse(input[..1]) - 1];
+            string newFront;
+            string newBack;
+
+            while (true)
+            {
+                bool nameGood = true;
+                newFront = AnsiConsole.Ask<string>($"What is the cards question? (Current question: [blue]{card.Front}[/])");
+                foreach(Card currentCard in Output.CurrentStack.Cards)
+                {
+                    if (currentCard.Front.Equals(newFront) && !currentCard.Front.Equals(card.Front))
+                    {
+                        AnsiConsole.MarkupLine("[red]The cards question must be unique[/]");
+                        nameGood = false;
+                        break;
+                    }
+                }
+                if (nameGood)
+                {
+                    newBack = AnsiConsole.Ask<string>($"What is the answer? (Current answer: [blue]{card.Back}[/])");
+                    string query = $"UPDATE dbo.Cards SET Front = '{newFront}', Back = '{newBack}' WHERE Front = '{card.Front}'";
+                    DatabaseHelper.RunQuery(query);
+                    card.Front = newFront;
+                    card.Back = newBack;
+                    return;
+                }
+            }
         }
     } // end of EditCards Method
 
@@ -93,5 +120,6 @@ internal class EditStack
             case "<-- Back":
                 return;
         }
+        EditMenu();
     }
 }

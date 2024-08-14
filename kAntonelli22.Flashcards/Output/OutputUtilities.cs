@@ -21,29 +21,12 @@ internal class OutputUtilities
         var options = new SelectionPrompt<string>();
         for (int i = 0; i < list.Count; i++)
         {
-            options.AddChoice($"{list[i].Front}?    {list[i].Back}");
+            options.AddChoice($"{i + 1}. {list[i].Front,-20}{list[i].Back}");
         }
         options.AddChoice("<-- Back To Menu");
         var menu = AnsiConsole.Prompt(options);
         return menu;
     }
-
-    public static void ViewCards(string stackName)
-    {
-        Console.Clear();
-        // CardStack? stack = CardStack.Stacks.FirstOrDefault(stack => stack.name == stackName);
-        // if (stack == null)
-        //     return;
-
-        // string cards = "";
-        // for (int i = 0; i < stack.Cards.Count(); i++)
-        // {
-        //     cards += $"{stack.Cards[i].question.PadRight(10)} . . . . . . {stack.Cards[i].answer.PadLeft(10)}\n";
-        // }
-        // var panel = new Panel(cards);
-        // panel.Header = new PanelHeader(stackName);
-        // AnsiConsole.Write(panel)
-    } // end of ViewCards Method
 
     public static bool NameUnique(string name, List<CardStack> list)
     {

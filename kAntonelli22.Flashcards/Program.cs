@@ -14,6 +14,7 @@ class Program
             Environment.Exit(0);
         }
 
+        DatabaseHelper.InitializeDatabase();
         DatabaseHelper.GetStacks();
         DatabaseHelper.GetSessions();
         MainMenu();
@@ -49,11 +50,7 @@ class Program
 
 // -- Todo List
 // - add or remove cards when changing stack size
-// - allow user to edit a stacks flashcard
-// - create study session functionality
-// - create study session table
-// - create study session viewer
-// - remove study sessions when its stack is deleted
+// - fix error when stack is deleted
 
 // -- Project Requirments
 // - After creating the flashcards functionalities, create a "Study Session" area, where the users will study the stacks. All study sessions should be stored, with date and score.

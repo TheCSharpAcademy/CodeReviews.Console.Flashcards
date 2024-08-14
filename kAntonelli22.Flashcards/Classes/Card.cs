@@ -5,7 +5,7 @@ internal class Card
     public string Front { get; set; }
     public string Back { get; set; }
     public int StackId { get; set; }
-    public static List<Card> Cards { get; set; } = new List<Card>();
+    public static List<Card> Cards { get; set; } = [];
     public Card(string Front, string Back, CardStack stack)
     {
         this.Front = Front;
