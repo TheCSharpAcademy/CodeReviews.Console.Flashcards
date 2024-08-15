@@ -1,6 +1,6 @@
 # Flashcards
 - Console based CRUD application for creating and studying stacks of flashcards
-- Developed using C# and MSSQL
+- Developed using C#, MSSQL, Spectre.Console, and Dapper ORM
 
 # Given Requirements:
 - [x]  This is an application where the users will create Stacks of Flashcards.
@@ -28,6 +28,7 @@
 * ![image](https://github.com/user-attachments/assets/f7a8abac-2037-454e-a0ba-6e3e5abc5a0d)
 
 # Resources Used
-* assorted stack overflow questions
+* Lots of different Stack Overflow questions
+* Microsoft SQL [Documentation](https://learn.microsoft.com/en-us/sql/?view=sql-server-ver16)
 * [Spectre.Console](https://spectreconsole.net/)
 * [Dapper ORM](https://www.learndapper.com/)
