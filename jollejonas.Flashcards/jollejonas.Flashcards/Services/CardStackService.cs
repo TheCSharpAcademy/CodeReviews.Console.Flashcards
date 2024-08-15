@@ -55,7 +55,7 @@ namespace jollejonas.Flashcards.Services
             {
                 Console.WriteLine("Existing stacks: ");
                 DisplayCardStacks();
-                Console.WriteLine("Enter the name of the stack:");
+                Console.WriteLine("Enter the name of the stack (or 'q' to cancel):");
                 string name = Console.ReadLine();
 
                 Console.WriteLine("Enter the description of the stack:");

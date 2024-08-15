@@ -1,6 +1,8 @@
 ﻿using jollejonas.Flashcards.Data;
 using jollejonas.Flashcards.DTOs;
 using jollejonas.Flashcards.Models;
+using jollejonas.Flashcards.UserInputs;
+using jollejonas.Flashcards.Validation;
 using Spectre.Console;
 
 namespace jollejonas.Flashcards.Services
@@ -14,28 +16,25 @@ namespace jollejonas.Flashcards.Services
             var cardStackService = new CardStackService(_databaseManager);
             Console.WriteLine("Select the stack name:");
             var cardStack = cardStackService.DisplayAndSelectCardStacks();
-            int stackId = cardStack.Id;
             Console.Clear();
             while (true)
             {
                 Console.WriteLine($"Selected stack: {cardStack.Name}\n");
-                Console.WriteLine("Enter the question:");
-                string question = Console.ReadLine();
+                string question = UserInput.GetStringInput("Enter the question:");
 
-                Console.WriteLine("Enter the answer:");
-                string answer = Console.ReadLine();
+                string answer = UserInput.GetStringInput("Enter the answer:");
 
                 var query = $@"
                     INSERT INTO Cards (Question, Answer, StackId)
-                    VALUES ('{question}', '{answer}', {stackId})
+                    VALUES ('{question}', '{answer}', {cardStack.Id})
                 ";
 
                 _databaseManager.ExecuteNonQuery(query);
 
                 Console.WriteLine("Card created successfully!");
-                Console.WriteLine("Press 1 to add another card to stack or 0 to return to menu");
+                Console.WriteLine("Do you want to add another card?(y/n)");
 
-                if (Console.ReadLine() == "0")
+                if (Console.ReadLine() == "n")
                 {
                     break;
                 }
@@ -56,12 +55,10 @@ namespace jollejonas.Flashcards.Services
                 var card = DisplayCardsAndSelectId(stackId);
 
                 Console.WriteLine($"Current question: {card.Question}");
-                Console.WriteLine("Enter the new question:");
-                string question = Console.ReadLine();
+                string question = UserInput.GetStringInput("Enter the new question:");
 
                 Console.WriteLine($"Current answer: {card.Answer}");
-                Console.WriteLine("Enter the new answer:");
-                string answer = Console.ReadLine();
+                string answer = UserInput.GetStringInput("Enter the new answer:");
 
                 var query = $@"
                     UPDATE Cards
@@ -82,9 +79,9 @@ namespace jollejonas.Flashcards.Services
                 _databaseManager.ExecuteNonQuery(query);
 
                 Console.WriteLine("Card updated successfully!");
-                Console.WriteLine("Press 1 to edit another card or 0 to return to menu");
+                Console.WriteLine("Do you want to edit another card?(y/n)");
 
-                if (Console.ReadLine() == "0")
+                if (Console.ReadLine() == "n")
                 {
                     break;
                 }
@@ -118,9 +115,9 @@ namespace jollejonas.Flashcards.Services
                 _databaseManager.ExecuteNonQuery(query);
 
                 Console.WriteLine("Card deleted successfully!");
-                Console.WriteLine("Press 1 to delete another card or 0 to return to menu");
+                Console.WriteLine("Do you want to delete another card?(y/n)");
 
-                if (Console.ReadLine() == "0")
+                if (Console.ReadLine() == "n")
                 {
                     break;
                 }
@@ -143,13 +140,12 @@ namespace jollejonas.Flashcards.Services
         public bool Confirmations(string operation)
         {
             Console.WriteLine($"Are you sure you want to {operation} this card?");
-            Console.WriteLine("Press 1 to confirm or 0 to return to menu");
 
             var menuSelection = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                 .Title("Select an option")
                 .PageSize(10)
-                .AddChoices(new[] { "1", "0" })
+                .AddChoices(new[] { "Yes", "No" })
                 .UseConverter(option => option));
 
             if (menuSelection == "1")
