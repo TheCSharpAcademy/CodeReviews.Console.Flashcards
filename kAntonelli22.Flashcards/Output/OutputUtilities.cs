@@ -11,7 +11,7 @@ internal class OutputUtilities
         {
             options.AddChoice($"{list[i].StackName}");
         }
-        options.AddChoice("<-- Back To Menu");
+        options.AddChoice("<-- Back");
         var menu = AnsiConsole.Prompt(options);
         return menu;
     }
@@ -23,7 +23,7 @@ internal class OutputUtilities
         {
             options.AddChoice($"{i + 1}. {list[i].Front,-20}{list[i].Back}");
         }
-        options.AddChoice("<-- Back To Menu");
+        options.AddChoice("<-- Back");
         var menu = AnsiConsole.Prompt(options);
         return menu;
     }
@@ -37,14 +37,4 @@ internal class OutputUtilities
         }
         return true;
     } // End of NameUnique Method
-
-    public static void ReturnToMenu(string message)
-    {
-        if (message == "")
-            Console.WriteLine($"Press enter to return to menu.");
-        else
-            Console.WriteLine($"{message}. Press enter to return to menu.");
-        // InputValidator.CleanString();
-        Console.ReadLine();
-    } // end of ReturnToMenu Method
 }

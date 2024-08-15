@@ -67,7 +67,7 @@ internal class Practice
             avgTime += times[i].TotalSeconds;
 
         avgTime /= times.Count;
-        StudySession session = new(stackName, stack.StackSize, numComplete, numCorrect, avgTime, DateTime.Now);
+        StudySession session = new(DateTime.Now, numComplete, numCorrect, stackName, avgTime);
         DatabaseUtilities.DatabaseHelper.InsertSession(session);
         PracticeOver(stackName);
     } // end of PracticeStack Method
@@ -77,7 +77,7 @@ internal class Practice
         AnsiConsole.WriteLine("\n------------------------");
         var menu = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-            .AddChoices(["Exit Flashcard", "Redo Stack", "Try Another", "<-- Back To Menu"]));
+            .AddChoices(["Exit Flashcard", "Redo Stack", "Try Another", "<-- Back"]));
 
         switch (menu)
         {
@@ -90,7 +90,7 @@ internal class Practice
             case "Try Another":
                 PracticeMenu();
                 break;
-            case "<-- Back To Menu":
+            case "<-- Back":
                 Program.MainMenu();
                 break;
         }

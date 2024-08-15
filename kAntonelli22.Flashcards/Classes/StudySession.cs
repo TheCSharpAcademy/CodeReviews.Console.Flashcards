@@ -11,7 +11,7 @@ internal class StudySession
     public DateTime Date { get; set; }
     public static List<StudySession> Sessions { get; set; } = [];
 
-    public StudySession(string StackName, int StackSize, int NumComplete, int NumCorrect, double AvgTime, DateTime Date)
+    public StudySession(DateTime Date, int NumComplete, int NumCorrect, string StackName, double AvgTime)
     {
         this.StackName = StackName;
         this.StackSize = StackSize;
@@ -22,7 +22,7 @@ internal class StudySession
         Sessions.Add(this);
     }
 
-    public StudySession(string StackName, int StackSize, int Stack_Id, int NumComplete, int NumCorrect, double AvgTime, string Date)
+    public StudySession(string Date, int NumComplete, int NumCorrect, string StackName, int Stack_Id, double AvgTime)
     {
         this.StackName = StackName;
         this.StackSize = StackSize;

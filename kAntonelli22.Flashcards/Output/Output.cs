@@ -17,23 +17,14 @@ internal class Output
                 break;
             AnsiConsole.MarkupLine("[red]Stack names must be unique[/]");
         }
-        int size = AnsiConsole.Ask<int>("What is the Stacks size?");
-        CurrentStack = new(name, size);
+        int size = AnsiConsole.Ask<int>("How many cards do you want to add?");
+        CurrentStack = new(name);
 
-        bool empty = AnsiConsole.Confirm("Do you want to leave the Stack empty?");
-        if (empty)
+        for (int i = 0; i < size; i++)
         {
-            for (int i = 0; i < size; i++)
-                new Card($"Question {i + 1}", $"Answer {i + 1}", CurrentStack);
-        }
-        else if (!empty)
-        {
-            for (int i = 0; i < size; i++)
-            {
-                string question = AnsiConsole.Ask<string>("What is the cards question?");
-                string answer = AnsiConsole.Ask<string>("What is the answer?");
-                new Card(question, answer, CurrentStack);
-            }
+            string question = AnsiConsole.Ask<string>("What is the cards question?");
+            string answer = AnsiConsole.Ask<string>("What is the answer?");
+            new Card(question, answer, CurrentStack);
         }
         DatabaseHelper.InsertStack(CurrentStack);
     } // end of CreateStack Method
@@ -66,8 +57,7 @@ internal class Output
         new TableColumn(""), 
         new TableColumn("[blue]Session Date[/]").Centered(), 
         new TableColumn("[blue]Stack Studdied[/]").Centered(), 
-        new TableColumn("[blue]Questions Attempted[/]").Centered(), 
-        new TableColumn("[blue]Questions Correct[/]").Centered(),
+        new TableColumn("[blue]Correct/Attempted[/]").Centered(), 
         new TableColumn("[blue]Time Per Question[/]").Centered()
         ];
         table.AddColumns(columns);
@@ -75,7 +65,12 @@ internal class Output
         for (int i = 0; i < StudySession.Sessions.Count; i++)
         {
             StudySession session = StudySession.Sessions[i];
-            table.AddRow($"{i + 1}", $"{session.Date}", $"{session.StackName}", $"{session.NumComplete}", $"{session.NumCorrect}", $"{session.AvgTime}");
+            table.AddRow(
+            $"{i + 1}",
+            $"{session.Date}",
+            $"{session.StackName}",
+            session.NumCorrect == session.NumComplete ? $"[green]{session.NumCorrect}/{session.NumComplete}[/]" : $"[red]{session.NumCorrect}/{session.NumComplete}[/]",
+            $"{session.AvgTime:N5}");
         }
 
         AnsiConsole.Write(table);
@@ -110,7 +105,7 @@ internal class Output
             CardStack stack = CardStack.Stacks[i];
             var table = new Table();
             table.Border = TableBorder.Markdown;
-            table.Title = new($"[blue]{stack.StackName}[/][grey]({stack.StackSize})[/]");
+            table.Title = new($"[blue]{stack.StackName}[/][grey]({stack.Cards.Count})[/]");
 
             TableColumn[] columns = [new TableColumn(""), new TableColumn("[blue]Card Front[/]").Centered(), new TableColumn("[blue]Card Back[/]").Centered()];
             table.AddColumns(columns);
