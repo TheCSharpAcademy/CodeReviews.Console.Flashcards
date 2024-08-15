@@ -47,12 +47,3 @@ class Program
         MainMenu();
     } // end of MainMenu Method
 }
-
-// -- Todo List
-// - add or remove cards when changing stack size
-// - fix error when stack is deleted
-
-// -- Project Requirments
-// - After creating the flashcards functionalities, create a "Study Session" area, where the users will study the stacks. All study sessions should be stored, with date and score.
-// - The study and stack tables should be linked. If a stack is deleted, it's study sessions should be deleted.
-// - The project should contain a call to the study table so the users can see all their study sessions. This table receives insert calls upon each study session, but there shouldn't be update and delete calls to it.
