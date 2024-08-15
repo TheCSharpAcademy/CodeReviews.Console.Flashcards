@@ -17,12 +17,14 @@
 * Application connects to a MSSQL server
 * If not present it will create a new database and tables
 * Easy to navigate console ui using Spectre.Console which allows users to navigate the application with their keyboard and arrow keys
-  ![image](https://github.com/user-attachments/assets/934f93b1-4edb-4486-a9a9-8e9aa2643bb1)
+* ![image](https://github.com/user-attachments/assets/934f93b1-4edb-4486-a9a9-8e9aa2643bb1)
 * View, create, modify, and delete stacks
+* ![image](https://github.com/user-attachments/assets/d0125252-3e0f-485d-86d1-22abd91cdc2a)
+* ![image](https://github.com/user-attachments/assets/440e4476-f562-4a6c-93e4-350d0e6371b5)
 * Practice stacks and save them as study sessions
+* ![image](https://github.com/user-attachments/assets/64a1be1a-63a3-41a6-9d2e-3cb572caf3f1)
 * View Past study sessions
-  ![image](https://github.com/user-attachments/assets/c8f35e42-c492-4603-bd7b-1cf618d96919)
-
+* ![image](https://github.com/user-attachments/assets/f7a8abac-2037-454e-a0ba-6e3e5abc5a0d)
 
 # Resources Used
 * assorted stack overflow questions
