@@ -105,13 +105,13 @@ internal class EditStack
         var menu = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
             .AddChoices([
-                "Exit Flashcard", "Rename Stack", "Add Cards",
+                "Exit Program", "Rename Stack", "Add Cards",
                 "Remove Card", "Edit Cards", "<-- Back"
                 ]));
 
         switch (menu)
         {
-            case "Exit Flashcard":
+            case "Exit Program":
                 Environment.Exit(0);
                 break;
             case "Rename Stack":

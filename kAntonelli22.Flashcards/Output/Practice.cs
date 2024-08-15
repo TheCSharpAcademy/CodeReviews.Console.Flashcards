@@ -77,11 +77,11 @@ internal class Practice
         AnsiConsole.WriteLine("\n------------------------");
         var menu = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-            .AddChoices(["Exit Flashcard", "Redo Stack", "Try Another", "<-- Back"]));
+            .AddChoices(["Exit Program", "Redo Stack", "Try Another", "<-- Back"]));
 
         switch (menu)
         {
-            case "Exit Flashcard":
+            case "Exit Program":
                 Environment.Exit(0);
                 break;
             case "Redo Stack":

@@ -23,14 +23,14 @@ class Program
     public static void MainMenu()
     {
         Console.Clear();
-        AnsiConsole.WriteLine("Flashcard Main Menu\n------------------------");
+        AnsiConsole.WriteLine("Flashcards Main Menu\n------------------------");
         var menu = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-            .AddChoices(["Exit Flashcard", "Study Sessions", "View Sessions", "Manage Stacks"]));
+            .AddChoices(["Exit Program", "Study Sessions", "View Sessions", "Manage Stacks"]));
 
         switch (menu)
         {
-            case "Exit Flashcard":
+            case "Exit Program":
                 Environment.Exit(0);
                 break;
             case "Study Sessions":

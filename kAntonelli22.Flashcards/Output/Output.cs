@@ -80,12 +80,12 @@ internal class Output
         var menu = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
             .AddChoices([
-                "Exit Flashcard", "<-- Back"
+                "Exit Program", "<-- Back"
                 ]));
 
         switch (menu)
         {
-            case "Exit Flashcard":
+            case "Exit Program":
                 Environment.Exit(0);
                 break;
             case "<-- Back":
@@ -128,13 +128,13 @@ internal class Output
         var menu = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
             .AddChoices([
-                "Exit Flashcard", "Create Stack", "Edit Stack",
+                "Exit Program", "Create Stack", "Edit Stack",
                 "Remove Stack", "<-- Back"
                 ]));
 
         switch (menu)
         {
-            case "Exit Flashcard":
+            case "Exit Program":
                 Environment.Exit(0);
                 break;
             case "Create Stack":
