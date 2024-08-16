@@ -104,7 +104,11 @@ namespace jollejonas.Flashcards.Services
 
                 Console.WriteLine("Select the card ID:");
                 var card = DisplayCardsAndSelectId(stackId);
-
+                if(card == null)
+                {
+                    Console.ReadKey();
+                    break;
+                }
                 Console.WriteLine($"You selected this card: ");
                 Console.WriteLine($"Question: {card.Question} - Answer: {card.Answer}");
 
@@ -154,10 +158,11 @@ namespace jollejonas.Flashcards.Services
                 .AddChoices(new[] { "Yes", "No" })
                 .UseConverter(option => option));
 
-            if (menuSelection == "1")
+            if (menuSelection == "Yes")
             {
                 return true;
             }
+            Console.WriteLine("Cancelled.");
             return false;
         }
     }

@@ -235,7 +235,7 @@ namespace jollejonas.Flashcards.Data
 
             if (cardStackDetails.CardStackName == null)
             {
-                Console.WriteLine("No stack found");
+                Console.WriteLine("No cards found");
                 return null;
             }
             return cardStackDetails;
