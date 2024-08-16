@@ -42,6 +42,12 @@ namespace jollejonas.Flashcards.Data
                 };
                 stacks.Add(stack);
             }
+
+            if (stacks.Count == 0)
+            {
+                Console.WriteLine("No stacks found");
+                return null;
+            }
             return stacks;
         }
 
@@ -66,9 +72,126 @@ namespace jollejonas.Flashcards.Data
                 };
                 cards.Add(card);
             }
+            if (cards.Count == 0)
+            {
+                Console.WriteLine("No cards found");
+                return null;
+            }
             return cards;
         }
 
+        public void UpdateCard(string question, string answer, int cardId)
+        {
+            var query = "UPDATE Cards SET Question = @question, Answer = @answer WHERE Id = @id";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@question", question);
+                    command.Parameters.AddWithValue("@answer", answer);
+                    command.Parameters.AddWithValue("@id", cardId);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeleteCard(int cardId)
+        {
+            var query = "DELETE FROM Cards WHERE Id = @id";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", cardId);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void CreateCard(string question, string answer, int stackId)
+        {
+            var query = "INSERT INTO Cards (Question, Answer, StackId) VALUES (@question, @answer, @stackId)";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@question", question);
+                    command.Parameters.AddWithValue("@answer", answer);
+                    command.Parameters.AddWithValue("@stackId", stackId);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void UpdateStack(string name, string description, int stackId)
+        {
+            var query = "UPDATE Stacks SET Name = @name, Description = @description WHERE Id = @id";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@name", name);
+                    command.Parameters.AddWithValue("@description", description);
+                    command.Parameters.AddWithValue("@id", stackId);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeleteStack(int stackId)
+        {
+            var query = "DELETE FROM Stacks WHERE Id = @id";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", stackId);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+        public void CreateStack(string name, string description)
+        {
+            var query = "INSERT INTO Stacks (Name, Description) VALUES (@name, @description)";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@name", name);
+                    command.Parameters.AddWithValue("@description", description);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void RegisterStudySession(int stackId, int correctAnswers, int wrongAnswers)
+        {
+            var query = "INSERT INTO StudySessions (StackId, EndTime, CorrectAnswers, WrongAnswers) VALUES (@stackId, GETDATE(), @correctAnswers, @wrongAnswers)";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@stackId", stackId);
+                    command.Parameters.AddWithValue("@correctAnswers", correctAnswers);
+                    command.Parameters.AddWithValue("@wrongAnswers", wrongAnswers);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
         public CardStackDetailsDto GetCardStackDTOs(int stackId)
         {
             var cardStackDetails = new CardStackDetailsDto
@@ -108,6 +231,12 @@ namespace jollejonas.Flashcards.Data
                     Answer = reader.GetString(3)
                 };
                 cardStackDetails.Cards.Add(cards);
+            }
+
+            if (cardStackDetails.CardStackName == null)
+            {
+                Console.WriteLine("No stack found");
+                return null;
             }
             return cardStackDetails;
         }

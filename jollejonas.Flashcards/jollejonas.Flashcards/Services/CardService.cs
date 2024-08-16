@@ -24,12 +24,7 @@ namespace jollejonas.Flashcards.Services
 
                 string answer = UserInput.GetStringInput("Enter the answer:");
 
-                var query = $@"
-                    INSERT INTO Cards (Question, Answer, StackId)
-                    VALUES ('{question}', '{answer}', {cardStack.Id})
-                ";
-
-                _databaseManager.ExecuteNonQuery(query);
+                _databaseManager.CreateCard(question, answer, cardStack.Id);
 
                 Console.WriteLine("Card created successfully!");
                 Console.WriteLine("Do you want to add another card?(y/n)");
@@ -49,8 +44,15 @@ namespace jollejonas.Flashcards.Services
             {
                 Console.WriteLine("Select the card stack:");
                 var cardStackService = new CardStackService(_databaseManager);
-                int stackId = cardStackService.DisplayAndSelectCardStacks().Id;
+                CardStack cardStack = cardStackService.DisplayAndSelectCardStacks();
 
+                if (cardStack == null)
+                {
+                    Console.ReadKey();
+                    break;
+                }
+
+                int stackId = cardStack.Id;
                 Console.WriteLine("Select the card ID:");
                 var card = DisplayCardsAndSelectId(stackId);
 
@@ -60,11 +62,6 @@ namespace jollejonas.Flashcards.Services
                 Console.WriteLine($"Current answer: {card.Answer}");
                 string answer = UserInput.GetStringInput("Enter the new answer:");
 
-                var query = $@"
-                    UPDATE Cards
-                    SET Question = '{question}', Answer = '{answer}'
-                    WHERE Id = {card.Id}
-                ";
 
                 Console.WriteLine("Old card: ");
                 Console.WriteLine($"Question: {card.Question} - Answer: {card.Answer}\n");
@@ -76,7 +73,8 @@ namespace jollejonas.Flashcards.Services
                 {
                     break;
                 }
-                _databaseManager.ExecuteNonQuery(query);
+
+                _databaseManager.UpdateCard(question, answer, card.Id);
 
                 Console.WriteLine("Card updated successfully!");
                 Console.WriteLine("Do you want to edit another card?(y/n)");
@@ -94,16 +92,19 @@ namespace jollejonas.Flashcards.Services
             {
                 Console.WriteLine("Select the card stack:");
                 var cardStackService = new CardStackService(_databaseManager);
-                int stackId = cardStackService.DisplayAndSelectCardStacks().Id;
+                CardStack cardStack = cardStackService.DisplayAndSelectCardStacks();
+
+                if (cardStack == null)
+                {
+                    Console.ReadKey();
+                    break;
+                }
+
+                int stackId = cardStack.Id;
 
                 Console.WriteLine("Select the card ID:");
                 var card = DisplayCardsAndSelectId(stackId);
 
-
-                var query = $@"
-                    DELETE FROM Cards
-                    WHERE Id = {card.Id}
-                ";
                 Console.WriteLine($"You selected this card: ");
                 Console.WriteLine($"Question: {card.Question} - Answer: {card.Answer}");
 
@@ -112,7 +113,7 @@ namespace jollejonas.Flashcards.Services
                     break;
                 }
 
-                _databaseManager.ExecuteNonQuery(query);
+                _databaseManager.DeleteCard(card.Id);
 
                 Console.WriteLine("Card deleted successfully!");
                 Console.WriteLine("Do you want to delete another card?(y/n)");
@@ -125,7 +126,14 @@ namespace jollejonas.Flashcards.Services
         }
         public CardsDto DisplayCardsAndSelectId(int stackId)
         {
-            var cards = _databaseManager.GetCardStackDTOs(stackId).Cards;
+            CardStackDetailsDto cardStack = _databaseManager.GetCardStackDTOs(stackId);
+            if (cardStack == null)
+            {
+                Console.ReadKey();
+                return null;
+            }
+
+            var cards = cardStack.Cards;
 
             var menuSelection = AnsiConsole.Prompt(
                 new SelectionPrompt<CardsDto>()
@@ -139,11 +147,9 @@ namespace jollejonas.Flashcards.Services
 
         public bool Confirmations(string operation)
         {
-            Console.WriteLine($"Are you sure you want to {operation} this card?");
-
             var menuSelection = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                .Title("Select an option")
+                .Title($"Are you sure you want to {operation} this card?")
                 .PageSize(10)
                 .AddChoices(new[] { "Yes", "No" })
                 .UseConverter(option => option));

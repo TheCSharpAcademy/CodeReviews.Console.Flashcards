@@ -2,6 +2,7 @@
 using jollejonas.Flashcards.Models;
 using jollejonas.Flashcards.DTOs;
 using Spectre.Console;
+using jollejonas.Flashcards.UserInputs;
 
 
 namespace jollejonas.Flashcards.Services
@@ -13,7 +14,11 @@ namespace jollejonas.Flashcards.Services
         public CardStack DisplayAndSelectCardStacks()
         {
             var cardStacks = _databaseManager.GetCardStacks();
-
+            if (cardStacks == null)
+            {
+                Console.ReadKey();
+                return null;
+            }
             var menuSelection = AnsiConsole.Prompt(
                 new SelectionPrompt<CardStack>()
                 .Title("Select an option")
@@ -27,7 +32,11 @@ namespace jollejonas.Flashcards.Services
         public void DisplayCardStacks()
         {
             var cardStacks = _databaseManager.GetCardStacks();
-
+            if (cardStacks == null)
+            {
+                Console.ReadKey();
+                return;
+            }
             foreach (var stack in cardStacks)
             {
                 Console.WriteLine($"ID: {stack.Id}, Name: {stack.Name}, Description: {stack.Description}");
@@ -55,23 +64,16 @@ namespace jollejonas.Flashcards.Services
             {
                 Console.WriteLine("Existing stacks: ");
                 DisplayCardStacks();
-                Console.WriteLine("Enter the name of the stack (or 'q' to cancel):");
-                string name = Console.ReadLine();
+                string name = UserInput.GetStringInput("Enter the name of the stack (or 'q' to cancel):");
 
-                Console.WriteLine("Enter the description of the stack:");
-                string description = Console.ReadLine();
+                string description = UserInput.GetStringInput("Enter the description of the stack:");
 
-                var query = $@"
-                INSERT INTO Stacks (Name, Description)
-                VALUES ('{name}', '{description}')
-            ";
-
-                _databaseManager.ExecuteNonQuery(query);
+                _databaseManager.CreateStack(name, description);
 
                 Console.WriteLine("Stack created successfully!");
-                Console.WriteLine("Press 1 to add another stack or 0 to return to menu");
+                Console.WriteLine("Do you want to add another stack?(y/n)");
 
-                if (Console.ReadLine() == "0")
+                if (Console.ReadLine().ToLower() == "n")
                 {
                     break;
                 }
@@ -85,19 +87,14 @@ namespace jollejonas.Flashcards.Services
             {
                 Console.WriteLine("Select the stack ID:");
                 var cardStack = DisplayAndSelectCardStacks();
+                if (cardStack == null)
+                {
+                    Console.ReadKey();
+                    break;
+                }
+                string name = UserInput.GetStringInput("Enter the new name of the stack:");
 
-                Console.WriteLine("Enter the new name of the stack:");
-                string name = Console.ReadLine();
-
-                Console.WriteLine("Enter the new description of the stack:");
-                string description = Console.ReadLine();
-
-                var query = $@"
-                UPDATE Stacks
-                SET Name = '{name}', Description = '{description}'
-                WHERE Id = {cardStack.Id}
-            ";
-
+                string description = UserInput.GetStringInput("Enter the new description of the stack:");
 
                 Console.WriteLine("Old stack: ");
                 Console.WriteLine($"Stack name: {cardStack.Name} - Stack description: {cardStack.Description}\n");
@@ -110,12 +107,12 @@ namespace jollejonas.Flashcards.Services
                     break;
                 }
 
-                _databaseManager.ExecuteNonQuery(query);
+                _databaseManager.UpdateStack(name, description, cardStack.Id);
 
                 Console.WriteLine("Stack updated successfully!");
-                Console.WriteLine("Press 1 to edit another stack or 0 to return to menu");
+                Console.WriteLine("Do you want to edit another stack?(y/n)");
 
-                if (Console.ReadLine() == "0")
+                if (Console.ReadLine().ToLower() == "n")
                 {
                     break;
                 }
@@ -129,22 +126,17 @@ namespace jollejonas.Flashcards.Services
             {
                 Console.WriteLine("Select the stack you want to delete:");
                 int stackId = DisplayAndSelectCardStacks().Id;
-
-                var query = $@"
-                DELETE FROM Stacks
-                WHERE Id = {stackId}
-            ";
-
+              
                 if (!Confirmations("delete"))
                 {
                     break;
                 }
-                _databaseManager.ExecuteNonQuery(query);
+                _databaseManager.DeleteStack(stackId);
 
                 Console.WriteLine("Stack deleted successfully!");
-                Console.WriteLine("Press 1 to delete another stack or 0 to return to menu");
+                Console.WriteLine("Do you want to delete another stack?(y/n)");
 
-                if (Console.ReadLine() == "0")
+                if (Console.ReadLine().ToLower() == "n")
                 {
                     break;
                 }
@@ -153,17 +145,15 @@ namespace jollejonas.Flashcards.Services
 
         public bool Confirmations(string operation)
         {
-            Console.WriteLine($"Are you sure you want to {operation} this stack?");
-            Console.WriteLine("Press 1 to confirm or 0 to return to menu");
 
             var menuSelection = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                .Title("Select an option")
+                .Title($"Are you sure you want to {operation} this stack?")
                 .PageSize(10)
-                .AddChoices(new[] { "1", "0" })
+                .AddChoices(new[] { "Yes", "No" })
                 .UseConverter(option => option));
 
-            if (menuSelection == "1")
+            if (menuSelection == "Yes")
             {
                 return true;
             }

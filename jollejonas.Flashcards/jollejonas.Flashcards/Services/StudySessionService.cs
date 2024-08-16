@@ -53,17 +53,7 @@ namespace jollejonas.Flashcards.Services
                 Console.Clear();
             }
             Console.WriteLine($"Your result {correctAnswers}/{cardStack.Cards.Count()}");
-            RegisterStudySession(cardStackId, correctAnswers, wrongAnswers);
-        }
-
-        public void RegisterStudySession(int cardStackId, int correctAnwers, int wrongAnswers)
-        {
-            var query = $@"
-                INSERT INTO StudySessions (StackId, EndTime, CorrectAnswers, WrongAnswers)
-                VALUES ({cardStackId}, GETDATE(),{correctAnwers}, {wrongAnswers})
-            ";
-
-            _databaseManager.ExecuteNonQuery(query);
+            _databaseManager.RegisterStudySession(cardStackId, correctAnswers, wrongAnswers);
         }
 
         public void DisplaySessionsPerMonth()

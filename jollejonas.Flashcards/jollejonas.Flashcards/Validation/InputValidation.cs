@@ -16,5 +16,6 @@ namespace jollejonas.Flashcards.Validation
             }
             return true;
         }
+
     }
 }
