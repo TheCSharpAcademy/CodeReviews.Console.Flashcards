@@ -1,0 +1,961 @@
+{
+    "Stacks": [
+        { "Id": 1, "Name": "French" },
+        { "Id": 2, "Name": "Italian" },
+        { "Id": 3, "Name": "Norwegian" },
+        { "Id": 4, "Name": "German" },
+        { "Id": 5, "Name": "Spanish" }
+    ],
+    "Flashcards": [
+        {
+            "StackId": 1,
+            "Question": "Love",
+            "Answer": "Amour"
+        },
+        {
+            "StackId": 1,
+            "Question": "Happiness",
+            "Answer": "Bonheur"
+        },
+        {
+            "StackId": 1,
+            "Question": "Cat",
+            "Answer": "Chat"
+        },
+        {
+            "StackId": 1,
+            "Question": "Flag",
+            "Answer": "Drapeau"
+        },
+        {
+            "StackId": 1,
+            "Question": "Star",
+            "Answer": "\u00c9toile"
+        },
+        {
+            "StackId": 1,
+            "Question": "Flower",
+            "Answer": "Fleur"
+        },
+        {
+            "StackId": 1,
+            "Question": "Ice",
+            "Answer": "Glace"
+        },
+        {
+            "StackId": 1,
+            "Question": "Winter",
+            "Answer": "Hiver"
+        },
+        {
+            "StackId": 1,
+            "Question": "Island",
+            "Answer": "\u00cele"
+        },
+        {
+            "StackId": 1,
+            "Question": "Garden",
+            "Answer": "Jardin"
+        },
+        {
+            "StackId": 1,
+            "Question": "Koala",
+            "Answer": "Koala"
+        },
+        {
+            "StackId": 1,
+            "Question": "Moon",
+            "Answer": "Lune"
+        },
+        {
+            "StackId": 1,
+            "Question": "Sea",
+            "Answer": "Mer"
+        },
+        {
+            "StackId": 1,
+            "Question": "Snow",
+            "Answer": "Neige"
+        },
+        {
+            "StackId": 1,
+            "Question": "Storm",
+            "Answer": "Orage"
+        },
+        {
+            "StackId": 1,
+            "Question": "Rain",
+            "Answer": "Pluie"
+        },
+        {
+            "StackId": 1,
+            "Question": "Sun",
+            "Answer": "Soleil"
+        },
+        {
+            "StackId": 1,
+            "Question": "Mountain",
+            "Answer": "Montagne"
+        },
+        {
+            "StackId": 1,
+            "Question": "River",
+            "Answer": "Rivi\u00e8re"
+        },
+        {
+            "StackId": 1,
+            "Question": "Cloud",
+            "Answer": "Nuage"
+        },
+        {
+            "StackId": 1,
+            "Question": "Bird",
+            "Answer": "Oiseau"
+        },
+        {
+            "StackId": 1,
+            "Question": "Fish",
+            "Answer": "Poisson"
+        },
+        {
+            "StackId": 1,
+            "Question": "Tree",
+            "Answer": "Arbre"
+        },
+        {
+            "StackId": 1,
+            "Question": "Book",
+            "Answer": "Livre"
+        },
+        {
+            "StackId": 1,
+            "Question": "Car",
+            "Answer": "Voiture"
+        },
+        {
+            "StackId": 1,
+            "Question": "House",
+            "Answer": "Maison"
+        },
+        {
+            "StackId": 1,
+            "Question": "Road",
+            "Answer": "Route"
+        },
+        {
+            "StackId": 1,
+            "Question": "Sky",
+            "Answer": "Ciel"
+        },
+        {
+            "StackId": 1,
+            "Question": "Wind",
+            "Answer": "Vent"
+        },
+        {
+            "StackId": 1,
+            "Question": "Light",
+            "Answer": "Lumi\u00e8re"
+        },
+        {
+            "StackId": 1,
+            "Question": "Darkness",
+            "Answer": "Obscurit\u00e9"
+        },
+        {
+            "StackId": 1,
+            "Question": "Morning",
+            "Answer": "Matin"
+        },
+        {
+            "StackId": 1,
+            "Question": "Evening",
+            "Answer": "Soir"
+        },
+        {
+            "StackId": 1,
+            "Question": "Night",
+            "Answer": "Nuit"
+        },
+        {
+            "StackId": 1,
+            "Question": "Spring",
+            "Answer": "Printemps"
+        },
+        {
+            "StackId": 1,
+            "Question": "Summer",
+            "Answer": "\u00c9t\u00e9"
+        },
+        {
+            "StackId": 1,
+            "Question": "Autumn",
+            "Answer": "Automne"
+        },
+        {
+            "StackId": 1,
+            "Question": "Day",
+            "Answer": "Jour"
+        },
+        {
+            "StackId": 2,
+            "Question": "Love",
+            "Answer": "Amore"
+        },
+        {
+            "StackId": 2,
+            "Question": "Happiness",
+            "Answer": "Felicit\u00e0"
+        },
+        {
+            "StackId": 2,
+            "Question": "Cat",
+            "Answer": "Gatto"
+        },
+        {
+            "StackId": 2,
+            "Question": "Flag",
+            "Answer": "Bandiera"
+        },
+        {
+            "StackId": 2,
+            "Question": "Star",
+            "Answer": "Stella"
+        },
+        {
+            "StackId": 2,
+            "Question": "Flower",
+            "Answer": "Fiore"
+        },
+        {
+            "StackId": 2,
+            "Question": "Ice",
+            "Answer": "Ghiaccio"
+        },
+        {
+            "StackId": 2,
+            "Question": "Winter",
+            "Answer": "Inverno"
+        },
+        {
+            "StackId": 2,
+            "Question": "Island",
+            "Answer": "Isola"
+        },
+        {
+            "StackId": 2,
+            "Question": "Garden",
+            "Answer": "Giardino"
+        },
+        {
+            "StackId": 2,
+            "Question": "Koala",
+            "Answer": "Koala"
+        },
+        {
+            "StackId": 2,
+            "Question": "Moon",
+            "Answer": "Luna"
+        },
+        {
+            "StackId": 2,
+            "Question": "Sea",
+            "Answer": "Mare"
+        },
+        {
+            "StackId": 2,
+            "Question": "Snow",
+            "Answer": "Neve"
+        },
+        {
+            "StackId": 2,
+            "Question": "Storm",
+            "Answer": "Tempesta"
+        },
+        {
+            "StackId": 2,
+            "Question": "Rain",
+            "Answer": "Pioggia"
+        },
+        {
+            "StackId": 2,
+            "Question": "Sun",
+            "Answer": "Sole"
+        },
+        {
+            "StackId": 2,
+            "Question": "Mountain",
+            "Answer": "Montagna"
+        },
+        {
+            "StackId": 2,
+            "Question": "River",
+            "Answer": "Fiume"
+        },
+        {
+            "StackId": 2,
+            "Question": "Cloud",
+            "Answer": "Nuvola"
+        },
+        {
+            "StackId": 2,
+            "Question": "Bird",
+            "Answer": "Uccello"
+        },
+        {
+            "StackId": 2,
+            "Question": "Fish",
+            "Answer": "Pesce"
+        },
+        {
+            "StackId": 2,
+            "Question": "Tree",
+            "Answer": "Albero"
+        },
+        {
+            "StackId": 2,
+            "Question": "Book",
+            "Answer": "Libro"
+        },
+        {
+            "StackId": 2,
+            "Question": "Car",
+            "Answer": "Auto"
+        },
+        {
+            "StackId": 2,
+            "Question": "House",
+            "Answer": "Casa"
+        },
+        {
+            "StackId": 2,
+            "Question": "Road",
+            "Answer": "Strada"
+        },
+        {
+            "StackId": 2,
+            "Question": "Sky",
+            "Answer": "Cielo"
+        },
+        {
+            "StackId": 2,
+            "Question": "Wind",
+            "Answer": "Vento"
+        },
+        {
+            "StackId": 2,
+            "Question": "Light",
+            "Answer": "Luce"
+        },
+        {
+            "StackId": 2,
+            "Question": "Darkness",
+            "Answer": "Oscurit\u00e0"
+        },
+        {
+            "StackId": 2,
+            "Question": "Morning",
+            "Answer": "Mattina"
+        },
+        {
+            "StackId": 2,
+            "Question": "Evening",
+            "Answer": "Sera"
+        },
+        {
+            "StackId": 2,
+            "Question": "Night",
+            "Answer": "Notte"
+        },
+        {
+            "StackId": 2,
+            "Question": "Spring",
+            "Answer": "Primavera"
+        },
+        {
+            "StackId": 2,
+            "Question": "Summer",
+            "Answer": "Estate"
+        },
+        {
+            "StackId": 2,
+            "Question": "Autumn",
+            "Answer": "Autunno"
+        },
+        {
+            "StackId": 2,
+            "Question": "Day",
+            "Answer": "Giorno"
+        },
+        {
+            "StackId": 3,
+            "Question": "Love",
+            "Answer": "Kj\u00e6rlighet"
+        },
+        {
+            "StackId": 3,
+            "Question": "Happiness",
+            "Answer": "Lykke"
+        },
+        {
+            "StackId": 3,
+            "Question": "Cat",
+            "Answer": "Katt"
+        },
+        {
+            "StackId": 3,
+            "Question": "Flag",
+            "Answer": "Flagg"
+        },
+        {
+            "StackId": 3,
+            "Question": "Star",
+            "Answer": "Stjerne"
+        },
+        {
+            "StackId": 3,
+            "Question": "Flower",
+            "Answer": "Blomst"
+        },
+        {
+            "StackId": 3,
+            "Question": "Ice",
+            "Answer": "Is"
+        },
+        {
+            "StackId": 3,
+            "Question": "Winter",
+            "Answer": "Vinter"
+        },
+        {
+            "StackId": 3,
+            "Question": "Island",
+            "Answer": "\u00d8y"
+        },
+        {
+            "StackId": 3,
+            "Question": "Garden",
+            "Answer": "Hage"
+        },
+        {
+            "StackId": 3,
+            "Question": "Koala",
+            "Answer": "Koala"
+        },
+        {
+            "StackId": 3,
+            "Question": "Moon",
+            "Answer": "M\u00e5ne"
+        },
+        {
+            "StackId": 3,
+            "Question": "Sea",
+            "Answer": "Sj\u00f8"
+        },
+        {
+            "StackId": 3,
+            "Question": "Snow",
+            "Answer": "Sn\u00f8"
+        },
+        {
+            "StackId": 3,
+            "Question": "Storm",
+            "Answer": "Storm"
+        },
+        {
+            "StackId": 3,
+            "Question": "Rain",
+            "Answer": "Regn"
+        },
+        {
+            "StackId": 3,
+            "Question": "Sun",
+            "Answer": "Sol"
+        },
+        {
+            "StackId": 3,
+            "Question": "Mountain",
+            "Answer": "Fjell"
+        },
+        {
+            "StackId": 3,
+            "Question": "River",
+            "Answer": "Elv"
+        },
+        {
+            "StackId": 3,
+            "Question": "Cloud",
+            "Answer": "Sky"
+        },
+        {
+            "StackId": 3,
+            "Question": "Bird",
+            "Answer": "Fugl"
+        },
+        {
+            "StackId": 3,
+            "Question": "Fish",
+            "Answer": "Fisk"
+        },
+        {
+            "StackId": 3,
+            "Question": "Tree",
+            "Answer": "Tre"
+        },
+        {
+            "StackId": 3,
+            "Question": "Book",
+            "Answer": "Bok"
+        },
+        {
+            "StackId": 3,
+            "Question": "Car",
+            "Answer": "Bil"
+        },
+        {
+            "StackId": 3,
+            "Question": "House",
+            "Answer": "Hus"
+        },
+        {
+            "StackId": 3,
+            "Question": "Road",
+            "Answer": "Vei"
+        },
+        {
+            "StackId": 3,
+            "Question": "Sky",
+            "Answer": "Himmel"
+        },
+        {
+            "StackId": 3,
+            "Question": "Wind",
+            "Answer": "Vind"
+        },
+        {
+            "StackId": 3,
+            "Question": "Light",
+            "Answer": "Lys"
+        },
+        {
+            "StackId": 3,
+            "Question": "Darkness",
+            "Answer": "M\u00f8rke"
+        },
+        {
+            "StackId": 3,
+            "Question": "Morning",
+            "Answer": "Morgen"
+        },
+        {
+            "StackId": 3,
+            "Question": "Evening",
+            "Answer": "Kveld"
+        },
+        {
+            "StackId": 3,
+            "Question": "Night",
+            "Answer": "Natt"
+        },
+        {
+            "StackId": 3,
+            "Question": "Spring",
+            "Answer": "V\u00e5r"
+        },
+        {
+            "StackId": 3,
+            "Question": "Summer",
+            "Answer": "Sommer"
+        },
+        {
+            "StackId": 3,
+            "Question": "Autumn",
+            "Answer": "H\u00f8st"
+        },
+        {
+            "StackId": 3,
+            "Question": "Day",
+            "Answer": "Dag"
+        },
+        {
+            "StackId": 4,
+            "Question": "Love",
+            "Answer": "Liebe"
+        },
+        {
+            "StackId": 4,
+            "Question": "Happiness",
+            "Answer": "Gl\u00fcck"
+        },
+        {
+            "StackId": 4,
+            "Question": "Cat",
+            "Answer": "Katze"
+        },
+        {
+            "StackId": 4,
+            "Question": "Flag",
+            "Answer": "Flagge"
+        },
+        {
+            "StackId": 4,
+            "Question": "Star",
+            "Answer": "Stern"
+        },
+        {
+            "StackId": 4,
+            "Question": "Flower",
+            "Answer": "Blume"
+        },
+        {
+            "StackId": 4,
+            "Question": "Ice",
+            "Answer": "Eis"
+        },
+        {
+            "StackId": 4,
+            "Question": "Winter",
+            "Answer": "Winter"
+        },
+        {
+            "StackId": 4,
+            "Question": "Island",
+            "Answer": "Insel"
+        },
+        {
+            "StackId": 4,
+            "Question": "Garden",
+            "Answer": "Garten"
+        },
+        {
+            "StackId": 4,
+            "Question": "Koala",
+            "Answer": "Koala"
+        },
+        {
+            "StackId": 4,
+            "Question": "Moon",
+            "Answer": "Mond"
+        },
+        {
+            "StackId": 4,
+            "Question": "Sea",
+            "Answer": "Meer"
+        },
+        {
+            "StackId": 4,
+            "Question": "Snow",
+            "Answer": "Schnee"
+        },
+        {
+            "StackId": 4,
+            "Question": "Storm",
+            "Answer": "Sturm"
+        },
+        {
+            "StackId": 4,
+            "Question": "Rain",
+            "Answer": "Regen"
+        },
+        {
+            "StackId": 4,
+            "Question": "Sun",
+            "Answer": "Sonne"
+        },
+        {
+            "StackId": 4,
+            "Question": "Mountain",
+            "Answer": "Berg"
+        },
+        {
+            "StackId": 4,
+            "Question": "River",
+            "Answer": "Fluss"
+        },
+        {
+            "StackId": 4,
+            "Question": "Cloud",
+            "Answer": "Wolke"
+        },
+        {
+            "StackId": 4,
+            "Question": "Bird",
+            "Answer": "Vogel"
+        },
+        {
+            "StackId": 4,
+            "Question": "Fish",
+            "Answer": "Fisch"
+        },
+        {
+            "StackId": 4,
+            "Question": "Tree",
+            "Answer": "Baum"
+        },
+        {
+            "StackId": 4,
+            "Question": "Book",
+            "Answer": "Buch"
+        },
+        {
+            "StackId": 4,
+            "Question": "Car",
+            "Answer": "Auto"
+        },
+        {
+            "StackId": 4,
+            "Question": "House",
+            "Answer": "Haus"
+        },
+        {
+            "StackId": 4,
+            "Question": "Road",
+            "Answer": "Stra\u00dfe"
+        },
+        {
+            "StackId": 4,
+            "Question": "Sky",
+            "Answer": "Himmel"
+        },
+        {
+            "StackId": 4,
+            "Question": "Wind",
+            "Answer": "Wind"
+        },
+        {
+            "StackId": 4,
+            "Question": "Light",
+            "Answer": "Licht"
+        },
+        {
+            "StackId": 4,
+            "Question": "Darkness",
+            "Answer": "Dunkelheit"
+        },
+        {
+            "StackId": 4,
+            "Question": "Morning",
+            "Answer": "Morgen"
+        },
+        {
+            "StackId": 4,
+            "Question": "Evening",
+            "Answer": "Abend"
+        },
+        {
+            "StackId": 4,
+            "Question": "Night",
+            "Answer": "Nacht"
+        },
+        {
+            "StackId": 4,
+            "Question": "Spring",
+            "Answer": "Fr\u00fchling"
+        },
+        {
+            "StackId": 4,
+            "Question": "Summer",
+            "Answer": "Sommer"
+        },
+        {
+            "StackId": 4,
+            "Question": "Autumn",
+            "Answer": "Herbst"
+        },
+        {
+            "StackId": 4,
+            "Question": "Day",
+            "Answer": "Tag"
+        },
+        {
+            "StackId": 5,
+            "Question": "Love",
+            "Answer": "Amor"
+        },
+        {
+            "StackId": 5,
+            "Question": "Happiness",
+            "Answer": "FelicIdad"
+        },
+        {
+            "StackId": 5,
+            "Question": "Cat",
+            "Answer": "Gato"
+        },
+        {
+            "StackId": 5,
+            "Question": "Flag",
+            "Answer": "Bandera"
+        },
+        {
+            "StackId": 5,
+            "Question": "Star",
+            "Answer": "Estrella"
+        },
+        {
+            "StackId": 5,
+            "Question": "Flower",
+            "Answer": "Flor"
+        },
+        {
+            "StackId": 5,
+            "Question": "Ice",
+            "Answer": "Hielo"
+        },
+        {
+            "StackId": 5,
+            "Question": "Winter",
+            "Answer": "Invierno"
+        },
+        {
+            "StackId": 5,
+            "Question": "Island",
+            "Answer": "Isla"
+        },
+        {
+            "StackId": 5,
+            "Question": "Garden",
+            "Answer": "Jard\u00edn"
+        },
+        {
+            "StackId": 5,
+            "Question": "Koala",
+            "Answer": "Koala"
+        },
+        {
+            "StackId": 5,
+            "Question": "Moon",
+            "Answer": "Luna"
+        },
+        {
+            "StackId": 5,
+            "Question": "Sea",
+            "Answer": "Mar"
+        },
+        {
+            "StackId": 5,
+            "Question": "Snow",
+            "Answer": "Nieve"
+        },
+        {
+            "StackId": 5,
+            "Question": "Storm",
+            "Answer": "Tormenta"
+        },
+        {
+            "StackId": 5,
+            "Question": "Rain",
+            "Answer": "Lluvia"
+        },
+        {
+            "StackId": 5,
+            "Question": "Sun",
+            "Answer": "Sol"
+        },
+        {
+            "StackId": 5,
+            "Question": "Mountain",
+            "Answer": "Monta\u00f1a"
+        },
+        {
+            "StackId": 5,
+            "Question": "River",
+            "Answer": "R\u00edo"
+        },
+        {
+            "StackId": 5,
+            "Question": "Cloud",
+            "Answer": "Nube"
+        },
+        {
+            "StackId": 5,
+            "Question": "Bird",
+            "Answer": "P\u00e1jaro"
+        },
+        {
+            "StackId": 5,
+            "Question": "Fish",
+            "Answer": "Pez"
+        },
+        {
+            "StackId": 5,
+            "Question": "Tree",
+            "Answer": "\u00c1rbol"
+        },
+        {
+            "StackId": 5,
+            "Question": "Book",
+            "Answer": "Libro"
+        },
+        {
+            "StackId": 5,
+            "Question": "Car",
+            "Answer": "Coche"
+        },
+        {
+            "StackId": 5,
+            "Question": "House",
+            "Answer": "Casa"
+        },
+        {
+            "StackId": 5,
+            "Question": "Road",
+            "Answer": "Carretera"
+        },
+        {
+            "StackId": 5,
+            "Question": "Sky",
+            "Answer": "Cielo"
+        },
+        {
+            "StackId": 5,
+            "Question": "Wind",
+            "Answer": "Viento"
+        },
+        {
+            "StackId": 5,
+            "Question": "Light",
+            "Answer": "Luz"
+        },
+        {
+            "StackId": 5,
+            "Question": "Darkness",
+            "Answer": "OscurIdad"
+        },
+        {
+            "StackId": 5,
+            "Question": "Morning",
+            "Answer": "Ma\u00f1ana"
+        },
+        {
+            "StackId": 5,
+            "Question": "Evening",
+            "Answer": "Tarde"
+        },
+        {
+            "StackId": 5,
+            "Question": "Night",
+            "Answer": "Noche"
+        },
+        {
+            "StackId": 5,
+            "Question": "Spring",
+            "Answer": "Primavera"
+        },
+        {
+            "StackId": 5,
+            "Question": "Summer",
+            "Answer": "Verano"
+        },
+        {
+            "StackId": 5,
+            "Question": "Autumn",
+            "Answer": "Oto\u00f1o"
+        },
+        {
+            "StackId": 5,
+            "Question": "Day",
+            "Answer": "D\u00eda"
+        }
+    ]
+}
