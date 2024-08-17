@@ -1,8 +1,8 @@
-﻿using Flashcards.Extensions;
-using Flashcards.Interfaces.View;
+﻿using Flashcards.Eddyfadeev.Extensions;
+using Flashcards.Eddyfadeev.Interfaces.View;
 using Spectre.Console;
 
-namespace Flashcards.View;
+namespace Flashcards.Eddyfadeev.View;
 
 /// <summary>
 /// Represents a class that provides menu entries for a specific menu.

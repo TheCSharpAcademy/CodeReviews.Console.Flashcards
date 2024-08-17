@@ -1,21 +1,21 @@
-﻿using Flashcards.Database;
-using Flashcards.Enums;
-using Flashcards.Handlers;
-using Flashcards.Interfaces.Database;
-using Flashcards.Interfaces.Handlers;
-using Flashcards.Interfaces.Models;
-using Flashcards.Interfaces.Report;
-using Flashcards.Interfaces.Repositories;
-using Flashcards.Interfaces.View;
-using Flashcards.Interfaces.View.Factory;
-using Flashcards.Report;
-using Flashcards.Repositories;
-using Flashcards.View;
-using Flashcards.View.Factory;
-using Flashcards.View.Factory.EntriesInitializers;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Flashcards.Eddyfadeev.Database;
+using Flashcards.Eddyfadeev.Enums;
+using Flashcards.Eddyfadeev.Handlers;
+using Flashcards.Eddyfadeev.Interfaces.Database;
+using Flashcards.Eddyfadeev.Interfaces.Handlers;
+using Flashcards.Eddyfadeev.Interfaces.Models;
+using Flashcards.Eddyfadeev.Interfaces.Report;
+using Flashcards.Eddyfadeev.Interfaces.Repositories;
+using Flashcards.Eddyfadeev.Interfaces.View;
+using Flashcards.Eddyfadeev.Interfaces.View.Factory;
+using Flashcards.Eddyfadeev.Report;
+using Flashcards.Eddyfadeev.Repositories;
+using Flashcards.Eddyfadeev.View;
+using Flashcards.Eddyfadeev.View.Factory;
+using Flashcards.Eddyfadeev.View.Factory.EntriesInitializers;
 
-namespace Flashcards.Services;
+namespace Flashcards.Eddyfadeev.Services;
 
 /// <summary>
 /// The ServicesConfigurator class is responsible for configuring the services used in the Flashcards application.

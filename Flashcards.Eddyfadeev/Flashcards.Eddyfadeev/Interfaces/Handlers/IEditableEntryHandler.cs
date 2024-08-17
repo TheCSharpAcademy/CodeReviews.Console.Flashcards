@@ -1,4 +1,4 @@
-﻿namespace Flashcards.Interfaces.Handlers;
+﻿namespace Flashcards.Eddyfadeev.Interfaces.Handlers;
 
 /// <summary>
 /// Represents an interface for handling editable entries.

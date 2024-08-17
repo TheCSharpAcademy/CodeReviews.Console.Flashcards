@@ -1,4 +1,4 @@
-﻿namespace Flashcards.Messages;
+﻿namespace Flashcards.Eddyfadeev.Messages;
 
 /// <summary>
 /// Represents a class that contains messages used in the application.

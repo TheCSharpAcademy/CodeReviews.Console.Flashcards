@@ -1,4 +1,4 @@
-﻿namespace Flashcards.Interfaces.Repositories.Operations;
+﻿namespace Flashcards.Eddyfadeev.Interfaces.Repositories.Operations;
 
 /// Represents an interface for deleting entries from a repository.
 internal interface IDeleteFromRepository

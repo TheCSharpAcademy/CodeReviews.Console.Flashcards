@@ -1,7 +1,7 @@
 ﻿using Dapper;
-using Flashcards.Interfaces.Database;
+using Flashcards.Eddyfadeev.Interfaces.Database;
 
-namespace Flashcards.Database;
+namespace Flashcards.Eddyfadeev.Database;
 
 /// <summary>
 /// The DatabaseInitializer class is responsible for initializing the database.

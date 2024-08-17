@@ -1,4 +1,4 @@
-﻿namespace Flashcards.Interfaces.Database;
+﻿namespace Flashcards.Eddyfadeev.Interfaces.Database;
 
 /// <summary>
 /// The IDatabaseInitializer interface is used to initialize the database.

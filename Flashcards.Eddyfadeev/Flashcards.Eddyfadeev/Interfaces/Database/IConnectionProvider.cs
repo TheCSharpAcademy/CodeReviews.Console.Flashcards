@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 
-namespace Flashcards.Interfaces.Database;
+namespace Flashcards.Eddyfadeev.Interfaces.Database;
 
 /// <summary>
 /// Represents a connection provider for accessing the database.

@@ -1,9 +1,9 @@
-﻿using Flashcards.Interfaces.Models;
-using Flashcards.Interfaces.Repositories;
-using Flashcards.Models.Entity;
+﻿using Flashcards.Eddyfadeev.Interfaces.Models;
+using Flashcards.Eddyfadeev.Interfaces.Repositories;
+using Flashcards.Eddyfadeev.Models.Entity;
 using Spectre.Console;
 
-namespace Flashcards.Services;
+namespace Flashcards.Eddyfadeev.Services;
 
 /// <summary>
 /// The StudySessionsHelperService class provides helper methods related to study sessions.

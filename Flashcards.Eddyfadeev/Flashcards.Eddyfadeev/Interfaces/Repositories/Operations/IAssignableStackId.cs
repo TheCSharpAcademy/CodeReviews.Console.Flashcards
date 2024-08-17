@@ -1,4 +1,4 @@
-﻿namespace Flashcards.Interfaces.Repositories.Operations;
+﻿namespace Flashcards.Eddyfadeev.Interfaces.Repositories.Operations;
 
 /// <summary>
 /// Represents an object that can be assigned a stack ID.

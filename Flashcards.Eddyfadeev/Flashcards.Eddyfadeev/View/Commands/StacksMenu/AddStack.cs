@@ -1,10 +1,10 @@
-﻿using Flashcards.Interfaces.Repositories;
-using Flashcards.Interfaces.View.Commands;
-using Flashcards.Models.Entity;
-using Flashcards.Services;
+﻿using Flashcards.Eddyfadeev.Interfaces.Repositories;
+using Flashcards.Eddyfadeev.Interfaces.View.Commands;
+using Flashcards.Eddyfadeev.Models.Entity;
+using Flashcards.Eddyfadeev.Services;
 using Spectre.Console;
 
-namespace Flashcards.View.Commands.StacksMenu;
+namespace Flashcards.Eddyfadeev.View.Commands.StacksMenu;
 
 /// <summary>
 /// Represents a command for adding a new stack.

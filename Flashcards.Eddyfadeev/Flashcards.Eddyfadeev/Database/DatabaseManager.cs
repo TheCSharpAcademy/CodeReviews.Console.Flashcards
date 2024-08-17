@@ -1,10 +1,10 @@
 ﻿using Dapper;
-using Flashcards.Interfaces.Database;
-using Flashcards.Models.Entity;
-using Flashcards.Services;
+using Flashcards.Eddyfadeev.Interfaces.Database;
+using Flashcards.Eddyfadeev.Models.Entity;
+using Flashcards.Eddyfadeev.Services;
 using Microsoft.Data.SqlClient;
 
-namespace Flashcards.Database;
+namespace Flashcards.Eddyfadeev.Database;
 
 /// <summary>
 /// Manages database operations for the Flashcards application.

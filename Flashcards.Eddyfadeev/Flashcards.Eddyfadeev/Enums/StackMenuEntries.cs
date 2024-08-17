@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Flashcards.Enums;
+namespace Flashcards.Eddyfadeev.Enums;
 
 /// <summary>
 /// Represents the stack menu entries.

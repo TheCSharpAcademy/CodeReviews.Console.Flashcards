@@ -1,11 +1,11 @@
-﻿using Flashcards.Interfaces.Handlers;
-using Flashcards.Interfaces.Models;
-using Flashcards.Interfaces.Repositories;
-using Flashcards.Interfaces.View.Commands;
-using Flashcards.Services;
+﻿using Flashcards.Eddyfadeev.Interfaces.Handlers;
+using Flashcards.Eddyfadeev.Interfaces.Models;
+using Flashcards.Eddyfadeev.Interfaces.Repositories;
+using Flashcards.Eddyfadeev.Interfaces.View.Commands;
+using Flashcards.Eddyfadeev.Services;
 using Spectre.Console;
 
-namespace Flashcards.View.Commands.StacksMenu;
+namespace Flashcards.Eddyfadeev.View.Commands.StacksMenu;
 
 /// <summary>
 /// Represents a command for choosing a stack.

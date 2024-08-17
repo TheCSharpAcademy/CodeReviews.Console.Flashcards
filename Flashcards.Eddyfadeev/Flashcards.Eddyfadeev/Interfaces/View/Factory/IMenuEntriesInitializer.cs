@@ -1,6 +1,6 @@
-﻿using Flashcards.Interfaces.View.Commands;
+﻿using Flashcards.Eddyfadeev.Interfaces.View.Commands;
 
-namespace Flashcards.Interfaces.View.Factory;
+namespace Flashcards.Eddyfadeev.Interfaces.View.Factory;
 
 /// <summary>
 /// Interface for initializing menu entries.

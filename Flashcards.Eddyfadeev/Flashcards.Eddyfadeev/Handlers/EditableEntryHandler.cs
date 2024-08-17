@@ -1,7 +1,7 @@
-﻿using Flashcards.Interfaces.Handlers;
+﻿using Flashcards.Eddyfadeev.Interfaces.Handlers;
 using Spectre.Console;
 
-namespace Flashcards.Handlers;
+namespace Flashcards.Eddyfadeev.Handlers;
 
 /// <summary>
 /// Represents a class that handles editable entries.

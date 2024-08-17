@@ -1,10 +1,10 @@
-﻿using Flashcards.Extensions;
-using Flashcards.Interfaces.Handlers;
-using Flashcards.Interfaces.View;
-using Flashcards.Interfaces.View.Factory;
+﻿using Flashcards.Eddyfadeev.Interfaces.Handlers;
+using Flashcards.Eddyfadeev.Interfaces.View;
+using Flashcards.Eddyfadeev.Interfaces.View.Factory;
+using Flashcards.Eddyfadeev.Extensions;
 using Spectre.Console;
 
-namespace Flashcards.Handlers;
+namespace Flashcards.Eddyfadeev.Handlers;
 
 /// <summary>
 /// Handles the menu for a specific menu entries type.

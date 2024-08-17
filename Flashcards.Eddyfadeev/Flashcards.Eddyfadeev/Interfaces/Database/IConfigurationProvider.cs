@@ -1,4 +1,4 @@
-﻿namespace Flashcards.Interfaces.Database;
+﻿namespace Flashcards.Eddyfadeev.Interfaces.Database;
 
 /// <summary>
 /// Represents a provider for retrieving configuration data.

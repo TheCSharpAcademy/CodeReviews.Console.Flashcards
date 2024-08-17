@@ -1,8 +1,8 @@
-﻿using Flashcards.Interfaces.Models;
-using Flashcards.Models.Dto;
-using Flashcards.Models.Entity;
+﻿using Flashcards.Eddyfadeev.Interfaces.Models;
+using Flashcards.Eddyfadeev.Models.Dto;
+using Flashcards.Eddyfadeev.Models.Entity;
 
-namespace Flashcards.Extensions;
+namespace Flashcards.Eddyfadeev.Extensions;
 
 /// <summary>
 /// Contains extension methods for mapping between DTOs and entities.

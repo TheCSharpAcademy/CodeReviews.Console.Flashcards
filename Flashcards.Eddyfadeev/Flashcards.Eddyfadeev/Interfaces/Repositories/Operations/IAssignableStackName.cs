@@ -1,4 +1,4 @@
-﻿namespace Flashcards.Interfaces.Repositories.Operations;
+﻿namespace Flashcards.Eddyfadeev.Interfaces.Repositories.Operations;
 
 /// <summary>
 /// Represents an interface for objects that can have an assignable stack name.

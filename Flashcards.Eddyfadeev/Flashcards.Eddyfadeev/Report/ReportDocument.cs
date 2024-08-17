@@ -1,9 +1,9 @@
-﻿using Flashcards.Interfaces.Models;
+﻿using Flashcards.Eddyfadeev.Interfaces.Models;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
-namespace Flashcards.Report;
+namespace Flashcards.Eddyfadeev.Report;
 
 /// <summary>
 /// Represents a report document for generating study history reports.

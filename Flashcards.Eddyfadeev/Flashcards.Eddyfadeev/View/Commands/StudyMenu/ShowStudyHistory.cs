@@ -1,10 +1,10 @@
-﻿using Flashcards.Interfaces.Report;
-using Flashcards.Interfaces.Repositories;
-using Flashcards.Interfaces.View.Commands;
-using Flashcards.Services;
+﻿using Flashcards.Eddyfadeev.Interfaces.Report;
+using Flashcards.Eddyfadeev.Interfaces.Repositories;
+using Flashcards.Eddyfadeev.Interfaces.View.Commands;
+using Flashcards.Eddyfadeev.Services;
 using Spectre.Console;
 
-namespace Flashcards.View.Commands.StudyMenu;
+namespace Flashcards.Eddyfadeev.View.Commands.StudyMenu;
 
 /// <summary>
 /// Represents a command that displays the study history to the user and provides options to save it as a PDF.

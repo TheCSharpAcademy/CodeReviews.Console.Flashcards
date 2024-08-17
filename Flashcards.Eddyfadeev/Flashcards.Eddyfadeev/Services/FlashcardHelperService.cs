@@ -1,10 +1,10 @@
-﻿using Flashcards.Enums;
-using Flashcards.Interfaces.Models;
-using Flashcards.Interfaces.Repositories;
-using Flashcards.Interfaces.View.Factory;
+﻿using Flashcards.Eddyfadeev.Enums;
+using Flashcards.Eddyfadeev.Interfaces.Models;
+using Flashcards.Eddyfadeev.Interfaces.Repositories;
+using Flashcards.Eddyfadeev.Interfaces.View.Factory;
 using Spectre.Console;
 
-namespace Flashcards.Services;
+namespace Flashcards.Eddyfadeev.Services;
 
 /// <summary>
 /// Helper service for managing flashcards.

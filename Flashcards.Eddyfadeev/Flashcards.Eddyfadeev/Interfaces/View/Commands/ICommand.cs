@@ -1,4 +1,4 @@
-﻿namespace Flashcards.Interfaces.View.Commands;
+﻿namespace Flashcards.Eddyfadeev.Interfaces.View.Commands;
 
 /// <summary>
 /// Represents a command that can be executed.

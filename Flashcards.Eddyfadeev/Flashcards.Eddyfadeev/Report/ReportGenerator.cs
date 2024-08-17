@@ -1,10 +1,10 @@
-﻿using Flashcards.Interfaces.Models;
-using Flashcards.Interfaces.Report;
+﻿using Flashcards.Eddyfadeev.Interfaces.Models;
+using Flashcards.Eddyfadeev.Interfaces.Report;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using Spectre.Console;
 
-namespace Flashcards.Report;
+namespace Flashcards.Eddyfadeev.Report;
 
 /// <summary>
 /// Generates reports for study sessions.

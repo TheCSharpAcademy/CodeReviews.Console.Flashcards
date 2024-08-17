@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace Flashcards.Extensions;
+namespace Flashcards.Eddyfadeev.Extensions;
 
 /// <summary>
 /// Provides extension methods for enumerations.

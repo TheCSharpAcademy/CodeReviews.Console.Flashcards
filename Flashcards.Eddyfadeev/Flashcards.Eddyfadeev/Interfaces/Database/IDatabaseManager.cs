@@ -1,6 +1,6 @@
-﻿using Flashcards.Models.Entity;
+﻿using Flashcards.Eddyfadeev.Models.Entity;
 
-namespace Flashcards.Interfaces.Database;
+namespace Flashcards.Eddyfadeev.Interfaces.Database;
 
 /// <summary>
 /// Represents a database manager that provides CRUD operations and database initialization.

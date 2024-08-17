@@ -1,8 +1,8 @@
-﻿using Flashcards.Interfaces.Models;
+﻿using Flashcards.Eddyfadeev.Interfaces.Models;
 using QuestPDF.Infrastructure;
 using Spectre.Console;
 
-namespace Flashcards.Interfaces.Report;
+namespace Flashcards.Eddyfadeev.Interfaces.Report;
 
 /// <summary>
 /// Represents a report generator used for generating study session reports.

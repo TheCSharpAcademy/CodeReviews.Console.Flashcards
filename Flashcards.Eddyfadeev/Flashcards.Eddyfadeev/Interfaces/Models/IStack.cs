@@ -1,4 +1,4 @@
-﻿namespace Flashcards.Interfaces.Models;
+﻿namespace Flashcards.Eddyfadeev.Interfaces.Models;
 
 /// <summary>
 /// Represents a stack.

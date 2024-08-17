@@ -1,12 +1,12 @@
-﻿using Flashcards.Enums;
-using Flashcards.Exceptions;
-using Flashcards.Interfaces.Report;
-using Flashcards.Interfaces.Repositories;
-using Flashcards.Interfaces.View.Commands;
-using Flashcards.Interfaces.View.Factory;
-using Flashcards.View.Commands.StudyMenu;
+﻿using Flashcards.Eddyfadeev.Enums;
+using Flashcards.Eddyfadeev.Exceptions;
+using Flashcards.Eddyfadeev.Interfaces.Report;
+using Flashcards.Eddyfadeev.Interfaces.Repositories;
+using Flashcards.Eddyfadeev.Interfaces.View.Commands;
+using Flashcards.Eddyfadeev.Interfaces.View.Factory;
+using Flashcards.Eddyfadeev.View.Commands.StudyMenu;
 
-namespace Flashcards.View.Factory.EntriesInitializers;
+namespace Flashcards.Eddyfadeev.View.Factory.EntriesInitializers;
 
 /// <summary>
 /// Initializes the menu entries for the study menu.

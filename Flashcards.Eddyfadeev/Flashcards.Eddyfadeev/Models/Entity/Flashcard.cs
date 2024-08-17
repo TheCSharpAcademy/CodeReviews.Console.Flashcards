@@ -1,7 +1,7 @@
-﻿using Flashcards.Extensions;
-using Flashcards.Interfaces.Models;
+﻿using Flashcards.Eddyfadeev.Interfaces.Models;
+using Flashcards.Eddyfadeev.Extensions;
 
-namespace Flashcards.Models.Entity;
+namespace Flashcards.Eddyfadeev.Models.Entity;
 
 /// <summary>
 /// Represents a flashcard used for studying.

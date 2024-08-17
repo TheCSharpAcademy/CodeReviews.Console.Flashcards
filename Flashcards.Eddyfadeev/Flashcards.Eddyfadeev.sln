@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flashcards", "Flashcards\Flashcards.csproj", "{999060C6-5BBF-4675-81CB-3458D3BF4840}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flashcards.Eddyfadeev", "Flashcards.Eddyfadeev\Flashcards.Eddyfadeev.csproj", "{999060C6-5BBF-4675-81CB-3458D3BF4840}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

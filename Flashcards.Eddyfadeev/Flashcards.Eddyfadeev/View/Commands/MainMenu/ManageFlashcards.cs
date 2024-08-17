@@ -1,8 +1,8 @@
-﻿using Flashcards.Enums;
-using Flashcards.Interfaces.Handlers;
-using Flashcards.Interfaces.View.Commands;
+﻿using Flashcards.Eddyfadeev.Enums;
+using Flashcards.Eddyfadeev.Interfaces.Handlers;
+using Flashcards.Eddyfadeev.Interfaces.View.Commands;
 
-namespace Flashcards.View.Commands.MainMenu;
+namespace Flashcards.Eddyfadeev.View.Commands.MainMenu;
 
 /// <summary>
 /// Represents a command to manage flashcards.

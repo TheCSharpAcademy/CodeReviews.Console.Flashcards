@@ -1,6 +1,6 @@
-﻿using Flashcards.Interfaces.Repositories.Operations;
+﻿using Flashcards.Eddyfadeev.Interfaces.Repositories.Operations;
 
-namespace Flashcards.Interfaces.Models;
+namespace Flashcards.Eddyfadeev.Interfaces.Models;
 
 /// <summary>
 /// Represents a flashcard with a question and an answer.

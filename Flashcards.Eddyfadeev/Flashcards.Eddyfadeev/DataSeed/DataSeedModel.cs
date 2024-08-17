@@ -1,7 +1,7 @@
-﻿using Flashcards.Models.Entity;
+﻿using Flashcards.Eddyfadeev.Models.Entity;
 using Newtonsoft.Json;
 
-namespace Flashcards.DataSeed;
+namespace Flashcards.Eddyfadeev.DataSeed;
 
 /// <summary>
 /// The SeedDataModel class contains two properties: Stacks and Flashcards.

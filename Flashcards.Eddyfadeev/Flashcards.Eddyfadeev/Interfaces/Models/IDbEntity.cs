@@ -1,4 +1,4 @@
-﻿namespace Flashcards.Interfaces.Models;
+﻿namespace Flashcards.Eddyfadeev.Interfaces.Models;
 
 /// <summary>
 /// Represents an entity that can be stored in a database.

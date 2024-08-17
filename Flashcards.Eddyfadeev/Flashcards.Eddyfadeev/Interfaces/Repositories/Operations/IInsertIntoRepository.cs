@@ -1,6 +1,6 @@
-﻿using Flashcards.Interfaces.Models;
+﻿using Flashcards.Eddyfadeev.Interfaces.Models;
 
-namespace Flashcards.Interfaces.Repositories.Operations;
+namespace Flashcards.Eddyfadeev.Interfaces.Repositories.Operations;
 
 /// <summary>
 /// Represents an interface for inserting entities into a repository.

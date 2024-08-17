@@ -1,12 +1,12 @@
-﻿using Flashcards.Enums;
-using Flashcards.Exceptions;
-using Flashcards.Interfaces.Database;
-using Flashcards.Interfaces.Handlers;
-using Flashcards.Services;
+﻿using Flashcards.Eddyfadeev.Enums;
+using Flashcards.Eddyfadeev.Exceptions;
+using Flashcards.Eddyfadeev.Interfaces.Database;
+using Flashcards.Eddyfadeev.Interfaces.Handlers;
+using Flashcards.Eddyfadeev.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
-namespace Flashcards;
+namespace Flashcards.Eddyfadeev;
 
 internal static class Program
 {

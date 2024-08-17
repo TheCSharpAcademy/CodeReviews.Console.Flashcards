@@ -1,4 +1,4 @@
-﻿namespace Flashcards.Exceptions;
+﻿namespace Flashcards.Eddyfadeev.Exceptions;
 
 /// <summary>
 /// Represents an exception thrown to return to the main menu.

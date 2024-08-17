@@ -1,7 +1,7 @@
-﻿using Flashcards.Interfaces.View.Commands;
-using Flashcards.Interfaces.View.Factory;
+﻿using Flashcards.Eddyfadeev.Interfaces.View.Commands;
+using Flashcards.Eddyfadeev.Interfaces.View.Factory;
 
-namespace Flashcards.View.Factory;
+namespace Flashcards.Eddyfadeev.View.Factory;
 
 /// <summary>
 /// Represents a factory for creating menu commands.

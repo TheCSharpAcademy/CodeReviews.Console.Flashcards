@@ -1,6 +1,6 @@
 ﻿using Spectre.Console;
 
-namespace Flashcards.Interfaces.View;
+namespace Flashcards.Eddyfadeev.Interfaces.View;
 
 /// <summary>
 /// Represents an interface for retrieving menu entries.

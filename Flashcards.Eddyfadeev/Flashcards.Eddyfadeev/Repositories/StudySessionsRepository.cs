@@ -1,10 +1,10 @@
-﻿using Flashcards.Extensions;
-using Flashcards.Interfaces.Database;
-using Flashcards.Interfaces.Models;
-using Flashcards.Interfaces.Repositories;
-using Flashcards.Models.Dto;
+﻿using Flashcards.Eddyfadeev.Interfaces.Database;
+using Flashcards.Eddyfadeev.Interfaces.Models;
+using Flashcards.Eddyfadeev.Interfaces.Repositories;
+using Flashcards.Eddyfadeev.Models.Dto;
+using Flashcards.Eddyfadeev.Extensions;
 
-namespace Flashcards.Repositories;
+namespace Flashcards.Eddyfadeev.Repositories;
 
 /// <summary>
 /// Represents a repository for managing study sessions.

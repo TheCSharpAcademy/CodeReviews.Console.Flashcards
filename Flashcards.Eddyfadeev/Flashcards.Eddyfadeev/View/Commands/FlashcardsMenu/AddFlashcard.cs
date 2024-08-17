@@ -1,12 +1,12 @@
-﻿using Flashcards.Enums;
-using Flashcards.Interfaces.Repositories;
-using Flashcards.Interfaces.View.Commands;
-using Flashcards.Interfaces.View.Factory;
-using Flashcards.Models.Entity;
-using Flashcards.Services;
+﻿using Flashcards.Eddyfadeev.Enums;
+using Flashcards.Eddyfadeev.Interfaces.Repositories;
+using Flashcards.Eddyfadeev.Interfaces.View.Commands;
+using Flashcards.Eddyfadeev.Interfaces.View.Factory;
+using Flashcards.Eddyfadeev.Models.Entity;
+using Flashcards.Eddyfadeev.Services;
 using Spectre.Console;
 
-namespace Flashcards.View.Commands.FlashcardsMenu;
+namespace Flashcards.Eddyfadeev.View.Commands.FlashcardsMenu;
 
 /// <summary>
 /// Represents a command for adding a flashcard.

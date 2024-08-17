@@ -1,6 +1,6 @@
 ﻿using Spectre.Console;
 
-namespace Flashcards.Interfaces.Handlers;
+namespace Flashcards.Eddyfadeev.Interfaces.Handlers;
 
 /// <summary>
 /// Represents a menu handler that handles menu interactions.

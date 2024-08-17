@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
-using IConfigurationProvider = Flashcards.Interfaces.Database.IConfigurationProvider;
+using IConfigurationProvider = Flashcards.Eddyfadeev.Interfaces.Database.IConfigurationProvider;
 
-namespace Flashcards.Database;
+namespace Flashcards.Eddyfadeev.Database;
 
 /// <summary>
 /// Represents a provider for retrieving configuration data.

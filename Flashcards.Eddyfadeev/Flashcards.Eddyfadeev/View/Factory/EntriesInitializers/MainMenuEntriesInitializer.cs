@@ -1,11 +1,11 @@
-﻿using Flashcards.Enums;
-using Flashcards.Exceptions;
-using Flashcards.Interfaces.Handlers;
-using Flashcards.Interfaces.View.Commands;
-using Flashcards.Interfaces.View.Factory;
-using Flashcards.View.Commands.MainMenu;
+﻿using Flashcards.Eddyfadeev.Enums;
+using Flashcards.Eddyfadeev.Exceptions;
+using Flashcards.Eddyfadeev.Interfaces.Handlers;
+using Flashcards.Eddyfadeev.Interfaces.View.Commands;
+using Flashcards.Eddyfadeev.Interfaces.View.Factory;
+using Flashcards.Eddyfadeev.View.Commands.MainMenu;
 
-namespace Flashcards.View.Factory.EntriesInitializers;
+namespace Flashcards.Eddyfadeev.View.Factory.EntriesInitializers;
 
 /// <summary>
 /// Initializes the menu entries for the main menu.

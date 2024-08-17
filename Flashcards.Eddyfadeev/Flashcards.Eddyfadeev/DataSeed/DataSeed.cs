@@ -1,8 +1,8 @@
-﻿using Flashcards.Interfaces.Database;
-using Flashcards.Services;
+﻿using Flashcards.Eddyfadeev.Interfaces.Database;
+using Flashcards.Eddyfadeev.Services;
 using Newtonsoft.Json;
 
-namespace Flashcards.DataSeed;
+namespace Flashcards.Eddyfadeev.DataSeed;
 
 /// <summary>
 /// This class provides methods for seeding data into the database.

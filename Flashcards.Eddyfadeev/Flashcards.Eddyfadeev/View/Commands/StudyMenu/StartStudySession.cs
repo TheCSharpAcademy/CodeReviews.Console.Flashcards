@@ -1,11 +1,11 @@
-﻿using Flashcards.Enums;
-using Flashcards.Interfaces.Repositories;
-using Flashcards.Interfaces.View.Commands;
-using Flashcards.Interfaces.View.Factory;
-using Flashcards.Models.Entity;
-using Flashcards.Services;
+﻿using Flashcards.Eddyfadeev.Enums;
+using Flashcards.Eddyfadeev.Interfaces.Repositories;
+using Flashcards.Eddyfadeev.Interfaces.View.Commands;
+using Flashcards.Eddyfadeev.Interfaces.View.Factory;
+using Flashcards.Eddyfadeev.Models.Entity;
+using Flashcards.Eddyfadeev.Services;
 
-namespace Flashcards.View.Commands.StudyMenu;
+namespace Flashcards.Eddyfadeev.View.Commands.StudyMenu;
 
 /// <summary>
 /// Represents a command to start a study session.

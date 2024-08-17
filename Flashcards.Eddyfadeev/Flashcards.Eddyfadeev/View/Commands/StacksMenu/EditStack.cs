@@ -1,11 +1,11 @@
-﻿using Flashcards.Enums;
-using Flashcards.Interfaces.Repositories;
-using Flashcards.Interfaces.View.Commands;
-using Flashcards.Interfaces.View.Factory;
-using Flashcards.Services;
+﻿using Flashcards.Eddyfadeev.Enums;
+using Flashcards.Eddyfadeev.Interfaces.Repositories;
+using Flashcards.Eddyfadeev.Interfaces.View.Commands;
+using Flashcards.Eddyfadeev.Interfaces.View.Factory;
+using Flashcards.Eddyfadeev.Services;
 using Spectre.Console;
 
-namespace Flashcards.View.Commands.StacksMenu;
+namespace Flashcards.Eddyfadeev.View.Commands.StacksMenu;
 
 /// <summary>
 /// Represents a command to edit a stack.

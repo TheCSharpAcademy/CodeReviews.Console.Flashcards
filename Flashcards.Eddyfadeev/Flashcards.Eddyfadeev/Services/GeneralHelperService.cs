@@ -1,8 +1,8 @@
-﻿using Flashcards.Interfaces.Models;
-using Flashcards.Interfaces.Repositories.Operations;
+﻿using Flashcards.Eddyfadeev.Interfaces.Models;
+using Flashcards.Eddyfadeev.Interfaces.Repositories.Operations;
 using Spectre.Console;
 
-namespace Flashcards.Services;
+namespace Flashcards.Eddyfadeev.Services;
 
 /// <summary>
 /// The GeneralHelperService class provides general helper methods for various operations.

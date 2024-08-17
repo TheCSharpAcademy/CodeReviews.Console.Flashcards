@@ -1,13 +1,13 @@
-﻿using Flashcards.Enums;
-using Flashcards.Interfaces.Handlers;
-using Flashcards.Interfaces.Models;
-using Flashcards.Interfaces.Repositories;
-using Flashcards.Interfaces.View.Commands;
-using Flashcards.Interfaces.View.Factory;
-using Flashcards.Services;
+﻿using Flashcards.Eddyfadeev.Enums;
+using Flashcards.Eddyfadeev.Interfaces.Handlers;
+using Flashcards.Eddyfadeev.Interfaces.Models;
+using Flashcards.Eddyfadeev.Interfaces.Repositories;
+using Flashcards.Eddyfadeev.Interfaces.View.Commands;
+using Flashcards.Eddyfadeev.Interfaces.View.Factory;
+using Flashcards.Eddyfadeev.Services;
 using Spectre.Console;
 
-namespace Flashcards.View.Commands.FlashcardsMenu;
+namespace Flashcards.Eddyfadeev.View.Commands.FlashcardsMenu;
 
 /// <summary>
 /// Represents a command that allows the user to choose a flashcard.

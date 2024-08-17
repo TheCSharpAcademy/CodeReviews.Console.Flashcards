@@ -1,6 +1,6 @@
-﻿using Flashcards.Interfaces.Models;
+﻿using Flashcards.Eddyfadeev.Interfaces.Models;
 
-namespace Flashcards.Models.Dto;
+namespace Flashcards.Eddyfadeev.Models.Dto;
 
 /// <summary>
 /// Represents a data transfer object for a flashcard.

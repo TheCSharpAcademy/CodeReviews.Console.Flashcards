@@ -1,7 +1,7 @@
-﻿using Flashcards.Interfaces.Models;
-using Flashcards.Interfaces.Repositories.Operations;
+﻿using Flashcards.Eddyfadeev.Interfaces.Models;
+using Flashcards.Eddyfadeev.Interfaces.Repositories.Operations;
 
-namespace Flashcards.Interfaces.Repositories;
+namespace Flashcards.Eddyfadeev.Interfaces.Repositories;
 
 /// <summary>
 /// Represents an interface for a flashcard repository.
