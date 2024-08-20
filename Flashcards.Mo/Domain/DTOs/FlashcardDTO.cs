@@ -2,7 +2,7 @@
 
 namespace Flashcards.Domain.DTO
 {
-    public class FlashcardDTO
+    public class FlashcardDto
     {
         public int FlashcardNumber { get; set; }
         public string Question { get; set; } = string.Empty;

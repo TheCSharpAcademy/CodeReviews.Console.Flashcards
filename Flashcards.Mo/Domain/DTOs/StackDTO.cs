@@ -1,10 +1,10 @@
-﻿
+﻿using System.Collections.Generic;
 
 namespace Flashcards.Domain.DTO
 {
-    public class StackDTO
+    public class StackDto
     {
         public string Name { get; set; } = string.Empty;
-        public List<FlashcardDTO> Flashcards { get; set; } = new List<FlashcardDTO>(); 
+        public List<FlashcardDto> Flashcards { get; set; } = new List<FlashcardDto>(); 
     }
 }

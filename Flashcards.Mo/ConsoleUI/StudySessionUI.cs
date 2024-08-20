@@ -104,7 +104,7 @@ public static class StudySessionUI
 
         if (stack != null)
         {
-            var sessions = studySessionService.GetStudySessionsForStack(stack.Id)?.ToList() ?? new List<StudySessionDTO>(); 
+            var sessions = studySessionService.GetStudySessionsForStack(stack.Id)?.ToList() ?? new List<StudySessionDto>(); 
 
             if (sessions.Any())
             {

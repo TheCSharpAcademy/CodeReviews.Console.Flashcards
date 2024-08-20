@@ -1,7 +1,7 @@
 ﻿using Flashcards.Domain.Interfaces;
 using Flashcards.Domain.DTO;
 using Flashcards.Domain.Entities;
-
+using System.Collections.Generic;
 
 namespace Flashcards.Services
 {
@@ -25,10 +25,10 @@ namespace Flashcards.Services
             _studySessionRepository.Add(studySession);
         }
 
-        public IEnumerable<StudySessionDTO> GetStudySessionsForStack(int stackId)
+        public IEnumerable<StudySessionDto> GetStudySessionsForStack(int stackId)
         {
             var sessions = _studySessionRepository.GetByStackId(stackId)
-                                                  .Select(ss => new StudySessionDTO
+                                                  .Select(ss => new StudySessionDto
                                                   {
                                                       Date = ss.Date,
                                                       Score = ss.Score

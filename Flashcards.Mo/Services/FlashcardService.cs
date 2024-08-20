@@ -14,10 +14,10 @@ namespace Flashcards.Services
             _flashcardRepository = flashcardRepository;
         }
 
-        public IEnumerable<FlashcardDTO> GetFlashcardsForStack(int stackId)
+        public IEnumerable<FlashcardDto> GetFlashcardsForStack(int stackId)
         {
             var flashcards = _flashcardRepository.GetByStackId(stackId).OrderBy(f => f.DisplayOrder);
-            return flashcards.Select((f, index) => new FlashcardDTO
+            return flashcards.Select((f, index) => new FlashcardDto
             {
                 FlashcardNumber = index + 1,
                 Question = f.Question,
