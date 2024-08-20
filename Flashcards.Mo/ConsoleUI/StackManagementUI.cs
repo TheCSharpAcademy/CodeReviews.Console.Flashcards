@@ -1,5 +1,4 @@
 ﻿using Flashcards.Services;
-using ConsoleTables;
 public static class StackManagementUI
 {
     public static void Run(StackService stackService, FlashcardService flashcardService)

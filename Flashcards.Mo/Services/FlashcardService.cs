@@ -1,8 +1,7 @@
 ﻿using Flashcards.Domain.Entities;
 using Flashcards.Domain.Interfaces;
 using Flashcards.Domain.DTO;
-using System.Collections.Generic;
-using System.Linq;
+
 
 namespace Flashcards.Services
 {

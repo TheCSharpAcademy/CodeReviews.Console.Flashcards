@@ -1,12 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Flashcards.Data.Context; 
-using Flashcards.Data.Repositories;
-using Flashcards.Services;
-using Flashcards.Domain.Interfaces;
-using System.IO;
+
 
 namespace Flashcards.Data.Context
 {

@@ -5,7 +5,6 @@ using Flashcards.Data.Context;
 using Flashcards.Data.Repositories;
 using Flashcards.Services;
 using Flashcards.Domain.Interfaces;
-using Npgsql;
 
 
 class Program

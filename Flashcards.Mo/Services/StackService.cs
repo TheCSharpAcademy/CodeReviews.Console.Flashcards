@@ -2,7 +2,7 @@
 using Flashcards.Domain.Interfaces;
 using ConsoleTables;
 using Npgsql;
-using System.Collections.Generic;
+
 
 namespace Flashcards.Services
 {
