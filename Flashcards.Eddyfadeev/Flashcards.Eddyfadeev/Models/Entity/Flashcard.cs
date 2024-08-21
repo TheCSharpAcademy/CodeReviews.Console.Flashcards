@@ -1,5 +1,5 @@
-﻿using Flashcards.Eddyfadeev.Interfaces.Models;
-using Flashcards.Eddyfadeev.Extensions;
+﻿using Flashcards.Eddyfadeev.Extensions;
+using Flashcards.Eddyfadeev.Interfaces.Models;
 
 namespace Flashcards.Eddyfadeev.Models.Entity;
 

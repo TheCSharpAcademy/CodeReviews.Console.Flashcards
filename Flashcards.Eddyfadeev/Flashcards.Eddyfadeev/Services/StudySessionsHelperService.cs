@@ -1,4 +1,6 @@
-﻿using Flashcards.Eddyfadeev.Interfaces.Models;
+﻿using Flashcards.Eddyfadeev.Extensions;
+using Flashcards.Eddyfadeev.Interfaces.Handlers;
+using Flashcards.Eddyfadeev.Interfaces.Models;
 using Flashcards.Eddyfadeev.Interfaces.Repositories;
 using Flashcards.Eddyfadeev.Models.Entity;
 using Spectre.Console;
@@ -10,18 +12,6 @@ namespace Flashcards.Eddyfadeev.Services;
 /// </summary>
 internal static class StudySessionsHelperService
 {
-    /// <summary>
-    /// Sets the stack ID in the flashcards repository and study sessions repository.
-    /// </summary>
-    /// <param name="stack">The stack.</param>
-    /// <param name="flashcardsRepository">The flashcards repository.</param>
-    /// <param name="studySessionsRepository">The study sessions repository.</param>
-    internal static void SetStackIdsInRepositories(IStack stack, IFlashcardsRepository flashcardsRepository, IStudySessionsRepository studySessionsRepository)
-    {
-        GeneralHelperService.SetStackIdInRepository(flashcardsRepository, stack);
-        GeneralHelperService.SetStackIdInRepository(studySessionsRepository, stack);
-    }
-
     /// <summary>
     /// Creates a new study session.
     /// </summary>
@@ -61,18 +51,49 @@ internal static class StudySessionsHelperService
             {
                 correctAnswers++;
                 AnsiConsole.MarkupLine($"{ Messages.Messages.CorrectAnswerMessage }\n");
-                GeneralHelperService.ShowContinueMessage();
             }
             else
             {
                 AnsiConsole.MarkupLine($"{ Messages.Messages.IncorrectAnswerMessage } Correct answer is { flashcard.Answer }\n");
-                GeneralHelperService.ShowContinueMessage();
             }
+
+            GeneralHelperService.ShowContinueMessage();
         }
         AnsiConsole.MarkupLine($"[white]You have { correctAnswers } out of { flashcards.Count }.[/]");
         
         GeneralHelperService.ShowContinueMessage();
         
         return correctAnswers;
+    }
+
+    /// <summary>
+    /// Retrieves the chosen year from the user.
+    /// </summary>
+    /// <param name="studySessionsRepository">The study sessions repository.</param>
+    /// <param name="yearEntryHandler">The handler for user input of year.</param>
+    /// <returns>The chosen year as an instance of IYear.</returns>
+    internal static IYear GetYearFromUser(
+        IStudySessionsRepository studySessionsRepository, 
+        IEditableEntryHandler<IYear> yearEntryHandler)
+    {
+        var years = studySessionsRepository.GetYears().ToList();
+        
+        if (years.Count == 0)
+        {
+            AnsiConsole.MarkupLine(Messages.Messages.NoEntriesFoundMessage);
+            GeneralHelperService.ShowContinueMessage();
+            return new Year();
+        }
+        
+        var userChoice = yearEntryHandler.HandleEditableEntry(years)?.ToEntity();
+        
+        if (userChoice is null)
+        {
+            AnsiConsole.MarkupLine(Messages.Messages.NoYearsFoundMessage);
+            GeneralHelperService.ShowContinueMessage();
+            return new Year();
+        }
+        
+        return userChoice;
     }
 }

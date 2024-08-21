@@ -32,13 +32,6 @@ internal sealed class ChooseStack : ICommand
             return;
         }
         
-        var userChoice = _editableEntryHandler.HandleEditableEntry(entries);
-
-        if (GeneralHelperService.CheckForNull(userChoice))
-        {
-            return;
-        }
-        
-        _stacksRepository.SelectedEntry = userChoice;
+        _editableEntryHandler.HandleEditableEntry(entries);
     }
 }

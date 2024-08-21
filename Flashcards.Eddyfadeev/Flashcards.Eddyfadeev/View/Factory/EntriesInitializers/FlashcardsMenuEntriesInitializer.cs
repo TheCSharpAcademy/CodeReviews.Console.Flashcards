@@ -16,28 +16,47 @@ internal class FlashcardsMenuEntriesInitializer : IMenuEntriesInitializer<Flashc
 {
     private readonly IFlashcardsRepository _flashcardsRepository;
     private readonly IStacksRepository _stacksRepository;
-    private readonly IEditableEntryHandler<IFlashcard> _editableEntryHandler;
-    private readonly IMenuCommandFactory<StackMenuEntries> _stackMenuCommandFactory;
+    private readonly IEditableEntryHandler<IFlashcard> _flashcardEntryHandler;
+    private readonly IEditableEntryHandler<IStack> _stackEntryHandler;
 
     public FlashcardsMenuEntriesInitializer(
         IFlashcardsRepository flashcardsRepository, 
         IStacksRepository stacksRepository,
-        IEditableEntryHandler<IFlashcard> editableEntryHandler,
-        IMenuCommandFactory<StackMenuEntries> stackMenuCommandFactory)
+        IEditableEntryHandler<IFlashcard> flashcardEntryHandler,
+        IEditableEntryHandler<IStack> stackEntryHandler)
     {
         _flashcardsRepository = flashcardsRepository;
         _stacksRepository = stacksRepository;
-        _editableEntryHandler = editableEntryHandler;
-        _stackMenuCommandFactory = stackMenuCommandFactory;
+        _flashcardEntryHandler = flashcardEntryHandler;
+        _stackEntryHandler = stackEntryHandler;
     }
 
     public Dictionary<FlashcardEntries, Func<ICommand>> InitializeEntries(IMenuCommandFactory<FlashcardEntries> flashcardsMenuCommandFactory) =>
         new()
         {
-            { FlashcardEntries.ChooseFlashcard, () => new ChooseFlashcard(_flashcardsRepository, _stacksRepository, _editableEntryHandler, _stackMenuCommandFactory) },
-            { FlashcardEntries.AddFlashcard, () => new AddFlashcard(_flashcardsRepository, _stacksRepository,_stackMenuCommandFactory) },
-            { FlashcardEntries.EditFlashcard, () => new EditFlashcard(_flashcardsRepository, flashcardsMenuCommandFactory) },
-            { FlashcardEntries.DeleteFlashcard, () => new DeleteFlashcard(_flashcardsRepository, flashcardsMenuCommandFactory) },
+            { FlashcardEntries.ChooseFlashcard, () => new ViewFlashcards(
+                _flashcardsRepository, 
+                _stacksRepository, 
+                _flashcardEntryHandler, 
+                _stackEntryHandler
+                ) },
+            { FlashcardEntries.AddFlashcard, () => new AddFlashcard(
+                _flashcardsRepository, 
+                _stacksRepository, 
+                _stackEntryHandler
+                ) },
+            { FlashcardEntries.EditFlashcard, () => new EditFlashcard(
+                _stacksRepository,
+                _flashcardsRepository,
+                _stackEntryHandler,
+                _flashcardEntryHandler
+                ) },
+            { FlashcardEntries.DeleteFlashcard, () => new DeleteFlashcard(
+                _stacksRepository,
+                _flashcardsRepository,
+                _stackEntryHandler,
+                _flashcardEntryHandler
+                ) },
             { FlashcardEntries.ReturnToMainMenu, () => throw new ReturnToMainMenuException()}
         };
 }

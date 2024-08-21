@@ -52,7 +52,7 @@ internal class DatabaseManager : IDatabaseManager
         try
         {
             using var connection = GetConnection();
-
+            
             return connection.Query<TEntity>(query);
         }
         catch (Exception ex)

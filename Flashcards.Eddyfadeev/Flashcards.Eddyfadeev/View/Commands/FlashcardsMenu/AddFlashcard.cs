@@ -1,7 +1,7 @@
-﻿using Flashcards.Eddyfadeev.Enums;
+﻿using Flashcards.Eddyfadeev.Interfaces.Handlers;
+using Flashcards.Eddyfadeev.Interfaces.Models;
 using Flashcards.Eddyfadeev.Interfaces.Repositories;
 using Flashcards.Eddyfadeev.Interfaces.View.Commands;
-using Flashcards.Eddyfadeev.Interfaces.View.Factory;
 using Flashcards.Eddyfadeev.Models.Entity;
 using Flashcards.Eddyfadeev.Services;
 using Spectre.Console;
@@ -15,44 +15,42 @@ internal sealed class AddFlashcard : ICommand
 {
     private readonly IFlashcardsRepository _flashcardsRepository;
     private readonly IStacksRepository _stacksRepository;
-    private readonly IMenuCommandFactory<StackMenuEntries> _stackMenuCommandFactory;
+    private readonly IEditableEntryHandler<IStack> _stackEntryHandler;
 
     public AddFlashcard(
         IFlashcardsRepository flashcardsRepository, 
         IStacksRepository stacksRepository,
-        IMenuCommandFactory<StackMenuEntries> stackMenuCommandFactory)
+        IEditableEntryHandler<IStack> stackEntryHandler)
     {
         _flashcardsRepository = flashcardsRepository;
         _stacksRepository = stacksRepository;
-        _stackMenuCommandFactory = stackMenuCommandFactory;
+        _stackEntryHandler = stackEntryHandler;
     }
 
     public void Execute()
     {
-        var stack = StackChooserService.GetStacks(_stackMenuCommandFactory, _stacksRepository);
-        
-        GeneralHelperService.SetStackIdInRepository(_flashcardsRepository, stack);
-        GeneralHelperService.SetStackNameInRepository(_flashcardsRepository, stack);
-        
-        var question = FlashcardHelperService.GetQuestion();
-        var answer = FlashcardHelperService.GetAnswer();
-        
-        if (_flashcardsRepository.StackId is null)
+        var stack = StackChooserService.GetStackFromUser(_stacksRepository, _stackEntryHandler);
+
+        if (GeneralHelperService.CheckForNull(stack))
         {
-            AnsiConsole.MarkupLine(Messages.Messages.NoStackChosenMessage);
-            GeneralHelperService.ShowContinueMessage();
             return;
         }
         
-        var stackId = _flashcardsRepository.StackId;
+        var question = FlashcardHelperService.GetQuestion();
+        var answer = FlashcardHelperService.GetAnswer();
         
         var flashcard = new Flashcard
         {
             Question = question,
             Answer = answer,
-            StackId = stackId!.Value
+            StackId = stack.Id
         };
         
-        _flashcardsRepository.Insert(flashcard);
+        var result = _flashcardsRepository.Insert(flashcard);
+        
+        AnsiConsole.MarkupLine(result > 0
+            ? Messages.Messages.AddSuccessMessage
+            : Messages.Messages.AddFailedMessage);
+        GeneralHelperService.ShowContinueMessage();
     }
 }

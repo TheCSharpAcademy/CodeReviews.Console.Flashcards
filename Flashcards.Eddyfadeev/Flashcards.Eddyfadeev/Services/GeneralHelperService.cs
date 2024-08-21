@@ -1,6 +1,4 @@
-﻿using Flashcards.Eddyfadeev.Interfaces.Models;
-using Flashcards.Eddyfadeev.Interfaces.Repositories.Operations;
-using Spectre.Console;
+﻿using Spectre.Console;
 
 namespace Flashcards.Eddyfadeev.Services;
 
@@ -27,36 +25,6 @@ internal static class GeneralHelperService
     {
         AnsiConsole.MarkupLine(Messages.Messages.AnyKeyToContinueMessage);
         Console.ReadKey();
-    }
-
-    /// <summary>
-    /// Sets the stack ID in the specified repository.
-    /// </summary>
-    /// <param name="repository">The repository that implements the <see cref="IAssignableStackId"/> interface.</param>
-    /// <param name="stack">The stack object from which the stack ID will be assigned.</param>
-    internal static void SetStackIdInRepository(IAssignableStackId repository, IStack stack)
-    {
-        if (CheckForNull(stack))
-        {
-            return;
-        }
-        
-        repository.StackId = stack.Id;
-    }
-
-    /// <summary>
-    /// Sets the stack name in the repository.
-    /// </summary>
-    /// <param name="repository">The repository with an assignable stack name.</param>
-    /// <param name="stack">The stack containing the name.</param>
-    internal static void SetStackNameInRepository(IAssignableStackName repository, IStack stack)
-    {
-        if (CheckForNull(stack))
-        {
-            return;
-        }
-        
-        repository.StackName = stack.Name;
     }
 
     /// <summary>

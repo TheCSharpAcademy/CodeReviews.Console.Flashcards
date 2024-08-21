@@ -15,24 +15,24 @@ namespace Flashcards.Eddyfadeev.View.Factory.EntriesInitializers;
 internal class StacksMenuEntriesInitializer : IMenuEntriesInitializer<StackMenuEntries>
 {
     private readonly IStacksRepository _stacksRepository;
-    private readonly IEditableEntryHandler<IStack> _editableEntryHandler;
+    private readonly IEditableEntryHandler<IStack> _stackEntryHandler;
 
     public StacksMenuEntriesInitializer(
         IStacksRepository stacksRepository,
-        IEditableEntryHandler<IStack> editableEntryHandler
+        IEditableEntryHandler<IStack> stackEntryHandler
         )
     {
         _stacksRepository = stacksRepository;
-        _editableEntryHandler = editableEntryHandler;
+        _stackEntryHandler = stackEntryHandler;
     }
 
     public Dictionary<StackMenuEntries, Func<ICommand>> InitializeEntries(IMenuCommandFactory<StackMenuEntries> menuCommandFactory) =>
         new()
         {
             { StackMenuEntries.AddStack, () => new AddStack(_stacksRepository) },
-            { StackMenuEntries.DeleteStack, () => new DeleteStack(_stacksRepository, menuCommandFactory) },
-            { StackMenuEntries.EditStack, () => new EditStack(_stacksRepository, menuCommandFactory) },
-            { StackMenuEntries.ChooseStack, () => new ChooseStack(_stacksRepository, _editableEntryHandler) },
+            { StackMenuEntries.DeleteStack, () => new DeleteStack(_stacksRepository, _stackEntryHandler) },
+            { StackMenuEntries.EditStack, () => new EditStack(_stacksRepository, _stackEntryHandler) },
+            { StackMenuEntries.ChooseStack, () => new ChooseStack(_stacksRepository, _stackEntryHandler) },
             { StackMenuEntries.ReturnToMainMenu, () => throw new ReturnToMainMenuException() }
         };
 }

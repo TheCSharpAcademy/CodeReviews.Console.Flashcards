@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Database_IConfigurationProvider = Flashcards.Eddyfadeev.Interfaces.Database.IConfigurationProvider;
 using IConfigurationProvider = Flashcards.Eddyfadeev.Interfaces.Database.IConfigurationProvider;
 
 namespace Flashcards.Eddyfadeev.Database;
@@ -6,7 +7,7 @@ namespace Flashcards.Eddyfadeev.Database;
 /// <summary>
 /// Represents a provider for retrieving configuration data.
 /// </summary>
-internal class ConfigurationProvider : IConfigurationProvider
+internal class ConfigurationProvider : Database_IConfigurationProvider
 {
     private const string AppSettingsFileName = "appsettings.json";
 

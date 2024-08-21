@@ -1,7 +1,7 @@
-﻿using Flashcards.Eddyfadeev.Interfaces.Handlers;
+﻿using Flashcards.Eddyfadeev.Extensions;
+using Flashcards.Eddyfadeev.Interfaces.Handlers;
 using Flashcards.Eddyfadeev.Interfaces.View;
 using Flashcards.Eddyfadeev.Interfaces.View.Factory;
-using Flashcards.Eddyfadeev.Extensions;
 using Spectre.Console;
 
 namespace Flashcards.Eddyfadeev.Handlers;

@@ -1,9 +1,9 @@
-﻿using Flashcards.Eddyfadeev.Interfaces.Database;
+﻿using Flashcards.Eddyfadeev.Extensions;
+using Flashcards.Eddyfadeev.Interfaces.Database;
 using Flashcards.Eddyfadeev.Interfaces.Models;
 using Flashcards.Eddyfadeev.Interfaces.Repositories;
 using Flashcards.Eddyfadeev.Models.Dto;
 using Flashcards.Eddyfadeev.Services;
-using Flashcards.Eddyfadeev.Extensions;
 
 namespace Flashcards.Eddyfadeev.Repositories;
 
@@ -13,10 +13,6 @@ namespace Flashcards.Eddyfadeev.Repositories;
 internal class FlashcardsRepository : IFlashcardsRepository
 {
     private readonly IDatabaseManager _databaseManager;
-    
-    public int? StackId { get; set; }
-    public string? StackName { get; set; }
-    public IFlashcard? SelectedEntry { get; set; }
     
     public FlashcardsRepository(IDatabaseManager databaseManager)
     {
@@ -30,6 +26,11 @@ internal class FlashcardsRepository : IFlashcardsRepository
     /// <returns>The number of rows affected by the insert operation.</returns>
     public int Insert(IDbEntity<IFlashcard> entity)
     {
+        if (GeneralHelperService.CheckForNull(entity))
+        {
+            return 0;
+        }
+        
         var stack = entity.MapToDto();
         
         const string query = "INSERT INTO Flashcards (Question, Answer, StackId) VALUES (@Question, @Answer, @StackId);";
@@ -41,32 +42,31 @@ internal class FlashcardsRepository : IFlashcardsRepository
     /// Deletes the selected flashcard from the repository.
     /// </summary>
     /// <returns>The number of flashcards deleted from the repository.</returns>
-    public int Delete()
+    public int Delete(IDbEntity<IFlashcard> entity)
     {
-        if (GeneralHelperService.CheckForNull(SelectedEntry))
+        if (GeneralHelperService.CheckForNull(entity))
         {
             return 0;
         }
-        
-        var parameters = new { Id = SelectedEntry.Id };
-        
+
+        var flashcard = entity.MapToDto();
         const string deleteQuery = "DELETE FROM Flashcards WHERE Id = @Id;";
         
-        return _databaseManager.DeleteEntry(deleteQuery, parameters);
+        return _databaseManager.DeleteEntry(deleteQuery, flashcard);
     }
 
     /// <summary>
     /// Updates the flashcard in the repository.
     /// </summary>
     /// <returns>The number of rows affected (should be 1 if successful, 0 otherwise).</returns>
-    public int Update()
+    public int Update(IDbEntity<IFlashcard> entity)
     {
-        if (GeneralHelperService.CheckForNull(SelectedEntry))
+        if (GeneralHelperService.CheckForNull(entity))
         {
             return 0;
         }
 
-        var flashcard = SelectedEntry.ToDto();
+        var flashcard = entity.MapToDto();
         
         const string query = "UPDATE Flashcards SET Question = @Question, Answer = @Answer WHERE Id = @Id;";
         
@@ -79,18 +79,21 @@ internal class FlashcardsRepository : IFlashcardsRepository
     /// <returns>
     /// An IEnumerable of IFlashcard representing all the flashcards in the stack.
     /// </returns>
-    public IEnumerable<IFlashcard> GetAll()
+    public IEnumerable<IFlashcard> GetFlashcards(IDbEntity<IStack> stack)
     {
-        const string query = "SELECT * FROM Flashcards WHERE StackId = @StackId;";
-        object parameters = new
+        if (GeneralHelperService.CheckForNull(stack))
         {
-            StackId
-        };
+            return new List<IFlashcard>();
+        }
         
-        IEnumerable<IFlashcard> flashcards = _databaseManager.GetAllEntities<FlashcardDto>(query, parameters);
+        var stackDto = stack.MapToDto();
+        
+        const string query = "SELECT * FROM Flashcards WHERE StackId = @Id;";
+        
+        IEnumerable<IFlashcard> flashcards = _databaseManager.GetAllEntities<FlashcardDto>(query, stackDto);
         
         flashcards = flashcards.Select(flashcard => flashcard.ToEntity());
-
+        
         return flashcards;
     }
 }

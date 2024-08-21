@@ -1,7 +1,7 @@
-﻿using Flashcards.Eddyfadeev.Enums;
+﻿using Flashcards.Eddyfadeev.Interfaces.Handlers;
+using Flashcards.Eddyfadeev.Interfaces.Models;
 using Flashcards.Eddyfadeev.Interfaces.Repositories;
 using Flashcards.Eddyfadeev.Interfaces.View.Commands;
-using Flashcards.Eddyfadeev.Interfaces.View.Factory;
 using Flashcards.Eddyfadeev.Services;
 using Spectre.Console;
 
@@ -13,23 +13,28 @@ namespace Flashcards.Eddyfadeev.View.Commands.StacksMenu;
 internal sealed class EditStack : ICommand
 {
     private readonly IStacksRepository _stacksRepository;
-    private readonly IMenuCommandFactory<StackMenuEntries> _menuCommandFactory;
+    private readonly IEditableEntryHandler<IStack> _stackEntryHandler;
 
-    public EditStack(IStacksRepository stacksRepository, IMenuCommandFactory<StackMenuEntries> menuCommandFactory)
+    public EditStack(IStacksRepository stacksRepository, IEditableEntryHandler<IStack> stackEntryHandler)
     {
         _stacksRepository = stacksRepository;
-        _menuCommandFactory = menuCommandFactory;
+        _stackEntryHandler = stackEntryHandler;
     }
 
     public void Execute()
     {
-        StackChooserService.GetStacks(_menuCommandFactory, _stacksRepository);
+        var stack = StackChooserService.GetStackFromUser(_stacksRepository, _stackEntryHandler);
+
+        if (GeneralHelperService.CheckForNull(stack))
+        {
+            return;
+        }
 
         var newStackName = AskNewStackName();
         
-        _stacksRepository.SelectedEntry!.Name = newStackName;
+        stack.Name = newStackName;
 
-        var result = _stacksRepository.Update();
+        var result = _stacksRepository.Update(stack);
         
         AnsiConsole.MarkupLine(
             result > 0 ? 
