@@ -51,7 +51,9 @@ internal class MainMenuEntriesInitializer : IMenuEntriesInitializer<MainMenuEntr
                     _stackEntryHandler, 
                     _stacksRepository, 
                     _studySessionsRepository, 
-                    _flashcardsRepository) },
+                    _flashcardsRepository
+                    ) 
+            },
             { MainMenuEntries.StudyHistory, () => new ShowStudyHistory(_reportsMenuHandler) },
             { MainMenuEntries.ManageStacks, () => new ManageStacks(_stacksMenuHandler) },
             { MainMenuEntries.ManageFlashcards, () => new ManageFlashcards(_flashcardsMenuHandler) },

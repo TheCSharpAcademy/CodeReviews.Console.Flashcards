@@ -39,24 +39,28 @@ internal class FlashcardsMenuEntriesInitializer : IMenuEntriesInitializer<Flashc
                 _stacksRepository, 
                 _flashcardEntryHandler, 
                 _stackEntryHandler
-                ) },
+                ) 
+            },
             { FlashcardEntries.AddFlashcard, () => new AddFlashcard(
                 _flashcardsRepository, 
                 _stacksRepository, 
                 _stackEntryHandler
-                ) },
+                ) 
+            },
             { FlashcardEntries.EditFlashcard, () => new EditFlashcard(
                 _stacksRepository,
                 _flashcardsRepository,
                 _stackEntryHandler,
                 _flashcardEntryHandler
-                ) },
+                ) 
+            },
             { FlashcardEntries.DeleteFlashcard, () => new DeleteFlashcard(
                 _stacksRepository,
                 _flashcardsRepository,
                 _stackEntryHandler,
                 _flashcardEntryHandler
-                ) },
+                ) 
+            },
             { FlashcardEntries.ReturnToMainMenu, () => throw new ReturnToMainMenuException()}
         };
 }
