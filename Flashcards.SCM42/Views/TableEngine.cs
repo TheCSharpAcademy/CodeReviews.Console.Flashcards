@@ -6,13 +6,11 @@ public class VisualizationEngine
 {
     static TableBorder borderStyle = ViewStyles.borderStyle;
     static Color foregroundColor = ViewStyles.foregroundColor;
-    static int bottomPad = 1;
 
     internal static void DisplayFlashcards(List<FlashcardDTO> cardList, string? name)
     {
         var table = new Table();
-        table.Border = borderStyle;
-        var bottomPadding = new Padder(table).PadBottom(bottomPad);
+        table.Border = borderStyle;       
 
         table.AddColumn($"[{foregroundColor}]Card #[/]");
         table.AddColumn($"[{foregroundColor}]Card Front[/]");
@@ -30,7 +28,6 @@ public class VisualizationEngine
     {
         var table = new Table();
         table.Border = borderStyle;
-        var bottomPadding = new Padder(table).PadBottom(bottomPad);
 
         table.AddColumn($"[{foregroundColor}]Stack #[/]");
         table.AddColumn($"[{foregroundColor}]Stack Name[/]");
@@ -48,7 +45,7 @@ public class VisualizationEngine
     {
         var table = new Table();
         table.Border = borderStyle;
-        var bottomPadding = new Padder(table).PadBottom(bottomPad);
+        
         table.Title($"Average Score Per Month For: {year}");
 
         table.AddColumn($"[{foregroundColor}]Stack Name[/]");
@@ -80,7 +77,7 @@ public class VisualizationEngine
     {
         var table = new Table();
         table.Border = borderStyle;
-        var bottomPadding = new Padder(table).PadBottom(bottomPad);
+        
         table.Title($"Sessions Per Month For: {year}");
 
         table.AddColumn($"[{foregroundColor}]Stack Name[/]");
@@ -112,7 +109,6 @@ public class VisualizationEngine
     {
         var table = new Table();
         table.Border = borderStyle;
-        var bottomPadding = new Padder(table).PadBottom(bottomPad);
 
         table.AddColumn($"[{foregroundColor}]Session #[/]");
         table.AddColumn($"[{foregroundColor}]Stack[/]");
@@ -132,7 +128,6 @@ public class VisualizationEngine
     {
         var table = new Table();
         table.Border = borderStyle;
-        var bottomPadding = new Padder(table).PadBottom(bottomPad);
 
         table.AddColumn($"[{foregroundColor}]Front[/]");
         table.AddRow($"{card.CardFront}");
@@ -144,7 +139,6 @@ public class VisualizationEngine
     {
         var table = new Table();
         table.Border = borderStyle;
-        var bottomPadding = new Padder(table).PadBottom(bottomPad);
 
         table.AddColumn($"[{foregroundColor}]Back[/]");
         table.AddRow($"{card.CardBack}");
