@@ -30,12 +30,14 @@ public class DapperHelper
     {
         _connection = new SqlConnection(_config.GetConnectionString("LocalDB"));
 
-        if (_config["UseExampleData"] is not null and "True")
+        if (_config["UseExampleData"] is "True")
         {
-            _connection.Execute("DROP TABLE Cards");
-            _connection.Execute("DROP TABLE Stacks");
+            DropTable("Cards");
+            DropTable("StudySessions");
+            DropTable("Stacks");
             CreateStacksTable();
             CreateCardsTable();
+            CreateStudySessionsTable();
             PopulateDatabase();
         }
         else
@@ -68,6 +70,16 @@ public class DapperHelper
                    INSERT INTO Cards (Front, Back, StackId) VALUES ('In which year did the Titanic sink?', '1912', 3);
                    INSERT INTO Cards (Front, Back, StackId) VALUES ('What ancient civilization built the pyramids?', 'The Egyptians', 3);
                    
+                   -- Insert example data into StudySessions table
+                   INSERT INTO StudySessions (Date, Correct, Total, StackId) VALUES ('2024-08-18', 3, 5, 1);
+                   INSERT INTO StudySessions (Date, Correct, Total, StackId) VALUES ('2024-08-19', 10, 11, 2);
+                   INSERT INTO StudySessions (Date, Correct, Total, StackId) VALUES ('2024-08-20', 7, 10, 3);
+                   INSERT INTO StudySessions (Date, Correct, Total, StackId) VALUES ('2024-08-21', 4, 5, 1);
+                   INSERT INTO StudySessions (Date, Correct, Total, StackId) VALUES ('2024-08-22', 4, 14, 2);
+                   INSERT INTO StudySessions (Date, Correct, Total, StackId) VALUES ('2024-08-23', 10, 10, 3);
+                   INSERT INTO StudySessions (Date, Correct, Total, StackId) VALUES ('2024-08-24', 5, 5, 1);
+                                       
+                   
                    """;
 
         Log(sql);
@@ -80,22 +92,6 @@ public class DapperHelper
         _connection.Dispose();
     }
 
-    private void CreateStacksTable()
-    {
-        var sql = $"""
-                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Stacks')
-                    BEGIN
-                        CREATE TABLE Stacks (
-                            Id INT IDENTITY(1,1) PRIMARY KEY,
-                            Name VARCHAR({TextSize}) NOT NULL UNIQUE,
-                        )
-                    END
-                    """;
-        
-        Log(sql);
-        _connection.Execute(sql);
-    }
-
     public bool AddStack(string name)
     {
         const string sql = "INSERT INTO Stacks (Name) VALUES (@name)";
@@ -105,7 +101,7 @@ public class DapperHelper
             var rows = _connection.Execute(sql, new { name });
             return rows == 1;
         }
-        catch (SqlException ex)
+        catch (SqlException)
         {
             // Name already exists
             return false;
@@ -146,6 +142,16 @@ public class DapperHelper
         return rows == 1;
     }
 
+    public List<Card> GetCardsByStackId(int stackId)
+    {
+        const string sql = """
+                           SELECT * FROM Cards WHERE StackId = @stackId
+                           """;
+        
+        var results = _connection.Query<Card>(sql, new { stackId }).ToList();
+        return results;
+    }
+
     public List<CardDTO> GetCardDtos()
     {
         const string sql = """
@@ -165,6 +171,49 @@ public class DapperHelper
         return rows == 1;
     }
 
+    public bool AddSession(StudySession session)
+    {
+        const string sql = """
+                           INSERT INTO StudySessions (Date, Correct, Total, StackId)
+                           VALUES (@date, @correct, @total, @stackId)
+                           """;
+        Log(sql);
+        var rows = _connection.Execute(sql, session);
+        return rows == 1;
+    }
+
+    public List<StudySessionDto> GetSessions(int stack = 0)
+    {
+        var sql = """
+                  SELECT Date, Correct, Total, Name
+                  FROM StudySessions JOIN Stacks on StudySessions.StackId = Stacks.Id
+                  """;
+
+        if (stack > 0)
+        {
+            sql += $" WHERE StackId = {stack}";
+        }
+        
+        var results = _connection.Query<StudySessionDto>(sql).ToList();
+        return results;
+    }
+
+    private void CreateStacksTable()
+    {
+        var sql = $"""
+                   IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Stacks')
+                   BEGIN
+                       CREATE TABLE Stacks (
+                           Id INT IDENTITY(1,1) PRIMARY KEY,
+                           Name VARCHAR({TextSize}) NOT NULL UNIQUE,
+                       )
+                   END
+                   """;
+        
+        Log(sql);
+        _connection.Execute(sql);
+    }
+
     private void CreateCardsTable()
     {
         var sql = $"""
@@ -180,6 +229,37 @@ public class DapperHelper
                    """;
         
         Log(sql);
+        _connection.Execute(sql);
+    }
+
+    private void CreateStudySessionsTable()
+    {
+        var sql = $"""
+                   IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'StudySessions')
+                   BEGIN
+                        CREATE TABLE StudySessions (
+                            ID INT IDENTITY(1,1) PRIMARY KEY,
+                            Date CHAR(10) NOT NULL,
+                            Correct INTEGER NOT NULL,
+                            Total INTEGER NOT NULL,
+                            StackId INT NOT NULL FOREIGN KEY REFERENCES Stacks(ID) ON DELETE CASCADE
+                        )
+                   END
+                   """;
+        
+        Log(sql);
+        _connection.Execute(sql);
+    }
+
+    private void DropTable(string name)
+    {
+        var sql = $"""
+                   IF OBJECT_ID(N'{name}', N'U') IS NOT NULL
+                   BEGIN
+                        DROP TABLE {name}
+                   END
+                   """;
+        
         _connection.Execute(sql);
     }
 }

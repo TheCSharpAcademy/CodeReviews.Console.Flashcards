@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using Azure.Identity;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Serilog;
 
 namespace FlashCards;
@@ -22,20 +20,10 @@ public class FlashCardsController
 
     public void Run()
     {
-        string[] mainMenu = {
-            "Add Stack",
-            "Delete Stack",
-            "Add Card",
-            "Delete Card",
-            "Study Session",
-            "View Study Sessions by Stack",
-            "Average Score Yearly Report",
-            "Exit"};
-        
         // Main menu
         while (true)
         {
-            switch (_console.MainMenu(mainMenu))
+            switch (_console.MainMenu())
             {
                 case "Add Stack":
                     var name = GetNewStackName();
@@ -51,10 +39,13 @@ public class FlashCardsController
                     DeleteCard();
                     break;
                 case "Start Study Session":
+                    StartStudySession();
                     break;
-                case "View Study Sessions by Stack":
+                case "Review Sessions":
+                    ReviewSessions();
                     break;
-                case "Average Score Yearly Report":
+                case "Review Sessions by Stack":
+                    ReviewSessionsByStack();
                     break;
                 case "Exit":
                     return;
@@ -154,6 +145,55 @@ public class FlashCardsController
         {
             _console.Error("Something went wrong and card could not be deleted.");
         }
+    }
 
+    private void StartStudySession()
+    {
+        var stacks = _dapper.GetStacks();
+        var stack = _console.SelectStackMenu(stacks, "Which stack would you like to study?");
+        
+        var cards = _dapper.GetCardsByStackId(stack.Id);
+
+        var correct = 0;
+        var total = 0;
+        foreach (var card in cards)
+        {
+            total++;
+            if (_console.StudyCard(card).Equals(card.Back, StringComparison.InvariantCultureIgnoreCase))
+            {
+                correct++;
+                _console.Success("Correct!");
+            }
+            else
+            {
+                _console.Red($"Sorry, the correct answer is \"{card.Back}\".");
+            }
+        }
+
+        StudySession session = new()
+        {
+            Date = DateTime.Now.ToString("yyyy-MM-dd"),
+            StackId = stack.Id,
+            Correct = correct,
+            Total = total,
+        };
+
+        _dapper.AddSession(session);
+        
+        _console.Success($"Your got {correct} out of {total} correct.");
+    }
+
+    private void ReviewSessions()
+    {
+        var sessions = _dapper.GetSessions();
+        _console.ShowSessions(sessions);
+    }
+
+    private void ReviewSessionsByStack()
+    {
+        var stacks = _dapper.GetStacks();
+        var stack = _console.SelectStackMenu(stacks, "Please choose a stack to review pasts sessions:");
+        var sessions = _dapper.GetSessions(stack.Id);
+        _console.ShowSessions(sessions);
     }
 }
