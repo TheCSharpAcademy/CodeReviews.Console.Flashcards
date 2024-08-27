@@ -50,9 +50,9 @@ public class SpectreConsole
         return (front, back);
     }
 
-    public CardDTO DeleteCardMenu(List<CardDTO> cards, string message)
+    public CardDto DeleteCardMenu(List<CardDto> cards, string message)
     {
-        var prompt = new SelectionPrompt<CardDTO>()
+        var prompt = new SelectionPrompt<CardDto>()
             .Title(message)
             .AddChoices(cards)
             .UseConverter(card => $"{card.Name}:\t\t {card.Front}");

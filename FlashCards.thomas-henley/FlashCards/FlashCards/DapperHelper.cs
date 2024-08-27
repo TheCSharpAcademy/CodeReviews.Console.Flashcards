@@ -152,14 +152,14 @@ public class DapperHelper
         return results;
     }
 
-    public List<CardDTO> GetCardDtos()
+    public List<CardDto> GetCardDtos()
     {
         const string sql = """
                            SELECT Cards.Id, Cards.Front, Cards.Back, Cards.StackId, Stacks.Name 
                            FROM Cards JOIN Stacks ON Cards.StackId=Stacks.Id
                            """;
         
-        var results = _connection.Query<CardDTO>(sql).ToList();
+        var results = _connection.Query<CardDto>(sql).ToList();
         return results;
     }
 
