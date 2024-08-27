@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlashCards", "FlashCards\FlashCards.csproj", "{4357727E-EF75-4BD5-A557-C96539ACDD0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlashCards.Tests", "FlashCards.Tests\FlashCards.Tests.csproj", "{CBF63A93-9D6B-4F1C-8508-B837A9F7039B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4357727E-EF75-4BD5-A557-C96539ACDD0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4357727E-EF75-4BD5-A557-C96539ACDD0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4357727E-EF75-4BD5-A557-C96539ACDD0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4357727E-EF75-4BD5-A557-C96539ACDD0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBF63A93-9D6B-4F1C-8508-B837A9F7039B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBF63A93-9D6B-4F1C-8508-B837A9F7039B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBF63A93-9D6B-4F1C-8508-B837A9F7039B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBF63A93-9D6B-4F1C-8508-B837A9F7039B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
