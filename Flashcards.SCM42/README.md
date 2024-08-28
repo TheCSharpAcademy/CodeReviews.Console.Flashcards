@@ -34,7 +34,7 @@ If a stack is deleted, all flashcards and study sessions associated with it will
 
 # What I Learned
 - Set up a localDb with SQL Server
-- Started using parameterized queries with my SQL methods to protect againt injection attacks
+- Started using parameterized queries with my SQL methods to protect against injection attacks
 - Linked tables using foreign keys
 - Used ON DELETE CASCADE to automatically delete related rows
 - Used ROW_NUMBER to get card and stack numbers that always started at 1
