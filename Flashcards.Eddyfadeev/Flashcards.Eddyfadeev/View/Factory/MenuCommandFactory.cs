@@ -10,13 +10,10 @@ namespace Flashcards.Eddyfadeev.View.Factory;
 internal class MenuCommandFactory<TMenu> : IMenuCommandFactory<TMenu> where TMenu : Enum
 {
     private readonly Dictionary<TMenu, Func<ICommand>> _entriesFactory;
-
-    /// The MenuCommandFactory class is responsible for creating an instance of the ICommand interface based on the provided menu entry.
-    /// @param <TMenu> The type of the menu entry enum.
-    /// /
+    
     public MenuCommandFactory(IMenuEntriesInitializer<TMenu> entriesInitializer)
     {
-        _entriesFactory = entriesInitializer.InitializeEntries(this);
+        _entriesFactory = entriesInitializer.InitializeEntries();
     }
 
     /// <summary>

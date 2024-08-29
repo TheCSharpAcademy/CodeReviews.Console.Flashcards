@@ -26,7 +26,7 @@ internal class StacksMenuEntriesInitializer : IMenuEntriesInitializer<StackMenuE
         _stackEntryHandler = stackEntryHandler;
     }
 
-    public Dictionary<StackMenuEntries, Func<ICommand>> InitializeEntries(IMenuCommandFactory<StackMenuEntries> menuCommandFactory) =>
+    public Dictionary<StackMenuEntries, Func<ICommand>> InitializeEntries() =>
         new()
         {
             { StackMenuEntries.AddStack, () => new AddStack(_stacksRepository) },

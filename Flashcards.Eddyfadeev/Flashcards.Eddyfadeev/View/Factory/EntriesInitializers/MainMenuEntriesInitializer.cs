@@ -43,7 +43,7 @@ internal class MainMenuEntriesInitializer : IMenuEntriesInitializer<MainMenuEntr
         _stackEntryHandler = stackEntryHandler;
     }
 
-    public Dictionary<MainMenuEntries, Func<ICommand>> InitializeEntries(IMenuCommandFactory<MainMenuEntries> commandFactory) =>
+    public Dictionary<MainMenuEntries, Func<ICommand>> InitializeEntries() =>
         new()
         {
             { MainMenuEntries.StartStudySession, () => 

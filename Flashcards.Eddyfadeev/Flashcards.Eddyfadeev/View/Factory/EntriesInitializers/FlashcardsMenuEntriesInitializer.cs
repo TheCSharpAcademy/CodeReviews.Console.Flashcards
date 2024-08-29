@@ -31,7 +31,7 @@ internal class FlashcardsMenuEntriesInitializer : IMenuEntriesInitializer<Flashc
         _stackEntryHandler = stackEntryHandler;
     }
 
-    public Dictionary<FlashcardEntries, Func<ICommand>> InitializeEntries(IMenuCommandFactory<FlashcardEntries> flashcardsMenuCommandFactory) =>
+    public Dictionary<FlashcardEntries, Func<ICommand>> InitializeEntries() =>
         new()
         {
             { FlashcardEntries.ChooseFlashcard, () => new ViewFlashcards(

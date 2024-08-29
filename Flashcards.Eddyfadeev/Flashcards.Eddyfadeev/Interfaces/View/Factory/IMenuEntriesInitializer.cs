@@ -12,7 +12,6 @@ internal interface IMenuEntriesInitializer<TMenu> where TMenu : Enum
     /// Initializes the entries for a specific menu.
     /// </summary>
     /// <typeparam name="TMenu">The type of menu entries.</typeparam>
-    /// <param name="menuCommandFactory">The menu command factory.</param>
     /// <returns>A dictionary mapping menu entries to command functions.</returns>
-    Dictionary<TMenu, Func<ICommand>> InitializeEntries(IMenuCommandFactory<TMenu> menuCommandFactory);
+    Dictionary<TMenu, Func<ICommand>> InitializeEntries();
 }

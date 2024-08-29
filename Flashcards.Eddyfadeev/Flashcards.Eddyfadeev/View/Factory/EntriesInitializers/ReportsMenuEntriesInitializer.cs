@@ -28,8 +28,7 @@ internal class ReportsMenuEntriesInitializer : IMenuEntriesInitializer<ReportsMe
         _yearEntryHandler = yearEntryHandler;
     }
 
-    public Dictionary<ReportsMenuEntries, Func<ICommand>> InitializeEntries(
-        IMenuCommandFactory<ReportsMenuEntries> menuCommandFactory) =>
+    public Dictionary<ReportsMenuEntries, Func<ICommand>> InitializeEntries() =>
         new()
         {
             { ReportsMenuEntries.FullReport, () => new FullReport(_studySessionsRepository) },
