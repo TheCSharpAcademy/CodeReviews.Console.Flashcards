@@ -3,6 +3,7 @@ using Flashcards.Eddyfadeev.Interfaces.Database;
 using Flashcards.Eddyfadeev.Models.Entity;
 using Flashcards.Eddyfadeev.Services;
 using Microsoft.Data.SqlClient;
+using Spectre.Console;
 
 namespace Flashcards.Eddyfadeev.Database;
 
@@ -18,6 +19,12 @@ internal class DatabaseManager : IDatabaseManager
         _connectionProvider = connectionProvider;
         
         databaseInitializer.Initialize();
+
+        #if DEBUG
+        AnsiConsole.MarkupLine("[yellow]Started in Debug Mode![/]");
+        AnsiConsole.MarkupLine("[yellow]Seeding Database...[/]");
+        DataSeed.DataSeed.ProcessRequest(this, databaseInitializer);
+        #endif
     }
 
     /// <summary>Inserts a new entity into the database.</summary>
