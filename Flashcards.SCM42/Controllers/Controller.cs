@@ -47,7 +47,7 @@ public class Controller
         }
     }
 
-    // Stacks methods
+    #region Stacks methods
     internal static void StackHandler()
     {
         bool exitMenu = false;
@@ -247,9 +247,9 @@ public class Controller
             }
         }
     }
+    #endregion
 
-
-    // Flashcard methods
+    #region Flashcard methods
     internal static void FlashcardHandler()
     {
         bool exitMenu = false;
@@ -442,13 +442,14 @@ public class Controller
                     }
                     else
                     {
-                        Views.ShowMessage("Something went wrong. Card wasn't added.");
+                        Views.ShowMessage("\nCard wasn't added.");
                     }
 
                     Views.ShowMessage("Press any key to continue.\n");
                     Console.ReadLine();
 
                     exitSubMenu = true;
+                    
                 }
                 else
                 {
@@ -601,8 +602,9 @@ public class Controller
             }
         }
     }
+    #endregion
 
-    // Card DTO methods
+    #region Card DTO methods
     internal static List<FlashcardDTO> RunFlashcardMapper(List<Flashcard> cardsList)
     {
         var dtoList = new List<FlashcardDTO>();
@@ -638,8 +640,9 @@ public class Controller
             Views.EmptyTable(stackName);
         }
     }
+    #endregion
 
-    //Stack DTO methods
+    #region Stack DTO methods
     internal static List<StackDTO> RunStackMapper(List<Stack> stackList)
     {
         var dtoList = new List<StackDTO>();
@@ -675,4 +678,5 @@ public class Controller
             Views.ShowMessage("Stack list is empty.\n");
         }
     }
+    #endregion
 }

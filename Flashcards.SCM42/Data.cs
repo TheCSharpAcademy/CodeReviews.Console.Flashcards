@@ -34,7 +34,7 @@ public class DataAccess
                                 BEGIN
                                     CREATE TABLE Stacks (
                                         StackId INT IDENTITY(1,1) PRIMARY KEY,
-                                        StackName NVARCHAR(50) NOT NULL,
+                                        StackName NVARCHAR(50) NOT NULL UNIQUE ,
                                         CardQuantity INT
                                     );
                                 END";
@@ -43,7 +43,7 @@ public class DataAccess
                                     BEGIN
                                         CREATE TABLE Flashcards (
                                         CardId INT IDENTITY(1,1) PRIMARY KEY,
-                                        Front NVARCHAR(50) NOT NULL,
+                                        Front NVARCHAR(50) NOT NULL UNIQUE,
                                         Back NVARCHAR(50) NOT NULL,
                                         StackId INT NOT NULL,
                                         CONSTRAINT FK_StackId
