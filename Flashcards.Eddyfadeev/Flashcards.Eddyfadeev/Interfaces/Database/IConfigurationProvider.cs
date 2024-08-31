@@ -10,4 +10,10 @@ internal interface IConfigurationProvider
     /// </summary>
     /// <returns>The database connection string.</returns>
     internal string GetConfiguration();
+
+    /// <summary>
+    /// Retrieves database name from the configuration
+    /// </summary>
+    /// <returns>The database name of type string</returns>
+    internal string GetDatabaseName();
 }

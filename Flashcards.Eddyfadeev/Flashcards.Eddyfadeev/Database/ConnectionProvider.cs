@@ -8,12 +8,13 @@ namespace Flashcards.Eddyfadeev.Database;
 /// </summary>
 internal class ConnectionProvider : IConnectionProvider
 {
-    private const string DatabaseName = "Flashcards";
+    private readonly string _databaseName;
     private readonly string _connectionString;
 
     public ConnectionProvider(IConfigurationProvider configurationProvider)
     {
         _connectionString = configurationProvider.GetConfiguration();
+        _databaseName = configurationProvider.GetDatabaseName();
         EnsureDatabaseExists();
     }
 
@@ -28,11 +29,11 @@ internal class ConnectionProvider : IConnectionProvider
         using var connection = GetConnection();
         connection.Open();
 
-        const string commandText = 
+        string commandText = 
             $"""
-                IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '{DatabaseName}')
+                IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '{_databaseName}')
                     BEGIN
-                        CREATE DATABASE [{DatabaseName}];
+                        CREATE DATABASE [{_databaseName}];
                     END
             """;
 
