@@ -36,12 +36,12 @@ internal class HomeMenuController
     private void ManageFlashcards()
     {
         DataViewer.DisplayHeader("Flashcard Manager");
-        if(string.IsNullOrEmpty(Utilities.currentStack))
+        if(string.IsNullOrEmpty(Utilities.CurrentStack))
         {
             System.Console.WriteLine("The current stack is empty, so there are no Flashcards to modify\n Please go to Manage Stacks\n -> Either Create a Stack or Enter the ID of one\n -> Select 'Exit' or any modification you want to make\n -> Come back here as the latest Stack will be selected");
             return;
         }
-        FlashcardManager flashcardManager = new(Utilities.currentStack);
+        FlashcardManager flashcardManager = new(Utilities.CurrentStack);
         StackSelections flashcardSelection;
 
         do 

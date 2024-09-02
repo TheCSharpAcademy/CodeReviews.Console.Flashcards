@@ -120,7 +120,7 @@ internal class FlashcardManager
     {
         System.Console.Clear();
         DataViewer.DisplayHeader("Flashcard Modification");
-        System.Console.WriteLine("\nCurrent Stack: {0}\n", Utilities.currentStack);
+        System.Console.WriteLine("\nCurrent Stack: {0}\n", Utilities.CurrentStack);
         return  
             Utilities.GetSelection<StackSelections>
             (

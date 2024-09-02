@@ -23,9 +23,9 @@ internal class StackMenuController
             {
                 System.Console.WriteLine("The stack is currently empty\n");
             }
-            if(!string.IsNullOrEmpty(Utilities.currentStack))
+            if(!string.IsNullOrEmpty(Utilities.CurrentStack))
             {
-                System.Console.WriteLine($"Current Stack: {Utilities.currentStack}\n\n");
+                System.Console.WriteLine($"Current Stack: {Utilities.CurrentStack}\n\n");
             }
 
             StackHomeSelections stackHomeSelection =
@@ -54,7 +54,7 @@ internal class StackMenuController
                 
                 case StackHomeSelections.DeleteStack:
                     this.DeleteStack();
-                    Utilities.currentStack = null;
+                    Utilities.CurrentStack = null;
                     break;
                 
                 default:
@@ -96,7 +96,7 @@ internal class StackMenuController
             );
         
         string topic = Utilities.databaseManager.GetTopicFromStackID(id);
-        Utilities.currentStack = topic;
+        Utilities.CurrentStack = topic;
 
         StackSelections modificationSelection;
         do 
@@ -163,7 +163,7 @@ internal class StackMenuController
             );
         
         string topic = Utilities.databaseManager.GetTopicFromStackID(id);
-        Utilities.currentStack = topic;
+        Utilities.CurrentStack = topic;
 
         Utilities.databaseManager.DeleteStack(id, topic);
     }

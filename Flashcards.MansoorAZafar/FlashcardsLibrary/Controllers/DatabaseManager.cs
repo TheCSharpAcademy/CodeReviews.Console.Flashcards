@@ -85,8 +85,6 @@ internal class DatabaseManager
         List<T> data = new();
         
         using var connection = new SqlConnection(ConnectionString);
-        var tableCommand = connection.CreateCommand();
-
         data = connection.Query<T>($"SELECT * FROM {tableName} ORDER BY Id ASC").ToList();
         
         connection.Close();

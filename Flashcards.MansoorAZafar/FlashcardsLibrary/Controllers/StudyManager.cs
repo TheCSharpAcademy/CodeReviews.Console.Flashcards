@@ -15,10 +15,10 @@ internal class StudyManager
             return;
         }
         
-        System.Console.WriteLine($"Current Stack: {Utilities.currentStack}\n");
+        System.Console.WriteLine($"Current Stack: {Utilities.CurrentStack}\n");
         System.Console.WriteLine("To select/change a stack follow these steps (The latest stack modified in Manage Stacks will be selected)\n 1. Go to the Home Menu\n 2. Select \"Manage Stacks\"\n 3. Enter the ID of the stack you want to enter\n 4. Come back here\n");
         
-        if(string.IsNullOrEmpty(Utilities.currentStack)) return;
+        if(string.IsNullOrEmpty(Utilities.CurrentStack)) return;
         Utilities.PressToContinue();
         
         this.PracticeSession();
@@ -29,7 +29,7 @@ internal class StudyManager
         int score = 0;
         System.Console.Clear();
         List<Flashcard> flashcards 
-            = Utilities.databaseManager.GetAllDataWithTopic<Flashcard>(Utilities.FlashcardTableName, Utilities.currentStack);
+            = Utilities.databaseManager.GetAllDataWithTopic<Flashcard>(Utilities.FlashcardTableName, Utilities.CurrentStack);
 
         foreach(var flashcard in flashcards)
         {

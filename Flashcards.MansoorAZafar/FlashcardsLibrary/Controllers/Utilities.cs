@@ -10,7 +10,7 @@ internal static class Utilities
     internal static readonly string StackTableName = "Stack";
     internal static readonly string FlashcardTableName = "Flashcard";
     internal static bool EmptyStack;
-    internal static string? currentStack {get; set;} 
+    internal static string? CurrentStack {get; set;} 
     internal static readonly DatabaseManager databaseManager;
 
     static Utilities()
