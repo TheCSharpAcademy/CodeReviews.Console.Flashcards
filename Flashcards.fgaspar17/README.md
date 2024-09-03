@@ -1,5 +1,3 @@
-# Flashcards
-
 A console-based application to help you study via flashcards.
 Developed using C#, Dapper, Spectre.Console and SQL Server Express LocalDB.
 
@@ -27,7 +25,7 @@ so the users can see all their study sessions.
 This table receives insert calls upon each study session,
 but there shouldn't be update and delete calls to it.
 
-### Features
+## Features
 
 - SQL Server database connection
   
@@ -56,7 +54,7 @@ but there shouldn't be update and delete calls to it.
   - ![image](https://github.com/user-attachments/assets/b4dca651-007c-417d-82f6-e7f854dc7103)
   - At the end, the score is presented.
   - ![image](https://github.com/user-attachments/assets/302af189-6d7e-4f65-b1e1-bfe0b4347377)
-    
+
 - Study Sessions
   
   - Every time you study a stack, a session is created, you need to choose a session,
