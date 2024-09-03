@@ -15,4 +15,7 @@ GlobalConfig.InitializeSetupConnectionString(setupConnectionString);
 
 CancelSetup.CancelString = builder.GetValue<string>("CancelString");
 
+DatabaseConfig databaseConfig = new DatabaseConfig();
+databaseConfig.InitializeDatabase();
+
 Application.Run();

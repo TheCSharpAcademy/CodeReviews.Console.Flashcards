@@ -22,8 +22,8 @@ public class DatabaseConfig
                 connection.ChangeDatabase("flashcardsdb");
 
                 using IDbTransaction transaction = connection.BeginTransaction();
-                string scriptSql = File.ReadAllText("DatabaseScript.sql");
-                connection.Execute(scriptSql);
+                string scriptSql = File.ReadAllText("DatabaseScript.txt");
+                connection.Execute(scriptSql, transaction: transaction);
                 transaction.Commit();
             }
         }
