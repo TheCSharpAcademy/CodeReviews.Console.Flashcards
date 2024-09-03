@@ -71,7 +71,7 @@ but there shouldn't be update and delete calls to it.
   - ![image](https://github.com/user-attachments/assets/1018c02b-c8de-4794-80e7-90f0cf3fbce2)
   - ![image](https://github.com/user-attachments/assets/c41f124b-b16f-4d19-81b4-02b780ef8b9b)
   - ![image](https://github.com/user-attachments/assets/6d71e93e-8cc4-412d-bee8-248a2f0592d6)
- 
+
 ## Challenges
 
 - Creating the SQL Server Express LocalDB instance.
