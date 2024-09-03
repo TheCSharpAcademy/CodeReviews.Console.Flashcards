@@ -1,5 +1,5 @@
 # Flashcards
-A console-based application to help you study via flashcards. 
+A console-based application to help you study via flashcards.
 Developed using C#, Dapper, Spectre.Console and SQL Server Express LocalDB.
 
 ## Given Requirements:
@@ -60,27 +60,27 @@ This table receives insert calls upon each study session, but there shouldn't be
     
 ## Challenges
 
-  - Creating the SQL Server Express LocalDB instance.
-  - Designing the database.
-  - Adding a way to cancel input for the user.
-  - Using DTOs to present the data.
-  - PIVOT data for monthly reports.
+- Creating the SQL Server Express LocalDB instance.
+- Designing the database.
+- Adding a way to cancel input for the user.
+- Using DTOs to present the data.
+- PIVOT data for monthly reports.
      
 ## Lessons Learned
 
-  - SQL Server Express LocalDB operations via mssqllocaldb.
-  - ON DELETE CASCADE keeps consistency in the database.
-  - DTOs present the data to the view in a user-friendly way.
-  - Microsoft.Extensions.Configuration.Binder is a library to get values strongly typed from the configuration file.
-  - TypeConverter can be used to convert generic types.
-  - PIVOT operator in SQL is a great tool to analyze data.
-  - Attribute restrictions establish what can use the attribute.
+- SQL Server Express LocalDB operations via mssqllocaldb.
+- ON DELETE CASCADE keeps consistency in the database.
+- DTOs present the data to the view in a user-friendly way.
+- Microsoft.Extensions.Configuration.Binder is a library to get values strongly typed from the configuration file.
+- TypeConverter can be used to convert generic types.
+- PIVOT operator in SQL is a great tool to analyze data.
+- Attribute restrictions establish what can use the attribute.
    
 ## Areas to Improve
 
-  - Separating business logic to the services classes; I feel like the view is doing business logic when it shouldn't.
-  - Database design to build scalable applications.
-  - SQL Server queries and administration to improve skills with a popular database.
+- Separating business logic to the services classes; I feel like the view is doing business logic when it shouldn't.
+- Database design to build scalable applications.
+- SQL Server queries and administration to improve skills with a popular database.
    
 ##  Resources used
 
