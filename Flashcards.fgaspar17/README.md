@@ -1,3 +1,5 @@
+# Flashcards
+
 A console-based application to help you study via flashcards.
 Developed using C#, Dapper, Spectre.Console and SQL Server Express LocalDB.
 
@@ -56,20 +58,20 @@ but there shouldn't be update and delete calls to it.
   - ![image](https://github.com/user-attachments/assets/302af189-6d7e-4f65-b1e1-bfe0b4347377)
 
 - Study Sessions
-  
+
   - Every time you study a stack, a session is created, you need to choose a session,
   then the questions for that session are presented.
   - ![image](https://github.com/user-attachments/assets/4bf1c5f1-f988-4d5e-afa6-eebc6a1eb382)
   - ![image](https://github.com/user-attachments/assets/0bbd36d6-27a5-4072-a0c9-125fbad1087f)
-    
+
 - Monthly Report
-  
+
   - You can choose between the number of sessions
   or the average score per month in a year.
   - ![image](https://github.com/user-attachments/assets/1018c02b-c8de-4794-80e7-90f0cf3fbce2)
   - ![image](https://github.com/user-attachments/assets/c41f124b-b16f-4d19-81b4-02b780ef8b9b)
   - ![image](https://github.com/user-attachments/assets/6d71e93e-8cc4-412d-bee8-248a2f0592d6)
-    
+ 
 ## Challenges
 
 - Creating the SQL Server Express LocalDB instance.
@@ -77,7 +79,7 @@ but there shouldn't be update and delete calls to it.
 - Adding a way to cancel input for the user.
 - Using DTOs to present the data.
 - PIVOT data for monthly reports.
-     
+
 ## Lessons Learned
 
 - SQL Server Express LocalDB operations via mssqllocaldb.
@@ -88,14 +90,14 @@ to get values strongly typed from the configuration file.
 - TypeConverter can be used to convert generic types.
 - PIVOT operator in SQL is a great tool to analyze data.
 - Attribute restrictions establish what can use the attribute.
-   
+
 ## Areas to Improve
 
 - Separating business logic to the services classes;
 I feel like the view is doing business logic when it shouldn't.
 - Database design to build scalable applications.
 - SQL Server queries and administration to improve skills with a popular database.
-   
+
 ## Resources used
 
 - StackOverflow posts
@@ -104,4 +106,3 @@ I feel like the view is doing business logic when it shouldn't.
 - [DTO C#Corner Example](https://www.c-sharpcorner.com/article/data-transfer-objects-dtos-in-c-sharp/#:~:text=Data%20Transfer%20Objects%20(DTOs)%20play%20a%20pivotal%20role)
 - [LocalDB Video](https://www.youtube.com/watch?v=M5DhHYQlnq8)
 - [SQL Server Database Example](https://www.sqlservertutorial.net/getting-started/sql-server-sample-database/#:~:text=This%20tutorial%20provides%20you%20with%20a%20SQL%20Server)
-  
