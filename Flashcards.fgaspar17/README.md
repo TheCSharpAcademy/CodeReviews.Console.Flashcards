@@ -1,4 +1,3 @@
-[None]
 # Flashcards
 
 A console-based application to help you study via flashcards.
@@ -28,7 +27,7 @@ so the users can see all their study sessions.
 This table receives insert calls upon each study session,
 but there shouldn't be update and delete calls to it.
 
-## Features
+### Features
 
 - SQL Server database connection
   
@@ -49,7 +48,7 @@ but there shouldn't be update and delete calls to it.
   - Inputs are validated.
   - You can cancel an operation by entering the string from the configuration file.
   - ![image](https://github.com/user-attachments/assets/9360cc2b-66ff-4aa0-87bc-626cf4be4738)
-    
+
 - Study
   
   - After selecting a stack, the questions are presented,
@@ -107,4 +106,4 @@ I feel like the view is doing business logic when it shouldn't.
 - [DTO C#Corner Example](https://www.c-sharpcorner.com/article/data-transfer-objects-dtos-in-c-sharp/#:~:text=Data%20Transfer%20Objects%20(DTOs)%20play%20a%20pivotal%20role)
 - [LocalDB Video](https://www.youtube.com/watch?v=M5DhHYQlnq8)
 - [SQL Server Database Example](https://www.sqlservertutorial.net/getting-started/sql-server-sample-database/#:~:text=This%20tutorial%20provides%20you%20with%20a%20SQL%20Server)
-   
+  
