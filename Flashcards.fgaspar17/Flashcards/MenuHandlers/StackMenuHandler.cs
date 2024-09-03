@@ -52,7 +52,7 @@ public class StackMenuHandler
         ShowStacks();
 
         AnsiConsole.WriteLine("Old Name"); 
-        string oldName = GetStackNameFromUser(new ExistingModelValidator<string, Stack>() { errorMsg = "Stack Name must exist", GetModel = StackController.GetStackByName });
+        string oldName = GetStackNameFromUser(new ExistingModelValidator<string, Stack>() { ErrorMsg = "Stack Name must exist", GetModel = StackController.GetStackByName });
         if (CancelSetup.IsCancelled(oldName)) return;
         AnsiConsole.WriteLine();
         AnsiConsole.WriteLine("New Name"); 
@@ -67,7 +67,7 @@ public class StackMenuHandler
         MenuPresentation.PresentMenu("[red]Deleting[/]");
         ShowStacks();
 
-        string name = GetStackNameFromUser(new ExistingModelValidator<string, Stack>() { errorMsg = "Stack Name must exist", GetModel = StackController.GetStackByName });
+        string name = GetStackNameFromUser(new ExistingModelValidator<string, Stack>() { ErrorMsg = "Stack Name must exist", GetModel = StackController.GetStackByName });
         if (CancelSetup.IsCancelled(name)) return;
 
         StackController.DeleteStack(new Stack { StackId = StackController.GetStackByName(name).StackId, Name = name });

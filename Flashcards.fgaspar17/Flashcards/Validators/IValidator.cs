@@ -4,6 +4,6 @@ namespace Flashcards;
 
 public interface IValidator
 {
-    string errorMsg { get; set; }
+    string ErrorMsg { get; set; }
     ValidationResult Validate(string? input);
 }

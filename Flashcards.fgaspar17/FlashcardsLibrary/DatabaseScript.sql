@@ -1,7 +1,23 @@
-﻿CREATE TABLE dbo.Stacks (
+﻿SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER OFF;
+
+IF NOT EXISTS(SELECT name FROM sys.databases WHERE name = 'flashcardsdb')
+BEGIN
+    CREATE DATABASE flashcardsdb;
+END
+GO
+
+USE flashcardsdb;
+GO
+
+CREATE TABLE dbo.Stacks (
 	StackId INT IDENTITY(1,1) NOT NULL,
 	Name VARCHAR(50) NOT NULL
-);
+)
+WITH (DATA_COMPRESSION = ROW);
 --Primary Key
 ALTER TABLE dbo.Stacks 
 ADD CONSTRAINT PK_STACKS 
@@ -17,7 +33,8 @@ CREATE TABLE dbo.Flashcards (
 	StackId INT NOT NULL,
 	Question VARCHAR(MAX) NOT NULL,
 	Answer VARCHAR(MAX) NOT NULL
-);
+)
+WITH (DATA_COMPRESSION = ROW);
 
 --Primary Key
 ALTER TABLE dbo.Flashcards 
@@ -34,7 +51,8 @@ CREATE TABLE dbo.StudySessions (
 	SessionId INT IDENTITY(1,1) NOT NULL,
 	StackId INT NOT NULL,
 	SessionDate DATETIME2 NOT NULL,
-);
+)
+WITH (DATA_COMPRESSION = ROW);
 
 --Primary Key
 ALTER TABLE dbo.StudySessions 
@@ -59,7 +77,8 @@ CREATE TABLE dbo.SessionQuestion (
     AnswerText VARCHAR(MAX) NOT NULL,
 	UserAnswer VARCHAR(MAX) NOT NULL,
 	IsCorrect BIT NOT NULL
-);
+)
+WITH (DATA_COMPRESSION = ROW);;
 
 --Primary Key
 ALTER TABLE dbo.SessionQuestion 

@@ -1,23 +1,22 @@
-﻿using System.ComponentModel;
-using Spectre.Console;
+﻿using Spectre.Console;
 
 namespace Flashcards;
 public class ExistingModelValidator<TKey, TModel> : IValidator
 {
-    public string errorMsg { get; set; } = string.Empty;
+    public string ErrorMsg { get; set; } = string.Empty;
     public required Func<TKey, TModel> GetModel {  get; set; }
     public ValidationResult Validate(string input)
     {
         try
         {
-            TypeConverter converter = TypeDescriptor.GetConverter(typeof(TKey));
+            System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter(typeof(TKey));
             if (converter != null && converter.CanConvertFrom(typeof(string)))
             {
                 TKey key = (TKey)converter.ConvertFrom(input);
 
                 if (GetModel(key) == null)
                 {
-                    return ValidationResult.Error($"[red]{errorMsg}[/]");
+                    return ValidationResult.Error($"[red]{ErrorMsg}[/]");
                 }
                 return ValidationResult.Success();
             }

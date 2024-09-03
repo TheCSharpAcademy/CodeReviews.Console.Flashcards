@@ -10,7 +10,7 @@ public class StudySessionDisplayer
 
         string sessionId = GetSessionIdFromUser(new ExistingModelValidator<int, StudySession>
         {
-            errorMsg = "Study Session Id must exist",
+            ErrorMsg = "Study Session Id must exist",
             GetModel = StudySessionController.GetStudySessionById
         });
         if (CancelSetup.IsCancelled(sessionId)) return;

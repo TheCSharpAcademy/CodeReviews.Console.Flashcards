@@ -1,9 +1,9 @@
 ﻿namespace FlashcardsLibrary;
 public static class FlashcardMapper
 {
-    public static FlashcardDTO MapToDTO(Flashcard flashcard)
+    public static FlashcardDto MapToDto(Flashcard flashcard)
     {
-        return new FlashcardDTO
+        return new FlashcardDto
         {
             Id = flashcard.OrderId,
             Question = flashcard.Question,

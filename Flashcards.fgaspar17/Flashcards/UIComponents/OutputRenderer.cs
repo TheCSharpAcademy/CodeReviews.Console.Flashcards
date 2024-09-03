@@ -1,6 +1,5 @@
 ﻿using Spectre.Console;
 using System.Reflection;
-using System.Text;
 
 namespace Flashcards;
 

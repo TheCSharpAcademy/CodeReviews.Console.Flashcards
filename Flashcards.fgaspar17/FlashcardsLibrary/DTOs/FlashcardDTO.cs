@@ -1,5 +1,5 @@
 ﻿namespace FlashcardsLibrary;
-public class FlashcardDTO
+public class FlashcardDto
 {
     public int Id { get; set; }
     public required string Question { get; set; }

@@ -1,5 +1,5 @@
 ﻿namespace FlashcardsLibrary;
-public class StudySessionDTO
+public class StudySessionDto
 {
     public int Id { get; set; }
     public DateTime Date { get; set; }

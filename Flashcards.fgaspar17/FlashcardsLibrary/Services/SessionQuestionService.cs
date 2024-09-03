@@ -1,8 +1,8 @@
 ﻿namespace FlashcardsLibrary;
 public class SessionQuestionService
 {
-    public static List<SessionQuestionDTO> GetSessionQuestionsBySessionId(int sessionId)
+    public static List<SessionQuestionDto> GetSessionQuestionsBySessionId(int sessionId)
     {
-        return SessionQuestionController.GetSessionQuestionsBySessionId(sessionId).Select(question => SessionQuestionMapper.MapToDTO(question)).ToList();
+        return SessionQuestionController.GetSessionQuestionsBySessionId(sessionId).Select(question => SessionQuestionMapper.MapToDto(question)).ToList();
     }
 }

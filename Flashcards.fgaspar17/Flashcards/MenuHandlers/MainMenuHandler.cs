@@ -10,7 +10,6 @@ public class MainMenuHandler
 
     public bool HandleMenuOptions(MainMenuOptions option)
     {
-        string stackName;
         switch (option)
         {
             case MainMenuOptions.Quit:

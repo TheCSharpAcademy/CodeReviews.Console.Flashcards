@@ -1,9 +1,9 @@
 ﻿namespace FlashcardsLibrary;
 public static class StackMapper
 {
-    public static StackDTO MapToDTO(Stack stack)
+    public static StackDto MapToDto(Stack stack)
     {
-        return new StackDTO
+        return new StackDto
         {
             Name = stack.Name,
         };

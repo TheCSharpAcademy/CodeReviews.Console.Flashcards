@@ -11,7 +11,7 @@ public class FlashcardMenuHandler
     {
         StackMenuHandler.ShowStacks();
         string stackName = StackMenuHandler.GetStackNameFromUser(new ExistingModelValidator<string, Stack>
-        { errorMsg = "Stack Name must exist", GetModel = StackController.GetStackByName });
+        { ErrorMsg = "Stack Name must exist", GetModel = StackController.GetStackByName });
         if (CancelSetup.IsCancelled(stackName)) return;
 
         SelectedStack = StackController.GetStackByName(stackName);
@@ -81,7 +81,7 @@ public class FlashcardMenuHandler
         MenuPresentation.PresentMenu("[yellow]Updating[/]");
         ShowFlashcards();
 
-        string flashcardPresentationId = GetFlashcardOrderIdFromUser(new ExistingModelValidator<int, Flashcard> { errorMsg = "Flashcard Id must exist",
+        string flashcardPresentationId = GetFlashcardOrderIdFromUser(new ExistingModelValidator<int, Flashcard> { ErrorMsg = "Flashcard Id must exist",
             GetModel = GetFlashcardIdByOrderId });
         if (CancelSetup.IsCancelled(flashcardPresentationId)) return;
         int flashcarOrderId = Convert.ToInt32(flashcardPresentationId);
@@ -104,7 +104,7 @@ public class FlashcardMenuHandler
 
         string flashcardPresentationId = GetFlashcardOrderIdFromUser(new ExistingModelValidator<int, Flashcard>
         {
-            errorMsg = "Flashcard Id must exist",
+            ErrorMsg = "Flashcard Id must exist",
             GetModel = GetFlashcardIdByOrderId
         });
         if (CancelSetup.IsCancelled(flashcardPresentationId)) return;

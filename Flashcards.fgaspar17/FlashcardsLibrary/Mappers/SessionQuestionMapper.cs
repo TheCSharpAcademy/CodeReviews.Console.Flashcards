@@ -1,9 +1,9 @@
 ﻿namespace FlashcardsLibrary;
 public static class SessionQuestionMapper
 {
-    public static SessionQuestionDTO MapToDTO(SessionQuestion question)
+    public static SessionQuestionDto MapToDto(SessionQuestion question)
     {
-        return new SessionQuestionDTO
+        return new SessionQuestionDto
         {
             Id = question.QuestionId,
             Question = question.QuestionText,

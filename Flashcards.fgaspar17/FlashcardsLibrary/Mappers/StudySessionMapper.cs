@@ -1,9 +1,9 @@
 ﻿namespace FlashcardsLibrary;
 public static class StudySessionMapper
 {
-    public static StudySessionDTO MapToDTO(StudySession session)
+    public static StudySessionDto MapToDto(StudySession session)
     {
-        return new StudySessionDTO
+        return new StudySessionDto
         {
             Id = session.SessionId,
             Date = session.SessionDate,

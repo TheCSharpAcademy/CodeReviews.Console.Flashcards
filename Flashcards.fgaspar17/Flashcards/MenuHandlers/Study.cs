@@ -10,7 +10,7 @@ public class Study
     {
         StackMenuHandler.ShowStacks();
         string stackName = StackMenuHandler.GetStackNameFromUser(new ExistingModelValidator<string, Stack>
-        { errorMsg = "Stack Name must exist", GetModel = StackController.GetStackByName });
+        { ErrorMsg = "Stack Name must exist", GetModel = StackController.GetStackByName });
         if (CancelSetup.IsCancelled(stackName)) return;
 
         SelectedStack = StackController.GetStackByName(stackName);
@@ -34,7 +34,7 @@ public class Study
             return;
         }
 
-        CreateQuestionsForSession(sessionQuestions, sessionId);
+        CreateQuestionsForSession(sessionQuestions);
         AnsiConsole.MarkupLine($"[green]Score: {StudySessionController.GetStudySessionById(sessionId).Score}[/]");
         Prompter.PressKeyToContinuePrompt();
     }
@@ -78,7 +78,7 @@ public class Study
         return true;
     }
 
-    private void CreateQuestionsForSession(List<SessionQuestion> sessionQuestions, int sessionId)
+    private void CreateQuestionsForSession(List<SessionQuestion> sessionQuestions)
     {
         foreach(var question in sessionQuestions)
         {

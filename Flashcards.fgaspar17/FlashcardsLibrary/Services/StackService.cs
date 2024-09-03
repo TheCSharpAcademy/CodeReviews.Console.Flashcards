@@ -1,9 +1,9 @@
 ﻿namespace FlashcardsLibrary;
 public static class StackService
 {
-    public static List<StackDTO> GetStacks()
+    public static List<StackDto> GetStacks()
     {
         List<Stack> stacks = StackController.GetStacks();
-        return stacks.Select(stack => StackMapper.MapToDTO(stack)).ToList();
+        return stacks.Select(stack => StackMapper.MapToDto(stack)).ToList();
     }
 }
