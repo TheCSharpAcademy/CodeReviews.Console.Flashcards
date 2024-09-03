@@ -1,0 +1,74 @@
+﻿CREATE TABLE dbo.Stacks (
+	StackId INT IDENTITY(1,1) NOT NULL,
+	Name VARCHAR(50) NOT NULL
+);
+--Primary Key
+ALTER TABLE dbo.Stacks 
+ADD CONSTRAINT PK_STACKS 
+PRIMARY KEY(StackId);
+
+--Unique
+ALTER TABLE dbo.Stacks
+ADD CONSTRAINT UNQ_Stacks_Name
+UNIQUE(Name);
+
+CREATE TABLE dbo.Flashcards (
+	FlashcardId INT IDENTITY(1,1) NOT NULL,
+	StackId INT NOT NULL,
+	Question VARCHAR(MAX) NOT NULL,
+	Answer VARCHAR(MAX) NOT NULL
+);
+
+--Primary Key
+ALTER TABLE dbo.Flashcards 
+ADD CONSTRAINT PK_FLASHCARDS
+PRIMARY KEY(FlashcardId);
+
+--Foreign Key
+ALTER TABLE dbo.Flashcards
+ADD CONSTRAINT FK_Flashcards_Stacks
+FOREIGN KEY(StackId)
+REFERENCES dbo.Stacks(StackId) ON DELETE CASCADE;
+
+CREATE TABLE dbo.StudySessions (
+	SessionId INT IDENTITY(1,1) NOT NULL,
+	StackId INT NOT NULL,
+	SessionDate DATETIME2 NOT NULL,
+);
+
+--Primary Key
+ALTER TABLE dbo.StudySessions 
+ADD CONSTRAINT PK_STUDY_SESSIONS
+PRIMARY KEY(SessionId);
+
+--Foreign Key
+ALTER TABLE dbo.StudySessions
+ADD CONSTRAINT FK_StudySessions_Stacks
+FOREIGN KEY(StackId)
+REFERENCES dbo.Stacks(StackId) ON DELETE CASCADE;
+
+--Default constraint
+ALTER TABLE dbo.StudySessions
+ADD CONSTRAINT DFT_StudySessions_sessiondate
+DEFAULT(SYSDATETIME()) FOR SessionDate;
+									
+CREATE TABLE dbo.SessionQuestion (
+	QuestionId INT IDENTITY(1,1) NOT NULL,
+	SessionId INT NOT NULL,
+	QuestionText VARCHAR(MAX) NOT NULL,
+    AnswerText VARCHAR(MAX) NOT NULL,
+	UserAnswer VARCHAR(MAX) NOT NULL,
+	IsCorrect BIT NOT NULL
+);
+
+--Primary Key
+ALTER TABLE dbo.SessionQuestion 
+ADD CONSTRAINT PK_SESSION_QUESTIONS
+PRIMARY KEY(QuestionId);
+
+
+--Foreign Key
+ALTER TABLE dbo.SessionQuestion
+ADD CONSTRAINT FK_Question_Session
+FOREIGN KEY(SessionId)
+REFERENCES dbo.StudySessions(SessionId) ON DELETE CASCADE; 
