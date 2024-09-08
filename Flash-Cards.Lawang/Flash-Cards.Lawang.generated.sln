@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flash-Cards.Lawang", "Flash-Cards.Lawang.csproj", "{C2060FF8-19E1-4EDB-9D26-3010D7B86C2F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C2060FF8-19E1-4EDB-9D26-3010D7B86C2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2060FF8-19E1-4EDB-9D26-3010D7B86C2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2060FF8-19E1-4EDB-9D26-3010D7B86C2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2060FF8-19E1-4EDB-9D26-3010D7B86C2F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9D5BF46E-CB2E-406B-8480-EBD1BCE9EC51}
+	EndGlobalSection
+EndGlobal
