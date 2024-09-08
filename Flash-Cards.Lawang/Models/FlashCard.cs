@@ -1,4 +1,3 @@
-using System;
 
 namespace Flash_Cards.Lawang;
 

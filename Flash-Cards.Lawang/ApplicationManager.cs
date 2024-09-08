@@ -1,5 +1,3 @@
-using System;
-using System.Xml.Serialization;
 using Flash_Cards.Lawang.Controller;
 using Flash_Cards.Lawang.Models;
 using Flash_Cards.Lawang.Views;
