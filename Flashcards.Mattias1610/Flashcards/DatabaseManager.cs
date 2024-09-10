@@ -114,7 +114,6 @@ namespace Flashcards
                     Console.WriteLine("\nWHAT DO YOU WANT TO DO?");
                     Console.WriteLine("TYPE 1 TO INSERT FLASHCARD");
                     Console.WriteLine("TYPE 2 TO DELETE FLASHCARD");
-                    Console.WriteLine("TYPE 3 TO UPDATE FLASHCARD");
                     Console.WriteLine("TYPE 0 TO GO BACK TO MAIN MENU");
                     string stackChoice = Console.ReadLine();
 
@@ -125,9 +124,6 @@ namespace Flashcards
                         case "2":
                             DeleteFlashcard();
                             break;
-                        // case "3":
-                        //     UpdateFlashcard();
-                        //     break;
                         case "0":
                             Menu();
                             break;
