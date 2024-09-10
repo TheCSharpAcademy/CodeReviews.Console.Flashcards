@@ -1,7 +1,6 @@
 using System.Data.SqlClient;
 using Dapper;
 using Microsoft.Data.Sqlite;
-using Flashcards;
 
 namespace Flashcards
 {
