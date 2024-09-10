@@ -10,7 +10,7 @@ namespace Flashcards
         public string Question{get;set;}
         public string Answer{get;set;}
     }
-    public class FlashcardsDTO
+    public class FlashcardsDto
     {
         public string Question{get;set;}
         public string Answer{get;set;}
