@@ -270,7 +270,7 @@ namespace Flashcards
             using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
-                    var table = connection.Query("SELECT * FROM dbo.STACKS ORDER BY StackID");
+                    
 
                     Console.WriteLine("ENTER THE STACK ID");
                     string initialStackID = Console.ReadLine();
