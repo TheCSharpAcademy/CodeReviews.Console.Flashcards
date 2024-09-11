@@ -1,12 +1,3 @@
-using System.Data.Common;
-using System.Data.SqlClient;
-using Flashcards;
+﻿using System;
 
-class Program
-{
-    static void Main(string[] args){
-        
-        DatabaseManager db = new DatabaseManager();
-        db.Menu();
-    }    
-}
+Console.WriteLine("sugi");
