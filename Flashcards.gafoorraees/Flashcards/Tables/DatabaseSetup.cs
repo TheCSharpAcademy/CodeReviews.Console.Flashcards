@@ -26,8 +26,8 @@ public class DatabaseSetup
                 ID INT PRIMARY KEY IDENTITY(1,1),
                 Question TEXT NOT NULL,
                 Answer TEXT NOT NULL,
-                StackID INT NOT NULL FOREIGN KEY REFERENCES Stacks(ID),
-                DisplayID INT NOT NULL
+                DisplayID INT NOT NULL,
+                StackID INT NOT NULL FOREIGN KEY REFERENCES Stacks(ID) ON DELETE CASCADE
             )";
             
         connection.Execute(createFlashcardsTable);
@@ -36,9 +36,9 @@ public class DatabaseSetup
             IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='StudySessions' and xtype='U')
             CREATE TABLE StudySessions (
                 ID INT PRIMARY KEY IDENTITY(1, 1),
-                StackID INT NOT NULL FOREIGN KEY REFERENCES Stacks(ID),
                 Date DATETIME NOT NULL,
-                Score INT NOT NULL
+                Score INT NOT NULL,
+                StackID INT NOT NULL FOREIGN KEY REFERENCES Stacks(ID) ON DELETE CASCADE
         )";
 
         connection.Execute(createStudySessionsTable);
