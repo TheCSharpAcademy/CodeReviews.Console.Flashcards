@@ -7,15 +7,16 @@ var builder = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .Build();
 
-string? connectionString = builder.GetConnectionString("DefaultConnection");
 string? setupConnectionString = builder.GetConnectionString("SetupConnection");
 
-GlobalConfig.InitializeConnectionString(connectionString);
 GlobalConfig.InitializeSetupConnectionString(setupConnectionString);
+string? database = builder.GetValue<string>("DatabaseName");
 
 CancelSetup.CancelString = builder.GetValue<string>("CancelString");
 
 DatabaseConfig databaseConfig = new DatabaseConfig();
-databaseConfig.InitializeDatabase();
+databaseConfig.InitializeDatabase(database);
+
+GlobalConfig.InitializeConnectionString(database);
 
 Application.Run();

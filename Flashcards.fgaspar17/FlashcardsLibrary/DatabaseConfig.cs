@@ -7,19 +7,19 @@ namespace FlashcardsLibrary;
 
 public class DatabaseConfig
 {
-    public void InitializeDatabase()
+    public void InitializeDatabase(string databaseName)
     {
         try
         {
             using IDbConnection connection = new SqlConnection(GlobalConfig.SetupConnectionString);
 
             connection.Open();
-            string? db = connection.QuerySingleOrDefault<string>(@"SELECT name FROM sys.databases WHERE name = 'flashcardsdb'");
+            string? db = connection.QuerySingleOrDefault<string>(@$"SELECT name FROM sys.databases WHERE name = '{databaseName}'");
 
             if (db == null)
             {
-                connection.Execute("CREATE DATABASE flashcardsdb;");
-                connection.ChangeDatabase("flashcardsdb");
+                connection.Execute($"CREATE DATABASE {databaseName};");
+                connection.ChangeDatabase(databaseName);
 
                 using IDbTransaction transaction = connection.BeginTransaction();
                 string scriptSql = File.ReadAllText("DatabaseScript.txt");
