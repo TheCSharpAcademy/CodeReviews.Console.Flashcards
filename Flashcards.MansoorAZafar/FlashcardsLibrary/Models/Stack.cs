@@ -1,7 +1,7 @@
 
 namespace FlashcardsLibrary.Models;
 
-public class Stack
+internal class Stack
 {
     public static string[] Headers = ["Id", "Topic"];
     public int? Id { get; set; }

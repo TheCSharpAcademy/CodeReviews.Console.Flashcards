@@ -42,11 +42,24 @@ internal class DatabaseManager
                     FrontOfTheCard NVARCHAR(255),
                     BackOfTheCard NVARCHAR(255),
                     Topic NVARCHAR(255),
-                    FOREIGN KEY (Topic) REFERENCES Stack(Topic)
+                    FOREIGN KEY (Topic) REFERENCES Stack(Topic) ON DELETE CASCADE
                 )
             END";
-        tableCommand.ExecuteNonQuery();    
-        
+        tableCommand.ExecuteNonQuery();
+
+        tableCommand.CommandText =
+            @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'StudySession')
+              BEGIN
+                CREATE TABLE StudySession
+                (
+                    Id INT IDENTITY(1,1) PRIMARY KEY,
+                    Score INT,
+                    Date DATETIME,
+                    Topic NVARCHAR(255),
+                    FOREIGN KEY (Topic) REFERENCES Stack(Topic) ON DELETE CASCADE
+                )
+              END";
+        tableCommand.ExecuteNonQuery();
 
         tableCommand.CommandText =
             @"IF NOT EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'fix_flashcard_Ids')
@@ -206,6 +219,17 @@ internal class DatabaseManager
         return queryLength;
     }
 
+    internal void InsertSession(int score, DateTime date, string topic)
+    {
+        using var connection = new SqlConnection(ConnectionString);
+        var sql = @"INSERT INTO StudySession(Score, Date, Topic)
+                    VALUES(@Score, @Date, @Topic)";
+        
+        StudySession studySession = new(score, date, topic);
+        connection.Execute(sql, studySession);
+        connection.Close();
+    }
+
     internal int GetNumberOfEntriesFromFlashcards()
     {
         int queryLength = 0;
@@ -256,8 +280,7 @@ internal class DatabaseManager
         using var connection = new SqlConnection(ConnectionString);
         
         string deleteSQL = 
-            @"DELETE FROM Flashcard WHERE Topic = @Topic;
-              DELETE FROM Stack WHERE Id = @Id;";
+            @"DELETE FROM Stack WHERE Id = @Id;";
         connection.Execute(deleteSQL, toBeDelted);
 
         connection.Close();

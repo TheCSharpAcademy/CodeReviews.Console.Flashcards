@@ -5,7 +5,8 @@ internal enum HomeMenu
     exit = 0, 
     StackManager,
     FlashCardManager,
-    Study
+    Study,
+    StudySession
 }
 
 internal enum StackSelections
@@ -25,4 +26,11 @@ internal enum StackHomeSelections
     InputStack,
     CreateStack,
     DeleteStack
+}
+
+internal enum StudySessionSelections
+{
+    exit = 0,
+    ViewData,
+    StartSession
 }

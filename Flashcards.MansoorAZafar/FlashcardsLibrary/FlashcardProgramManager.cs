@@ -27,6 +27,7 @@ public class FlashcardProgramManager
                     {
                         HomeMenu.FlashCardManager => "Manage FlashCards",
                         HomeMenu.StackManager => "Manage Stacks",
+                        HomeMenu.StudySession => "Study Session",
                         _ => item.ToString()
                 });
             

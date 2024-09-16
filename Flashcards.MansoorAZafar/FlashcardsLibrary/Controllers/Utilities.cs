@@ -7,8 +7,9 @@ namespace FlashcardsLibrary.Controllers;
 internal static class Utilities
 {
     private static readonly string? connectionString;
-    internal static readonly string StackTableName = "Stack";
-    internal static readonly string FlashcardTableName = "Flashcard";
+    internal static readonly string StackTableName        = "Stack";
+    internal static readonly string FlashcardTableName    = "Flashcard";
+    internal static readonly string StudySessionTableName = "StudySession";
     internal static bool EmptyStack;
     internal static string? CurrentStack {get; set;} 
     internal static readonly DatabaseManager databaseManager;

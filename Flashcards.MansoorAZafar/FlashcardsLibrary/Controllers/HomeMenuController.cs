@@ -22,6 +22,10 @@ internal class HomeMenuController
             case HomeMenu.Study:
                 this.Study();
                 break;
+
+            case HomeMenu.StudySession:
+                this.StudySession();
+                break;
             
             default: break;
         }
@@ -53,9 +57,14 @@ internal class HomeMenuController
     }
 
     private void Study()
-    {
-        DataViewer.DisplayHeader("Study");
+    {   
         StudyManager studyManager = new();
         studyManager.Study();
+    }
+
+    private void StudySession()
+    {
+        StudySessionManager studySessionManager = new();
+        studySessionManager.BeginSession();
     }
 }

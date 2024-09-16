@@ -6,6 +6,12 @@ namespace FlashcardsLibrary.Controllers;
 
 internal class StudyManager
 {
+    private bool recordData;
+    internal StudyManager(bool recordData = false)
+    {
+        this.recordData = recordData;
+    }
+
     internal void Study()
     {
         DataViewer.DisplayHeader("Study");
@@ -34,7 +40,7 @@ internal class StudyManager
         foreach(var flashcard in flashcards)
         {
             DataViewer.DisplayHeader("Study");
-            var panel = new Panel(flashcard.FrontOfTheCard)
+            var panel = new Panel(flashcard.FrontOfTheCard ?? "n/a")
                                  .Header("Front")
                                  .SquareBorder()
                                  .Collapse()
@@ -42,11 +48,11 @@ internal class StudyManager
                                  .Padding(4,2,4,2);
             AnsiConsole.Write(panel);
 
-            string input = Utilities.GetStringInput(message: "\nInput your answer to this card\nOr 0 to exit\n> ");
+            string input = Utilities.GetStringInput(message: "\nInput your answer to this card\nOr 0 to exit\n> ").ToLower();
             if("0".Equals(input))
                 break;
 
-            if(input == flashcard.BackOfTheCard)
+            if(input == flashcard.BackOfTheCard?.ToLower())
                 System.Console.WriteLine($"\nCorrect! The answer is indeed {input}\n Your score is {++score}");
             else 
                 System.Console.WriteLine($"\nYour answer was wrong.\n\nYou answered {input}\nThe correct answer was {flashcard.BackOfTheCard}");
@@ -56,5 +62,12 @@ internal class StudyManager
         }
         DataViewer.DisplayHeader("Study Result");
         System.Console.WriteLine($"Exiting Study Session\nYou got {score} right out of {flashcards.Count}");
+        
+        if(this.recordData)
+        {
+            DateTime dateTime = DateTime.Now;
+            Utilities.databaseManager
+                .InsertSession(score, dateTime, Utilities.CurrentStack);
+        }
     }
 }
