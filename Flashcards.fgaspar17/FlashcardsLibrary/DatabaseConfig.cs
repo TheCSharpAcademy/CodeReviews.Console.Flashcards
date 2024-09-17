@@ -18,7 +18,7 @@ public class DatabaseConfig
 
             if (db == null)
             {
-                connection.Execute($"CREATE DATABASE {databaseName};");
+                connection.Execute($"CREATE DATABASE [{databaseName}];");
                 connection.ChangeDatabase(databaseName);
 
                 using IDbTransaction transaction = connection.BeginTransaction();
