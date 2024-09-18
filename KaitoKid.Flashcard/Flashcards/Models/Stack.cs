@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Flashcards.Models
 {
+    [Index(nameof(StackName), IsUnique = true)]
     public class Stack
     {
         [Key]
