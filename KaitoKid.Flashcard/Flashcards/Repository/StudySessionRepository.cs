@@ -45,8 +45,7 @@ namespace Flashcards.Repository
             table.AddColumn("[green]Session Duration[/]");
 
             foreach(var entity in entities)
-            {
-                int count = _context.Flashcard.Count(f => f.StackId == entity.StackId);
+            { 
                 table.AddRow(
                     entity.StackName,
                     entity.Score.ToString(),

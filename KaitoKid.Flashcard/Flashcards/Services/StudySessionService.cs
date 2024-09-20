@@ -43,7 +43,6 @@ namespace Flashcards.Services
                 Console.Clear();
                 Console.WriteLine("Starting Study Session: \n\n");
 
-                //Extract question and answer from database;
                 timer.Start();
                 foreach (var card in cards) { 
                     Console.Write(card.Question + ": " );

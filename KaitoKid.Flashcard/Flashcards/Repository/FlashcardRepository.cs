@@ -1,4 +1,4 @@
-﻿using Flashcards.DTO;
+﻿using Flashcards.Dto;
 using Flashcards.Models;
 using Spectre.Console;
 
@@ -15,11 +15,11 @@ namespace Flashcards.Repository
             this.stackId = stackId;
         }
 
-        public List<FlashcardDTO> GetAllCards()
+        public List<FlashcardDto> GetAllCards()
         {
             var entities = _context.Flashcard
                           .Where(flashcard => flashcard.StackId == stackId)
-                          .Select(flashcard => new FlashcardDTO
+                          .Select(flashcard => new FlashcardDto
                           {
                               StackCardId = flashcard.StackCardId,
                               Question = flashcard.Question,
@@ -34,7 +34,7 @@ namespace Flashcards.Repository
         {
             var entities = _context.Flashcard
                           .Where(flashcard => flashcard.StackId == stackId)
-                          .Select(flashcard => new FlashcardDTO
+                          .Select(flashcard => new FlashcardDto
                           {
                               StackCardId = flashcard.StackCardId,
                               Question = flashcard.Question,
@@ -47,7 +47,7 @@ namespace Flashcards.Repository
 
 
 
-        public void GetTable(List<FlashcardDTO> entities)
+        public void GetTable(List<FlashcardDto> entities)
         {
             if (entities.Count() == 0)
             {

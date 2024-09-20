@@ -2,9 +2,9 @@
 
 //When adding a new flashcard or updating an existing one,
 //use this DTO to collect the necessary information while abstracting away database details from the user.
-namespace Flashcards.DTO
+namespace Flashcards.Dto
 {
-    public class FlashcardDTO
+    public class FlashcardDto
     {
         public int StackCardId { get; set; }
         public string Question { get; set; }

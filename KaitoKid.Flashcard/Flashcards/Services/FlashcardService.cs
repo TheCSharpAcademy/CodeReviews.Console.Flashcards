@@ -1,11 +1,6 @@
 ﻿using Flashcards.Repository;
 using Flashcards.Views;
 using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Flashcards.Services
 {
@@ -100,7 +95,10 @@ namespace Flashcards.Services
                         break;
 
                     case 7:
-                        repo.GetAllCards();
+                        if (repo.GetAllCards().Count == 0)
+                        {
+                            break;
+                        }
                         Console.Write("\nEnter Card Id to be Deleted: ");
                         cardId = userInput.GetInt();
                         repo.Delete(cardId);

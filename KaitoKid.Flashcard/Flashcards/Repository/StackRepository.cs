@@ -1,7 +1,5 @@
 ﻿using Flashcards.Models;
 using Spectre.Console;
-using System;
-using System.Security.Cryptography;
 
 namespace Flashcards.Repository
 {
