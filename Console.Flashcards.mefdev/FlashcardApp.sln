@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlashcardApp.Core", "FlashcardApp.Core\FlashcardApp.Core.csproj", "{D6D55DDF-FF2D-43A3-AD78-68C3CA8632ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlashcardApp.Console", "FlashcardApp.Console\FlashcardApp.Console.csproj", "{23F80C68-EDCB-452D-BDFE-0E1E53DFB96B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D6D55DDF-FF2D-43A3-AD78-68C3CA8632ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6D55DDF-FF2D-43A3-AD78-68C3CA8632ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6D55DDF-FF2D-43A3-AD78-68C3CA8632ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6D55DDF-FF2D-43A3-AD78-68C3CA8632ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23F80C68-EDCB-452D-BDFE-0E1E53DFB96B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23F80C68-EDCB-452D-BDFE-0E1E53DFB96B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23F80C68-EDCB-452D-BDFE-0E1E53DFB96B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23F80C68-EDCB-452D-BDFE-0E1E53DFB96B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
