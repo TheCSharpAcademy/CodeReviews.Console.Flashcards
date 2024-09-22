@@ -1,6 +1,6 @@
 ﻿using System.Data.SqlClient;
 using Spectre.Console;
-using static Flashcards_JvR_Hannes.DTO;
+using static Flashcards_JvR_Hannes.Dto;
 namespace Flashcards_JvR_Hannes
 {
     internal static class SqlController
@@ -222,10 +222,10 @@ namespace Flashcards_JvR_Hannes
                 AnsiConsole.MarkupLine("[green]Study session added successfully.[/]");
             }
         }
-        public static List<StudySessionDTO> GetStudySessions(SqlConnection connection)
+        public static List<StudySessionDto> GetStudySessions(SqlConnection connection)
         {
             string query = "SELECT * FROM StudySessions ORDER BY Date DESC";
-            List<StudySessionDTO> sessions = new List<StudySessionDTO>();
+            List<StudySessionDto> sessions = new List<StudySessionDto>();
 
             using (SqlCommand command = new SqlCommand(query, connection))
             {
@@ -233,7 +233,7 @@ namespace Flashcards_JvR_Hannes
                 {
                     while (reader.Read())
                     {
-                        sessions.Add(new StudySessionDTO
+                        sessions.Add(new StudySessionDto
                         {
                             SessionId = reader.GetInt32(0),
                             StackId = reader.GetInt32(1),
@@ -257,17 +257,17 @@ namespace Flashcards_JvR_Hannes
                 AnsiConsole.MarkupLine($"[red]Stack {stackId} deleted successfully[/]");
             }
         }
-        public static List<StackDTO> GetStacks(SqlConnection connection)
+        public static List<StackDto> GetStacks(SqlConnection connection)
         {
             string query = "SELECT * FROM Stacks";
-            List<StackDTO> stacks = new List<StackDTO>();
+            List<StackDto> stacks = new List<StackDto>();
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        stacks.Add(new StackDTO
+                        stacks.Add(new StackDto
                         {
                             StackId = reader.GetInt32(0),
                             StackName = reader.GetString(1)

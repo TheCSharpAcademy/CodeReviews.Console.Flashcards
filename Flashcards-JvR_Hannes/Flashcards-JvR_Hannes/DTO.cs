@@ -1,8 +1,8 @@
 ﻿namespace Flashcards_JvR_Hannes
 {
-    internal class DTO
+    internal class Dto
     {
-        public class FlashcardsDTO
+        public class FlashcardsDto
         {
             public int DisplayId { get; set; }
             private string _question;
@@ -32,7 +32,7 @@
                 }
             }
         }
-        public class StackDTO
+        public class StackDto
         {
             public int StackId { get; set; }
             private string _stackName;
@@ -48,9 +48,9 @@
                     _stackName = value;
                 }
             }
-            public List<FlashcardsDTO> Flashcards { get; set; } = new List<FlashcardsDTO>();
+            public List<FlashcardsDto> Flashcards { get; set; } = new List<FlashcardsDto>();
         }
-        public class StudySessionDTO
+        public class StudySessionDto
         {
             public int SessionId { get; set; }
             public int StackId { get; set; }
