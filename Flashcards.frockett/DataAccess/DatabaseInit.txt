@@ -1,5 +1,0 @@
-﻿IF DB_ID('FlashCards') IS NULL
-BEGIN
-    CREATE DATABASE FlashCards;
-    -- Additional commands to set up the database can be added here if needed
-END

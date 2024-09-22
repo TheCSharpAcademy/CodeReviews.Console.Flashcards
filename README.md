@@ -1,140 +1,65 @@
-# CodingTracker
-- Console based CRUD application to create and study flashcards
-- Developed using C# and MSSQL
+<h1>Flashcards App</h1>
+<p>This Flashcards application allows users to create, view, update, delete, and study stacks of flashcards.</p>
+<p>Additionally, it stores study session scores for tracking progress.</p>
 
-# Given Requirements:
-- [x] When application starts, it creates a MSSQL database if one is not present
-- [x] Creates a database where flashcard stacks are made and studied
-- [x] Shows a menu of options
-- [x] Allows user to Add and delete a stack, add and delete a flashcard, do a study session, view all study sessions, and get a report on study sessions for the last year.
-- [x] Handles all errors so application doesn't crash
-- [x] Only exits when user selects Exit
+<h2>Table Of Content</h2>
+<ol>
+  <li><a href="#features">Features</a></li>
+  <li><a href="#technologies">Technologies</a></li>
+  <li><a href="#database-setup">Database Setup</a></li>
+  <li><a href="#usage">Usage</a></li>
+</ol>
 
-# Features
+<h2>Features</h2>
+  <ul>
+    <li>Create, view, update, and delete flashcard stacks.</li>
+    <li>Add and edit flashcards in each stack.</li>
+    <li>Track study session performance and scores.</li>
+    <li>Automatically renumber flashcards within a stack when updated.</li>
+    <li>View historical study session data.</li>
+  </ul>
+<h2>Technologies</h2>
+  <ul>
+    <li>.NET Core 8.0: The framework used for the backend logic.</li>
+    <li>SQL Server (LocalDB): For database management.</li>
+    <li>Spectre.Console: For colorful and interactive console UI.</li>
+    <li>SQL Server Management Studio (SSMS): For database management.</li>
+  </ul>
 
-* MSSQL database connection
-		
-- The program uses a MSSQL db conneciton to store and read information.
-- If no database exists, or the correct table does not exist, they will be created when the program starts.
+<h2>Database Setup</h2>
+<p>The app uses SQL Server LocalDB to store flashcards, stacks, and study session data.</p>
 
-* A console based UI using Spectre Console where users can navigate with selecting with their keyboard
+<h3>Automatic Database Creation</h3>
+<p>Upon launching the app for the first time, the necessary database and tables will be created automatically in the project's bin/Debug/net8.0 folder.</p>
 
-
-# DB functions
-
-## Main Menu
-
-- Users can add and delete a stack, add and delete a flashcard, do a study session, view study sessions by stack, and get an average score yearly report.
-
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardsMainMenu.png)
-
-### Add a stack
-
-- Stack name is entered, with a way to exit to the main menu by entering 0.
-
-	![image](https://github.com/Fennikko/Images/blob/main/StackName.png)
-
-- If a stack name already exists, you receive an error message and can press any key to try again.
-
-	![image](https://github.com/Fennikko/Images/blob/main/StackError.png)
-
-- Informs you the stack has been added and prompts to press any key to continue
-	![image](https://github.com/Fennikko/Images/blob/main/StackAddSuccess.png)
-
-### Delete a stack
-
-- Users select a stack to delete from the available stacks
-
-	![image](https://github.com/Fennikko/Images/blob/main/StackDeletion.png)
-
-- Users get a message on screen telling them that the stack has been deleted, and they can press any key to continue.
-- When a stack is deleted, the associated flashcards and study sessions for that stack are also deleted from the database.
-
-	![image](https://github.com/Fennikko/Images/blob/main/StackDeleted.png)
-
-### Add a flashcard
-
-- Users will be prompted if the flashcard will be for a new stack. If yes, the user will be prompted to create a new stack.
-- If no, they will select the stack that the flashcard will be added to.
-
-	![image](https://github.com/Fennikko/Images/blob/main/AddFlashcardStackSelect.png)
-
-- Users will be prompted to enter the front and back of the flashcard, they can also press 0 to return to the main menu.
-
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardFront.png)
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardBack.png)
-
-- Empty values are not allowed, this is handled by prompting the user again, they can also press 0 to return to the main menu.
-
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardEmpty.png)
-
-- The front of flashcards **MUST** be unique, or users will get an error message and will need to try again.
-
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardAddError.png)
-
-
-
-### Delete a flashcard
-
-- Users will be prompted to select a stack to delete the flashcard from.
-
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardDeletion1.png)
-
-- Users will then be prompted to select the flash card to delete, these are sorted by the front of the flashcards
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardDeletion2.png)
-
-- Users will get a message that the flashcard has been deleted, and that the indexes have been updated.
-- When a flash card is deleted, all flashcard Id's will adjust to get rid of any gaps.
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardDeletion3.png)
-
-
-### Study Session
-
-- Users will be prompted to select a stack to study from.
-
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardStudySession.png)
-
-- Users will shown the Id of the flashcard and the front of the flashcard, and will be prompted to provide an answer
-- If a blank answer is provided, the user will be presented with an error message and be prompted to provide an answer
-
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardStudySession2.png)
-
-- Once an answer is provided, the flashscard Id and back of the card will be shown to the user
-- If the answer is correct, they will get a point and be prompted to press any key to continue
-- If the answer is incorrect, they will not receive a point and will be informed that their answer was incorrect.
-
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardStudySession3.png)
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardStudySession4.png)
-
-- After all flashcards have been answered, the user will get their final score and to press any key to continue.
-- User will be shown that the study session has been added, and to press any key to continue.
-
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardStudySession5.png)
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardStudySession6.png)
-
-
-### View Study Sessions by Stack
-
-- Users will be prompted to select a stack to view all the sessions of.
-
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardViewStudySessions.png)
-
-- Users will then be presented with a table with the name of the stack, the session dates, and the scores.
-- At the bottom will show the average study session score for all their sessions for that stack.
-- Pressing any key will return user to the main menu.
-
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardViewStudySessions2.png)
-
-
-### Average Score Yearly Report
-
-- Users will be prompted to enter the year for the report.
-- If the format is incorrect or blank, the user will receive an error message and be prompted to enter in the correct format.
-
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardsYearlyReport.png)
-
-- After the year is entered, users will be presented with a table with the average study sessions for the year they entered.
-- If no sessions exist, they will be presented with an error message asking if they'd like to try agian.
-- Selecting yes will prompt them for the year, selecting no will return them to the main menu.
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardsYearlyReport2.png)
-	![image](https://github.com/Fennikko/Images/blob/main/FlashcardsYearlyReport3.png)
+<h3>Manual Database Setup (optional)</h3>
+<p>If you want to set up the database manually:</p>
+  <ol>
+    <li>Open SQL Server Management Studio (SSMS).</li>
+    <li>Connect to the (LocalDB)\MSSQLLocalDB instance.</li>
+    <li>Navigate to the Attach Databases option and attach the flashcardsdb.mdf located in the project’s bin/Debug/net8.0 folder.</li>
+  </ol>
+<h3>Tables Structure</h3>
+  <ul>
+    <li>Stacks: Stores information about each flashcard stack.</li>
+    <li>Flashcards: Contains the flashcards associated with each stack.</li>
+    <li>StudySessions: Records each study session's date, score, and associated stack.</li>
+  </ul>
+<h2>Usage</h2>
+<h3>Main Menu Options:</h3>
+  <ul>
+    <li>Create Stack: Add a new flashcard stack.</li>
+    <li>Update Stack: Rename an existing stack and renumber the flashcards.</li>
+    <li>View Stacks: View all stacks and their associated flashcards.</li>
+    <li>Delete Stack: Permanently remove a stack and its flashcards.</li>
+    <li>Study Session: Select a stack, go through the flashcards, and record a score.</li>
+    <li>View Study Sessions: See a list of past study sessions and scores.</li>
+    <li>Close App: Exit the application.</li>
+  </ul>
+<h3>Sample Workflow:</h3>
+  <ol>
+    <li>Create a new stack (e.g., "Mathematics").</li>
+    <li>Add flashcards (e.g., "What is 2 + 2?", "Answer: 4").</li>
+    <li>Start a study session and answer the flashcards.</li>
+    <li>View your study session scores.</li>
+  </ol>

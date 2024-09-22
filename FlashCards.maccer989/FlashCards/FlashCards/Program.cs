@@ -1,2 +1,0 @@
-﻿using FlashCardsUI;
-UserInterface.GetMainMenu();

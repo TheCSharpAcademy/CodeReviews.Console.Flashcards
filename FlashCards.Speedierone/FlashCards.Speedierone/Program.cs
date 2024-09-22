@@ -1,3 +1,0 @@
-﻿using FlashCards;
-
-MainMenu.ShowMenu();
