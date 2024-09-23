@@ -10,6 +10,19 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Spectre.Console" Version="0.49.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FlashcardApp.Core\FlashcardApp.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="IoC\" />
+    <None Remove="MessageLoggers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="IoC\" />
+    <Folder Include="MessageLoggers\" />
+  </ItemGroup>
 </Project>

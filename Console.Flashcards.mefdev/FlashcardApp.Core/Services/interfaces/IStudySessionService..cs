@@ -1,6 +1,6 @@
 namespace FlashcardApp.Core.Services.Interfaces;
 
-public interface IStudySessionService.
+public interface IStudySessionService
 {
     
 }

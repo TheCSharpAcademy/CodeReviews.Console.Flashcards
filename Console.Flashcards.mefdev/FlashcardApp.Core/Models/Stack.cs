@@ -2,10 +2,10 @@ namespace FlashcardApp.Core.Models;
 
 public class Stack
 {
-    public int Id { get; set; }
+    public int StackId { get; set; }
     public string Name { get; set; }
 
-    protected readonly Stack(){
+    public Stack(){
 
     }
 

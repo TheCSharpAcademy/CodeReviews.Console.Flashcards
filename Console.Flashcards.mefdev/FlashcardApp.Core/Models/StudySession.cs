@@ -7,7 +7,7 @@ public class StudySession
     public DateTime Date {get; set; }
     public int Score {get; set; }
 
-   protected readonly StudySession(){
+   protected StudySession(){
 
     }
 

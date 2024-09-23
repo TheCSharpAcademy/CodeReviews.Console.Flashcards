@@ -5,8 +5,8 @@ public class FlashCardDTO
     public string Question { get; set; }
     public string Answer { get; set; }
 
-    readonly FlashCardDTO(){
-
+    protected FlashCardDTO(){
+        
     }
 
 }
