@@ -24,13 +24,14 @@ public class Program
         {
             MessageLogger.DisplayErrorMessage(ex.Message);
         }
-        
     }
+
     private static async Task LoadDisplayMenu(IServiceProvider serviceProvider)
     {
         var mainMenu = serviceProvider.GetRequiredService<MainMenu>();
         await mainMenu.DisplayMenu();
     }
+
     private static IServiceProvider LoadIocConfiguration()
     {
         string connectionString = GetConnectionString();

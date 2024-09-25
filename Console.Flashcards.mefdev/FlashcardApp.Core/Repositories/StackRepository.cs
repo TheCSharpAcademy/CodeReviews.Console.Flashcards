@@ -77,8 +77,6 @@ public class StackRepository : IStackRepository
         {
             throw new Exception("Invalid Operation: An error has occured while retreiving a stack");
         }
-        
-       
     }
 
     public Task UpdateStack(Stack stack)

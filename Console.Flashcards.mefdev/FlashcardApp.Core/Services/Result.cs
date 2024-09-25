@@ -15,5 +15,3 @@ public class Result
 
     public static Result Failure(string errorMessage) => new Result(false, errorMessage);
 }
-
-

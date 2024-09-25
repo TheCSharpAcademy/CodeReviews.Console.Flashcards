@@ -1,8 +1,7 @@
 ﻿using Spectre.Console;
 
-namespace FlashcardApp.Console.MessageLoggers
+namespace FlashcardApp.Console.MessageLoggers;
 
-{
 	public static class MessageLogger
     {
 
@@ -15,16 +14,14 @@ namespace FlashcardApp.Console.MessageLoggers
         {
             AnsiConsole.MarkupLine($"[red]An error occurred: {message}[/]");
         }
+
         public static void DisplayNoticeMessage(string message)
         {
             AnsiConsole.MarkupLine($"[yellow]Notice: {message}[/]");
         }
+
         public static void DisplayQuitMessage()
         {
             AnsiConsole.MarkupLine($"[yellow]Quitting the application: Thank you for using our Flashcard APP[/]");
         }
-
     }
-	
-}
-

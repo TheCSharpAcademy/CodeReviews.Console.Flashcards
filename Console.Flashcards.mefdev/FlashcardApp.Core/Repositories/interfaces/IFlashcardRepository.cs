@@ -9,5 +9,4 @@ public interface IFlashcardRepository
     Task UpdateFlashcard(Flashcard Flashcard);
     Task<Flashcard> GetFlashcardById(int id);
     Task<IEnumerable<Flashcard>> GetAllFlashcards();
-
 }

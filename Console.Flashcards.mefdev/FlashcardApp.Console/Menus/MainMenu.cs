@@ -7,10 +7,12 @@ namespace FlashcardApp.Console.Menus;
 public class MainMenu
 {
     private readonly IStackService _stackService;
+
     public MainMenu(IStackService stackService)
     {
         _stackService = stackService;
     }
+
     public async Task DisplayMenu()
     {
         RenderCustomLine("DodgerBlue1", "Flashcard Menu");
@@ -88,4 +90,3 @@ public class MainMenu
         }
     }
 }
-    

@@ -6,18 +6,15 @@ using FlashcardApp.Core.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using FlashcardApp.Console.Menus;
 
-namespace FlashcardApp.Console.IoC
+namespace FlashcardApp.Console.IoC;
 
+public static class DependencyInjectionConfig
 {
-    public static class DependencyInjectionConfig
+    public static void ConfigureServices(IServiceCollection services, string connectionString)
     {
-        public static void ConfigureServices(IServiceCollection services, string connectionString)
-        {
-            services.AddSingleton(provider => new DatabaseContext(connectionString));
-            services.AddScoped<IStackRepository, StackRepository>();
-            services.AddScoped<IStackService, StackService>();
-            services.AddSingleton<MainMenu>();
-        }
+        services.AddSingleton(provider => new DatabaseContext(connectionString));
+        services.AddScoped<IStackRepository, StackRepository>();
+        services.AddScoped<IStackService, StackService>();
+        services.AddSingleton<MainMenu>();
     }
 }
-
