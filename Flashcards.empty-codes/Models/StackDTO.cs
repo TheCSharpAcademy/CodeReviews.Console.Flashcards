@@ -3,5 +3,5 @@
 internal class StackDTO
 {
     public int StackId { get; set; }
-    public string StackName { get; set; }
+    public string? StackName { get; set; }
 }
