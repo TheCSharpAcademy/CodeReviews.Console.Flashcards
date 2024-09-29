@@ -3,7 +3,7 @@ using Flashcards.empty_codes.Models;
 using Spectre.Console;
 using System.Data.SqlClient;
 
-namespace Sessions.empty_codes.Controllers;
+namespace Flashcards.empty_codes.Controllers;
 
 internal class StudySessionController
 {

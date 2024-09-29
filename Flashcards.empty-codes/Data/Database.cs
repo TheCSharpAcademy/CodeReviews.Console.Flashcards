@@ -5,7 +5,7 @@ namespace Flashcards.empty_codes.Data;
 
 internal class Database
 {
-    private readonly string connectionString;
+    public readonly string connectionString;
 
     public Database(string connString)
     {
@@ -56,9 +56,9 @@ internal class Database
         {
             {
                 AnsiConsole.MarkupLine($"[red]Error occurred while trying to create the database Table\n - Details: {e.Message}[/]");
-            }
-            AnsiConsole.MarkupLine($"[green]Database file {dbPath} successfully created.[/] [green]The database is ready to use.[/]");
-            Console.Clear();
+            }   
         }
+        AnsiConsole.MarkupLine($"[green]Database file successfully created.[/] [green]The database is ready to use.[/]");
+        Console.Clear();
     }
 }
