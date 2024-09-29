@@ -14,22 +14,53 @@ internal class StacksController
         database = db;
     }
 
-    public void InsertStack(StackDTO stack)
+    public int CheckIfStackExists(StackDTO  stack)
     {
+        int exists = 0;
         using var conn = new SqlConnection(database.connectionString);
-        string insertQuery = "INSERT INTO Stacks(StackName) VALUES (@StackName)";
-
+        string checkQuery = "SELECT COUNT(*) FROM Stacks WHERE StackName = @StackName";
         try
         {
             conn.Open();
-            using var cmd = new SqlCommand(insertQuery, conn);
-            cmd.Parameters.AddWithValue("@StackName", stack.StackName);
-            cmd.ExecuteNonQuery();
+
+            using var checkCmd = new SqlCommand(checkQuery, conn);
+            checkCmd.Parameters.AddWithValue("@StackName", stack.StackName);
+            exists = (int)checkCmd.ExecuteScalar();
         }
         catch (SqlException e)
         {
             {
-                AnsiConsole.MarkupLine($"[red]Error occurred while trying to insert your stack\n - Details: {e.Message}[/]");
+                AnsiConsole.MarkupLine($"[red]Error occurred while trying to check if stack exists\n - Details: {e.Message}[/]");
+            }
+        }
+        return exists;
+    }
+
+    public void InsertStack(StackDTO stack)
+    {
+        int exists = CheckIfStackExists(stack);
+        if (exists > 0)
+        {
+            AnsiConsole.MarkupLine($"[red]Error: The stack name '{stack.StackName}' already exists![/]");
+            return;
+        }
+        else
+        {
+            using var conn = new SqlConnection(database.connectionString);
+            string insertQuery = "INSERT INTO Stacks(StackName) VALUES (@StackName)";
+
+            try
+            {
+                conn.Open();
+                using var cmd = new SqlCommand(insertQuery, conn);
+                cmd.Parameters.AddWithValue("@StackName", stack.StackName);
+                cmd.ExecuteNonQuery();
+            }
+            catch (SqlException e)
+            {
+                {
+                    AnsiConsole.MarkupLine($"[red]Error occurred while trying to insert your stack\n - Details: {e.Message}[/]");
+                }
             }
         }
     }
@@ -61,59 +92,62 @@ internal class StacksController
         return stacks;
     }
 
-    public void UpdateStack(StackDTO stack)
+    public void UpdateStack(StackDTO stack, string newStackName)
     {
-        using var conn = new SqlConnection(database.connectionString);
-        string updateQuery = "UPDATE Stacks SET StackName = @StackName WHERE StackId = @StackId\"";
-
-        try
+        int exists = CheckIfStackExists(stack);
+        if (exists == 0)
         {
-            conn.Open();
-            using var cmd = new SqlCommand(updateQuery, conn);
-            cmd.Parameters.AddWithValue("@StackId", stack.StackId);
-            cmd.Parameters.AddWithValue("@StackName", stack.StackName);
-
-            int result = cmd.ExecuteNonQuery();
-
-            if (result == 0)
-            {
-                AnsiConsole.MarkupLine($"[yellow]No stack found with the provided Id: {stack.StackId}[/]");
-            }
-            else
-            {
-                AnsiConsole.MarkupLine($"[green]Stack Name with Id: {stack.StackId} successfully updated.[/]");
-            }
+            AnsiConsole.MarkupLine($"[yellow]No stack found with the provided name: {stack.StackName}[/]");
+            return;
         }
-        catch (SqlException e)
+        else
         {
-            AnsiConsole.MarkupLine($"[red]Error occurred while trying to change the stack name\n - Details: {e.Message}[/]");
+            using var conn = new SqlConnection(database.connectionString);
+            string updateQuery = "UPDATE Stacks SET StackName = @NewStackName WHERE StackName = @OldStackName";
+
+            try
+            {
+                conn.Open();
+                using var cmd = new SqlCommand(updateQuery, conn);
+                cmd.Parameters.AddWithValue("@OldStackName", stack.StackName);
+                cmd.Parameters.AddWithValue("@NewStackName", newStackName);
+
+                cmd.ExecuteNonQuery();
+                AnsiConsole.MarkupLine($"[green]Stack Name successfully updated from '{stack.StackName}' to '{newStackName}'.[/]");
+            }
+            catch (SqlException e)
+            {
+                AnsiConsole.MarkupLine($"[red]Error occurred while trying to change the stack name\n - Details: {e.Message}[/]");
+            }
         }
     }
 
     public void DeleteStack(StackDTO stack)
     {
-        using var conn = new SqlConnection(database.connectionString);
-        string deleteQuery = "DELETE FROM Stacks WHERE StackId = @StackId";
-
-        try
+        int exists = CheckIfStackExists(stack);
+        if (exists == 0)
         {
-            conn.Open();
-            using var cmd = new SqlCommand(deleteQuery, conn);
-
-            int result = cmd.ExecuteNonQuery();
-
-            if (result == 0)
-            {
-                AnsiConsole.MarkupLine($"[yellow]No stack found with the provided Id: {stack.StackId}[/]");
-            }
-            else
-            {
-                AnsiConsole.MarkupLine($"[green]Stack with Id: {stack.StackId} successfully deleted.[/]");
-            }
+            AnsiConsole.MarkupLine($"[yellow]No stack found with the provided name: {stack.StackName}[/]");
+            return;
         }
-        catch (SqlException e)
+        else
         {
-            AnsiConsole.MarkupLine($"[red]Error occurred while trying to delete your stack\n - Details: {e.Message}[/]");
+            using var conn = new SqlConnection(database.connectionString);
+            string deleteQuery = "DELETE FROM Stacks WHERE StackName = @StackName";
+
+            try
+            {
+                conn.Open();
+                using var cmd = new SqlCommand(deleteQuery, conn);
+
+                int result = cmd.ExecuteNonQuery();
+
+                AnsiConsole.MarkupLine($"[green]Stack with Name: {stack.StackName} successfully deleted.[/]");
+            }
+            catch (SqlException e)
+            {
+                AnsiConsole.MarkupLine($"[red]Error occurred while trying to delete your stack\n - Details: {e.Message}[/]");
+            }
         }
     }
 }
