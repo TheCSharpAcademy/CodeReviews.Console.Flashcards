@@ -7,23 +7,15 @@ namespace Flashcards.empty_codes.Controllers;
 
 internal class StudySessionController
 {
-    private readonly Database database;
-
-    public StudySessionController(Database db)
-    {
-        database = db;
-    }
-
     public void InsertSession(StudySessionDTO session)
     {
-        using var conn = new SqlConnection(database.connectionString);
-        string insertQuery = "INSERT INTO StudySessions(SessionId, StudyDate, Score, StackId) VALUES (@SessionId, @StudyDate, @Score, @StackId)";
+        using var conn = new SqlConnection(Database.ConnectionString);
+        string insertQuery = "INSERT INTO StudySessions(StudyDate, Score, StackId) VALUES (@StudyDate, @Score, @StackId)";
 
         try
         {
             conn.Open();
             using var cmd = new SqlCommand(insertQuery, conn);
-            cmd.Parameters.AddWithValue("@SessionId", session.SessionId);
             cmd.Parameters.AddWithValue("@StudyDate", session.StudyDate);
             cmd.Parameters.AddWithValue("@Score", session.Score);
             cmd.Parameters.AddWithValue("@StackId", session.StackId);
@@ -32,14 +24,14 @@ internal class StudySessionController
         catch (SqlException e)
         {
             {
-                AnsiConsole.MarkupLine($"[red]Error occurred while trying to insert your flashsession\n - Details: {e.Message}[/]");
+                AnsiConsole.MarkupLine($"[red]Error occurred while trying to insert your session\n - Details: {e.Message}[/]");
             }
         }
     }
     public List<StudySessionDTO> ViewAllSessions()
     {
         var sessions = new List<StudySessionDTO>();
-        using var conn = new SqlConnection(database.connectionString);
+        using var conn = new SqlConnection(Database.ConnectionString);
         string readQuery = "SELECT * FROM StudySessions";
 
         try

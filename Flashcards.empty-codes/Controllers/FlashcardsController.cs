@@ -7,17 +7,10 @@ namespace Flashcards.empty_codes.Controllers;
 
 internal class FlashcardsController
 {
-    private readonly Database database;
-
-    public FlashcardsController(Database db)
-    {
-        database = db;
-    }
-
     public int CheckIfCardExists(FlashcardDTO card)
     {
         int exists = 0;
-        using var conn = new SqlConnection(database.connectionString);
+        using var conn = new SqlConnection(Database.ConnectionString);
         string checkQuery = "SELECT COUNT(*) FROM Stacks WHERE FlashcardId = @FlashcardId";
         try
         {
@@ -38,7 +31,7 @@ internal class FlashcardsController
 
     public int GetFlashcardIdByQuestion(string question, int stackId)
     {
-        using var conn = new SqlConnection(database.connectionString);
+        using var conn = new SqlConnection(Database.ConnectionString);
         string query = "SELECT FlashcardId FROM Flashcards WHERE Question = @Question AND StackId = @StackId";
         int flashcardId = -1;
 
@@ -54,36 +47,44 @@ internal class FlashcardsController
             {
                 flashcardId = (int)result;
             }
+            else
+            {
+                AnsiConsole.MarkupLine($"[yellow]No flashcard found with the question: '{question}' in stack ID {stackId}[/]");
+                return -1;
+            }
         }
         catch (SqlException e)
         {
             AnsiConsole.MarkupLine($"[red]Error occurred while trying to fetch flashcard ID by question\n - Details: {e.Message}[/]");
+            return -1;
         }
 
         return flashcardId;
     }
 
-
     public void InsertFlashcard(FlashcardDTO card)
     {
-        int exists = CheckIfCardExists(card);
-        if (exists > 0)
-        {
-            AnsiConsole.MarkupLine($"[red]Error: The flashcard '{card.Question}' already exists![/]");
-            return;
-        }
-        using var conn = new SqlConnection(database.connectionString);
-        string insertQuery = "INSERT INTO Flashcards(FlashcardId, Question, Answer, StackId) VALUES (@FlashcardId, @Question, @Answer, @StackId)";
+        using var conn = new SqlConnection(Database.ConnectionString);
+        string insertQuery = "INSERT INTO Flashcards(Question, Answer, StackId) VALUES (@Question, @Answer, @StackId)";
 
         try
         {
             conn.Open();
             using var cmd = new SqlCommand(insertQuery, conn);
-            cmd.Parameters.AddWithValue("@FlashcardId", card.FlashcardId);
             cmd.Parameters.AddWithValue("@Question", card.Question);
             cmd.Parameters.AddWithValue("@Answer", card.Answer);
             cmd.Parameters.AddWithValue("@StackId", card.StackId);
-            cmd.ExecuteNonQuery();
+
+            int result = cmd.ExecuteNonQuery();
+
+            if (result == 0)
+            {
+                AnsiConsole.MarkupLine($"[yellow]Flashcard could not be added.[/]");
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"[green]Flashcard successfully added.[/]");
+            }
         }
         catch (SqlException e)
         {
@@ -95,7 +96,7 @@ internal class FlashcardsController
     public List<FlashcardDTO> ViewAllFlashcards(StackDTO stack)
     {
         var cards = new List<FlashcardDTO>();
-        using var conn = new SqlConnection(database.connectionString);
+        using var conn = new SqlConnection(Database.ConnectionString);
         string readQuery = "SELECT * FROM Flashcards WHERE StackId = @StackId";
 
         try
@@ -126,8 +127,8 @@ internal class FlashcardsController
 
     public void UpdateFlashcard(FlashcardDTO card)
     {
-        using var conn = new SqlConnection(database.connectionString);
-        string updateQuery = "UPDATE Flashcards SET FlashcardId = @FlashcardId, Question = @Question, Answer = @Answer WHERE FlashcardId = @FlashcardId\"";
+        using var conn = new SqlConnection(Database.ConnectionString);
+        string updateQuery = "UPDATE Flashcards SET Question = @Question, Answer = @Answer WHERE FlashcardId = @FlashcardId";
 
         try
         {
@@ -150,19 +151,22 @@ internal class FlashcardsController
         }
         catch (SqlException e)
         {
-            AnsiConsole.MarkupLine($"[red]Error occurred while trying to change the card name\n - Details: {e.Message}[/]");
+            AnsiConsole.WriteLine($"Error occurred while trying to change the card name\n - Details: {e.Message}");
+
         }
     }
 
     public void DeleteFlashcard(FlashcardDTO card)
     {
-        using var conn = new SqlConnection(database.connectionString);
+        using var conn = new SqlConnection(Database.ConnectionString);
         string deleteQuery = "DELETE FROM Flashcards WHERE FlashcardId = @FlashcardId";
 
         try
         {
             conn.Open();
             using var cmd = new SqlCommand(deleteQuery, conn);
+
+            cmd.Parameters.AddWithValue("@FlashcardId", card.FlashcardId);
 
             int result = cmd.ExecuteNonQuery();
 

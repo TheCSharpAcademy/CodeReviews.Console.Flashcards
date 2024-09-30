@@ -7,16 +7,9 @@ namespace Flashcards.empty_codes.Controllers;
 
 internal class StacksController
 {
-    private readonly Database database;
-
-    public StacksController(Database db)
-    {
-        database = db;
-    }
-
     public StackDTO GetStackById(int id)
     {
-        using var conn = new SqlConnection(database.connectionString);
+        using var conn = new SqlConnection(Database.ConnectionString);
         string query = "SELECT * FROM Stacks WHERE StackId = @StackId";
 
         try
@@ -42,27 +35,35 @@ internal class StacksController
         return null;
     }
 
-    public int CheckIfStackExists(StackDTO  stack)
+    public int CheckIfStackExists(StackDTO stack)
     {
+        using var conn = new SqlConnection(Database.ConnectionString);
+        string checkQuery = "SELECT StackId FROM Stacks WHERE StackName = @StackName";
         int exists = 0;
-        using var conn = new SqlConnection(database.connectionString);
-        string checkQuery = "SELECT COUNT(*) FROM Stacks WHERE StackName = @StackName";
+
         try
         {
             conn.Open();
 
             using var checkCmd = new SqlCommand(checkQuery, conn);
             checkCmd.Parameters.AddWithValue("@StackName", stack.StackName);
-            exists = (int)checkCmd.ExecuteScalar();
+
+            object result = checkCmd.ExecuteScalar();
+
+            if (result != null)
+            {
+                stack.StackId = (int)result;
+                exists = 1;
+            }
         }
         catch (SqlException e)
         {
-            {
-                AnsiConsole.MarkupLine($"[red]Error occurred while trying to check if stack exists\n - Details: {e.Message}[/]");
-            }
+            AnsiConsole.MarkupLine($"[red]Error occurred while trying to check if stack exists\n - Details: {e.Message}[/]");
         }
+
         return exists;
     }
+
 
     public void InsertStack(StackDTO stack)
     {
@@ -74,7 +75,7 @@ internal class StacksController
         }
         else
         {
-            using var conn = new SqlConnection(database.connectionString);
+            using var conn = new SqlConnection(Database.ConnectionString);
             string insertQuery = "INSERT INTO Stacks(StackName) VALUES (@StackName)";
 
             try
@@ -83,6 +84,16 @@ internal class StacksController
                 using var cmd = new SqlCommand(insertQuery, conn);
                 cmd.Parameters.AddWithValue("@StackName", stack.StackName);
                 cmd.ExecuteNonQuery();
+                int result = cmd.ExecuteNonQuery();
+
+                if (result == 0)
+                {
+                    AnsiConsole.MarkupLine($"[yellow]Stack could not be added.[/]");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine($"[green]Stack successfully added.[/]");
+                }
             }
             catch (SqlException e)
             {
@@ -95,7 +106,7 @@ internal class StacksController
     public List<StackDTO> ViewAllStacks()
     {
         var stacks = new List<StackDTO>();
-        using var conn = new SqlConnection(database.connectionString);
+        using var conn = new SqlConnection(Database.ConnectionString);
         string readQuery = "SELECT * FROM Stacks";
 
         try
@@ -130,7 +141,7 @@ internal class StacksController
         }
         else
         {
-            using var conn = new SqlConnection(database.connectionString);
+            using var conn = new SqlConnection(Database.ConnectionString);
             string updateQuery = "UPDATE Stacks SET StackName = @NewStackName WHERE StackName = @OldStackName";
 
             try
@@ -140,8 +151,17 @@ internal class StacksController
                 cmd.Parameters.AddWithValue("@OldStackName", stack.StackName);
                 cmd.Parameters.AddWithValue("@NewStackName", newStackName);
 
-                cmd.ExecuteNonQuery();
-                AnsiConsole.MarkupLine($"[green]Stack Name successfully updated from '{stack.StackName}' to '{newStackName}'.[/]");
+                int result = cmd.ExecuteNonQuery();
+
+                if (result == 0)
+                {
+                    AnsiConsole.MarkupLine($"[green]Stack Name could not be updated.[/]");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine($"[green]Stack Name successfully updated from '{stack.StackName}' to '{newStackName}'.[/]");
+                }
+                
             }
             catch (SqlException e)
             {
@@ -160,17 +180,24 @@ internal class StacksController
         }
         else
         {
-            using var conn = new SqlConnection(database.connectionString);
+            using var conn = new SqlConnection(Database.ConnectionString);
             string deleteQuery = "DELETE FROM Stacks WHERE StackName = @StackName";
 
             try
             {
                 conn.Open();
                 using var cmd = new SqlCommand(deleteQuery, conn);
-
+                cmd.Parameters.AddWithValue("@StackName", stack.StackName);
                 int result = cmd.ExecuteNonQuery();
 
-                AnsiConsole.MarkupLine($"[green]Stack with Name: {stack.StackName} successfully deleted.[/]");
+                if (result == 0)
+                {
+                    AnsiConsole.MarkupLine($"[yellow]Stack could not be deleted.[/]");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine($"[green]Stack with Name: {stack.StackName} successfully deleted.[/]");
+                }
             }
             catch (SqlException e)
             {
