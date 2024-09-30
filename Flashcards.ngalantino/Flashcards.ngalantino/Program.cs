@@ -1,1 +1,1 @@
-﻿
+﻿DatabaseManager db = new DatabaseManager();
