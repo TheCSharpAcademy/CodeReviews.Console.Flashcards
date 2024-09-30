@@ -6,14 +6,10 @@ namespace Flashcards.empty_codes.Views
 {
     internal class StudySessionMenu
     {
-        public StacksController StackController { get; }
-        public FlashcardsController FlashcardController { get; }
-        public StudySessionController StudySessionController { get; }
-        public MainMenu MainMenu { get; }
-        public StackMenu StackMenu { get; }
-        public FlashcardMenu FlashcardMenu { get; }
         public void GetStudySessionMenu()
         {
+            MainMenu menu = new MainMenu();
+            Console.Clear();
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("Choose an [green]option below[/]?")
@@ -27,12 +23,14 @@ namespace Flashcards.empty_codes.Views
             {
                 case "Start a Study Session":
                     StartNewStudySession();
+                    menu.GetMainMenu();
                     break;
                 case "View Study Session Records":
                     ViewStudySessions();
+                    menu.GetMainMenu();
                     break;
                 case "Return to Main Menu":
-                    MainMenu.GetMainMenu();
+                    menu.GetMainMenu();
                     break;
                 default:
                     AnsiConsole.WriteLine("Invalid selection. Please try again.");
@@ -42,12 +40,15 @@ namespace Flashcards.empty_codes.Views
 
         public void StartNewStudySession()
         {
-            StackMenu.ViewAllStacks();
+            StacksController stackController = new StacksController();
+            StackMenu stackMenu = new StackMenu();
+            stackMenu.ViewAllStacks();
             var name = AnsiConsole.Ask<string>("Enter the name of the stack you want to study: ");
             StackDTO stack = new StackDTO();
             stack.StackName = name;
-            if (StackController.CheckIfStackExists(stack) > 0)
+            if (stackController.CheckIfStackExists(stack) > 0)
             {
+                Console.Clear();
                 AnsiConsole.WriteLine($"Current stack: {stack.StackName}");
                 GetStudySessionQandA(stack);
             }
@@ -59,9 +60,10 @@ namespace Flashcards.empty_codes.Views
 
         public void GetStudySessionQandA(StackDTO stack)
         {
+            FlashcardsController flashcardController = new FlashcardsController();
             StudySessionDTO session = new StudySessionDTO();
             int correctAnswers = 0;
-            var cards = FlashcardController.ViewAllFlashcards(stack);
+            var cards = flashcardController.ViewAllFlashcards(stack);
             if (cards.Count == 0)
             {
                 AnsiConsole.MarkupLine("[red]No flashcards found![/]");
@@ -81,14 +83,23 @@ namespace Flashcards.empty_codes.Views
                     }
                 }
                 session.Score = $"You got {correctAnswers} correct out of {cards.Count} questions.";
+
+                StudySessionController studySessionController = new StudySessionController();
+                studySessionController.InsertSession(session);
+
                 AnsiConsole.WriteLine(session.Score);
-                FlashcardMenu.ViewAllFlashcards(stack);
+                AnsiConsole.WriteLine("Press any key to show the correct answers");
+                Console.ReadKey();
+                FlashcardMenu flashcardMenu = new FlashcardMenu();
+                flashcardMenu.ViewAllFlashcards(stack);
+                Console.ReadKey(); 
             }
         }
 
         public void ViewStudySessions()
         {
-            var sessions = StudySessionController.ViewAllSessions();
+            StudySessionController studySessionController = new StudySessionController();
+            var sessions = studySessionController.ViewAllSessions();
             if (sessions.Count == 0)
             {
                 AnsiConsole.MarkupLine("[red]No sessions found![/]");
@@ -104,7 +115,8 @@ namespace Flashcards.empty_codes.Views
 
                 foreach (var session in sessions)
                 {
-                    var stack = StackController.GetStackById(session.StackId);
+                    StacksController stackController = new StacksController();
+                    var stack = stackController.GetStackById(session.StackId);
                     table.AddRow(
                         stack.StackName,
                         session.SessionId.ToString(),
@@ -114,6 +126,7 @@ namespace Flashcards.empty_codes.Views
                 }
                 Console.Clear();
                 AnsiConsole.Write(table);
+                Console.ReadKey();
             }
         }
     }

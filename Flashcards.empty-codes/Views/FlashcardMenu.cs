@@ -6,10 +6,10 @@ namespace Flashcards.empty_codes.Views
 {
     internal class FlashcardMenu
     {
-        public FlashcardsController FlashcardController { get; }
-        
         public void GetFlashcardMenu(StackDTO stack)
         {
+            FlashcardMenu flashcardMenu = new FlashcardMenu();
+            Console.Clear();
             ViewAllFlashcards(stack);
             var flashcardChoice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
@@ -24,16 +24,20 @@ namespace Flashcards.empty_codes.Views
             switch (flashcardChoice)
             {
                 case "Add New Flashcard":
-                    AddNewFlashcard(stack); 
+                    AddNewFlashcard(stack);
+                    flashcardMenu.GetFlashcardMenu(stack);
                     break;
                 case "Edit Flashcard":
-                    UpdateFlashcard(stack); 
+                    UpdateFlashcard(stack);
+                    flashcardMenu.GetFlashcardMenu(stack);
                     break;
                 case "Delete Flashcard":
-                    DeleteFlashcard(stack); 
+                    DeleteFlashcard(stack);
+                    flashcardMenu.GetFlashcardMenu(stack);
                     break;
                 case "Return to Main Menu":
-                    GetFlashcardMenu(stack);
+                    MainMenu menu = new MainMenu();
+                    menu.GetMainMenu();
                     break;
                 default:
                     AnsiConsole.WriteLine("Invalid selection. Please try again."); 
@@ -44,6 +48,7 @@ namespace Flashcards.empty_codes.Views
 
         public void AddNewFlashcard(StackDTO stack)
         {
+            FlashcardsController flashcardController = new FlashcardsController();
             var question = AnsiConsole.Ask<string>("Enter the question: ");
             var answer = AnsiConsole.Ask<string>("Enter the answer: ");
             FlashcardDTO card = new FlashcardDTO();
@@ -51,28 +56,47 @@ namespace Flashcards.empty_codes.Views
             card.Answer = answer;
             card.StackId = stack.StackId;
 
-            FlashcardController.InsertFlashcard(card);
+            flashcardController.InsertFlashcard(card);
+            Console.ReadKey();
         }
 
         public void UpdateFlashcard(StackDTO stack)
         {
+            FlashcardsController flashcardController = new FlashcardsController();
             var oldQuestion = AnsiConsole.Ask<string>("Enter the question you want to change: ");
-            int id = FlashcardController.GetFlashcardIdByQuestion(oldQuestion, stack.StackId);
+            int id = flashcardController.GetFlashcardIdByQuestion(oldQuestion, stack.StackId);
+
+            if (id == -1)
+            {
+                AnsiConsole.MarkupLine("[red]Invalid question entered.[/]");
+                Console.ReadKey();
+                return; 
+            }
+
             var newQuestion = AnsiConsole.Ask<string>("Enter the new question: ");
             var newAnswer = AnsiConsole.Ask<string>("Enter the new answer: ");
+
             FlashcardDTO card = new FlashcardDTO();
             card.FlashcardId = id;
             card.Question = newQuestion;
             card.Answer = newAnswer;
             card.StackId = stack.StackId;
 
-            FlashcardController.UpdateFlashcard(card);
+            flashcardController.UpdateFlashcard(card);
+            Console.ReadKey();
         }
 
         public void DeleteFlashcard(StackDTO stack)
         {
+            FlashcardsController flashcardController = new FlashcardsController();
             var deleteQuestion = AnsiConsole.Ask<string>("Enter the question you want to delete: ");
-            int id = FlashcardController.GetFlashcardIdByQuestion(deleteQuestion, stack.StackId);
+            int id = flashcardController.GetFlashcardIdByQuestion(deleteQuestion, stack.StackId);
+            if(id == -1)
+            {
+                AnsiConsole.MarkupLine("[red]Invalid question entered.[/]");
+                Console.ReadKey();
+                return;
+            }
             FlashcardDTO card = new FlashcardDTO();
             card.FlashcardId = id;
             card.StackId = stack.StackId;
@@ -80,19 +104,20 @@ namespace Flashcards.empty_codes.Views
             var confirmation = AnsiConsole.Prompt(new ConfirmationPrompt("Are you sure?"));
             if (confirmation == true)
             {
-                FlashcardController.DeleteFlashcard(card);
+                flashcardController.DeleteFlashcard(card);
             }
             else
             {
                 AnsiConsole.MarkupLine("[red]Flashcard not deleted![/]");
                 GetFlashcardMenu(stack);
             }
-
+            Console.ReadKey();
         }
 
         public void ViewAllFlashcards(StackDTO stack)
         {
-            var cards = FlashcardController.ViewAllFlashcards(stack);
+            FlashcardsController flashcardController = new FlashcardsController();
+            var cards = flashcardController.ViewAllFlashcards(stack);
             if (cards.Count == 0)
             {
                 AnsiConsole.MarkupLine("[red]No flashcards found![/]");

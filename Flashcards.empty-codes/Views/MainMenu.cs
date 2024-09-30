@@ -7,12 +7,9 @@ namespace Flashcards.empty_codes.Views
 {
     internal class MainMenu
     {
-        public StacksController? stackController { get; }
-        public FlashcardsController? flashcardsController { get; }
-        public StudySessionController? studySessionController { get; }
-
-        public void GetMainMenu()
+        public bool GetMainMenu()
         {
+            Console.Clear();
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("Choose an [green]option below[/]?")
@@ -34,11 +31,12 @@ namespace Flashcards.empty_codes.Views
                     sessionMenu.GetStudySessionMenu();
                     break;
                 case "Exit":
-                    return;
+                    return false;
                 default:
                     AnsiConsole.WriteLine("Invalid selection. Please try again.");
                     break;
             }
+            return true;
         }    
     }
 }

@@ -6,11 +6,10 @@ namespace Flashcards.empty_codes.Views
 {
     internal class StackMenu
     {
-        public StacksController StackController { get; }
-        public MainMenu MainMenu { get; }
-        public FlashcardMenu FlashcardMenu { get; }
         public void GetStackMenu()
         {
+            MainMenu menu = new MainMenu();
+            Console.Clear();
             ViewAllStacks();
 
             var choice = AnsiConsole.Prompt(
@@ -27,18 +26,22 @@ namespace Flashcards.empty_codes.Views
             {
                 case "Select a Stack":
                     SelectAStack();
+                    GetStackMenu();
                     break;
                 case "Add New Stack":
                     AddNewStack();
+                    GetStackMenu();
                     break;
                 case "Update Stack":
                     UpdateStack();
+                    GetStackMenu();
                     break;
                 case "Delete Stack":
                     DeleteStack();
+                    GetStackMenu();
                     break;
                 case "Return to Main Menu":
-                    MainMenu.GetMainMenu();
+                    menu.GetMainMenu();
                     break;
                 default:
                     AnsiConsole.WriteLine("Invalid selection. Please try again.");
@@ -49,12 +52,15 @@ namespace Flashcards.empty_codes.Views
 
         public void SelectAStack()
         {
+            MainMenu menu = new MainMenu();
+            StacksController stackController = new StacksController();
             ViewAllStacks();
             var name = AnsiConsole.Ask<string>("Enter the name of the stack you want to select: ");
             StackDTO stack = new StackDTO();
             stack.StackName = name;
-            if (StackController.CheckIfStackExists(stack) > 0)
+            if (stackController.CheckIfStackExists(stack) > 0)
             {
+                Console.Clear();
                 AnsiConsole.WriteLine($"Current stack: {stack.StackName}");
                 var stackChoice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
@@ -62,8 +68,7 @@ namespace Flashcards.empty_codes.Views
                     .PageSize(10)
                     .MoreChoicesText("[grey](Move up and down to reveal your choices)[/]")
                     .AddChoices(new[] {
-                        "Select another Stack", "View all flashcards in this stack", "Create a new flashcard in this stack",
-                        "Edit a flashcard", "Delete a flashcard", "Return to Main Menu",
+                        "Select another Stack", "Manage flashcards", "Return to Main Menu",
                     }));
 
                 switch (stackChoice)
@@ -72,10 +77,12 @@ namespace Flashcards.empty_codes.Views
                         SelectAStack();
                         break;
                     case "Manage flashcards":
-                        FlashcardMenu.GetFlashcardMenu(stack);
+                        FlashcardMenu flashcardMenu = new FlashcardMenu();
+                        flashcardMenu.GetFlashcardMenu(stack);
+                        SelectAStack();
                         break;
                     case "Return to Main Menu":
-                        MainMenu.GetMainMenu();
+                        menu.GetMainMenu();
                         break;
                     default:
                         AnsiConsole.WriteLine("Invalid selection. Please try again.");
@@ -94,12 +101,15 @@ namespace Flashcards.empty_codes.Views
             var name = AnsiConsole.Ask<string>("Enter the stack name: ");
             StackDTO stack = new StackDTO();
             stack.StackName = name;
-            StackController.InsertStack(stack);
+            StacksController stackController = new StacksController();
+            stackController.InsertStack(stack);
+            Console.ReadKey();
         }
 
         public void ViewAllStacks()
         {
-            var stacks = StackController.ViewAllStacks();
+            StacksController stackController = new StacksController();
+            var stacks = stackController.ViewAllStacks();
             if (stacks.Count == 0)
             {
                 AnsiConsole.MarkupLine("[red]No stacks found![/]");
@@ -124,16 +134,19 @@ namespace Flashcards.empty_codes.Views
 
         public void UpdateStack()
         {
+            StacksController stackController = new StacksController();
             var name = AnsiConsole.Ask<string>("Enter the name of the stack you want to update: ");
             StackDTO stack = new StackDTO();
             stack.StackName = name;
 
             var newStackName = AnsiConsole.Ask<string>("Enter the new name of the stack: ");
-            StackController.UpdateStack(stack, newStackName);
+            stackController.UpdateStack(stack, newStackName);
+            Console.ReadKey();
         }
 
         public void DeleteStack()
         {
+            StacksController stackController = new StacksController();
             var name = AnsiConsole.Ask<string>("Enter the name of the stack you want to delete: ");
             StackDTO stack = new StackDTO();
             stack.StackName = name;
@@ -141,14 +154,13 @@ namespace Flashcards.empty_codes.Views
             var confirmation = AnsiConsole.Prompt(new ConfirmationPrompt("Are you sure?"));
             if (confirmation == true)
             {
-                StackController.DeleteStack(stack);
+                stackController.DeleteStack(stack);
             }
             else
             {
                 AnsiConsole.MarkupLine("[red]Stack not deleted![/]");
-                GetStackMenu();
             }
-
+            Console.ReadKey();
         }
     }
 }
