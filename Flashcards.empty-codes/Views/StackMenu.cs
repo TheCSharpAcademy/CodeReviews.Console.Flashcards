@@ -72,7 +72,7 @@ namespace Flashcards.empty_codes.Views
                         SelectAStack();
                         break;
                     case "Manage flashcards":
-                        FlashcardMenu.GetFlashcardMenu();
+                        FlashcardMenu.GetFlashcardMenu(stack);
                         break;
                     case "Return to Main Menu":
                         MainMenu.GetMainMenu();
@@ -142,8 +142,13 @@ namespace Flashcards.empty_codes.Views
             if (confirmation == true)
             {
                 StackController.DeleteStack(stack);
-            } 
-            
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[red]Stack not deleted![/]");
+                GetStackMenu();
+            }
+
         }
     }
 }

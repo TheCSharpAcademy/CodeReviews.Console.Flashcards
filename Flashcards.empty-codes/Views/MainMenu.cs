@@ -19,7 +19,7 @@ namespace Flashcards.empty_codes.Views
                     .PageSize(10)
                     .MoreChoicesText("[grey](Move up and down to reveal your choices)[/]")
                     .AddChoices(new[] {
-                        "Manage Stacks", "Manage Flashcards",
+                        "Manage Stacks",
                         "Manage Study Sessions", "Exit",
                     }));
 
@@ -28,10 +28,6 @@ namespace Flashcards.empty_codes.Views
                 case "Manage Stacks":
                     var stackMenu = new StackMenu();
                     stackMenu.GetStackMenu();
-                    break;
-                case "Manage Flashcards":
-                    var flashcardMenu = new FlashcardMenu();
-                    flashcardMenu.GetFlashcardMenu();
                     break;
                 case "Manage Study Sessions":
                     var sessionMenu = new StudySessionMenu();
