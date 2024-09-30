@@ -86,9 +86,7 @@ internal class FlashcardsController
         }
         catch (SqlException e)
         {
-            {
-                AnsiConsole.MarkupLine($"[red]Error occurred while trying to insert your flashcard\n - Details: {e.Message}[/]");
-            }
+            AnsiConsole.MarkupLine($"[red]Error occurred while trying to insert your flashcard\n - Details: {e.Message}[/]");
         }
     }
     public List<FlashcardDto> ViewAllFlashcards(StackDto stack)
