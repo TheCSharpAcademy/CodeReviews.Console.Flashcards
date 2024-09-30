@@ -17,8 +17,12 @@ if (string.IsNullOrEmpty(connectionString))
     return;
 }
 
-var database = new Database(connectionString);
-database.InitializeDatabase();
+Database.ConnectionString = connectionString;
+Database.VerifyDatabaseAndTables();
+
 
 var user = new MainMenu();
+
 user.GetMainMenu();
+
+

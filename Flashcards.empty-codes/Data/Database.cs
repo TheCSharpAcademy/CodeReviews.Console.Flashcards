@@ -3,62 +3,51 @@ using Spectre.Console;
 
 namespace Flashcards.empty_codes.Data;
 
-internal class Database
+internal static class Database
 {
-    public readonly string connectionString;
+    public static string ConnectionString;
 
-    public Database(string connString)
+    public static void VerifyDatabaseAndTables()
     {
-        connectionString = connString;
-    }
-
-    public void InitializeDatabase()
-    {
-        using var conn = new SqlConnection(connectionString);
+        using var conn = new SqlConnection(ConnectionString);
         conn.Open();
 
-        string createStacksTable = @"
-            CREATE TABLE IF NOT EXISTS Stacks (
-                StackId INT PRIMARY KEY IDENTITY(1,1),
-                StackName VARCHAR(255) NOT NULL UNIQUE
-            )";
+        string dbName = new SqlConnectionStringBuilder(ConnectionString).InitialCatalog;
+        string checkDatabaseQuery = $"SELECT database_id FROM sys.databases WHERE name = '{dbName}'";
 
-        string createFlashcardsTable = @"
-            CREATE TABLE IF NOT EXISTS Flashcards (
-                FlashcardId INT PRIMARY KEY IDENTITY(1,1),
-                Question VARCHAR(255),
-                Answer VARCHAR(255),
-                StackId INT,
-                FOREIGN KEY (StackId) REFERENCES Stacks(StackId) ON DELETE CASCADE
-            )";
+        using var checkDbCommand = new SqlCommand(checkDatabaseQuery, conn);
+        var dbExists = checkDbCommand.ExecuteScalar() != null;
 
-        string createStudySessionsTable = @"
-            CREATE TABLE IF NOT EXISTS StudySessions (
-                SessionId INT PRIMARY KEY IDENTITY(1,1),
-                StudyDate DATETIME,
-                Score VARCHAR(255),
-                StackId INT,
-                FOREIGN KEY (StackId) REFERENCES Stacks(StackId) ON DELETE CASCADE
-            )";
-
-        try
+        if (!dbExists)
         {
-            using var stacksTableCommand = new SqlCommand(createStacksTable, conn);
-            stacksTableCommand.ExecuteNonQuery();
-
-            using var flashcardsTableCommand = new SqlCommand(createFlashcardsTable, conn);
-            flashcardsTableCommand.ExecuteNonQuery();
-
-            using var studysessionsTableCommand = new SqlCommand(createStudySessionsTable, conn);
-            studysessionsTableCommand.ExecuteNonQuery();
+            AnsiConsole.MarkupLine($"[red]Database '{dbName}' does not exist.[/]");
+            return;
         }
-        catch (SqlException e)
+        else
         {
+            AnsiConsole.MarkupLine($"[green]Database '{dbName}' exists.[/]");
+        }
+
+        string[] tableNames = { "Stacks", "Flashcards", "StudySessions" };
+
+        foreach (var tableName in tableNames)
+        {
+            string checkTableQuery = $"SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{tableName}'";
+
+            using var checkTableCommand = new SqlCommand(checkTableQuery, conn);
+            var tableExists = checkTableCommand.ExecuteScalar() != null;
+
+            if (tableExists)
             {
-                AnsiConsole.MarkupLine($"[red]Error occurred while trying to create the database Table\n - Details: {e.Message}[/]");
-            }   
+                AnsiConsole.MarkupLine($"[green]Table '{tableName}' exists.[/]");
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"[red]Table '{tableName}' does not exist.[/]");
+            }
         }
-        AnsiConsole.MarkupLine($"[green]Database file successfully created.[/] [green]The database is ready to use.[/]");
+        AnsiConsole.WriteLine("Press any key to continue.");
+        Console.ReadKey();
         Console.Clear();
     }
 }
