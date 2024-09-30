@@ -56,11 +56,12 @@ namespace Flashcards.empty_codes.Views
 
         public void UpdateFlashcard(StackDTO stack)
         {
-            var editId = AnsiConsole.Ask<int>("Enter the id of the flashcard you want to edit: ");
+            var oldQuestion = AnsiConsole.Ask<string>("Enter the question you want to change: ");
+            int id = FlashcardController.GetFlashcardIdByQuestion(oldQuestion, stack.StackId);
             var newQuestion = AnsiConsole.Ask<string>("Enter the new question: ");
             var newAnswer = AnsiConsole.Ask<string>("Enter the new answer: ");
             FlashcardDTO card = new FlashcardDTO();
-            card.FlashcardId = editId;
+            card.FlashcardId = id;
             card.Question = newQuestion;
             card.Answer = newAnswer;
             card.StackId = stack.StackId;
@@ -70,9 +71,10 @@ namespace Flashcards.empty_codes.Views
 
         public void DeleteFlashcard(StackDTO stack)
         {
-            var deleteId = AnsiConsole.Ask<int>("Enter the id of the flashcard you want to edit: ");
+            var deleteQuestion = AnsiConsole.Ask<string>("Enter the question you want to delete: ");
+            int id = FlashcardController.GetFlashcardIdByQuestion(deleteQuestion, stack.StackId);
             FlashcardDTO card = new FlashcardDTO();
-            card.FlashcardId = deleteId;
+            card.FlashcardId = id;
             card.StackId = stack.StackId;
 
             var confirmation = AnsiConsole.Prompt(new ConfirmationPrompt("Are you sure?"));
@@ -103,13 +105,15 @@ namespace Flashcards.empty_codes.Views
                 table.AddColumn("[bold]Question[/]");
                 table.AddColumn("[bold]Answer[/]");
 
+                int fakeId = 1;
                 foreach (var card in cards)
                 {
                     table.AddRow(
-                           card.FlashcardId,
+                           fakeId.ToString(),
                            card.Question,
                            card.Answer
                        );
+                    fakeId++;
                 }
                 Console.Clear();
                 AnsiConsole.Write(table);

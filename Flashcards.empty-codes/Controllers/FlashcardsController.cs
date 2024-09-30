@@ -36,6 +36,34 @@ internal class FlashcardsController
         return exists;
     }
 
+    public int GetFlashcardIdByQuestion(string question, int stackId)
+    {
+        using var conn = new SqlConnection(database.connectionString);
+        string query = "SELECT FlashcardId FROM Flashcards WHERE Question = @Question AND StackId = @StackId";
+        int flashcardId = -1;
+
+        try
+        {
+            conn.Open();
+            using var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@Question", question);
+            cmd.Parameters.AddWithValue("@StackId", stackId);
+
+            object result = cmd.ExecuteScalar();
+            if (result != null)
+            {
+                flashcardId = (int)result;
+            }
+        }
+        catch (SqlException e)
+        {
+            AnsiConsole.MarkupLine($"[red]Error occurred while trying to fetch flashcard ID by question\n - Details: {e.Message}[/]");
+        }
+
+        return flashcardId;
+    }
+
+
     public void InsertFlashcard(FlashcardDTO card)
     {
         int exists = CheckIfCardExists(card);
