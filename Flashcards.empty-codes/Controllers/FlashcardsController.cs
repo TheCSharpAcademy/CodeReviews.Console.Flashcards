@@ -14,8 +14,36 @@ internal class FlashcardsController
         database = db;
     }
 
+    public int CheckIfCardExists(FlashcardDTO card)
+    {
+        int exists = 0;
+        using var conn = new SqlConnection(database.connectionString);
+        string checkQuery = "SELECT COUNT(*) FROM Stacks WHERE FlashcardId = @FlashcardId";
+        try
+        {
+            conn.Open();
+
+            using var checkCmd = new SqlCommand(checkQuery, conn);
+            checkCmd.Parameters.AddWithValue("@FlashcardId", card.FlashcardId);
+            exists = (int)checkCmd.ExecuteScalar();
+        }
+        catch (SqlException e)
+        {
+            {
+                AnsiConsole.MarkupLine($"[red]Error occurred while trying to check if flashcard exists\n - Details: {e.Message}[/]");
+            }
+        }
+        return exists;
+    }
+
     public void InsertFlashcard(FlashcardDTO card)
     {
+        int exists = CheckIfCardExists(card);
+        if (exists > 0)
+        {
+            AnsiConsole.MarkupLine($"[red]Error: The flashcard '{card.Question}' already exists![/]");
+            return;
+        }
         using var conn = new SqlConnection(database.connectionString);
         string insertQuery = "INSERT INTO Flashcards(FlashcardId, Question, Answer, StackId) VALUES (@FlashcardId, @Question, @Answer, @StackId)";
 
@@ -36,16 +64,18 @@ internal class FlashcardsController
             }
         }
     }
-    public List<FlashcardDTO> ViewAllFlashcards()
+    public List<FlashcardDTO> ViewAllFlashcards(StackDTO stack)
     {
         var cards = new List<FlashcardDTO>();
         using var conn = new SqlConnection(database.connectionString);
-        string readQuery = "SELECT * FROM Flashcards";
+        string readQuery = "SELECT * FROM Flashcards WHERE StackId = @StackId";
 
         try
         {
             conn.Open();
             using var cmd = new SqlCommand(readQuery, conn);
+            cmd.Parameters.AddWithValue("@StackId", stack.StackId);
+
             using SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {

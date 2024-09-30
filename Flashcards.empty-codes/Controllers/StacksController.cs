@@ -14,6 +14,34 @@ internal class StacksController
         database = db;
     }
 
+    public StackDTO GetStackById(int id)
+    {
+        using var conn = new SqlConnection(database.connectionString);
+        string query = "SELECT * FROM Stacks WHERE StackId = @StackId";
+
+        try
+        {
+            conn.Open();
+            using var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@StackId", id);
+
+            using SqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                return new StackDTO
+                {
+                    StackId = reader.GetInt32(0),
+                    StackName = reader.GetString(1)
+                };
+            }
+        }
+        catch (SqlException e)
+        {
+            AnsiConsole.MarkupLine($"[red]Error occurred while trying to fetch the stack\n - Details: {e.Message}[/]");
+        }
+        return null;
+    }
+
     public int CheckIfStackExists(StackDTO  stack)
     {
         int exists = 0;

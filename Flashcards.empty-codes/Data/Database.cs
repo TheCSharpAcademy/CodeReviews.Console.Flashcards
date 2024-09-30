@@ -36,7 +36,7 @@ internal class Database
             CREATE TABLE IF NOT EXISTS StudySessions (
                 SessionId INT PRIMARY KEY IDENTITY(1,1),
                 StudyDate DATETIME,
-                Score INT,
+                Score VARCHAR(255),
                 StackId INT,
                 FOREIGN KEY (StackId) REFERENCES Stacks(StackId) ON DELETE CASCADE
             )";

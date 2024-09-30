@@ -53,7 +53,7 @@ internal class StudySessionController
                 {
                     SessionId = reader.GetInt32(0),
                     StudyDate = reader.GetDateTime(1),
-                    Score = reader.GetInt32(2),
+                    Score = reader.GetString(2),
                     StackId = reader.GetInt32(3)
                 };
                 sessions.Add(session);
