@@ -83,7 +83,6 @@ internal class StacksController
                 conn.Open();
                 using var cmd = new SqlCommand(insertQuery, conn);
                 cmd.Parameters.AddWithValue("@StackName", stack.StackName);
-                cmd.ExecuteNonQuery();
                 int result = cmd.ExecuteNonQuery();
 
                 if (result == 0)

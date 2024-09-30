@@ -20,9 +20,5 @@ if (string.IsNullOrEmpty(connectionString))
 Database.ConnectionString = connectionString;
 Database.VerifyDatabaseAndTables();
 
-
 var user = new MainMenu();
-
 user.GetMainMenu();
-
-
