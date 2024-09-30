@@ -44,7 +44,7 @@ internal class StudySessionMenu
         StackMenu stackMenu = new StackMenu();
         stackMenu.ViewAllStacks();
         var name = AnsiConsole.Ask<string>("Enter the name of the stack you want to study: ");
-        StackDTO stack = new StackDTO();
+        StackDto stack = new StackDto();
         stack.StackName = name;
         if (stackController.CheckIfStackExists(stack) > 0)
         {
@@ -58,10 +58,10 @@ internal class StudySessionMenu
         }
     }
 
-    public void GetStudySessionQandA(StackDTO stack)
+    public void GetStudySessionQandA(StackDto stack)
     {
         FlashcardsController flashcardController = new FlashcardsController();
-        StudySessionDTO session = new StudySessionDTO();
+        StudySessionDto session = new StudySessionDto();
         int correctAnswers = 0;
         var cards = flashcardController.ViewAllFlashcards(stack);
         if (cards.Count == 0)

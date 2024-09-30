@@ -7,7 +7,7 @@ namespace Flashcards.empty_codes.Controllers;
 
 internal class FlashcardsController
 {
-    public int CheckIfCardExists(FlashcardDTO card)
+    public int CheckIfCardExists(FlashcardDto card)
     {
         int exists = 0;
         using var conn = new SqlConnection(Database.ConnectionString);
@@ -22,9 +22,7 @@ internal class FlashcardsController
         }
         catch (SqlException e)
         {
-            {
-                AnsiConsole.MarkupLine($"[red]Error occurred while trying to check if flashcard exists\n - Details: {e.Message}[/]");
-            }
+            AnsiConsole.MarkupLine($"[red]Error occurred while trying to check if flashcard exists\n - Details: {e.Message}[/]");
         }
         return exists;
     }
@@ -62,7 +60,7 @@ internal class FlashcardsController
         return flashcardId;
     }
 
-    public void InsertFlashcard(FlashcardDTO card)
+    public void InsertFlashcard(FlashcardDto card)
     {
         using var conn = new SqlConnection(Database.ConnectionString);
         string insertQuery = "INSERT INTO Flashcards(Question, Answer, StackId) VALUES (@Question, @Answer, @StackId)";
@@ -93,9 +91,9 @@ internal class FlashcardsController
             }
         }
     }
-    public List<FlashcardDTO> ViewAllFlashcards(StackDTO stack)
+    public List<FlashcardDto> ViewAllFlashcards(StackDto stack)
     {
-        var cards = new List<FlashcardDTO>();
+        var cards = new List<FlashcardDto>();
         using var conn = new SqlConnection(Database.ConnectionString);
         string readQuery = "SELECT * FROM Flashcards WHERE StackId = @StackId";
 
@@ -108,7 +106,7 @@ internal class FlashcardsController
             using SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                FlashcardDTO card = new FlashcardDTO
+                FlashcardDto card = new FlashcardDto
                 {
                     FlashcardId = reader.GetInt32(0),
                     Question = reader.GetString(1),
@@ -125,7 +123,7 @@ internal class FlashcardsController
         return cards;
     }
 
-    public void UpdateFlashcard(FlashcardDTO card)
+    public void UpdateFlashcard(FlashcardDto card)
     {
         using var conn = new SqlConnection(Database.ConnectionString);
         string updateQuery = "UPDATE Flashcards SET Question = @Question, Answer = @Answer WHERE FlashcardId = @FlashcardId";
@@ -156,7 +154,7 @@ internal class FlashcardsController
         }
     }
 
-    public void DeleteFlashcard(FlashcardDTO card)
+    public void DeleteFlashcard(FlashcardDto card)
     {
         using var conn = new SqlConnection(Database.ConnectionString);
         string deleteQuery = "DELETE FROM Flashcards WHERE FlashcardId = @FlashcardId";

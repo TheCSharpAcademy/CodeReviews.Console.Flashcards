@@ -7,7 +7,7 @@ namespace Flashcards.empty_codes.Controllers;
 
 internal class StacksController
 {
-    public StackDTO GetStackById(int id)
+    public StackDto GetStackById(int id)
     {
         using var conn = new SqlConnection(Database.ConnectionString);
         string query = "SELECT * FROM Stacks WHERE StackId = @StackId";
@@ -21,7 +21,7 @@ internal class StacksController
             using SqlDataReader reader = cmd.ExecuteReader();
             if (reader.Read())
             {
-                return new StackDTO
+                return new StackDto
                 {
                     StackId = reader.GetInt32(0),
                     StackName = reader.GetString(1)
@@ -35,7 +35,7 @@ internal class StacksController
         return null;
     }
 
-    public int CheckIfStackExists(StackDTO stack)
+    public int CheckIfStackExists(StackDto stack)
     {
         using var conn = new SqlConnection(Database.ConnectionString);
         string checkQuery = "SELECT StackId FROM Stacks WHERE StackName = @StackName";
@@ -65,7 +65,7 @@ internal class StacksController
     }
 
 
-    public void InsertStack(StackDTO stack)
+    public void InsertStack(StackDto stack)
     {
         int exists = CheckIfStackExists(stack);
         if (exists > 0)
@@ -96,15 +96,13 @@ internal class StacksController
             }
             catch (SqlException e)
             {
-                {
-                    AnsiConsole.MarkupLine($"[red]Error occurred while trying to insert your stack\n - Details: {e.Message}[/]");
-                }
+                AnsiConsole.MarkupLine($"[red]Error occurred while trying to insert your stack\n - Details: {e.Message}[/]");
             }
         }
     }
-    public List<StackDTO> ViewAllStacks()
+    public List<StackDto> ViewAllStacks()
     {
-        var stacks = new List<StackDTO>();
+        var stacks = new List<StackDto>();
         using var conn = new SqlConnection(Database.ConnectionString);
         string readQuery = "SELECT * FROM Stacks";
 
@@ -115,7 +113,7 @@ internal class StacksController
             using SqlDataReader reader = cmd.ExecuteReader();
             while(reader.Read())
             {
-                StackDTO stack = new StackDTO
+                StackDto stack = new StackDto
                 {
                     StackId = reader.GetInt32(0),
                     StackName = reader.GetString(1)
@@ -130,7 +128,7 @@ internal class StacksController
         return stacks;
     }
 
-    public void UpdateStack(StackDTO stack, string newStackName)
+    public void UpdateStack(StackDto stack, string newStackName)
     {
         int exists = CheckIfStackExists(stack);
         if (exists == 0)
@@ -169,7 +167,7 @@ internal class StacksController
         }
     }
 
-    public void DeleteStack(StackDTO stack)
+    public void DeleteStack(StackDto stack)
     {
         int exists = CheckIfStackExists(stack);
         if (exists == 0)

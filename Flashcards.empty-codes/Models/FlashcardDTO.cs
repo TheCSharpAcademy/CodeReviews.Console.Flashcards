@@ -1,6 +1,6 @@
 ﻿namespace Flashcards.empty_codes.Models;
 
-internal class FlashcardDTO
+internal class FlashcardDto
 {
     public int FlashcardId {  get; set; }
     public string? Question { get; set; }

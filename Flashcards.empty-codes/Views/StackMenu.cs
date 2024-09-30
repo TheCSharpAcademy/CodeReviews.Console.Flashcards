@@ -55,7 +55,7 @@ internal class StackMenu
         StacksController stackController = new StacksController();
         ViewAllStacks();
         var name = AnsiConsole.Ask<string>("Enter the name of the stack you want to select: ");
-        StackDTO stack = new StackDTO();
+        StackDto stack = new StackDto();
         stack.StackName = name;
         if (stackController.CheckIfStackExists(stack) > 0)
         {
@@ -98,7 +98,7 @@ internal class StackMenu
     {
         StacksController stackController = new StacksController();
         var name = AnsiConsole.Ask<string>("Enter the stack name: ");
-        StackDTO stack = new StackDTO();
+        StackDto stack = new StackDto();
         stack.StackName = name;
         
         stackController.InsertStack(stack);
@@ -134,7 +134,7 @@ internal class StackMenu
     {
         StacksController stackController = new StacksController();
         var name = AnsiConsole.Ask<string>("Enter the name of the stack you want to update: ");
-        StackDTO stack = new StackDTO();
+        StackDto stack = new StackDto();
         stack.StackName = name;
 
         var newStackName = AnsiConsole.Ask<string>("Enter the new name of the stack: ");
@@ -146,7 +146,7 @@ internal class StackMenu
     {
         StacksController stackController = new StacksController();
         var name = AnsiConsole.Ask<string>("Enter the name of the stack you want to delete: ");
-        StackDTO stack = new StackDTO();
+        StackDto stack = new StackDto();
         stack.StackName = name;
 
         var confirmation = AnsiConsole.Prompt(new ConfirmationPrompt("Are you sure?"));

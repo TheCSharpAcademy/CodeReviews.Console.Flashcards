@@ -7,7 +7,7 @@ namespace Flashcards.empty_codes.Controllers;
 
 internal class StudySessionController
 {
-    public void InsertSession(StudySessionDTO session)
+    public void InsertSession(StudySessionDto session)
     {
         using var conn = new SqlConnection(Database.ConnectionString);
         string insertQuery = "INSERT INTO StudySessions(StudyDate, Score, StackId) VALUES (@StudyDate, @Score, @StackId)";
@@ -23,14 +23,12 @@ internal class StudySessionController
         }
         catch (SqlException e)
         {
-            {
-                AnsiConsole.MarkupLine($"[red]Error occurred while trying to insert your session\n - Details: {e.Message}[/]");
-            }
+            AnsiConsole.MarkupLine($"[red]Error occurred while trying to insert your session\n - Details: {e.Message}[/]"); 
         }
     }
-    public List<StudySessionDTO> ViewAllSessions()
+    public List<StudySessionDto> ViewAllSessions()
     {
-        var sessions = new List<StudySessionDTO>();
+        var sessions = new List<StudySessionDto>();
         using var conn = new SqlConnection(Database.ConnectionString);
         string readQuery = "SELECT * FROM StudySessions";
 
@@ -41,7 +39,7 @@ internal class StudySessionController
             using SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                StudySessionDTO session = new StudySessionDTO
+                StudySessionDto session = new StudySessionDto
                 {
                     SessionId = reader.GetInt32(0),
                     StudyDate = reader.GetDateTime(1),

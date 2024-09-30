@@ -47,7 +47,7 @@ This project introduces Data Transfer Objects (DTOs) to simplify data manipulati
 
 #### 1. **Unique Stack Names**
    - **Problem**: When a stack with a unique name was deleted, an error occurred while trying to reuse the name.
-   Details: Violation of UNIQUE KEY constraint 'UQ_Stacks_F73C0D30A3FA20E9'. Cannot insert duplicate key in object 'dbo.Stacks'. 
+     - **Details**: Violation of UNIQUE KEY constraint 'UQ_Stacks_F73C0D30A3FA20E9'. Cannot insert duplicate key in object 'dbo.Stacks'.
    - **Solution**: The issue arose from executing the `INSERT` command twice. Once corrected, the problem went away. Ensuring hard delete functionality (via `DELETE` SQL command) ensures stack names can be reused after deletion.
 
 #### 2. **Auto-numbered Flashcards without Gaps**
@@ -59,11 +59,11 @@ This project introduces Data Transfer Objects (DTOs) to simplify data manipulati
    - **Solution**: Ensured the correct connection string was used to connect to the `mssqllocaldb` instance.
 
 #### 4. **SQL Syntax Issues**
-   - **Problem**: Error "Incorrect syntax near the keyword 'IF'," is due to the use of the IF NOT EXISTS syntax, which is not supported in SQL Server when creating tables. This syntax is commonly found in other databases like SQLite, but SQL Server requires a different approach.
-   - **Solution**: In SQL Server, you'll need to check if the table exists before trying to create it so I used a conditional statement in my SQL command instead
+   - **Problem**: Error "Incorrect syntax near the keyword 'IF'," is due to the use of the `IF NOT EXISTS` syntax, which is not supported in SQL Server when creating tables. This syntax is commonly found in other databases like SQLite, but SQL Server requires a different approach.
+   - **Solution**: In SQL Server, you'll need to check if the table exists before trying to create it, so I used a conditional statement in my SQL command instead.
 
 #### 5. **Config Issues**
-   - **Lesson**: In .NET Core and .NET 5/6/7/8, app.config is replaced by appsettings.json, and configuration is handled via the IConfiguration interface from the Microsoft.Extensions.Configuration namespace. ConfigurationManager is not typically used directly in modern .NET Core projects.
+   - **Lesson**: In .NET Core and .NET 5/6/7/8, `app.config` is replaced by `appsettings.json`, and configuration is handled via the `IConfiguration` interface from the `Microsoft.Extensions.Configuration` namespace. `ConfigurationManager` is not typically used directly in modern .NET Core projects.
 
 ### Areas for Improvement
 - **Error Handling**: Add more detailed error handling and logging for database operations.
@@ -71,4 +71,4 @@ This project introduces Data Transfer Objects (DTOs) to simplify data manipulati
 - **Advanced Study Features**: Consider adding features like timed study sessions, flashcard categories, or user-specific settings.
 
 ### Conclusion
-I was introduced to DTOs and the IDENTITY constraints for the first time. Also learnt about pivoting tables although i did not implement the reports feature.
+I was introduced to DTOs and the `IDENTITY` constraints for the first time. I also learned about pivoting tables, although I did not implement the reports feature.

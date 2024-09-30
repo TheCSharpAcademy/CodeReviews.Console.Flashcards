@@ -1,6 +1,6 @@
 ﻿namespace Flashcards.empty_codes.Models;
 
-internal class StudySessionDTO
+internal class StudySessionDto
 {
     public int SessionId { get; set; }
     public DateTime StudyDate { get; set; }

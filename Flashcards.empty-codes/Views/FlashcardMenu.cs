@@ -6,7 +6,7 @@ namespace Flashcards.empty_codes.Views;
 
 internal class FlashcardMenu
 {
-    public void GetFlashcardMenu(StackDTO stack)
+    public void GetFlashcardMenu(StackDto stack)
     {
         Console.Clear();
         ViewAllFlashcards(stack);
@@ -44,12 +44,12 @@ internal class FlashcardMenu
         }
     }
 
-    public void AddNewFlashcard(StackDTO stack)
+    public void AddNewFlashcard(StackDto stack)
     {
         FlashcardsController flashcardController = new FlashcardsController();
         var question = AnsiConsole.Ask<string>("Enter the question: ");
         var answer = AnsiConsole.Ask<string>("Enter the answer: ");
-        FlashcardDTO card = new FlashcardDTO();
+        FlashcardDto card = new FlashcardDto();
         card.Question = question;
         card.Answer = answer;
         card.StackId = stack.StackId;
@@ -58,7 +58,7 @@ internal class FlashcardMenu
         Console.ReadKey();
     }
 
-    public void UpdateFlashcard(StackDTO stack)
+    public void UpdateFlashcard(StackDto stack)
     {
         FlashcardsController flashcardController = new FlashcardsController();
         var oldQuestion = AnsiConsole.Ask<string>("Enter the question you want to change: ");
@@ -74,7 +74,7 @@ internal class FlashcardMenu
         var newQuestion = AnsiConsole.Ask<string>("Enter the new question: ");
         var newAnswer = AnsiConsole.Ask<string>("Enter the new answer: ");
 
-        FlashcardDTO card = new FlashcardDTO();
+        FlashcardDto card = new FlashcardDto();
         card.FlashcardId = id;
         card.Question = newQuestion;
         card.Answer = newAnswer;
@@ -84,7 +84,7 @@ internal class FlashcardMenu
         Console.ReadKey();
     }
 
-    public void DeleteFlashcard(StackDTO stack)
+    public void DeleteFlashcard(StackDto stack)
     {
         FlashcardsController flashcardController = new FlashcardsController();
         var deleteQuestion = AnsiConsole.Ask<string>("Enter the question you want to delete: ");
@@ -95,7 +95,7 @@ internal class FlashcardMenu
             Console.ReadKey();
             return;
         }
-        FlashcardDTO card = new FlashcardDTO();
+        FlashcardDto card = new FlashcardDto();
         card.FlashcardId = id;
         card.StackId = stack.StackId;
 
@@ -112,7 +112,7 @@ internal class FlashcardMenu
         Console.ReadKey();
     }
 
-    public void ViewAllFlashcards(StackDTO stack)
+    public void ViewAllFlashcards(StackDto stack)
     {
         FlashcardsController flashcardController = new FlashcardsController();
         var cards = flashcardController.ViewAllFlashcards(stack);
