@@ -29,7 +29,6 @@ The Flashcards application is a console application designed to help users creat
 - **Session Tracking**: Users can track study sessions and scores for each stack.
 - **Report System**: Provides reporting on the number of sessions and average scores per stack.
 
-
 ![StudySession](Screenshots/study.PNG)
 ![StudySessionReports](Screenshots/data.PNG)
 
@@ -44,4 +43,3 @@ The Flashcards application is a console application designed to help users creat
 
 1. **User Interface Enhancements**: The console interface could benefit from improved navigation and user prompts for a more intuitive experience.
 2. **Error Handling**: More robust error handling and feedback mechanisms could enhance user experience, especially for invalid inputs.
-
