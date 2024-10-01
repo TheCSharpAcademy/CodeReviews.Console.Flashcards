@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Flashcard_Application": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\nathanj\\source\\repos\\Flashcard_Application"
+    }
+  }
+}

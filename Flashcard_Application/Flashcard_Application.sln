@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34607.79
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flashcard_Application", "Flashcard_Application.csproj", "{0057118C-DF37-466B-B69C-CA2C27D3610A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0057118C-DF37-466B-B69C-CA2C27D3610A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0057118C-DF37-466B-B69C-CA2C27D3610A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0057118C-DF37-466B-B69C-CA2C27D3610A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0057118C-DF37-466B-B69C-CA2C27D3610A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {14E2F305-850A-4E9D-A5E3-80AD9C5C3FE7}
+	EndGlobalSection
+EndGlobal
