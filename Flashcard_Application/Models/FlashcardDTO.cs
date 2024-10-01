@@ -1,6 +1,6 @@
 ﻿namespace Flashcards.Models;
 
-public class FlashcardDTO
+public class FlashcardDto
 {
     public string Question { get; set; }
     public string Answer { get; set; }
