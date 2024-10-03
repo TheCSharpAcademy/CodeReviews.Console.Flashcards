@@ -12,39 +12,55 @@ public class StackService : IStackService
     {
         _stackRepository = stackRepository;
     }
-    public async Task<Result> AddStack(string stackName)
+    public async Task<Result<string>> AddStack(string stackName)
     {
         var existingStack = await _stackRepository.GetStackByName(stackName);
         if (existingStack != null)
         {
-            return Result.Failure("The stack is already exists.");
+            return Result<string>.Failure("The stack is already exists.");
         }
         int id = GenerateRandomID();
         await _stackRepository.AddStack(new Stack { StackId = id, Name = stackName });
-        return Result.Success();
+        return Result<string>.Success("success");
     }
 
-    public Task DeleteStack(int id)
+    public async Task<Result<string>> DeleteStack(string name)
+    {
+        var stack = await _stackRepository.GetStackByName(name);
+        if(stack == null)
+        {
+            return Result<string>.Failure("The stack is not found.");
+        }
+        await _stackRepository.DeleteStack(stack.StackId);
+        return Result<string>.Success("success");
+    }
+
+    public async Task<Result<IEnumerable<Stack>>> GetAllStacks()
+    {
+        var stacks = await _stackRepository.GetAllStacks();
+        if (stacks == null || !stacks.Any())
+        {
+            return Result<IEnumerable<Stack>>.Failure("Notice: No stacks found.");
+        }
+        return Result<IEnumerable<Stack>>.Success(stacks);
+    }
+
+    public async Task<Result<Stack>> GetStackByName(string name)
+    {
+        var stack = await _stackRepository.GetStackByName(name);
+        if (stack == null)
+        {
+            return Result<Stack>.Failure("The stack is not found.");
+        }
+        return Result<Stack>.Success(stack);
+    }
+
+    public Task<Result<string>> UpdateStack(Stack stack)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Stack>> GetAllStacks()
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Stack> GetStackByName(string name)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task UpdateStack(Stack stack)
-    {
-        throw new NotImplementedException();
-    }
-
-    private int GenerateRandomID()
+    public int GenerateRandomID()
     {
         return Math.Abs(Guid.NewGuid().GetHashCode());
     }

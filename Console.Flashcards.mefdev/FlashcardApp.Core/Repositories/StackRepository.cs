@@ -25,7 +25,6 @@ public class StackRepository : IStackRepository
         {
             throw new Exception("An error occured while connecting to the DB");
         }
-       
     }
 
     public async Task DeleteStack(int id)
@@ -33,7 +32,7 @@ public class StackRepository : IStackRepository
         try
         {
             using var db = _dbContext.CreateConnection();
-            string query = "DELETE FROM Stacks WHERE Id=@Id";
+            string query = "DELETE FROM Stacks WHERE stackId=@Id";
             await db.ExecuteAsync(query, new { Id = id });
         }
         catch
@@ -68,10 +67,7 @@ public class StackRepository : IStackRepository
                 Console.Error.WriteLine("Notice: The Stack cannot be found");
                 return stack;
             }
-            else
-            {
-               return stack;
-            }
+            return stack;
         }
         catch
         {

@@ -15,6 +15,8 @@ public static class DependencyInjectionConfig
         services.AddSingleton(provider => new DatabaseContext(connectionString));
         services.AddScoped<IStackRepository, StackRepository>();
         services.AddScoped<IStackService, StackService>();
+        services.AddScoped<IFlashcardRepository, FlashcardRepository>();
+        services.AddScoped<IFlashcardService, FlashcardService>();
         services.AddSingleton<MainMenu>();
     }
 }
