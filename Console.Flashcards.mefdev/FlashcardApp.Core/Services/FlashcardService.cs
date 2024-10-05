@@ -37,9 +37,30 @@ public class FlashcardService : IFlashcardService
         return Result<string>.Success("success");
     }
 
-    public async Task<Result<IEnumerable<Flashcard>>> GetAllFlashcard()
+    public async Task<Result<string>> DeleteFlashcardByQuestion(string question)
+    {
+        var flashcard = await _flashcardRepository.GetFlashcardByQuestion(question);
+        if (flashcard == null)
+        {
+            return Result<string>.Failure("The flashcard is not found.");
+        }
+        await _flashcardRepository.DeleteFlashcardByQuestion(flashcard.Question);
+        return Result<string>.Success("success");
+    }
+
+    public async Task<Result<IEnumerable<Flashcard>>> GetAllFlashcards()
     {
         var flashcards = await _flashcardRepository.GetAllFlashcards();
+        if (flashcards == null || !flashcards.Any())
+        {
+            return Result<IEnumerable<Flashcard>>.Failure("Notice: No flashcard found.");
+        }
+        return Result<IEnumerable<Flashcard>>.Success(flashcards);
+    }
+
+    public async Task<Result<IEnumerable<Flashcard>>> GetFlashcardsByStackname(string name)
+    {
+        var flashcards = await _flashcardRepository.GetFlashcardsByStackname(name);
         if (flashcards == null || !flashcards.Any())
         {
             return Result<IEnumerable<Flashcard>>.Failure("Notice: No flashcard found.");
@@ -61,4 +82,13 @@ public class FlashcardService : IFlashcardService
         return Math.Abs(Guid.NewGuid().GetHashCode());
     }
 
+    public async Task<Result<Flashcard>> GetFlashcardByQuestion(string question)
+    {
+        var flashcard = await _flashcardRepository.GetFlashcardByQuestion(question);
+        if (flashcard == null)
+        {
+            return Result<Flashcard>.Failure("The flashcard is not found.");
+        }
+        return Result<Flashcard>.Success(flashcard);
+    }
 }

@@ -23,15 +23,38 @@ public class FlashcardRepository : IFlashcardRepository
             var parms = new { StackId = flashcard.stack.StackId, Question = flashcard.Question, Answer = flashcard.Answer };
             await db.ExecuteAsync(query, parms);
         }
-        catch
+        catch(Exception ex)
         {
-            throw new Exception("An error occured while connecting to the DB");
+            throw new Exception($"{ex.Message}");
         }
     }
 
-    public Task DeleteFlashcard(int id)
+    public async Task DeleteFlashcard(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            using var db = _dbContext.CreateConnection();
+            string query = "DELETE FROM flashcards WHERE flashcardId=@Id";
+            await db.ExecuteAsync(query, new { Id = id });
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"{ex.Message}");
+        }
+    }
+
+    public async Task DeleteFlashcardByQuestion(string question)
+    {
+        try
+        {
+            using var db = _dbContext.CreateConnection();
+            string query = "DELETE FROM flashcards WHERE Question=@Question";
+            await db.ExecuteAsync(query, new { Question = question });
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"{ex.Message}");
+        }
     }
 
     public async Task<IEnumerable<Flashcard>> GetAllFlashcards()
@@ -48,11 +71,11 @@ public class FlashcardRepository : IFlashcardRepository
 
             return flashcard;
         }
-        catch
+        catch (Exception ex)
         {
-            throw new Exception("An error occured while connecting to the DB");
+            throw new Exception($"{ex.Message}");
         }
-        
+
     }
 
     public async Task<Flashcard> GetFlashcard(int id)
@@ -77,11 +100,59 @@ public class FlashcardRepository : IFlashcardRepository
             }
             return flashcard;
         }
-        catch
+        catch (Exception ex)
         {
-            throw new Exception("An error occured while connecting to the DB");
+            throw new Exception($"{ex.Message}");
         }
-        
+
+    }
+
+    public async Task<Flashcard> GetFlashcardByQuestion(string question)
+    {
+        try
+        {
+            using var db = _dbContext.CreateConnection();
+            string query = "SELECT * FROM FlashCards f LEFT JOIN Stacks s on f.StackId = s.stackId WHERE f.Question=@question";
+            var flashCard = await db.QueryAsync<Flashcard, Stack, Flashcard>(query, (flashcard, stack) =>
+            {
+                flashcard.stack = stack;
+                return flashcard;
+            },
+            new { question = question },
+            splitOn: "stackId");
+
+            var flashcard = flashCard.FirstOrDefault();
+            if (flashcard == null)
+            {
+                Console.Error.WriteLine("Notice: The flashcard cannot be found");
+                return null;
+            }
+            return flashcard;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"{ex.Message}");
+        }
+    }
+
+    public async Task<IEnumerable<Flashcard>> GetFlashcardsByStackname(string name)
+    {
+        try
+        {
+            using var db = _dbContext.CreateConnection();
+            string query = "SELECT * FROM FlashCards f LEFT JOIN Stacks s on f.StackId = s.stackId WHERE s.Name = @name";
+            var flashcard = await db.QueryAsync<Flashcard, Stack, Flashcard>(query, (flashcard, stack) =>
+            {
+                flashcard.stack = stack;
+                return flashcard;
+            }, new {name = name},
+            splitOn: "stackId");
+            return flashcard;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"{ex.Message}");
+        }
     }
 
     public Task UpdateFlashcard(Flashcard Flashcard)

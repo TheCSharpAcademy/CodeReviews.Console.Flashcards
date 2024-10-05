@@ -477,3 +477,6 @@ $RECYCLE.BIN/
 *.lnk
 
 .idea
+
+# appSetting files
+appsettings.json

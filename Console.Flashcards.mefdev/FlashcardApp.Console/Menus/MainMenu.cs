@@ -48,7 +48,7 @@ public class MainMenu
                 await DisplayAddFlashcardMenu();
                 break;
             case "delete a flashcard":
-                await DisplayAddFlashcardMenu();
+                await DisplayDeleteFlashcardMenu();
                 break;
             case "study session":
                 await DisplayAddFlashcardMenu();
@@ -155,6 +155,30 @@ public class MainMenu
         await AddFlashcard(new Flashcard { Id = 1, Answer = answer, Question = question, stack = stack });
     }
 
+    private async Task DisplayDeleteFlashcardMenu()
+    {
+        var stackNames = await GetAllStackNames();
+        var flashCardStackName = AnsiConsole.Prompt(
+        new SelectionPrompt<string>()
+           .Title("Select a [green]stack[/] Where the flashcard resides")
+           .PageSize(10)
+           .MoreChoicesText("[grey](Move up and down to reveal more choices)[/]")
+           .AddChoices(stackNames));
+        var flashcardList = await GetAllFlashcards(flashCardStackName);
+
+        var flashCardQuestionName = AnsiConsole.Prompt(
+        new SelectionPrompt<string>()
+            .Title("Select a [green]stack[/] Where the flashcard resides")
+            .PageSize(10)
+            .MoreChoicesText("[grey](Move up and down to reveal more choices)[/]")
+            .AddChoices(flashcardList));
+        var flashcard = await GetFlashcard(flashCardQuestionName);
+        if(flashcard != null)
+        {
+            await DeleteFlashcard(flashcard);
+        }
+    }
+
     private async Task AddFlashcard(Flashcard flashcard)
     {   
         var result = await _flashcardService.AddFlashcard(flashcard);
@@ -167,6 +191,35 @@ public class MainMenu
         AnsiConsole.Prompt(new TextPrompt<string>("Press any Key to continue").AllowEmpty());
     }
 
+    private async Task DeleteFlashcard(Flashcard flashcard)
+    {
+        var result = await _flashcardService.DeleteFlashcardByQuestion(flashcard.Question);
+        if (!result.IsSuccess)
+        {
+            MessageLogger.DisplayErrorMessage(result.ErrorMessage);
+            return;
+        }
+        MessageLogger.DisplaySuccessMessage("[green]1[/] flashcard deleted.");
+        AnsiConsole.Prompt(new TextPrompt<string>("Press any Key to continue").AllowEmpty());
+    }
+
+    private async Task<string[]> GetAllFlashcards(string name)
+    {
+        var flashcards = await _flashcardService.GetFlashcardsByStackname(name);
+        var flashcardList = flashcards.Value.Select(flashcard => flashcard.Question).OrderBy(q => q).ToArray();
+        return flashcardList;
+    }
+
+    private async Task<Flashcard> GetFlashcard(string questionName)
+    {
+        var result = await _flashcardService.GetFlashcardByQuestion(questionName);
+        if (!result.IsSuccess)
+        {
+            MessageLogger.DisplayErrorMessage(result.ErrorMessage);
+            return null;
+        }
+        return result.Value;
+    }
 
     private async Task<string> CheckPrompt(string message)
     {
