@@ -2,6 +2,7 @@ using Spectre.Console;
 using FlashcardApp.Core.Services.Interfaces;
 using FlashcardApp.Console.MessageLoggers;
 using FlashcardApp.Core.Models;
+using FlashcardApp.Core.DTOs;
 
 namespace FlashcardApp.Console.Menus;
 
@@ -9,14 +10,16 @@ public class MainMenu
 {
     private readonly IStackService _stackService;
     private readonly IFlashcardService _flashcardService;
+    private readonly IStudySessionService _studySessionService;
 
-    public MainMenu(IStackService stackService, IFlashcardService flashcardService)
+    public MainMenu(IStackService stackService, IFlashcardService flashcardService, IStudySessionService studySessionService)
     {
         _stackService = stackService;
         _flashcardService = flashcardService;
+        _studySessionService = studySessionService;
     }
 
-    /******************************************** Main menu ********************************************/
+    /********************************************    Main menu     ********************************************/
     public async Task DisplayMenu()
     {
         RenderCustomLine("DodgerBlue1", "Flashcard Menu");
@@ -51,10 +54,10 @@ public class MainMenu
                 await DisplayDeleteFlashcardMenu();
                 break;
             case "study session":
-                await DisplayAddFlashcardMenu();
+                await DisplayStudySessionMenu();
                 break;
             case "view study sessions by stack":
-                await DisplayAddFlashcardMenu();
+                await DisplayViewStudySessions();
                 break;
             case "average score yearly report":
                 await DisplayAddFlashcardMenu();
@@ -72,7 +75,7 @@ public class MainMenu
         AnsiConsole.Write(rule);
     }
 
-    /******************************************** Stack Menu********************************************/
+    /********************************************   Stack Menu     ********************************************/
     private async Task AddStack(string stackName)
     {
         var result = await _stackService.AddStack(stackName);
@@ -133,7 +136,7 @@ public class MainMenu
         await DeleteStack(choice);
     }
 
-    /******************************************** Flashcard Menu********************************************/
+    /********************************************    Flashcard Menu    ********************************************/
     private async Task DisplayAddFlashcardMenu()
     {
         var response = await CheckPrompt("The flashcard will be for a new stack(Y/N):  ");
@@ -210,6 +213,18 @@ public class MainMenu
         return flashcardList;
     }
 
+    private async Task<List<FlashcardDTO>> GetFlashcardList(string name)
+    {
+        var flashcardDTOList = new List<FlashcardDTO>();
+        var flashcards = await _flashcardService.GetFlashcardsByStackname(name);
+        foreach (var flashcard in flashcards.Value)
+        {
+            FlashcardDTO flashcardDTO = new FlashcardDTO(flashcard.Question, flashcard.Answer);
+            flashcardDTOList.Add(flashcardDTO);
+        }
+        return flashcardDTOList;
+    }
+
     private async Task<Flashcard> GetFlashcard(string questionName)
     {
         var result = await _flashcardService.GetFlashcardByQuestion(questionName);
@@ -236,5 +251,106 @@ public class MainMenu
             }
         } while (string.IsNullOrEmpty(prompt));
         return prompt.ToLower();
+    }
+
+    /********************************************   Study Session Menu   ********************************************/
+    private async Task DisplayStudySessionMenu()
+    {
+
+        int index = 1;
+        int score = 0;
+
+        RenderCustomLine("DodgerBlue1", "Study Session Menu");
+        var stackNames = await GetAllStackNames();
+        var flashCardStackName = AnsiConsole.Prompt(
+        new SelectionPrompt<string>()
+           .Title("Select a [green]stack[/] to study")
+           .PageSize(10)
+           .MoreChoicesText("[grey](Move up and down to reveal more choices)[/]")
+           .AddChoices(stackNames));
+        var flashcardList = await GetFlashcardList(flashCardStackName);
+        foreach (FlashcardDTO flashcard in flashcardList)
+        {
+            var frontTable = CreateSpecterTable("Front");
+            DrawTable(frontTable, index, flashcard.Question);
+            var answer = await CheckPrompt("Please, enter the answer for the above flashcard: ");
+            if (!answer.Equals(flashcard.Answer))
+            {
+                MessageLogger.DisplayMessage("Incorrect");
+                AnsiConsole.Prompt(new TextPrompt<string>("Press any Key to continue").AllowEmpty());
+            }
+            else
+            {
+                var backTable = CreateSpecterTable("Back");
+                DrawTable(backTable, index, flashcard.Answer);
+                MessageLogger.DisplayMessage("correct");
+                score++;
+                AnsiConsole.Prompt(new TextPrompt<string>($"You current score is [green]{score}[/]. Press any Key to continue").AllowEmpty());
+            }
+            index++;
+        }
+        var stack = await GetStack(flashCardStackName);
+        var studySession = new StudySession
+        {
+            Id = 0,
+            stack = stack,
+            CurrentDate = DateTime.UtcNow,
+            Score = score
+        };
+        MessageLogger.DisplayFinalScoreMessage(score.ToString());
+        var result = await _studySessionService.AddStudySession(studySession);
+        if (!result.IsSuccess)
+        {
+            MessageLogger.DisplayErrorMessage(result.ErrorMessage);
+        }
+        MessageLogger.DisplaySuccessMessage("[green]1[/] study session created.");
+        AnsiConsole.Prompt(new TextPrompt<string>("Press any Key to continue").AllowEmpty());
+    }
+    private Table CreateSpecterTable(string head)
+    {
+        var table = new Table();
+        table.AddColumn("[lightskyblue1] FlashcardId [/]");
+        table.AddColumn(new TableColumn($"[skyblue1] {head}[/]").Centered());
+        table.Border = TableBorder.Rounded;
+        table.BorderColor(Color.DodgerBlue1);
+        return table;
+    }
+    private Table CreateRow(Table table, int id, string questionOrAnswer)
+    {
+        table.AddRow($"[lightskyblue1]{id}[/]", $"[skyblue1]{questionOrAnswer}[/]");
+        return table;
+    }
+
+    private void DrawTable(Table table, int id, string questionOrAnswer)
+    {
+        table = CreateRow(table, id, questionOrAnswer);
+        AnsiConsole.Write(table);
+    }
+    /********************************************   View Study Session Menu   ********************************************/
+
+    private async Task DisplayViewStudySessions()
+    {
+        RenderCustomLine("DodgerBlue1", "Study Session Menu");
+        var stackNames = await GetAllStackNames();
+        var selectedStackName = AnsiConsole.Prompt(
+        new SelectionPrompt<string>()
+           .Title("Select a [green]stack[/] to view study sessions")
+           .PageSize(10)
+           .MoreChoicesText("[grey](Move up and down to reveal more choices)[/]")
+           .AddChoices(stackNames));
+
+        var studySessions = await _studySessionService.GetStudySessionsByStackName(selectedStackName);
+        var table = new Table();
+        table.AddColumn("[lightskyblue1] Session Date [/]");
+        table.AddColumn(new TableColumn($"[skyblue1] score [/]").Centered());
+        table.Border = TableBorder.Rounded;
+        table.BorderColor(Color.DodgerBlue1);
+        foreach (var studySession in studySessions.Value)
+        {
+            table.AddRow($"[lightskyblue1]{studySession.CurrentDate}[/]", $"[skyblue1]{studySession.Score}[/]");
+        }
+        AnsiConsole.Write(table);
+        int averageScore = (int) studySessions.Value.Average(studySession => studySession.Score);
+        MessageLogger.DisplayAverageScoreMessage(averageScore.ToString());
     }
 }
