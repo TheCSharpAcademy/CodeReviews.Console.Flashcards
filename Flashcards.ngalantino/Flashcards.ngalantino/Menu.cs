@@ -1,40 +1,76 @@
+using System.Runtime.CompilerServices;
 using Spectre.Console;
 public static class Menu
 {
-    public static string userInput = "";
-    private static DatabaseManager db = new DatabaseManager();
+    private static string userInput = "";
+    private static string mainMenuChoice = "";
+    public static string selectedStack = "No stack selected";
     public static void DisplayMenu()
     {
-        Console.WriteLine("--------------------------------------------------");
 
-        Console.WriteLine("exit");
-        Console.WriteLine("Manage Stacks");
-        Console.WriteLine("Manage Flashcards");
-        Console.WriteLine("Study");
-        Console.WriteLine("view study session data");
-
-        Console.WriteLine("--------------------------------------------------");
-
-        
-
-        while (userInput != "exit")
+        while (mainMenuChoice != "Exit")
         {
-            userInput = Console.ReadLine();
+            // Create main prompt
+            mainMenuChoice = AnsiConsole.Prompt(new SelectionPrompt<string>()
+            .Title("Select an option")
+            .PageSize(10)
+            .MoreChoicesText("(Move up and down to reveal more options)")
+            .AddChoices(new[] {
+                "Exit",
+                "Manage stacks",
+                "Manage flashcards",
+                "Study",
+                "View study session data"
+            }));
 
             // Switch statement for menu options
-            switch (userInput.ToLower())
+            switch (mainMenuChoice.ToLower())
             {
                 case "manage stacks":
 
-                    SelectionPrompt<string> prompt = new SelectionPrompt<string>();
+                    selectedStack = StudyContentController.SelectStack();
 
-                    // Build the prompt
-                    foreach (Stack stack in db.GetStacks())
+                    if (selectedStack != null)
                     {
-                        prompt.AddChoice(stack.name);
+                        goto case "manage flashcards";
                     }
-                    // Display the prompt
-                    string menuChoice = AnsiConsole.Prompt(prompt);
+
+                    break;
+
+                case "manage flashcards":
+
+                    mainMenuChoice = StudyContentController.ManageFlashcards();
+
+                    // Change current stack
+                    if (mainMenuChoice == "Change current stack")
+                    {
+                        goto case "manage stacks";
+                    }
+                    else if (mainMenuChoice == "View all flashcards in stack")
+                    {
+                        goto case "View all flashcards in stack";
+                    }
+
+                    break;
+
+                case "View all flashcards in stack":
+                    List<Flashcard> flashcards = StudyContentController.GetFlashcardsInStack();
+
+                    // Display table with ID, front, and back
+                    Table table = new Table();
+
+                    table.AddColumn("Id");
+                    table.AddColumn("Front");
+                    table.AddColumn("Back");
+
+                    int id = 1;
+
+                    foreach (Flashcard flashcard in flashcards) {
+                        table.AddRow(id.ToString(), flashcard.front, flashcard.back);
+                        id++;
+                    }
+
+                    AnsiConsole.Write(table);
 
                     break;
             }
