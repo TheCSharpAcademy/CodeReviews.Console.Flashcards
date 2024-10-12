@@ -12,5 +12,4 @@ public interface IFlashcardRepository
     Task<Flashcard> GetFlashcardByQuestion(string question);
     Task<IEnumerable<Flashcard>> GetAllFlashcards();
     Task<IEnumerable<Flashcard>> GetFlashcardsByStackname(string name);
-
 }

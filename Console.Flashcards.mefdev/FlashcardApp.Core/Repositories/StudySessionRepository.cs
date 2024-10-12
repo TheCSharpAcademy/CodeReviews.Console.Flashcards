@@ -1,5 +1,6 @@
 using FlashcardApp.Core.Data;
 using FlashcardApp.Core.Models;
+using FlashcardApp.Core.DTOs;
 using FlashcardApp.Core.Repositories.Interfaces;
 using Dapper;
 
@@ -104,6 +105,71 @@ public class StudySessionRepository : IStudySessionRepository
         return studySession;
     }
 
+    public async Task<List<ReportingDTO>> GetStudySessionsReport(string year)
+    {
+        try
+        {
+            var reportingList = new List<ReportingDTO>();
+            using var db = _dbContext.CreateConnection();
+            string query = @"
+            SELECT 
+                stackName, 
+                COALESCE([1], 0) AS Jan,
+                COALESCE([2], 0) AS Feb,
+                COALESCE([3], 0) AS Mar,
+                COALESCE([4], 0) AS Apr,
+                COALESCE([5], 0) AS May,
+                COALESCE([6], 0) AS Jun,
+                COALESCE([7], 0) AS Jul,
+                COALESCE([8], 0) AS Aug,
+                COALESCE([9], 0) AS Sep,
+                COALESCE([10], 0) AS Oct,
+                COALESCE([11], 0) AS Nov,
+                COALESCE([12], 0) AS Dec 
+            FROM 
+                (SELECT 
+                    s.Name AS stackName, 
+                    MONTH(ss.CurrentDate) AS Month,
+                    AVG(ss.Score) AS AverageScore 
+                 FROM 
+                    StudySessions ss 
+                 INNER JOIN 
+                    Stacks s ON ss.StackId = s.StackId WHERE YEAR(ss.CurrentDate) = @Year
+                 GROUP BY 
+                    s.Name, MONTH(ss.CurrentDate)
+                ) AS SourceTable 
+            PIVOT 
+                (AVG(AverageScore) FOR Month IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])) AS PivotTable;";
+
+            var reader = await db.ExecuteReaderAsync(query, new { Year = year});
+            while (reader.Read())
+            {
+                var reportingData = new ReportingDTO
+                {
+                    StackName = reader.GetString(0),
+                    Jan = reader.GetInt32(1),
+                    Feb = reader.GetInt32(2),
+                    Mar = reader.GetInt32(3),
+                    Apr = reader.GetInt32(4),
+                    May = reader.GetInt32(5),
+                    Jun = reader.GetInt32(6),
+                    Jul = reader.GetInt32(7),
+                    Aug = reader.GetInt32(8),
+                    Sep = reader.GetInt32(9),
+                    Oct = reader.GetInt32(10),
+                    Nov = reader.GetInt32(11),
+                    Dec = reader.GetInt32(12),
+                };
+                reportingList.Add(reportingData);
+            }
+            return reportingList;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+        
     public Task UpdateStudySession(StudySession studySession)
     {
         throw new NotImplementedException();

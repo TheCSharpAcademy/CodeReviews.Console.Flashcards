@@ -40,4 +40,8 @@ namespace FlashcardApp.Console.MessageLoggers;
         {
             AnsiConsole.Prompt(new TextPrompt<string>($"Average study session score is [skyblue1]{averageScore}[/]. Press any Key to continue").AllowEmpty());
         }
+        public static void DisplaySimpleErrorMessage(string message)
+        {
+            AnsiConsole.Markup($"[red]{message}[/]");
+        }
 }

@@ -19,6 +19,6 @@ public static class DependencyInjectionConfig
         services.AddScoped<IFlashcardService, FlashcardService>();
         services.AddScoped<IStudySessionRepository, StudySessionRepository>();
         services.AddScoped<IStudySessionService, StudySessionService>();
-        services.AddSingleton<MainMenu>();
+        services.AddTransient<MainMenu>();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using FlashcardApp.Core.Repositories.Interfaces;
 using FlashcardApp.Core.Services.Interfaces;
 using FlashcardApp.Core.Models;
+using FlashcardApp.Core.DTOs;
 
 namespace FlashcardApp.Core.Services
 {
@@ -45,6 +46,16 @@ namespace FlashcardApp.Core.Services
                 return Result<IEnumerable<StudySession>>.Failure("Notice: No StudySessions found.");
             }
             return Result<IEnumerable<StudySession>>.Success(studySessions);
+        }
+
+        public async Task<Result<List<ReportingDTO>>> GetStudySessionsReport(string year)
+        {
+            var reports = await _studySessionRepository.GetStudySessionsReport(year);
+            if (reports == null || reports.Count <= 0)
+            {
+                return Result<List<ReportingDTO>>.Failure("Notice: No StudySession reports are found.");
+            }
+            return Result<List<ReportingDTO>>.Success(reports);
         }
     }
 }

@@ -1,3 +1,4 @@
+using FlashcardApp.Core.DTOs;
 using FlashcardApp.Core.Models;
 
 namespace FlashcardApp.Core.Repositories.Interfaces;
@@ -10,4 +11,5 @@ public interface IStudySessionRepository
     Task<StudySession> GetStudySessionById(int id);
     Task<IEnumerable<StudySession>> GetAllStudySessions();
     Task<IEnumerable<StudySession>> GetStudySessionsByStackName(string name);
+    Task<List<ReportingDTO>> GetStudySessionsReport(string year);
 }
