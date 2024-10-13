@@ -41,6 +41,20 @@ public class StackRepository : IStackRepository
         }
     }
 
+    public async Task DeleteStackByName(string name)
+    {
+        try
+        {
+            using var db = _dbContext.CreateConnection ();
+            string query = "DELETE FROM Stacks WHERE Name=@Name";
+            await db.ExecuteAsync (query, new { Name = name });
+        }
+        catch
+        {
+            throw new Exception ("An error occured while connecting to the DB");
+        }
+    }
+
     public async Task<IEnumerable<Stack>> GetAllStacks()
     {
         try

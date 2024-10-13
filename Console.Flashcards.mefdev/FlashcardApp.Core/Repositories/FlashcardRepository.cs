@@ -20,8 +20,8 @@ public class FlashcardRepository : IFlashcardRepository
         {
             using var db = _dbContext.CreateConnection();
             string query = "INSERT INTO FlashCards (StackId, Question, Answer) " +
-                "VALUES (@StackId, @Question, @Answer)";
-            var parms = new { StackId = flashcard.stack.StackId, Question = flashcard.Question, Answer = flashcard.Answer };
+                "VALUES (@Id, @Question, @Answer)";
+            var parms = new { Id = flashcard.stack.Id, Question = flashcard.Question, Answer = flashcard.Answer };
             await db.ExecuteAsync(query, parms);
         }
         catch(Exception ex)

@@ -20,7 +20,7 @@ public class StackService : IStackService
             return Result<string>.Failure("The stack is already exists.");
         }
         int id = GenerateRandomID();
-        await _stackRepository.AddStack(new Stack { StackId = id, Name = stackName });
+        await _stackRepository.AddStack(new Stack { Id = id, Name = stackName });
         return Result<string>.Success("success");
     }
 
@@ -31,7 +31,7 @@ public class StackService : IStackService
         {
             return Result<string>.Failure("The stack is not found.");
         }
-        await _stackRepository.DeleteStack(stack.StackId);
+        await _stackRepository.DeleteStackByName(stack.Name);
         return Result<string>.Success("success");
     }
 

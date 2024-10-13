@@ -20,10 +20,10 @@ public class StudySessionRepository : IStudySessionRepository
         try
         {
             using var db = _dbContext.CreateConnection();
-            string query = "INSERT INTO StudySessions (StackId, CurrentDate, Score) VALUES (@StackId, @CurrentDate, @Score)";
+            string query = "INSERT INTO StudySessions (StackId, CurrentDate, Score) VALUES (@Id, @CurrentDate, @Score)";
             await db.ExecuteAsync(query,
             new {
-                StackId = studySession.stack.StackId,
+                Id = studySession.stack.Id,
                 CurrentDate =   studySession.CurrentDate,
                 Score=   studySession.Score
                 });
