@@ -148,7 +148,7 @@ public class MainMenu
         var answer = await CheckPrompt("Please enter a the [green]back[/] of the flashcard or enter 0 to return to [red]main menu: [/]");
 
         var stack = await GetStack(flashCardStackName);
-        await AddFlashcard(new Flashcard { Id = 1, Answer = answer, Question = question, stack = stack });
+        await AddFlashcard(new Flashcard { Id = 1, Answer = answer, Question = question, Stack = stack });
     }
 
     private async Task DisplayDeleteFlashcardMenu()
@@ -206,9 +206,9 @@ public class MainMenu
         return flashcardList;
     }
 
-    private async Task<List<FlashcardDTO>> GetFlashcardList(string name)
+    private async Task<List<FlashcardDto>> GetFlashcardList(string name)
     {
-        var flashcardDTOList = new List<FlashcardDTO>();
+        var FlashcardDtoList = new List<FlashcardDto>();
         var flashcards = await _flashcardService.GetFlashcardsByStackname(name);
         if (!flashcards.IsSuccess)
         {
@@ -216,10 +216,10 @@ public class MainMenu
         }
         foreach (var flashcard in flashcards.Value)
         {
-            FlashcardDTO flashcardDTO = new FlashcardDTO(flashcard.Question, flashcard.Answer);
-            flashcardDTOList.Add(flashcardDTO);
+            FlashcardDto FlashcardDto = new FlashcardDto(flashcard.Question, flashcard.Answer);
+            FlashcardDtoList.Add(FlashcardDto);
         }
-        return flashcardDTOList;
+        return FlashcardDtoList;
     }
 
     private async Task<Flashcard> GetFlashcard(string questionName)
@@ -250,7 +250,7 @@ public class MainMenu
                .MoreChoicesText("[grey](Move up and down to reveal more choices)[/]")
                .AddChoices(stackNames));
             var flashcardList = await GetFlashcardList(flashCardStackName);
-            foreach (FlashcardDTO flashcard in flashcardList)
+            foreach (FlashcardDto flashcard in flashcardList)
             {
                 var frontTable = CreateSpecterTable("Front");
                 DrawTable(frontTable, index, flashcard.Question);
@@ -274,7 +274,7 @@ public class MainMenu
             var studySession = new StudySession
             {
                 Id = 0,
-                stack = stack,
+                Stack = stack,
                 CurrentDate = DateTime.UtcNow,
                 Score = score
             };
@@ -365,7 +365,7 @@ public class MainMenu
         }
         var table = new Table();
         var reports = result.Value;
-        var reportDto = new ReportingDTO();
+        var reportDto = new ReportingDto();
         foreach (var prop in reportDto.GetType().GetProperties())
         {
             table.AddColumn($"[lightskyblue1] {prop.Name} [/]");
@@ -381,7 +381,7 @@ public class MainMenu
                 row.Add(value);
             }
             table.AddRow(row.ToArray());
-        };
+        }
         AnsiConsole.Write(table.Centered().Title($"[lightskyblue1]{currentYear} [/][blue]Study sessions[/] "));
         AnsiConsole.Prompt(new TextPrompt<string>("Press any Key to continue").AllowEmpty());
         await DisplayMenu();

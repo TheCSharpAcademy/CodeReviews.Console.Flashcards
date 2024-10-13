@@ -16,7 +16,6 @@ public class Program
             var serviceProvider = LoadIocConfiguration();
             while (true)
             {
-
                 await LoadDisplayMenu(serviceProvider);
             }
         }

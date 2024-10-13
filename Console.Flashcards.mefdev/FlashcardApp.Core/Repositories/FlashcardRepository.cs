@@ -20,8 +20,9 @@ public class FlashcardRepository : IFlashcardRepository
         {
             using var db = _dbContext.CreateConnection();
             string query = "INSERT INTO FlashCards (StackId, Question, Answer) " +
-                "VALUES (@Id, @Question, @Answer)";
-            var parms = new { Id = flashcard.stack.Id, Question = flashcard.Question, Answer = flashcard.Answer };
+                "VALUES(@StackId, @Question, @Answer)";
+            Console.WriteLine(flashcard.Stack.stackId);
+            var parms = new { StackId = flashcard.Stack.stackId, Question = flashcard.Question, Answer = flashcard.Answer };
             await db.ExecuteAsync(query, parms);
         }
         catch(Exception ex)
@@ -66,7 +67,7 @@ public class FlashcardRepository : IFlashcardRepository
             string query = "SELECT * FROM FlashCards fc LEFT JOIN Stacks s on fc.StackId = s.stackId";
             var flashcard = await db.QueryAsync<Flashcard, Stack, Flashcard>(query, (flashcard, stack) =>
             {
-                flashcard.stack = stack;
+                flashcard.Stack = stack;
                 return flashcard;
             }, splitOn: "stackId");
 
@@ -87,7 +88,7 @@ public class FlashcardRepository : IFlashcardRepository
             string query = "SELECT * FROM FlashCards fc LEFT JOIN Stacks s on fc.StackId = s.stackId WHERE fc.flashcardId=@id";
             var flashCard = await db.QueryAsync<Flashcard, Stack, Flashcard>(query, (flashcard, stack) =>
             {
-                flashcard.stack = stack;
+                flashcard.Stack = stack;
                 return flashcard;
             },
             new { id = id },
@@ -116,7 +117,7 @@ public class FlashcardRepository : IFlashcardRepository
             string query = "SELECT * FROM FlashCards f LEFT JOIN Stacks s on f.StackId = s.stackId WHERE f.Question=@question";
             var flashCard = await db.QueryAsync<Flashcard, Stack, Flashcard>(query, (flashcard, stack) =>
             {
-                flashcard.stack = stack;
+                flashcard.Stack = stack;
                 return flashcard;
             },
             new { question = question },
@@ -144,7 +145,7 @@ public class FlashcardRepository : IFlashcardRepository
             string query = "SELECT * FROM FlashCards f LEFT JOIN Stacks s on f.StackId = s.stackId WHERE s.Name = @name";
             var flashcard = await db.QueryAsync<Flashcard, Stack, Flashcard>(query, (flashcard, stack) =>
             {
-                flashcard.stack = stack;
+                flashcard.Stack = stack;
                 return flashcard;
             }, new {name = name},
             splitOn: "stackId");

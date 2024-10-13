@@ -1,6 +1,6 @@
 ﻿namespace FlashcardApp.Core.DTOs;
 
-public class ReportingDTO
+public class ReportingDto
 {
     public string? StackName { get; set;}
     public int? Jan { get; set; }

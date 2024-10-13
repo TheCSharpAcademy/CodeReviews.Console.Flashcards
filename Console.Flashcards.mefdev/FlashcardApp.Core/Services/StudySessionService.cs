@@ -25,7 +25,7 @@ namespace FlashcardApp.Core.Services
             await _studySessionRepository.AddStudySession(new StudySession
             {
                 Id= studySession.Id,
-                stack =studySession.stack,
+                Stack =studySession.Stack,
                 CurrentDate = studySession.CurrentDate,
                 Score = studySession.Score
 
@@ -48,14 +48,14 @@ namespace FlashcardApp.Core.Services
             return Result<IEnumerable<StudySession>>.Success(studySessions);
         }
 
-        public async Task<Result<List<ReportingDTO>>> GetStudySessionsReport(string year)
+        public async Task<Result<List<ReportingDto>>> GetStudySessionsReport(string year)
         {
             var reports = await _studySessionRepository.GetStudySessionsReport(year);
             if (reports == null || reports.Count <= 0)
             {
-                return Result<List<ReportingDTO>>.Failure("Notice: No StudySession reports are found.");
+                return Result<List<ReportingDto>>.Failure("Notice: No StudySession reports are found.");
             }
-            return Result<List<ReportingDTO>>.Success(reports);
+            return Result<List<ReportingDto>>.Success(reports);
         }
     }
 }

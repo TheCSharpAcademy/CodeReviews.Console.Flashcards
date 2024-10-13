@@ -20,10 +20,10 @@ public class StudySessionRepository : IStudySessionRepository
         try
         {
             using var db = _dbContext.CreateConnection();
-            string query = "INSERT INTO StudySessions (StackId, CurrentDate, Score) VALUES (@Id, @CurrentDate, @Score)";
+            string query = "INSERT INTO StudySessions (StackId, CurrentDate, Score) VALUES (@stackId, @CurrentDate, @Score)";
             await db.ExecuteAsync(query,
             new {
-                Id = studySession.stack.Id,
+                stackId = studySession.Stack.stackId,
                 CurrentDate =   studySession.CurrentDate,
                 Score=   studySession.Score
                 });
@@ -105,11 +105,11 @@ public class StudySessionRepository : IStudySessionRepository
         return studySession;
     }
 
-    public async Task<List<ReportingDTO>> GetStudySessionsReport(string year)
+    public async Task<List<ReportingDto>> GetStudySessionsReport(string year)
     {
         try
         {
-            var reportingList = new List<ReportingDTO>();
+            var reportingList = new List<ReportingDto>();
             using var db = _dbContext.CreateConnection();
             string query = @"
             SELECT
@@ -144,7 +144,7 @@ public class StudySessionRepository : IStudySessionRepository
             var reader = await db.ExecuteReaderAsync(query, new { Year = year});
             while (reader.Read())
             {
-                var reportingData = new ReportingDTO
+                var reportingData = new ReportingDto
                 {
                     StackName = reader.GetString(0),
                     Jan = reader.GetInt32(1),

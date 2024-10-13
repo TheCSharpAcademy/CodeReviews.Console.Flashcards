@@ -11,5 +11,5 @@ public interface IStudySessionRepository
     Task<StudySession> GetStudySessionById(int id);
     Task<IEnumerable<StudySession>> GetAllStudySessions();
     Task<IEnumerable<StudySession>> GetStudySessionsByStackName(string name);
-    Task<List<ReportingDTO>> GetStudySessionsReport(string year);
+    Task<List<ReportingDto>> GetStudySessionsReport(string year);
 }
