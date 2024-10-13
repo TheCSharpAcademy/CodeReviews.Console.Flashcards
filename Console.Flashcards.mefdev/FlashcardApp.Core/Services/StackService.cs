@@ -20,7 +20,7 @@ public class StackService : IStackService
             return Result<string>.Failure("The stack is already exists.");
         }
         int id = GenerateRandomID();
-        await _stackRepository.AddStack(new Stack { stackId = id, Name = stackName });
+        await _stackRepository.AddStack(new Stack { StackId = id, Name = stackName });
         return Result<string>.Success("success");
     }
 

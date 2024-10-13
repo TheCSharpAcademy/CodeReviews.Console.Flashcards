@@ -21,8 +21,8 @@ public class FlashcardRepository : IFlashcardRepository
             using var db = _dbContext.CreateConnection();
             string query = "INSERT INTO FlashCards (StackId, Question, Answer) " +
                 "VALUES(@StackId, @Question, @Answer)";
-            Console.WriteLine(flashcard.Stack.stackId);
-            var parms = new { StackId = flashcard.Stack.stackId, Question = flashcard.Question, Answer = flashcard.Answer };
+            Console.WriteLine(flashcard.Stack.StackId);
+            var parms = new { StackId = flashcard.Stack.StackId, Question = flashcard.Question, Answer = flashcard.Answer };
             await db.ExecuteAsync(query, parms);
         }
         catch(Exception ex)

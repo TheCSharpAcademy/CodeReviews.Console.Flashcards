@@ -91,12 +91,15 @@
 ## Configuration
 
 -   **Azure SQL Support**: Connects to an Azure SQL database using `appsettings.json`.
--   cd FlashcardApp 1. cd FlashcardApp.Console 2. touch appsettings.json 3. add the below code to the appsettings.json file
+    1. cd FlashcardApp
+    2. cd FlashcardApp.Console
+    3. touch appsettings.json  add the below code to the appsettings.json file
+
     ```json
     {
-  		"ConnectionStrings": {
-    		"DefaultConnection": "Server=your-server-name;Database=your-db-name;User Id=your-username;Password=your-password;"
-  		}
+        "ConnectionStrings": {
+            "DefaultConnection": "Server=your-server-name;Database=your-db-name;User Id=your-username;Password=your-password;"
+        }
     }
     ```
 
