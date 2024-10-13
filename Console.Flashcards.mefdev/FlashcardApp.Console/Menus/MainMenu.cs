@@ -290,7 +290,7 @@ public class MainMenu
         catch (Exception ex)
         {
             MessageLogger.DisplayErrorMessage(ex.Message);
-        }     
+        }
     }
     private Table CreateSpecterTable(string head)
     {

@@ -112,8 +112,8 @@ public class StudySessionRepository : IStudySessionRepository
             var reportingList = new List<ReportingDTO>();
             using var db = _dbContext.CreateConnection();
             string query = @"
-            SELECT 
-                stackName, 
+            SELECT
+                stackName,
                 COALESCE([1], 0) AS Jan,
                 COALESCE([2], 0) AS Feb,
                 COALESCE([3], 0) AS Mar,
@@ -125,20 +125,20 @@ public class StudySessionRepository : IStudySessionRepository
                 COALESCE([9], 0) AS Sep,
                 COALESCE([10], 0) AS Oct,
                 COALESCE([11], 0) AS Nov,
-                COALESCE([12], 0) AS Dec 
-            FROM 
-                (SELECT 
-                    s.Name AS stackName, 
+                COALESCE([12], 0) AS Dec
+            FROM
+                (SELECT
+                    s.Name AS stackName,
                     MONTH(ss.CurrentDate) AS Month,
-                    AVG(ss.Score) AS AverageScore 
-                 FROM 
-                    StudySessions ss 
-                 INNER JOIN 
+                    AVG(ss.Score) AS AverageScore
+                 FROM
+                    StudySessions ss
+                 INNER JOIN
                     Stacks s ON ss.StackId = s.StackId WHERE YEAR(ss.CurrentDate) = @Year
-                 GROUP BY 
+                 GROUP BY
                     s.Name, MONTH(ss.CurrentDate)
-                ) AS SourceTable 
-            PIVOT 
+                ) AS SourceTable
+            PIVOT
                 (AVG(AverageScore) FOR Month IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])) AS PivotTable;";
 
             var reader = await db.ExecuteReaderAsync(query, new { Year = year});
@@ -169,7 +169,7 @@ public class StudySessionRepository : IStudySessionRepository
             throw new Exception(ex.Message);
         }
     }
-        
+
     public Task UpdateStudySession(StudySession studySession)
     {
         throw new NotImplementedException();

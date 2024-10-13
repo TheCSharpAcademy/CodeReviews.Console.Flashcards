@@ -51,7 +51,7 @@ public class StackRepository : IStackRepository
         }
         catch
         {
-            throw new Exception("An error occured while connecting to the DB"); 
+            throw new Exception("An error occured while connecting to the DB");
         }
     }
 

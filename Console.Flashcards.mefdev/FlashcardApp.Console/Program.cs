@@ -8,7 +8,6 @@ public class Program
 {
     public static IConfiguration Configuration { get; set; }
 
-
     public async static Task Main(string[] args)
     {
         try
