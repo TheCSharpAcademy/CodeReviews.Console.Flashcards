@@ -1,0 +1,13 @@
+D:\C#\cli\hasona23.FlashCards\FlashCards\FlashCardsLibrary\bin\Debug\net8.0\FlashCardsLibrary.deps.json
+D:\C#\cli\hasona23.FlashCards\FlashCards\FlashCardsLibrary\bin\Debug\net8.0\FlashCardsLibrary.dll
+D:\C#\cli\hasona23.FlashCards\FlashCards\FlashCardsLibrary\bin\Debug\net8.0\FlashCardsLibrary.pdb
+D:\C#\cli\hasona23.FlashCards\FlashCards\FlashCardsLibrary\obj\Debug\net8.0\FlashCardsLibrary.GeneratedMSBuildEditorConfig.editorconfig
+D:\C#\cli\hasona23.FlashCards\FlashCards\FlashCardsLibrary\obj\Debug\net8.0\FlashCardsLibrary.AssemblyInfoInputs.cache
+D:\C#\cli\hasona23.FlashCards\FlashCards\FlashCardsLibrary\obj\Debug\net8.0\FlashCardsLibrary.AssemblyInfo.cs
+D:\C#\cli\hasona23.FlashCards\FlashCards\FlashCardsLibrary\obj\Debug\net8.0\FlashCardsLibrary.csproj.CoreCompileInputs.cache
+D:\C#\cli\hasona23.FlashCards\FlashCards\FlashCardsLibrary\obj\Debug\net8.0\FlashCardsLibrary.sourcelink.json
+D:\C#\cli\hasona23.FlashCards\FlashCards\FlashCardsLibrary\obj\Debug\net8.0\FlashCardsLibrary.dll
+D:\C#\cli\hasona23.FlashCards\FlashCards\FlashCardsLibrary\obj\Debug\net8.0\refint\FlashCardsLibrary.dll
+D:\C#\cli\hasona23.FlashCards\FlashCards\FlashCardsLibrary\obj\Debug\net8.0\FlashCardsLibrary.pdb
+D:\C#\cli\hasona23.FlashCards\FlashCards\FlashCardsLibrary\obj\Debug\net8.0\ref\FlashCardsLibrary.dll
+D:\C#\cli\hasona23.FlashCards\FlashCards\FlashCardsLibrary\obj\Debug\net8.0\FlashCardsLibrary.csproj.AssemblyReference.cache
