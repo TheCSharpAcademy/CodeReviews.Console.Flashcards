@@ -1,3 +1,4 @@
+using System.Data.Common;
 using System.Runtime.CompilerServices;
 using Spectre.Console;
 public static class Menu
@@ -10,6 +11,7 @@ public static class Menu
 
         while (mainMenuChoice != "Exit")
         {
+            Console.Clear();
             // Create main prompt
             mainMenuChoice = AnsiConsole.Prompt(new SelectionPrompt<string>()
             .Title("Select an option")
@@ -30,51 +32,51 @@ public static class Menu
 
                     selectedStack = StudyContentController.SelectStack();
 
-                    if (selectedStack != null)
-                    {
-                        goto case "manage flashcards";
-                    }
-
                     break;
 
                 case "manage flashcards":
-
-                    mainMenuChoice = StudyContentController.ManageFlashcards();
-
-                    // Change current stack
-                    if (mainMenuChoice == "Change current stack")
+                    while (mainMenuChoice != "Return to main menu")
                     {
-                        goto case "manage stacks";
+
+                        mainMenuChoice = StudyContentController.ManageFlashcards();
+
+                        // Add nested switch statement for submenu
+                        switch (mainMenuChoice)
+                        {
+                            case "View all flashcards in stack":
+                                Console.Clear();
+                                List<Flashcard> flashcards = StudyContentController.GetFlashcardsInStack();
+
+                                // Display table with ID, front, and back
+                                Table table = new Table();
+
+                                table.AddColumn("Id");
+                                table.AddColumn("Front");
+                                table.AddColumn("Back");
+
+                                int id = 1;
+
+                                foreach (Flashcard flashcard in flashcards)
+                                {
+                                    table.AddRow(id.ToString(), flashcard.front, flashcard.back);
+                                    id++;
+                                }
+
+                                AnsiConsole.Write(table);
+
+                                break;
+
+                            case "Create a flashcard in current stack":
+                                StudyContentController.CreateFlashcard();
+                                break;
+
+                            default:
+                                break;
+                        }
                     }
-                    else if (mainMenuChoice == "View all flashcards in stack")
-                    {
-                        goto case "View all flashcards in stack";
-                    }
-
-                    break;
-
-                case "View all flashcards in stack":
-                    List<Flashcard> flashcards = StudyContentController.GetFlashcardsInStack();
-
-                    // Display table with ID, front, and back
-                    Table table = new Table();
-
-                    table.AddColumn("Id");
-                    table.AddColumn("Front");
-                    table.AddColumn("Back");
-
-                    int id = 1;
-
-                    foreach (Flashcard flashcard in flashcards) {
-                        table.AddRow(id.ToString(), flashcard.front, flashcard.back);
-                        id++;
-                    }
-
-                    AnsiConsole.Write(table);
 
                     break;
             }
         }
     }
-
 }

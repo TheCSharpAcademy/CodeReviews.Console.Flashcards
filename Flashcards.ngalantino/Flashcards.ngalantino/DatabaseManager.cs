@@ -69,4 +69,25 @@ internal class DatabaseManager
         return stacks;
 
     }
+
+    // Add flashcard to stack
+    public void AddFlashcard(Flashcard flashcard)
+    {
+        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection")))
+        {
+
+            // TODO: Create parameterized query
+            
+            connection.Open();
+
+            string sql = $"INSERT INTO flashcards (stack, front, back) VALUES('{flashcard.stack}', '{flashcard.front}', '{flashcard.back}')";
+
+            SqlCommand command = new SqlCommand(sql, connection);
+
+            Int32 recordsAffected = command.ExecuteNonQuery();
+
+        }
+    }
+
 }
+

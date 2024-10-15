@@ -41,9 +41,39 @@ public static class StudyContentController
 
     }
 
-    public static List<Flashcard> GetFlashcardsInStack() {
+    public static List<Flashcard> GetFlashcardsInStack()
+    {
         List<Flashcard> flashcards = db.GetFlashcards(Menu.selectedStack);
 
         return flashcards;
+    }
+
+    public static void CreateFlashcard()
+    {
+        if (!isStackSelected())
+        {
+            Console.WriteLine("Select a stack beforing adding a flashcard!");
+            SelectStack();
+        }
+
+        Flashcard flashcard = new Flashcard();
+
+        Console.WriteLine("Enter front of flashcard: ");
+
+        flashcard.front = Console.ReadLine();
+        
+        Console.WriteLine("Enter back of flashcard.");
+
+        flashcard.back = Console.ReadLine();
+
+        flashcard.stack = Menu.selectedStack;
+        
+
+        db.AddFlashcard(flashcard);
+    }
+
+    public static bool isStackSelected()
+    {
+        return !(Menu.selectedStack == "No stack selected");
     }
 }

@@ -20,4 +20,6 @@
 
 <li><a href ="https://spectreconsole.net/">Spectre.Console</a></li>
 
+<li><a href="https://visualstudiomagazine.com/articles/2017/07/01/parameterized-queries.aspx">Create Parameterized Queries in ADO.NET</a></li>
+
 </ul>
