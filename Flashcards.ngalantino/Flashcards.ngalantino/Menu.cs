@@ -70,6 +70,10 @@ public static class Menu
                                 StudyContentController.CreateFlashcard();
                                 break;
 
+                            case "Delete a flashcard":
+                                StudyContentController.DeleteFlashcard();
+                                break;
+
                             default:
                                 break;
                         }

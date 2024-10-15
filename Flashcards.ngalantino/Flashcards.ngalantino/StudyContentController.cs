@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using Spectre.Console;
 
 public static class StudyContentController
@@ -72,6 +73,21 @@ public static class StudyContentController
         db.AddFlashcard(flashcard);
     }
 
+    public static void DeleteFlashcard() {
+        Flashcard flashcard = new Flashcard();
+
+        // Get flashcard to be deleted.
+        List<Flashcard> flashcards = GetFlashcardsInStack();
+
+        Console.WriteLine("Enter Id of flashcard to be deleted: ");
+        int id = Int32.Parse(Console.ReadLine()) - 1;
+
+        flashcard.id = flashcards[id].id;
+
+
+
+        db.DeleteFlashcard(flashcard);
+    }
     public static bool isStackSelected()
     {
         return !(Menu.selectedStack == "No stack selected");
