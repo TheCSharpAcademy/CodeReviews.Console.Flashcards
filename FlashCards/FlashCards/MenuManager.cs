@@ -1,7 +1,6 @@
 ﻿using FlashCardsLibrary;
 using Spectre.Console;
 using FlashCardsLibrary.Models;
-using System.ComponentModel;
 namespace FlashCards
 {
     internal static class MenuManager

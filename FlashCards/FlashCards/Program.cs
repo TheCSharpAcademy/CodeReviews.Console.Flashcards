@@ -34,7 +34,6 @@ public class Program
             {
                 case 1:
                     MenuManager.MakeReport();
-                    //TODO: Make Reports
                     ReportBuilder.MakeReport();
                     break;
                 case 2:
