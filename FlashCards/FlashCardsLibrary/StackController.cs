@@ -18,7 +18,7 @@ namespace FlashCardsLibrary
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        list.Add(new Stack(reader["StackName"].ToString()));
+                        list.Add(new Stack((string)reader["StackName"]));
                     }
                 }
             }

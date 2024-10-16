@@ -1,24 +1,33 @@
 ﻿using System.Data.SqlClient;
-using System.Security.Cryptography.X509Certificates;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace FlashCardsLibrary
 {
     public static class Database
     {
-        internal static string _connectionString = @"Server=(localdb)\MSSQLLocalDB;Database=FlashCardsDB;Integrated Security=true;";
-        internal static string _masterConnectionString = @"Server=(localdb)\MSSQLLocalDB;Database=master;Integrated Security=true;";
-
-        public static void InitialiseDB()
-        {
+         internal static string _connectionString = string.Empty;
+         public static void InitialiseDB()
+         {
             // SQL command to insert a new stack
+            SetConnetionString();
+            if(_connectionString == string.Empty)
+            {
+                throw new Exception("Error: Connection string is empty check. Couldn't find \"config.xml\"");
+            }
             CheckDatabase();
+         }
+        private static void SetConnetionString()
+        {
+            var file = XDocument.Load("../../../config.xml");
+            _connectionString = file.Element("Database")?.Element("ConnectionString")?.Value ?? string.Empty ;
         }
-        internal static void CheckDatabase()
+        private static void CheckDatabase()
         {
             try
             {
 
-                SqlConnection conn = new SqlConnection(_masterConnectionString);
+                SqlConnection conn = new SqlConnection(_connectionString);
                 using (conn)
                 {
                     conn.Open();
@@ -41,7 +50,7 @@ namespace FlashCardsLibrary
             }
         }
 
-        internal static void CreateTables()
+        private static void CreateTables()
         {
             SqlConnection conn = new SqlConnection(_connectionString);
             using (conn)

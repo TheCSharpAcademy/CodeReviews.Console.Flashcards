@@ -6,26 +6,27 @@ namespace FlashCardsLibrary
     public static class FlashCardController
     {
         private static string _connectionString = Database._connectionString;
-        public static List<FlashCardRead> GetFlashCards()
+        public static List<FlashCardRead> GetFlashCards(Stack stack)
         {
             var cards = new List<FlashCardRead>();
-            string readCmd = @"SELECT * FROM FlashCards";
+            string readCmd = @"SELECT * FROM FlashCards WHERE StackName = @stack";
             using (var conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(readCmd, conn))
                 {
+                    cmd.Parameters.AddWithValue("stack",stack.Name);
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        FlashCardRead card = new FlashCardRead((int)reader["ID"], reader["Front"].ToString(), reader["Back"].ToString(), reader["StackName"].ToString());
+                        FlashCardRead card = new FlashCardRead((int)reader["ID"], (string)reader["StackName"], (string)reader["front"], (string)reader["Back"]);
                         cards.Add(card);
                     }
                 }
             }
             return cards;
         }
-        public static void AddFlashCard(FlachCardCreate card)
+        public static void AddFlashCard(FlashCardCreate card)
         {
             string insertCmd = @"INSERT INTO FlashCards (StackName , Front,Back) VALUES (@stack, @front, @back)";
             using (var conn = new SqlConnection(_connectionString))
@@ -49,7 +50,7 @@ namespace FlashCardsLibrary
 
             }
         }
-        public static void DeleteFlashCard(FlashCardDelete card)
+        public static void DeleteFlashCard(int id )
         {
             string deleteCmd = @"DELETE FROM FlashCards WHERE ID = @id";
             using (var conn = new SqlConnection(_connectionString))
@@ -59,7 +60,7 @@ namespace FlashCardsLibrary
                 {
                     try
                     {
-                        cmd.Parameters.AddWithValue("id", card.ID);
+                        cmd.Parameters.AddWithValue("id", id);
                         cmd.ExecuteNonQuery();
                     }
                     catch (Exception e)
@@ -70,7 +71,7 @@ namespace FlashCardsLibrary
                 }
             }
         }
-        public static void UpdateFlashCard(FlashCardUpdate oldCard,FlashCardUpdate newCard)
+        public static void UpdateFlashCard(FlashCardUpdate newCard)
         {
             string updateCmd = @"UPDATE FlashCards SET Front = @front, Back = @back WHERE ID  = @id";
             using (var conn = new SqlConnection(_connectionString))
@@ -82,7 +83,7 @@ namespace FlashCardsLibrary
                     {
                         cmd.Parameters.AddWithValue("front", newCard.Front);
                         cmd.Parameters.AddWithValue("back", newCard.Back);
-                        cmd.Parameters.AddWithValue("id", oldCard.ID);
+                        cmd.Parameters.AddWithValue("id", newCard.ID);
                         cmd.ExecuteNonQuery();
                     }
                     catch (Exception e)

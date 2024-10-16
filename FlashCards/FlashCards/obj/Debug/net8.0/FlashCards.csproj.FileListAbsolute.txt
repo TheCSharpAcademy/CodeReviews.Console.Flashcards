@@ -23,3 +23,4 @@ D:\C#\cli\hasona23.FlashCards\FlashCards\FlashCards\bin\Debug\net8.0\runtimes\wi
 D:\C#\cli\hasona23.FlashCards\FlashCards\FlashCards\bin\Debug\net8.0\runtimes\win-x86\native\sni.dll
 D:\C#\cli\hasona23.FlashCards\FlashCards\FlashCards\bin\Debug\net8.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
 D:\C#\cli\hasona23.FlashCards\FlashCards\FlashCards\bin\Debug\net8.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\C#\cli\hasona23.FlashCards\FlashCards\FlashCards\bin\Debug\net8.0\Spectre.Console.dll

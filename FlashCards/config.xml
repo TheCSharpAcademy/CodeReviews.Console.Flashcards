@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database>
+	<ConnectionString>"Server=(localdb)\MSSQLLocalDB;Database=FlashCardsDB;Integrated Security=true;</ConnectionString>
+</Database>

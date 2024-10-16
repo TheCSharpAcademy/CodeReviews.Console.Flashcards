@@ -1,0 +1,5 @@
+﻿<Database>
+	<ConnectionString>
+		Server=(localdb)\MSSQLLocalDB;Database=FlashCardsDB;Integrated Security=true;
+	</ConnectionString>
+</Database>

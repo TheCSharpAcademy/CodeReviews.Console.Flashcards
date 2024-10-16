@@ -73,6 +73,19 @@
           }
         }
       },
+      "Spectre.Console/0.49.1": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Spectre.Console.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Spectre.Console.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "System.Data.SqlClient/4.8.6": {
         "type": "package",
         "dependencies": {
@@ -290,6 +303,26 @@
         "version.txt"
       ]
     },
+    "Spectre.Console/0.49.1": {
+      "sha512": "USV+pdu49OJ3nCjxNuw1K9Zw/c1HCBbwbjXZp0EOn6wM99tFdAtN34KEBZUMyRuJuXlUMDqhd8Yq9obW2MslYA==",
+      "type": "package",
+      "path": "spectre.console/0.49.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net6.0/Spectre.Console.dll",
+        "lib/net6.0/Spectre.Console.xml",
+        "lib/net7.0/Spectre.Console.dll",
+        "lib/net7.0/Spectre.Console.xml",
+        "lib/net8.0/Spectre.Console.dll",
+        "lib/net8.0/Spectre.Console.xml",
+        "lib/netstandard2.0/Spectre.Console.dll",
+        "lib/netstandard2.0/Spectre.Console.xml",
+        "small-logo.png",
+        "spectre.console.0.49.1.nupkg.sha512",
+        "spectre.console.nuspec"
+      ]
+    },
     "System.Data.SqlClient/4.8.6": {
       "sha512": "2Ij/LCaTQRyAi5lAv7UUTV9R2FobC8xN9mE0fXBZohum/xLl8IZVmE98Rq5ugQHjCgTBRKqpXRb4ORulRdA6Ig==",
       "type": "package",
@@ -484,7 +517,8 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "FlashCardsLibrary >= 1.0.0"
+      "FlashCardsLibrary >= 1.0.0",
+      "Spectre.Console >= 0.49.1"
     ]
   },
   "packageFolders": {
@@ -540,6 +574,12 @@
     "frameworks": {
       "net8.0": {
         "targetAlias": "net8.0",
+        "dependencies": {
+          "Spectre.Console": {
+            "target": "Package",
+            "version": "[0.49.1, )"
+          }
+        },
         "imports": [
           "net461",
           "net462",
