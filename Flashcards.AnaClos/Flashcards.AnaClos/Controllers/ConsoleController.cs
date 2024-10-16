@@ -1,56 +1,60 @@
-﻿using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Flashcards.AnaClos.DTOs;
+using Spectre.Console;
 
-namespace Flashcards.AnaClos.Controllers
+namespace Flashcards.AnaClos.Controllers;
+
+public class ConsoleController
 {
-    public class ConsoleController
+    public string Menu(string title, string color, List<string> mainOptions)
     {
-        public string MainMenu(List<string> mainOptions)
+        Console.Clear();
+
+        var selection = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title($"[{color}]{title}[/]")
+            .PageSize(10)
+            .AddChoices(mainOptions));
+
+        return selection;
+    }
+
+    public string GetString(string message)
+    {
+        return AnsiConsole.Prompt(new TextPrompt<string>($@"[bold blue]{message} [/]"));
+    }
+
+    public void ShowMessage(string message, string color)
+    {
+        AnsiConsole.MarkupLine($"[{color}]{message}[/]\n");
+    }
+
+    public void PressKey(string message)
+    {
+        ShowMessage(message,"blue");
+        Console.ReadKey();
+        Console.Clear();
+    }
+
+    public void MessageAndPressKey(string message, string color)
+    {
+        ShowMessage(message, color);
+        PressKey("Press any key to continue");
+    }
+
+    public void ShowTable(string title, string[] columns, List<TableRecordDTO> records)
+    {
+        var table = new Table();
+        table.Title(title);
+        foreach (var column in columns)
         {
-            Console.Clear();
-
-            var selection = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                .Title("Select a [green]function[/]")
-                .PageSize(10)
-                .AddChoices(mainOptions));
-
-            //return options.IndexOf(selection);
-            return selection;
+            table.AddColumn(column);
         }
 
-        public string Menu(string title, string color, List<string> mainOptions)
+        foreach (var record in records)
         {
-            Console.Clear();
-
-            var selection = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                .Title($"[{color}]{title}[/]")
-                .PageSize(10)
-                .AddChoices(mainOptions));
-
-            //return options.IndexOf(selection);
-            return selection;
+            table.AddRow(record.Column1, record.Column2);
         }
 
-        public string GetString(string message)
-        {
-            return AnsiConsole.Prompt(new TextPrompt<string>($@"[bold blue]{message} [/]"));
-        }
-
-        public void ShowMessage(string message, string color)
-        {
-            AnsiConsole.MarkupLine($"[{color}]{message}[/]\n");
-        }
-        public void PressKey(string message)
-        {
-            ShowMessage(message,"blue");
-            Console.ReadKey();
-            Console.Clear();
-        }
+        AnsiConsole.Write(table);
     }
 }

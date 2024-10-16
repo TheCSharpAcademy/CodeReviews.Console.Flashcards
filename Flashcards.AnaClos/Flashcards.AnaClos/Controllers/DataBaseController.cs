@@ -1,24 +1,81 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
+using System.Configuration;
 
 namespace Flashcards.AnaClos.Controllers;
 
 public class DataBaseController
 {   
     private string _connectionString;
+    private string _dataBaseName;
+    private string _server;
 
-    public DataBaseController(string connectionString)
+    public DataBaseController()
     {
-        _connectionString = connectionString;
+        _server = ConfigurationManager.AppSettings.Get("Server");
+        _dataBaseName=ConfigurationManager.AppSettings.Get("DataBase");
+        _connectionString = $@"Server={_server};Integrated Security=true;TrustServerCertificate=true";
+    }
+
+    public void CreateDatabase()
+    {
+        string createDataBase = $@"IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '{_dataBaseName}')
+                                BEGIN
+                                CREATE DATABASE {_dataBaseName};
+                                END";
+        Execute(createDataBase);
+    }
+
+    public void CreateTableStacks()
+    {
+        string createTableStacks = @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Stacks')
+                                    BEGIN
+                                    CREATE TABLE Stacks (
+                                    Id INT PRIMARY KEY IDENTITY,
+                                    Name NVARCHAR(50) NOT NULL,
+                                    CONSTRAINT Stacks_Name UNIQUE(Name)
+                                    );
+                                    END";
+        Execute(createTableStacks);
+    }
+
+    public void CreateTableFlashCards()
+    {
+        string createTableFlashCards = @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'FlashCards')
+                                        BEGIN
+                                        CREATE TABLE FlashCards (
+                                        Id INT PRIMARY KEY IDENTITY,
+                                        Front NVARCHAR(50) NOT NULL,
+                                        Back NVARCHAR(50) NOT NULL,
+                                        StackId INT NOT NULL,
+                                        CONSTRAINT Front_Name UNIQUE(Front),
+                                        CONSTRAINT fkStack FOREIGN KEY (StackId)
+                                        REFERENCES Stacks(Id)
+                                        ON DELETE CASCADE
+                                        );
+                                        END";
+        Execute(createTableFlashCards);
+    }
+
+    public void CreateTableStudySessions()
+    {
+        string createTableFlashCards = @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'StudySessions')
+                                        BEGIN
+                                        CREATE TABLE StudySessions (
+                                        Id INT PRIMARY KEY IDENTITY,
+                                        Date DATETIME NOT NULL,
+                                        Score INT NOT NULL,
+                                        StackId INT NOT NULL
+                                        );
+                                        END";
+        Execute(createTableFlashCards);
     }
 
     public void Execute(string commandText)
     {
         using (var connection = new SqlConnection(_connectionString))
         {
-            //connection.Open();
             connection.Execute(commandText);
-            //connection.Close();
         }
     }
 
@@ -30,7 +87,6 @@ public class DataBaseController
             try
             {
                 rowsAffected = connection.Execute(sql, genericObject);
-
             }
             catch (SqlException)
             {
@@ -54,79 +110,7 @@ public class DataBaseController
             }
         }
         return value;
-    }
-    public T QuerySingle<T>(string sql, string text)
-    {
-        T newObject;
-        using (var connection = new SqlConnection(_connectionString))
-        {
-            try
-            {
-                newObject = connection.QuerySingle<T>(sql, text);
-            }
-            catch (SqlException)
-            {
-                throw;
-            }
-        }
-        return newObject;
-    }
-
-    public void QueryPrueba()
-    {
-        using (var connection = new SqlConnection(_connectionString))
-        {
-            connection.Open();
-            using (var transaction = connection.BeginTransaction())
-            {
-
-                var sql = @"INSERT INTO Stacks (Name) VALUES (@Name);
-                SELECT @@ROWCOUNT AS RowsInserted, CAST(SCOPE_IDENTITY() AS INT) AS NewID;";
-
-                var result = connection.QuerySingle<(int RowsInserted, int NewID)>(sql, new { Name = "prueba" }, transaction);
-
-                transaction.Commit();
-
-                Console.WriteLine("Rows Inserted: " + result.RowsInserted);
-                Console.WriteLine("New ID: " + result.NewID);
-            }
-        }
-    }
-
-    public T QuerySingle<T>(string sql, int value)
-    {
-        T newObject;
-        using (var connection = new SqlConnection(_connectionString))
-        {
-            try
-            {
-                newObject = connection.QuerySingle<T>(sql, value);
-            }
-            catch (SqlException)
-            {
-                throw;
-            }
-        }
-        return newObject;
-    }
-
-
-    public List<T> Query<T>(string sql, T genericObject)
-    {
-        List<T> list = new List<T>();
-        using (var connection = new SqlConnection(_connectionString))
-        {
-            try
-            {
-                list = connection.Query<T>(sql, genericObject).ToList();
-            }
-            catch (SqlException)
-            {
-                throw;
-            }
-        }
-        return list;
-    }
+    }     
 
     public List<T> Query<T>(string sql)
     {

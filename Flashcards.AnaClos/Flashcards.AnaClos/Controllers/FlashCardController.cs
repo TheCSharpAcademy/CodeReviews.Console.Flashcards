@@ -1,7 +1,6 @@
 ﻿using Spectre.Console;
 using Flashcards.AnaClos.DTOs;
 using Flashcards.AnaClos.Models;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Flashcards.AnaClos.Controllers;
 
@@ -10,6 +9,8 @@ public class FlashCardController
     private ConsoleController _consoleController;
     private DataBaseController _dataBaseController;
     private StackController _stackController;
+    private string returnOption = "Return to Main";
+
     public FlashCardController(ConsoleController consoleController, DataBaseController dataBaseController, StackController stackController)
     {
         _consoleController = consoleController;
@@ -17,18 +18,43 @@ public class FlashCardController
         _stackController = stackController;
     }
 
+    public List<FlashCardDTO> GetFlashCardsDTO(string stackName)
+    {
+        return FlashCardDTO.Flashcards.Where(x => x.StackName == stackName).ToList();
+    }
+
+    public List<TableRecordDTO> FrontToTableRecord(List<FlashCardDTO> flashCards)
+    {
+        var tableRecord = new List<TableRecordDTO>();
+        foreach(var flashCard in flashCards)
+        {
+            var record = new TableRecordDTO { Column1=flashCard.SequentialId.ToString(),Column2=flashCard.Front};
+            tableRecord.Add(record);
+        }
+        return tableRecord;
+    }
+
+    public List<TableRecordDTO> BackToTableRecord(List<FlashCard> flashCards)
+    {
+        var tableRecord = new List<TableRecordDTO>();
+        foreach (var flashCard in flashCards)
+        {
+            var record = new TableRecordDTO { Column1 = flashCard.StackId.ToString(), Column2 = flashCard.Back };
+        }
+        return tableRecord;
+    }
+
     public List<FlashCard> GetFlashCards(int stackId)
     {
         var flashCards = new List<FlashCard>();
-        var sql = $"SELECT * FROM FlashCards WHERE Id ={stackId}";
+        var sql = $"SELECT * FROM FlashCards WHERE StackId ={stackId}";
         try
         {
             flashCards = _dataBaseController.Query<FlashCard>(sql);
         }
         catch (Exception ex)
         {
-            _consoleController.ShowMessage(ex.Message, "red bold");
-            _consoleController.PressKey("Press any key to continue");
+            _consoleController.MessageAndPressKey(ex.Message, "red bold");
         }
         return flashCards;
     }
@@ -43,8 +69,7 @@ public class FlashCardController
         }
         catch (Exception ex)
         {
-            _consoleController.ShowMessage(ex.Message, "red bold");
-            _consoleController.PressKey("Press any key to continue");
+            _consoleController.MessageAndPressKey(ex.Message, "red bold");
         }
         return flashCards;
     }
@@ -54,16 +79,16 @@ public class FlashCardController
         return  flashCards.Select(x => x.Front).ToList();
     }
 
-    public List<FlashCardDTO> GetFlashCardsDTO(List<FlashCard> flashCards)
+    public void UpdateOrderFlashCardsDTO(string stackName)
     {
         int order = 1;
-        var flashCardDTOs = new List<FlashCardDTO>();
-        foreach(var flashCard in flashCards) 
+        foreach (var flashCard in FlashCardDTO.Flashcards)
         {
-            flashCardDTOs.Add(new FlashCardDTO { Back = flashCard.Back, Front = flashCard.Front, SequentialId = order, StackId = flashCard.StackId });
-            order++;
+            if (flashCard.StackName == stackName)
+            {
+                flashCard.SequentialId = order++;
+            }
         }
-        return flashCardDTOs;
     }
 
     public void DeleteFlashCard()
@@ -72,24 +97,23 @@ public class FlashCardController
         string selectFlashCard = "Select a flashcard to delete.";
         string noFlashCard = "There is no flashcard to delete.";
         string message;
-        string returnOption = "Return to Main";
+        
         var stacks = _stackController.GetStacks();
-        //var flashcards = GetFlashCards();
         var stackNames = _stackController.GetStackNames(stacks);
         stackNames.Add(returnOption);
 
-        string response = _consoleController.Menu(selectStack, "blue", stackNames);
-        if (response == returnOption)
+        string stackName = _consoleController.Menu(selectStack, "blue", stackNames);
+        if (stackName == returnOption)
         {
             return;
         }
-        int stackId = stacks.FirstOrDefault(x => x.Name == response).Id;
+        int stackId = stacks.FirstOrDefault(x => x.Name == stackName).Id;
         var flashcards = GetFlashCards(stackId);
         var flashcardsFronts = GetFlashCardsFronts(flashcards);
         flashcardsFronts.Add(returnOption);
         message = flashcardsFronts.Count > 1 ? selectFlashCard : noFlashCard;
 
-        response = _consoleController.Menu(message, "blue", flashcardsFronts);
+        var response = _consoleController.Menu(message, "blue", flashcardsFronts);
         if (response == returnOption)
         {
             return;
@@ -101,12 +125,16 @@ public class FlashCardController
         {
             rows = _dataBaseController.Execute<FlashCard>(sql, flashCard);
             _consoleController.ShowMessage($"{rows} flashcard deleted.", "green");
-            _consoleController.PressKey("Press any key to continue");
+
+            FlashCardDTO.Flashcards.RemoveAll(x=>x.Front==response);
+
+            UpdateOrderFlashCardsDTO(stackName);
+
+            _consoleController.MessageAndPressKey($"{rows} flashcard indexes updated.", "green");
         }
         catch (Exception ex)
         {
-            _consoleController.ShowMessage(ex.Message, "red bold");
-            _consoleController.PressKey("Press any key to continue");
+            _consoleController.MessageAndPressKey(ex.Message, "red bold");
         }
     }
 
@@ -114,7 +142,8 @@ public class FlashCardController
     {
         int rows;
         int stackId;
-        Stack? stack;
+        string stackName = string.Empty;
+        Stack stack;
         string message = "Will the flashcard be for a new stack?";
         var confirmation = AnsiConsole.Prompt(
         new TextPrompt<bool>(message)
@@ -122,6 +151,7 @@ public class FlashCardController
             .AddChoice(false)
             .DefaultValue(true)
             .WithConverter(choice => choice ? "yes" : "no"));
+
         if (confirmation)
         {
             stack = _stackController.AddStack();
@@ -130,41 +160,34 @@ public class FlashCardController
                 return;
             }
             stackId= stack.Id;
+            stackName = stack.Name;
         }
         else
         {
             string title = "Select a stack to add the FlashCard to.";
-            string returnOption = "Return to Main";
             var stacks = _stackController.GetStacks();
             if(stacks==null || stacks.Count == 0)
             {
-                _consoleController.ShowMessage("You must enter a Stack first.", "red bold");
-                _consoleController.PressKey("Press any key to continue");
+                _consoleController.MessageAndPressKey("You must enter a Stack first.", "red bold");
                 return;
             }
             var stackNames = _stackController.GetStackNames(stacks);
             stackNames.Add(returnOption);
-            string response = _consoleController.Menu(title, "blue", stackNames);
-            if (response == returnOption)
+            stackName = _consoleController.Menu(title, "blue", stackNames);
+            if (stackName == returnOption)
             {
                 return;
             }
-            stackId = stacks.FirstOrDefault(x => x.Name == response).Id;
+            stackId = stacks.FirstOrDefault(x => x.Name == stackName).Id;
         }
-        string front = _consoleController.GetString("Please enter the front of the flashcard or press 0 to return to main menu:");
-        while (front == "")
-        {
-            front = _consoleController.GetString("Please enter the front of the flashcard or press 0 to return to main menu:");
-        }        
-        if (front == "0")
+        string front = _consoleController.GetString("Please enter the front of the flashcard or press # to return to main menu:");
+      
+        if (front.Trim() == "#")
             return;
-        string back = _consoleController.GetString("Please enter the back of the flashcard or press 0 to return to main menu:");
-        while (back == "")
-        {
-            back = _consoleController.GetString("Please enter the back of the flashcard or press 0 to return to main menu:");
-        }
+
+        string back = _consoleController.GetString("Please enter the back of the flashcard or press # to return to main menu:");
         
-        if (back == "0")
+        if (back.Trim() == "#")
             return;
 
         try
@@ -172,13 +195,17 @@ public class FlashCardController
             var flashCard = new FlashCard { Front = front, Back = back, StackId = stackId };
             var sql = "INSERT INTO FlashCards (Front, Back, StackId) VALUES (@Front, @Back, @StackId)";
             rows = _dataBaseController.Execute<FlashCard>(sql, flashCard);
-            _consoleController.ShowMessage($"{rows} flashCard added.", "green");
-            _consoleController.PressKey("Press any key to continue");
+
+            var flashCardDTO = new FlashCardDTO { Front = front, Back = back, StackName = stackName };
+
+            FlashCardDTO.Flashcards.Add(flashCardDTO);
+            UpdateOrderFlashCardsDTO(stackName);
+
+            _consoleController.MessageAndPressKey($"{rows} flashCard added.", "green");
         }
         catch (Exception ex)
         {
-            _consoleController.ShowMessage(ex.Message, "red bold");
-            _consoleController.PressKey("Press any key to continue");
+            _consoleController.MessageAndPressKey(ex.Message,"red bold");
         }
-    }
+    }   
 }
