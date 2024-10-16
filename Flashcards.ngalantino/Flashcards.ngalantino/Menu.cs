@@ -43,6 +43,10 @@ public static class Menu
                         // Add nested switch statement for submenu
                         switch (mainMenuChoice)
                         {
+                            case "Return to main menu":
+
+                                break;
+                            
                             case "View all flashcards in stack":
                                 Console.Clear();
                                 List<Flashcard> flashcards = StudyContentController.GetFlashcardsInStack();
@@ -68,6 +72,10 @@ public static class Menu
 
                             case "Create a flashcard in current stack":
                                 StudyContentController.CreateFlashcard();
+                                break;
+
+                            case "Edit a flashcard":
+                                StudyContentController.EditFlashcard();
                                 break;
 
                             case "Delete a flashcard":

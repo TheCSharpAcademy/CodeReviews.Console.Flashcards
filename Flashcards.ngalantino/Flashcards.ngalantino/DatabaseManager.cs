@@ -89,6 +89,22 @@ internal class DatabaseManager
         }
     }
 
+    public void EditFlashcard(Flashcard flashcard) {
+        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection"))) {
+            
+            connection.Open();
+
+            string sql = @$"UPDATE flashcards
+                            SET front = '{flashcard.front}', back = '{flashcard.back}'
+                            WHERE id = '{flashcard.id}'";
+
+            SqlCommand command = new SqlCommand(sql, connection);
+
+            Int32 recordsAffected = command.ExecuteNonQuery();
+
+        }
+    }
+
     public void DeleteFlashcard(Flashcard flashcard) {
         using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection"))) {
             connection.Open();

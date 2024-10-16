@@ -54,7 +54,7 @@ public static class StudyContentController
         if (!isStackSelected())
         {
             Console.WriteLine("Select a stack beforing adding a flashcard!");
-            SelectStack();
+            Menu.selectedStack = SelectStack();
         }
 
         Flashcard flashcard = new Flashcard();
@@ -62,18 +62,19 @@ public static class StudyContentController
         Console.WriteLine("Enter front of flashcard: ");
 
         flashcard.front = Console.ReadLine();
-        
+
         Console.WriteLine("Enter back of flashcard.");
 
         flashcard.back = Console.ReadLine();
 
         flashcard.stack = Menu.selectedStack;
-        
+
 
         db.AddFlashcard(flashcard);
     }
 
-    public static void DeleteFlashcard() {
+    public static void DeleteFlashcard()
+    {
         Flashcard flashcard = new Flashcard();
 
         // Get flashcard to be deleted.
@@ -84,12 +85,41 @@ public static class StudyContentController
 
         flashcard.id = flashcards[id].id;
 
-
-
         db.DeleteFlashcard(flashcard);
     }
     public static bool isStackSelected()
     {
         return !(Menu.selectedStack == "No stack selected");
+    }
+
+    public static void EditFlashcard()
+    {
+        if (!isStackSelected())
+        {
+            Console.WriteLine("Select a stack beforing updating a flashcard!");
+            Menu.selectedStack = SelectStack();
+        }
+
+        Flashcard flashcard = new Flashcard();
+
+        List<Flashcard> flashcards = GetFlashcardsInStack();
+
+        Console.WriteLine("Enter Id of flashcard to be updated: ");
+        int id = Int32.Parse(Console.ReadLine()) - 1;
+
+        flashcard.id = flashcards[id].id;
+
+        Console.WriteLine("Enter front of flashcard: ");
+
+        flashcard.front = Console.ReadLine();
+
+        Console.WriteLine("Enter back of flashcard.");
+
+        flashcard.back = Console.ReadLine();
+
+        flashcard.stack = Menu.selectedStack;
+
+
+        db.EditFlashcard(flashcard);
     }
 }
