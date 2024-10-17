@@ -17,7 +17,7 @@ dataBaseController.CreateDatabase();
 dataBaseController.CreateTableStacks();
 dataBaseController.CreateTableFlashCards();
 dataBaseController.CreateTableStudySessions();
-
+flashCardController.InitFlashCardsDto();
 do
 {
     choice = consoleController.Menu(title,color,mainOptions);

@@ -51,7 +51,23 @@ public class StackController
             _consoleController.MessageAndPressKey(ex.Message, "red bold");
         }
         return stack;
-    }    
+    }
+
+    public Stack GetStackById(int id)
+    {
+        Stack stack;
+        var sql = $"SELECT * FROM Stacks WHERE Id = {id}";
+        try
+        {
+            stack = _dataBaseController.QuerySingle<Stack>(sql);
+        }
+        catch (Exception ex)
+        {
+            stack = null;
+            _consoleController.MessageAndPressKey(ex.Message, "red bold");
+        }
+        return stack;
+    }
 
     public List<Stack> GetStacks()
     {

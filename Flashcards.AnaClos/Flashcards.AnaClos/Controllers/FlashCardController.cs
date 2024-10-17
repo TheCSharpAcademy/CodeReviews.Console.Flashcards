@@ -18,28 +18,39 @@ public class FlashCardController
         _stackController = stackController;
     }
 
-    public List<FlashCardDTO> GetFlashCardsDTO(string stackName)
+    public void InitFlashCardsDto()
     {
-        return FlashCardDTO.Flashcards.Where(x => x.StackName == stackName).ToList();
+        var flashcards = GetFlashCards();
+        foreach(var flashcard in flashcards)
+        {
+            var stack = _stackController.GetStackById(flashcard.StackId);
+            FlashCardDto.Flashcards.Add(new FlashCardDto { Front = flashcard.Front, Back = flashcard.Back,StackName=stack.Name });
+        }
     }
 
-    public List<TableRecordDTO> FrontToTableRecord(List<FlashCardDTO> flashCards)
+    public List<FlashCardDto> GetFlashCardsDto(string stackName)
     {
-        var tableRecord = new List<TableRecordDTO>();
+        return FlashCardDto.Flashcards.Where(x => x.StackName == stackName).ToList();
+    }
+
+    public List<TableRecordDto> FrontToTableRecord(List<FlashCardDto> flashCards)
+    {
+        var tableRecord = new List<TableRecordDto>();
         foreach(var flashCard in flashCards)
         {
-            var record = new TableRecordDTO { Column1=flashCard.SequentialId.ToString(),Column2=flashCard.Front};
+            var record = new TableRecordDto { Column1=flashCard.SequentialId.ToString(),Column2=flashCard.Front};
             tableRecord.Add(record);
         }
         return tableRecord;
     }
 
-    public List<TableRecordDTO> BackToTableRecord(List<FlashCard> flashCards)
+    public List<TableRecordDto> BackToTableRecord(List<FlashCardDto> flashCards)
     {
-        var tableRecord = new List<TableRecordDTO>();
+        var tableRecord = new List<TableRecordDto>();
         foreach (var flashCard in flashCards)
         {
-            var record = new TableRecordDTO { Column1 = flashCard.StackId.ToString(), Column2 = flashCard.Back };
+            var record = new TableRecordDto { Column1 = flashCard.SequentialId.ToString(), Column2 = flashCard.Back };
+            tableRecord.Add(record);
         }
         return tableRecord;
     }
@@ -79,10 +90,10 @@ public class FlashCardController
         return  flashCards.Select(x => x.Front).ToList();
     }
 
-    public void UpdateOrderFlashCardsDTO(string stackName)
+    public void UpdateOrderFlashCardsDto(string stackName)
     {
         int order = 1;
-        foreach (var flashCard in FlashCardDTO.Flashcards)
+        foreach (var flashCard in FlashCardDto.Flashcards)
         {
             if (flashCard.StackName == stackName)
             {
@@ -126,9 +137,9 @@ public class FlashCardController
             rows = _dataBaseController.Execute<FlashCard>(sql, flashCard);
             _consoleController.ShowMessage($"{rows} flashcard deleted.", "green");
 
-            FlashCardDTO.Flashcards.RemoveAll(x=>x.Front==response);
+            FlashCardDto.Flashcards.RemoveAll(x=>x.Front==response);
 
-            UpdateOrderFlashCardsDTO(stackName);
+            UpdateOrderFlashCardsDto(stackName);
 
             _consoleController.MessageAndPressKey($"{rows} flashcard indexes updated.", "green");
         }
@@ -196,10 +207,10 @@ public class FlashCardController
             var sql = "INSERT INTO FlashCards (Front, Back, StackId) VALUES (@Front, @Back, @StackId)";
             rows = _dataBaseController.Execute<FlashCard>(sql, flashCard);
 
-            var flashCardDTO = new FlashCardDTO { Front = front, Back = back, StackName = stackName };
+            var flashCardDto = new FlashCardDto { Front = front, Back = back, StackName = stackName };
 
-            FlashCardDTO.Flashcards.Add(flashCardDTO);
-            UpdateOrderFlashCardsDTO(stackName);
+            FlashCardDto.Flashcards.Add(flashCardDto);
+            UpdateOrderFlashCardsDto(stackName);
 
             _consoleController.MessageAndPressKey($"{rows} flashCard added.", "green");
         }

@@ -41,7 +41,7 @@ public class ConsoleController
         PressKey("Press any key to continue");
     }
 
-    public void ShowTable(string title, string[] columns, List<TableRecordDTO> records)
+    public void ShowTable(string title, string[] columns, List<TableRecordDto> records)
     {
         var table = new Table();
         table.Title(title);

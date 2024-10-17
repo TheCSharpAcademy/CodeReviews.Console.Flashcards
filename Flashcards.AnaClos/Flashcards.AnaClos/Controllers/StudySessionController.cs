@@ -31,7 +31,9 @@ public class StudySessionController
         int score = 0;
         var stack = _stackController.GetStackByName(stackName);
 
-        var flashcards = _flashCardController.GetFlashCardsDTO(stackName);
+        _flashCardController.UpdateOrderFlashCardsDto(stackName);
+
+        var flashcards = _flashCardController.GetFlashCardsDto(stackName);
         if (flashcards.Count==0)
         {
             _consoleController.MessageAndPressKey("There is no FlashCard in this Stack", "red bold");
@@ -54,24 +56,22 @@ public class StudySessionController
         }
     } 
 
-    public void StackStudy(FlashCardDTO flashCard, ref int score)
+    public void StackStudy(FlashCardDto flashCard, ref int score)
     {
         string title = "Study Session";
-        string returnOption = "Return to Main";
         string[] columnsFront = { "FlashcardId", "Front" };
         string[] columnsBack = { "FlashcardId", "Back" };
-        var flashCards = new List<FlashCardDTO> { flashCard};
+        var flashCards = new List<FlashCardDto> { flashCard};
         var tableRecords =_flashCardController.FrontToTableRecord(flashCards);
         _consoleController.ShowTable(title, columnsFront, tableRecords);
         var back = _consoleController.GetString("Please enter your answer to the above flashcard: ");
-        while (back.Trim() == "")
-        {
-            _consoleController.ShowMessage("Invalid entry, cannot be empty.", "red bold");
-            back = _consoleController.GetString("Please enter your answer to the above flashcard: ");
-        }
+        Console.WriteLine();
+        tableRecords = _flashCardController.BackToTableRecord(flashCards);
+        _consoleController.ShowTable(title, columnsBack, tableRecords);
+
         if (back.Trim().ToLower() == flashCard.Back)
         {
-            score++;//falta mostrar tabla
+            score++;
             _consoleController.MessageAndPressKey($"Correct! your current score is {score}", "green");
         }
         else
@@ -113,12 +113,12 @@ public class StudySessionController
 
     }
 
-    public List<TableRecordDTO> StudyToTableRecord(List<StudySession> studySessions)
+    public List<TableRecordDto> StudyToTableRecord(List<StudySession> studySessions)
     {
-        var tableRecord = new List<TableRecordDTO>();
+        var tableRecord = new List<TableRecordDto>();
         foreach (var studySession in studySessions)
         {
-            var record = new TableRecordDTO { Column1 = studySession.Date.ToString(new CultureInfo("en-us")), Column2 = studySession.Score.ToString() };
+            var record = new TableRecordDto { Column1 = studySession.Date.ToString(new CultureInfo("en-us")), Column2 = studySession.Score.ToString() };
             tableRecord.Add(record);
         }
         return tableRecord;
