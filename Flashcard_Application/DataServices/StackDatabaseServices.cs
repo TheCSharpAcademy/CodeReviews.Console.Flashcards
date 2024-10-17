@@ -5,7 +5,7 @@ namespace Flashcard_Application.DataServices;
 
 public class StackDatabaseServices
 {
-    public void InsertStack(StackDTO stack)
+    public void InsertStack(StackDto stack)
     {
         using (var connection = new SqlConnection(DatabaseConfig.dbFilePath))
         {
