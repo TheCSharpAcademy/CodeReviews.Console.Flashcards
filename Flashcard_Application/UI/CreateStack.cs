@@ -21,7 +21,7 @@ public class CreateStack
         {
             string stackDescription = AnsiConsole.Prompt<string>(new TextPrompt<string>("[blueviolet]Please enter a description for the Stack: [/]"));
 
-            StackDTO stack = new();
+            StackDto stack = new();
             stack.StackName = stackName;
             stack.StackDescription = stackDescription;
 
