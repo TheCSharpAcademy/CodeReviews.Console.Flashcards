@@ -10,7 +10,7 @@ internal class DatabaseManager
 
     // Return list of flashcard DTOs.
     // Add input parameter to return specific stack
-    public List<Flashcard> GetFlashcards(String stack)
+    public List<Flashcard> GetFlashcards(String stack, int numFlashcards = 0)
     {
         List<Flashcard> flashcards = new List<Flashcard>();
 
@@ -24,17 +24,37 @@ internal class DatabaseManager
 
             SqlDataReader reader = command.ExecuteReader();
 
-            while (reader.Read())
+            if (numFlashcards != 0)
             {
-                Flashcard flashcard = new Flashcard
+                while (reader.Read() && numFlashcards > 0)
                 {
-                    id = reader.GetInt32(0),
-                    stack = reader.GetString(1),
-                    front = reader.GetString(2),
-                    back = reader.GetString(3)
-                };
+                    Flashcard flashcard = new Flashcard
+                    {
+                        id = reader.GetInt32(0),
+                        stack = reader.GetString(1),
+                        front = reader.GetString(2),
+                        back = reader.GetString(3)
+                    };
 
-                flashcards.Add(flashcard);
+                    flashcards.Add(flashcard);
+                    numFlashcards--;
+                }
+            }
+
+            else
+            {
+                while (reader.Read())
+                {
+                    Flashcard flashcard = new Flashcard
+                    {
+                        id = reader.GetInt32(0),
+                        stack = reader.GetString(1),
+                        front = reader.GetString(2),
+                        back = reader.GetString(3)
+                    };
+
+                    flashcards.Add(flashcard);
+                }
             }
 
             connection.Close();
@@ -77,7 +97,7 @@ internal class DatabaseManager
         {
 
             // TODO: Create parameterized query
-            
+
             connection.Open();
 
             string sql = $"INSERT INTO flashcards (stack, front, back) VALUES('{flashcard.stack}', '{flashcard.front}', '{flashcard.back}')";
@@ -89,9 +109,11 @@ internal class DatabaseManager
         }
     }
 
-    public void EditFlashcard(Flashcard flashcard) {
-        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection"))) {
-            
+    public void EditFlashcard(Flashcard flashcard)
+    {
+        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection")))
+        {
+
             connection.Open();
 
             string sql = @$"UPDATE flashcards
@@ -105,8 +127,10 @@ internal class DatabaseManager
         }
     }
 
-    public void DeleteFlashcard(Flashcard flashcard) {
-        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection"))) {
+    public void DeleteFlashcard(Flashcard flashcard)
+    {
+        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection")))
+        {
             connection.Open();
 
             string sql = $"DELETE FROM flashcards WHERE id='{flashcard.id}'";

@@ -46,27 +46,21 @@ public static class Menu
                             case "Return to main menu":
 
                                 break;
-                            
+
                             case "View all flashcards in stack":
                                 Console.Clear();
                                 List<Flashcard> flashcards = StudyContentController.GetFlashcardsInStack();
 
-                                // Display table with ID, front, and back
-                                Table table = new Table();
+                                DisplayTable(flashcards);
+                                
+                                break;
 
-                                table.AddColumn("Id");
-                                table.AddColumn("Front");
-                                table.AddColumn("Back");
+                            case "View X amount of cards in stack":
+                                Console.WriteLine("How many flashcards do you want to view?");
+                                int numFlashcards = Int32.Parse(Console.ReadLine());
+                                List<Flashcard> xAmountofFlashcards = StudyContentController.GetFlashcardsInStack(numFlashcards);
 
-                                int id = 1;
-
-                                foreach (Flashcard flashcard in flashcards)
-                                {
-                                    table.AddRow(id.ToString(), flashcard.front, flashcard.back);
-                                    id++;
-                                }
-
-                                AnsiConsole.Write(table);
+                                DisplayTable(xAmountofFlashcards);
 
                                 break;
 
@@ -90,5 +84,25 @@ public static class Menu
                     break;
             }
         }
+    }
+
+    public static void DisplayTable(List<Flashcard> flashcards)
+    {
+        // Display table with ID, front, and back
+        Table table = new Table();
+
+        table.AddColumn("Id");
+        table.AddColumn("Front");
+        table.AddColumn("Back");
+
+        int id = 1;
+
+        foreach (Flashcard flashcard in flashcards)
+        {
+            table.AddRow(id.ToString(), flashcard.front, flashcard.back);
+            id++;
+        }
+
+        AnsiConsole.Write(table);
     }
 }

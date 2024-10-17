@@ -42,9 +42,9 @@ public static class StudyContentController
 
     }
 
-    public static List<Flashcard> GetFlashcardsInStack()
+    public static List<Flashcard> GetFlashcardsInStack(int numFlashcards = 0)
     {
-        List<Flashcard> flashcards = db.GetFlashcards(Menu.selectedStack);
+        List<Flashcard> flashcards = db.GetFlashcards(Menu.selectedStack, numFlashcards);
 
         return flashcards;
     }
