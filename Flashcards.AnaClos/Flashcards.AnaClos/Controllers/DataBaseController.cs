@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
-using System.Configuration;
 
 namespace Flashcards.AnaClos.Controllers;
 
@@ -12,8 +11,8 @@ public class DataBaseController
 
     public DataBaseController()
     {
-        _server = ConfigurationManager.AppSettings.Get("Server");
-        _dataBaseName=ConfigurationManager.AppSettings.Get("DataBase");
+        _server = System.Configuration.ConfigurationManager.AppSettings.Get("Server");
+        _dataBaseName= System.Configuration.ConfigurationManager.AppSettings.Get("DataBase");
         _connectionString = $@"Server={_server};Integrated Security=true;TrustServerCertificate=true";
     }
 
