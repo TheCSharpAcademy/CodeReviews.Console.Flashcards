@@ -14,11 +14,33 @@ public static class StudyContentController
             prompt.AddChoice(stack.name);
         }
         // Display the prompt
+        Console.WriteLine("Select a stack:");
         string menuChoice = AnsiConsole.Prompt(prompt);
 
         return menuChoice;
     }
 
+    public static string ManageStacks()
+    {
+
+        SelectionPrompt<string> prompt2 = new SelectionPrompt<string>();
+
+        string mainMenuChoice = AnsiConsole.Prompt(new SelectionPrompt<string>()
+        .Title($"Current working stack: {Menu.selectedStack}")
+        .PageSize(10)
+        .MoreChoicesText("(Move up and down to reveal more options)")
+        .AddChoices(new[] {
+                        "Return to main menu",
+                        "Change current stack",
+                        "View all stacks",
+                        "Create a new stack",
+                        "Edit a stack",
+                        "Delete a stack"
+        }));
+
+        return mainMenuChoice;
+
+    }
     public static string ManageFlashcards()
     {
 
@@ -122,4 +144,16 @@ public static class StudyContentController
 
         db.EditFlashcard(flashcard);
     }
+
+    public static void newStudySession(String stack, DateTime date, int score) {
+        // id, stack, date, score
+        db.AddStudySession(stack, date, score);
+    }
+
+    public static List<StudySession> GetStudySessions() {
+       List<StudySession> studySessions = db.GetStudySessions();
+
+       return studySessions;
+    }
+
 }

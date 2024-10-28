@@ -141,5 +141,47 @@ internal class DatabaseManager
         }
     }
 
+    public void AddStudySession(String stack, DateTime date, int score) {
+
+        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection"))) {
+            
+            connection.Open();
+
+            string sql = $"INSERT INTO studysessions (stack, date, score) VALUES ('{stack}', '{date}', '{score}')";
+
+            SqlCommand command = new SqlCommand(sql, connection);
+
+            Int32 recordsAffected = command.ExecuteNonQuery();
+        }
+    }
+
+    public List<StudySession> GetStudySessions() {
+        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection"))) {
+            
+            List<StudySession> studySessions = new List<StudySession>();
+
+            connection.Open();
+
+            string sql = "SELECT * FROM studysessions";
+
+            SqlCommand command = new SqlCommand(sql, connection);
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read()) {
+                StudySession session = new StudySession 
+                {
+                    stack = reader.GetString(1),
+                    date = reader.GetDateTime(2),
+                    score = reader.GetInt32(3)
+
+                };
+
+                studySessions.Add(session);
+            }
+
+            return studySessions;
+        }
+    }
 }
 

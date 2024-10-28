@@ -1,4 +1,5 @@
 using System.Data.Common;
+using System.Formats.Asn1;
 using System.Runtime.CompilerServices;
 using Spectre.Console;
 public static class Menu
@@ -32,6 +33,12 @@ public static class Menu
 
                     selectedStack = StudyContentController.SelectStack();
 
+                    Console.Clear();
+
+                    string mainMenuChoice2 = StudyContentController.ManageStacks();
+
+                    // TODO: Add switch statement for sub menu choices to manage stack
+
                     break;
 
                 case "manage flashcards":
@@ -52,7 +59,7 @@ public static class Menu
                                 List<Flashcard> flashcards = StudyContentController.GetFlashcardsInStack();
 
                                 DisplayTable(flashcards);
-                                
+
                                 break;
 
                             case "View X amount of cards in stack":
@@ -82,6 +89,65 @@ public static class Menu
                     }
 
                     break;
+
+                case "study":
+                    // Select stack
+                    if (selectedStack == "No stack selected")
+                    {
+                        selectedStack = StudyContentController.SelectStack();
+                        Console.Clear();
+                    }
+
+
+                    // Begin study session by getting first flashcard in stack and iterating
+                    List<Flashcard> studyFlashcards = StudyContentController.GetFlashcardsInStack();
+
+                    string answer = "";
+                    int score = 0;
+                    DateTime dateTime = DateTime.Now;
+
+                    while (answer != "0")
+                    {
+                        foreach (Flashcard flashcard in studyFlashcards)
+                        {
+                            Console.WriteLine(flashcard.front);
+                            Console.WriteLine("Input your answer or press 0 to exit.");
+                            answer = Console.ReadLine();
+
+                            if (answer == "0") {
+                                break;
+                            }
+
+                            // Check answer
+                            if (answer.ToLower().Equals(flashcard.back.ToLower())) {
+                                Console.WriteLine("Correct!");
+                                score++;
+                            }
+                            else {
+                                Console.WriteLine("Wrong!");
+                            }
+                            // Calculate score
+                        }
+
+                        // Add study session
+                    }
+                    StudyContentController.newStudySession(selectedStack, dateTime, score);
+
+                    // Create new study session with date.
+
+                    // Iterate over stack
+                    // Show front of card
+                    // Get answer
+                    // Keep track of score
+                    // Insert score date and score into study session table.
+                    break;
+            
+                case "view study session data":
+
+                    DisplayTable(StudyContentController.GetStudySessions());
+                    Console.WriteLine("Press any key to return.");
+                    Console.ReadLine();
+                    break;
             }
         }
     }
@@ -101,6 +167,20 @@ public static class Menu
         {
             table.AddRow(id.ToString(), flashcard.front, flashcard.back);
             id++;
+        }
+
+        AnsiConsole.Write(table);
+    }
+
+    public static void DisplayTable(List<StudySession> studySessions) {
+        Table table = new Table();
+
+        table.AddColumn("Stack");
+        table.AddColumn("Date");
+        table.AddColumn("Score");
+
+        foreach (StudySession session in studySessions) {
+            table.AddRow(session.stack, session.date.ToString(), session.score.ToString());
         }
 
         AnsiConsole.Write(table);
