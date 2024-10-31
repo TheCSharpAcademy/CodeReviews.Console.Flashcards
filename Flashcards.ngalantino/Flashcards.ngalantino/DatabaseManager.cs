@@ -8,8 +8,6 @@ internal class DatabaseManager
 
     }
 
-    // Return list of flashcard DTOs.
-    // Add input parameter to return specific stack
     public List<Flashcard> GetFlashcards(String stack, int numFlashcards = 0)
     {
         List<Flashcard> flashcards = new List<Flashcard>();
@@ -90,13 +88,22 @@ internal class DatabaseManager
 
     }
 
-    // Add flashcard to stack
+    public void NewStack(String name) {
+        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection"))) {
+            connection.Open();
+
+            string sql = $"INSERT INTO stacks (stack) VALUES ('{name}')";
+
+            SqlCommand command = new SqlCommand(sql, connection);
+
+            Int32 recordsAffected = command.ExecuteNonQuery();
+        }
+    }
+
     public void AddFlashcard(Flashcard flashcard)
     {
         using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection")))
         {
-
-            // TODO: Create parameterized query
 
             connection.Open();
 
@@ -183,5 +190,6 @@ internal class DatabaseManager
             return studySessions;
         }
     }
+
 }
 

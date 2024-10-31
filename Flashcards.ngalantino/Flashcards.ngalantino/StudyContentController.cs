@@ -41,6 +41,7 @@ public static class StudyContentController
         return mainMenuChoice;
 
     }
+    
     public static string ManageFlashcards()
     {
 
@@ -71,6 +72,9 @@ public static class StudyContentController
         return flashcards;
     }
 
+    public static List<Stack> GetStacks() {
+        return db.GetStacks();
+    }
     public static void CreateFlashcard()
     {
         if (!isStackSelected())
@@ -109,6 +113,7 @@ public static class StudyContentController
 
         db.DeleteFlashcard(flashcard);
     }
+    
     public static bool isStackSelected()
     {
         return !(Menu.selectedStack == "No stack selected");
@@ -146,7 +151,7 @@ public static class StudyContentController
     }
 
     public static void newStudySession(String stack, DateTime date, int score) {
-        // id, stack, date, score
+
         db.AddStudySession(stack, date, score);
     }
 
@@ -156,4 +161,11 @@ public static class StudyContentController
        return studySessions;
     }
 
+    public static void NewStack() {
+        Console.WriteLine("Enter name of new stack.");
+
+        String? stackName = Console.ReadLine();
+
+        db.NewStack(stackName);
+    }
 }

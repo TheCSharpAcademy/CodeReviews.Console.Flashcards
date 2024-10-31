@@ -1,10 +1,10 @@
 using System.Data.Common;
 using System.Formats.Asn1;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using Spectre.Console;
 public static class Menu
 {
-    private static string userInput = "";
     private static string mainMenuChoice = "";
     public static string selectedStack = "No stack selected";
     public static void DisplayMenu()
@@ -26,18 +26,48 @@ public static class Menu
                 "View study session data"
             }));
 
-            // Switch statement for menu options
             switch (mainMenuChoice.ToLower())
             {
                 case "manage stacks":
 
-                    selectedStack = StudyContentController.SelectStack();
+                    while (mainMenuChoice != "Return to main menu")
+                    {
+                        Console.Clear();
 
-                    Console.Clear();
+                        mainMenuChoice = StudyContentController.ManageStacks();
 
-                    string mainMenuChoice2 = StudyContentController.ManageStacks();
+                        switch (mainMenuChoice.ToLower())
+                        {
 
-                    // TODO: Add switch statement for sub menu choices to manage stack
+                            case "change current stack":
+                                selectedStack = StudyContentController.SelectStack();
+                                break;
+
+                            case "view all stacks":
+                                List<Stack> stacks = StudyContentController.GetStacks();
+
+                                DisplayTable(stacks);
+
+                                Console.WriteLine("Press enter to continue...");
+
+                                Console.ReadLine();
+
+                                break;
+
+                            case "create a new stack":
+                                StudyContentController.NewStack();
+                                break;
+
+                            case "edit a stack":
+
+                                break;
+
+                            case "delete a stack":
+
+                                break;
+                        }
+
+                    }
 
                     break;
 
@@ -47,11 +77,14 @@ public static class Menu
 
                         mainMenuChoice = StudyContentController.ManageFlashcards();
 
-                        // Add nested switch statement for submenu
                         switch (mainMenuChoice)
                         {
                             case "Return to main menu":
 
+                                break;
+
+                            case "Change current stack":
+                                selectedStack = StudyContentController.SelectStack();
                                 break;
 
                             case "View all flashcards in stack":
@@ -114,16 +147,19 @@ public static class Menu
                             Console.WriteLine("Input your answer or press 0 to exit.");
                             answer = Console.ReadLine();
 
-                            if (answer == "0") {
+                            if (answer == "0")
+                            {
                                 break;
                             }
 
                             // Check answer
-                            if (answer.ToLower().Equals(flashcard.back.ToLower())) {
+                            if (answer.ToLower().Equals(flashcard.back.ToLower()))
+                            {
                                 Console.WriteLine("Correct!");
                                 score++;
                             }
-                            else {
+                            else
+                            {
                                 Console.WriteLine("Wrong!");
                             }
                             // Calculate score
@@ -141,7 +177,7 @@ public static class Menu
                     // Keep track of score
                     // Insert score date and score into study session table.
                     break;
-            
+
                 case "view study session data":
 
                     DisplayTable(StudyContentController.GetStudySessions());
@@ -172,15 +208,30 @@ public static class Menu
         AnsiConsole.Write(table);
     }
 
-    public static void DisplayTable(List<StudySession> studySessions) {
+    public static void DisplayTable(List<StudySession> studySessions)
+    {
         Table table = new Table();
 
         table.AddColumn("Stack");
         table.AddColumn("Date");
         table.AddColumn("Score");
 
-        foreach (StudySession session in studySessions) {
+        foreach (StudySession session in studySessions)
+        {
             table.AddRow(session.stack, session.date.ToString(), session.score.ToString());
+        }
+
+        AnsiConsole.Write(table);
+    }
+
+    public static void DisplayTable(List<Stack> stacks) {
+
+        Table table = new Table();
+
+        table.AddColumn("Stacks");
+
+        foreach (Stack stack in stacks) {
+            table.AddRow(stack.name);
         }
 
         AnsiConsole.Write(table);
