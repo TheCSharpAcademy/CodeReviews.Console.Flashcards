@@ -58,12 +58,10 @@ public static class Menu
                                 StudyContentController.NewStack();
                                 break;
 
-                            case "edit a stack":
-
-                                break;
-
                             case "delete a stack":
+                                String stackToDelete = StudyContentController.SelectStack();
 
+                                StudyContentController.DeleteStack(stackToDelete);
                                 break;
                         }
 

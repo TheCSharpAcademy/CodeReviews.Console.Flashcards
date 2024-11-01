@@ -88,11 +88,27 @@ internal class DatabaseManager
 
     }
 
-    public void NewStack(String name) {
-        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection"))) {
+    public void NewStack(String name)
+    {
+        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection")))
+        {
             connection.Open();
 
             string sql = $"INSERT INTO stacks (stack) VALUES ('{name}')";
+
+            SqlCommand command = new SqlCommand(sql, connection);
+
+            Int32 recordsAffected = command.ExecuteNonQuery();
+        }
+    }
+
+    public void DeleteStack(String stack)
+    {
+        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection")))
+        {
+            connection.Open();
+
+            string sql = $"DELETE FROM stacks WHERE stack='{stack}'";
 
             SqlCommand command = new SqlCommand(sql, connection);
 
@@ -148,10 +164,12 @@ internal class DatabaseManager
         }
     }
 
-    public void AddStudySession(String stack, DateTime date, int score) {
+    public void AddStudySession(String stack, DateTime date, int score)
+    {
 
-        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection"))) {
-            
+        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection")))
+        {
+
             connection.Open();
 
             string sql = $"INSERT INTO studysessions (stack, date, score) VALUES ('{stack}', '{date}', '{score}')";
@@ -162,9 +180,11 @@ internal class DatabaseManager
         }
     }
 
-    public List<StudySession> GetStudySessions() {
-        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection"))) {
-            
+    public List<StudySession> GetStudySessions()
+    {
+        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection")))
+        {
+
             List<StudySession> studySessions = new List<StudySession>();
 
             connection.Open();
@@ -175,8 +195,9 @@ internal class DatabaseManager
 
             SqlDataReader reader = command.ExecuteReader();
 
-            while (reader.Read()) {
-                StudySession session = new StudySession 
+            while (reader.Read())
+            {
+                StudySession session = new StudySession
                 {
                     stack = reader.GetString(1),
                     date = reader.GetDateTime(2),

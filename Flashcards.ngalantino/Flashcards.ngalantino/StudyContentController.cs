@@ -1,4 +1,7 @@
+using System.Configuration;
+using System.Data.SqlClient;
 using System.IO.Compression;
+using System.Linq.Expressions;
 using Spectre.Console;
 
 public static class StudyContentController
@@ -34,14 +37,13 @@ public static class StudyContentController
                         "Change current stack",
                         "View all stacks",
                         "Create a new stack",
-                        "Edit a stack",
                         "Delete a stack"
         }));
 
         return mainMenuChoice;
 
     }
-    
+
     public static string ManageFlashcards()
     {
 
@@ -72,7 +74,8 @@ public static class StudyContentController
         return flashcards;
     }
 
-    public static List<Stack> GetStacks() {
+    public static List<Stack> GetStacks()
+    {
         return db.GetStacks();
     }
     public static void CreateFlashcard()
@@ -113,7 +116,7 @@ public static class StudyContentController
 
         db.DeleteFlashcard(flashcard);
     }
-    
+
     public static bool isStackSelected()
     {
         return !(Menu.selectedStack == "No stack selected");
@@ -150,22 +153,47 @@ public static class StudyContentController
         db.EditFlashcard(flashcard);
     }
 
-    public static void newStudySession(String stack, DateTime date, int score) {
+    public static void newStudySession(String stack, DateTime date, int score)
+    {
 
         db.AddStudySession(stack, date, score);
     }
 
-    public static List<StudySession> GetStudySessions() {
-       List<StudySession> studySessions = db.GetStudySessions();
+    public static List<StudySession> GetStudySessions()
+    {
+        List<StudySession> studySessions = db.GetStudySessions();
 
-       return studySessions;
+        return studySessions;
     }
 
-    public static void NewStack() {
-        Console.WriteLine("Enter name of new stack.");
+    public static void NewStack()
+    {
+        bool loop = true;
+        String? stackName = "";
+        while (loop)
+        {
+            Console.WriteLine("Enter name of new stack.");
 
-        String? stackName = Console.ReadLine();
+            stackName = Console.ReadLine();
 
+            // Make sure stack name is unique
+            foreach (Stack stack in GetStacks())
+            {
+                if (stack.name == stackName)
+                {
+                    Console.WriteLine("Another stack with this name already exists!");
+                    loop = true;
+                    break;
+                }
+                else {
+                    loop = false;
+                }
+            }
+        }
         db.NewStack(stackName);
+    }
+
+    public static void DeleteStack(String stackToDelete) {
+        db.DeleteStack(stackToDelete);
     }
 }
