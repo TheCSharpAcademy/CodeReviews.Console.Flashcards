@@ -42,7 +42,7 @@ public class Program
     private static void LoadAppSettingConfiguration(){
         var builder = new ConfigurationBuilder()
             .SetBasePath(GetCurrentPath())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            .AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true);
 
         Configuration = builder.Build();
     }
