@@ -1,4 +1,3 @@
-
 using Spectre.Console;
 public static class Menu
 {
