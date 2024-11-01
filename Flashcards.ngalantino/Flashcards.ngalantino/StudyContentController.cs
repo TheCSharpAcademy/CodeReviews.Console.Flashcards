@@ -41,8 +41,6 @@ public static class StudyContentController
     public static string ManageFlashcards()
     {
 
-        SelectionPrompt<string> prompt2 = new SelectionPrompt<string>();
-
         string mainMenuChoice = AnsiConsole.Prompt(new SelectionPrompt<string>()
         .Title($"Current working stack: {Menu.selectedStack}")
         .PageSize(10)
