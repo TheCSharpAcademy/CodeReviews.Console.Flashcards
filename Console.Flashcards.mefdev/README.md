@@ -18,7 +18,7 @@
 ## Features
 
 -   **Azure SQL Database Connection**: The application connects to an Azure SQL Server database to store and retrieve data.
--   **USAGE**: After connected to the database, you need to use the script called CreateDatabaseScript.sql inside FlashcardApp.Console folder  to create all the    neccessary tables.
+-   **USAGE**: After connected to the database, you need to use the script called CreateDatabaseScript.sql to create all the neccessary tables.
 -   **Dapper ORM**: Utilizes Dapper as the Object-Relational Mapping (ORM) tool to interact with the database.
 -   **Console UI**: The UI is implemented using Spectre.Console, enabling users to navigate via keyboard.
 -   **Flashcard Stacks**: Create and manage stacks of flashcards.
