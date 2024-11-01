@@ -1,7 +1,4 @@
-using System.Data.Common;
-using System.Formats.Asn1;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.CompilerServices;
+
 using Spectre.Console;
 public static class Menu
 {
@@ -141,7 +138,7 @@ public static class Menu
                     {
                         foreach (Flashcard flashcard in studyFlashcards)
                         {
-                            Console.WriteLine(flashcard.front);
+                            Console.WriteLine(flashcard.Front);
                             Console.WriteLine("Input your answer or press 0 to exit.");
                             answer = Console.ReadLine();
 
@@ -151,7 +148,7 @@ public static class Menu
                             }
 
                             // Check answer
-                            if (answer.ToLower().Equals(flashcard.back.ToLower()))
+                            if (answer.ToLower().Equals(flashcard.Back.ToLower()))
                             {
                                 Console.WriteLine("Correct!");
                                 score++;
@@ -165,7 +162,7 @@ public static class Menu
 
                         // Add study session
                     }
-                    StudyContentController.newStudySession(selectedStack, dateTime, score);
+                    StudyContentController.NewStudySession(selectedStack, dateTime, score);
 
                     // Create new study session with date.
 
@@ -199,7 +196,7 @@ public static class Menu
 
         foreach (Flashcard flashcard in flashcards)
         {
-            table.AddRow(id.ToString(), flashcard.front, flashcard.back);
+            table.AddRow(id.ToString(), flashcard.Front, flashcard.Back);
             id++;
         }
 
@@ -216,7 +213,7 @@ public static class Menu
 
         foreach (StudySession session in studySessions)
         {
-            table.AddRow(session.stack, session.date.ToString(), session.score.ToString());
+            table.AddRow(session.Stack, session.Date.ToString(), session.Score.ToString());
         }
 
         AnsiConsole.Write(table);
@@ -229,7 +226,7 @@ public static class Menu
         table.AddColumn("Stacks");
 
         foreach (Stack stack in stacks) {
-            table.AddRow(stack.name);
+            table.AddRow(stack.Name);
         }
 
         AnsiConsole.Write(table);

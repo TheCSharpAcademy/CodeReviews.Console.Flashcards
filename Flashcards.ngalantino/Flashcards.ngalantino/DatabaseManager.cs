@@ -1,6 +1,4 @@
 using System.Data.SqlClient;
-using System.Configuration;
-using System.Data.Common;
 internal class DatabaseManager
 {
     internal DatabaseManager()
@@ -12,7 +10,7 @@ internal class DatabaseManager
     {
         List<Flashcard> flashcards = new List<Flashcard>();
 
-        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection")))
+        using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.AppSettings.Get("dbConnection")))
         {
             connection.Open();
 
@@ -28,10 +26,10 @@ internal class DatabaseManager
                 {
                     Flashcard flashcard = new Flashcard
                     {
-                        id = reader.GetInt32(0),
-                        stack = reader.GetString(1),
-                        front = reader.GetString(2),
-                        back = reader.GetString(3)
+                        Id = reader.GetInt32(0),
+                        Stack = reader.GetString(1),
+                        Front = reader.GetString(2),
+                        Back = reader.GetString(3)
                     };
 
                     flashcards.Add(flashcard);
@@ -45,10 +43,10 @@ internal class DatabaseManager
                 {
                     Flashcard flashcard = new Flashcard
                     {
-                        id = reader.GetInt32(0),
-                        stack = reader.GetString(1),
-                        front = reader.GetString(2),
-                        back = reader.GetString(3)
+                        Id = reader.GetInt32(0),
+                        Stack = reader.GetString(1),
+                        Front = reader.GetString(2),
+                        Back = reader.GetString(3)
                     };
 
                     flashcards.Add(flashcard);
@@ -64,7 +62,7 @@ internal class DatabaseManager
     public List<Stack> GetStacks()
     {
         List<Stack> stacks = new List<Stack>();
-        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection")))
+        using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.AppSettings.Get("dbConnection")))
         {
             connection.Open();
 
@@ -78,7 +76,7 @@ internal class DatabaseManager
             {
                 Stack stack = new Stack
                 {
-                    name = reader.GetString(0)
+                    Name = reader.GetString(0)
                 };
                 stacks.Add(stack);
             }
@@ -90,7 +88,7 @@ internal class DatabaseManager
 
     public void NewStack(String name)
     {
-        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection")))
+        using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.AppSettings.Get("dbConnection")))
         {
             connection.Open();
 
@@ -98,13 +96,13 @@ internal class DatabaseManager
 
             SqlCommand command = new SqlCommand(sql, connection);
 
-            Int32 recordsAffected = command.ExecuteNonQuery();
+            command.ExecuteNonQuery();
         }
     }
 
     public void DeleteStack(String stack)
     {
-        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection")))
+        using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.AppSettings.Get("dbConnection")))
         {
             connection.Open();
 
@@ -112,62 +110,62 @@ internal class DatabaseManager
 
             SqlCommand command = new SqlCommand(sql, connection);
 
-            Int32 recordsAffected = command.ExecuteNonQuery();
+            command.ExecuteNonQuery();
         }
     }
 
     public void AddFlashcard(Flashcard flashcard)
     {
-        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection")))
+        using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.AppSettings.Get("dbConnection")))
         {
 
             connection.Open();
 
-            string sql = $"INSERT INTO flashcards (stack, front, back) VALUES('{flashcard.stack}', '{flashcard.front}', '{flashcard.back}')";
+            string sql = $"INSERT INTO flashcards (stack, front, back) VALUES('{flashcard.Stack}', '{flashcard.Front}', '{flashcard.Back}')";
 
             SqlCommand command = new SqlCommand(sql, connection);
 
-            Int32 recordsAffected = command.ExecuteNonQuery();
+            command.ExecuteNonQuery();
 
         }
     }
 
     public void EditFlashcard(Flashcard flashcard)
     {
-        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection")))
+        using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.AppSettings.Get("dbConnection")))
         {
 
             connection.Open();
 
             string sql = @$"UPDATE flashcards
-                            SET front = '{flashcard.front}', back = '{flashcard.back}'
-                            WHERE id = '{flashcard.id}'";
+                            SET front = '{flashcard.Front}', back = '{flashcard.Back}'
+                            WHERE id = '{flashcard.Id}'";
 
             SqlCommand command = new SqlCommand(sql, connection);
 
-            Int32 recordsAffected = command.ExecuteNonQuery();
+            command.ExecuteNonQuery();
 
         }
     }
 
     public void DeleteFlashcard(Flashcard flashcard)
     {
-        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection")))
+        using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.AppSettings.Get("dbConnection")))
         {
             connection.Open();
 
-            string sql = $"DELETE FROM flashcards WHERE id='{flashcard.id}'";
+            string sql = $"DELETE FROM flashcards WHERE id='{flashcard.Id}'";
 
             SqlCommand command = new SqlCommand(sql, connection);
 
-            Int32 recordsAffected = command.ExecuteNonQuery();
+            command.ExecuteNonQuery();
         }
     }
 
     public void AddStudySession(String stack, DateTime date, int score)
     {
 
-        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection")))
+        using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.AppSettings.Get("dbConnection")))
         {
 
             connection.Open();
@@ -176,13 +174,13 @@ internal class DatabaseManager
 
             SqlCommand command = new SqlCommand(sql, connection);
 
-            Int32 recordsAffected = command.ExecuteNonQuery();
+            command.ExecuteNonQuery();
         }
     }
 
     public List<StudySession> GetStudySessions()
     {
-        using (SqlConnection connection = new SqlConnection(ConfigurationManager.AppSettings.Get("dbConnection")))
+        using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.AppSettings.Get("dbConnection")))
         {
 
             List<StudySession> studySessions = new List<StudySession>();
@@ -199,9 +197,9 @@ internal class DatabaseManager
             {
                 StudySession session = new StudySession
                 {
-                    stack = reader.GetString(1),
-                    date = reader.GetDateTime(2),
-                    score = reader.GetInt32(3)
+                    Stack = reader.GetString(1),
+                    Date = reader.GetDateTime(2),
+                    Score = reader.GetInt32(3)
 
                 };
 

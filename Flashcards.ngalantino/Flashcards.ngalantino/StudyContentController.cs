@@ -1,7 +1,3 @@
-using System.Configuration;
-using System.Data.SqlClient;
-using System.IO.Compression;
-using System.Linq.Expressions;
 using Spectre.Console;
 
 public static class StudyContentController
@@ -14,7 +10,7 @@ public static class StudyContentController
         // Build the prompt
         foreach (Stack stack in db.GetStacks())
         {
-            prompt.AddChoice(stack.name);
+            prompt.AddChoice(stack.Name);
         }
         // Display the prompt
         Console.WriteLine("Select a stack:");
@@ -25,8 +21,6 @@ public static class StudyContentController
 
     public static string ManageStacks()
     {
-
-        SelectionPrompt<string> prompt2 = new SelectionPrompt<string>();
 
         string mainMenuChoice = AnsiConsole.Prompt(new SelectionPrompt<string>()
         .Title($"Current working stack: {Menu.selectedStack}")
@@ -80,7 +74,7 @@ public static class StudyContentController
     }
     public static void CreateFlashcard()
     {
-        if (!isStackSelected())
+        if (!IsStackSelected())
         {
             Console.WriteLine("Select a stack beforing adding a flashcard!");
             Menu.selectedStack = SelectStack();
@@ -90,13 +84,13 @@ public static class StudyContentController
 
         Console.WriteLine("Enter front of flashcard: ");
 
-        flashcard.front = Console.ReadLine();
+        flashcard.Front = Console.ReadLine();
 
         Console.WriteLine("Enter back of flashcard.");
 
-        flashcard.back = Console.ReadLine();
+        flashcard.Back = Console.ReadLine();
 
-        flashcard.stack = Menu.selectedStack;
+        flashcard.Stack = Menu.selectedStack;
 
 
         db.AddFlashcard(flashcard);
@@ -112,19 +106,19 @@ public static class StudyContentController
         Console.WriteLine("Enter Id of flashcard to be deleted: ");
         int id = Int32.Parse(Console.ReadLine()) - 1;
 
-        flashcard.id = flashcards[id].id;
+        flashcard.Id = flashcards[id].Id;
 
         db.DeleteFlashcard(flashcard);
     }
 
-    public static bool isStackSelected()
+    public static bool IsStackSelected()
     {
         return !(Menu.selectedStack == "No stack selected");
     }
 
     public static void EditFlashcard()
     {
-        if (!isStackSelected())
+        if (!IsStackSelected())
         {
             Console.WriteLine("Select a stack beforing updating a flashcard!");
             Menu.selectedStack = SelectStack();
@@ -137,23 +131,23 @@ public static class StudyContentController
         Console.WriteLine("Enter Id of flashcard to be updated: ");
         int id = Int32.Parse(Console.ReadLine()) - 1;
 
-        flashcard.id = flashcards[id].id;
+        flashcard.Id = flashcards[id].Id;
 
         Console.WriteLine("Enter front of flashcard: ");
 
-        flashcard.front = Console.ReadLine();
+        flashcard.Front = Console.ReadLine();
 
         Console.WriteLine("Enter back of flashcard.");
 
-        flashcard.back = Console.ReadLine();
+        flashcard.Back = Console.ReadLine();
 
-        flashcard.stack = Menu.selectedStack;
+        flashcard.Stack = Menu.selectedStack;
 
 
         db.EditFlashcard(flashcard);
     }
 
-    public static void newStudySession(String stack, DateTime date, int score)
+    public static void NewStudySession(String stack, DateTime date, int score)
     {
 
         db.AddStudySession(stack, date, score);
@@ -179,7 +173,7 @@ public static class StudyContentController
             // Make sure stack name is unique
             foreach (Stack stack in GetStacks())
             {
-                if (stack.name == stackName)
+                if (stack.Name == stackName)
                 {
                     Console.WriteLine("Another stack with this name already exists!");
                     loop = true;

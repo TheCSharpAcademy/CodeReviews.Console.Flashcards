@@ -1,4 +1,4 @@
 public class Stack {
-    public string name { get; set; }
+    public string Name { get; set; }
     
 }

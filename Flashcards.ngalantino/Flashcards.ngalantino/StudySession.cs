@@ -1,5 +1,5 @@
 public class StudySession {
-    public string stack { get; set; }
-    public DateTime date { get; set; }
-    public int score { get; set; }
+    public string Stack { get; set; }
+    public DateTime Date { get; set; }
+    public int Score { get; set; }
 }
