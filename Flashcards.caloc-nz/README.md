@@ -12,6 +12,7 @@ Framework Core to handle data management, enabling users to manage flashcards,
 conduct study sessions, and review their study progress.
 
 ## Given Requirements
+
 - [x] The application organizes flashcards into named stacks.
 - [x] Each stack has a unique name, and deleting a stack deletes all associated
   flashcards and study sessions.
@@ -98,6 +99,7 @@ conduct study sessions, and review their study progress.
   or backup.
 
 ## Resources Used
+
 - Entity Framework Core documentation
 - Spectre.Console documentation
 - [StackOverflow articles](https://stackoverflow.com/) and community
