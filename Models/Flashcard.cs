@@ -10,7 +10,7 @@ public class Flashcard
     public string Front { get; set; }
     public string Back { get; set; }
 
-    public int StackId { get; set; }
+    public int CardStackId { get; set; }
 
     public CardStack CardStack { get; set; }
 }
