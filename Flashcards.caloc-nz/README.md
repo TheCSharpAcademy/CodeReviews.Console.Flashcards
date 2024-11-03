@@ -4,7 +4,7 @@ I have spent countless hours on this project over the last 6 months. I have
 started and restarted this project, spent hours online researching each and
 every bit, and finally got help from a C# Dev who is now mentoring me on
 improving my skills and best practices. This is by no means a perfect final
-solution, but I bellieve it is functional and meets the project requirements.
+solution, but I believe it is functional and meets the project requirements.
 
 A console-based application for organizing and studying flashcards in
 structured stacks. This project leverages C# with SQL Server and Entity
