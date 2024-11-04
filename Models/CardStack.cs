@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Flashcards.TwilightSaw.Domain;
+namespace Flashcards.TwilightSaw.Models;
 
 public class CardStack
 {
@@ -13,5 +13,10 @@ public class CardStack
     public CardStack(string Name)
     {
         this.Name = Name;
+    }
+
+    public override string ToString()
+    {
+        return Name;
     }
 }

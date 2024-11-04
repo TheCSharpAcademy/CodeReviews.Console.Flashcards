@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Flashcards.TwilightSaw.Domain;
+namespace Flashcards.TwilightSaw.Models;
 
 public class Flashcard
 {
@@ -13,4 +12,16 @@ public class Flashcard
     public int CardStackId { get; set; }
 
     public CardStack CardStack { get; set; }
+
+    public Flashcard(string front, string back, int cardStackId )
+    {
+        Front = front;
+        Back = back;
+        CardStackId = cardStackId;
+    }
+
+    public override string ToString()
+    {
+        return $@"{Front} {Back}";
+    }
 }

@@ -1,13 +1,14 @@
-﻿using Flashcards.TwilightSaw.Domain;
+﻿using Flashcards.TwilightSaw.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Flashcards.TwilightSaw.Controller;
 
 public class AppDbContext : DbContext
 {
-    private DbSet<CardStack> CardStacks { get; set; }
-    private DbSet<Flashcard> Flashcards { get; set; }
+    public DbSet<CardStack> CardStacks { get; set; }
+    public DbSet<Flashcard> Flashcards { get; set; }
 
     private readonly IConfiguration _configuration;
 
@@ -19,7 +20,7 @@ public class AppDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var connectionString = _configuration.GetConnectionString("DefaultConnection");
-        optionsBuilder.UseSqlServer(connectionString);
+        optionsBuilder.UseSqlServer(connectionString).LogTo(Console.WriteLine, LogLevel.Warning);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
