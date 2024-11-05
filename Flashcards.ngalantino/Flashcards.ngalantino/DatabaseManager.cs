@@ -3,7 +3,22 @@ internal class DatabaseManager
 {
     internal DatabaseManager()
     {
+        using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.AppSettings.Get("dbConnection"))) {
+            connection.Open();
 
+            String sql = @"IF NOT EXISTS (SELECT * FROM sysobjects where name='flashcards' and xtype='U')
+                            CREATE TABLE flashcards (
+                            id int NOT NULL PRIMARY KEY,
+                            stack nvarchar(50),
+                            front nvarchar(MAX),
+                            back nvarchar(MAX)
+                        )";
+
+            SqlCommand command = new SqlCommand(sql, connection);
+
+            command.ExecuteNonQuery();
+
+        }
     }
 
     public List<Flashcard> GetFlashcards(String stack, int numFlashcards = 0)
