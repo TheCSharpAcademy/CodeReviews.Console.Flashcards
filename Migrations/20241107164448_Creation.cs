@@ -5,7 +5,7 @@
 namespace Flashcards.TwilightSaw.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Creation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,23 +31,23 @@ namespace Flashcards.TwilightSaw.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Front = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Back = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StackId = table.Column<int>(type: "int", nullable: false)
+                    CardStackId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Flashcards", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Flashcards_CardStacks_StackId",
-                        column: x => x.StackId,
+                        name: "FK_Flashcards_CardStacks_CardStackId",
+                        column: x => x.CardStackId,
                         principalTable: "CardStacks",
                         principalColumn: "CardStackId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Flashcards_StackId",
+                name: "IX_Flashcards_CardStackId",
                 table: "Flashcards",
-                column: "StackId");
+                column: "CardStackId");
         }
 
         /// <inheritdoc />

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Flashcards.TwilightSaw.Controller
 {
@@ -21,5 +22,12 @@ namespace Flashcards.TwilightSaw.Controller
         {
            return _context.Flashcards.Where(t => t.CardStackId == cardStackId).ToList();
         }
+
+        public void Delete(int flashcardId, int chosenStackCardStackId)
+        {
+            _context.Flashcards.Where(flashcard => flashcard.CardStackId == chosenStackCardStackId && flashcard.Id == flashcardId).ExecuteDelete();
+        }
+
+       
     }
 }

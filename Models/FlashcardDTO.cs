@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Flashcards.TwilightSaw.Models
 {
-    internal class FlashcardDTO
+    public class FlashcardDTO
     {
         public int Id { get; set; }
         public string Front { get; set; }

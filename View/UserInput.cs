@@ -53,5 +53,27 @@ namespace Flashcards.TwilightSaw.View
                         .AddChoices(stack));
                 return input;
             }
+
+            public static Flashcard ChooseFlashcard(List<Flashcard> flashcards)
+            {
+                var input = AnsiConsole.Prompt(
+                    new SelectionPrompt<Flashcard>()
+                        .Title("[blue]Please, choose an option from the list below:[/]")
+                        .PageSize(10)
+                        .MoreChoicesText("[grey](Move up and down to reveal more categories[/]")
+                        .AddChoices(flashcards));
+                return input;
+            }
+
+        public static string CreateChoosingList(string[] variants)
+            {
+            var select = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[blue]Please, choose an option from the list below:[/]")
+                    .PageSize(10)
+                    .MoreChoicesText("[grey](Move up and down to reveal more categories[/]")
+                    .AddChoices(variants));
+            return select;
+            }
     }
 }

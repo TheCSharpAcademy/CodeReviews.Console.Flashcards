@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flashcards.TwilightSaw.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241102180703_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241107164448_Creation")]
+    partial class Creation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace Flashcards.TwilightSaw.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Flashcards.TwilightSaw.Domain.CardStack", b =>
+            modelBuilder.Entity("Flashcards.TwilightSaw.Models.CardStack", b =>
                 {
                     b.Property<int>("CardStackId")
                         .ValueGeneratedOnAdd()
@@ -41,7 +41,7 @@ namespace Flashcards.TwilightSaw.Migrations
                     b.ToTable("CardStacks");
                 });
 
-            modelBuilder.Entity("Flashcards.TwilightSaw.Domain.Flashcard", b =>
+            modelBuilder.Entity("Flashcards.TwilightSaw.Models.Flashcard", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -53,32 +53,32 @@ namespace Flashcards.TwilightSaw.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("CardStackId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Front")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StackId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("StackId");
+                    b.HasIndex("CardStackId");
 
                     b.ToTable("Flashcards");
                 });
 
-            modelBuilder.Entity("Flashcards.TwilightSaw.Domain.Flashcard", b =>
+            modelBuilder.Entity("Flashcards.TwilightSaw.Models.Flashcard", b =>
                 {
-                    b.HasOne("Flashcards.TwilightSaw.Domain.CardStack", "CardStack")
+                    b.HasOne("Flashcards.TwilightSaw.Models.CardStack", "CardStack")
                         .WithMany("Flashcards")
-                        .HasForeignKey("StackId")
+                        .HasForeignKey("CardStackId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("CardStack");
                 });
 
-            modelBuilder.Entity("Flashcards.TwilightSaw.Domain.CardStack", b =>
+            modelBuilder.Entity("Flashcards.TwilightSaw.Models.CardStack", b =>
                 {
                     b.Navigation("Flashcards");
                 });

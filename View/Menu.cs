@@ -1,6 +1,5 @@
 ﻿using Flashcards.TwilightSaw.Controller;
 using Spectre.Console;
-using System.Linq.Expressions;
 
 namespace Flashcards.TwilightSaw.View;
 
@@ -13,25 +12,15 @@ internal class Menu
         var endSession = false;
         while (!endSession)
         {
-            var input = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                    .Title("[blue]Please, choose an option from the list below:[/]")
-                    .PageSize(10)
-                    .MoreChoicesText("[grey](Move up and down to reveal more categories[/]")
-                    .AddChoices("Manage Stacks",
-                        "Study", "View Study Session Data", "Exit"));
+            var input = UserInput.CreateChoosingList(["Manage Stacks",
+                "Study", "View Study Session Data", "Exit"]);
             switch (input)
             {
                 case "Manage Stacks":
                     var endManage = false;
                     while (!endManage)
                     {
-                        var inputStacks = AnsiConsole.Prompt(
-                            new SelectionPrompt<string>()
-                                .Title("[blue]Please, choose an option from the list below:[/]")
-                                .PageSize(10)
-                                .MoreChoicesText("[grey](Move up and down to reveal more categories[/]")
-                                .AddChoices("Choose a Stack", "Create a new Stack", "Return"));
+                        var inputStacks = UserInput.CreateChoosingList(["Choose a Stack", "Create a new Stack", "Return"]);
                         switch (inputStacks)
                         {
                             case "Create a new Stack":
@@ -44,17 +33,15 @@ internal class Menu
                                 var endStack = false;
                                 while (!endStack)
                                 {
-                                    var inputCreateStacks = AnsiConsole.Prompt(
-                                        new SelectionPrompt<string>()
-                                            .Title("[blue]Please, choose an option from the list below:[/]")
-                                            .PageSize(10)
-                                            .MoreChoicesText("[grey](Move up and down to reveal more categories[/]")
-                                            .AddChoices("Create a Flashcard in the Stack",
-                                                "View all Flashcards in the Stack", "Delete a Flashcard in the Stack",
-                                                "Return"));
+                                    var inputCreateStacks = UserInput.CreateChoosingList([
+                                        "Create a Flashcard in the Stack",
+                                        "View all Flashcards in the Stack", "Delete a Flashcard in the Stack",
+                                        "Return"
+                                    ]);
                                     switch (inputCreateStacks)
                                     {
                                         case "Create a Flashcard in the Stack":
+                                            //REGEX? 
                                             var frontSideInput = UserInput.Create("Name the front side of your Flashcard: ");
                                             var backSideInput = UserInput.Create("Name the back side of your Flashcard: ");
                                             flashcardController.Create(frontSideInput, backSideInput, chosenStack.CardStackId);
@@ -69,27 +56,34 @@ internal class Menu
                                                     .AddColumn("Front")
                                                     .AddColumn("Back")
                                                     .Centered();
-                                                foreach (var flashcard in flashcardController.Read(chosenStack
-                                                             .CardStackId))
-                                                    table.AddRow(@$"{flashcard.Id}", $"{flashcard.Front}",
-                                                        $"{flashcard.Back}");
+                                                var read = flashcardController.Read(chosenStack
+                                                             .CardStackId);
+                                                for (var index = 0; index < read.Count; index++)
+                                                {
+                                                    var flashcard = read[index];
+                                                    table.AddRow(@$"{index+1}",
+                                                        $"{FlashcardMapper.ConvertToDto(flashcard).Front}",
+                                                        $"{FlashcardMapper.ConvertToDto(flashcard).Back}");
+                                                }
+
                                                 AnsiConsole.Write(table);
 
-                                                var inputView = AnsiConsole.Prompt(
-                                                    new SelectionPrompt<string>()
-                                                        .Title("[blue]Please, choose an option from the list below:[/]")
-                                                        .PageSize(10)
-                                                        .MoreChoicesText("[grey](Move up and down to reveal more categories[/]")
-                                                        .AddChoices("Return"));
+                                                var inputView = UserInput.CreateChoosingList(["Return"]);
                                                 switch (inputView)
                                                 {
                                                     case "Return":
                                                         endRead = false;
                                                         break;
                                                 }
-
                                                 Console.Clear();
                                             }
+                                            break;
+                                        case "Delete a Flashcard in the Stack":
+                                            //FIX
+                                            var inputDelete = UserInput.ChooseFlashcard(flashcardController.Read(chosenStack.CardStackId));
+                                            AnsiConsole.Write(Validation.Validate(() => UserInput.ChooseFlashcard(flashcardController.Read(chosenStack.CardStackId))),
+                                                new Style(Color.LightCyan1));
+                                          flashcardController.Delete(inputDelete.Id, chosenStack.CardStackId);
                                             break;
                                         case "Return":
                                             endStack = true;
