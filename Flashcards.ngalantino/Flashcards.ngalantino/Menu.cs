@@ -1,3 +1,4 @@
+using System.Data.Common;
 using Spectre.Console;
 public static class Menu
 {
@@ -123,6 +124,14 @@ public static class Menu
                     {
                         selectedStack = StudyContentController.SelectStack();
                         Console.Clear();
+                    }
+
+                    // If selected stack has no flashcards, instruct user to add flashcards first.
+                    if (StudyContentController.GetFlashcardsInStack().Count == 0) {
+                        Console.WriteLine("No flashcards in stack!");
+                        Console.WriteLine("Press enter to continue.");
+                        Console.ReadLine();
+                        break;
                     }
 
 

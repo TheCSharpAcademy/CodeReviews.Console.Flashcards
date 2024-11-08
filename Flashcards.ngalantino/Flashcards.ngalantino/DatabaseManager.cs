@@ -3,18 +3,59 @@ internal class DatabaseManager
 {
     internal DatabaseManager()
     {
-        using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.AppSettings.Get("dbConnection"))) {
+        using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.AppSettings.Get("dbConnection")))
+        {
             connection.Open();
 
-            String sql = @"IF NOT EXISTS (SELECT * FROM sysobjects where name='flashcards' and xtype='U')
-                            CREATE TABLE flashcards (
-                            id int NOT NULL PRIMARY KEY,
-                            stack nvarchar(50),
-                            front nvarchar(MAX),
-                            back nvarchar(MAX)
-                        )";
+            // Create database if not exists.
+            String sql = @"IF NOT EXISTS (SELECT * FROM sys.databases WHERE name='flashcardstest')
+                                CREATE DATABASE flashcardstest";
 
             SqlCommand command = new SqlCommand(sql, connection);
+
+            command.ExecuteNonQuery();
+
+            // Create stacks table if not exists.
+            sql = @"IF OBJECT_ID(N'flashcardstest.dbo.stacks', 'U') IS NULL
+                        BEGIN
+                            CREATE TABLE flashcardstest.dbo.stacks (
+                                stack nvarchar(50) NOT NULL PRIMARY KEY
+                            )
+                        END";
+
+            command = new SqlCommand(sql, connection);
+
+            command.ExecuteNonQuery();
+
+            // Create flashcards table if not exists.
+            sql = @"IF OBJECT_ID(N'flashcardstest.dbo.flashcards', 'U') IS NULL
+                        BEGIN
+                            CREATE TABLE flashcardstest.dbo.flashcards (
+                            id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
+                            stack nvarchar(50),
+                            front nvarchar(MAX),
+                            back nvarchar(MAX),
+                            constraint FK_flashcards_stacks FOREIGN KEY (stack) references flashcardstest.dbo.stacks(stack) ON DELETE CASCADE,
+                        )
+                        END";
+
+            command = new SqlCommand(sql, connection);
+
+            command.ExecuteNonQuery();
+
+            // Create studysessions table if not exists.
+            sql = @"IF OBJECT_ID(N'flashcardstest.dbo.studysessions', 'U') IS NULL
+                        BEGIN
+                            CREATE TABLE flashcardstest.dbo.studysessions (
+                            id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
+                            stack nvarchar(50),
+                            date datetime,
+                            score int,
+                            constraint FK_study_sessions_stacks FOREIGN KEY (stack) references flashcardstest.dbo.stacks(stack) ON DELETE CASCADE,
+                        )
+                        END";
+
+            command = new SqlCommand(sql, connection);
 
             command.ExecuteNonQuery();
 
@@ -29,7 +70,7 @@ internal class DatabaseManager
         {
             connection.Open();
 
-            String sql = $"SELECT * FROM flashcards WHERE stack='{stack}'";
+            String sql = $"SELECT * FROM flashcardstest.dbo.flashcards WHERE stack='{stack}'";
 
             SqlCommand command = new SqlCommand(sql, connection);
 
@@ -81,7 +122,7 @@ internal class DatabaseManager
         {
             connection.Open();
 
-            String sql = $"SELECT * FROM stacks";
+            String sql = $"SELECT * FROM flashcardstest.dbo.stacks";
 
             SqlCommand command = new SqlCommand(sql, connection);
 
@@ -107,7 +148,7 @@ internal class DatabaseManager
         {
             connection.Open();
 
-            string sql = $"INSERT INTO stacks (stack) VALUES ('{name}')";
+            string sql = $"INSERT INTO flashcardstest.dbo.stacks (stack) VALUES ('{name}')";
 
             SqlCommand command = new SqlCommand(sql, connection);
 
@@ -121,7 +162,7 @@ internal class DatabaseManager
         {
             connection.Open();
 
-            string sql = $"DELETE FROM stacks WHERE stack='{stack}'";
+            string sql = $"DELETE FROM flashcardstest.dbo.stacks WHERE stack='{stack}'";
 
             SqlCommand command = new SqlCommand(sql, connection);
 
@@ -136,7 +177,7 @@ internal class DatabaseManager
 
             connection.Open();
 
-            string sql = $"INSERT INTO flashcards (stack, front, back) VALUES('{flashcard.Stack}', '{flashcard.Front}', '{flashcard.Back}')";
+            string sql = $"INSERT INTO flashcardstest.dbo.flashcards (stack, front, back) VALUES('{flashcard.Stack}', '{flashcard.Front}', '{flashcard.Back}')";
 
             SqlCommand command = new SqlCommand(sql, connection);
 
@@ -152,7 +193,7 @@ internal class DatabaseManager
 
             connection.Open();
 
-            string sql = @$"UPDATE flashcards
+            string sql = @$"UPDATE flashcardstest.dbo.flashcards
                             SET front = '{flashcard.Front}', back = '{flashcard.Back}'
                             WHERE id = '{flashcard.Id}'";
 
@@ -169,7 +210,7 @@ internal class DatabaseManager
         {
             connection.Open();
 
-            string sql = $"DELETE FROM flashcards WHERE id='{flashcard.Id}'";
+            string sql = $"DELETE FROM flashcardstest.dbo.flashcards WHERE id='{flashcard.Id}'";
 
             SqlCommand command = new SqlCommand(sql, connection);
 
@@ -185,7 +226,7 @@ internal class DatabaseManager
 
             connection.Open();
 
-            string sql = $"INSERT INTO studysessions (stack, date, score) VALUES ('{stack}', '{date}', '{score}')";
+            string sql = $"INSERT INTO flashcardstest.dbo.studysessions (stack, date, score) VALUES ('{stack}', '{date}', '{score}')";
 
             SqlCommand command = new SqlCommand(sql, connection);
 
@@ -202,7 +243,7 @@ internal class DatabaseManager
 
             connection.Open();
 
-            string sql = "SELECT * FROM studysessions";
+            string sql = "SELECT * FROM flashcardstest.dbo.studysessions";
 
             SqlCommand command = new SqlCommand(sql, connection);
 

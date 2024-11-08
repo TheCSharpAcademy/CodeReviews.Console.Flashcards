@@ -6,15 +6,59 @@ public static class StudyContentController
     public static string SelectStack()
     {
         SelectionPrompt<string> prompt = new SelectionPrompt<string>();
+        String menuChoice = "";
+        const String createStack = "Create a new stack";
 
+        if (db.GetStacks().Count == 0)
+        {
+            Console.WriteLine("You don't have any saved stacks. Would you like to add a stack?");
+            SelectionPrompt<string> prompt2 = new SelectionPrompt<string>();
+            prompt2.AddChoice("Yes");
+            prompt2.AddChoice("No");
+
+            menuChoice = AnsiConsole.Prompt(prompt2);
+
+            if (menuChoice == "No")
+            {
+                return "No stack selected";
+            }
+            else
+            {
+                Console.Clear();
+                NewStack();
+                Console.Clear();
+            }
+        }
         // Build the prompt
+        prompt.AddChoice(createStack);
+
         foreach (Stack stack in db.GetStacks())
         {
             prompt.AddChoice(stack.Name);
         }
         // Display the prompt
         Console.WriteLine("Select a stack:");
-        string menuChoice = AnsiConsole.Prompt(prompt);
+
+        try
+        {
+            menuChoice = AnsiConsole.Prompt(prompt);
+        }
+        catch (InvalidOperationException e)
+        {
+            Console.WriteLine(e.Message);
+            Console.WriteLine("Press enter to continue...");
+            Console.ReadLine();
+        }
+        finally
+        {
+            Console.Clear();
+        }
+
+        if (menuChoice == createStack)
+        {
+            NewStack();
+            return menuChoice = "No stack selected";
+        }
 
         return menuChoice;
     }
@@ -76,17 +120,57 @@ public static class StudyContentController
         {
             Console.WriteLine("Select a stack beforing adding a flashcard!");
             Menu.selectedStack = SelectStack();
+            if (Menu.selectedStack == "No stack selected")
+            {
+                Console.Clear();
+                return;
+            }
         }
 
         Flashcard flashcard = new Flashcard();
+        bool validEntry = false;
 
-        Console.WriteLine("Enter front of flashcard: ");
+        while (!validEntry)
+        {
+            Console.WriteLine("Enter front of flashcard: ");
 
-        flashcard.Front = Console.ReadLine();
+            flashcard.Front = Console.ReadLine();
 
-        Console.WriteLine("Enter back of flashcard.");
+            Console.Clear();
 
-        flashcard.Back = Console.ReadLine();
+            if (flashcard.Front.Trim() == "")
+            {
+                Console.WriteLine("Front of flashcard cannot be blank!");
+            }
+            else
+            {
+                validEntry = true;
+            }
+
+        }
+
+        Console.Clear();
+
+        validEntry = false;
+
+        while (!validEntry)
+        {
+            Console.WriteLine("Enter back of flashcard.");
+
+            flashcard.Back = Console.ReadLine();
+
+            Console.Clear();
+
+            if (flashcard.Back.Trim() == "")
+            {
+                Console.WriteLine("Back of flashcard cannot be blank!");
+            }
+            else
+            {
+                validEntry = true;
+            }
+
+        }
 
         flashcard.Stack = Menu.selectedStack;
 
@@ -101,10 +185,34 @@ public static class StudyContentController
         // Get flashcard to be deleted.
         List<Flashcard> flashcards = GetFlashcardsInStack();
 
-        Console.WriteLine("Enter Id of flashcard to be deleted: ");
-        int id = Int32.Parse(Console.ReadLine()) - 1;
+        Console.WriteLine("Enter Id of flashcard to be deleted (or enter 0 to cancel): ");
 
-        flashcard.Id = flashcards[id].Id;
+        int id = 0;
+
+        try
+        {
+            id = Int32.Parse(Console.ReadLine()) - 1;
+        }
+        catch (FormatException e)
+        {
+            Console.WriteLine("Invalid entry!");
+            DeleteFlashcard();
+        }
+
+        if (id + 1 == 0) {
+            Console.Clear();
+            return;
+        }
+
+        try
+        {
+            flashcard.Id = flashcards[id].Id;
+        }
+        catch (ArgumentOutOfRangeException e)
+        {
+            Console.WriteLine("Flashcard id " + (id + 1) + " does not exist!");
+            DeleteFlashcard();
+        }
 
         db.DeleteFlashcard(flashcard);
     }
@@ -129,7 +237,18 @@ public static class StudyContentController
         Console.WriteLine("Enter Id of flashcard to be updated: ");
         int id = Int32.Parse(Console.ReadLine()) - 1;
 
-        flashcard.Id = flashcards[id].Id;
+        try
+        {
+            flashcard.Id = flashcards[id].Id;
+        }
+        catch (ArgumentOutOfRangeException e)
+        {
+            Console.WriteLine("Invalid entry!");
+            Console.WriteLine("Press enter to continue");
+            Console.ReadLine();
+            Console.Clear();
+            return;
+        }
 
         Console.WriteLine("Enter front of flashcard: ");
 
@@ -168,6 +287,10 @@ public static class StudyContentController
 
             stackName = Console.ReadLine();
 
+            if (GetStacks().Count == 0)
+            {
+                loop = false;
+            }
             // Make sure stack name is unique
             foreach (Stack stack in GetStacks())
             {
@@ -177,7 +300,8 @@ public static class StudyContentController
                     loop = true;
                     break;
                 }
-                else {
+                else
+                {
                     loop = false;
                 }
             }
@@ -185,7 +309,12 @@ public static class StudyContentController
         db.NewStack(stackName);
     }
 
-    public static void DeleteStack(String stackToDelete) {
+    public static void DeleteStack(String stackToDelete)
+    {
+        if (stackToDelete == Menu.selectedStack)
+        {
+            Menu.selectedStack = "No stack selected";
+        }
         db.DeleteStack(stackToDelete);
     }
 }
