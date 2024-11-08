@@ -1,4 +1,5 @@
 ﻿using Flashcards.TwilightSaw.Controller;
+using Flashcards.TwilightSaw.Models;
 using Spectre.Console;
 
 namespace Flashcards.TwilightSaw.View;
@@ -35,7 +36,7 @@ internal class Menu
                                 {
                                     var inputCreateStacks = UserInput.CreateChoosingList([
                                         "Create a Flashcard in the Stack",
-                                        "View all Flashcards in the Stack", "Delete a Flashcard in the Stack",
+                                        "View all Flashcards in the Stack", "Edit a Flashcard in the Stack", "Delete a Flashcard in the Stack",
                                         "Return"
                                     ]);
                                     switch (inputCreateStacks)
@@ -50,7 +51,6 @@ internal class Menu
                                             var endRead = true;
                                             while (endRead)
                                             {
-                                                
                                                 var table = new Table();
                                                 table.AddColumn("Number")
                                                     .AddColumn("Front")
@@ -78,12 +78,30 @@ internal class Menu
                                                 Console.Clear();
                                             }
                                             break;
+                                        case "Edit a Flashcard in the Stack":
+                                            //Late validation
+                                            var inputUpdate = flashcardController.GetFlashcard(flashcardController, chosenStack);
+                                            var inputUpdateSide = UserInput.CreateChoosingList(["Front side", "Back side"]);
+                                            var newFlashcardSide = UserInput.Create(inputUpdateSide == "Front side" ? "Type your new Front Side" : "Type your new Back Side");
+                                            var executeUpdate = Validation.Validate(() => flashcardController.Update(inputUpdate.Id, chosenStack.CardStackId, (inputUpdateSide,newFlashcardSide)));
+                                            //Duplicate code
+                                            AnsiConsole.Markup($"[olive]{executeUpdate}[/]");
+                                            Console.ReadKey();
+                                            Console.Clear();
+                                            break;
                                         case "Delete a Flashcard in the Stack":
-                                            //FIX
-                                            var inputDelete = UserInput.ChooseFlashcard(flashcardController.Read(chosenStack.CardStackId));
-                                            AnsiConsole.Write(Validation.Validate(() => UserInput.ChooseFlashcard(flashcardController.Read(chosenStack.CardStackId))),
-                                                new Style(Color.LightCyan1));
-                                          flashcardController.Delete(inputDelete.Id, chosenStack.CardStackId);
+                                            var inputDelete = flashcardController.GetFlashcard(flashcardController, chosenStack);
+                                            var inputView1 = UserInput.CreateChoosingList(["Return"]);
+                                            switch (inputView1)
+                                            {
+                                                case "Return":
+                                                    endRead = false;
+                                                    break;
+                                            }
+                                            var executeDelete = Validation.Validate(() => flashcardController.Delete(inputDelete.Id, chosenStack.CardStackId));
+                                            AnsiConsole.Markup($"[olive]{executeDelete}[/]");
+                                            Console.ReadKey();
+                                            Console.Clear();
                                             break;
                                         case "Return":
                                             endStack = true;

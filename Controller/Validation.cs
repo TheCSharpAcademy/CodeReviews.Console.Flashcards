@@ -1,4 +1,6 @@
-﻿namespace Flashcards.TwilightSaw.Controller;
+﻿using Spectre.Console;
+
+namespace Flashcards.TwilightSaw.Controller;
 
 public static class Validation
 {
