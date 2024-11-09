@@ -51,22 +51,9 @@ internal class Menu
                                             var endRead = true;
                                             while (endRead)
                                             {
-                                                var table = new Table();
-                                                table.AddColumn("Number")
-                                                    .AddColumn("Front")
-                                                    .AddColumn("Back")
-                                                    .Centered();
-                                                var read = flashcardController.Read(chosenStack
+                                               var read = flashcardController.Read(chosenStack
                                                              .CardStackId);
-                                                for (var index = 0; index < read.Count; index++)
-                                                {
-                                                    var flashcard = read[index];
-                                                    table.AddRow(@$"{index+1}",
-                                                        $"{FlashcardMapper.ConvertToDto(flashcard).Front}",
-                                                        $"{FlashcardMapper.ConvertToDto(flashcard).Back}");
-                                                }
-
-                                                AnsiConsole.Write(table);
+                                               AnsiConsole.Write(UserInput.CreateFlashcardTable(read));
 
                                                 var inputView = UserInput.CreateChoosingList(["Return"]);
                                                 switch (inputView)
@@ -114,6 +101,24 @@ internal class Menu
                                 break;
                         }
                     }
+                    break;
+                case "Study":
+                    new StudyMenu(context, flashcardController).Menu(cardStackController);
+                    break;
+                case "View Study Session Data":
+                    var k = new StudyController(context).Read();
+                    var table = new Table();
+                    table.AddColumn("Date")
+                        .AddColumn("Score")
+                        .Centered();
+
+                    foreach (var session in k)
+                        table.AddRow(@$"{session.Date}",
+                            $"{session.Score}");
+
+                    AnsiConsole.Write(table);
+                    Console.ReadKey();
+                    Console.Clear();
                     break;
                 case "Exit":
                     endSession = true;

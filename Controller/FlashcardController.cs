@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Flashcards.TwilightSaw.View;
 using Spectre.Console;
 
 namespace Flashcards.TwilightSaw.Controller

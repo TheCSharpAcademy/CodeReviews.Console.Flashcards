@@ -9,6 +9,7 @@ public class CardStack
     public string Name { get; set; }
 
     public List<Flashcard> Flashcards { get; set; }
+    public List<StudySession> Sessions { get; set; }
 
     public CardStack(string Name)
     {
