@@ -185,24 +185,33 @@ public static class StudyContentController
         // Get flashcard to be deleted.
         List<Flashcard> flashcards = GetFlashcardsInStack();
 
-        Console.WriteLine("Enter Id of flashcard to be deleted (or enter 0 to cancel): ");
+
 
         int id = 0;
-
-        try
+        Boolean validEntry = false;
+        while (!validEntry)
         {
-            id = Int32.Parse(Console.ReadLine()) - 1;
-        }
-        catch (FormatException e)
-        {
-            Console.WriteLine("Invalid entry!");
-            DeleteFlashcard();
+            try
+            {
+                Menu.DisplayTable(GetFlashcardsInStack());
+                Console.WriteLine("Enter Id of flashcard to be deleted (or enter 0 to cancel): ");
+                id = Int32.Parse(Console.ReadLine()) - 1;
+
+                if (id + 1 == 0)
+                {
+                    Console.Clear();
+                    return;
+                }
+                validEntry = true;
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine("Invalid entry!");
+                DeleteFlashcard();
+            }
         }
 
-        if (id + 1 == 0) {
-            Console.Clear();
-            return;
-        }
+
 
         try
         {
@@ -234,20 +243,34 @@ public static class StudyContentController
 
         List<Flashcard> flashcards = GetFlashcardsInStack();
 
-        Console.WriteLine("Enter Id of flashcard to be updated: ");
-        int id = Int32.Parse(Console.ReadLine()) - 1;
+        int id = 0;
 
-        try
+        Boolean validEntry = false;
+
+        while (!validEntry)
         {
-            flashcard.Id = flashcards[id].Id;
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            Console.WriteLine("Invalid entry!");
-            Console.WriteLine("Press enter to continue");
-            Console.ReadLine();
-            Console.Clear();
-            return;
+            try
+            {
+                Menu.DisplayTable(GetFlashcardsInStack());
+                Console.WriteLine("Enter Id of flashcard to be updated (or enter 0 to cancel): ");
+                id = Int32.Parse(Console.ReadLine()) - 1;
+
+                if (id + 1 == 0)
+                {
+                    Console.Clear();
+                    return;
+                }
+
+                flashcard.Id = flashcards[id].Id;
+                validEntry = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Invalid entry!");
+                Console.WriteLine("Press enter to continue");
+                Console.ReadLine();
+                Console.Clear();
+            }
         }
 
         Console.WriteLine("Enter front of flashcard: ");

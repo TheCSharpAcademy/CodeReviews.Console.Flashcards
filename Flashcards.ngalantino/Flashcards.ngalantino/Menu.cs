@@ -104,6 +104,7 @@ public static class Menu
                                 break;
 
                             case "Edit a flashcard":
+                                
                                 StudyContentController.EditFlashcard();
                                 break;
 
@@ -172,13 +173,6 @@ public static class Menu
                     }
                     StudyContentController.NewStudySession(selectedStack, dateTime, score);
 
-                    // Create new study session with date.
-
-                    // Iterate over stack
-                    // Show front of card
-                    // Get answer
-                    // Keep track of score
-                    // Insert score date and score into study session table.
                     break;
 
                 case "view study session data":
