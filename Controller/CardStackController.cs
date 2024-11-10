@@ -1,29 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Flashcards.TwilightSaw.Models;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+﻿using Flashcards.TwilightSaw.Models;
+using Microsoft.EntityFrameworkCore;
+using Spectre.Console;
 
 namespace Flashcards.TwilightSaw.Controller
 {
-    internal class CardStackController(AppDbContext context)
+    public class CardStackController(AppDbContext context)
     {
-        private readonly AppDbContext _context = context;
-
         public void Create(string name)
         {
-            _context.Add(new CardStack(name));
-            _context.SaveChanges();
+            context.Add(new CardStack(name));
+            AnsiConsole.Markup($"[red]{Validation.Validate(() => context.SaveChanges())}[/]");
+            Console.ReadKey();
         }
 
         public List<CardStack> Read()
         {
-            return _context.CardStacks.ToList();
+            return context.CardStacks.ToList();
         }
 
-        
+        public void Delete(CardStack inputStackDelete)
+        {
+            context.CardStacks.Where(s => s.Equals(inputStackDelete)).ExecuteDelete();
+            context.SaveChanges();
+        }
     }
 }

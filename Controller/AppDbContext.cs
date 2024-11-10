@@ -21,7 +21,7 @@ public class AppDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var connectionString = _configuration.GetConnectionString("DefaultConnection");
-        optionsBuilder.UseSqlServer(connectionString).LogTo(Console.WriteLine, LogLevel.Warning);
+        optionsBuilder.UseSqlServer(connectionString).LogTo(Console.WriteLine, LogLevel.None);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -30,5 +30,6 @@ public class AppDbContext : DbContext
             .HasForeignKey(o => o.CardStackId);
         modelBuilder.Entity<CardStack>().HasMany(u => u.Sessions).WithOne(o => o.CardStack)
             .HasForeignKey(o => o.CardStackId);
+        modelBuilder.Entity<CardStack>().HasIndex(e => e.Name).IsUnique();
     }
 }

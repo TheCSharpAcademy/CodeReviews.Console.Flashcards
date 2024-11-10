@@ -39,7 +39,8 @@ namespace Flashcards.TwilightSaw.Controller
         public static string Create(string messageStart)
         {
             var input = AnsiConsole.Prompt(
-                new TextPrompt<string>($"[green]{messageStart}[/]"));
+                new TextPrompt<string>($"[green]{messageStart} or 0 to exit: [/]"));
+            Console.Clear();
             return input;
         }
 
@@ -91,7 +92,6 @@ namespace Flashcards.TwilightSaw.Controller
                     $"{FlashcardMapper.ConvertToDto(flashcard).Front}",
                     $"{FlashcardMapper.ConvertToDto(flashcard).Back}");
             }
-
             return table;
         }
     }

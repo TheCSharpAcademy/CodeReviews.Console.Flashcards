@@ -18,7 +18,8 @@ namespace Flashcards.TwilightSaw.View
                 case "Pick a Stack to study":
                     var chosenStack = UserInput.ChooseStack(cardStackController.Read());
                     var t = studyController.StartSession(chosenStack, flashcardController);
-                    studyController.Create(t);
+                    if(t != null) studyController.Create(t);
+                    Validation.EndMessage("");
                     break;
             }
         }

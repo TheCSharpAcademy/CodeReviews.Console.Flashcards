@@ -1,15 +1,9 @@
 ﻿using Flashcards.TwilightSaw.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Spectre.Console;
 
 namespace Flashcards.TwilightSaw.Controller
 {
-    internal class FlashcardController(AppDbContext context)
+    public class FlashcardController(AppDbContext context)
     {
         public void Create(string front, string back, int cardStackId)
         {
