@@ -10,6 +10,7 @@ public class AppDbContext : DbContext
     public DbSet<CardStack> CardStacks { get; set; }
     public DbSet<Flashcard> Flashcards { get; set; }
     public DbSet<StudySession> StudySessions { get; set; }
+    public DbSet<StudySessionTable> StudySessionTable { get; set; }
 
     private readonly IConfiguration _configuration;
 
@@ -26,6 +27,7 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<StudySessionTable>().HasNoKey();
         modelBuilder.Entity<CardStack>().HasMany(u => u.Flashcards).WithOne(o => o.CardStack)
             .HasForeignKey(o => o.CardStackId);
         modelBuilder.Entity<CardStack>().HasMany(u => u.Sessions).WithOne(o => o.CardStack)

@@ -1,5 +1,4 @@
 ﻿using Flashcards.TwilightSaw.Controller;
-using Flashcards.TwilightSaw.Models;
 using Spectre.Console;
 
 namespace Flashcards.TwilightSaw.View;
@@ -10,11 +9,12 @@ internal class Menu
     {
         var cardStackController = new CardStackController(context);
         var flashcardController = new FlashcardController(context);
+        var studyController = new StudyController(context);
         var endSession = false;
         while (!endSession)
         {
             var input = UserInput.CreateChoosingList(["Manage Stacks",
-                "Study", "View Study Session Data", "Exit"]);
+                "Study", "View Study Session Data", "View Study Session Report", "Exit"]);
             switch (input)
             {
                 case "Manage Stacks":
@@ -37,6 +37,12 @@ internal class Menu
                     AnsiConsole.Write(table);
                     Console.ReadKey();
                     Console.Clear();
+                    break;
+                case "View Study Session Report":
+                    var date = UserInput.CreateRegex(@"^(\d{4})$", "Insert desired year: ", "Wrong symbols.");
+                    studyController.GetTable("COUNT", date ,"Number of sessions per month");
+                    studyController.GetTable("AVG", date,"Avg sessions score per month");
+                    Validation.EndMessage("");
                     break;
                 case "Exit":
                     endSession = true;

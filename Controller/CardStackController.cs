@@ -13,9 +13,10 @@ namespace Flashcards.TwilightSaw.Controller
             Console.ReadKey();
         }
 
-        public List<CardStack> Read()
+        public List<CardStack>? Read()
         {
-            return context.CardStacks.ToList();
+            var stacks = context.CardStacks.AsNoTracking().ToList();
+            return stacks.Count != 0 ? stacks : null;
         }
 
         public void Delete(CardStack inputStackDelete)
@@ -23,5 +24,6 @@ namespace Flashcards.TwilightSaw.Controller
             context.CardStacks.Where(s => s.Equals(inputStackDelete)).ExecuteDelete();
             context.SaveChanges();
         }
+
     }
 }

@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Flashcards.TwilightSaw.Migrations
 {
     /// <inheritdoc />
-    public partial class Creation : Migration
+    public partial class Create : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,7 +17,7 @@ namespace Flashcards.TwilightSaw.Migrations
                 {
                     CardStackId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -44,9 +45,41 @@ namespace Flashcards.TwilightSaw.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "StudySessions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateOnly>(type: "date", nullable: false),
+                    Score = table.Column<int>(type: "int", nullable: false),
+                    CardStackId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudySessions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudySessions_CardStacks_CardStackId",
+                        column: x => x.CardStackId,
+                        principalTable: "CardStacks",
+                        principalColumn: "CardStackId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CardStacks_Name",
+                table: "CardStacks",
+                column: "Name",
+                unique: true);
+
             migrationBuilder.CreateIndex(
                 name: "IX_Flashcards_CardStackId",
                 table: "Flashcards",
+                column: "CardStackId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudySessions_CardStackId",
+                table: "StudySessions",
                 column: "CardStackId");
         }
 
@@ -55,6 +88,9 @@ namespace Flashcards.TwilightSaw.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Flashcards");
+
+            migrationBuilder.DropTable(
+                name: "StudySessions");
 
             migrationBuilder.DropTable(
                 name: "CardStacks");

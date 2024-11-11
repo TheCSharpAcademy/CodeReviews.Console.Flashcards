@@ -18,11 +18,14 @@ public static class Validation
         return "Executed successfully";
     }
 
-    public static void EndMessage(string message)
+    public static void EndMessage(string? message)
     {
-        AnsiConsole.MarkupLine($"[olive]{message}[/]");
-        AnsiConsole.Markup($"[grey]Press any key to continue.[/]");
-        Console.ReadKey();
+        if (message != null)
+        {
+            AnsiConsole.MarkupLine($"[olive]{message}[/]");
+            AnsiConsole.Markup($"[grey]Press any key to continue.[/]");
+            Console.ReadKey();
+        }
         Console.Clear();
     }
 }

@@ -21,6 +21,7 @@ public class StackMenu(AppDbContext context, FlashcardController flashcardContro
                     break;
                 case "Choose a Stack":
                     var chosenStack = UserInput.ChooseStack(cardStackController.Read());
+                    if (chosenStack == null) break;
                     var endStack = false;
                     while (!endStack)
                     {
@@ -44,8 +45,7 @@ public class StackMenu(AppDbContext context, FlashcardController flashcardContro
                                 var endRead = true;
                                 while (endRead)
                                 {
-                                    var read = flashcardController.Read(chosenStack
-                                                  .CardStackId);
+                                    var read = flashcardController.Read(chosenStack.CardStackId);
                                     AnsiConsole.Write(UserInput.CreateFlashcardTable(read));
 
                                     var inputView = UserInput.CreateChoosingList(["Return"]);
@@ -85,7 +85,7 @@ public class StackMenu(AppDbContext context, FlashcardController flashcardContro
                 case "Delete a Stack":
                     var inputStackDelete = UserInput.ChooseStack(cardStackController.Read());
                     var executeStackDelete = Validation.Validate(() => cardStackController.Delete(inputStackDelete));
-                    Validation.EndMessage(executeStackDelete);
+                    Validation.EndMessage(inputStackDelete == null ? null : executeStackDelete);
                     break;
                 case "Return":
                     endManage = true;

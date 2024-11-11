@@ -44,8 +44,14 @@ namespace Flashcards.TwilightSaw.Controller
             return input;
         }
 
-        public static CardStack ChooseStack(List<CardStack> stack)
+        public static CardStack ChooseStack(List<CardStack>? stack)
         {
+            if (stack == null)
+            {
+                Validation.EndMessage("No Stack has been created yet.");
+                return null;
+            }
+                
             var input = AnsiConsole.Prompt(
                 new SelectionPrompt<CardStack>()
                     .Title("[blue]Please, choose an option from the list below:[/]")

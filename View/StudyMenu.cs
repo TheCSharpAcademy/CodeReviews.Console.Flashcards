@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Flashcards.TwilightSaw.Controller;
+﻿using Flashcards.TwilightSaw.Controller;
 
 namespace Flashcards.TwilightSaw.View
 {
@@ -16,10 +11,14 @@ namespace Flashcards.TwilightSaw.View
             switch (inputStudy)
             {
                 case "Pick a Stack to study":
-                    var chosenStack = UserInput.ChooseStack(cardStackController.Read());
-                    var t = studyController.StartSession(chosenStack, flashcardController);
-                    if(t != null) studyController.Create(t);
-                    Validation.EndMessage("");
+                    var stackList = cardStackController.Read();
+                    if (stackList != null)
+                    {
+                        var chosenStack = UserInput.ChooseStack(stackList);
+                        var t = studyController.StartSession(chosenStack, flashcardController);
+                        if (t != null) studyController.Create(t);
+                    }
+                    Validation.EndMessage(stackList == null ? "No Stack has been created yet" : "");
                     break;
             }
         }
