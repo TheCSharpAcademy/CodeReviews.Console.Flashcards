@@ -24,19 +24,18 @@ internal class Menu
                     new StudyMenu(context, flashcardController).Menu(cardStackController);
                     break;
                 case "View Study Session Data":
-                    var k = new StudyController(context).Read();
+                    var sessionsList = new StudyController(context).Read();
                     var table = new Table();
-                    table.AddColumn("Date")
-                        .AddColumn("Score")
+                    table.AddColumns(["Date", "Score", "Card Stack Name"])
                         .Centered();
 
-                    foreach (var session in k)
+                    foreach (var session in sessionsList)
                         table.AddRow(@$"{session.Date}",
-                            $"{session.Score}");
+                            $"{session.Score}",
+                            $"{session.Name}");
 
                     AnsiConsole.Write(table);
-                    Console.ReadKey();
-                    Console.Clear();
+                   Validation.EndMessage("");
                     break;
                 case "View Study Session Report":
                     var date = UserInput.CreateRegex(@"^(\d{4})$", "Insert desired year: ", "Wrong symbols.");

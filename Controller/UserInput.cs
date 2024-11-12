@@ -71,7 +71,7 @@ namespace Flashcards.TwilightSaw.Controller
                     .AddChoices(flashcards));
             return input;
         }
-
+        //UNIFORM
         public static string CreateChoosingList(string[] variants)
         {
             var select = AnsiConsole.Prompt(

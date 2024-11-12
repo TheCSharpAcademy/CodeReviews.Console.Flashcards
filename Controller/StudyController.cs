@@ -40,10 +40,9 @@ namespace Flashcards.TwilightSaw.Controller
             return new StudySession(DateOnly.FromDateTime(DateTime.Now), points, stack.CardStackId);
         }
 
-        public List<StudySession> Read()
+        public List<StudySessionDTO> Read()
         {
-            //IMPROVE
-           return context.StudySessions.AsNoTracking().ToList();
+           return context.StudySessions.Select(s => new StudySessionDTO{Date = s.Date,Score = s.Score,Name = s.CardStack.Name}).AsNoTracking().ToList();
         }
 
         public void GetTable(string tableType, string date, string tableTitle)
