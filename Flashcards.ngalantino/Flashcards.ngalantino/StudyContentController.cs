@@ -287,7 +287,7 @@ public static class StudyContentController
         db.EditFlashcard(flashcard);
     }
 
-    public static void NewStudySession(String stack, DateTime date, int score)
+    public static void NewStudySession(String stack, String date, int score)
     {
 
         db.AddStudySession(stack, date, score);

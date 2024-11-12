@@ -49,7 +49,7 @@ internal class DatabaseManager
                             CREATE TABLE flashcardstest.dbo.studysessions (
                             id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
                             stack nvarchar(50),
-                            date datetime,
+                            date nvarchar(50),
                             score int,
                             constraint FK_study_sessions_stacks FOREIGN KEY (stack) references flashcardstest.dbo.stacks(stack) ON DELETE CASCADE,
                         )
@@ -218,7 +218,7 @@ internal class DatabaseManager
         }
     }
 
-    public void AddStudySession(String stack, DateTime date, int score)
+    public void AddStudySession(String stack, String date, int score)
     {
 
         using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.AppSettings.Get("dbConnection")))
@@ -254,7 +254,8 @@ internal class DatabaseManager
                 StudySession session = new StudySession
                 {
                     Stack = reader.GetString(1),
-                    Date = reader.GetDateTime(2),
+                    //Date = reader.GetDateTime(2),
+                    Date = reader.GetString(2),
                     Score = reader.GetInt32(3)
 
                 };

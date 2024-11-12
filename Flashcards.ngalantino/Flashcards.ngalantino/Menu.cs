@@ -104,7 +104,7 @@ public static class Menu
                                 break;
 
                             case "Edit a flashcard":
-                                
+
                                 StudyContentController.EditFlashcard();
                                 break;
 
@@ -128,7 +128,8 @@ public static class Menu
                     }
 
                     // If selected stack has no flashcards, instruct user to add flashcards first.
-                    if (StudyContentController.GetFlashcardsInStack().Count == 0) {
+                    if (StudyContentController.GetFlashcardsInStack().Count == 0)
+                    {
                         Console.WriteLine("No flashcards in stack!");
                         Console.WriteLine("Press enter to continue.");
                         Console.ReadLine();
@@ -142,6 +143,9 @@ public static class Menu
                     string answer = "";
                     int score = 0;
                     DateTime dateTime = DateTime.Now;
+                    string dateString = dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
+                    // Store dateString in the database
+
 
                     while (answer != "0")
                     {
@@ -166,12 +170,9 @@ public static class Menu
                             {
                                 Console.WriteLine("Wrong!");
                             }
-                            // Calculate score
                         }
-
-                        // Add study session
                     }
-                    StudyContentController.NewStudySession(selectedStack, dateTime, score);
+                    StudyContentController.NewStudySession(selectedStack, dateString, score);
 
                     break;
 
@@ -221,13 +222,15 @@ public static class Menu
         AnsiConsole.Write(table);
     }
 
-    public static void DisplayTable(List<Stack> stacks) {
+    public static void DisplayTable(List<Stack> stacks)
+    {
 
         Table table = new Table();
 
         table.AddColumn("Stacks");
 
-        foreach (Stack stack in stacks) {
+        foreach (Stack stack in stacks)
+        {
             table.AddRow(stack.Name);
         }
 
