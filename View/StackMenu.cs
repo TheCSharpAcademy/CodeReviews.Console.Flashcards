@@ -42,21 +42,10 @@ public class StackMenu(AppDbContext context, FlashcardController flashcardContro
                                 Console.Clear();
                                 break;
                             case "View all Flashcards in the Stack":
-                                var endRead = true;
-                                while (endRead)
-                                {
+                                
                                     var read = flashcardController.Read(chosenStack.CardStackId);
                                     AnsiConsole.Write(UserInput.CreateFlashcardTable(read));
-
-                                    var inputView = UserInput.CreateChoosingList(["Return"]);
-                                    switch (inputView)
-                                    {
-                                        case "Return":
-                                            endRead = false;
-                                            break;
-                                    }
-                                    Console.Clear();
-                                }
+                                    Validation.EndMessage("");
                                 break;
                             case "Edit a Flashcard in the Stack":
                                 var inputUpdate = flashcardController.GetFlashcard(flashcardController, chosenStack);
