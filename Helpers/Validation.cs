@@ -1,6 +1,6 @@
 ﻿using Spectre.Console;
 
-namespace Flashcards.TwilightSaw.Controller;
+namespace Flashcards.TwilightSaw.Helpers;
 
 public static class Validation
 {
@@ -14,7 +14,6 @@ public static class Validation
         {
             return e.Message;
         }
-
         return "Executed successfully";
     }
 
@@ -24,7 +23,7 @@ public static class Validation
         {
             AnsiConsole.MarkupLine($"[olive]{message}[/]");
             AnsiConsole.Markup($"[grey]Press any key to continue.[/]");
-            Console.ReadKey();
+            Console.ReadKey(intercept: true);
         }
         Console.Clear();
     }

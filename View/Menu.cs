@@ -1,4 +1,5 @@
 ﻿using Flashcards.TwilightSaw.Controller;
+using Flashcards.TwilightSaw.Helpers;
 using Spectre.Console;
 
 namespace Flashcards.TwilightSaw.View;
@@ -10,6 +11,7 @@ internal class Menu
         var cardStackController = new CardStackController(context);
         var flashcardController = new FlashcardController(context);
         var studyController = new StudyController(context);
+
         var endSession = false;
         while (!endSession)
         {
@@ -18,35 +20,43 @@ internal class Menu
             switch (input)
             {
                 case "Manage Stacks":
-                    new StackMenu(context, flashcardController, cardStackController).Menu();
+                    new StackMenu(flashcardController, cardStackController).Menu();
                     break;
                 case "Study":
-                    new StudyMenu(context, flashcardController).Menu(cardStackController);
+                    new StudyMenu(studyController, flashcardController, cardStackController).Menu();
                     break;
                 case "View Study Session Data":
-                    var sessionsList = new StudyController(context).Read();
-                    var table = new Table();
-                    table.AddColumns(["Date", "Score", "Card Stack Name"])
-                        .Centered();
-
-                    foreach (var session in sessionsList)
-                        table.AddRow(@$"{session.Date}",
-                            $"{session.Score}",
-                            $"{session.Name}");
-
-                    AnsiConsole.Write(table);
-                   Validation.EndMessage("");
+                    ViewStudySessionData(context);
                     break;
                 case "View Study Session Report":
-                    var date = UserInput.CreateRegex(@"^(\d{4})$", "Insert desired year: ", "Wrong symbols.");
-                    studyController.GetTable("COUNT", date ,"Number of sessions per month");
-                    studyController.GetTable("AVG", date,"Avg sessions score per month");
-                    Validation.EndMessage("");
+                    ViewStudySessionReport(studyController);
                     break;
                 case "Exit":
                     endSession = true;
                     break;
             }
         }
+    }
+
+    private void ViewStudySessionData(AppDbContext context)
+    {
+        var sessionsList = new StudyController(context).Read();
+        var table = new Table();
+        table.AddColumns(["Date", "Score", "Card Stack Name"])
+            .Centered();
+
+        foreach (var session in sessionsList)
+            table.AddRow(@$"{session.Date}", $"{session.Score}", $"{session.Name}");
+
+        AnsiConsole.Write(table);
+        Validation.EndMessage("");
+    }
+
+    private void ViewStudySessionReport(StudyController studyController)
+    {
+        var date = UserInput.CreateRegex(@"^(\d{4})$", "Insert desired year: ", "Wrong symbols.");
+        studyController.GetTable("COUNT", date, "Number of sessions per month");
+        studyController.GetTable("AVG", date, "Avg sessions score per month");
+        Validation.EndMessage("");
     }
 }

@@ -1,4 +1,5 @@
-﻿using Flashcards.TwilightSaw.Models;
+﻿using Flashcards.TwilightSaw.Helpers;
+using Flashcards.TwilightSaw.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Flashcards.TwilightSaw.Controller
@@ -19,6 +20,7 @@ namespace Flashcards.TwilightSaw.Controller
         public void Delete(int flashcardId, int chosenStackCardStackId)
         {
             context.Flashcards.Where(flashcard => flashcard.CardStackId == chosenStackCardStackId && flashcard.Id == flashcardId).ExecuteDelete();
+            context.SaveChanges();
         }
 
         public Flashcard? GetFlashcard(FlashcardController flashcardController, CardStack stack)

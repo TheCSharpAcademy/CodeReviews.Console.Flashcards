@@ -1,8 +1,9 @@
 ﻿using System.Text.RegularExpressions;
+using Flashcards.TwilightSaw.Controller;
 using Flashcards.TwilightSaw.Models;
 using Spectre.Console;
 
-namespace Flashcards.TwilightSaw.Controller
+namespace Flashcards.TwilightSaw.Helpers
 {
     static class UserInput
     {
@@ -51,7 +52,8 @@ namespace Flashcards.TwilightSaw.Controller
                 Validation.EndMessage("No Stack has been created yet.");
                 return null;
             }
-                
+
+            stack.Add(new CardStack("Return"));
             var input = AnsiConsole.Prompt(
                 new SelectionPrompt<CardStack>()
                     .Title("[blue]Please, choose an option from the list below:[/]")
@@ -63,6 +65,7 @@ namespace Flashcards.TwilightSaw.Controller
 
         public static Flashcard ChooseFlashcard(List<Flashcard> flashcards)
         {
+            flashcards.Add(new Flashcard("Return", "", 0));
             var input = AnsiConsole.Prompt(
                 new SelectionPrompt<Flashcard>()
                     .Title("[blue]Please, choose an option from the list below:[/]")
@@ -71,7 +74,6 @@ namespace Flashcards.TwilightSaw.Controller
                     .AddChoices(flashcards));
             return input;
         }
-        //UNIFORM
         public static string CreateChoosingList(List<string> variants)
         {
             var select = AnsiConsole.Prompt(
@@ -90,7 +92,7 @@ namespace Flashcards.TwilightSaw.Controller
                 .AddColumn("Front")
                 .AddColumn("Back")
                 .Centered();
-            
+
             for (var index = 0; index < flashcards.Count; index++)
             {
                 var flashcard = flashcards[index];

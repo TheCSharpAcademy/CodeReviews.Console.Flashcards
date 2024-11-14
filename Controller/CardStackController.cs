@@ -1,4 +1,5 @@
-﻿using Flashcards.TwilightSaw.Models;
+﻿using Flashcards.TwilightSaw.Helpers;
+using Flashcards.TwilightSaw.Models;
 using Microsoft.EntityFrameworkCore;
 using Spectre.Console;
 
@@ -9,8 +10,8 @@ namespace Flashcards.TwilightSaw.Controller
         public void Create(string name)
         {
             context.Add(new CardStack(name));
+            context.SaveChanges();
             AnsiConsole.Markup($"[red]{Validation.Validate(() => context.SaveChanges())}[/]");
-            Console.ReadKey();
         }
 
         public List<CardStack>? Read()

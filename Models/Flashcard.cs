@@ -22,13 +22,7 @@ public class Flashcard
 
     public override string ToString()
     {
-        return $@"{Front} {Back} {CardStackId}";
+        return $@"{Front} {Back}";
     }
 
-    public static bool TryParse(string flashcardString,out Flashcard flashcard)
-    {
-        string[] splitString = flashcardString.Split(' ');
-        flashcard = new Flashcard(splitString[0], splitString[1], Convert.ToInt32(splitString[2]));
-        return true;
-    }
 }
