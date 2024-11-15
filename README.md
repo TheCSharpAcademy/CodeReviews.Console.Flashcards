@@ -1,4 +1,4 @@
-﻿﻿# ConsoleFlashcards
+﻿﻿# Console Flashcards
 
 Console based CRUD application to create flashcards into stacks and study them. Developed using C# and SQL Server with Entity Framework.
 
@@ -17,14 +17,14 @@ Console based CRUD application to create flashcards into stacks and study them. 
 * SQL Server database connection with Entity Framework.
   > [!IMPORTANT]
   > After downloading the project, you should check appsetting.json and write your own path to connect the db.
-  > ![image]()
+  > ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/images/appsettings.png)
 
   > [!IMPORTANT]
   > Also you should do starting migrations to create db with all necessary tables, simply write ```dotnet ef database update``` in CLI.
-  > ![image]()
+  > ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/images/migrations.png)
 
 * A console based UI where you can navigate by user input.
-   ![image]()
+   ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/images/UI.png)
   
 * CRUD DB functions
   - From the menu you can Create, Read, Update or Delete entries to manipulate your Stacks and Flashcards.
@@ -33,10 +33,10 @@ Console based CRUD application to create flashcards into stacks and study them. 
   - After creating your Stack and Flashcards inside, you can start a Study Session, where you can earn points by answering your Flashcards.
 
 * Table that contains all your previous Study Sessions.
-   ![image]()
+   ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/images/table.png)
     
 * Study Session report, where you can see your sessions amount per month and average amount of points you earned per month for every existing Stack for desired year.
-   ![image]()
+   ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/images/report.png)
 
 ## Challenges and Learned Lessons
 - Using Entity Framework for the first was a hard task, but it's a really convinient tool when you finally get used to it.
