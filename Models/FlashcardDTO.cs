@@ -1,6 +1,6 @@
 ﻿namespace Flashcards.TwilightSaw.Models
 {
-    public class FlashcardDTO
+    public class FlashcardDto
     {
         public int Id { get; set; }
         public string Front { get; set; }
