@@ -1,4 +1,4 @@
-﻿﻿# Console Flashcards
+# ConsoleFlashcards
 
 Console based CRUD application to create flashcards into stacks and study them. Developed using C# and SQL Server with Entity Framework.
 
@@ -15,11 +15,11 @@ Console based CRUD application to create flashcards into stacks and study them. 
 
 ## Features
 * SQL Server database connection with Entity Framework.
-  > [!IMPORTANT]
+  > **IMPORTANT**
   > After downloading the project, you should check appsetting.json and write your own path to connect the db.
   > ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/images/appsettings.png)
 
-  > [!IMPORTANT]
+  > **IMPORTANT**
   > Also you should do starting migrations to create db with all necessary tables, simply write ```dotnet ef database update``` in CLI.
   > ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/images/migrations.png)
 
