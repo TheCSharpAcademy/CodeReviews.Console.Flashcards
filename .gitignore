@@ -399,6 +399,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+.idea/
 
 ##
 ## Visual studio for Mac
@@ -475,5 +476,5 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
-.idea
+/MathGame2
+/CodingTracker.TomDonegan/TextFile1.txt
