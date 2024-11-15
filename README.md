@@ -16,6 +16,7 @@
 * SQL Server database connection with Entity Framework.
 > [!IMPORTANT]
 > After downloading the project, you should check appsetting.json and write your own path to connect the db.
+> 
 > ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/images/appsettings.png)
 
 
@@ -25,6 +26,7 @@
  > ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/images/migrations.png)
 
 * A console based UI where you can navigate by user input.
+  
    ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/images/UI.png)
   
 * CRUD DB functions
@@ -34,9 +36,11 @@
   - After creating your Stack and Flashcards inside, you can start a Study Session, where you can earn points by answering your Flashcards.
 
 * Table that contains all your previous Study Sessions.
+  
    ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/images/table.png)
     
 * Study Session report, where you can see your sessions amount per month and average amount of points you earned per month for every existing Stack for desired year.
+  
    ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/images/report.png)
 
 ## Challenges and Learned Lessons
