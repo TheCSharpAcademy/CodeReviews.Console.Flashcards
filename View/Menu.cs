@@ -15,6 +15,8 @@ internal class Menu
         var endSession = false;
         while (!endSession)
         {
+            var rule = new Rule($"[Aqua]Welcome to Flashcards application![/]");
+            AnsiConsole.Write(rule);
             var input = UserInput.CreateChoosingList(["Manage Stacks",
                 "Study", "View Study Session Data", "View Study Session Report", "Exit"]);
             switch (input)
@@ -40,6 +42,7 @@ internal class Menu
 
     private void ViewStudySessionData(AppDbContext context)
     {
+        Console.Clear();
         var sessionsList = new StudyController(context).Read();
         var table = new Table();
         table.AddColumns(["Date", "Score", "Card Stack Name"])
@@ -54,6 +57,7 @@ internal class Menu
 
     private void ViewStudySessionReport(StudyController studyController)
     {
+        Console.Clear();
         var date = UserInput.CreateRegex(@"^(\d{4})$", "Insert desired year: ", "Wrong symbols.");
         studyController.GetTable("COUNT", date, "Number of sessions per month");
         studyController.GetTable("AVG", date, "Avg sessions score per month");

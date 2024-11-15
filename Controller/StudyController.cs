@@ -3,52 +3,58 @@ using Flashcards.TwilightSaw.Models;
 using Microsoft.EntityFrameworkCore;
 using Spectre.Console;
 
-namespace Flashcards.TwilightSaw.Controller
+namespace Flashcards.TwilightSaw.Controller;
+
+internal class StudyController(AppDbContext context)
 {
-    internal class StudyController(AppDbContext context)
+    public void Create(StudySession session)
     {
-        public void Create(StudySession session)
+        context.Add(session);
+        context.SaveChanges();
+    }
+
+    public StudySession? StartSession(CardStack stack, FlashcardController flashcardController)
+    {
+        var points = 0;
+        var flashcards = flashcardController.Read(stack.CardStackId);
+        if (flashcards.Count == 0)
         {
-            context.Add(session);
-            context.SaveChanges();
+            AnsiConsole.MarkupLine("[red]No flashcards in the Stack![/]");
+            return null;
         }
 
-        public StudySession? StartSession(CardStack stack, FlashcardController flashcardController)
+        foreach (var item in flashcards)
         {
-            var points = 0;
-            var flashcards = flashcardController.Read(stack.CardStackId);
-            if (flashcards.Count == 0)
+            AnsiConsole.MarkupLine($"[yellow]{item.Front}[/]");
+            var userAnswer = UserInput.Create("Write the answer");
+            if (userAnswer == "0") return null;
+            var isEqual = string.Equals(userAnswer, item.Back, StringComparison.CurrentCultureIgnoreCase);
+            if (isEqual)
             {
-                AnsiConsole.MarkupLine($"[red]No flashcards in the Stack![/]");
-                return null;
+                AnsiConsole.MarkupLine("Nice! You got [green]1[/] point!");
+                points++;
             }
-            foreach (var item in flashcards)
+            else
             {
-                    AnsiConsole.MarkupLine($"[yellow]{item.Front}[/]");
-                    var userAnswer = UserInput.Create("Write the answer");
-                    if (userAnswer == "0") break;
-                    var isEqual = string.Equals(userAnswer, item.Back, StringComparison.CurrentCultureIgnoreCase);
-                    if (isEqual)
-                    {
-                        AnsiConsole.MarkupLine("Nice! You got [green]1[/] point!");
-                        points++;
-                    }
-                    else
-                        AnsiConsole.MarkupLine($"Hell! Bad answer!\n" +
-                                               $"Correct answer is - {item.Back}.");
+                AnsiConsole.MarkupLine($"Hell! Bad answer!\n" +
+                                       $"Correct answer is - {item.Back}.");
             }
-            AnsiConsole.MarkupLine($"You got {points} right answers out of {flashcards.Count}");
-            return new StudySession(DateOnly.FromDateTime(DateTime.Now), points, stack.CardStackId);
         }
 
-        public List<StudySessionDTO> Read()
-        {
-           return context.StudySessions.Select(s => new StudySessionDTO{Date = s.Date,Score = s.Score,Name = s.CardStack.Name}).AsNoTracking().ToList();
-        }
+        AnsiConsole.MarkupLine($"You got {points} right answers out of {flashcards.Count}");
+        return new StudySession(DateOnly.FromDateTime(DateTime.Now), points, stack.CardStackId);
+    }
 
-        public void GetTable(string tableType, string date, string tableTitle)
-        {
-            string SqlRawQuery = @$"SELECT Name, Year, 
+    public List<StudySessionDTO> Read()
+    {
+        return context.StudySessions
+            .Select(s => new StudySessionDTO { Date = s.Date, Score = s.Score, Name = s.CardStack.Name }).AsNoTracking()
+            .ToList();
+    }
+
+    public void GetTable(string tableType, string date, string tableTitle)
+    {
+        var SqlRawQuery = @$"SELECT Name, Year, 
     ISNULL([1], 0) AS January, ISNULL([2],0) AS February,
     ISNULL([3],0) AS March, ISNULL([4],0) AS April, 
     ISNULL([5],0) AS May, ISNULL([6],0) AS June, 
@@ -71,13 +77,15 @@ PIVOT
 ORDER BY Year;
 
 ";
-            var table = new Table();
-            table.Title(tableTitle);
-            table.AddColumns(["Name", "Year", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"])
-                .Centered();
-            foreach (var session in context.Set<StudySessionTable>().FromSqlRaw(SqlRawQuery).ToList())
-                session.ToTable(table);
-            AnsiConsole.Write(table);
-        }
+        var table = new Table();
+        table.Title(tableTitle);
+        table.AddColumns([
+                "Name", "Year", "January", "February", "March", "April", "May", "June", "July", "August", "September",
+                "October", "November", "December"
+            ])
+            .Centered();
+        foreach (var session in context.Set<StudySessionTable>().FromSqlRaw(SqlRawQuery).ToList())
+            session.ToTable(table);
+        AnsiConsole.Write(table);
     }
 }

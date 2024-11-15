@@ -12,6 +12,9 @@ public class FlashcardMenu(FlashcardController flashcardController, CardStack ch
         var endStack = false;
         while (!endStack)
         {
+            Console.Clear();
+            var rule = new Rule($"[olive]{chosenStack.Name}[/]");
+            AnsiConsole.Write(rule);
             var inputCreateStacks = UserInput.CreateChoosingList([
                 "Create a Flashcard in the Stack", "View all Flashcards in the Stack", "Edit a Flashcard in the Stack",
                 "Delete a Flashcard in the Stack", "Return"
@@ -32,6 +35,7 @@ public class FlashcardMenu(FlashcardController flashcardController, CardStack ch
                     break;
                 case "Return":
                     endStack = true;
+                    Console.Clear();
                     break;
             }
         }
@@ -80,6 +84,7 @@ public class FlashcardMenu(FlashcardController flashcardController, CardStack ch
 
     private void CreateFlashcard()
     {
+        Console.Clear();
         var frontSideInput = UserInput.Create("Name the front side of your Flashcard");
         if (frontSideInput == "0") return;
         var backSideInput = UserInput.Create("Name the back side of your Flashcard");

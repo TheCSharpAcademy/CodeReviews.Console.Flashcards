@@ -7,6 +7,7 @@ public class StackMenu(FlashcardController flashcardController, CardStackControl
 {
     public void Menu()
     {
+        Console.Clear();
         var endManage = false;
         while (!endManage)
         {

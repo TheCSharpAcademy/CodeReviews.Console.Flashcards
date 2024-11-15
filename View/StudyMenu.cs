@@ -7,6 +7,7 @@ namespace Flashcards.TwilightSaw.View
     {
         public void Menu()
         {
+            Console.Clear();
             var inputStudy = UserInput.CreateChoosingList(["Pick a Stack to study"]);
             switch (inputStudy)
             {

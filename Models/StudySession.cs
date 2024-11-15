@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Flashcards.TwilightSaw.Models;
 
@@ -9,11 +8,8 @@ public class StudySession
     public int Id { get; set; }
     public DateOnly Date { get; set; }
     public int Score { get; set; }
-
     public int CardStackId { get; set; }
-
     public CardStack CardStack { get; set; }
-
     public StudySession(DateOnly date, int score, int cardStackId)
     {
         Date = date;
