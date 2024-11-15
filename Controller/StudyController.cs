@@ -45,10 +45,10 @@ internal class StudyController(AppDbContext context)
         return new StudySession(DateOnly.FromDateTime(DateTime.Now), points, stack.CardStackId);
     }
 
-    public List<StudySessionDTO> Read()
+    public List<StudySessionDto> Read()
     {
         return context.StudySessions
-            .Select(s => new StudySessionDTO { Date = s.Date, Score = s.Score, Name = s.CardStack.Name }).AsNoTracking()
+            .Select(s => new StudySessionDto { Date = s.Date, Score = s.Score, Name = s.CardStack.Name }).AsNoTracking()
             .ToList();
     }
 
