@@ -21,6 +21,7 @@
 
  > [!IMPORTANT]
  > Also you should do starting migrations to create db with all necessary tables, simply write ```dotnet ef database update``` in CLI.
+ > 
  > ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/images/migrations.png)
 
 * A console based UI where you can navigate by user input.
