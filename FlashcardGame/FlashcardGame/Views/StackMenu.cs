@@ -1,4 +1,6 @@
-﻿namespace FlashcardGame
+﻿using FlashcardGame.Helpers;
+
+namespace FlashcardGame.Views
 {
     public static class StackMenu
     {
@@ -41,6 +43,6 @@
                 }
             }
         }
-        
+
     }
 }

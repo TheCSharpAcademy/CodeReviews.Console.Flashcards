@@ -1,4 +1,4 @@
-﻿namespace FlashcardGame
+﻿namespace FlashcardGame.Views
 {
     public static class MainMenu
     {
@@ -42,10 +42,10 @@
                         break;
                 }
 
-            
 
-            }   
+
+            }
         }
-        
+
     }
 }

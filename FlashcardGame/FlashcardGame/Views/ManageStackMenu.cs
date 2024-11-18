@@ -1,6 +1,8 @@
-﻿using Microsoft.VisualBasic.FileIO;
+﻿using FlashcardGame.Helpers;
+using FlashcardGame.Models;
+using Microsoft.VisualBasic.FileIO;
 
-namespace FlashcardGame
+namespace FlashcardGame.Views
 {
     internal class ManageStackMenu
     {
@@ -18,7 +20,7 @@ namespace FlashcardGame
             }
 
             Console.WriteLine("Choose with what stack you want to interact(write full name of it) or press 0 to exit");
-            
+
             for (int i = 0; i < stacks.Count; i++)
             {
                 Stack stack = stacks[i];

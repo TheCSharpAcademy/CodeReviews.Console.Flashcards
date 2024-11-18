@@ -1,20 +1,113 @@
 ﻿using System.Data.SqlClient;
 using Dapper;
+using FlashcardGame.Models;
+using FlashcardGame.Views;
 
-namespace FlashcardGame
+namespace FlashcardGame.Helpers
 {
     internal class DatabaseHelpers
     {
-        static string Connection = Helper.CnnVal("Dbtest");
+        static string Connection = Helper.CnnVal("FlashcardDatabase");
+        public static void InitializeDatabase()
+        {
+            string databaseName = "FlashcardDatabase";
 
+            // Query to check if the database exists
+            string checkDbSql = $"SELECT COUNT(*) FROM sys.databases WHERE name = '{databaseName}'";
+
+            // Query to create the database
+            string createDbSql = $"CREATE DATABASE {databaseName}";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(Connection))
+                {
+                    conn.Open();
+
+                    // Check if the database exists
+                    using (SqlCommand checkCommand = new SqlCommand(checkDbSql, conn))
+                    {
+                        int databaseCount = (int)checkCommand.ExecuteScalar();
+                        if (databaseCount > 0)
+                        {
+                            Console.WriteLine("Database already exists.");
+                            return;
+                        }
+                    }
+
+                    // Create the database if it does not exist
+                    using (SqlCommand createCommand = new SqlCommand(createDbSql, conn))
+                    {
+                        createCommand.ExecuteNonQuery();
+                        Console.WriteLine("Database created successfully.");
+                    }
+
+                    conn.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+
+        }
+        public static void InitializeTables()
+        {
+            using (SqlConnection conn = new SqlConnection(Connection))
+            {
+                try
+                {
+                    conn.Open();
+
+
+                    var com = conn.CreateCommand();
+                    com.CommandText = @"
+                IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='FlashcardTable' AND xtype='U')
+                CREATE TABLE FlashcardTable (
+                    flashcard_id INT IDENTITY(1,1) PRIMARY KEY,
+                    flashcard_question NVARCHAR(MAX) NOT NULL,
+                    flashcard_answer NVARCHAR(MAX) NOT NULL,
+                    stack_id INT NOT NULL
+                );";
+                    com.ExecuteNonQuery();
+
+
+                    com.CommandText = @"
+                IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='StacksTable' AND xtype='U')
+                CREATE TABLE StacksTable (
+                    stack_id INT IDENTITY(1,1) PRIMARY KEY,
+                    stack_name NVARCHAR(MAX) NOT NULL
+                );";
+                    com.ExecuteNonQuery();
+
+
+                    com.CommandText = @"
+                IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='StudySessionsTable' AND xtype='U')
+                CREATE TABLE StudySessionsTable (
+                    studySession_id INT IDENTITY(1,1) PRIMARY KEY,
+                    right_answers INT NOT NULL,
+                    bad_answers INT NOT NULL,
+                    study_date DATE NOT NULL
+                );";
+                    com.ExecuteNonQuery();
+
+                    conn.Close();
+                    Console.WriteLine("Tables initialized successfully.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+            }
+        }
         public static void DeleteStack()
         {
             Console.Clear();
             Console.WriteLine("Write a name of stack that you want to Delete or press 0 to exit:");
 
             List<Stack> stacks = DataAccess.GetStacks();
-            
-            
+
+
 
             if (stacks.Count == 0)
             {
@@ -35,7 +128,7 @@ namespace FlashcardGame
                 return;
             }
 
-           
+
             using (SqlConnection connection = new SqlConnection(Connection))
             {
                 connection.Open();
@@ -99,7 +192,7 @@ namespace FlashcardGame
             Console.WriteLine("Write an answer of the question or press 0 to exit");
 
             var answer = Console.ReadLine();
-            
+
             if (answer == "0")
             {
                 return;
@@ -165,7 +258,7 @@ namespace FlashcardGame
 
         public static void UpdateFlashcard(int stackId)
         {
-            
+
 
             ViewFlashcard(stackId);
 
@@ -230,7 +323,7 @@ namespace FlashcardGame
 
             var flashcards = DataAccess.GetFlashcards();
             var filteredFlashcards = FilterFlashcardsByStackId(stackId, flashcards);
-            
+
             if (filteredFlashcards.Count == 0)
             {
                 Console.WriteLine("No flashcards found in this stack.");
@@ -281,7 +374,7 @@ namespace FlashcardGame
 
             foreach (var studySession in studySessions)
             {
-                
+
                 Console.WriteLine(studySession.ToString());
             }
 
@@ -293,7 +386,7 @@ namespace FlashcardGame
         }
 
 
-          
-        
+
+
     }
 }

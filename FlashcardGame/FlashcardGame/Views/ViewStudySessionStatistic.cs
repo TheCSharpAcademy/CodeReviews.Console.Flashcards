@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
+using FlashcardGame.Models;
 
-namespace FlashcardGame
+namespace FlashcardGame.Views
 {
     internal class ViewStudySessionStatistic
     {
@@ -74,13 +75,13 @@ namespace FlashcardGame
                     }
                 }
             }
-            
+
             Console.WriteLine($"\nYear:{parsedYear}  Stack:{chosenStack.stack_name}");
             Console.WriteLine(new string('-', 50));
             foreach (var month in allMonths)
             {
                 string monthName = new DateTime(1, month.Month, 1).ToString("MMMM", CultureInfo.CreateSpecificCulture("en-US"));
-                Console.WriteLine($"{monthName}" +  " - " + $"{month.Count}");
+                Console.WriteLine($"{monthName}" + " - " + $"{month.Count}");
             }
             Console.WriteLine(new string('-', 50));
             Console.WriteLine("Press any key to continue");

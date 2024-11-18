@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace FlashcardGame
+namespace FlashcardGame.Helpers
 {
     public static class Helper
     {

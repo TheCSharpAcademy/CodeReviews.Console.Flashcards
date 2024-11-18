@@ -1,10 +1,10 @@
-﻿namespace FlashcardGame
+﻿namespace FlashcardGame.Models
 {
     internal class Flashcard
     {
-        public int flashcard_Id { get; set; }  
-        public string flashCard_Question { get; set; }   
-        public string flashcard_Answer { get; set; }   
+        public int flashcard_Id { get; set; }
+        public string flashCard_Question { get; set; }
+        public string flashcard_Answer { get; set; }
         public int stack_Id { get; set; }
 
         public Flashcard(int flashcard_Id, string flashCard_Question, string flashcard_Answer, int stack_Id)
@@ -22,9 +22,9 @@
         {
             return new FlashcardDTO
             {
-                flashcard_Id = this.flashcard_Id,
-                flashCard_Question = this.flashCard_Question,
-                flashcard_Answer = this.flashcard_Answer
+                flashcard_Id = flashcard_Id,
+                flashCard_Question = flashCard_Question,
+                flashcard_Answer = flashcard_Answer
             };
         }
         public override string ToString()

@@ -1,10 +1,19 @@
-﻿namespace FlashcardGame
+﻿using FlashcardGame.Helpers;
+using FlashcardGame.Views;
+
+namespace FlashcardGame
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            MainMenu.Get1UserInput();
+           
+                DatabaseHelpers.InitializeDatabase();
+                DatabaseHelpers.InitializeTables();
+                MainMenu.Get1UserInput();
+          
+            
+          
         }
     }
 }

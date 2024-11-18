@@ -1,4 +1,6 @@
-﻿namespace FlashcardGame
+﻿using FlashcardGame.Helpers;
+
+namespace FlashcardGame.Views
 {
     internal class StudyMenu
     {

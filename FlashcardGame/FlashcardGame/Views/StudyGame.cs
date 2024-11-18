@@ -1,7 +1,9 @@
 ﻿using Dapper;
+using FlashcardGame.Helpers;
+using FlashcardGame.Models;
 using Microsoft.Data.SqlClient;
 
-namespace FlashcardGame
+namespace FlashcardGame.Views
 {
     internal class StudyGame
     {
@@ -95,9 +97,9 @@ namespace FlashcardGame
 
                 Console.WriteLine("Question:");
 
-                Console.WriteLine(new string('-', flashcard.flashCard_Question.Length+6));
+                Console.WriteLine(new string('-', flashcard.flashCard_Question.Length + 6));
                 Console.WriteLine($"|--{flashcard.flashCard_Question}--|");
-                Console.WriteLine(new string('-', flashcard.flashCard_Question.Length+6));
+                Console.WriteLine(new string('-', flashcard.flashCard_Question.Length + 6));
 
                 Console.WriteLine("Enter the answer");
                 string? answer = Console.ReadLine();

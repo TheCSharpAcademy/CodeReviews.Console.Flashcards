@@ -1,4 +1,4 @@
-﻿namespace FlashcardGame
+﻿namespace FlashcardGame.Models
 {
     internal class StudySession
     {
