@@ -5,11 +5,12 @@ using FlashCards.Views;
 using Spectre.Console;
 
 namespace FlashCards.Services;
+
 public static class FlashcardService
 {
     private static FlashcardController _flashcardController = new FlashcardController(new DatabaseService());
     internal static string ChangeCurrentStack() => StackExtensions.ChooseStack();
-    
+
     internal static void ViewAllFlashcards(string currentStack)
     {
         int stack_id = FlashcardExtensions.GetStack_id(currentStack);
@@ -38,7 +39,7 @@ public static class FlashcardService
 
     internal static void EditFlashcard(string currentStack)
     {
-        (int flashcardId, string flashcardFront, string flashcardBack) = FlashcardExtensions.GetFlashcard(currentStack);
+        (_, string flashcardFront, string flashcardBack) = FlashcardExtensions.GetFlashcard(currentStack);
 
         string userInput = AnsiConsole.Prompt(
             new TextPrompt<string>("What would you like to update: ([yellow]front, back, or both[/])")
