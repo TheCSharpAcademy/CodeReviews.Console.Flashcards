@@ -17,17 +17,17 @@
 > [!IMPORTANT]
 > After downloading the project, you should check appsetting.json and write your own path to connect the db.
 > 
-> ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/images/appsettings.png)
+> ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/Flashcards.TwilightSaw/images/appsettings.png)
 
 
  > [!IMPORTANT]
  > Also you should do starting migrations to create db with all necessary tables, simply write ```dotnet ef database update``` in CLI.
  > 
- > ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/images/migrations.png)
+ > ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/Flashcards.TwilightSaw/images/migrations.png)
 
 * A console based UI where you can navigate by user input.
   
-   ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/images/UI.png)
+   ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/Flashcards.TwilightSaw/images/UI.png)
   
 * CRUD DB functions
   - From the menu you can Create, Read, Update or Delete entries to manipulate your Stacks and Flashcards.
@@ -37,11 +37,11 @@
 
 * Table that contains all your previous Study Sessions.
   
-   ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/images/table.png)
+   ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/Flashcards.TwilightSaw/images/table.png)
     
 * Study Session report, where you can see your sessions amount per month and average amount of points you earned per month for every existing Stack for desired year.
   
-   ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/images/report.png)
+   ![image](https://github.com/TwilightSaw/CodeReviews.Console.Flashcards/blob/main/Flashcards.TwilightSaw/images/report.png)
 
 ## Challenges and Learned Lessons
 - Using Entity Framework for the first was a hard task, but it's a really convinient tool when you finally get used to it.
