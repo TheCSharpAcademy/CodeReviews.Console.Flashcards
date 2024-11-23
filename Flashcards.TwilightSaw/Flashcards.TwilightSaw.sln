@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flashcards.TwilightSaw", "Flashcards.TwilightSaw.csproj", "{0441AD29-C8A7-478B-B553-59D3FC806B62}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0441AD29-C8A7-478B-B553-59D3FC806B62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0441AD29-C8A7-478B-B553-59D3FC806B62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0441AD29-C8A7-478B-B553-59D3FC806B62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0441AD29-C8A7-478B-B553-59D3FC806B62}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {01237419-BBC8-4D4D-85D8-A01E588AA9D9}
+	EndGlobalSection
+EndGlobal
