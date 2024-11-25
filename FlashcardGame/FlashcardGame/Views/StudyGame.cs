@@ -2,6 +2,7 @@
 using FlashcardGame.Helpers;
 using FlashcardGame.Models;
 using Microsoft.Data.SqlClient;
+using System.Diagnostics;
 
 namespace FlashcardGame.Views
 {
@@ -59,20 +60,22 @@ namespace FlashcardGame.Views
                     }
                 }
 
-                RunStudyGame(option);
+                int stackId = stacks.Single(s => s.stack_name == option).stack_id;
+
+                RunStudyGame(stackId);
 
 
             }
         }
-        public static void RunStudyGame(string stackOption)
+        public static void RunStudyGame(int stackId)
         {
             Console.Clear();
             var stacks = DataAccess.GetStacks();
-            var flashcards = DataAccess.GetFlashcards();
+            var flashcards = DataAccess.GetFlashcards(stackId);
             var chosenStack = new Stack();
             foreach (var stack in stacks)
             {
-                if (stack.stack_name == stackOption)
+                if (stack.stack_id == stackId)
                 {
                     chosenStack = stack;
                 }
@@ -93,7 +96,7 @@ namespace FlashcardGame.Views
             foreach (var flashcard in filteredFlashcards)
             {
                 Console.Clear();
-                Console.WriteLine($"Current stack of flashcards: {stackOption}");
+                Console.WriteLine($"Current stack of flashcards: {chosenStack.stack_name}");
 
                 Console.WriteLine("Question:");
 

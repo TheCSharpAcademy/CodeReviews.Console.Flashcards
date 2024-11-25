@@ -8,11 +8,11 @@ namespace FlashcardGame
 
     internal class DataAccess
     {
-        public static List<Flashcard> GetFlashcards()
+        public static List<Flashcard> GetFlashcards(int stackId)
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("FlashcardDatabase")))
             {
-                var output = connection.Query<Flashcard>($"select * from FlashcardTable").ToList();
+                var output = connection.Query<Flashcard>($"select * from Stack{stackId}Table").ToList();
                 return output;
             }
         }

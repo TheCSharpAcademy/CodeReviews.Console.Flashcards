@@ -61,16 +61,6 @@ namespace FlashcardGame.Helpers
 
 
                     var com = conn.CreateCommand();
-                    com.CommandText = @"
-                IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='FlashcardTable' AND xtype='U')
-                CREATE TABLE FlashcardTable (
-                    flashcard_id INT IDENTITY(1,1) PRIMARY KEY,
-                    flashcard_question NVARCHAR(MAX) NOT NULL,
-                    flashcard_answer NVARCHAR(MAX) NOT NULL,
-                    stack_id INT NOT NULL
-                );";
-                    com.ExecuteNonQuery();
-
 
                     com.CommandText = @"
                 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='StacksTable' AND xtype='U')
@@ -162,14 +152,32 @@ namespace FlashcardGame.Helpers
             {
                 return;
             }
-            using (SqlConnection connection = new SqlConnection(Connection))
-            {
-                connection.Open();
-                string insertQuery = $@"INSERT INTO StacksTable (stack_name) VALUES ('{stackName}')";
 
-                connection.Execute(insertQuery);
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(Connection))
+                {
+                    connection.Open();
+
+                    // Insert the stack into the StacksTable and return the new Stack ID
+                    string insertQuery = $"INSERT INTO StacksTable (stack_name) OUTPUT INSERTED.stack_id VALUES ('{stackName}')";
+
+                    using (SqlCommand cmd = new SqlCommand(insertQuery, connection))
+                    {
+                        int stackId = (int)cmd.ExecuteScalar();
+                        Console.WriteLine($"Stack '{stackName}' added with ID {stackId}.");
+
+                        // Initialize the table for this stack
+                        InitializeStackTable(stackId);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
+
 
         public static void AddFlashcard(int stackId)
         {
@@ -209,7 +217,7 @@ namespace FlashcardGame.Helpers
             {
                 connection.Open();
                 string insertQuery =
-                    $@"INSERT INTO FlashcardTable (flashCard_Question, flashcard_Answer, stack_Id ) VALUES ('{question}', '{answer}', '{stackId}');";
+                    $@"INSERT INTO Stack{stackId}Table (flashCard_Question, flashcard_Answer, stack_Id ) VALUES ('{question}', '{answer}', '{stackId}');";
 
                 connection.Execute(insertQuery);
             }
@@ -237,7 +245,7 @@ namespace FlashcardGame.Helpers
             {
                 connection.Open();
                 string deleteQuery =
-                    $@"DELETE FROM FlashcardTable WHERE flashcard_Id = ('{id}')";
+                    $@"DELETE FROM Stack{stackId}Table WHERE flashcard_id = ('{id}')";
 
                 int count = connection.Execute(deleteQuery);
 
@@ -253,12 +261,12 @@ namespace FlashcardGame.Helpers
                     Console.WriteLine("Press any key to continue");
                     Console.ReadLine();
                 }
+                BalanceIds($"Stack{stackId}Table", stackId);
             }
         }
 
         public static void UpdateFlashcard(int stackId)
         {
-
 
             ViewFlashcard(stackId);
 
@@ -308,7 +316,7 @@ namespace FlashcardGame.Helpers
             using (SqlConnection connection = new SqlConnection(Connection))
             {
                 connection.Open();
-                string insertQuery = $@"UPDATE FlashcardTable
+                string insertQuery = $@"UPDATE Stack{stackId}Table
                 SET flashCard_Question = '{newQuestion}' , flashcard_Answer = '{newAnswer}'
                 WHERE flashCard_Id = {id}";
 
@@ -321,7 +329,7 @@ namespace FlashcardGame.Helpers
             Console.Clear();
             Console.WriteLine("========== Flashcards ==========\n");
 
-            var flashcards = DataAccess.GetFlashcards();
+            var flashcards = DataAccess.GetFlashcards(stackId);
             var filteredFlashcards = FilterFlashcardsByStackId(stackId, flashcards);
 
             if (filteredFlashcards.Count == 0)
@@ -385,8 +393,87 @@ namespace FlashcardGame.Helpers
 
         }
 
+        public static void InitializeStackTable(int stackId)
+        {
+            using (SqlConnection conn = new SqlConnection(Connection))
+            {
+                try
+                {
+                    conn.Open();
 
 
+                    var com = conn.CreateCommand();
+                    com.CommandText = $@"
+                IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Stack{stackId}Table' AND xtype='U')
+                CREATE TABLE Stack{stackId}Table (
+                    flashcard_id INT IDENTITY(1,1) PRIMARY KEY,
+                    flashcard_question NVARCHAR(MAX) NOT NULL,
+                    flashcard_answer NVARCHAR(MAX) NOT NULL,
+                    stack_id INT NOT NULL
+                );";
+                    com.ExecuteNonQuery();
+                    conn.Close();
+                    Console.WriteLine("Tables initialized successfully.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+            }
+        }
+        public static void BalanceIds(string flashcardStackName, int stackId)
+        {
+            var flashcards = DataAccess.GetFlashcards(stackId);
 
-    }
+            ClearFlashcardTable(stackId);
+
+            foreach (var flashcard in flashcards) 
+            {
+                using (SqlConnection connection = new SqlConnection(Connection))
+                {
+                    connection.Open();
+                    string insertQuery =
+                        $@"INSERT INTO Stack{stackId}Table (flashCard_Question, flashcard_Answer, stack_Id ) VALUES ('{flashcard.flashCard_Question}', '{flashcard.flashcard_Answer}', '{stackId}');";
+
+                    connection.Execute(insertQuery);
+
+                }
+            }
+            
+        }
+
+        public static void ClearFlashcardTable(int stackId)
+        {
+            string deleteSql = $"DELETE FROM Stack{stackId}Table;";
+            string resetIdentitySql = $"DBCC CHECKIDENT ('Stack{stackId}Table', RESEED, 0);";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(Connection))
+                {
+                    conn.Open();
+
+                    // Delete all rows
+                    using (SqlCommand deleteCommand = new SqlCommand(deleteSql, conn))
+                    {
+                        int rowsDeleted = deleteCommand.ExecuteNonQuery();
+                        Console.WriteLine($"Deleted {rowsDeleted} rows from Stack{stackId}Table.");
+                    }
+
+                    // Reset identity seed
+                    using (SqlCommand resetCommand = new SqlCommand(resetIdentitySql, conn))
+                    {
+                        resetCommand.ExecuteNonQuery();
+                        Console.WriteLine("Identity seed reset successfully.");
+                    }
+
+                    conn.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    } 
 }
