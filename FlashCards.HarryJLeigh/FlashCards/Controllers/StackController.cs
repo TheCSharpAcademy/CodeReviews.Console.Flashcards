@@ -1,14 +1,12 @@
 using FlashCards.Data;
 using Dapper;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace FlashCards.Controllers;
 
-public class StackController
+public class StackController(DatabaseService DbService)
 {
-    private DatabaseService DbService { get; }
-    
-    public StackController(DatabaseService dbService) => DbService = dbService;
+    private DatabaseService DbService { get; } = DbService;
     
     public List<StackDto> GetAllStackNames() => ExecuteDtoQuery("SELECT name FROM Stacks");
     

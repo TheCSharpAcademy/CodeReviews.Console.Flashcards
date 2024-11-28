@@ -31,7 +31,8 @@ public class UserInterface
                     ManageStackView.Run(selectedEnum);
                     break;
                 case MenuChoice.ManageFlashCards:
-                    ManageFlashcardView.Run(StackExtensions.ChooseStack());
+                    if(!StackExtensions.IsStacksEmpty()) ManageFlashcardView.Run(StackExtensions.ChooseStack());
+                    Util.AskUserToContinue();
                     break;
                 case MenuChoice.Study:
                     StudyView.Run(selectedEnum);

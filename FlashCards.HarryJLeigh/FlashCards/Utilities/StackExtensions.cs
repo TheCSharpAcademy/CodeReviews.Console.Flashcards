@@ -7,7 +7,7 @@ public static class StackExtensions
 {
     internal static string GetName(string type = "")
     {
-        AnsiConsole.MarkupLine($"[green]Enter {type} [/][yellow]stack[/] [green]name:[/]");
+        AnsiConsole.MarkupLine($"[green]Enter {type}[/] [yellow]stack[/] [green]name:[/]");
         string input = Console.ReadLine();
         return input;
     }
@@ -40,7 +40,21 @@ public static class StackExtensions
         }
     }
     
-    internal static string ChooseStack() => StackExtensions.GetStackNameFromTable("Choose a stack of flashcards to interact with:");
-   
+    internal static string ChooseStack()
+    {
+        return StackExtensions.GetStackNameFromTable("Choose a stack of flashcards to interact with:");
+    }
+
     internal static bool CheckIfStackExists(string stackName) => StackService.GetAllStackNames().Contains(stackName);
+
+    internal static bool IsStacksEmpty()
+    {
+        List<string> stacks = StackService.GetAllStackNames();
+        if (stacks.Count == 0)
+        {
+            AnsiConsole.MarkupLine("[red]No stacks found![/]");
+            return true;
+        }
+        return false;
+    }
 }

@@ -21,6 +21,7 @@ public static class FlashcardService
 
     internal static void ViewSpecificAmount(string currentStack)
     {
+        if (Util.ReturnToMenu()) return;
         int stack_id = FlashcardExtensions.GetStack_id(currentStack);
         string numberOfFlashcards = FlashcardExtensions.GetNumberOfFlashCards();
         List<FlashCardDto> flashcards = _flashcardController.GetAmountOfFlashcards(numberOfFlashcards, stack_id);
@@ -30,6 +31,7 @@ public static class FlashcardService
 
     internal static void CreateFlashcard(string currentStack)
     {
+        if (Util.ReturnToMenu()) return;
         string flashcardQuestion = FlashcardExtensions.GetFlashcardInfo("front");
         string flashcardAnswer = FlashcardExtensions.GetFlashcardInfo("back");
         int stack_id = FlashcardExtensions.GetStack_id(currentStack);
@@ -39,6 +41,7 @@ public static class FlashcardService
 
     internal static void EditFlashcard(string currentStack)
     {
+        if (Util.ReturnToMenu()) return;
         (_, string flashcardFront, string flashcardBack) = FlashcardExtensions.GetFlashcard(currentStack);
 
         string userInput = AnsiConsole.Prompt(
@@ -69,6 +72,7 @@ public static class FlashcardService
 
     internal static void DeleteFlashcard(string currentStack)
     {
+        if (Util.ReturnToMenu()) return;
         (int flashcardId, string flashcardFront, _) = FlashcardExtensions.GetFlashcard(currentStack);
         int stack_id = FlashcardExtensions.GetStack_id(currentStack);
         _flashcardController.DeleteFlashcard(flashcardFront, stack_id);

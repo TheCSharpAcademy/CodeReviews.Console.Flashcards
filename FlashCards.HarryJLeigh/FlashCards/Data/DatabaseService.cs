@@ -1,6 +1,6 @@
 using Dapper;
 using System.Configuration;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace FlashCards.Data;
 

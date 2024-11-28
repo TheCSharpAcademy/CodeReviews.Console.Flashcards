@@ -1,14 +1,12 @@
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Dapper;
 using FlashCards.Data;
 
 namespace FlashCards.Controllers;
 
-public class ReportController
+public class ReportController(DatabaseService DbService)
 {
-    private DatabaseService DbService { get; }
-
-    public ReportController(DatabaseService dbService) => DbService = dbService;
+    private DatabaseService DbService { get; } = DbService;
 
     public IEnumerable<dynamic>? GetSessionReportData(string year, int stack_id)
     {
