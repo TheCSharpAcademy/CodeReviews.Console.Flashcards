@@ -1,6 +1,6 @@
 ﻿
 using Microsoft.Data.SqlClient;
-using System.Configuration;
+
 
 namespace Flashcards.Bina28.DBmanager;
 internal class DBConfig
