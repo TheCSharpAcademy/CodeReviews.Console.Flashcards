@@ -1,7 +1,7 @@
 ﻿
 
 
-using Flashcards.Bina28.Models;
+
 using Microsoft.Data.SqlClient;
 using System.Configuration;
 
@@ -78,7 +78,7 @@ internal class FlashcardsDB
 			try
 			{
 				connection.Open();
-				int result = command.ExecuteNonQuery();
+				command.ExecuteNonQuery();
 
 			}
 			catch (Exception ex)
