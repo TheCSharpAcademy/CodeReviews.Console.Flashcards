@@ -81,7 +81,7 @@ internal class FlashcardsController
 	{
 		DisplayAllFlashcards(UserInterface.stackName);
 		int number = _inputHelper.GetValidIntegerInput("Enter the number of flachcard which you want to update: ");
-		if (!isCardExist(number))
+		if (!IsCardExist(number))
 		{
 			return;
 		}
@@ -98,7 +98,7 @@ internal class FlashcardsController
 		DisplayAllFlashcards(UserInterface.stackName);
 		int number = _inputHelper.GetValidIntegerInput("Enter the number of flachcard you want to delete: ");
 
-		if (!isCardExist(number))
+		if (!IsCardExist(number))
 		{
 			return;
 		}
