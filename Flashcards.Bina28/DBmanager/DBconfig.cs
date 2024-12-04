@@ -1,11 +1,13 @@
 ﻿
+
 using Microsoft.Data.SqlClient;
-using System.Configuration;
+
+
 
 namespace Flashcards.Bina28.DBmanager;
 internal class DBConfig
 {
-	public static string ConnectionString { get; } = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+	public static string ConnectionString =System.Configuration.ConfigurationManager.AppSettings["ConnectionString"];
 
 	public static SqlConnection EstablishConnection()
 	{

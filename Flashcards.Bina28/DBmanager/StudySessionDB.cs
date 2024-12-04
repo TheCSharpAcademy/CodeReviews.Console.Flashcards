@@ -14,7 +14,7 @@ internal class StudySessionDB
 	public StudySessionDB()
 	{
 
-		connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+		connectionString = System.Configuration.ConfigurationManager.AppSettings["ConnectionString"];
 	}
 
 	internal bool CreateSession(object date, string stackName, int wrongAnswer, int rightAnswer, int totalQuestions)

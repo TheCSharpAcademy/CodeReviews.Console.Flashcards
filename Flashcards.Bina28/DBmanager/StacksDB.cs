@@ -3,7 +3,7 @@
 using Dapper;
 using Flashcards.Bina28.Models;
 using Microsoft.Data.SqlClient;
-using System.Configuration;
+
 
 
 
@@ -13,8 +13,7 @@ internal class StacksDB
 	private string connectionString;
 	public StacksDB()
 	{
-
-		connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+		connectionString = System.Configuration.ConfigurationManager.AppSettings["ConnectionString"];
 	}
 
 	public List<StacksDto> GetAllRecords()

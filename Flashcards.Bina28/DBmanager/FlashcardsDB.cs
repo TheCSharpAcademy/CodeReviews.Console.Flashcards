@@ -3,7 +3,7 @@
 
 using Flashcards.Bina28.Models;
 using Microsoft.Data.SqlClient;
-using System.Configuration;
+
 
 namespace Flashcards.Bina28.DBmanager;
 
@@ -14,7 +14,7 @@ internal class FlashcardsDB
 	public FlashcardsDB()
 	{
 		// Retrieve the connection string from App.config
-		connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+		connectionString = System.Configuration.ConfigurationManager.AppSettings["ConnectionString"];
 	}
 	public List<FlashCardsDto> GetAllRecords(string stackName)
 	{
@@ -78,7 +78,7 @@ internal class FlashcardsDB
 			try
 			{
 				connection.Open();
-				int result = command.ExecuteNonQuery();
+				command.ExecuteNonQuery();
 
 			}
 			catch (Exception ex)
