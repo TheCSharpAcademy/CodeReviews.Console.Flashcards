@@ -50,7 +50,7 @@ internal class StudyController
 				DisplaySessionStats(rightAnswer, wrongAnswer);
 				break;
 			}
-			else if (!_flashCard_controller.isCardExist(number))
+			else if (!_flashCard_controller.IsCardExist(number))
 			{
 				Console.WriteLine("Flashcard not found. Please try again.");
 				continue;
