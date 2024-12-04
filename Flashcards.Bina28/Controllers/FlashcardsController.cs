@@ -126,7 +126,7 @@ internal class FlashcardsController
 		AnsiConsole.Write(table);
 	}
 
-	internal bool isCardExist(int number)
+	internal bool IsCardExist(int number)
 	{
 		if (number < 1 || number > _flashCards.Count)
 		{
