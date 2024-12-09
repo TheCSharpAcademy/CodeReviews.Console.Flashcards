@@ -9,9 +9,18 @@ namespace Flashcards.TwilightSaw.Controller
     {
         public void Create(string name)
         {
-            context.Add(new CardStack(name));
-            context.SaveChanges();
-            AnsiConsole.Markup($"[red]{Validation.Validate(() => context.SaveChanges())}[/]");
+            var cardStack = new CardStack(name);
+            context.Add(cardStack);
+            try
+            {
+                context.SaveChanges();
+                Validation.EndMessage("Created successfully.");
+            }
+            catch(DbUpdateException e)
+            {
+                AnsiConsole.MarkupLine("[red]This CardStack has been already created.[/]");
+                context.Entry(cardStack).State = EntityState.Detached;
+            }
         }
 
         public List<CardStack>? Read()
