@@ -20,7 +20,7 @@ public static class MenuOptions
         new SelectionPrompt<string>()
             .Title("[bold underline red]Menu[/]")
             .PageSize(6)
-            .AddChoices(["Manage stacks", "Study", "Exit"])
+            .AddChoices(["Manage stacks", "Study Sessions", "Exit"])
     );
   }
 
@@ -101,7 +101,7 @@ public static class MenuOptions
         new SelectionPrompt<string>()
             .Title("[bold underline red]Stacks[/]")
             .PageSize(6)
-            .AddChoices(["Go back", "View stacks", "Add stack", "Manage stack", "Update stack", "Delete stack"])
+            .AddChoices(["Go back", "View stacks", "Add new stack", "Manage stacks", "Update a stack", "Delete stack"])
     );
   }
 
@@ -123,7 +123,7 @@ public static class MenuOptions
     return AnsiConsole.Prompt(
         new SelectionPrompt<string>()
             .Title("[bold underline red]Study[/]")
-            .PageSize(6)
+            .PageSize(8)
             .AddChoices(["Go back", "View sessions", "Start new session", "View taken sessions", "View scores"])
     );
   }
@@ -170,10 +170,10 @@ public static class MenuOptions
         case "Manage stacks":
           InitStacks();
           break;
-        case "Study":
+        case "Study Sessions":
           InitStudy();
           break;
-        case "Close":
+        case "Exit":
           end = true;
           break;
       }

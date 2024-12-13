@@ -7,30 +7,29 @@ namespace Flashcards.yemiOdetola.Controllers;
 
 public static class SessionController
 {
-
   private static SessionsRepository sessionsRepository = new SessionsRepository();
   private static FlashCardsRepository flashcardsRepository = new FlashCardsRepository();
 
   public static void DisplaySessions()
   {
     Table table = new Table()
-        .Title("[bold red]Sessions[/]")
-        .AddColumn("[bold blue]stack name[/]")
-        .AddColumn("[bold green]score[/]")
-        .AddColumn("[bold yellow]date[/]");
+      .Title("[bold red]Sessions[/]")
+      .AddColumn("[bold blue]Stack Name[/]")
+      .AddColumn("[bold yellow]Date[/]")
+      .AddColumn("[bold green]Score(%)[/]");
 
     List<Session> sessions = sessionsRepository.GetSessions();
 
     foreach (Session session in sessions)
     {
-      double score = (double)session.score / session.maxScore * 100;
+      double score = session.maxScore / (double)session.score * 100;
+      Console.WriteLine($"Score: {score}, {session.score}, {session.maxScore}");
       table.AddRow(
-          $"[bold blue]{session.stackName}[/]",
-          $"[bold green]{score:0.00}%[/]",
-          $"[bold yellow]{session.dateTime.ToString(CultureInfo.CurrentCulture)}[/]"
-          );
+        $"[bold blue]{session.stackName}[/]",
+        $"[bold yellow]{session.dateTime.ToString(CultureInfo.CurrentCulture)}[/]",
+        $"[bold green]{score:0.00}%[/]"
+      );
     }
-
     AnsiConsole.Clear();
     AnsiConsole.Write(table);
   }
@@ -45,37 +44,37 @@ public static class SessionController
     Table table = new Table()
         .Title($"[bold red]Sessions per month: {year}[/]")
         .AddColumn("[bold navy]Stack name[/]")
-        .AddColumn("[bold green]January[/]")
-        .AddColumn("[bold blueviolet]February[/]")
-        .AddColumn("[bold mediumpurple]March[/]")
-        .AddColumn("[bold greenyellow]April[/]")
-        .AddColumn("[bold orchid]May[/]")
-        .AddColumn("[bold violet]June[/]")
-        .AddColumn("[bold sandybrown]July[/]")
-        .AddColumn("[bold lime]August[/]")
-        .AddColumn("[bold darkmagenta]September[/]")
-        .AddColumn("[bold darkseagreen]October[/]")
-        .AddColumn("[bold darkblue]November[/]")
-        .AddColumn("[bold purple]December[/]");
+        .AddColumn("[bold navy]January[/]")
+        .AddColumn("[bold navy]February[/]")
+        .AddColumn("[bold navy]March[/]")
+        .AddColumn("[bold navy]April[/]")
+        .AddColumn("[bold navy]May[/]")
+        .AddColumn("[bold navy]June[/]")
+        .AddColumn("[bold navy]July[/]")
+        .AddColumn("[bold navy]August[/]")
+        .AddColumn("[bold navy]September[/]")
+        .AddColumn("[bold navy]October[/]")
+        .AddColumn("[bold navy]November[/]")
+        .AddColumn("[bold navy]December[/]");
 
     List<SessionDto> sessionsReport = sessionsRepository.GetSessionsReport(year);
 
     foreach (SessionDto stackSession in sessionsReport)
     {
       table.AddRow(
-          $"[bold navy]{stackSession.Name}[/]",
-          $"[bold green]{stackSession.Sessions["January"]}[/]",
+          $"[bold blueviolet]{stackSession.Name}[/]",
+          $"[bold blueviolet]{stackSession.Sessions["January"]}[/]",
           $"[bold blueviolet]{stackSession.Sessions["February"]}[/]",
-          $"[bold mediumpurple]{stackSession.Sessions["March"]}[/]",
-          $"[bold greenyellow]{stackSession.Sessions["April"]}[/]",
-          $"[bold orchid]{stackSession.Sessions["May"]}[/]",
-          $"[bold violet]{stackSession.Sessions["June"]}[/]",
-          $"[bold sandybrown]{stackSession.Sessions["July"]}[/]",
-          $"[bold lime]{stackSession.Sessions["August"]}[/]",
-          $"[bold darkmagenta]{stackSession.Sessions["September"]}[/]",
-          $"[bold darkseagreen]{stackSession.Sessions["October"]}[/]",
-          $"[bold darkblue]{stackSession.Sessions["November"]}[/]",
-          $"[bold purple]{stackSession.Sessions["December"]}[/]"
+          $"[bold blueviolet]{stackSession.Sessions["March"]}[/]",
+          $"[bold blueviolet]{stackSession.Sessions["April"]}[/]",
+          $"[bold blueviolet]{stackSession.Sessions["May"]}[/]",
+          $"[bold blueviolet]{stackSession.Sessions["June"]}[/]",
+          $"[bold blueviolet]{stackSession.Sessions["July"]}[/]",
+          $"[bold blueviolet]{stackSession.Sessions["August"]}[/]",
+          $"[bold blueviolet]{stackSession.Sessions["September"]}[/]",
+          $"[bold blueviolet]{stackSession.Sessions["October"]}[/]",
+          $"[bold blueviolet]{stackSession.Sessions["November"]}[/]",
+          $"[bold blueviolet]{stackSession.Sessions["December"]}[/]"
       );
     }
 
@@ -92,19 +91,19 @@ public static class SessionController
 
     Table table = new Table()
         .Title($"[bold red]Average scores: {year}[/]")
-        .AddColumn("[bold navy]Stack name[/]")
-        .AddColumn("[bold green]January[/]")
+        .AddColumn("[bold blueviolet]Stack name[/]")
+        .AddColumn("[bold blueviolet]January[/]")
         .AddColumn("[bold blueviolet]February[/]")
-        .AddColumn("[bold mediumpurple]March[/]")
-        .AddColumn("[bold greenyellow]April[/]")
-        .AddColumn("[bold orchid]May[/]")
-        .AddColumn("[bold violet]June[/]")
-        .AddColumn("[bold sandybrown]July[/]")
-        .AddColumn("[bold lime]August[/]")
-        .AddColumn("[bold darkmagenta]September[/]")
-        .AddColumn("[bold darkseagreen]October[/]")
-        .AddColumn("[bold darkblue]November[/]")
-        .AddColumn("[bold purple]December[/]");
+        .AddColumn("[bold blueviolet]March[/]")
+        .AddColumn("[bold blueviolet]April[/]")
+        .AddColumn("[bold blueviolet]May[/]")
+        .AddColumn("[bold blueviolet]June[/]")
+        .AddColumn("[bold blueviolet]July[/]")
+        .AddColumn("[bold blueviolet]August[/]")
+        .AddColumn("[bold blueviolet]September[/]")
+        .AddColumn("[bold blueviolet]October[/]")
+        .AddColumn("[bold blueviolet]November[/]")
+        .AddColumn("[bold blueviolet]December[/]");
 
     List<ScoreDto> sessionsScore = sessionsRepository.GetSessionsScore(year);
 
@@ -112,18 +111,18 @@ public static class SessionController
     {
       table.AddRow(
           $"[bold navy]{stackScore.Name}[/]",
-          $"[bold green]{stackScore.Scores["January"]}%[/]",
-          $"[bold blueviolet]{stackScore.Scores["February"]}%[/]",
-          $"[bold mediumpurple]{stackScore.Scores["March"]}%[/]",
-          $"[bold greenyellow]{stackScore.Scores["April"]}%[/]",
-          $"[bold orchid]{stackScore.Scores["May"]}%[/]",
-          $"[bold violet]{stackScore.Scores["June"]}%[/]",
-          $"[bold sandybrown]{stackScore.Scores["July"]}%[/]",
-          $"[bold lime]{stackScore.Scores["August"]}%[/]",
-          $"[bold darkmagenta]{stackScore.Scores["September"]}%[/]",
-          $"[bold darkseagreen]{stackScore.Scores["October"]}%[/]",
-          $"[bold darkblue]{stackScore.Scores["November"]}%[/]",
-          $"[bold purple]{stackScore.Scores["December"]}%[/]"
+          $"[bold navy]{stackScore.Scores["January"]}%[/]",
+          $"[bold navy]{stackScore.Scores["February"]}%[/]",
+          $"[bold navy]{stackScore.Scores["March"]}%[/]",
+          $"[bold navy]{stackScore.Scores["April"]}%[/]",
+          $"[bold navy]{stackScore.Scores["May"]}%[/]",
+          $"[bold navy]{stackScore.Scores["June"]}%[/]",
+          $"[bold navy]{stackScore.Scores["July"]}%[/]",
+          $"[bold navy]{stackScore.Scores["August"]}%[/]",
+          $"[bold navy]{stackScore.Scores["September"]}%[/]",
+          $"[bold navy]{stackScore.Scores["October"]}%[/]",
+          $"[bold navy]{stackScore.Scores["November"]}%[/]",
+          $"[bold navy]{stackScore.Scores["December"]}%[/]"
       );
     }
 
