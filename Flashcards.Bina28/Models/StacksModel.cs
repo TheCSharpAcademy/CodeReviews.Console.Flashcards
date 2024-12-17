@@ -4,12 +4,12 @@ namespace Flashcards.Bina28.Models;
 
 internal class StacksModel
 {
-	public long Stack_id { get; set; }
+	public int Stack_id { get; set; }
 	public string Name { get; set; }
 
-	public StacksModel(long stack_id, string name) 
+	public StacksModel(string name) 
 	{ 
-		Stack_id = stack_id;
+	
 		Name = name;
 	}
 }

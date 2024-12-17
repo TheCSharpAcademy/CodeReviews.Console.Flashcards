@@ -2,33 +2,42 @@
 using Flashcards.Bina28;
 using Flashcards.Bina28.DBmanager;
 
-
-
 try
 {
-	// Establish the database connection
+	// Step 1: Establish the database connection
+	// This method sets up a connection to the database for subsequent operations.
 	DBConfig.EstablishConnection();
 
-	// Create and insert into the stacks table
+	// Step 2: Create and manage the operation status table
+	// Initialize the OperationManager class to handle table creation.
+	OperationManager operationalManager = new();
+	operationalManager.CreateOperationStatusTable();
+
+	// Step 3: Create and populate the stacks table
+	// Initialize the StacksDB class to create the 'stacks' table and insert default values.
 	StacksDB db = new();
-	db.CreateStacksTable();
-	db.InsertStacks();
+	db.CreateStacksTable(); 
+	db.InsertStacks();     
 
-	// Create and insert into the flashcards table
+	// Step 4: Create and populate the flashcards table
+	// Initialize the FlashcardsDB class to handle flashcards data.
 	FlashcardsDB cardDb = new();
-	cardDb.CreateFlashcardTable();
-	cardDb.InsertVocabularyFlashcards();
+	cardDb.CreateFlashcardTable();      
+	cardDb.InsertVocabularyFlashcards(); 
 
-	// Create the study session log table
+	// Step 5: Create a table for study session logs
+	// Initialize the StudySessionDB class to manage study session log data.
 	StudySessionDB studyDb = new();
-	studyDb.CreateStudySessionLogTable();
+	studyDb.CreateStudySessionLogTable(); 
 
-	// Start the user interface
+	// Step 6: Launch the user interface
+	// Initialize and display the main menu for user interaction.
 	UserInterface userInterface = new();
 	userInterface.MainMenu();
 }
 catch (Exception ex)
 {
-	// Error handling to catch any exceptions
+	// Error handling block
+	// Catches any exceptions that occur during the program execution and outputs an error message.
 	Console.WriteLine($"An error occurred: {ex.Message}");
 }

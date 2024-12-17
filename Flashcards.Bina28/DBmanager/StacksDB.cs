@@ -25,49 +25,133 @@ internal class StacksDB
 			using var connection = new SqlConnection(connectionString);
 			connection.Open();
 
-			string sql = "SELECT name FROM stacks";
-			return connection.Query<StacksDto>(sql).ToList();
+			string sql = "SELECT  name FROM stacks";
+			stacks = connection.Query<StacksDto>(sql).ToList();
 		}
 		catch (SqlException ex)
 		{
-
 			Console.WriteLine("SQL Error: " + ex.Message);
 		}
 		catch (Exception ex)
 		{
-
 			Console.WriteLine("Error: " + ex.Message);
 		}
+
 		return stacks;
 	}
-	internal bool CreateStack(string? stackName)
+	
+	public void CreateStacksTable()
 	{
-		string query = "INSERT INTO stacks (name) VALUES (@stackName)";
+		string createTableQuery = @"
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Stacks')
+BEGIN
+    CREATE TABLE Stacks (
+        stack_id INT IDENTITY(1,1) PRIMARY KEY,
+        name NVARCHAR(255) UNIQUE NOT NULL,
+
+    );
+END;
+";
+
+		// Query to find the highest stack_id
+		string findMaxStackIdQuery = "SELECT ISNULL(MAX(stack_id), 0) FROM Stacks";
+
+		// Query to reseed the identity column
+		string reseedQuery = "DBCC CHECKIDENT ('Stacks', RESEED, @maxStackId)";
+
 		using (SqlConnection connection = new SqlConnection(connectionString))
 		{
-			SqlCommand command = new SqlCommand(query, connection);
-			command.Parameters.AddWithValue("@stackName", stackName);
 			try
 			{
 				connection.Open();
-				int result = command.ExecuteNonQuery();
-				return result > 0;
+
+				// Create the table if it doesn't exist
+				using (SqlCommand createCommand = new SqlCommand(createTableQuery, connection))
+				{
+					createCommand.ExecuteNonQuery();					
+				}
+
+				// Find the highest stack_id
+				int maxStackId;
+				using (SqlCommand findMaxStackIdCommand = new SqlCommand(findMaxStackIdQuery, connection))
+				{
+					maxStackId = (int)findMaxStackIdCommand.ExecuteScalar();
+				}
+
+				// Reseed the identity column to avoid issues with the stack_id
+				using (SqlCommand reseedCommand = new SqlCommand(reseedQuery, connection))
+				{
+					// Add the @maxStackId parameter
+					reseedCommand.Parameters.AddWithValue("@maxStackId", maxStackId);
+					reseedCommand.ExecuteNonQuery();					
+				}
+			}
+			catch (SqlException ex)
+			{
+				Console.WriteLine("SQL Error: " + ex.Message);
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"An error occurred: {ex.Message}");
-				return false;
+				Console.WriteLine("An unexpected error occurred: " + ex.Message);
 			}
 		}
 	}
 
-
-	internal bool DeleteStack(string? stackName)
+	
+	public void CreateStack(string? stackName)
 	{
 		if (string.IsNullOrWhiteSpace(stackName))
 		{
 			Console.WriteLine("Stack name cannot be empty.");
-			return false;
+			
+		}
+
+		string checkQuery = "SELECT COUNT(1) FROM stacks WHERE name = @stackName";
+
+		using (SqlConnection connection = new SqlConnection(connectionString))
+		{
+			try
+			{
+				connection.Open();
+
+				using (SqlCommand checkCommand = new SqlCommand(checkQuery, connection))
+				{
+					checkCommand.Parameters.AddWithValue("@stackName", stackName);
+					int count = (int)checkCommand.ExecuteScalar();
+
+					if (count > 0)
+					{
+						Console.WriteLine($"Stack '{stackName}' already exists.");						
+					}
+				}
+
+				string query = "INSERT INTO stacks (name) VALUES (@stackName)";
+				SqlCommand command = new SqlCommand(query, connection);
+				command.Parameters.AddWithValue("@stackName", stackName);
+				int result = command.ExecuteNonQuery();
+
+				if (result > 0)
+				{
+					Console.WriteLine($"The stack '{stackName}' was successfully created");					
+				}
+				else
+				{
+					Console.WriteLine("Failed to create the stack.");				
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"An error occurred: {ex.Message}");				
+			}
+		}
+	}
+
+
+	public void  DeleteStack(string? stackName)
+	{
+		if (string.IsNullOrWhiteSpace(stackName))
+		{
+			Console.WriteLine("Stack name cannot be empty.");		
 		}
 
 		string selectQuery = "SELECT stack_id FROM stacks WHERE name = @stackName";
@@ -78,163 +162,142 @@ internal class StacksDB
 			try
 			{
 				connection.Open();
-
-				// First, retrieve the stack_id
 				SqlCommand selectCommand = new SqlCommand(selectQuery, connection);
 				selectCommand.Parameters.AddWithValue("@stackName", stackName);
 				object? stack_id = selectCommand.ExecuteScalar();
 
 				if (stack_id == null)
 				{
-					Console.WriteLine("Stack not found.");
-					return false;
+					Console.WriteLine("Stack not found.");					
 				}
 
-				// Now, delete the stack using stack_id
 				SqlCommand deleteCommand = new SqlCommand(deleteQuery, connection);
 				deleteCommand.Parameters.AddWithValue("@stack_id", stack_id);
 
 				int result = deleteCommand.ExecuteNonQuery();
-				return result > 0;
+				if (result > 0)
+				{
+					Console.WriteLine($"The stack '{stackName}' was successfully deleted.");					
+				}
+				else
+				{
+					Console.WriteLine("Failed to delete the stack.");					
+				}
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"An error occurred: {ex.Message}");
-				return false;
+				Console.WriteLine($"An error occurred: {ex.Message}");				
 			}
 		}
-
 	}
 
-	internal bool UpdateStack(string stackName, string newStackName)
+	public void UpdateStack(string stackName, string newStackName)
 	{
+
 		if (string.IsNullOrWhiteSpace(stackName) || string.IsNullOrWhiteSpace(newStackName))
 		{
-			Console.WriteLine("Stack name cannot be empty.");
-			return false;
+			Console.WriteLine("Stack name cannot be empty.");		
 		}
 
 		if (stackName == newStackName)
 		{
-			Console.WriteLine("New stack name cannot be the same as the old stack name.");
-			return false;
+			Console.WriteLine("New stack name cannot be the same as the old stack name.");		
 		}
 
 		string query = "UPDATE stacks SET name = @newStackName WHERE name = @stackName";
+
 		using (var connection = new SqlConnection(connectionString))
 		{
 			try
 			{
 				connection.Open();
+
+				// Using Dapper to execute the SQL Server query
 				int rowsAffected = connection.Execute(query, new { stackName, newStackName });
+
+				// Check if the update was successful
 				if (rowsAffected > 0)
 				{
-					Console.WriteLine("Stack name updated successfully.");
-					return true;
+					Console.WriteLine("Stack updated successfully.");					
 				}
 				else
 				{
-					Console.WriteLine("Stack not found or no changes made.");
-					return false;
+					Console.WriteLine("No stack was updated. Please check if the stack name exists.");
+				
 				}
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"An error occurred: {ex.Message}");
-				return false;
+				Console.WriteLine($"An error occurred: {ex.Message}");				
 			}
 		}
 	}
-
-	// Method to create the Stacks table
-	public void CreateStacksTable()
+	OperationManager operationManager = new OperationManager();
+	public void InsertStacks()
 	{
-		string createTableQuery = @"
-        IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Stacks')
-        BEGIN
-            CREATE TABLE Stacks (
-                stack_id INT IDENTITY(1,1) PRIMARY KEY,  
-                name NVARCHAR(100) NOT NULL
-            );
-        END";
-
-		// Execute the query to create the table
-		using (SqlConnection connection = new SqlConnection(connectionString))
-		{
-			try
-			{
-				connection.Open();
-
-				using (SqlCommand command = new SqlCommand(createTableQuery, connection))
-				{
-					command.ExecuteNonQuery();
-
-				}
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine("An error occurred: " + ex.Message);
-
-			}
-		}
-	}
-
-	// Method to insert stacks into the table
-	internal void InsertStacks()
+		var stacks = new List<StacksModel>
 	{
-		string query = "INSERT INTO stacks (name) VALUES (@name)";
-
-		var stacks = new List<StacksDto>
-	{
-		new StacksDto("Norwegian"),
-		new StacksDto("English"),
-		new StacksDto("Spanish"),
-		new StacksDto("German"),
-
+		new StacksModel("Norwegian"),
+		new StacksModel("English"),
+		new StacksModel("Spanish"),
+		new StacksModel("German")
 	};
 
-		using (SqlConnection connection = new SqlConnection(connectionString))
+		if (!operationManager.IsOperationComplete("Stack"))
 		{
-			try
+			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				connection.Open();
-				// Reset the identity seed for stacks table
-				string resetStackIdentityQuery = "DBCC CHECKIDENT ('stacks', RESEED, 0);";
-				using (SqlCommand resetStackCommand = new SqlCommand(resetStackIdentityQuery, connection))
+				try
 				{
-					resetStackCommand.ExecuteNonQuery();
-				}
-				foreach (var stack in stacks)
-				{
-					// Check if stack already exists
-					string checkIfExistsQuery = "SELECT COUNT(1) FROM stacks WHERE name = @name";
-					using (SqlCommand checkCommand = new SqlCommand(checkIfExistsQuery, connection))
+					connection.Open();
+
+					foreach (var stack in stacks)
 					{
-						checkCommand.Parameters.AddWithValue("@name", stack.Name);
-						int count = (int)checkCommand.ExecuteScalar();
-
-						if (count == 0) // If stack doesn't exist, insert it
+						// Check if the stack already exists in the database
+						string checkStackQuery = "SELECT COUNT(*) FROM Stacks WHERE name = @name";
+						using (var checkCommand = new SqlCommand(checkStackQuery, connection))
 						{
-							using (SqlCommand command = new SqlCommand(query, connection))
+							checkCommand.Parameters.AddWithValue("@name", stack.Name);
+							int count = (int)checkCommand.ExecuteScalar();
+
+							// If the stack doesn't exist, insert it
+							if (count == 0)
 							{
-								command.Parameters.AddWithValue("@name", stack.Name);
-								command.ExecuteNonQuery();
-
-
+								string insertQuery = "INSERT INTO Stacks (name) VALUES (@name)";
+								using (var insertCommand = new SqlCommand(insertQuery, connection))
+								{
+									insertCommand.Parameters.AddWithValue("@name", stack.Name);
+									insertCommand.ExecuteNonQuery();
+									Console.WriteLine($"Stack '{stack.Name}' inserted.");
+								}
+							}
+							else
+							{
+								Console.WriteLine($"Stack '{stack.Name}' already exists. Skipping insert.");
 							}
 						}
 					}
-				}
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine($"An error occurred while inserting stacks: {ex.Message}");
 
+					operationManager.MarkOperationComplete("Stack");
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine($"An error occurred while inserting stacks. Details: {ex.Message}");
+				}
 			}
 		}
 	}
 
+
 }
+
+
+
+
+
+
+
+
 
 
 

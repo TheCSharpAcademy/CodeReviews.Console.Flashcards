@@ -100,7 +100,7 @@ internal class UserInterface
 	{
 		_stacks_controller.ManageStacks();
 		stackName = _stacks_controller.InputStack();
-		_flashCard_controller.RefreshFlashCards(UserInterface.stackName);
+		_flashCard_controller.RefreshFlashCards();
 		Console.Clear();
 		Console.WriteLine($"You're currently working with {stackName} stack");
 		Console.WriteLine("---------------------------------");
@@ -150,7 +150,7 @@ internal class UserInterface
 	{
 		_stacks_controller.ManageStacks();
 		stackName = _stacks_controller.InputStack();
-		_flashCard_controller.RefreshFlashCards(stackName);
+		_flashCard_controller.RefreshFlashCards();
 		Console.Clear();
 		Console.WriteLine($"You are working with the '{stackName}' stack\n");		
 		_study_controller.StudySession();

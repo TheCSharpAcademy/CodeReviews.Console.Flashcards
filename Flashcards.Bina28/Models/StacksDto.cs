@@ -9,5 +9,6 @@ internal class StacksDto
 	public StacksDto(string name)
 	{
 		Name = name;
+		
 	}
 }

@@ -8,11 +8,13 @@ namespace Flashcards.Bina28.Models
 		public long Flashcard_id { get; set; }
 		public string Question { get; set; }
 
+
 		public FlashCardsDto(long flashcard_id, string question, string answer)
 		{
+			Flashcard_id = flashcard_id;
 			Question = question;
 			Answer = answer;
-			Flashcard_id = flashcard_id;
+		
 		}
 	}
 }

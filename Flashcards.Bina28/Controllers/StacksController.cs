@@ -18,6 +18,7 @@ internal class StacksController
 		stacks = db.GetAllRecords() ?? new List<StacksDto>();
 	}
 
+	// Create a table with a single column for stack names
 	internal void ManageStacks()
 	{
 		var table = new Table();
@@ -29,9 +30,10 @@ internal class StacksController
 			table.AddRow($"[yellow]{stack.Name}[/]");
 		}
 		AnsiConsole.Write(table);
-
 	}
 
+	// Prompts the user to input a valid stack name that exists in the list of stacks.
+	// Ensures the input matches an existing stack.
 	internal string InputStack()
 	{
 		string input;
@@ -45,21 +47,26 @@ internal class StacksController
 		return input;
 	}
 
+	// Creates a new stack with a name provided by the user.
 	internal void CreateStack()
 	{
 		string stackName = _inputHelper.GetNonEmptyInput("Enter the name of stack you want to create: ");
-		Console.WriteLine($"The stack '{stackName}' was successfullt created");
 		db.CreateStack(stackName);
+
 		_inputHelper.WaitForKeyPress();
 	}
 
-	internal void UpdateStack(string stack)
+	// Updates an existing stack's name.
+	// Prompts the user for a new name to replace the current one.
+	internal void UpdateStack(string stackName)
 	{
-		string newStackName = _inputHelper.GetNonEmptyInput($"The current stack name is '{stack}'. Enter a new name to update it: ");
-		db.UpdateStack(stack, newStackName);
+		string newStackName = _inputHelper.GetNonEmptyInput($"The current stack name is '{stackName}'. Enter a new name to update it: ");
+		db.UpdateStack(stackName, newStackName);
+
 		_inputHelper.WaitForKeyPress();
 	}
 
+	// Deletes a stack after confirmation from the user
 	internal void DeleteStack(string stackName)
 	{
 		if (ConfirmDeletion(stackName))
@@ -74,8 +81,8 @@ internal class StacksController
 		_inputHelper.WaitForKeyPress();
 	}
 
-
-
+	// Asks the user for confirmation before deleting a stack.
+	// Ensures valid input ('y' or 'n') is provided.
 	internal bool ConfirmDeletion(string stackName)
 	{
 		string input;

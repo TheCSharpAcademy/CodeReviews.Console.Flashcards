@@ -4,6 +4,7 @@
 using Flashcards.Bina28.DBmanager;
 using Flashcards.Bina28.Models;
 using Spectre.Console;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace Flashcards.Bina28.Controllers;
@@ -28,7 +29,7 @@ internal class StudyController
 		var sessionDate = DateTime.Now;
 
 		// Refresh flashcards once before starting the study session
-		_flashCard_controller.RefreshFlashCards(UserInterface.stackName);
+		_flashCard_controller.RefreshFlashCards();
 		var flashcards = _flashCard_controller.GetFlashCards();
 
 		// Check if there are any flashcards available
@@ -43,46 +44,21 @@ internal class StudyController
 		while (continueStudy)
 		{
 			_flashCard_controller.DisplayAllFlashcards(UserInterface.stackName);
-			int number = _inputHelper.GetValidIntegerInput("\nInput an ID of a flashcard \nor input 0 to exit");
+			int cardId = _inputHelper.GetValidIntegerInput("\nInput an ID of a flashcard \nor input 0 to exit");
 
-			if (number == 0)
+			if (cardId == 0)
 			{
-				DisplaySessionStats(rightAnswer, wrongAnswer);
+				DisplaySessionStatus(rightAnswer, wrongAnswer);
 				break;
 			}
-			else if (!_flashCard_controller.IsCardExist(number))
+
+			 if (!_flashCard_controller.IsCardExist(cardId))
 			{
 				Console.WriteLine("Flashcard not found. Please try again.");
 				continue;
 			}
-			else
-			{
-				Console.Clear();
-				ShowQuestion(number);
-				string answer = _inputHelper.GetNonEmptyInput("\nInput your answer to this flashcard \nor input 0 to exit").ToLower();
 
-				if (answer == "0")
-				{
-					DisplaySessionStats(rightAnswer, wrongAnswer);
-					break;
-				}
-
-				if (IsRightAnswer(number, answer))
-				{
-					Console.WriteLine("Your answer is correct!");
-					rightAnswer++;
-				}
-				else
-				{
-					Console.WriteLine($"Your answer is incorrect. Your answer: {answer}\nThe correct answer is: {flashcards[number - 1].Answer}");
-					wrongAnswer++;
-				}
-
-				Console.WriteLine("\nPress any key to continue...");
-				Console.ReadKey();
-				Console.Clear();
-
-			}
+			HandleFlashcardStudy(flashcards, cardId, ref rightAnswer, ref wrongAnswer);
 		}
 		int totalQuestions = rightAnswer + wrongAnswer;
 
@@ -90,8 +66,37 @@ internal class StudyController
 
 	}
 
+	private void HandleFlashcardStudy(List<FlashCardsDto> flashcards, int cardId, ref int rightAnswer, ref int wrongAnswer)
+	{
+		Console.Clear();
+		ShowQuestion(cardId);
+		
+		string answer = _inputHelper.GetNonEmptyInput("\nInput your answer to this flashcard \nor input 0 to exit").ToLower();
 
-	internal void DisplaySessionStats(int rightAnswer, int wrongAnswer)
+		if (answer == "0")
+		{
+			DisplaySessionStatus(rightAnswer, wrongAnswer);
+			return;
+		}
+
+		if (IsRightAnswer(cardId, answer))
+		{
+			Console.WriteLine("Your answer is correct!");
+			rightAnswer++;
+		}
+		else
+		{
+			Console.WriteLine($"Your answer is incorrect. Your answer: {answer}\nThe correct answer is: {flashcards[cardId - 1].Answer}");
+			wrongAnswer++;
+		}
+
+		Console.WriteLine("\nPress any key to continue...");
+		Console.ReadKey();
+		Console.Clear();
+
+	}
+
+	internal void DisplaySessionStatus(int rightAnswer, int wrongAnswer)
 	{
 		int totalCount = rightAnswer + wrongAnswer;
 		Console.WriteLine($"Current session status: You got {rightAnswer} correct out of {totalCount} flashcards.");
@@ -101,7 +106,7 @@ internal class StudyController
 
 	internal bool IsRightAnswer(int cardId, string userAnswer)
 	{
-		_flashCard_controller.RefreshFlashCards(UserInterface.stackName);
+		_flashCard_controller.RefreshFlashCards();
 		var flashcards = _flashCard_controller.GetFlashCards();
 		int index = cardId - 1;
 		var correctAnswer = flashcards[index].Answer.ToLower();
@@ -111,7 +116,7 @@ internal class StudyController
 
 	internal void ShowQuestion(int number)
 	{
-		_flashCard_controller.RefreshFlashCards(UserInterface.stackName);
+		_flashCard_controller.RefreshFlashCards();
 		var flashcards = _flashCard_controller.GetFlashCards();
 		int index = number - 1;
 

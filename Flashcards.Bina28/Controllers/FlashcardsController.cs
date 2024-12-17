@@ -8,9 +8,9 @@ using Spectre.Console;
 namespace Flashcards.Bina28.Controllers;
 internal class FlashcardsController
 {
-	private readonly FlashcardsDB _db;
-	private List<FlashCardsDto> _flashCards;
-	private readonly Helper _inputHelper = new Helper();
+	private readonly FlashcardsDB _db; // Database access object for flashcards
+	private List<FlashCardsDto> _flashCards; // Local cache of flashcards
+	private readonly Helper _inputHelper = new Helper(); // Helper class for user input handling
 
 	public FlashcardsController()
 	{
@@ -18,17 +18,17 @@ internal class FlashcardsController
 		LoadFlashCards();
 	}
 
+	// Loads all flashcards for the current stack name into memory.
+	// If no stack name is selected, initializes an empty list.
 	internal void LoadFlashCards()
 	{
-		if (string.IsNullOrEmpty(UserInterface.stackName))
-		{
-			_flashCards = new List<FlashCardsDto>();
-			return;
-		}
-
-		_flashCards = _db.GetAllRecords(UserInterface.stackName) ?? new List<FlashCardsDto>();
+		_flashCards = string.IsNullOrEmpty(UserInterface.stackName)
+				? new List<FlashCardsDto>()
+				: _db.GetAllRecords(UserInterface.stackName) ?? new List<FlashCardsDto>();
 	}
 
+	// Displays all flashcards in the current stack.
+	// Shows a table of flashcards or an empty message if no cards exist.
 	internal void DisplayAllFlashcards(string stackName)
 	{
 		if (_flashCards.Count == 0)
@@ -41,73 +41,92 @@ internal class FlashcardsController
 		{
 			CreateTable(_flashCards.Count);
 		}
-
 	}
 
-	public void RefreshFlashCards(string stackName)
+	
+	// Reloads the flashcards by fetching updated data from the database.	
+	public void RefreshFlashCards()
 	{
 		LoadFlashCards();
 	}
+
+	// Allows the user to display a specific number of flashcards.
+	// Ensures the number entered is valid and does not exceed the total flashcards.
 	internal void DisplayFlashcardCount()
 	{
-		int numberOfCards = 0;
-		do
-		{
-			numberOfCards = _inputHelper.GetValidIntegerInput("Enter the amount of flashcards you want to disply (must be be less than or equal to the total number of cards): ");
-			if (_flashCards.Count == 0)
-			{
-				Console.WriteLine("There are no available cards in the stack");
-				return;
-			}
-		}
-		while (numberOfCards > _flashCards.Count);
-		CreateTable(numberOfCards);
-		_inputHelper.WaitForKeyPress();
+		if (IsFlashcardStackEmpty())
+                return;
 
+		int count = GetValidFlashcardCount(); // Get user input for the count of flashcards
+            Console.Clear();
+            CreateTable(count);
+            _inputHelper.WaitForKeyPress();
 	}
 
+	// Adds a new flashcard to the current stack with user-provided question and answer.
 	internal void AddFlashcardToStack()
 	{
 		Console.WriteLine($"Please enter the following details to create a new flashcard in the '{UserInterface.stackName}' stack:");
+
 		string question = _inputHelper.GetNonEmptyInput("Enter a question: ");
 		string answer = _inputHelper.GetNonEmptyInput("Enter an answer: ");
-		_db.CreateCard(question, answer, UserInterface.stackName);
-		Console.WriteLine($"The question: {question} and answer: {answer} were successfully added");
-		_inputHelper.WaitForKeyPress();
 
+		_db.CreateCard(question, answer, UserInterface.stackName);
+
+		RefreshFlashCards();
+		_inputHelper.WaitForKeyPress();
 	}
 
+	// Updates an existing flashcard's question and answer.
+	// Prompts the user to input the flashcard to update.
 	internal void UpdateFlashCard()
 	{
 		DisplayAllFlashcards(UserInterface.stackName);
-		int number = _inputHelper.GetValidIntegerInput("Enter the number of flachcard which you want to update: ");
-		if (!IsCardExist(number))
-		{
-			return;
-		}
 
-		FlashCardsDto selectedFlashcard = _flashCards[number - 1];
-		string question = _inputHelper.GetNonEmptyInput("Enter a new question: ");
-		string answer = _inputHelper.GetNonEmptyInput("Enter an new answer: ");
-		_db.UpdateCard(question, answer, (int)selectedFlashcard.Flashcard_id, UserInterface.stackName);
+		if (IsFlashcardStackEmpty())
+			return;
+
+		string flashcardName = _inputHelper.GetNonEmptyInput("Enter the word (question) you want to update: ");
+		var selectedFlashcard = FindFlashcardByName(flashcardName); // Find the flashcard
+
+		if (selectedFlashcard == null)
+			return;
+
+		// Get new question and answer from user
+		string newQuestion = _inputHelper.GetNonEmptyInput("Enter a new question: ");
+		string newAnswer = _inputHelper.GetNonEmptyInput("Enter a new answer: ");
+
+		// Update flashcard in database
+		_db.UpdateCard(newQuestion, newAnswer, (int)selectedFlashcard.Flashcard_id, UserInterface.stackName);
+		Console.WriteLine("Flashcard successfully updated!");
+
+		RefreshFlashCards(); // Reload flashcards after updating
 		_inputHelper.WaitForKeyPress();
 	}
 
+	// Deletes a flashcard by its question.
+	// Prompts the user for the flashcard to delete.
 	internal void DeleteFlashCard()
 	{
 		DisplayAllFlashcards(UserInterface.stackName);
-		int number = _inputHelper.GetValidIntegerInput("Enter the number of flachcard you want to delete: ");
 
-		if (!IsCardExist(number))
-		{
+		if (IsFlashcardStackEmpty())
 			return;
-		}
-		FlashCardsDto selectedFlashcard = _flashCards[number - 1];
-		_db.DeleteCard((int)selectedFlashcard.Flashcard_id);
-		Console.WriteLine($"The flashcard was successfully deleted");
+
+		string flashcardName = _inputHelper.GetNonEmptyInput("Enter the word (question) you want to delete: ");
+		var selectedFlashcard = FindFlashcardByName(flashcardName); // Find the flashcard
+
+		if (selectedFlashcard == null)
+			return;
+
+		_db.DeleteCard((int)selectedFlashcard.Flashcard_id); // Delete from database
+		Console.WriteLine("Flashcard successfully deleted!");
+
+		RefreshFlashCards(); // Reload flashcards after deleting
 		_inputHelper.WaitForKeyPress();
 	}
 
+	// Displays a table of flashcards.
 	internal void CreateTable(int count)
 	{
 		var table = new Table
@@ -126,6 +145,53 @@ internal class FlashcardsController
 		AnsiConsole.Write(table);
 	}
 
+	// Ensures the flashcard stack is not empty before proceeding.
+	// Displays a message and waits for user input if the stack is empty.	
+	private bool IsFlashcardStackEmpty()
+	{
+		if (_flashCards.Count == 0)
+		{
+			Console.WriteLine("No flashcards available for the selected stack.");
+			_inputHelper.WaitForKeyPress();
+			return true;
+		}
+		return false;
+	}
+
+	
+	// Gets a valid integer input from the user for the number of flashcards to display.
+	// Ensures the number is within a valid range.
+	private int GetValidFlashcardCount()
+	{
+		int count;
+		do
+		{
+			count = _inputHelper.GetValidIntegerInput($"Enter the number of flashcards to display (max {_flashCards.Count}): ");
+		}
+		while (count > _flashCards.Count || count < 1);
+
+		return count;
+	}
+
+	// Finds a flashcard by its question.
+	// Displays an error message if the flashcard is not found.
+	
+	private FlashCardsDto FindFlashcardByName(string name)
+	{
+		var flashcard = _flashCards.FirstOrDefault(f => f.Question.Equals(name, StringComparison.OrdinalIgnoreCase));
+		if (flashcard == null)
+		{
+			Console.WriteLine("Flashcard not found.");
+			_inputHelper.WaitForKeyPress();
+		}
+		return flashcard;
+	}
+
+	public List<FlashCardsDto> GetFlashCards()
+	{
+		return _flashCards;
+	}
+
 	internal bool IsCardExist(int number)
 	{
 		if (number < 1 || number > _flashCards.Count)
@@ -135,11 +201,4 @@ internal class FlashcardsController
 		}
 		return true;
 	}
-
-
-	public List<FlashCardsDto> GetFlashCards()
-	{
-		return _flashCards;
-	}
-
 }
