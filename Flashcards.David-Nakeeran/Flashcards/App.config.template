@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <appSettings>
+        <add 
+            key="connectionString"
+            value="Server=SERVER_NAME;Database=FlashcardsDB;User=YOUR_USER_ID;Password=YOUR_PASSWORD;Encrypt=True;TrustServerCertificate=True;"
+        />
+        <add
+            key="masterConnectionString"
+            value="Server=SERVER_NAME;Database=master;User=YOUR_USER_ID;Password=YOUR_PASSWORD;Encrypt=True;TrustServerCertificate=True;"
+        />
+    </appSettings>
+</configuration>
