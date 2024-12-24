@@ -17,10 +17,4 @@ class StacksControllers
         stackName = _validation.CheckInputNullOrWhitespace(message, stackName);
         return stackName.Trim();
     }
-    // internal string? GetAvailableStackName()
-    // {
-    //     var stackName = AnsiConsole.Ask<string>("Please enter name of available stack or enter 0 to return to main menu");
-    //     stackName = _validation.CheckInputNullOrWhitespace("Please enter name of available stack or enter 0 to return to main menu", stackName);
-    //     return stackName;
-    // }
 }
