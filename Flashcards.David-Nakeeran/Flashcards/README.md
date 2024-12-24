@@ -1,4 +1,4 @@
-## Flashcards
+Flashcards
 
 Console based CRUD application to create stacks of flashcards that can be studied.
 Developed using C# , SQL Server and Spectre.Console.
@@ -8,7 +8,7 @@ Developed using C# , SQL Server and Spectre.Console.
 
 ## How to run application
 
-- Configure an app.config file using app.config.template, ensuring replace text noted in file.
+- Configure an app.config using app.config.template.
 
 ## Requirements
 
@@ -23,15 +23,15 @@ Developed using C# , SQL Server and Spectre.Console.
 3. **Stacks**:
 
    - Stack names should be unique.
-   - Upon application start, it should create a SQL Server database, if one isn’t present.
+   - On app start, SQL Server database should be created, if one isn’t present.
 
 4. **DTOs**:
 
-   - Uses Data Transfer Objects (DTOs) to display stacks and flashcards to user without exposing database ids.
+   - Uses Data Transfer Objects (DTOs) to display stacks and flashcards.
 
 5. **Error Handling**:
 
-   - Application should handle all possible errors so that the application never crashes.
+   - Able to handle all possible errors so that the application never crashes.
 
 6. **Database**:
 
