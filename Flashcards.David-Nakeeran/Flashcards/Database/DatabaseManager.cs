@@ -1,6 +1,5 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Configuration;
 using Flashcards.Models;
 using Dapper;
 
