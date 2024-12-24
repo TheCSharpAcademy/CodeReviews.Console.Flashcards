@@ -11,13 +11,6 @@ namespace FlashCards.Data
         public DbSet<Stack> Stacks { get; set; }
         public DbSet<StudySession> StudySessions { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Server=.;Database=Phonebook;Trusted_Connection=True;Encrypt=false;");
-            }
-        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<StudySession>()
