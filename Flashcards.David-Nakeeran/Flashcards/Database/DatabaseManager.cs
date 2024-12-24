@@ -228,7 +228,7 @@ class DatabaseManager
         using var command = connection.CreateCommand();
         command.CommandText = @"DELETE from flashcards WHERE FlashcardId = @flashcardId";
         command.Parameters.AddWithValue("@FlashcardId", flashcardId);
-        int rowDeleted = command.ExecuteNonQuery();
+        command.ExecuteNonQuery();
 
         return flashcardId;
     }
