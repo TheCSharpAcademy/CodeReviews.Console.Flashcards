@@ -1,8 +1,17 @@
+# City / State Flash Card App
+
+## Description
 This is a console app to study Cities and which State/provice it belongs to.
 This app uses microsoft sql server. The required tables will be created when the app is ran.
 
-first create the flash cards and related stacks.
 
-After, study the flash cards.
+## Prerequisites
+Requires Microsoft sql server
 
-Your study session results will be saved.
+The Required tables will be created when the app is first ran.
+
+Next, create stacks of flashcards and flashcards in each stack.
+
+There should be over 10 cards per stack to ensure enough variety in study sessions
+
+Once the stacks are created, test your knowledge by studying the stacks.

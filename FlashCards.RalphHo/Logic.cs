@@ -54,14 +54,12 @@ public static class Logic
             else
             {
                 Console.WriteLine("This stack does not exist. Do you want to create this?");
+                if (Console.ReadLine().ToUpper().Trim()=="Y")
                 {
-                    if (Console.ReadLine().ToUpper().Trim()=="Y")
-                    {
-                        DBController.InsertStack(connection, stackName);
-                    }
-                    else
-                        Console.WriteLine("Please enter a valid stack.");
+                    DBController.InsertStack(connection, stackName);
                 }
+                else
+                    Console.WriteLine("Please enter a valid stack.");
             }
         }
         int stackID = DBController.QueryStackID(connection,stackName);
