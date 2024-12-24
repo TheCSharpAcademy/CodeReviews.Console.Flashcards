@@ -1,14 +1,8 @@
-/*
-add flash cards
-create  a stack and add flahcards to stack
-    each flashcard needs to be assigned to a stack
+This is a console app to study Cities and which State/provice it belongs to.
+This app uses microsoft sql server. The required tables will be created when the app is ran.
 
-study session area:
-    pick a stack
-    sessions  need to be stored, data, score
-    if a stack is deleted the session is deleted.
-    need function to view all sesions
+first create the flash cards and related stacks.
 
+After, study the flash cards.
 
-
-*/
+Your study session results will be saved.

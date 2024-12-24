@@ -1,11 +1,6 @@
-using System.Collections;
-using System.Data.Common;
-using System.Data.SqlTypes;
-using System.Runtime.CompilerServices;
 using Microsoft.Data.SqlClient;
 using Spectre;
 using Spectre.Console;
-using Spectre.Console.Cli;
 
 class DBController
 {
@@ -72,10 +67,7 @@ class DBController
         }
         connection.Close();
     }
-    public static void UpdateStack()
-    {
 
-    }
     public static void DeleteFlashCard(SqlConnection connection, int ID)
     {
         string sqlString = @"DELETE FROM FlashCards WHERE ID = @ID;";
@@ -314,7 +306,6 @@ class DBController
                 }
             
         }
-        //Connection.Close();
         AnsiConsole.Write(table);
         return flashCards;
     }
@@ -323,7 +314,7 @@ class DBController
         Random rand = new Random();
         int i =0;
         string idList = "";
-        int flashcardCount = countFlashCards(connection,Stack);
+        int flashcardCount = CountFlashCards(connection,Stack);
         for (i = 1; i<=cardNumber;i++)
         {
             int j = rand.Next(1,flashcardCount+1);
@@ -352,7 +343,7 @@ class DBController
         connection.Close();
         AnsiConsole.Write(table);
     }
-    public static int countFlashCards(SqlConnection connection, string Stack)
+    public static int CountFlashCards(SqlConnection connection, string Stack)
     {
         string sqlString = @"SELECT Count(FlashCards.ID) FROM Flashcards LEFT JOIN STACKS ON FlashCards.StackID = Stacks.ID WHERE Stacks.Name = @Stack;";
         SqlCommand command = new SqlCommand(sqlString, connection);
@@ -415,7 +406,6 @@ class DBController
         List<SessionModel> sessions = new List<SessionModel>();
         
         List<FlashCardModel> cards = new List<FlashCardModel>();
-        FlashCardModel card = new FlashCardModel();
         List<StackModel> stacks = DBController.GetStacks(connection);
 
         string sqlString = @"SELECT DateTime, StackId, Score, FlashCardIds

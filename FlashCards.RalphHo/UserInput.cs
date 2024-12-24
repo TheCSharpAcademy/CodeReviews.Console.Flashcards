@@ -1,7 +1,4 @@
-using System.Collections;
 using System.Data.Common;
-using System.Net.Quic;
-using System.Runtime.InteropServices;
 using Microsoft.Data.SqlClient;
 
 class UserInput
@@ -48,11 +45,6 @@ class UserInput
             case "2":
                 UserInput.FlashCardMenu();
                 break;
-            
-            /*
-            study session
-            */
-
 
             case "3":
                 Console.Clear();
@@ -152,7 +144,7 @@ class UserInput
                 {
                     if(int.TryParse(Console.ReadLine(), out cardNumber))
                     {
-                        if (cardNumber > DBController.countFlashCards(connection, Stack))
+                        if (cardNumber > DBController.CountFlashCards(connection, Stack))
                         {
                             Console.WriteLine("Number entered is greater than the number of flashcards in this Stack. Please retry.");
                         }
@@ -315,10 +307,6 @@ class UserInput
             default:
                 break;
         }
-    }
-    public  static void StudyMenu()
-    {
-        
     }
 
 }

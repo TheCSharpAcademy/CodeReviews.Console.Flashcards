@@ -1,5 +1,3 @@
-using System;
-using Microsoft.Identity.Client;
 public class SessionModel
 {
 

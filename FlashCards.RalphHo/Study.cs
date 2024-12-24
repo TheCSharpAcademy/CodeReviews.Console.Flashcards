@@ -10,7 +10,7 @@ public class Study
     }
     private int Count()
     {
-        DBController.countFlashCards(DBController.ConnectDB(), stack);
+        DBController.CountFlashCards(DBController.ConnectDB(), stack);
         return 1;
     }  
 

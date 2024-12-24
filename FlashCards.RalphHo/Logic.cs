@@ -1,6 +1,3 @@
-using System.Data.Common;
-using System.Security.Cryptography.X509Certificates;
-using Azure.Core.GeoJson;
 using Microsoft.Data.SqlClient;
 
 public static class Logic
@@ -18,32 +15,9 @@ public static class Logic
     }
     public static FlashCardModel SaveFlashCard(FlashCardModel model)
     {
-        //int stackID = DBController.QueryStackID(DBController.ConnectDB(),model.Name);
         DBController.InsertFlashCard(DBController.ConnectDB(),model.Name,model.Definition,model.StackId);
         return model;
     }
-
-
-    // //Delete Flash Cards
-    // public static void DeleteFlashCard(int Id)
-    // {
-        
-    //     return;
-    // }
-    //update FlashCard
-    // public static FlashCardModel UpdateFlashCard(string Name, string Definition, int Id)
-    // {
-    //     //Get FlashCard from DB
-
-    //     //Set FlashCard
-    //     FlashCardModel FlashCard = new FlashCardModel();
-    //     FlashCard.Name = Name;
-    //     FlashCard.Definition = Definition;
-    //     FlashCard.Id = Id;
-
-    //     //Save Flash Card to db
-    //     return  FlashCard;
-    // }
 
     //update FlashCard
     public static void UpdateFlashCard()
@@ -201,9 +175,4 @@ public static class Logic
         return session;
     }
 
-
-
-    //write quiz results to database
-
-    //read quiz results
 }
