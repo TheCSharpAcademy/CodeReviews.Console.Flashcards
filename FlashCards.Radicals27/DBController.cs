@@ -395,5 +395,20 @@ namespace flashcard_app
 
             return studySessions;
         }
+
+        internal static bool StackAlreadyExists(string stackName)
+        {
+            List<Stack> allStacks = GetAllStacks();
+
+            foreach (Stack stack in allStacks)
+            {
+                if (stack.Name == stackName)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

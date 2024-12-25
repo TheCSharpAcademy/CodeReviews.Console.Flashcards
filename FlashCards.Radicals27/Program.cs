@@ -3,6 +3,7 @@ This app allows you to create stacks of flashcards
 to test your knowledge on a subject
 */
 using System.Diagnostics;
+using Microsoft.Identity.Client;
 
 namespace flashcard_app
 {
@@ -62,13 +63,31 @@ namespace flashcard_app
 
         static void HandleStackMainMenuSelection()
         {
+            bool stackNameIsValid = false;
+            string? newStackName = "";
             int? stackID =
                 UserInput.GetNumberInput($"Type a stack ID to edit one, or type 0 to make a new one: \n");
 
             if (stackID == 0)
             {
                 // Make a new stack
-                string? newStackName = UserInput.GetStringInput("Enter the name of the new stack:");
+                while (stackNameIsValid == false)
+                {
+                    newStackName = UserInput.GetStringInput("Enter the name of the new stack:");
+
+                    if (string.IsNullOrEmpty(newStackName) == false)
+                    {
+                        if (DBController.StackAlreadyExists(newStackName))
+                        {
+                            Console.WriteLine("That stack name already exists, please enter a unique one.");
+                        }
+                        else
+                        {
+                            stackNameIsValid = true;
+                        }
+                    }
+                }
+
                 int newStackID = DBController.AddNewStack(newStackName);
 
                 // Allow user to add flashcards to this stack

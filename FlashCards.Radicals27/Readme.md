@@ -44,7 +44,13 @@ This is a console-based application to manage flashcards and study sessions usin
    dotnet restore
    ```
 
-3. Run the app:
+3. Update the SQL server name in App.config:
+
+```bash
+<add key="ServerName" value="<SERVER NAME HERE>" />
+```
+
+4. Run the app:
 
    ```bash
    dotnet run
