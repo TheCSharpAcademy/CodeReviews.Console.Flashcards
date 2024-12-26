@@ -104,7 +104,7 @@ namespace FlashCards.StudySessions
                         config.AppSettings.Settings["TimerOnOff"].Value = option;
                         config.Save();
                     }
-                };
+                }
             }
             catch (Exception ex) { AnsiConsole.Write(ex.Message); }
         }

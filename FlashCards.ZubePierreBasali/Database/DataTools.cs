@@ -30,6 +30,7 @@ namespace FlashCards.Database
                         {
                             if (connection.State == ConnectionState.Closed) connection.Open();
                             sqlCommandText = $@"CREATE DATABASE FlashCardsDB";
+                        sqlCommandText = "nejwrnw";
                             SqlCommand command = connection.CreateCommand();
                             command.CommandText = sqlCommandText;
                             command.ExecuteNonQuery();
@@ -37,7 +38,7 @@ namespace FlashCards.Database
                         }
                     }
                 }
-                catch { }
+                catch(Exception ex) { throw ex; }
 
                 try
                 {
@@ -60,12 +61,11 @@ namespace FlashCards.Database
                                            WITH CHECK ADD CONSTRAINT [FK_StudySessions_Stacks] FOREIGN KEY ([Stack])
                                            REFERENCES [dbo].[Stacks] ([Name]) ON UPDATE CASCADE ON DELETE CASCADE;";
                         command.CommandText = sqlCommandText;
-                        ExecuteQuery(sqlCommandText);
                         command.ExecuteNonQuery();
                         connection.Close();
                     }
                 }
-                catch { }
+                catch(Exception ex) { throw ex; }
             }
             catch (Exception ex)
             {
@@ -205,7 +205,7 @@ namespace FlashCards.Database
         {
             using (SqlConnection connection = new(ConnectionString))
             {
-                string sqlCommand = "SELECT Stack,Date,QuestionMode,QuestionCount,Score,(FORMAT(Time,'hh')+':'+FORMAT(Time,'mm')+':'+FORMAT(Time,'ss')) as Time FROM StudySessions ORDER BY Stack,Date;";//$"SELECT * FROM StudySessions ORDER BY Stack,Date";
+                string sqlCommand = "SELECT Stack,Date,QuestionMode,QuestionCount,Score,(FORMAT(Time,'hh')+':'+FORMAT(Time,'mm')+':'+FORMAT(Time,'ss')) as Time FROM StudySessions ORDER BY Stack,Date;";
                 List<StudyModel> sessions = connection.Query<StudyModel>(sqlCommand).ToList();
                 return sessions;
             }
