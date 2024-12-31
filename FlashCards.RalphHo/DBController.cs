@@ -37,7 +37,8 @@ class DBController
                                     ID Int NOT NULL IDENTITY(1,1) PRIMARY KEY,
                                     DateTime varchar(255),
                                     StackId int,
-                                    Score varchar(255));";
+                                    Score varchar(255),
+                                    FlashCardIds varchar(255));";
         using (connection)
         {
             connection.Open();
@@ -231,7 +232,7 @@ class DBController
         connection.Close();
         return 0;
     }
-    public static void ViewStacks(List<StackModel> stacks)
+    public static List<StackModel> ViewStacks(List<StackModel> stacks)
     {
         Console.Clear();
         Table table = new Table();
@@ -241,6 +242,7 @@ class DBController
             table.AddRow(stack.Name);
         }
         AnsiConsole.Write(table);
+        return stacks;
     }
     
     //revise this method

@@ -25,21 +25,27 @@ class UserInput
             case "0":
                 return;
             case "1":
-                DBController.ViewStacks(DBController.GetStacks(DBController.ConnectDB()));
+                List<StackModel> stacks = DBController.ViewStacks(DBController.GetStacks(DBController.ConnectDB()));
+                
+                if (stacks.Count == 0)
+                {
+                    break;
+                }
+
                 while(true)
                 {
                     Console.WriteLine("Enter the stack name to select");
                     selectedStack = Console.ReadLine();
                     if (Logic.StackExists(selectedStack))
                     {
+                        UserInput.StackMenu(selectedStack);  
                         break;
                     }
                     else
                     {
-                        Console.WriteLine("Invalid Stack. PLease reenter.");
+                        Console.WriteLine("Invalid Stack. Please reenter.");
                     }
                 }
-                UserInput.StackMenu(selectedStack);  
                 break;
             
             case "2":
@@ -52,12 +58,30 @@ class UserInput
                 string stack = "";
                 while(true)
                 {
-                    
                     DBController.ViewStacks(DBController.GetStacks(DBController.ConnectDB()));
                     Console.WriteLine();
                     Console.WriteLine("Enter a Stack to study.");
                     stack = Console.ReadLine();
                     if (Logic.StackExists(stack))
+                    {
+                        List<FlashCardModel> flashCardStack = DBController.GetFlashCardsInStack(connection,stack);
+                        Console.WriteLine("10 cards will be chosen at random, if there are less than 10 cards in the stack, the whole stack will be included.");
+                        //pick random
+                        flashCardStack = Logic.CreateQuizCards(flashCardStack, 10);
+                        SessionModel session = Logic.StudySession(flashCardStack);
+                        Console.WriteLine();
+                        Console.WriteLine("Save session? Y/N");
+                        if (Console.ReadLine().ToUpper().Trim() == "Y")
+                        {
+                            DBController.InsertSesion(connection, session);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Session not saved");
+                        }
+                        break;
+                    }
+                    else if (stack == "" || stack == "0")
                     {
                         break;
                     }
@@ -65,21 +89,6 @@ class UserInput
                     {
                         Console.WriteLine("Invalid Stack. Please retry.");
                     }
-                }
-                List<FlashCardModel> flashCardStack = DBController.GetFlashCardsInStack(connection,stack);
-                Console.WriteLine("10 cards will be chosen at random, if there are less than 10 cards in the stack, the whole stack will be included.");
-                //pick random
-                flashCardStack = Logic.CreateQuizCards(flashCardStack, 10);
-                SessionModel session = Logic.StudySession(flashCardStack);
-                Console.WriteLine();
-                Console.WriteLine("Save session? Y/N");
-                if (Console.ReadLine().ToUpper().Trim() == "Y")
-                {
-                    DBController.InsertSesion(connection, session);
-                }
-                else
-                {
-                    Console.WriteLine("Session not saved");
                 }
                 break;
 
@@ -117,21 +126,39 @@ class UserInput
                 MainMenu();
                 break;
             case "X":
-                DBController.ViewStacks(DBController.GetStacks(connection));
+                
+                List<StackModel> stacks = DBController.ViewStacks(DBController.GetStacks(connection));
+                
                 while(true)
                 {
                     Console.WriteLine("Please enter the new stack name to select.");
                     string stack = Console.ReadLine();
                     if (Logic.StackExists(stack))
                     {
+                        StackMenu(Stack);
+                        break;
+                    }
+                    else if (stack == "" || stack == "0")
+                    {
+                        Console.WriteLine("Cancel");
                         break;
                     }
                     else
                     {
-                        Console.WriteLine("Invalid stack please try again");
+                    
+                    //if not exists save stack return stack ID
+                    Console.WriteLine("Stack does not exists. Create Stack? (Y/N)");
+
+                    if (Console.ReadLine().ToUpper().Trim() == "Y")
+                    {
+                        DBController.InsertStack(DBController.ConnectDB(),stack);
+                    }
+
+                    else 
+                        break;                        
                     }
                 }
-                StackMenu(Stack);
+                
                 break;
             case "V":
                 DBController.ViewFlashcardsInStack(connection, Stack);
