@@ -77,6 +77,7 @@ namespace FlashcardGame.Helpers
                     studySession_id INT IDENTITY(1,1) PRIMARY KEY,
                     right_answers INT NOT NULL,
                     bad_answers INT NOT NULL,
+                    stack_id INT NOT NULL,
                     study_date DATE NOT NULL
                 );";
                     com.ExecuteNonQuery();

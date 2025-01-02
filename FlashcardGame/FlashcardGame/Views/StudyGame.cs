@@ -8,7 +8,7 @@ namespace FlashcardGame.Views
 {
     internal class StudyGame
     {
-        static string Connection = Helper.CnnVal("Dbtest");
+        static string Connection = Helper.CnnVal("FlashcardDatabase");
 
         public static void PickStackMenu()
         {
@@ -16,6 +16,7 @@ namespace FlashcardGame.Views
             bool runFlashcardskMenu = true;
             while (runFlashcardskMenu)
             {
+                Console.Clear();
                 List<Stack> stacks = DataAccess.GetStacks();
                 if (stacks.Count == 0)
                 {
