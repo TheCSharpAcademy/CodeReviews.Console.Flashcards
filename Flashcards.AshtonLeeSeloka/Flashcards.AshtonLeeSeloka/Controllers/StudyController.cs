@@ -1,4 +1,5 @@
-﻿using FlashcardStack.AshtonLeeSeloka.Models;
+﻿using Flashcards.AshtonLeeSeloka.DTO;
+using FlashcardStack.AshtonLeeSeloka.Models;
 using FlashcardStack.AshtonLeeSeloka.Services;
 using FlashcardStack.AshtonLeeSeloka.Views;
 namespace FlashcardStack.AshtonLeeSeloka.Controllers;
@@ -10,6 +11,7 @@ internal class StudyController
 	public void StartStudying()
 	{
 		List<StackModel> AvailableStacks = _dataService.GetAvailableStacks();
-		_studyView.SelectStackView(AvailableStacks);
+		StackModel selection =_studyView.SelectStackView(AvailableStacks);
+		List<CardDTO> cards = _dataService.GetCards(selection);
 	}
 }

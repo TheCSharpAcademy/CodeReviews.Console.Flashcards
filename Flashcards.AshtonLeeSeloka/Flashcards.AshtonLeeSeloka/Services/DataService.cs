@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Flashcards.AshtonLeeSeloka.DTO;
 using FlashcardStack.AshtonLeeSeloka.Models;
 using Microsoft.Data.SqlClient;
 using System.Configuration;
@@ -19,5 +20,23 @@ internal class DataService
 			stackResults.Add(new StackModel() { Stack_ID = stack.Stack_ID, Stack_Name = stack.Stack_Name });
 		}
 		return stackResults;
+	}
+
+	public List<CardDTO> GetCards(StackModel stack) 
+	{
+		SqlConnection connection = new SqlConnection(_connection);
+		var SqlCommand = @"SELECT stack.Stack_Name,Cards.Front, Cards.Back
+						FROM stack
+						INNER JOIN Cards 
+						ON stack.Stack_ID = Cards.Stack_ID
+						WHERE Cards.Stack_ID =@Stack_ID;";
+		var Cards = connection.Query<CardDTO>(SqlCommand, new { Stack_ID = stack.Stack_ID});
+		List<CardDTO> RetrievedCards = new List<CardDTO>();
+
+		foreach (var card in Cards) 
+		{
+			RetrievedCards.Add(new CardDTO() { Stack_Name = card.Stack_Name, Front = card.Front, Back = card.Back });
+		}
+		return RetrievedCards;
 	}
 }

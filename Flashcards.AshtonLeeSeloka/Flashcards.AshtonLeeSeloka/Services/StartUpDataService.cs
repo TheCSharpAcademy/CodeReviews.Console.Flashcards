@@ -29,7 +29,6 @@ internal class StartUpDataService
 																CREATE DATABASE FlashCardsDB;
 															END;";
 				SQLCommand.ExecuteNonQuery();
-				Console.WriteLine("Sucess");
 				connection.Close();
 			}
 		}
