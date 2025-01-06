@@ -1,15 +1,15 @@
 ﻿namespace Flashcards.AshtonLeeSeloka.Services;
+using Dapper;
 using Microsoft.Data.SqlClient;
 using System.Configuration;
-using Dapper;
 
 internal class StartUpDataService
 {
 	private readonly string? _ConnectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
 	private readonly string? _DBCreationString = ConfigurationManager.AppSettings.Get("DBCreationString");
 
-	public void StartUpDB() 
-	{ 
+	public void StartUpDB()
+	{
 		CreateDB();
 		CreateTables();
 		SeedTableStack();
@@ -39,7 +39,7 @@ internal class StartUpDataService
 		}
 	}
 
-	public void CreateTables() 
+	public void CreateTables()
 	{
 		var connection = new SqlConnection(_ConnectionString);
 		var SQLCommandStack = @"IF OBJECT_ID(N'dbo.stack',N'U') IS NULL
@@ -71,17 +71,17 @@ internal class StartUpDataService
 		connection.Execute(SQLCommandStudy);
 	}
 
-	public void SeedTableStack() 
+	public void SeedTableStack()
 	{
-			var connection = new SqlConnection(_ConnectionString);
-			var SQLCommand = @" IF EXISTS (SELECT * FROM stack)
+		var connection = new SqlConnection(_ConnectionString);
+		var SQLCommand = @" IF EXISTS (SELECT * FROM stack)
 								SELECT 'TABLE IS NOT EMPTY'
 								ELSE				
 								INSERT INTO stack(Stack_Name) VALUES('German'),('Spanish'),('Swahili');";
-			connection.Execute(SQLCommand);
+		connection.Execute(SQLCommand);
 	}
 
-	public void SeedTablesCards() 
+	public void SeedTablesCards()
 	{
 		var connection = new SqlConnection(_ConnectionString);
 		var SQLCommand = @" IF EXISTS (SELECT * FROM dbo.Cards)
