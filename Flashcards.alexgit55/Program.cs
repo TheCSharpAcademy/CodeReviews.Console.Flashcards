@@ -4,7 +4,10 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            var DataAccess = new DataAccess();
+            DataAccess.CreateTables();
+
+            Console.ReadKey();
         }
     }
 }
