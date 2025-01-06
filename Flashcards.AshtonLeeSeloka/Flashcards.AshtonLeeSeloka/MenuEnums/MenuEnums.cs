@@ -9,4 +9,11 @@ internal class MenuEnums
 		Study,
 		Exit
 	}
+
+	public enum ManageStacks 
+	{
+		Manage_Stacks,
+		Manage_Cards,
+		Exit
+	}
 }

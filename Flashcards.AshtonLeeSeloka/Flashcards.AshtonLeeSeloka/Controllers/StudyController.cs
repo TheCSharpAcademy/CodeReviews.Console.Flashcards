@@ -14,4 +14,9 @@ internal class StudyController
 		StackModel selection =_studyView.SelectStackView(AvailableStacks);
 		List<CardDTO> cards = _dataService.GetCards(selection);
 	}
+
+	public void StudyStack(List<CardDTO> cards) 
+	{
+	
+	}
 }
