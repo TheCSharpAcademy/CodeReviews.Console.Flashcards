@@ -1,4 +1,5 @@
 ﻿using Flashcards.AshtonLeeSeloka.Services;
 
 DataService _DataBaseService = new DataService();
-_DataBaseService.createDB();
+_DataBaseService.CreateDB();
+_DataBaseService.CreateTables();
