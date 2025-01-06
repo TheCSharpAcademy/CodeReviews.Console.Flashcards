@@ -12,8 +12,8 @@ internal class MenuEnums
 
 	public enum ManageStacks 
 	{
-		Manage_Stacks,
-		Manage_Cards,
+		Manage_Existing_Stacks,
+		Create_New_Stack,
 		Exit
 	}
 }

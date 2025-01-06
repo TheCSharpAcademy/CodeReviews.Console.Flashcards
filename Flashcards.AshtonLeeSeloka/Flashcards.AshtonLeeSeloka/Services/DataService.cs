@@ -39,4 +39,9 @@ internal class DataService
 		}
 		return RetrievedCards;
 	}
+
+	public void CreateStack() 
+	{
+	
+	}
 }

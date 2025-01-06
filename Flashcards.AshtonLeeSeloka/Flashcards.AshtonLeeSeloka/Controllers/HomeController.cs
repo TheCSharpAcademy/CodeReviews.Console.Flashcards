@@ -1,4 +1,5 @@
 ﻿using Flashcards.AshtonLeeSeloka.Controllers;
+using Flashcards.AshtonLeeSeloka.Views;
 using FlashcardStack.AshtonLeeSeloka.Services;
 using FlashcardStack.AshtonLeeSeloka.Views;
 using static FlashcardStack.AshtonLeeSeloka.MenuEnums.MenuEnums;
@@ -6,7 +7,7 @@ namespace FlashcardStack.AshtonLeeSeloka.Controllers;
 
 internal class HomeController
 {
-	private readonly HomeView _homeView = new HomeView();
+	private readonly UIViews _view = new UIViews();
 	private readonly StudyController _studyController = new StudyController();
 	private readonly StackController _stackController = new StackController();	
 
@@ -14,7 +15,7 @@ internal class HomeController
 	{
 		while (true) 
 		{
-			var selection =_homeView.MainMenu();
+			var selection =_view.MainMenu();
 
 			switch (selection) 
 			{

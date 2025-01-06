@@ -9,7 +9,7 @@ internal class StackManagerView
 		Console.Clear();
 		var Selection = AnsiConsole.Prompt(
 		new SelectionPrompt<ManageStacks>()
-			.Title("Select [green]Item to manage[/]")
+			.Title("Select [green]Stack to manage[/]")
 			.PageSize(10)
 			.AddChoices(Enum.GetValues<ManageStacks>()));
 		return Selection;
