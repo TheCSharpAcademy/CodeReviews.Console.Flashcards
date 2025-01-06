@@ -37,7 +37,7 @@ internal class DataService
 		var SQLCommandStack = @"IF OBJECT_ID(N'dbo.stack',N'U') IS NULL
 							CREATE TABLE stack(
 							Stack_ID INT IDENTITY(1,1) PRIMARY KEY,
-							Stack TEXT NOT NULL,
+							Stack_Name VARCHAR(20) NOT NULL UNIQUE,
 							);";
 		connection.Execute(SQLCommandStack);
 
@@ -62,5 +62,24 @@ internal class DataService
 							FOREIGN KEY (Stack_ID) REFERENCES stack (Stack_ID) 
 							);";
 		connection.Execute(SQLCommandStudy);
+	}
+
+	public void SeedTableStack() 
+	{
+		try
+		{
+			var connection = new SqlConnection(_ConnectionString);
+			var SQLCommand = @"INSERT INTO stack(Stack_Name) VALUES('German'),('Spanish'),('Swahili');";
+			connection.Execute(SQLCommand);
+		}
+		catch
+		{
+			Console.Write("Vales already seeded");
+		}
+	}
+
+	public void SeedTablesCards() 
+	{
+	
 	}
 }

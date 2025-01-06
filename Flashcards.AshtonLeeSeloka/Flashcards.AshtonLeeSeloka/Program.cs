@@ -3,3 +3,4 @@
 DataService _DataBaseService = new DataService();
 _DataBaseService.CreateDB();
 _DataBaseService.CreateTables();
+_DataBaseService.SeedTableStack();
