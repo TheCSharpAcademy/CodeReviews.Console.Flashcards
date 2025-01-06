@@ -1,4 +1,4 @@
-﻿namespace Flashcards.AshtonLeeSeloka.MenuEnums;
+﻿namespace FlashcardStack.AshtonLeeSeloka.MenuEnums;
 
 internal class MenuEnums
 {

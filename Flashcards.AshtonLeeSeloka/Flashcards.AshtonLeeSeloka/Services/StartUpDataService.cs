@@ -1,4 +1,4 @@
-﻿namespace Flashcards.AshtonLeeSeloka.Services;
+﻿namespace FlashcardStack.AshtonLeeSeloka.Services;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using System.Configuration;

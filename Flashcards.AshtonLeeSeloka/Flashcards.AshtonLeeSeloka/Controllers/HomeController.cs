@@ -1,11 +1,12 @@
-﻿using Flashcards.AshtonLeeSeloka.Services;
-using Flashcards.AshtonLeeSeloka.Views;
-using static Flashcards.AshtonLeeSeloka.MenuEnums.MenuEnums;
-namespace Flashcards.AshtonLeeSeloka.Controllers;
+﻿using FlashcardStack.AshtonLeeSeloka.Services;
+using FlashcardStack.AshtonLeeSeloka.Views;
+using static FlashcardStack.AshtonLeeSeloka.MenuEnums.MenuEnums;
+namespace FlashcardStack.AshtonLeeSeloka.Controllers;
 
 internal class HomeController
 {
 	private readonly HomeView _homeView = new HomeView();
+	private readonly StudyController _studyController = new StudyController();
 
 	public void Start() 
 	{
@@ -20,6 +21,7 @@ internal class HomeController
 				case MainMenu.Manage_Stacks:
 					break;
 				case MainMenu.Study:
+					_studyController.StartStudying();
 					break;
 				case MainMenu.Exit:
 					Environment.Exit(0);

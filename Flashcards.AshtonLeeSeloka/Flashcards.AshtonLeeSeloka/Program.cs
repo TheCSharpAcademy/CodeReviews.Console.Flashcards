@@ -1,5 +1,5 @@
-﻿using Flashcards.AshtonLeeSeloka.Controllers;
-using Flashcards.AshtonLeeSeloka.Services;
+﻿using FlashcardStack.AshtonLeeSeloka.Controllers;
+using FlashcardStack.AshtonLeeSeloka.Services;
 
 StartUpDataService _StartUpDataBaseService = new StartUpDataService();
 HomeController _HomeController = new HomeController();

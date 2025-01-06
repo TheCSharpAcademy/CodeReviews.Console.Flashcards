@@ -1,6 +1,6 @@
-﻿namespace Flashcards.AshtonLeeSeloka.Views;
+﻿namespace FlashcardStack.AshtonLeeSeloka.Views;
 using Spectre.Console;
-using static Flashcards.AshtonLeeSeloka.MenuEnums.MenuEnums;
+using static FlashcardStack.AshtonLeeSeloka.MenuEnums.MenuEnums;
 
 internal class HomeView
 {
