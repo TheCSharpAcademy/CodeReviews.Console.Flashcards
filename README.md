@@ -3,7 +3,7 @@
 - Developed using C# and MSSQL
 
 # Given Requirements:
-- [] This is an application where the users will create Stacks of Flashcards.
+- [x] This is an application where the users will create Stacks of Flashcards.
 - [] You'll need two different tables for stacks and flashcards. The tables should be linked by a foreign key.
 - [] Stacks should have an unique name.
 - [] Every flashcard needs to be part of a stack. If a stack is deleted, the same should happen with the flashcard.
