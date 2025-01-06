@@ -51,5 +51,16 @@ internal class DataService
 							FOREIGN KEY (Stack_ID) REFERENCES stack (Stack_ID)
 							);";
 		connection.Execute(SQLCommandCard);
+
+		var SQLCommandStudy = @"IF OBJECT_ID(N'dbo.study_session',N'U') IS NULL
+							CREATE TABLE study_session(
+							ID INT IDENTITY(1,1) PRIMARY KEY,
+							Stack TEXT NOT NULL,
+							Study_date DATE,
+							Score DECIMAL(3,1),
+							Stack_ID INT NOT NULL,
+							FOREIGN KEY (Stack_ID) REFERENCES stack (Stack_ID) 
+							);";
+		connection.Execute(SQLCommandStudy);
 	}
 }
