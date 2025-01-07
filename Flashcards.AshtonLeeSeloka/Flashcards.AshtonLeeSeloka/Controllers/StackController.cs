@@ -122,11 +122,10 @@ internal class StackController
 		Console.WriteLine($"Stack {selection.Stack_Name} Removed Succesfully, press any key to return");
 		Console.ReadLine();
 	}
-
 	#endregion
 
 	#region CreateStack
-	public void CreateStack() 
+	public void CreateStack()
 	{
 		string stackName = _views.PromptUser("Enter Stack [Red]Name[/]");
 		_dataService.InsertNewStack(stackName);

@@ -34,4 +34,11 @@ internal class MenuEnums
 		Delete_Cards,
 		Exit
 	}
+
+	public enum StudyOptions
+	{
+		View_All_Cards,
+		Play,
+		Exit
+	}
 }

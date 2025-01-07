@@ -86,4 +86,34 @@ internal class UIViews
 			);
 		return selection;
 	}
+
+	public StudyOptions StudyOptions() 
+	{
+		Console.Clear();
+		var Selection = AnsiConsole.Prompt(
+		new SelectionPrompt<StudyOptions>()
+			.Title("[green]Select Study Option[/]")
+			.PageSize(10)
+			.AddChoices(Enum.GetValues<StudyOptions>()));
+		return Selection;
+	}
+
+	public string QuestionAnswer(List<string> questions) 
+	{
+		var Selection = AnsiConsole.Prompt(
+		new SelectionPrompt<string>()
+			.Title("Select [green]Correct[/] Answer")
+			.PageSize(10)
+			.AddChoices(questions));
+		return Selection;
+	}
+
+	public void DisplayCardFront(string front) 
+	{
+		var table = new Table();
+		table.AddColumn("[cyan]Front[/]");
+		table.AddRow($"{front}");
+		table.Border(TableBorder.Rounded);
+		AnsiConsole.Write(table);
+	}
 }
