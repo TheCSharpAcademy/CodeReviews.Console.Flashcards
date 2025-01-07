@@ -43,7 +43,7 @@ internal class DataService
 	public void InsertCard(string front, string back, int? foreignKey) 
 	{
 		SqlConnection connection = new SqlConnection(_connection);
-		var sqlCommand = @"INSERT INTO Cards(Front, Back, Stack_ID) VALUES(@front, @back, @stack_ID)";
+		var sqlCommand = @"INSERT INTO Cards(Front, Back, Stack_ID) VALUES(@front, @back, @stack_ID);";
 		connection.Execute(sqlCommand, new { front = front,back = back, stack_ID = foreignKey });
 	}
 
@@ -70,5 +70,12 @@ internal class DataService
 		var sqlCommand = @"DELETE FROM stack
 							WHERE Stack_ID = @ID;";
 		connection.Execute(sqlCommand, new { ID = ID });
+	}
+
+	public void InsertNewStack(string stackName)
+	{
+		SqlConnection connection = new SqlConnection(_connection);
+		var sqlCommand = @"INSERT INTO stack(Stack_Name) VALUES(@stackName);";
+		connection.Execute(sqlCommand, new { stackName = stackName });
 	}
 }

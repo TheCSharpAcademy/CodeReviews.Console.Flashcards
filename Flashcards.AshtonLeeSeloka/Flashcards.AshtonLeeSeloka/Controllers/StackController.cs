@@ -19,6 +19,7 @@ internal class StackController
 		switch (selection)
 		{
 			case ManageStacks.Create_New_Stack:
+				CreateStack();
 				break;
 			case ManageStacks.Manage_Existing_Stacks:
 				ManageExistingStack();
@@ -28,6 +29,7 @@ internal class StackController
 		}
 	}
 
+	#region ManageExistingStacks
 	public void ManageExistingStack()
 	{
 		List<StackModel> AvailableStacks = _dataService.GetAvailableStacks();
@@ -120,4 +122,16 @@ internal class StackController
 		Console.WriteLine($"Stack {selection.Stack_Name} Removed Succesfully, press any key to return");
 		Console.ReadLine();
 	}
+
+	#endregion
+
+	#region CreateStack
+	public void CreateStack() 
+	{
+		string stackName = _views.PromptUser("Enter Stack [Red]Name[/]");
+		_dataService.InsertNewStack(stackName);
+		Console.WriteLine($"Succesfully Created {stackName}, press any key to return");
+		Console.ReadLine();
+	}
+	#endregion
 }
