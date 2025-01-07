@@ -25,7 +25,7 @@ internal class DataService
 	public List<CardDTO> GetCards(StackModel stack) 
 	{
 		SqlConnection connection = new SqlConnection(_connection);
-		var SqlCommand = @"SELECT stack.Stack_Name,Cards.Front, Cards.Back
+		var SqlCommand = @"SELECT stack.Stack_Name,Cards.ID,Cards.Front, Cards.Back
 						FROM stack
 						INNER JOIN Cards 
 						ON stack.Stack_ID = Cards.Stack_ID
@@ -45,5 +45,14 @@ internal class DataService
 		SqlConnection connection = new SqlConnection(_connection);
 		var sqlCommand = @"INSERT INTO Cards(Front, Back, Stack_ID) VALUES(@front, @back, @stack_ID)";
 		connection.Execute(sqlCommand, new { front = front,back = back, stack_ID = foreignKey });
+	}
+
+	public void EditCard(string front, string back, int? ID) 
+	{
+		SqlConnection connection = new SqlConnection(_connection);
+		var sqlCommand = @"UPDATE Cards
+							SET Front = @front, Back = @back
+							WHERE ID = @ID;";
+		connection.Execute(sqlCommand, new {front = front,back = back, ID = ID });
 	}
 }

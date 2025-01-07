@@ -71,7 +71,6 @@ internal class UIViews
 
 	public String PromptUser(string prompt) 
 	{
-		Console.Clear();
 		var answer = AnsiConsole.Ask<string>(prompt);
 		return answer;
 	}

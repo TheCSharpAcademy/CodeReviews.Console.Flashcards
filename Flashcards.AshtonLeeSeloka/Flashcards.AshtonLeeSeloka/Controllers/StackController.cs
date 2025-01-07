@@ -1,4 +1,5 @@
 ﻿using Flashcards.AshtonLeeSeloka.DTO;
+using Flashcards.AshtonLeeSeloka.Services;
 using Flashcards.AshtonLeeSeloka.Views;
 using FlashcardStack.AshtonLeeSeloka.MenuEnums;
 using FlashcardStack.AshtonLeeSeloka.Models;
@@ -11,6 +12,7 @@ internal class StackController
 {
 	private readonly DataService _dataService = new DataService();
 	private readonly UIViews _views = new UIViews();
+	private readonly ValidationService _validationService = new ValidationService();
 	
 	public void MainMenu()
 	{
@@ -43,6 +45,9 @@ internal class StackController
 			case MenuEnums.ManageExistingStack.Edit_Cards:
 				EditCard(selection);
 				break;
+			case MenuEnums.ManageExistingStack.Delete_Cards:
+				break;
+
 			case MenuEnums.ManageExistingStack.Exit:
 				break;
 		}
@@ -66,10 +71,28 @@ internal class StackController
 		Console.ReadLine();
 	}
 
-	public void EditCard(StackModel selection) 
+	public void EditCard(StackModel selection)
 	{
 		List<CardDTO> cards = _dataService.GetCards(selection);
-		_views.selectSpecificCard(cards, "Select Card to Delete");
+		_views.ViewCardsAsTable(cards);
+		int cardIndex = _validationService.getIndex(cards);
+		if (cardIndex == 0)
+			return;
+
+		string? front = _views.PromptUser("Enter the front of the Card or Type x to leave the same");
+		if (front.Equals("x"))
+			front = cards[cardIndex - 1].Front;
+
+		string? back = _views.PromptUser("Enter the bacck of the Card or Type x to leave the same");
+		if (back.Equals("x"))
+			back = cards[cardIndex - 1].Back;
+
+		_dataService.EditCard(front, back, cards[cardIndex-1].ID);
+		cards = _dataService.GetCards(selection);
+		_views.ViewCardsAsTable(cards);
+		Console.WriteLine("Card Added Succesfully, press any key to return");
 		Console.ReadLine();
 	}
+
+
 }
