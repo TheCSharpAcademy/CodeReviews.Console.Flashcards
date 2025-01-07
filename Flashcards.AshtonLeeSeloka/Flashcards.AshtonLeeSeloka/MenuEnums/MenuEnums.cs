@@ -16,4 +16,22 @@ internal class MenuEnums
 		Create_New_Stack,
 		Exit
 	}
+
+	public enum ManageExistingStack
+	{
+		Create_New_Card,
+		Edit_Cards,
+		Delete_Cards,
+		Delete_Stack,
+		Exit
+
+	}
+
+	public enum ManageCards
+	{
+		Create_New_Card,
+		Edit_Cards,
+		Delete_Cards,
+		Exit
+	}
 }

@@ -35,13 +35,15 @@ internal class DataService
 
 		foreach (var card in Cards) 
 		{
-			RetrievedCards.Add(new CardDTO() { Stack_Name = card.Stack_Name, Front = card.Front, Back = card.Back });
+			RetrievedCards.Add(new CardDTO() {ID = card.ID, Stack_Name = card.Stack_Name, Front = card.Front, Back = card.Back });
 		}
 		return RetrievedCards;
 	}
 
-	public void CreateStack() 
+	public void InsertCard(string front, string back, int? foreignKey) 
 	{
-	
+		SqlConnection connection = new SqlConnection(_connection);
+		var sqlCommand = @"INSERT INTO Cards(Front, Back, Stack_ID) VALUES(@front, @back, @stack_ID)";
+		connection.Execute(sqlCommand, new { front = front,back = back, stack_ID = foreignKey });
 	}
 }
