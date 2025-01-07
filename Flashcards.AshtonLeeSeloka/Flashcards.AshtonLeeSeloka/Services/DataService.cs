@@ -55,4 +55,20 @@ internal class DataService
 							WHERE ID = @ID;";
 		connection.Execute(sqlCommand, new {front = front,back = back, ID = ID });
 	}
+
+	public void DeleteCard(int? ID) 
+	{
+		SqlConnection connection = new SqlConnection(_connection);
+		var sqlCommand = @"DELETE FROM Cards
+							WHERE ID = @ID;";
+		connection.Execute(sqlCommand, new { ID = ID });
+	}
+
+	public void DeleteStack(int? ID) 
+	{
+		SqlConnection connection = new SqlConnection(_connection);
+		var sqlCommand = @"DELETE FROM stack
+							WHERE Stack_ID = @ID;";
+		connection.Execute(sqlCommand, new { ID = ID });
+	}
 }

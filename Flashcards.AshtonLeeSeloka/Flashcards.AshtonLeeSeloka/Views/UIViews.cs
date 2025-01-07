@@ -77,11 +77,11 @@ internal class UIViews
 
 	public CardDTO selectSpecificCard(List<CardDTO>? cards,string message) 
 	{
-		int i = 0;
+		Console.Clear();
 		var selection = AnsiConsole.Prompt(
 			new SelectionPrompt<CardDTO>()
 			.Title(message)
-			.UseConverter((c) =>$"ID:{i++}, Front: {c.Front}, Back: {c.Back}")
+			.UseConverter((c) =>$"Front: {c.Front}")
 			.AddChoices(cards.ToList())
 			);
 		return selection;

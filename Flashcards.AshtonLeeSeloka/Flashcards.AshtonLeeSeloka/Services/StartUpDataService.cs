@@ -54,7 +54,7 @@ internal class StartUpDataService
 							Front TEXT,
 							Back TEXT,
 							Stack_ID int Not Null,
-							FOREIGN KEY (Stack_ID) REFERENCES stack (Stack_ID)
+							FOREIGN KEY (Stack_ID) REFERENCES stack (Stack_ID) ON DELETE CASCADE
 							);";
 		connection.Execute(SQLCommandCard);
 
@@ -65,7 +65,7 @@ internal class StartUpDataService
 							Study_date DATE,
 							Score DECIMAL(3,1),
 							Stack_ID INT NOT NULL,
-							FOREIGN KEY (Stack_ID) REFERENCES stack (Stack_ID) 
+							FOREIGN KEY (Stack_ID) REFERENCES stack (Stack_ID) ON DELETE CASCADE
 							);";
 		connection.Execute(SQLCommandStudy);
 	}
