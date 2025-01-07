@@ -11,6 +11,7 @@ internal class StudyController
 	private readonly UIViews _views = new UIViews();
 	public void StartStudying()
 	{
+		Console.Clear();
 		List<StackModel> AvailableStacks = _dataService.GetAvailableStacks();
 		StackModel selection = _views.SelectStackView(AvailableStacks, "Select [green]Stack[/] to [cyan]study[/]");
 		List<CardDTO> cards = _dataService.GetCards(selection);
@@ -19,6 +20,7 @@ internal class StudyController
 		switch (menuSelection)
 		{
 			case StudyOptions.View_All_Cards:
+				ViewAllCards(cards);
 				break;
 			case StudyOptions.Play:
 				Play(cards);
@@ -31,7 +33,6 @@ internal class StudyController
 	public void Play(List<CardDTO> cards)
 	{
 		string stack = cards[0].Stack_Name;
-
 		Console.Clear();
 		int score = 0;
 		List<string>? Questions = new List<string>();
@@ -62,12 +63,19 @@ internal class StudyController
 
 			cards.RemoveAt(index);
 		}
-
 		
 		DateTime dateTime = DateTime.Now.ToUniversalTime();
 		int ID = _dataService.GetStackID(stack);
 		_dataService.InsertScore(stack,dateTime,score,ID);
 		Console.WriteLine($"Finale score: {score}");
 		Console.ReadKey();
+	}
+
+	public void ViewAllCards(List<CardDTO> cards) 
+	{
+		_views.ViewCardsAsTable(cards);
+		Console.WriteLine("Press Any Key to return.");
+		Console.ReadKey();
+		StartStudying();
 	}
 }
