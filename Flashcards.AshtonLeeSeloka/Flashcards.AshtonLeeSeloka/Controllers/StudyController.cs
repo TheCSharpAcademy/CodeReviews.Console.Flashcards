@@ -2,15 +2,13 @@
 using Flashcards.AshtonLeeSeloka.Views;
 using FlashcardStack.AshtonLeeSeloka.Models;
 using FlashcardStack.AshtonLeeSeloka.Services;
-using FlashcardStack.AshtonLeeSeloka.Views;
-using System.Diagnostics;
 using static FlashcardStack.AshtonLeeSeloka.MenuEnums.MenuEnums;
 namespace FlashcardStack.AshtonLeeSeloka.Controllers;
 
 internal class StudyController
 {
 	private readonly DataService _dataService = new DataService();
-	private readonly UIViews _views = new UIViews();	
+	private readonly UIViews _views = new UIViews();
 	public void StartStudying()
 	{
 		List<StackModel> AvailableStacks = _dataService.GetAvailableStacks();
@@ -18,7 +16,7 @@ internal class StudyController
 		List<CardDTO> cards = _dataService.GetCards(selection);
 		var menuSelection = _views.StudyOptions();
 
-		switch (menuSelection) 
+		switch (menuSelection)
 		{
 			case StudyOptions.View_All_Cards:
 				break;
@@ -30,18 +28,20 @@ internal class StudyController
 		}
 	}
 
-	public void Play(List<CardDTO> cards) 
+	public void Play(List<CardDTO> cards)
 	{
+		string stack = cards[0].Stack_Name;
+
 		Console.Clear();
 		int score = 0;
 		List<string>? Questions = new List<string>();
 
-		foreach (CardDTO card in cards) 
+		foreach (CardDTO card in cards)
 		{
 			Questions.Add(card.Back);
 		}
 
-		while (cards.Count != 0) 
+		while (cards.Count != 0)
 		{
 			Console.Clear();
 			Random rnd = new Random();
@@ -63,6 +63,10 @@ internal class StudyController
 			cards.RemoveAt(index);
 		}
 
+		
+		DateTime dateTime = DateTime.Now.ToUniversalTime();
+		int ID = _dataService.GetStackID(stack);
+		_dataService.InsertScore(stack,dateTime,score,ID);
 		Console.WriteLine($"Finale score: {score}");
 		Console.ReadKey();
 	}

@@ -78,4 +78,21 @@ internal class DataService
 		var sqlCommand = @"INSERT INTO stack(Stack_Name) VALUES(@stackName);";
 		connection.Execute(sqlCommand, new { stackName = stackName });
 	}
+
+	public int GetStackID(string stackName) 
+	{
+		SqlConnection connection = new SqlConnection(_connection);
+		var sqlCommand = @"SELECT Stack_ID
+							FROM stack
+							WHERE Stack_Name = @stackName";
+		var stack_ID = connection.QuerySingle<int>(sqlCommand, new {stackName = stackName });
+		return stack_ID;
+	}
+
+	public void InsertScore(string stack, DateTime study_date ,int score, int stack_ID) 
+	{
+		SqlConnection connection = new SqlConnection(_connection);
+		var sqlCommand = @"INSERT INTO study_session(Stack, Study_date, Score, Stack_ID) VALUES(@stack, @study_date, @score, @stack_ID)";
+		connection.Execute(sqlCommand, new {stack = stack, study_date=study_date, score = score, stack_ID = stack_ID});
+	}
 }
