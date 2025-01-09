@@ -41,8 +41,7 @@ This is a simple C# console application designed to help users study and memoriz
 - On startup or if no stack data is  present, sample data will be seeded into the database.
 - Enjoy.
 
-
-  ## UI Samples
+## UI Samples
   
    
     
