@@ -10,8 +10,11 @@ This is a simple C# console application designed to help users study and memoriz
 - Track study Score (Reporting)
   - Instance per month and avergae score per month presented using Pivot table
 - Simple and user-friendly console interface.
-  -Spectre.Console Library used to create User Interface.
+  - Spectre.Console Library used to create User Interface.
 - Performs operations against SQL Server Database.
-  -Perform CRUD operations on stacks and Cards.
+  - Perform CRUD operations on stacks and Cards.
+  - Automatically Create and Populate Database.
+  - Using Linked tables to manage data (if stack deleted, cards and history removed).
+  - Using Pivot tables to seperate report data into Month Columns per stack.
   
 
