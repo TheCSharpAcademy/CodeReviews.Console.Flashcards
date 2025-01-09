@@ -3,15 +3,15 @@ This is a simple C# console application designed to help users study and memoriz
 
 ## Key Features:
 
-#### Create custom flashcard Stacks.
+- Create custom flashcard Stacks.
   - Users are able to Create, Read, Update and Delete Stacks and Cards.
-#### Test knowledge with multiple-choice questions.
+- Test knowledge with multiple-choice questions.
   - Provides randomised Questions to the user Based on Stack selection.
-#### Track study Score (Reporting)
+- Track study Score (Reporting)
   - Instance per month and avergae score per month presented using Pivot table
-#### Simple and user-friendly console interface.
+- Simple and user-friendly console interface.
   - Spectre.Console Library used to create User Interface.
-#### Performs operations against SQL Server Database.
+- Performs operations against SQL Server Database.
   - Perform CRUD operations on stacks, Cards and Study Session Tables.
   - Automatically Create and Populate Database if not present.
   - Using Linked tables to manage data (if stack deleted, cards and history removed).
