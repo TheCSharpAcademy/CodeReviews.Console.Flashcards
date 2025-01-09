@@ -12,8 +12,8 @@ This is a simple C# console application designed to help users study and memoriz
 #### Simple and user-friendly console interface.
   - Spectre.Console Library used to create User Interface.
 #### Performs operations against SQL Server Database.
-  - Perform CRUD operations on stacks and Cards.
-  - Automatically Create and Populate Database.
+  - Perform CRUD operations on stacks, Cards and Study Session Tables.
+  - Automatically Create and Populate Database if not present.
   - Using Linked tables to manage data (if stack deleted, cards and history removed).
   - Using Pivot tables to seperate report data into Month Columns per stack.
   
