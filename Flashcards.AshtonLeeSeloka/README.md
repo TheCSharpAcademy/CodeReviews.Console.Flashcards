@@ -1,3 +1,3 @@
 ## FlashCards
-A simple FlashCard Console App 
+A simple *FlashCard* console app 
 To aid in studying using spaced repition
