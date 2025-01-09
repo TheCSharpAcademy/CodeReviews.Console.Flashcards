@@ -25,6 +25,15 @@ This is a simple C# console application designed to help users study and memoriz
     - key ="ConnectionString"
     - key ="DBCreationString"
    
+'''C#
+        <configuration>
+        		<appSettings>
+        			<add key ="ConnectionString" value="Server=(LocalDB)\[Your Local DB Name];Database=FlashCardsDB;Trusted_Connection=True;" />
+        			<add key ="DBCreationString" value="Server=(LocalDB)\[Your Local DB Name];Database=;Trusted_Connection=True;" />
+        		</appSettings>
+        	</configuration>
+'''
+   
     
 
 
