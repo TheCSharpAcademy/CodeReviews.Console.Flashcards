@@ -19,3 +19,7 @@ This is a simple C# console application designed to help users study and memoriz
 
   ## Application Setup
 
+  ### Pre-requisites
+  - A local SQL Server Database must be present and running.
+  - The Local SQL Server name must be copied and Inserted into the App.config
+
