@@ -33,6 +33,16 @@ This is a simple C# console application designed to help users study and memoriz
         		</appSettings>
         	</configuration>
 ```
+
+### Running Application
+- Clone Repo.
+- Ensure that App.Config File is updated to reflect Local DB instance.
+- On startup a DB will be created if not present.
+- On startup or if no stack data is  present, sample data will be seeded into the database.
+- Enjoy.
+
+  ## UI Samples
+  
    
     
 
