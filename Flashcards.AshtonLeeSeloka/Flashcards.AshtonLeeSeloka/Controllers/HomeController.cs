@@ -8,6 +8,7 @@ internal class HomeController
 	private readonly UIViews _view = new UIViews();
 	private readonly StudyController _studyController = new StudyController();
 	private readonly StackController _stackController = new StackController();
+	private readonly ReportController _reportController = new ReportController();
 
 	public void Start()
 	{
@@ -18,6 +19,7 @@ internal class HomeController
 			switch (selection)
 			{
 				case MainMenu.View_Reports:
+					_reportController.DisplayReport();
 					break;
 				case MainMenu.Manage_Stacks:
 					_stackController.MainMenu();

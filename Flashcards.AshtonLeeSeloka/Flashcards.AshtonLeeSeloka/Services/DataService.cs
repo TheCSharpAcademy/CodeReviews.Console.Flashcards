@@ -95,4 +95,44 @@ internal class DataService
 		var sqlCommand = @"INSERT INTO study_session(Stack, Study_date, Score, Stack_ID) VALUES(@stack, @study_date, @score, @stack_ID)";
 		connection.Execute(sqlCommand, new {stack = stack, study_date=study_date, score = score, stack_ID = stack_ID});
 	}
+
+	public List<string> PivotDateAverageSCore(int year, string stack)
+	{
+		SqlConnection connection = new SqlConnection(_connection);
+		var sqlCommand = @"SELECT 
+						Stack,  
+						ISNULL([1], 0) AS 'January',
+						ISNULL([2], 0) AS 'February',
+						ISNULL([3], 0) AS 'March',
+						ISNULL([4], 0) AS 'April',
+						ISNULL([5], 0) AS 'May',
+						ISNULL([6], 0) AS 'June',
+						ISNULL([7], 0) AS 'July',
+						ISNULL([8], 0) AS 'August',
+						ISNULL([9], 0) AS 'September',
+						ISNULL([10], 0) AS 'October',
+						ISNULL([11], 0) AS 'November',
+						ISNULL([12], 0) AS 'December'
+					FROM 
+						(
+							SELECT 
+								CAST(Stack AS VARCHAR(MAX)) AS Stack,  
+								MONTH(Study_Date) AS Month, 
+								Score
+							FROM 
+								study_session
+							WHERE YEAR(Study_date) = @year
+						) AS SourceTable
+					PIVOT (
+						SUM(Score)  
+						FOR Month IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12]) 
+					) AS PivotTable
+					ORDER BY 
+						Stack;";
+
+		var values = connection.Query<IEnumerable<string>>(sqlCommand, new { year= year, stack = stack });
+		List<string> result = new List<string>();
+
+		return result;
+	}
 }
