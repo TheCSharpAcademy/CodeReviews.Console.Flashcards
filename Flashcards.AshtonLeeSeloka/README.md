@@ -24,7 +24,7 @@ This is a simple C# console application designed to help users study and memoriz
   - The Local SQL Server name must be copied and Inserted into the App.config
   - 
 
-'''
+''''
         <configuration>
         		<appSettings>
         			<add key ="ConnectionString" value="Server=(LocalDB)\[Your Local DB Name];Database=FlashCardsDB;Trusted_Connection=True;" />
