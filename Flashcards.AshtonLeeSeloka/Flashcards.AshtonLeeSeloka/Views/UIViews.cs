@@ -1,8 +1,11 @@
 ﻿using Flashcards.AshtonLeeSeloka.DTO;
+using Flashcards.AshtonLeeSeloka.Models;
 using FlashcardStack.AshtonLeeSeloka.MenuEnums;
 using FlashcardStack.AshtonLeeSeloka.Models;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualBasic;
 using Spectre.Console;
+using System;
 using System.Collections.ObjectModel;
 using static FlashcardStack.AshtonLeeSeloka.MenuEnums.MenuEnums;
 namespace Flashcards.AshtonLeeSeloka.Views;
@@ -49,6 +52,22 @@ internal class UIViews
 			.Title(text)
 			.UseConverter((s) => $"{s.Stack_Name}")
 			.AddChoices(availableStacks.ToList())
+			);
+		return StackSelection;
+	}
+
+	public int? SelectStacYear(List<int>? availableStackYears, string text)
+	{
+		if (availableStackYears.IsNullOrEmpty())
+		{
+			Console.WriteLine($"No available study History for Selected Stack.\nPress any key to exit\n");
+			return null;
+		}
+
+		var StackSelection = AnsiConsole.Prompt(
+			new SelectionPrompt<int>()
+			.Title(text)
+			.AddChoices(availableStackYears.ToList())
 			);
 		return StackSelection;
 	}
@@ -113,6 +132,42 @@ internal class UIViews
 		var table = new Table();
 		table.AddColumn("[cyan]Front[/]");
 		table.AddRow($"{front}");
+		table.Border(TableBorder.Rounded);
+		AnsiConsole.Write(table);
+	}
+
+	public void ReportView(List<Report> averageScorePerMonth, List<Report> entriesPerMonth) 
+	{
+		Console.Clear();
+		AnsiConsole.WriteLine("Average Score per month for selected year");
+		ReportTable(averageScorePerMonth);
+		AnsiConsole.WriteLine("\nEntries per month for selected year");
+		ReportTable(entriesPerMonth);
+		AnsiConsole.WriteLine("\n Press any Key to Exit");
+		Console.ReadLine();
+	}
+
+	public void ReportTable(List<Report> reportValues) 
+	{
+		var table = new Table();
+		table.AddColumn("[cyan]Stack[/]");
+		table.AddColumn("[yellow]Jan[/]");
+		table.AddColumn("[yellow]Feb[/]");
+		table.AddColumn("[yellow]Mar[/]");
+		table.AddColumn("[yellow]Apr[/]");
+		table.AddColumn("[yellow]May[/]");
+		table.AddColumn("[yellow]Jun[/]");
+		table.AddColumn("[yellow]Jul[/]");
+		table.AddColumn("[yellow]Aug[/]");
+		table.AddColumn("[yellow]Sep[/]");
+		table.AddColumn("[yellow]Oct[/]");
+		table.AddColumn("[yellow]Nov[/]");
+		table.AddColumn("[yellow]Dec[/]");
+
+		foreach (Report report in reportValues)
+		{
+			table.AddRow($"{report.Stack}", $"{Math.Round((decimal)report.Jan)}", $"{Math.Round((decimal)report.Feb)}", $"{Math.Round((decimal)report.Mar)}", $"{Math.Round((decimal)report.Apr)}", $"{Math.Round((decimal)report.May)}", $"{Math.Round((decimal)report.Jun)}", $"{Math.Round((decimal)report.Jul)}", $"{Math.Round((decimal)report.Aug)}", $"{Math.Round((decimal)report.Sep)}", $"{Math.Round((decimal)report.Oct)}", $"{Math.Round((decimal)report.Nov)}", $"{Math.Round((decimal)report.Dec)}");
+		}
 		table.Border(TableBorder.Rounded);
 		AnsiConsole.Write(table);
 	}
