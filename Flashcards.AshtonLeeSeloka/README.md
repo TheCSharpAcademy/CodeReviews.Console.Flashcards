@@ -42,6 +42,9 @@ This is a simple C# console application designed to help users study and memoriz
 - Enjoy.
 
 ## UI Samples
+
+### Main Menu
+![MainMenu]([Flashcards.AshtonLeeSeloka/Flashcards.AshtonLeeSeloka/wwwroot/MainMenu.png](https://github.com/AshtonLeeSeloka/CodeReviews.Console.Flashcards/blob/0101b3967916e791444b9d3c5686b6e0786c451b/Flashcards.AshtonLeeSeloka/Flashcards.AshtonLeeSeloka/wwwroot/MainMenu.png))
   
    
     
