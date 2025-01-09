@@ -44,8 +44,25 @@ This is a simple C# console application designed to help users study and memoriz
 ## UI Samples
 
 ### Main Menu
-![MainMenu]([Flashcards.AshtonLeeSeloka/Flashcards.AshtonLeeSeloka/wwwroot/MainMenu.png](https://github.com/AshtonLeeSeloka/CodeReviews.Console.Flashcards/blob/0101b3967916e791444b9d3c5686b6e0786c451b/Flashcards.AshtonLeeSeloka/Flashcards.AshtonLeeSeloka/wwwroot/MainMenu.png))
-  
+![MainMenu](https://github.com/AshtonLeeSeloka/CodeReviews.Console.Flashcards/blob/main/Flashcards.AshtonLeeSeloka/Flashcards.AshtonLeeSeloka/wwwroot/MainMenu.png)
+
+### Study
+![Studying Mode](https://github.com/AshtonLeeSeloka/CodeReviews.Console.Flashcards/blob/main/Flashcards.AshtonLeeSeloka/Flashcards.AshtonLeeSeloka/wwwroot/Study.png)
+
+### Manage Stacks
+![Manage Stack Menu](https://github.com/AshtonLeeSeloka/CodeReviews.Console.Flashcards/blob/main/Flashcards.AshtonLeeSeloka/Flashcards.AshtonLeeSeloka/wwwroot/ManageStack.png)
+
+### Report
+![Select Stack Menu](https://github.com/AshtonLeeSeloka/CodeReviews.Console.Flashcards/blob/main/Flashcards.AshtonLeeSeloka/Flashcards.AshtonLeeSeloka/wwwroot/ReportOne.png)
+![Select Year Menu](https://github.com/AshtonLeeSeloka/CodeReviews.Console.Flashcards/blob/main/Flashcards.AshtonLeeSeloka/Flashcards.AshtonLeeSeloka/wwwroot/ReportTwo.png)
+![Report](https://github.com/AshtonLeeSeloka/CodeReviews.Console.Flashcards/blob/main/Flashcards.AshtonLeeSeloka/Flashcards.AshtonLeeSeloka/wwwroot/ReportThree.png)
+
+
+## STACK
+- C#
+- Dapper
+- SQL Server
+- Spectre.Console
    
     
 
