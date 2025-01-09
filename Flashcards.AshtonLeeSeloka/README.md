@@ -21,16 +21,11 @@ This is a simple C# console application designed to help users study and memoriz
 
   ### Pre-requisites
   - A local SQL Server Database must be present and running.
-  - The Local SQL Server name must be copied and Inserted into the App.config
-  - 
+  - The Local SQL Server name must be copied and Inserted into the App.config file under the following Keys:
+    - key ="ConnectionString"
+    - key ="DBCreationString"
+   
+    
 
-'''C#
-        <configuration>
-        		<appSettings>
-        			<add key ="ConnectionString" value="Server=(LocalDB)\[Your Local DB Name];Database=FlashCardsDB;Trusted_Connection=True;" />
-        			<add key ="DBCreationString" value="Server=(LocalDB)\[Your Local DB Name];Database=;Trusted_Connection=True;" />
-        		</appSettings>
-        	</configuration>
-'''
 
 
