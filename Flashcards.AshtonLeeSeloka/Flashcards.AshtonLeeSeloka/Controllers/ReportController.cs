@@ -1,4 +1,5 @@
-﻿using FlashcardStack.AshtonLeeSeloka.Services;
+﻿using Flashcards.AshtonLeeSeloka.Models;
+using FlashcardStack.AshtonLeeSeloka.Services;
 
 namespace Flashcards.AshtonLeeSeloka.Controllers;
 
@@ -8,7 +9,7 @@ internal class ReportController
 
 	public void DisplayReport() 
 	{
-		List<string> row = _dataService.PivotDateAverageSCore(2025,"spanish");
+		List<Report> row = _dataService.PivotDateAverageSCore(2025,"German");
 
 	}
 	

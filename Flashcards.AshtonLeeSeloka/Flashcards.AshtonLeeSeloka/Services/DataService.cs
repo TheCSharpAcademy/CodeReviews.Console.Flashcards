@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Flashcards.AshtonLeeSeloka.DTO;
+using Flashcards.AshtonLeeSeloka.Models;
 using FlashcardStack.AshtonLeeSeloka.Models;
 using Microsoft.Data.SqlClient;
 using System.Configuration;
@@ -96,43 +97,40 @@ internal class DataService
 		connection.Execute(sqlCommand, new {stack = stack, study_date=study_date, score = score, stack_ID = stack_ID});
 	}
 
-	public List<string> PivotDateAverageSCore(int year, string stack)
+	public List<Report> PivotDateAverageSCore(int year, string stack)
 	{
 		SqlConnection connection = new SqlConnection(_connection);
 		var sqlCommand = @"SELECT 
-						Stack,  
-						ISNULL([1], 0) AS 'January',
-						ISNULL([2], 0) AS 'February',
-						ISNULL([3], 0) AS 'March',
-						ISNULL([4], 0) AS 'April',
-						ISNULL([5], 0) AS 'May',
-						ISNULL([6], 0) AS 'June',
-						ISNULL([7], 0) AS 'July',
-						ISNULL([8], 0) AS 'August',
-						ISNULL([9], 0) AS 'September',
-						ISNULL([10], 0) AS 'October',
-						ISNULL([11], 0) AS 'November',
-						ISNULL([12], 0) AS 'December'
-					FROM 
-						(
-							SELECT 
-								CAST(Stack AS VARCHAR(MAX)) AS Stack,  
-								MONTH(Study_Date) AS Month, 
-								Score
-							FROM 
-								study_session
-							WHERE YEAR(Study_date) = @year
-						) AS SourceTable
-					PIVOT (
-						SUM(Score)  
-						FOR Month IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12]) 
-					) AS PivotTable
-					ORDER BY 
-						Stack;";
+						CAST(stack AS VARCHAR(255)) AS stack,  
+						AVG(CASE WHEN Months = 1 THEN Average_Score ELSE 0 END) AS Jan,
+						AVG(CASE WHEN Months = 2 THEN Average_Score ELSE 0 END) AS Feb,
+						AVG(CASE WHEN Months = 3 THEN Average_Score ELSE 0 END) AS Mar,
+						AVG(CASE WHEN Months = 4 THEN Average_Score ELSE 0 END) AS Apr,
+						AVG(CASE WHEN Months = 5 THEN Average_Score ELSE 0 END) AS May,
+						AVG(CASE WHEN Months = 6 THEN Average_Score ELSE 0 END) AS Jun,
+						AVG(CASE WHEN Months = 7 THEN Average_Score ELSE 0 END) AS Jul,
+						AVG(CASE WHEN Months = 8 THEN Average_Score ELSE 0 END) AS Aug,
+						AVG(CASE WHEN Months = 9 THEN Average_Score ELSE 0 END) AS Sep,
+						AVG(CASE WHEN Months = 10 THEN Average_Score ELSE 0 END) AS Oct,
+						AVG(CASE WHEN Months = 11 THEN Average_Score ELSE 0 END) AS Nov,
+						AVG(CASE WHEN Months = 12 THEN Average_Score ELSE 0 END) AS Dec
+					FROM (
+						SELECT  
+							CAST(Stack AS VARCHAR(255)) AS stack,  
+							AVG(study_session.Score) AS Average_Score,
+							MONTH(study_session.Study_date) AS Months
+						FROM study_session
+						WHERE YEAR(study_session.Study_date) = @year AND CAST(Stack AS VARCHAR(100))=@stack
+						GROUP BY MONTH(study_session.Study_date), CAST(Stack AS VARCHAR(255))  
+					) AS sub
+					GROUP BY stack;";
 
-		var values = connection.Query<IEnumerable<string>>(sqlCommand, new { year= year, stack = stack });
-		List<string> result = new List<string>();
-
-		return result;
+		var values = connection.Query<Report>(sqlCommand, new { year= year, stack = stack });
+		List<Report> results = new List<Report>();
+		foreach (Report report in values)
+		{
+			results.Add(report);
+		}
+		return results;
 	}
 }
