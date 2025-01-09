@@ -16,5 +16,6 @@ This is a simple C# console application designed to help users study and memoriz
   - Automatically Create and Populate Database if not present.
   - Using Linked tables to manage data (if stack deleted, cards and history removed).
   - Using Pivot tables to seperate report data into Month Columns per stack.
-  
+
+  ## Application Setup
 
