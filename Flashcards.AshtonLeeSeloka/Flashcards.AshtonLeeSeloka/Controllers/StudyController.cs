@@ -32,6 +32,7 @@ internal class StudyController
 
 	public void Play(List<CardDTO> cards)
 	{
+		int counter = 0;
 		string stack = cards[0].Stack_Name;
 		Console.Clear();
 		int score = 0;
@@ -42,7 +43,7 @@ internal class StudyController
 			Questions.Add(card.Back);
 		}
 
-		while (cards.Count != 0)
+		while (cards.Count != 0 && counter <5)
 		{
 			Console.Clear();
 			Random rnd = new Random();
