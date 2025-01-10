@@ -16,7 +16,7 @@ internal class Enums
         ViewStacks,
         AddStack,
         DeleteStack,
-        UpdateStack,
+        UpdateStackName,
         ReturnToMainMenu
     }
 

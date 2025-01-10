@@ -74,7 +74,7 @@ internal class DataAccess
         }
     }
 
-    internal void InsertStack(Stack stack)
+    internal void DeleteTables()
     {
         try
         {
@@ -82,104 +82,19 @@ internal class DataAccess
             {
                 connection.Open();
 
-                string insertQuery = @"
-         INSERT INTO Stacks (Name) VALUES (@Name)";
+                string dropFlashcardsTableSql = @"DROP TABLE Flashcards";
+                connection.Execute(dropFlashcardsTableSql);
 
-                connection.Execute(insertQuery, new { stack.Name });
+                string dropStudySessionsTableSql = @"DROP TABLE StudySessions";
+                connection.Execute(dropStudySessionsTableSql);
+
+                string dropStacksTableSql = @"DROP TABLE Stacks";
+                connection.Execute(dropStacksTableSql);
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"There was a problem inserting the stack: {ex.Message}");
-        }
-    }
-
-    internal IEnumerable<Stack> GetAllStacks()
-    {
-        try
-        {
-            using (var connection = new SqlConnection(ConnectionString))
-            {
-                connection.Open();
-
-                string selectQuery = "SELECT * FROM stacks";
-
-                var records = connection.Query<Stack>(selectQuery);
-
-                return records;
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"There was a problem retrieving stacks: {ex.Message}");
-            return new List<Stack>();
-        }
-    }
-
-    internal IEnumerable<Flashcard> GetFlashcards(int stackid)
-    {
-        try
-        {
-            using (var connection = new SqlConnection(ConnectionString))
-            {
-                connection.Open();
-                string selectQuery = $"SELECT * FROM flashcards WHERE StackId={stackid}";
-                var records = connection.Query<Flashcard>(selectQuery);
-                return records;
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"There was a problem retrieving flashcards: {ex.Message}");
-            return new List<Flashcard>();
-        }
-    }
-
-    internal IEnumerable<StackListDTO> GetStackListData()
-    {
-        try
-        {
-            using (var connection = new SqlConnection(ConnectionString))
-            {
-                connection.Open();
-                string sql = @"
-                    SELECT
-                        s.Name as StackName,
-                        COUNT(f.Id) as FlashcardCount
-                    FROM
-                        Stacks s
-                    LEFT JOIN Flashcards f ON s.Id = f.StackId
-                    GROUP BY
-                        s.Name;";
-                var records = connection.Query<StackListDTO>(sql);
-                return records;
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"There was a problem retrieving stack list data: {ex.Message}");
-            return new List<StackListDTO>();
-        }
-    }
-
-
-    internal void InsertFlashcard(Flashcard flashcard)
-    {
-        try
-        {
-            using (var connection = new SqlConnection(ConnectionString))
-            {
-                connection.Open();
-
-                string insertQuery = @"
-         INSERT INTO Flashcards (Question, Answer, StackId) VALUES (@Question, @Answer, @StackId)";
-
-                connection.Execute(insertQuery, new { flashcard.Question, flashcard.Answer, flashcard.StackId });
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"There was a problem inserting the flashcard: {ex.Message}");
+            Console.WriteLine($"There was a problem deleting tables: {ex.Message}");
         }
     }
 
@@ -210,7 +125,7 @@ internal class DataAccess
         }
     }
 
-    internal void DeleteTables()
+    internal IEnumerable<Stack> GetAllStacks()
     {
         try
         {
@@ -218,23 +133,21 @@ internal class DataAccess
             {
                 connection.Open();
 
-                string dropFlashcardsTableSql = @"DROP TABLE Flashcards";
-                connection.Execute(dropFlashcardsTableSql);
+                string selectQuery = "SELECT * FROM stacks";
 
-                string dropStudySessionsTableSql = @"DROP TABLE StudySessions";
-                connection.Execute(dropStudySessionsTableSql);
+                var records = connection.Query<Stack>(selectQuery);
 
-                string dropStacksTableSql = @"DROP TABLE Stacks";
-                connection.Execute(dropStacksTableSql);
+                return records;
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"There was a problem deleting tables: {ex.Message}");
+            Console.WriteLine($"There was a problem retrieving stacks: {ex.Message}");
+            return new List<Stack>();
         }
     }
 
-    internal void DeleteFlashcard(int id)
+    internal void InsertStack(Stack stack)
     {
         try
         {
@@ -242,15 +155,45 @@ internal class DataAccess
             {
                 connection.Open();
 
-                string deleteQuery = "DELETE FROM Flashcards WHERE Id = @Id";
+                string insertQuery = @"
+         INSERT INTO Stacks (Name) VALUES (@Name)";
 
-                int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
+                connection.Execute(insertQuery, new { stack.Name });
+
+                Console.WriteLine($"Added {stack.Name}");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"There was a problem deleting the flashcard: {ex.Message}");
+            Console.WriteLine($"There was a problem inserting the stack: {ex.Message}");
+        }
+    }
 
+
+    internal IEnumerable<StackListDTO> GetStackListData()
+    {
+        try
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                string sql = @"
+                    SELECT
+                        s.Name as StackName,
+                        COUNT(f.Id) as FlashcardCount
+                    FROM
+                        Stacks s
+                    LEFT JOIN Flashcards f ON s.Id = f.StackId
+                    GROUP BY
+                        s.Name;";
+                var records = connection.Query<StackListDTO>(sql);
+                return records;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"There was a problem retrieving stack list data: {ex.Message}");
+            return new List<StackListDTO>();
         }
     }
 
@@ -286,6 +229,65 @@ internal class DataAccess
     WHERE Id = @Id";
 
             connection.Execute(updateQuery, new { stack.Name, stack.Id });
+        }
+    }
+
+    internal IEnumerable<Flashcard> GetFlashcards(int stackid)
+    {
+        try
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                string selectQuery = $"SELECT * FROM flashcards WHERE StackId={stackid}";
+                var records = connection.Query<Flashcard>(selectQuery);
+                return records;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"There was a problem retrieving flashcards: {ex.Message}");
+            return new List<Flashcard>();
+        }
+    }
+
+    internal void InsertFlashcard(Flashcard flashcard)
+    {
+        try
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+
+                string insertQuery = @"
+         INSERT INTO Flashcards (Question, Answer, StackId) VALUES (@Question, @Answer, @StackId)";
+
+                connection.Execute(insertQuery, new { flashcard.Question, flashcard.Answer, flashcard.StackId });
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"There was a problem inserting the flashcard: {ex.Message}");
+        }
+    }
+
+    internal void DeleteFlashcard(int id)
+    {
+        try
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+
+                string deleteQuery = "DELETE FROM Flashcards WHERE Id = @Id";
+
+                int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"There was a problem deleting the flashcard: {ex.Message}");
+
         }
     }
 

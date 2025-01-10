@@ -67,7 +67,7 @@ internal class UserInterface
                     .AddChoices(
                        StackChoices.ViewStacks,
                        StackChoices.AddStack,
-                       StackChoices.UpdateStack,
+                       StackChoices.UpdateStackName,
                        StackChoices.DeleteStack,
                        StackChoices.ReturnToMainMenu)
                     );
@@ -89,7 +89,7 @@ internal class UserInterface
                     AnsiConsole.MarkupLine($"\n{menuMessage}\n");
                     Console.ReadKey();
                     break;
-                case StackChoices.UpdateStack:
+                case StackChoices.UpdateStackName:
                     UpdateStack();
                     AnsiConsole.MarkupLine($"\n{menuMessage}\n");
                     Console.ReadKey();
@@ -149,6 +149,92 @@ internal class UserInterface
         }
     }
 
+    private static int ChooseStack(string message)
+    {
+        var dataAccess = new DataAccess();
+        var stacks = dataAccess.GetAllStacks();
+
+        var stacksArray = stacks.Select(x => x.Name).ToArray();
+        var option = AnsiConsole.Prompt(new SelectionPrompt<string>()
+            .Title(message)
+            .AddChoices(stacksArray));
+
+        var stackId = stacks.Single(x => x.Name == option).Id;
+
+        return stackId;
+    }
+
+    private static void UpdateStack()
+    {
+        var stack = new Stack
+        {
+            Id = ChooseStack("Choose stack to update:"),
+            Name = AnsiConsole.Ask<string>("Insert Stack's Name.")
+        };
+
+        var dataAccess = new DataAccess();
+        dataAccess.UpdateStack(stack);
+    }
+
+    private static void DeleteStack()
+    {
+        var id = ChooseStack("Choose stack to delete");
+
+        if (!AnsiConsole.Confirm("Are you sure?"))
+            return;
+
+        var dataAccess = new DataAccess();
+        dataAccess.DeleteStack(id);
+    }
+
+    private static void AddStack()
+    {
+        Stack stack = new()
+        {
+            Name = AnsiConsole.Ask<string>("Insert Stack's New Name: ")
+        };
+
+        while (string.IsNullOrEmpty(stack.Name))
+        {
+            stack.Name = AnsiConsole.Ask<string>("The name can't be empty. Try again.");
+        }
+
+        var dataAccess = new DataAccess();
+        dataAccess.InsertStack(stack);
+    }
+
+    private static void ViewStacks()
+    {
+        var dataAccess = new DataAccess();
+        var stackList = dataAccess.GetStackListData();
+
+        var table = new Table();
+        table.AddColumn("StackName");
+        table.AddColumn("Flashcards");
+
+        foreach (var stack in stackList)
+        {
+            table.AddRow(stack.StackName, stack.FlashcardCount.ToString());
+        }
+
+        AnsiConsole.Write(table);
+    }
+
+    private static int ChooseFlashcard(string message, int stackId)
+    {
+        var dataAccess = new DataAccess();
+        var flashcards = dataAccess.GetFlashcards(stackId);
+
+        var flashcardsArray = flashcards.Select(x => x.Question).ToArray();
+        var option = AnsiConsole.Prompt(new SelectionPrompt<string>()
+            .Title(message)
+            .AddChoices(flashcardsArray));
+
+        var flashcardId = flashcards.Single(x => x.Question == option).Id;
+
+        return flashcardId;
+    }
+
     private static void UpdateFlashcard()
     {
         var stackId = ChooseStack("Choose stack where flashcard is:");
@@ -181,7 +267,7 @@ internal class UserInterface
 
     private static string GetQuestion()
     {
-        var question = AnsiConsole.Ask<string>("Insert Question.");
+        var question = AnsiConsole.Ask<string>("Insert Question: ");
 
         while (string.IsNullOrEmpty(question))
         {
@@ -193,7 +279,7 @@ internal class UserInterface
 
     private static string GetAnswer()
     {
-        var answer = AnsiConsole.Ask<string>("Insert answer.");
+        var answer = AnsiConsole.Ask<string>("Insert answer: ");
 
         while (string.IsNullOrEmpty(answer))
         {
@@ -227,108 +313,25 @@ internal class UserInterface
         dataAccess.InsertFlashcard(flashcard);
     }
 
-    private static int ChooseFlashcard(string message, int stackId)
-    {
-        var dataAccess = new DataAccess();
-        var flashcards = dataAccess.GetFlashcards(stackId);
-
-        var flashcardsArray = flashcards.Select(x => x.Question).ToArray();
-        var option = AnsiConsole.Prompt(new SelectionPrompt<string>()
-            .Title(message)
-            .AddChoices(flashcardsArray));
-
-        var flashcardId = flashcards.Single(x => x.Question == option).Id;
-
-        return flashcardId;
-    }
-
     private static void ViewFlashcards()
     {
         var stackId = ChooseStack("Choose stack to view flashcards");
         var dataAccess = new DataAccess();
         var flashcards = dataAccess.GetFlashcards(stackId);
+        var count = 1;
 
         var table = new Table();
+        table.AddColumn("Id");
         table.AddColumn("Question");
         table.AddColumn("Answer");
 
         foreach (var flashcard in flashcards)
         {
-            table.AddRow(flashcard.Question, flashcard.Answer);
+            table.AddRow(count.ToString(),flashcard.Question, flashcard.Answer);
+            count++;
         }
 
         AnsiConsole.Write(table);
-    }
-
-    private static void UpdateStack()
-    {
-        var stack = new Stack
-        {
-            Id = ChooseStack("Choose stack to update"),
-            Name = AnsiConsole.Ask<string>("Insert Stack's Name.")
-        };
-
-        var dataAccess = new DataAccess();
-        dataAccess.UpdateStack(stack);
-    }
-
-    private static void DeleteStack()
-    {
-        var id = ChooseStack("Choose stack to delete");
-
-        if (!AnsiConsole.Confirm("Are you sure?"))
-            return;
-
-        var dataAccess = new DataAccess();
-        dataAccess.DeleteStack(id);
-    }
-
-    private static void AddStack()
-    {
-        Stack stack = new()
-        {
-            Name = AnsiConsole.Ask<string>("Insert Stack's Name.")
-        };
-
-        while (string.IsNullOrEmpty(stack.Name))
-        {
-            stack.Name = AnsiConsole.Ask<string>("Stack's name can't be empty. Try again.");
-        }
-
-        var dataAccess = new DataAccess();
-        dataAccess.InsertStack(stack);
-    }
-
-    private static void ViewStacks()
-    {
-        var dataAccess = new DataAccess();
-        var stackList = dataAccess.GetStackListData();
-
-        var table = new Table();
-        table.AddColumn("StackName");
-        table.AddColumn("Flashcards");
-
-        foreach (var stack in stackList)
-        {
-            table.AddRow(stack.StackName, stack.FlashcardCount.ToString());
-        }
-
-        AnsiConsole.Write(table);
-    }
-
-    private static int ChooseStack(string message)
-    {
-        var dataAccess = new DataAccess();
-        var stacks = dataAccess.GetAllStacks();
-
-        var stacksArray = stacks.Select(x => x.Name).ToArray();
-        var option = AnsiConsole.Prompt(new SelectionPrompt<string>()
-            .Title(message)
-            .AddChoices(stacksArray));
-
-        var stackId = stacks.Single(x => x.Name == option).Id;
-
-        return stackId;
     }
 
     internal static void StudySession()
