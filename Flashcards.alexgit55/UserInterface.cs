@@ -268,7 +268,19 @@ internal class UserInterface
 
     private static void ViewStacks()
     {
-        throw new NotImplementedException();
+        var dataAccess = new DataAccess();
+        var stackList = dataAccess.GetStackListData();
+
+        var table = new Table();
+        table.AddColumn("StackName");
+        table.AddColumn("Flashcards");
+
+        foreach (var stack in stackList)
+        {
+            table.AddRow(stack.StackName, stack.FlashcardCount.ToString());
+        }
+
+        AnsiConsole.Write(table);
     }
 
     private static int ChooseStack(string message)

@@ -135,6 +135,34 @@ internal class DataAccess
         }
     }
 
+    internal IEnumerable<StackListDTO> GetStackListData()
+    {
+        try
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                string sql = @"
+                    SELECT
+                        s.Name as StackName,
+                        COUNT(f.Id) as FlashcardCount
+                    FROM
+                        Stacks s
+                    LEFT JOIN Flashcards f ON s.Id = f.StackId
+                    GROUP BY
+                        s.Name;";
+                var records = connection.Query<StackListDTO>(sql);
+                return records;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"There was a problem retrieving stack list data: {ex.Message}");
+            return new List<StackListDTO>();
+        }
+    }
+
+
     internal void InsertFlashcard(Flashcard flashcard)
     {
         try
