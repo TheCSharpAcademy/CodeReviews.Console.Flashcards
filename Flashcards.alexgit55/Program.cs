@@ -5,9 +5,12 @@
         static void Main(string[] args)
         {
             var DataAccess = new DataAccess();
+            DataAccess.DeleteTables();
             DataAccess.CreateTables();
 
-            Console.ReadKey();
+            SeedData.SeedRecords();
+
+            UserInterface.DisplayMainMenu();
         }
     }
 }
