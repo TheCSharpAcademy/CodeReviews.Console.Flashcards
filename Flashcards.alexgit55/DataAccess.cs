@@ -242,7 +242,7 @@ internal class DataAccess
             {
                 connection.Open();
 
-                string deleteQuery = "DELETE FROM flashcards WHERE Id = @Id";
+                string deleteQuery = "DELETE FROM Flashcards WHERE Id = @Id";
 
                 int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
             }
@@ -262,7 +262,7 @@ internal class DataAccess
             {
                 connection.Open();
 
-                string deleteQuery = "DELETE FROM stack WHERE Id = @Id";
+                string deleteQuery = "DELETE FROM Stacks WHERE Id = @Id";
 
                 int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
             }

@@ -9,7 +9,7 @@ internal class UserInterface
     internal static void DisplayMainMenu()
     {
         var isMenuRunning = true;
-        var menuMessage = "Press any key to return to the main menu.";
+        var menuMessage = "Press any key to return to the Main Menu.";
 
         while (isMenuRunning)
         {
@@ -36,9 +36,13 @@ internal class UserInterface
                     break;
                 case MainMenuChoices.StudySession:
                     StudySession();
+                    AnsiConsole.MarkupLine($"\n{menuMessage}\n");
+                    Console.ReadKey();
                     break;
                 case MainMenuChoices.StudyHistory:
                     ViewStudyHistory();
+                    AnsiConsole.MarkupLine($"\n{menuMessage}\n");
+                    Console.ReadKey();
                     break;
                 case MainMenuChoices.Quit:
                     DisplayHeader("Thank you for using the Flashcards App!");
@@ -46,19 +50,65 @@ internal class UserInterface
                     isMenuRunning = false;
                     break;
             }
+        }
+    }
 
-            AnsiConsole.MarkupLine($"\n{menuMessage}\n");
-            Console.ReadKey();
-            Console.Clear();
+    private static void StacksMenu()
+    {
+        var isMenuRunning = true;
+        var menuMessage = "Press any key to return to the Stacks Menu";
+
+        while (isMenuRunning)
+        {
+            DisplayHeader("Stacks Menu");
+            var usersChoice = AnsiConsole.Prompt(
+                   new SelectionPrompt<StackChoices>()
+                    .Title("What would you like to do?")
+                    .AddChoices(
+                       StackChoices.ViewStacks,
+                       StackChoices.AddStack,
+                       StackChoices.UpdateStack,
+                       StackChoices.DeleteStack,
+                       StackChoices.ReturnToMainMenu)
+                    );
+
+            switch (usersChoice)
+            {
+                case StackChoices.ViewStacks:
+                    ViewStacks();
+                    AnsiConsole.MarkupLine($"\n{menuMessage}\n");
+                    Console.ReadKey();
+                    break;
+                case StackChoices.AddStack:
+                    AddStack();
+                    AnsiConsole.MarkupLine($"\n{menuMessage}\n");
+                    Console.ReadKey();
+                    break;
+                case StackChoices.DeleteStack:
+                    DeleteStack();
+                    AnsiConsole.MarkupLine($"\n{menuMessage}\n");
+                    Console.ReadKey();
+                    break;
+                case StackChoices.UpdateStack:
+                    UpdateStack();
+                    AnsiConsole.MarkupLine($"\n{menuMessage}\n");
+                    Console.ReadKey();
+                    break;
+                case StackChoices.ReturnToMainMenu:
+                    isMenuRunning = false;
+                    break;
+            }
         }
     }
 
     private static void FlashcardsMenu()
     {
         var isMenuRunning = true;
+        var menuMessage = "Press any key to return to the Flashcards Menu";
 
         while (isMenuRunning)
         {
+            DisplayHeader("Flashcards Menu");
             var usersChoice = AnsiConsole.Prompt(
                    new SelectionPrompt<FlashcardChoices>()
                     .Title("What would you like to do?")
@@ -74,15 +124,23 @@ internal class UserInterface
             {
                 case FlashcardChoices.ViewFlashcards:
                     ViewFlashcards();
+                    AnsiConsole.MarkupLine($"\n{menuMessage}\n");
+                    Console.ReadKey();
                     break;
                 case FlashcardChoices.AddFlashcard:
                     AddFlashcard();
+                    AnsiConsole.MarkupLine($"\n{menuMessage}\n");
+                    Console.ReadKey();
                     break;
                 case FlashcardChoices.DeleteFlashcard:
                     DeleteFlashcard();
+                    AnsiConsole.MarkupLine($"\n{menuMessage}\n");
+                    Console.ReadKey();
                     break;
                 case FlashcardChoices.UpdateFlashcard:
                     UpdateFlashcard();
+                    AnsiConsole.MarkupLine($"\n{menuMessage}\n");
+                    Console.ReadKey();
                     break;
                 case FlashcardChoices.ReturnToMainMenu:
                     isMenuRunning = false;
@@ -186,45 +244,20 @@ internal class UserInterface
 
     private static void ViewFlashcards()
     {
-        throw new NotImplementedException();
-    }
+        var stackId = ChooseStack("Choose stack to view flashcards");
+        var dataAccess = new DataAccess();
+        var flashcards = dataAccess.GetFlashcards(stackId);
 
-    private static void StacksMenu()
-    {
-        var isMenuRunning = true;
+        var table = new Table();
+        table.AddColumn("Question");
+        table.AddColumn("Answer");
 
-        while (isMenuRunning)
+        foreach (var flashcard in flashcards)
         {
-            var usersChoice = AnsiConsole.Prompt(
-                   new SelectionPrompt<StackChoices>()
-                    .Title("What would you like to do?")
-                    .AddChoices(
-                       StackChoices.ViewStacks,
-                       StackChoices.AddStack,
-                       StackChoices.UpdateStack,
-                       StackChoices.DeleteStack,
-                       StackChoices.ReturnToMainMenu)
-                    );
-
-            switch (usersChoice)
-            {
-                case StackChoices.ViewStacks:
-                    ViewStacks();
-                    break;
-                case StackChoices.AddStack:
-                    AddStack();
-                    break;
-                case StackChoices.DeleteStack:
-                    DeleteStack();
-                    break;
-                case StackChoices.UpdateStack:
-                    UpdateStack();
-                    break;
-                case StackChoices.ReturnToMainMenu:
-                    isMenuRunning = false;
-                    break;
-            }
+            table.AddRow(flashcard.Question, flashcard.Answer);
         }
+
+        AnsiConsole.Write(table);
     }
 
     private static void UpdateStack()
@@ -300,10 +333,13 @@ internal class UserInterface
 
     internal static void StudySession()
     {
+        DisplayHeader("Study Session");
+
         var id = ChooseStack("Choose stack to study");
 
         var dataAccess = new DataAccess();
         var flashcards = dataAccess.GetFlashcards(id);
+        var question = 1;
 
         var studySession = new StudySession();
         studySession.Questions = flashcards.Count();
@@ -314,6 +350,7 @@ internal class UserInterface
 
         foreach (var flashcard in flashcards)
         {
+            Console.WriteLine($"Question {question} of {studySession.Questions}");
             var answer = AnsiConsole.Ask<string>($"{flashcard.Question}: ");
 
             // We're only checking if the answer is empty. 
@@ -331,6 +368,8 @@ internal class UserInterface
                 Console.WriteLine($"Wrong, the answer is {flashcard.Answer}\n");
             }
 
+            question++;
+
         }
 
         Console.WriteLine($"You've got {correctAnswers} out of {flashcards.Count()}!");
@@ -343,6 +382,8 @@ internal class UserInterface
 
     internal static void ViewStudyHistory()
     {
+        DisplayHeader("Study History");
+
         var dataAccess = new DataAccess();
         var sessions = dataAccess.GetStudySessionData();
 
