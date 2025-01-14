@@ -165,10 +165,8 @@ internal static class FlashcardGenerator
     {
         var flashcards = new List<Flashcard>();
 
-        var translator = new MicrosoftTranslator();
         //use other translators if reached API request limit
-        //var translator = new GoogleTranslator();
-        //var translator = new YandexTranslator();
+        var translator = new MicrosoftTranslator();
 
         int progress = 0;
         foreach (var word in words)
