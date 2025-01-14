@@ -10,6 +10,8 @@ internal class HomeController
 	private readonly StackController _stackController = new StackController();
 	private readonly ReportController _reportController = new ReportController();
 
+
+
 	public void Start()
 	{
 		while (true)

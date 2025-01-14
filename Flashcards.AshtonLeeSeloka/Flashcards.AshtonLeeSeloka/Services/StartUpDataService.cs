@@ -1,5 +1,6 @@
 ﻿namespace FlashcardStack.AshtonLeeSeloka.Services;
 using Dapper;
+using Flashcards.AshtonLeeSeloka.Services;
 using Microsoft.Data.SqlClient;
 using System.Configuration;
 
@@ -7,6 +8,7 @@ internal class StartUpDataService
 {
 	private readonly string? _ConnectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
 	private readonly string? _DBCreationString = ConfigurationManager.AppSettings.Get("DBCreationString");
+	private readonly ValidationService _validationService = new ValidationService();
 
 	public void StartUpDB()
 	{
@@ -18,17 +20,21 @@ internal class StartUpDataService
 
 	public void CreateDB()
 	{
+		string dBName = _validationService.GetDBName(_ConnectionString);
+		string sql = $@"
+        IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '{dBName}')
+        BEGIN
+            CREATE DATABASE [{dBName}];
+        END;";
+
 		try
 		{
 			using (SqlConnection connection = new SqlConnection(_DBCreationString))
 			{
 				connection.Open();
-				var SQLCommand = connection.CreateCommand();
-				SQLCommand.CommandText = @"IF NOT EXISTS (SELECT * FROM sys.databases WHERE name ='FlashCardsDB')
-															BEGIN
-																CREATE DATABASE FlashCardsDB;
-															END;";
-				SQLCommand.ExecuteNonQuery();
+				SqlCommand s = new SqlCommand(sql, connection);
+				s.Parameters.AddWithValue("db", dBName);
+				s.ExecuteNonQuery();
 				connection.Close();
 			}
 		}
@@ -43,8 +49,8 @@ internal class StartUpDataService
 		var connection = new SqlConnection(_ConnectionString);
 		var SQLCommandStack = @"IF OBJECT_ID(N'dbo.stack',N'U') IS NULL
 							CREATE TABLE stack(
-							Stack_ID INT IDENTITY(1,1) PRIMARY KEY,
-							Stack_Name VARCHAR(20) NOT NULL UNIQUE,
+							StackID INT IDENTITY(1,1) PRIMARY KEY,
+							StackName VARCHAR(20) NOT NULL UNIQUE,
 							);";
 		connection.Execute(SQLCommandStack);
 
@@ -53,8 +59,8 @@ internal class StartUpDataService
 							ID INT IDENTITY(1,1) PRIMARY KEY,
 							Front TEXT,
 							Back TEXT,
-							Stack_ID int Not Null,
-							FOREIGN KEY (Stack_ID) REFERENCES stack (Stack_ID) ON DELETE CASCADE
+							StackID int Not Null,
+							FOREIGN KEY (StackID) REFERENCES stack (StackID) ON DELETE CASCADE
 							);";
 		connection.Execute(SQLCommandCard);
 
@@ -64,10 +70,11 @@ internal class StartUpDataService
 							Stack TEXT NOT NULL,
 							Study_date DATE,
 							Score DECIMAL(3,1),
-							Stack_ID INT NOT NULL,
-							FOREIGN KEY (Stack_ID) REFERENCES stack (Stack_ID) ON DELETE CASCADE
+							StackID INT NOT NULL,
+							FOREIGN KEY (StackID) REFERENCES stack (StackID) ON DELETE CASCADE
 							);";
 		connection.Execute(SQLCommandStudy);
+		connection.Dispose();
 	}
 
 	public void SeedTableStack()
@@ -76,8 +83,9 @@ internal class StartUpDataService
 		var SQLCommand = @" IF EXISTS (SELECT * FROM stack)
 								SELECT 'TABLE IS NOT EMPTY'
 								ELSE				
-								INSERT INTO stack(Stack_Name) VALUES('German'),('Spanish'),('Swahili');";
+								INSERT INTO stack(StackName) VALUES('German'),('Spanish'),('Swahili');";
 		connection.Execute(SQLCommand);
+		connection.Dispose();
 	}
 
 	public void SeedTablesCards()
@@ -86,7 +94,7 @@ internal class StartUpDataService
 		var SQLCommand = @" IF EXISTS (SELECT * FROM dbo.Cards)
 							SELECT 'TABLE IS NOT EMPTY'
 							ELSE
-							INSERT INTO Cards(Front,Back,Stack_ID)
+							INSERT INTO Cards(Front,Back,StackID)
 							VALUES('How do you say Thank you in German?','Danke',1),
 							('What is the correct form of the verb in the sentence: He ____ to the store','geht',1),
 							('How do you ask someones name in German?','Wie heißen Sie?',1),
@@ -103,5 +111,6 @@ internal class StartUpDataService
 							('What is the Swahili word for ""friend""? ','Rafiki',3),
 							('How do you ask ""Where are you from?"" in Swahili?','Unatoka wapi?',3);";
 		connection.Execute(SQLCommand);
+		connection.Dispose();
 	}
 }

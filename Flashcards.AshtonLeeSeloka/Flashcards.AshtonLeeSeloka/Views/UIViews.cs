@@ -1,12 +1,8 @@
 ﻿using Flashcards.AshtonLeeSeloka.DTO;
 using Flashcards.AshtonLeeSeloka.Models;
-using FlashcardStack.AshtonLeeSeloka.MenuEnums;
 using FlashcardStack.AshtonLeeSeloka.Models;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.VisualBasic;
 using Spectre.Console;
-using System;
-using System.Collections.ObjectModel;
 using static FlashcardStack.AshtonLeeSeloka.MenuEnums.MenuEnums;
 namespace Flashcards.AshtonLeeSeloka.Views;
 
@@ -19,6 +15,7 @@ internal class UIViews
 		new SelectionPrompt<MainMenu>()
 			.Title("Welcome to [green]FlashCards[/] make your selection")
 			.PageSize(10)
+			.UseConverter(m => $"{m}")
 			.AddChoices(Enum.GetValues<MainMenu>()));
 		return Selection;
 	}
@@ -38,29 +35,41 @@ internal class UIViews
 	{
 		var Selection = AnsiConsole.Prompt(
 		new SelectionPrompt<ManageExistingStack>()
-			.Title($"\nManage Stack [red]{selection.Stack_Name}[/] make your selection")
+			.Title($"\nManage Stack [red]{selection.StackName}[/] make your selection")
 			.PageSize(10)
 			.AddChoices(Enum.GetValues<ManageExistingStack>()));
 		return Selection;
 	}
 
-	public StackModel SelectStackView(List<StackModel> availableStacks,string text)
+	public StackModel SelectStackView(List<StackModel> availableStacks, string text)
 	{
-		
-		var StackSelection = AnsiConsole.Prompt(
-			new SelectionPrompt<StackModel>()
+		List<string>? options = new();
+		foreach (StackModel stack in availableStacks)
+		{
+			options.Add(stack.StackName);
+		}
+		options.Add("Exit");
+
+		var stackSelection = AnsiConsole.Prompt(
+			new SelectionPrompt<string>()
 			.Title(text)
-			.UseConverter((s) => $"{s.Stack_Name}")
-			.AddChoices(availableStacks.ToList())
+			.AddChoices(options.ToList())
 			);
-		return StackSelection;
+
+		foreach (StackModel stack in availableStacks)
+		{
+			if (stack.StackName.Equals(stackSelection))
+				return stack;
+		}
+
+		return null;
 	}
 
 	public int? SelectStacYear(List<int>? availableStackYears, string text)
 	{
 		if (availableStackYears.IsNullOrEmpty())
 		{
-			Console.WriteLine($"No available study History for Selected Stack.\nPress any key to exit\n");
+			Console.WriteLine($"No available study History for Selected Stack.\n");
 			return null;
 		}
 
@@ -72,7 +81,7 @@ internal class UIViews
 		return StackSelection;
 	}
 
-	public void ViewCardsAsTable(List<CardDTO> cards) 
+	public void ViewCardsAsTable(List<Card> cards)
 	{
 		Console.Clear();
 		var table = new Table();
@@ -80,33 +89,33 @@ internal class UIViews
 		table.AddColumn("[yellow]FRONT[/]");
 		table.AddColumn("[green]Back[/]");
 
-		foreach (CardDTO card in cards) 
+		foreach (Card card in cards)
 		{
-			table.AddRow($"{cards.IndexOf(card)+1}",$"{card.Front}",$"{card.Back}");
+			table.AddRow($"{cards.IndexOf(card) + 1}", $"{card.Front}", $"{card.Back}");
 		}
 		table.Border(TableBorder.Rounded);
 		AnsiConsole.Write(table);
 	}
 
-	public String PromptUser(string prompt) 
+	public String PromptUser(string prompt)
 	{
 		var answer = AnsiConsole.Ask<string>(prompt);
 		return answer;
 	}
 
-	public CardDTO selectSpecificCard(List<CardDTO>? cards,string message) 
+	public Card selectSpecificCard(List<Card>? cards, string message)
 	{
 		Console.Clear();
 		var selection = AnsiConsole.Prompt(
-			new SelectionPrompt<CardDTO>()
+			new SelectionPrompt<Card>()
 			.Title(message)
-			.UseConverter((c) =>$"Front: {c.Front}")
+			.UseConverter((c) => $"Front: {c.Front}")
 			.AddChoices(cards.ToList())
 			);
 		return selection;
 	}
 
-	public StudyOptions StudyOptions() 
+	public StudyOptions StudyOptions()
 	{
 		Console.Clear();
 		var Selection = AnsiConsole.Prompt(
@@ -117,7 +126,7 @@ internal class UIViews
 		return Selection;
 	}
 
-	public string QuestionAnswer(List<string> questions) 
+	public string QuestionAnswer(List<string> questions)
 	{
 		var Selection = AnsiConsole.Prompt(
 		new SelectionPrompt<string>()
@@ -127,7 +136,7 @@ internal class UIViews
 		return Selection;
 	}
 
-	public void DisplayCardFront(string front) 
+	public void DisplayCardFront(string front)
 	{
 		var table = new Table();
 		table.AddColumn("[cyan]Front[/]");
@@ -136,7 +145,7 @@ internal class UIViews
 		AnsiConsole.Write(table);
 	}
 
-	public void ReportView(List<Report> averageScorePerMonth, List<Report> entriesPerMonth) 
+	public void ReportView(List<Report> averageScorePerMonth, List<Report> entriesPerMonth)
 	{
 		Console.Clear();
 		AnsiConsole.WriteLine("Average Score per month for selected year");
@@ -147,7 +156,7 @@ internal class UIViews
 		Console.ReadLine();
 	}
 
-	public void ReportTable(List<Report> reportValues) 
+	public void ReportTable(List<Report> reportValues)
 	{
 		var table = new Table();
 		table.AddColumn("[cyan]Stack[/]");

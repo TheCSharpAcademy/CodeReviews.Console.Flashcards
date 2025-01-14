@@ -14,7 +14,7 @@ internal class StudyController
 		Console.Clear();
 		List<StackModel> AvailableStacks = _dataService.GetAvailableStacks();
 		StackModel selection = _views.SelectStackView(AvailableStacks, "Select [green]Stack[/] to [cyan]study[/]");
-		List<CardDTO> cards = _dataService.GetCards(selection);
+		List<Card> cards = _dataService.GetCards(selection);
 		var menuSelection = _views.StudyOptions();
 
 		switch (menuSelection)
@@ -30,20 +30,28 @@ internal class StudyController
 		}
 	}
 
-	public void Play(List<CardDTO> cards)
+	public void Play(List<Card> cards)
 	{
+		if (cards.Count == 0)
+		{
+			Console.WriteLine("Stack contains no cards \nAdd cards before playing\nPpress any key to select a different stack");
+			Console.ReadKey();
+			StartStudying();
+		}
+
 		int counter = 0;
-		string stack = cards[0].Stack_Name;
+		string? stack = cards[0].StackName;
+		int ID = _dataService.GetStackID(stack);
 		Console.Clear();
 		int score = 0;
 		List<string>? Questions = new List<string>();
 
-		foreach (CardDTO card in cards)
+		foreach (Card card in cards)
 		{
 			Questions.Add(card.Back);
 		}
 
-		while (cards.Count != 0 && counter <5)
+		while (cards.Count != 0 && counter < 5)
 		{
 			Console.Clear();
 			Random rnd = new Random();
@@ -64,15 +72,13 @@ internal class StudyController
 
 			cards.RemoveAt(index);
 		}
-		
 		DateTime dateTime = DateTime.Now.ToUniversalTime();
-		int ID = _dataService.GetStackID(stack);
-		_dataService.InsertScore(stack,dateTime,score,ID);
+		_dataService.InsertScore(stack, dateTime, score, ID);
 		Console.WriteLine($"Finale score: {score}");
 		Console.ReadKey();
 	}
 
-	public void ViewAllCards(List<CardDTO> cards) 
+	public void ViewAllCards(List<Card> cards)
 	{
 		_views.ViewCardsAsTable(cards);
 		Console.WriteLine("Press Any Key to return.");

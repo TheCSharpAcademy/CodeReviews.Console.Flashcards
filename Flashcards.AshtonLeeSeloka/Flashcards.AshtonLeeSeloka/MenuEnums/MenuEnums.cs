@@ -2,7 +2,7 @@
 
 internal class MenuEnums
 {
-	public enum MainMenu 
+	public enum MainMenu
 	{
 		View_Reports,
 		Manage_Stacks,
@@ -10,7 +10,7 @@ internal class MenuEnums
 		Exit
 	}
 
-	public enum ManageStacks 
+	public enum ManageStacks
 	{
 		Manage_Existing_Stacks,
 		Create_New_Stack,

@@ -34,7 +34,7 @@ internal class StackController
 	{
 		List<StackModel> AvailableStacks = _dataService.GetAvailableStacks();
 		StackModel selection = _views.SelectStackView(AvailableStacks, "Select the [green]Stack[/] to Manage");
-		List<CardDTO> cards = _dataService.GetCards(selection);
+		List<Card> cards = _dataService.GetCards(selection);
 		_views.ViewCardsAsTable(cards);
 		var menuSelection = _views.ManageExistingStacksMenu(selection);
 
@@ -67,9 +67,9 @@ internal class StackController
 		if (back.Equals("0"))
 			return;
 
-		int? foreignKey = selection.Stack_ID;
+		int? foreignKey = selection.StackID;
 		_dataService.InsertCard(front, back, foreignKey);
-		List<CardDTO> cards = _dataService.GetCards(selection);
+		List<Card> cards = _dataService.GetCards(selection);
 		_views.ViewCardsAsTable(cards);
 		Console.WriteLine("Card Added Succesfully, press any key to return");
 		Console.ReadLine();
@@ -77,7 +77,7 @@ internal class StackController
 
 	public void EditCard(StackModel selection)
 	{
-		List<CardDTO> cards = _dataService.GetCards(selection);
+		List<Card> cards = _dataService.GetCards(selection);
 		_views.ViewCardsAsTable(cards);
 
 		int cardIndex = _validationService.getIndex(cards);
@@ -101,8 +101,8 @@ internal class StackController
 
 	public void DeleteCard(StackModel selection)
 	{
-		List<CardDTO> cards = _dataService.GetCards(selection);
-		CardDTO cardToDelete = _views.selectSpecificCard(cards, "Select Card to Delete");
+		List<Card> cards = _dataService.GetCards(selection);
+		Card cardToDelete = _views.selectSpecificCard(cards, "Select Card to Delete");
 		int? ID = cardToDelete.ID;
 		_dataService.DeleteCard(ID);
 		cards = _dataService.GetCards(selection);
@@ -113,13 +113,13 @@ internal class StackController
 
 	public void DeleteStack(StackModel selection)
 	{
-		string confirmation = _views.PromptUser($"Are you Sure you want to delete stack [red]{selection.Stack_Name}?[/]\nAll associated cards will be deleted!\nType [red]y[/] to confirm or [cyan]any other key to exit[/]");
+		string confirmation = _views.PromptUser($"Are you Sure you want to delete stack [red]{selection.StackName}?[/]\nAll associated cards will be deleted!\nType [red]y[/] to confirm or [cyan]any other key to exit[/]");
 		if (confirmation != "y")
 			return;
 
-		_dataService.DeleteStack(selection.Stack_ID);
+		_dataService.DeleteStack(selection.StackID);
 		Console.Clear();
-		Console.WriteLine($"Stack {selection.Stack_Name} Removed Succesfully, press any key to return");
+		Console.WriteLine($"Stack {selection.StackName} Removed Succesfully, press any key to return");
 		Console.ReadLine();
 	}
 	#endregion
@@ -127,10 +127,42 @@ internal class StackController
 	#region CreateStack
 	public void CreateStack()
 	{
-		string stackName = _views.PromptUser("Enter Stack [Red]Name[/]");
-		_dataService.InsertNewStack(stackName);
-		Console.WriteLine($"Succesfully Created {stackName}, press any key to return");
-		Console.ReadLine();
+		bool exit = true;
+		while (exit)
+		{
+			Console.Clear();
+			string stackName = _views.PromptUser("Enter Stack [Red]Name[/] or type 0 to exit\n");
+			if (stackName.Equals("0"))
+				return;
+
+			List<StackModel> stacks = _dataService.GetAvailableStacks();
+			exit = DoesStackExist(stackName, stacks);
+			if (exit == false)
+			{
+				_dataService.InsertNewStack(stackName);
+				Console.WriteLine($"Succesfully Created {stackName}, press any key to return");
+				Console.ReadLine();
+			}
+			else
+			{
+				Console.WriteLine("Stack already exists press any key to continue");
+				Console.ReadLine();
+				continue;
+
+			}
+		}
+	}
+
+	public bool DoesStackExist(string stackName, List<StackModel> stacks)
+	{
+		foreach (StackModel stack in stacks)
+		{
+			if (stack.StackName == stackName)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	#endregion
 }

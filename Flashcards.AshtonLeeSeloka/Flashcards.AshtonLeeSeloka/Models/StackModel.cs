@@ -2,6 +2,6 @@
 
 internal class StackModel
 {
-	public int? Stack_ID { get; set; }
-	public string? Stack_Name { get; set; }
+	public int? StackID { get; set; }
+	public string? StackName { get; set; }
 }

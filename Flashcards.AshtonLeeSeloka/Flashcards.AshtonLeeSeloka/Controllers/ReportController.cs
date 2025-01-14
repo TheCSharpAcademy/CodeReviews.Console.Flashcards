@@ -9,22 +9,26 @@ internal class ReportController
 	private readonly DataService _dataService = new DataService();
 	private readonly UIViews _views = new UIViews();
 
-	public void DisplayReport() 
+	public void DisplayReport()
 	{
-		
+
 		List<StackModel> AvailableStacks = _dataService.GetAvailableStacks();
-		StackModel selection = _views.SelectStackView(AvailableStacks, "Select [green]Stack[/] to [red]Generate Report[/]");
-		List<int>? availableStackYears = _dataService.GetAvailableStackYears(selection.Stack_Name);
+		StackModel? selection = _views.SelectStackView(AvailableStacks, "Select [green]Stack[/] to [red]Generate Report[/]");
+
+		if (selection == null)
+			return;
+
+		List<int>? availableStackYears = _dataService.GetAvailableStackYears(selection.StackName);
 		int? selectedStackYear = _views.SelectStacYear(availableStackYears, "Select [green]Report[/] [red]Year[/]");
 		if (selectedStackYear == null)
 		{
 			DisplayReport();
 		}
-		else 
+		else
 		{
-			List<Report> averageScorePerMonth = _dataService.PivotDateAverageSCore(selectedStackYear, selection.Stack_Name);
-			List<Report> entriesPerMonth = _dataService.PivotDateCountEntries(selectedStackYear, selection.Stack_Name);
-			_views.ReportView(averageScorePerMonth,entriesPerMonth);
+			List<Report> averageScorePerMonth = _dataService.PivotDateAverageSCore(selectedStackYear, selection.StackName);
+			List<Report> entriesPerMonth = _dataService.PivotDateCountEntries(selectedStackYear, selection.StackName);
+			_views.ReportView(averageScorePerMonth, entriesPerMonth);
 		}
 	}
 }
