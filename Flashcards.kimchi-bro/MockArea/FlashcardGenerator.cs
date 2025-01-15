@@ -79,12 +79,11 @@ internal static class FlashcardGenerator
             await AnsiConsole.Progress()
                 .StartAsync(async ctx =>
                 {
-                    var task = ctx.AddTask("[yellow]Generating flashcards:[/]", true, 100);
+                    var task = ctx.AddTask("[yellow]Generating flashcards:[/]", true, numberOfFlashcards);
                     flashcards = await Translate(randomWords, language, (progress) =>
                     {
                         task.Increment(progress);
                     });
-                    task.Increment(100 - task.Value);
                 });
 
             FlashcardCreate.AddFlashcardsInBulk(flashcards, stack);
@@ -165,7 +164,6 @@ internal static class FlashcardGenerator
     {
         var flashcards = new List<Flashcard>();
 
-        //use other translators if reached API request limit
         var translator = new MicrosoftTranslator();
 
         int progress = 0;
@@ -180,7 +178,7 @@ internal static class FlashcardGenerator
             });
 
             progress++;
-            progressCallback(progress);
+            progressCallback(1);
             await Task.Delay(300);
         }
         return flashcards;

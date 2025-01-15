@@ -10,25 +10,19 @@ internal class QuickReport
         var allSessionsData = GetSessionsData();
         if (DisplayInfoHelpers.NoRecordsAvailable(allSessionsData)) return;
 
-        //Map stack names to lists of SessionDataDto
         var sessionDataMap = new Dictionary<string, List<SessionsData>>();
 
         foreach (var sessionDataDto in allSessionsData)
         {
-            //Check if sessionDataByStackName doesn't have StackName key 
             if (!sessionDataMap.TryGetValue($"{sessionDataDto.StackName}", out var sessions))
             {
-                //If it doesn't =>
-                //Create new List<SessionDataDto>
                 sessions = new List<SessionsData>();
-                //Add new list to the dictionary with the StackName as the key
                 sessionDataMap[$"{sessionDataDto.StackName}"] = sessions;
             }
-            //If StackName as key already exists
             sessions.Add(sessionDataDto);
         }
 
-        var years = sessionDataMap.Values //get ordered ienumerable<int> for years
+        var years = sessionDataMap.Values
             .SelectMany(s => s)
             .Select(s => s.SessionYear)
             .Distinct()
@@ -37,9 +31,8 @@ internal class QuickReport
         foreach (var year in years)
         {
             var table = new Table();
-            table.AddColumn("Stack Name"); //first column
+            table.AddColumn("Stack Name");
 
-            //+12 columns
             for (int month = 1; month <= 12; month++)
             {
                 table.AddColumn(CultureInfo.CurrentCulture.DateTimeFormat.MonthNames[month - 1]);
@@ -47,9 +40,7 @@ internal class QuickReport
 
             foreach (var sessionData in sessionDataMap)
             {
-                List<string> row = [sessionData.Key]; //stack name as first item in first column
-
-                //for other 12 columns (months) =>
+                List<string> row = [sessionData.Key];
                 for (int month = 1; month <= 12; month++)
                 {
                     var sessionDataDto = sessionData.Value
@@ -98,7 +89,6 @@ internal class QuickReport
                     MONTH(SessionDate)
                 ORDER BY 
                     StackName");
-
             return results.ToList();
         }
         catch (SqlException ex)
