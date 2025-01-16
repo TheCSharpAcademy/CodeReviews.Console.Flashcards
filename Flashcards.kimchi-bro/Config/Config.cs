@@ -29,7 +29,7 @@ internal class Config
             {
                 ConnectionStrings = new
                 {
-                    DefaultConnection = @"Server=(localdb)\\Flashcards;Database=FlashcardDB;Integrated Security=True;TrustServerCertificate=True;"
+                    DefaultConnection = @"Server=(localdb)\MSSQLLocalDB;Database=FlashcardDB;Integrated Security=True;TrustServerCertificate=True;"
                 }
             };
 

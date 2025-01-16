@@ -10,6 +10,11 @@ internal class Database
             using var connection = new SqlConnection(Config.ConnectionString);
             connection.Open();
             connection.Execute(@"
+                IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'FlashcardDB')
+                    BEGIN
+                        CREATE DATABASE [FlashcardDB]
+                    END;
+
                 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Stack')
                     CREATE TABLE Stack (
                         StackId INT IDENTITY(1,1) PRIMARY KEY,
