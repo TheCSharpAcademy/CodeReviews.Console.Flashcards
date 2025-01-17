@@ -146,9 +146,9 @@ public class DbManager(string connectionString)
         ExecuteNonQuery(query);
     }
 
-    public List<StackofCards>? GetCardStacks()
+    public List<StackOfCards>? GetCardStacks()
     {
-        var stacks = new List<StackofCards>();
+        var stacks = new List<StackOfCards>();
         var query = "SELECT * FROM Stacks";
 
         using var connection = ConnectionInit();
@@ -158,7 +158,7 @@ public class DbManager(string connectionString)
 
         while (reader.Read())
         {
-            var stack = new StackofCards
+            var stack = new StackOfCards
             {
                 Id = reader.GetInt32(0),
                 Name = reader.GetString(1),

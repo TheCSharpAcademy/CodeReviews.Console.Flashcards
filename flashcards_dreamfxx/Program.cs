@@ -16,9 +16,9 @@ var cnnConfig = new ConfigurationBuilder()
 string? connectionString = cnnConfig.GetConnectionString("DefaultConnection");
 
 var dbManager = new DbManager(connectionString);
-var cardStackService = new StackofCards();
+var cardStackService = new StackOfCards();
 var cardService = new CardService();
-//var studySessionService = new StudySessionService();
+var studySessionService = new StudySessionService();
 
 dbManager.CheckDatabaseExists();
 

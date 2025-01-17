@@ -10,6 +10,6 @@ public class Card
 
     [ForeignKey("CardStackId")]
     public int CardStackId { get; set; }
-    public StackofCards? StackOfCardsList { get; set; }
+    public StackOfCards? StackOfCardsList { get; set; }
 
 }

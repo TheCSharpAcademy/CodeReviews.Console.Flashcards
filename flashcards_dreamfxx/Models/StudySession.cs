@@ -12,5 +12,5 @@ public class StudySession
     public DateTime EndTime { get; set; }
     public int CorrectAnswers { get; set; }
     public int WrongAnswers { get; set; }
-    public StackofCards StackofCardsList { get; set; }
+    public StackOfCards StackofCardsList { get; set; }
 }
