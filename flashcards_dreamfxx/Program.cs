@@ -4,6 +4,7 @@ using Flashcards.DreamFXX.Services;
 using Microsoft.Extensions.Configuration;
 using Spectre.Console;
 
+
 string dir = Directory.GetCurrentDirectory();
 string rootDir = Path.Combine(dir, @"..\..\..\");
 
@@ -55,7 +56,7 @@ while (true)
     {
         case 1:
             Console.Clear();
-            StacksOf();
+            CreateCardStacks();
             break;
         case 2:
             Console.Clear();
@@ -72,4 +73,6 @@ while (true)
     }
 
     Console.ReadKey();
+}
+    }
 }

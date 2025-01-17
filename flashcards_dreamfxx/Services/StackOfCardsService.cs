@@ -6,11 +6,11 @@ using Spectre.Console;
 
 namespace Flashcards.DreamFXX.Services;
 
-public class CardStackService
+public class StackOfCardsService
 {
     private readonly DbManager dbManager;
 
-    public CardStackService(DbManager dbManager)
+    public StackOfCardsService(DbManager dbManager)
     {
         this.dbManager = dbManager;
     }
