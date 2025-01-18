@@ -97,38 +97,47 @@ internal static class DatabaseManager
         }
     }
 
+    private static List<T> ProcessReader<T>(SqlDataReader reader, Func<SqlDataReader, T> mapFunction)
+    {
+        var items = new List<T>();
+
+        while (reader.Read())
+        {
+            items.Add(mapFunction(reader));
+        }
+
+        return items;
+    }
+
     public static List<Stack> GetStacks()
     {
-        var Stacks = new List<Stack>();
-
+        var stacks = new List<Stack>();
         string script = "SELECT * FROM Stacks";
 
-        using var connection = new SqlConnection(_databaseConnectionString);
         try
         {
+            using var connection = new SqlConnection(_databaseConnectionString);
             connection.Open();
 
-            using (var command = new SqlCommand(script, connection))
-            {
-                using var reader = command.ExecuteReader();
-                {
-                    while (reader.Read())
-                    {
-                        Stacks.Add(new Stack
-                        {
-                            StackId = (int)reader["StackID"],
-                            Name = (string)reader["Name"]
-                        });
-                    }
-                }
-            }
+            using var command = new SqlCommand(script, connection);
+            var reader = command.ExecuteReader();
+            stacks = ProcessReader(reader, MapStack);
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error executing script: {ex.Message}");
         }
 
-        return Stacks;
+        return stacks;
+    }
+
+    private static Stack MapStack(SqlDataReader reader)
+    {
+        return new Stack
+        {
+            StackId = (int)reader["StackID"],
+            Name = (string)reader["Name"]
+        };
     }
 
     public static void AddStack(Stack stack)
@@ -173,40 +182,39 @@ internal static class DatabaseManager
         }
     }
 
-    internal static List<Flashcard> GetFlashcards(int StackId)
+    internal static List<Flashcard> GetFlashcards(int stackId)
     {
-        var Flashcards = new List<Flashcard>();
+        var flashcards = new List<Flashcard>();
         string script = "SELECT * FROM Flashcards WHERE StackID = @StackID";
 
-        using var connection = new SqlConnection(_databaseConnectionString);
         try
         {
+            using var connection = new SqlConnection(_databaseConnectionString);
             connection.Open();
 
-            using (var command = new SqlCommand(script, connection))
-            {
-                command.Parameters.AddWithValue("@StackID", StackId);
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        Flashcards.Add(new Flashcard
-                        {
-                            FlashcardId = (int)reader["FlashcardID"],
-                            StackId = (int)reader["StackID"],
-                            Question = (string)reader["Question"],
-                            Answer = (string)reader["Answer"]
-                        });
-                    }
-                }
-            }
+            using var command = new SqlCommand(script, connection);
+            command.Parameters.AddWithValue("@StackID", stackId);
+
+            var reader = command.ExecuteReader();
+            flashcards = ProcessReader(reader, MapFlashcard);
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error executing script: {ex.Message}");
         }
 
-        return Flashcards;
+        return flashcards;
+    }
+
+    private static Flashcard MapFlashcard(SqlDataReader reader)
+    {
+        return new Flashcard
+        {
+            FlashcardId = (int)reader["FlashcardID"],
+            StackId = (int)reader["StackID"],
+            Question = (string)reader["Question"],
+            Answer = (string)reader["Answer"]
+        };
     }
 
     public static void AddFlashcard(Flashcard flashcard)

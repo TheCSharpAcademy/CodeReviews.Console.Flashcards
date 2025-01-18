@@ -188,6 +188,7 @@ internal static class Menu
 
     private static void AddFlashcard(Stack stack)
     {
+        Console.Clear();
         var flashcard = new Flashcard { StackId = stack.StackId};
         Console.Write("Enter Question : ");
         string? question = Console.ReadLine()?.Trim();
@@ -210,21 +211,22 @@ internal static class Menu
         flashcard.Answer = answer;
         flashcard.Question = question;
         DatabaseManager.AddFlashcard(flashcard);
+        Console.WriteLine("Flashcard added successfully.");
+        PauseForUser();
     }
 
     private static List<Flashcard>? ViewFlashcards(Stack stack)
     {
+        Console.Clear();
         var flashcards = new List<Flashcard>();
         flashcards = DatabaseManager.GetFlashcards(stack.StackId);
         var DTOStack = new StackDto { Name = stack.Name };
         if (flashcards == null || flashcards.Count == 0)
         {
-            Console.Clear();
             Console.WriteLine("No flashcards available. Please add a flashcard first.");
             Console.WriteLine("Please Enter Another choice.");
             return flashcards;
         }
-        Console.Clear();
         Console.WriteLine($"Flash Cards for {DTOStack.Name} :");
 
         var DtoFlashcards = flashcards.Select(f => new FlashcardDto
@@ -232,9 +234,9 @@ internal static class Menu
             Answer = f.Answer,
             Question = f.Question
         }).ToList();
+
         for (int i = 0; i < DtoFlashcards.Count; i++)
         {
-
             Console.WriteLine("-------------------------------------------------");
             Console.WriteLine($"Flashcard Id: {i+1}");
             Console.WriteLine($"Question: {DtoFlashcards[i].Question}");
