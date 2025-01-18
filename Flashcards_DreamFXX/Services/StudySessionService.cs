@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Flashcards.DreamFXX.Services;
 
-namespace Flashcards_DreamFXX.Services
+public class StudySessionService
 {
-    internal class StudySessionService
-    {
-    }
+
 }

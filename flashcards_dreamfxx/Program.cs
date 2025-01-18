@@ -56,7 +56,7 @@ while (true)
     {
         case 1:
             Console.Clear();
-            CreateCardStacks();
+            //CreateCardStacks();
             break;
         case 2:
             Console.Clear();
@@ -73,6 +73,4 @@ while (true)
     }
 
     Console.ReadKey();
-}
-    }
 }
