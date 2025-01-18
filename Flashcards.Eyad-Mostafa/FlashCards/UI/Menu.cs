@@ -116,7 +116,6 @@ internal static class Menu
     private static bool ViewStacks()
     {
         var Stacks = DatabaseManager.GetStacks();
-        var SelectedStack = new Stack();
 
         if (Stacks == null || Stacks.Count == 0)
         {
@@ -129,12 +128,12 @@ internal static class Menu
         Console.Clear();
         Console.WriteLine("Stacks:");
 
-        var DTOStacks = Stacks.Select(s => new StackDTO
+        var DtoStacks = Stacks.Select(s => new StackDto
         {
             Name = s.Name
         }).ToList();
 
-        foreach (var stack in DTOStacks)
+        foreach (var stack in DtoStacks)
         {
             Console.WriteLine($"- {stack.Name}");
         }
@@ -217,7 +216,7 @@ internal static class Menu
     {
         var flashcards = new List<Flashcard>();
         flashcards = DatabaseManager.GetFlashcards(stack.StackId);
-        var DTOStack = new StackDTO { Name = stack.Name };
+        var DTOStack = new StackDto { Name = stack.Name };
         if (flashcards == null || flashcards.Count == 0)
         {
             Console.Clear();
@@ -228,18 +227,18 @@ internal static class Menu
         Console.Clear();
         Console.WriteLine($"Flash Cards for {DTOStack.Name} :");
 
-        var DTOFlashcards = flashcards.Select(f => new FlashcardDTO
+        var DtoFlashcards = flashcards.Select(f => new FlashcardDto
         {
             Answer = f.Answer,
             Question = f.Question
         }).ToList();
-        for (int i = 0; i < DTOFlashcards.Count; i++)
+        for (int i = 0; i < DtoFlashcards.Count; i++)
         {
 
             Console.WriteLine("-------------------------------------------------");
             Console.WriteLine($"Flashcard Id: {i+1}");
-            Console.WriteLine($"Question: {DTOFlashcards[i].Question}");
-            Console.WriteLine($"Answer: {DTOFlashcards[i].Answer}");
+            Console.WriteLine($"Question: {DtoFlashcards[i].Question}");
+            Console.WriteLine($"Answer: {DtoFlashcards[i].Answer}");
             Console.WriteLine("-------------------------------------------------");
         }
         return flashcards;
@@ -365,26 +364,26 @@ internal static class Menu
             return;
         }
 
-        var DTOFlashcards = flashcards.Select(s => new FlashcardDTO
+        var DtoFlashcards = flashcards.Select(s => new FlashcardDto
         {
             Question = s.Question,
             Answer = s.Answer
         }).ToList();
 
         int correctAnswers = 0;
-        for (int i = 0; i < DTOFlashcards.Count; i++)
+        for (int i = 0; i < DtoFlashcards.Count; i++)
         {
             Console.Clear();
             Console.WriteLine("-------------------------------------------------");
             Console.WriteLine($"Question no. : {i + 1}");
-            Console.WriteLine($"Question: {DTOFlashcards[i].Question}");
+            Console.WriteLine($"Question: {DtoFlashcards[i].Question}");
             Console.WriteLine("-------------------------------------------------");
             Console.WriteLine("Please enter your answer");
 
             string? answer = Console.ReadLine()?.Trim();
             if (answer != null)
             {
-                if (answer.Equals(DTOFlashcards[i].Answer, StringComparison.OrdinalIgnoreCase))
+                if (answer.Equals(DtoFlashcards[i].Answer, StringComparison.OrdinalIgnoreCase))
                 {
                     Console.WriteLine("Correct Answer");
                     correctAnswers++;
@@ -393,7 +392,7 @@ internal static class Menu
                 else
                 {
                     Console.WriteLine("Incorrect Answer");
-                    Console.WriteLine($"Correct Answer is : {DTOFlashcards[i].Answer}");
+                    Console.WriteLine($"Correct Answer is : {DtoFlashcards[i].Answer}");
                     PauseForUser();
                 }
             }
@@ -406,7 +405,7 @@ internal static class Menu
             }
         }
         Console.Clear();
-        Console.WriteLine($"You have answerd {correctAnswers} of {DTOFlashcards.Count} questions correctly.");
+        Console.WriteLine($"You have answerd {correctAnswers} of {DtoFlashcards.Count} questions correctly.");
         var StudySession = new StudySession
         {
             StackId = selectedStack.StackId,

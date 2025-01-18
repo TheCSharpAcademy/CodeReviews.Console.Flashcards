@@ -1,6 +1,6 @@
 ﻿namespace FlashCards.Models;
 
-internal class StackDTO
+internal class StackDto
 {
     public string Name { get; set; }
 }

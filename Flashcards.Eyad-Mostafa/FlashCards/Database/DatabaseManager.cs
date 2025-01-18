@@ -108,7 +108,7 @@ internal static class DatabaseManager
         {
             connection.Open();
 
-            using var command = new SqlCommand(script, connection);
+            using (var command = new SqlCommand(script, connection))
             {
                 using var reader = command.ExecuteReader();
                 {
