@@ -1,10 +1,9 @@
-﻿namespace FlashCards.Models
+﻿namespace FlashCards.Models;
+
+internal class StudySession
 {
-    internal class StudySession
-    {
-        public string Date { get; set; }
-        public string Score { get; set; }
-        public string StackName { get; set; }
-        public int StackId { get; set; }
-    }
+    public DateTime Date { get; set; }
+    public string Score { get; set; }
+    public string StackName { get; set; }
+    public int StackId { get; set; }
 }

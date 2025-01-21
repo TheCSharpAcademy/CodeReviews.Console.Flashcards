@@ -1,7 +1,6 @@
-﻿namespace FlashCards.Models
+﻿namespace FlashCards.Models;
+
+internal class StackWithCleanId : Stack
 {
-    internal class StackWithCleanId : Stack
-    {
-        public int CleanId { get; set; }
-    }
+    public int CleanId { get; set; }
 }

@@ -1,8 +1,7 @@
-﻿namespace FlashCards.Models
+﻿namespace FlashCards.Models;
+
+internal class FlashCardDto
 {
-    internal class FlashCardDto
-    {
-        public string Question { get; set; }
-        public string Answer { get; set; }
-    }
+    public string Question { get; set; }
+    public string Answer { get; set; }
 }

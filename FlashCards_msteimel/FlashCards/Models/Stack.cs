@@ -1,8 +1,7 @@
-﻿namespace FlashCards.Models
+﻿namespace FlashCards.Models;
+
+internal class Stack
 {
-    internal class Stack
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
+    public int Id { get; set; }
+    public string Name { get; set; }
 }
