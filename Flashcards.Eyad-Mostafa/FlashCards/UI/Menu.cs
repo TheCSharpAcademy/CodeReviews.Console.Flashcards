@@ -80,7 +80,7 @@ internal static class Menu
         }
     }
 
-    private static void PauseForUser()
+    internal static void PauseForUser()
     {
         Console.WriteLine("\nPress any key to continue...");
         Console.ReadKey();
@@ -158,7 +158,6 @@ internal static class Menu
             {
                 case "1":
                     AddFlashcard(stack);
-                    PauseForUser();
                     break;
                 case "2":
                     ViewFlashcards(stack);
@@ -197,6 +196,7 @@ internal static class Menu
         if (string.IsNullOrEmpty(answer) || string.IsNullOrEmpty(question))
         {
             Console.WriteLine("Question and Answer cannot be empty. Please try again.");
+            PauseForUser();
             return;
         }
 
@@ -356,6 +356,7 @@ internal static class Menu
 
     private static void StudyStack(Stack selectedStack)
     {
+        Console.Clear();
         Console.WriteLine($"Studying {selectedStack.Name}. \n");
         var flashcards = DatabaseManager.GetFlashcards(selectedStack.StackId);
         if (flashcards == null || flashcards.Count == 0)
@@ -411,7 +412,7 @@ internal static class Menu
         var StudySession = new StudySession
         {
             StackId = selectedStack.StackId,
-            SessionDate = DateTime.UtcNow,
+            SessionDate = DateTime.Now,
             Score = correctAnswers
         };
         DatabaseManager.AddStudySession(StudySession);
@@ -433,11 +434,12 @@ internal static class Menu
 
         foreach (var session in sessions)
         {
+            var flashcards = DatabaseManager.GetFlashcards(session.StackId);
             Console.WriteLine("-------------------------------------------------");
             Console.WriteLine($"Date : {session.SessionDate}");
             var stack = stacks.First(s => s.StackId == session.StackId);
             Console.WriteLine($"Stack : {stack.Name}");
-            Console.WriteLine($"Score : {session.Score}");
+            Console.WriteLine($"Score : {session.Score} / {flashcards.Count}");
             Console.WriteLine("-------------------------------------------------\n");
         }
         PauseForUser();
@@ -488,13 +490,14 @@ internal static class Menu
         Console.Clear();
         Console.WriteLine($"Year Summary for {yearInt}:\n");
         Console.WriteLine("Stack Name       | Month | Average Score");
-        Console.WriteLine("-----------------|-------|---------------");
+        Console.WriteLine("-----------------|-------|----------------");
         foreach (var result in results)
         {
             var stack = stacks.First(s => s.StackId == result.StackId);
+            var flashcards = DatabaseManager.GetFlashcards(stack.StackId);
             string monthName = new DateTime(yearInt, result.Month, 1).ToString("MMM");
 
-            Console.WriteLine($"{stack.Name,-16} | {monthName,-5} | {result.AverageScore,13:F2}");
+            Console.WriteLine($"{stack.Name,-16} | {monthName,-5} | {result.AverageScore,6:F2} / {flashcards.Count}");
         }
 
         PauseForUser();

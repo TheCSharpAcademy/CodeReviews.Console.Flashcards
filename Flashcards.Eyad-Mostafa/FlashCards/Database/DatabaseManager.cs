@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using FlashCards.Models;
+using FlashCards.UI;
 
 namespace FlashCards.Database;
 
@@ -69,8 +70,8 @@ internal static class DatabaseManager
                 CREATE TABLE StudySessions (
                     SessionID INT IDENTITY(1,1) PRIMARY KEY,
                     StackID INT NOT NULL,
-                    Date DATE NOT NULL,
-                    Score FLOAT NOT NULL,
+                    Date DATETIME NOT NULL,
+                    Score INT NOT NULL,
                     FOREIGN KEY (StackID) REFERENCES Stacks(StackID) ON DELETE CASCADE
                 );
             END;
@@ -126,6 +127,7 @@ internal static class DatabaseManager
         catch (Exception ex)
         {
             Console.WriteLine($"Error executing script: {ex.Message}");
+            Menu.PauseForUser();
         }
 
         return stacks;
@@ -201,6 +203,7 @@ internal static class DatabaseManager
         catch (Exception ex)
         {
             Console.WriteLine($"Error executing script: {ex.Message}");
+            Menu.PauseForUser();
         }
 
         return flashcards;
@@ -335,6 +338,7 @@ internal static class DatabaseManager
         catch (Exception ex)
         {
             Console.WriteLine($"Error executing script: {ex.Message}");
+            Menu.PauseForUser();
             return new List<StudySession>();
         }
     }
