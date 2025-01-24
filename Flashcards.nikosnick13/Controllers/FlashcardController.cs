@@ -64,7 +64,7 @@ internal class FlashcardController
             {
                 WriteLine("\n\nNo flashcards found.\n\n");
             }
-
+            ReadKey();
             TableVisualisation.DisplayFlashcards(flashcards);
             ReadKey();
             return flashcards;
