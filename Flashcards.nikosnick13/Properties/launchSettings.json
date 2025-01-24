@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Flashcards.nikosnick13": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
