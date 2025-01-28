@@ -4,7 +4,7 @@ public class StudySession
 {
     public long Id { get; set; }
     public long StackId { get; set; }
-    public string UsedFlashcards { get; set; }
+    public required string UsedFlashcards { get; set; }
     public DateTime Date { get; set; }
 }
 

@@ -4,8 +4,8 @@ public class Flashcards
 {
     public long Id { get; set; }
     public long StackId { get; set; }
-    public string Front { get; set; }
-    public string Back { get; set; }
+    public required string Front { get; set; }
+    public required string Back { get; set; }
     public bool Solved { get; set; }
 }
 

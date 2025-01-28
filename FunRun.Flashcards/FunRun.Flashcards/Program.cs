@@ -1,4 +1,5 @@
-﻿using FunRun.Flashcards.Data;
+﻿using FunRun.Flashcards;
+using FunRun.Flashcards.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -10,18 +11,22 @@ var host = Host.CreateDefaultBuilder(args)
    {
        var configuration = context.Configuration;
        string connectionString = configuration.GetConnectionString("SQLiteConnection")!;
-       services.AddSingleton(provider => new SqlServerConnectionFactory(connectionString));
+       services.AddSingleton(provider =>
+       {
+           var logger = provider.GetRequiredService<ILogger<SqlServerConnectionFactory>>();
+           return new SqlServerConnectionFactory(connectionString, logger);
+       });
        services.AddScoped<IDbConnection>(provider =>
        {
            var factory = provider.GetRequiredService<SqlServerConnectionFactory>();
            return factory.CreateConnection();
        });
 
-       services.AddSingleton<CodingTrackerApp>();
+       services.AddSingleton<FlashcardApp>();
 
-       services.AddScoped<ISessionCrudService, SessionCrudService>();
-       services.AddScoped<IUserInputService, UserInputService>();
-       services.AddScoped<IDataAccess, DataAccess>();
+       //services.AddScoped<ISessionCrudService, SessionCrudService>();
+       //services.AddScoped<IUserInputService, UserInputService>();
+       //services.AddScoped<IDataAccess, DataAccess>();
 
    })
     .ConfigureLogging(logger =>
@@ -35,5 +40,5 @@ var host = Host.CreateDefaultBuilder(args)
 var init = host.Services.GetRequiredService<SqlServerConnectionFactory>();
 init.InitializeDatabase();
 
-var app = host.Services.GetRequiredService<CodingTrackerApp>();
+var app = host.Services.GetRequiredService<FlashcardApp>();
 await app.RunApp();
