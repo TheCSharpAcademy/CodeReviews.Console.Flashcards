@@ -10,7 +10,7 @@ var host = Host.CreateDefaultBuilder(args)
    .ConfigureServices((context, services) =>
    {
        var configuration = context.Configuration;
-       string connectionString = configuration.GetConnectionString("SQLiteConnection")!;
+       string connectionString = configuration.GetConnectionString("SQLServerConnection")!;
        services.AddSingleton(provider =>
        {
            var logger = provider.GetRequiredService<ILogger<SqlServerConnectionFactory>>();
@@ -33,6 +33,7 @@ var host = Host.CreateDefaultBuilder(args)
     {
         logger.ClearProviders();
         logger.AddDebug();
+        logger.AddConsole();
 
     }).Build();
 

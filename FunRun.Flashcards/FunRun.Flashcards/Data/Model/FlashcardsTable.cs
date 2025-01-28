@@ -1,6 +1,6 @@
 ﻿namespace FunRun.Flashcards.Data.Model;
 
-public class Flashcards
+public class Flashcard
 {
     public long Id { get; set; }
     public long StackId { get; set; }
@@ -24,8 +24,8 @@ public const string TableCreateStatment = """
             Front NVARCHAR(MAX) NOT NULL,
             Back NVARCHAR(MAX) NOT NULL,
             Solved BIT NOT NULL,
-            CONSTRAINT FK_Flashcards_Stack FOREIGN KEY (StackId) REFERENCES StackTable(Id) ON DELETE CASCADE
-        );
+            CONSTRAINT FK_Flashcards_Stack FOREIGN KEY (StackId) REFERENCES Stack(Id) ON DELETE CASCADE
+        )
     END;
     
     """;

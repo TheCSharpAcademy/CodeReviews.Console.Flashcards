@@ -17,13 +17,14 @@ public static class StudySessionTable
             FROM sys.tables 
             WHERE name = 'StudySession' AND schema_id = SCHEMA_ID('dbo')
         )
+        BEGIN
             CREATE TABLE StudySession (
                 Id BIGINT PRIMARY KEY IDENTITY(1,1),
                 StackId BIGINT NOT NULL,
                 UsedFlashcards NVARCHAR(MAX) NOT NULL,
                 Date DATETIME NOT NULL,
-                CONSTRAINT FK_StudySession_Stack FOREIGN KEY (StackId) REFERENCES StackTable(Id) ON DELETE CASCADE
-            );
+                CONSTRAINT FK_StudySession_Stack FOREIGN KEY (StackId) REFERENCES Stack(Id) ON DELETE CASCADE
+            )
         END;
         """;
 

@@ -3,8 +3,14 @@ namespace FunRun.Flashcards.Data.Model;
 
 public class Stack
 {
+    public Stack(long id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
+
     public long Id { get; set; }
-    public required string Name { get; set; }
+    public string Name { get; set; }
 }
 
 public static class StackTable
