@@ -34,7 +34,7 @@ internal class StackController
             using var transaction = connection.BeginTransaction();
 
             connection.Execute(
-                "INSERT INTO stacks (Name, CreatedDate, Duration) VALUES (@StartTime, @EndTime, @Duration)",
+                "INSERT INTO stacks (Name, CreatedDate) VALUES (@Name, @CreatedDate)",
                 new { Name = stack.Name, CreatedDate = stack.CreatedDate },
                 transaction: transaction);
 
@@ -53,6 +53,8 @@ internal class StackController
             using var connection = Database.GetConnection();
             using var transaction = connection.BeginTransaction();
 
+            DeleteFlashcardsByStackId(id);
+
             var recordsAffected = connection.Execute(
                 "DELETE FROM stacks WHERE Id = @Id", new {Id = id}, transaction: transaction);
 
@@ -70,6 +72,27 @@ internal class StackController
         {
             Utilities.DisplayMessage($"Error deleting stack: {ex.Message}", "red");
             return false;
+        }
+    }
+
+    public void DeleteFlashcardsByStackId(int stackId)
+    {
+        try
+        {
+            using var connection = Database.GetConnection();
+            using var transaction = connection.BeginTransaction();
+
+            connection.Execute(
+                "DELETE FROM flashcards WHERE StackId = @StackId",
+                new { StackId = stackId },
+                transaction: transaction
+            );
+
+            transaction.Commit();
+        }
+        catch (Exception ex)
+        {
+            Utilities.DisplayMessage($"Error deleting flashcards for stack {stackId}: {ex.Message}", "red");
         }
     }
 }
