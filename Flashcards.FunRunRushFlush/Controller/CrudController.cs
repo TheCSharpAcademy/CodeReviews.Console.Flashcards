@@ -1,9 +1,9 @@
-﻿using FunRun.Flashcards.Controller.Interfaces;
-using FunRun.Flashcards.Data.Interfaces;
-using FunRun.Flashcards.Data.Model;
+﻿using Flashcards.FunRunRushFlush.Controller.Interfaces;
+using Flashcards.FunRunRushFlush.Data.Interfaces;
+using Flashcards.FunRunRushFlush.Data.Model;
 using Microsoft.Extensions.Logging;
 
-namespace FunRun.Flashcards.Controller;
+namespace Flashcards.FunRunRushFlush.Controller;
 
 public class CrudController : ICrudController
 {
@@ -60,6 +60,31 @@ public class CrudController : ICrudController
         try
         {
             _stack.DeleteStack(stack);
+        }
+        catch (Exception ex)
+        {
+            _log.LogError(ex.Message, ex);
+        }
+    }
+
+    public List<Flashcard> ShowAllFlashcardsOfSelectedStack(Stack stack)
+    {
+        try
+        {
+           return _flashcard.GetAllFlashcardsOfOneStack(stack);
+        }
+        catch (Exception ex)
+        {
+            _log.LogError(ex.Message, ex);
+            return new List<Flashcard>();
+        }
+    }
+
+    public void CreateFlashcard(Flashcard flashcard)
+    {
+        try
+        {
+            _flashcard.CreateFlashcard(flashcard);
         }
         catch (Exception ex)
         {

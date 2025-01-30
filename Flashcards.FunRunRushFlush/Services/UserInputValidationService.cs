@@ -1,10 +1,10 @@
 ﻿
-using FunRun.Flashcards.Data.Model;
-using FunRun.Flashcards.Services.Interfaces;
+using Flashcards.FunRunRushFlush.Data.Model;
+using Flashcards.FunRunRushFlush.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
 
-namespace FunRun.Flashcards.Services;
+namespace Flashcards.FunRunRushFlush.Services;
 
 public class UserInputValidationService : IUserInputValidationService
 {
@@ -32,8 +32,6 @@ public class UserInputValidationService : IUserInputValidationService
                        return ValidationResult.Error("[red]Please enter a valid Topicname up to 250 characters![/]");
                    return ValidationResult.Success();
                }));
-
-
 
         // If updating an existing session
         if (stack != null)

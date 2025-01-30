@@ -1,6 +1,6 @@
-﻿using FunRun.Flashcards.Data.Model;
+﻿using Flashcards.FunRunRushFlush.Data.Model;
 
-namespace FunRun.Flashcards.Data.Interfaces;
+namespace Flashcards.FunRunRushFlush.Data.Interfaces;
 
 public interface IStackDataAccess
 {

@@ -1,10 +1,10 @@
 ﻿using Dapper;
-using FunRun.Flashcards.Data.Interfaces;
-using FunRun.Flashcards.Data.Model;
+using Flashcards.FunRunRushFlush.Data.Interfaces;
+using Flashcards.FunRunRushFlush.Data.Model;
 using Microsoft.Extensions.Logging;
 using System.Data;
 
-namespace FunRun.Flashcards.Data;
+namespace Flashcards.FunRunRushFlush.Data;
 
 public class StackDataAccess : IStackDataAccess
 {

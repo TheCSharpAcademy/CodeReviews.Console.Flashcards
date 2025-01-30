@@ -1,5 +1,11 @@
-﻿using FunRun.Flashcards;
-using FunRun.Flashcards.Data;
+﻿using Flashcards.FunRunRushFlush.App;
+using Flashcards.FunRunRushFlush.App.Interfaces;
+using Flashcards.FunRunRushFlush.Controller;
+using Flashcards.FunRunRushFlush.Controller.Interfaces;
+using Flashcards.FunRunRushFlush.Data;
+using Flashcards.FunRunRushFlush.Data.Interfaces;
+using Flashcards.FunRunRushFlush.Services;
+using Flashcards.FunRunRushFlush.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,12 +27,15 @@ var host = Host.CreateDefaultBuilder(args)
            var factory = provider.GetRequiredService<SqlServerConnectionFactory>();
            return factory.CreateConnection();
        });
-
        services.AddSingleton<FlashcardApp>();
+       services.AddScoped<IFlashcardScreen, FlashcardScreen>();
+       services.AddScoped<IStackScreen, StackScreen>();
 
-       //services.AddScoped<ISessionCrudService, SessionCrudService>();
-       //services.AddScoped<IUserInputService, UserInputService>();
-       //services.AddScoped<IDataAccess, DataAccess>();
+       services.AddScoped<IUserInputValidationService, UserInputValidationService>();
+
+       services.AddScoped<ICrudController, CrudController>();
+       services.AddScoped<IFlashcardsDataAccess, FlashcardsDataAccess>();
+       services.AddScoped<IStackDataAccess, StackDataAccess>();
 
    })
     .ConfigureLogging(logger =>

@@ -1,11 +1,20 @@
-﻿namespace FunRun.Flashcards.Data.Model;
+﻿namespace Flashcards.FunRunRushFlush.Data.Model;
 
 public class Flashcard
 {
+    public Flashcard(long id, long stackId, string front, string back, bool solved)
+    {
+        Id = id;
+        StackId = stackId;
+        Front = front;
+        Back = back;
+        Solved = solved;
+    }
+
     public long Id { get; set; }
     public long StackId { get; set; }
-    public required string Front { get; set; }
-    public required string Back { get; set; }
+    public string Front { get; set; }
+    public string Back { get; set; }
     public bool Solved { get; set; }
 }
 

@@ -1,5 +1,5 @@
 ﻿
-namespace FunRun.Flashcards.Data.Model;
+namespace Flashcards.FunRunRushFlush.Data.Model;
 
 public class Stack
 {

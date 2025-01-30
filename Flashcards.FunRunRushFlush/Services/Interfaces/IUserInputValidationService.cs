@@ -1,6 +1,6 @@
-﻿using FunRun.Flashcards.Data.Model;
+﻿using Flashcards.FunRunRushFlush.Data.Model;
 
-namespace FunRun.Flashcards.Services.Interfaces
+namespace Flashcards.FunRunRushFlush.Services.Interfaces
 {
     public interface IUserInputValidationService
     {

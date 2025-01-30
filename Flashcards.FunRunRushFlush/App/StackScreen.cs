@@ -1,25 +1,26 @@
-﻿using FunRun.Flashcards.Controller.Interfaces;
-using FunRun.Flashcards.Data.Model;
-using FunRun.Flashcards.Services.Interfaces;
+﻿using Flashcards.FunRunRushFlush.App.Interfaces;
+using Flashcards.FunRunRushFlush.Controller.Interfaces;
+using Flashcards.FunRunRushFlush.Data.Model;
+using Flashcards.FunRunRushFlush.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
 
-namespace FunRun.Flashcards;
+namespace Flashcards.FunRunRushFlush.App;
 
-public class FlashcardApp
+public class StackScreen : IStackScreen
 {
-    private readonly ILogger<FlashcardApp> _log;
+    private readonly ILogger<StackScreen> _log;
     private readonly ICrudController _crud;
     private readonly IUserInputValidationService _userInpValidation;
 
-    public FlashcardApp(ILogger<FlashcardApp> log, ICrudController crud, IUserInputValidationService userInp)
+    public StackScreen(ILogger<StackScreen> log, ICrudController crud, IUserInputValidationService userInp)
     {
         _log = log;
         _crud = crud;
         _userInpValidation = userInp;
     }
 
-    public async Task RunApp()
+    public async Task RunStackView()
     {
         while (true)
         {
@@ -31,9 +32,9 @@ public class FlashcardApp
              .Centered());
 
             var fStacks = _crud.ShowAllStacks();
-            fStacks.Add(new Stack(-1,"Create new Stack"));
+            fStacks.Add(new Stack(0, "Create new Stack"));
 
-            var table = new Table().Centered();
+            var table = new Table().Centered().Expand();
             table.Border = TableBorder.Rounded;
 
             table.AddColumn("Topic").Centered();
@@ -60,11 +61,11 @@ public class FlashcardApp
                             {
                                 if (i == selectedIndex)
                                 {
-                                    table.AddRow("[blue]> Create new Session <[/]");
+                                    table.AddRow("[blue] > Create new Stack of Flashcards <[/]");
                                 }
                                 else
                                 {
-                                    table.AddRow("[dim]> Create new Session <[/]");
+                                    table.AddRow("[dim]> Create new Stack of Flashcards <[/]");
                                 }
 
                             }
@@ -124,8 +125,15 @@ public class FlashcardApp
                         new SelectionPrompt<string>()
                             .PageSize(10)
                             .AddChoices(new[] {
-                                "Update", "Delete", "Back"
+                             "Select", "Update", "Delete", "Back"
                             }));
+
+                    if (choice == "Select")
+                    {
+                        var codSes = _userInpValidation.ValidateUserSessionInput(selectedStack);
+
+                        _crud.UpdateStack(codSes);
+                    }
 
                     if (choice == "Update")
                     {
