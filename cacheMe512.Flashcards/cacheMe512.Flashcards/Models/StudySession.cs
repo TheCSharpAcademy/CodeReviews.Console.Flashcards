@@ -7,17 +7,4 @@ internal class StudySession
     public DateTime Date { get; set; }
     public int Score { get; set; }
 
-    public static StudySession Start(int stackId)
-    {
-        return new StudySession
-        {
-            StackId = stackId,
-            Date = DateTime.Now
-        };
-    }
-
-    public void Complete(int score)
-    {
-        Score = score;
-    }
 }

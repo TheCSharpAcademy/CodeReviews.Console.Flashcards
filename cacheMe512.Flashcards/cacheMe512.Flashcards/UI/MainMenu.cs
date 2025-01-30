@@ -40,8 +40,8 @@ internal class MainMenu
                 studyUI.Show();
                 break;
             case "View Study Session Reports":
-                var historyUI = new StudySessionHistoryUI();
-                historyUI.Show();
+                //var historyUI = new StudySessionHistoryUI();
+                //historyUI.Show();
                 break;
             case "Exit":
                 AnsiConsole.MarkupLine("[bold red]Exiting application...[/]");
