@@ -34,6 +34,9 @@ namespace cacheMe512.Flashcards.UI
                         })
                 );
 
+                if (choice == "Back to Stacks")
+                    return;
+
                 HandleOption(choice);
             }
         }
@@ -51,8 +54,6 @@ namespace cacheMe512.Flashcards.UI
                 case "Delete Flashcard":
                     DeleteFlashcard();
                     break;
-                case "Back to Stacks":
-                    return;
             }
         }
 
@@ -62,7 +63,8 @@ namespace cacheMe512.Flashcards.UI
 
             if (!flashcards.Any())
             {
-                AnsiConsole.MarkupLine("[red]No flashcards available in this stack.[/]");
+                Utilities.DisplayMessage("No flashcards available in this stack.", "red");
+                AnsiConsole.MarkupLine("Press Any Key to Continue.");
                 Console.ReadKey();
                 return;
             }
@@ -82,6 +84,7 @@ namespace cacheMe512.Flashcards.UI
             }
 
             AnsiConsole.Write(table);
+            AnsiConsole.MarkupLine("Press Any Key to Continue.");
             Console.ReadKey();
         }
 
@@ -98,7 +101,8 @@ namespace cacheMe512.Flashcards.UI
             };
 
             _flashcardController.InsertFlashcard(newFlashcard);
-            AnsiConsole.MarkupLine("[green]Flashcard added successfully![/]");
+            Utilities.DisplayMessage("Flashcard added successfully!", "green");
+            AnsiConsole.MarkupLine("Press Any Key to Continue.");
             Console.ReadKey();
         }
 
@@ -108,7 +112,8 @@ namespace cacheMe512.Flashcards.UI
 
             if (!flashcards.Any())
             {
-                AnsiConsole.MarkupLine("[red]No flashcards available to delete.[/]");
+                Utilities.DisplayMessage("No flashcards available to delete.", "red");
+                AnsiConsole.MarkupLine("Press Any Key to Continue.");
                 Console.ReadKey();
                 return;
             }
@@ -122,7 +127,8 @@ namespace cacheMe512.Flashcards.UI
             );
 
             _flashcardController.DeleteFlashcard(selectedFlashcard.Id);
-            AnsiConsole.MarkupLine("[red]Flashcard deleted successfully![/]");
+            Utilities.DisplayMessage("Flashcard deleted successfully!", "red");
+            AnsiConsole.MarkupLine("Press Any Key to Continue.");
             Console.ReadKey();
         }
     }

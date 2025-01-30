@@ -25,6 +25,10 @@ internal class StackUI
                             "Back to Main Menu"
                     })
             );
+
+            if (choice == "Back to Main Menu")
+                return;
+
             HandleOption(choice);
         }
     }
@@ -34,23 +38,18 @@ internal class StackUI
         switch (option)
         {
             case "Add Stack":
-                AddStack(_stackController);
+                AddStack();
                 break;
             case "View Stacks":
-                ViewStacks(_stackController);
+                ViewStacks();
                 break;
             case "Delete Stack":
-                DeleteStack(_stackController);
-                break;
-            case "Back to Main Menu":
-                return;
-            default:
-                AnsiConsole.MarkupLine("Invalid option. Please try again.");
+                DeleteStack();
                 break;
         }
     }
 
-    private void AddStack(StackController stackController)
+    private void AddStack()
     {
         AnsiConsole.MarkupLine("Enter stack name: ");
         string name = Console.ReadLine();
@@ -63,15 +62,18 @@ internal class StackUI
 
         _stackController.InsertStack(newStack);
 
-        AnsiConsole.MarkupLine("Stack added successfully!");
+        Utilities.DisplayMessage("Stack added successfully!", "green");
+        AnsiConsole.MarkupLine("Press Any Key to Continue.");
+        Console.ReadKey();
     }
 
-    private void DeleteStack(StackController stackController)
+    private void DeleteStack()
     {
-        var stacksToDelete = stackController.GetAllStacks();
+        var stacksToDelete = _stackController.GetAllStacks();
         if(!stacksToDelete.Any())
         {
-            Utilities.DisplayMessage("No stacks available to delete.[/]", "red");
+            Utilities.DisplayMessage("No stacks available to delete.", "red");
+            AnsiConsole.MarkupLine("Press Any Key to Continue.");
             Console.ReadKey();
             return;
         }
@@ -84,13 +86,13 @@ internal class StackUI
 
         if(Utilities.ConfirmDeletion(stackToDelete))
         {
-            if (stackController.DeleteStack(stackToDelete.Id))
+            if (_stackController.DeleteStack(stackToDelete.Id))
             {
-                Utilities.DisplayMessage("Session deleted successfully!");
+                Utilities.DisplayMessage("Stack deleted successfully!");
             }
             else
             {
-                Utilities.DisplayMessage("Session not found.", "red");
+                Utilities.DisplayMessage("Stack not found.", "red");
             }
         }
         else
@@ -102,9 +104,9 @@ internal class StackUI
         Console.ReadKey();
     }
 
-    private void ViewStacks(StackController stackController)
+    private void ViewStacks()
     {
-        var stacks = stackController.GetAllStacks();
+        var stacks = _stackController.GetAllStacks();
         if (!stacks.Any())
         {
             AnsiConsole.MarkupLine("[red]No stacks available. Add a stack first.[/]");
