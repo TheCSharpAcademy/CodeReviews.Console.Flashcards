@@ -29,6 +29,9 @@ internal class StudySessionUI
                     })
             );
 
+            if (choice == "Back to Main Menu")
+                return;
+
             HandleOption(choice);
         }
     }
@@ -46,8 +49,6 @@ internal class StudySessionUI
             case "End Study Session":
                 EndSession();
                 break;
-            case "Back to Main Menu":
-                return;
         }
     }
 
@@ -73,7 +74,8 @@ internal class StudySessionUI
         {
             StackId = selectedStack.Id,
             Date = DateTime.Now,
-            Score = 0
+            Score = 0,
+            TotalQuestions = 0
         };
 
         int sessionId = _sessionController.InsertSession(session);
@@ -130,20 +132,34 @@ internal class StudySessionUI
 
     private void RunStudySession(int sessionId, Stack stack)
     {
-        var flashcards = _flashcardController.GetFlashcardsByStackId(stack.Id).OrderBy(_ => Guid.NewGuid()).ToList();
+        Random random = new Random();
+        int correctAnswers = 0;
+        int totalQuestions = 0;
+        var flashcards = _flashcardController.GetFlashcardsByStackId(stack.Id).ToList();
+
         if (!flashcards.Any())
         {
-            AnsiConsole.MarkupLine("[red]No flashcards available in this stack.[/]");
+            Utilities.DisplayMessage("No flashcards available in this stack.", "red");
             Console.ReadKey();
             return;
         }
 
-        int correctAnswers = 0;
-        foreach (var flashcard in flashcards)
+        while (true)
         {
             Console.Clear();
+            Utilities.DisplayMessage("Press Enter or Space to see Answer, or 'q' to quit.");
+
+            var flashcard = flashcards[random.Next(flashcards.Count)];
+
             AnsiConsole.MarkupLine($"[bold cyan]Question: {flashcard.Question}[/]");
-            Console.ReadKey();
+
+            var key = Console.ReadKey(intercept: true).Key;
+            if (key == ConsoleKey.Q)
+            {
+                break;
+            }
+
+            totalQuestions++;
             AnsiConsole.MarkupLine($"[bold green]Answer: {flashcard.Answer}[/]");
 
             var isCorrect = AnsiConsole.Confirm("Did you get it right?");
@@ -153,8 +169,10 @@ internal class StudySessionUI
             }
         }
 
-        _sessionController.UpdateSessionScore(sessionId, correctAnswers);
-        AnsiConsole.MarkupLine("[green]Study session completed![/]");
+        _sessionController.UpdateSessionScore(sessionId, correctAnswers, totalQuestions);
+
+        var updatedSession = _sessionController.GetSessionById(sessionId);
+        AnsiConsole.MarkupLine($"[bold yellow]Session Complete: {updatedSession.Score}/{updatedSession.TotalQuestions} correct![/]");
         Console.ReadKey();
     }
 }

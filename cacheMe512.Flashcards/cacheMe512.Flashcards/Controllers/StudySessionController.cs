@@ -23,6 +23,24 @@ internal class StudySessionController
         }
     }
 
+    public StudySession GetSessionById(int sessionId)
+    {
+        try
+        {
+            using var connection = Database.GetConnection();
+            return connection.QueryFirstOrDefault<StudySession>(
+                "SELECT Id, StackId, Date, Score, TotalQuestions FROM study_sessions WHERE Id = @Id",
+                new { Id = sessionId }
+            );
+        }
+        catch (Exception ex)
+        {
+            Utilities.DisplayMessage($"Error retrieving session data: {ex.Message}", "red");
+            return null;
+        }
+    }
+
+
     public int InsertSession(StudySession session)
     {
         try
@@ -31,8 +49,9 @@ internal class StudySessionController
             using var transaction = connection.BeginTransaction();
 
             var sessionId = connection.ExecuteScalar<int>(
-                "INSERT INTO study_sessions (StackId, Date, Score, Active) VALUES (@StackId, @Date, @Score, 1); SELECT last_insert_rowid();",
-                new { session.StackId, session.Date, session.Score },
+                "INSERT INTO study_sessions (StackId, Date, Score, TotalQuestions, Active) " +
+                "OUTPUT INSERTED.Id VALUES (@StackId, @Date, @Score, @TotalQuestions, 1);",
+                new { session.StackId, session.Date, session.Score, TotalQuestions = 0 },
                 transaction: transaction
             );
 
@@ -67,16 +86,31 @@ internal class StudySessionController
         }
     }
 
-    public void UpdateSessionScore(int sessionId, int score)
+    public void UpdateSessionScore(int sessionId, int newCorrectAnswers, int newTotalQuestions)
     {
         try
         {
             using var connection = Database.GetConnection();
             using var transaction = connection.BeginTransaction();
 
+            var existingSession = connection.QueryFirstOrDefault<dynamic>(
+                "SELECT Score, TotalQuestions FROM study_sessions WHERE Id = @Id",
+                new { Id = sessionId },
+                transaction: transaction
+            );
+
+            if (existingSession == null)
+            {
+                Utilities.DisplayMessage($"Session with ID {sessionId} not found.", "red");
+                return;
+            }
+
+            int updatedScore = existingSession.Score + newCorrectAnswers;
+            int updatedTotalQuestions = existingSession.TotalQuestions + newTotalQuestions;
+
             connection.Execute(
-                "UPDATE study_sessions SET Score = @Score WHERE Id = @Id",
-                new { Score = score, Id = sessionId },
+                "UPDATE study_sessions SET Score = @Score, TotalQuestions = @TotalQuestions WHERE Id = @Id",
+                new { Score = updatedScore, TotalQuestions = updatedTotalQuestions, Id = sessionId },
                 transaction: transaction
             );
 

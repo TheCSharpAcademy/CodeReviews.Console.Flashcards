@@ -75,12 +75,17 @@ internal static class Database
                   );");
 
             connection.Execute(
-                @"IF OBJECT_ID('study_session', 'U') IS NULL
-                  CREATE TABLE study_session (
+                @"IF OBJECT_ID('study_sessions', 'U') IS NULL
+                  CREATE TABLE study_sessions (
                       Id INT PRIMARY KEY IDENTITY,
+                      StackId INT NOT NULL,
                       Date DATETIME NOT NULL,
-                      Score INT NOT NULL
+                      TotalQuestions INT NOT NULL DEFAULT 0,
+                      Score INT NOT NULL,
+                      Active INT NOT NULL,
+                      FOREIGN KEY (StackId) REFERENCES stacks(Id) ON DELETE CASCADE
                   );");
+
         }
     }
 }
