@@ -204,8 +204,6 @@ public class FlashcardScreen : IFlashcardScreen
             }
         }
 
-        var panel = new Panel("Front").Header("Question").Expand().Border(BoxBorder.Rounded);
-
         foreach (var question in objects)
         {
             AnsiConsole.Clear();

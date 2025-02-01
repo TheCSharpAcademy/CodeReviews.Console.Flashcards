@@ -19,7 +19,6 @@ Inspired by the [C# Academy Flashcards Project](https://thecsharpacademy.com/pro
   - **Only Solved Flashcards**
 - **Session History:** Track and review past study sessions.
 
-
 ## How It Works
 
 1. **Launch the app.**
