@@ -26,7 +26,7 @@ public class FlashcardsDataAccess : IFlashcardsDataAccess
                 """;
     public List<Flashcard> GetAllFlashcardsOfOneStack(Stack stack)
     {
-        List<Flashcard> flashcards = _connection.Query<Flashcard>(QueryGetAllFlashcardsOfOneStack, new { stack.Id }).ToList();
+        List<Flashcard> flashcards = _connection.Query<Flashcard>(QueryGetAllFlashcardsOfOneStack, new { StackId = stack.Id }).ToList();
         return flashcards;
     }
 
@@ -58,24 +58,26 @@ public class FlashcardsDataAccess : IFlashcardsDataAccess
     }
 
 
-    //    private static readonly string QueryUpdateStack = $"""
-    //            UPDATE {StackTable.TableName}
-    //            SET {StackTable.Name} = @{StackTable.Name}
-    //            WHERE {StackTable.Id} = @{StackTable.Id}
-    //            """;
-    //public void UpdateStack(Stack stack)
-    //{
-    //    _connection.Execute(QueryUpdateStack, new { stack.Name,stack.Id });
-    //}
+    private static readonly string QueryUpdateFlashcard = $"""
+                UPDATE {FlashcardsTable.TableName}
+                SET {FlashcardsTable.Front} = @{FlashcardsTable.Front},
+                    {FlashcardsTable.Back} = @{FlashcardsTable.Back},
+                    {FlashcardsTable.Solved} = @{FlashcardsTable.Solved}                    
+                WHERE {FlashcardsTable.Id} = @{FlashcardsTable.Id}
+                """;
+    public void UpdateFlashcard(Flashcard flashcard)
+    {
+        _connection.Execute(QueryUpdateFlashcard, new { flashcard.Front, flashcard.Back, flashcard.Solved, flashcard.Id });
+    }
 
 
 
-    //    private static readonly string QueryDeleteStack = $"""
-    //                Delete From {StackTable.TableName}
-    //                WHERE {StackTable.Id} = @Id;
-    //            """;
-    //public void DeleteStack(Stack stack)
-    //{
-    //    _connection.Execute(QueryDeleteStack, new{stack.Id});
-    //}
+    private static readonly string QueryDeleteFlashcard = $"""
+                    Delete From {FlashcardsTable.TableName}
+                    WHERE {FlashcardsTable.Id} = @Id;
+                """;
+    public void DeleteFlashcard(Flashcard flashcard)
+    {
+        _connection.Execute(QueryDeleteFlashcard, new { flashcard.Id });
+    }
 }

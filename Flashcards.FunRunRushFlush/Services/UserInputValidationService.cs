@@ -15,13 +15,11 @@ public class UserInputValidationService : IUserInputValidationService
         _log = log;
     }
 
-    public Stack ValidateUserSessionInput(Stack? stack = null)
+    public Stack ValidateUserStackInput(Stack? stack = null)
     {
         AnsiConsole.MarkupLine("[yellow]Please provide the topic for your Flashcard-Stack.[/]");
 
 
-        DateTime sessionStart = default;
-        DateTime sessionEnd = default;
         long Id = -1;
 
         var name = AnsiConsole.Prompt(
@@ -33,7 +31,7 @@ public class UserInputValidationService : IUserInputValidationService
                    return ValidationResult.Success();
                }));
 
-        // If updating an existing session
+        // If updating existing
         if (stack != null)
         {
             Id = stack.Id;
@@ -44,4 +42,83 @@ public class UserInputValidationService : IUserInputValidationService
 
         return sta;
     }
+
+    public Flashcard ValidateUserFlashcardInput(Stack stack, Flashcard flashcard = null)
+    {
+        AnsiConsole.MarkupLine("[yellow]Please provide the Front and the Back of Flashcard.[/]");
+
+
+        long Id = -1;
+        bool solved = false;
+
+        var front = AnsiConsole.Prompt(
+             new TextPrompt<string>("[yellow]Enter the [green]Front[/] (max 250 Chars):[/]")
+               .Validate(input =>
+               {
+                   if (string.IsNullOrWhiteSpace(input) || input.Length > 250)
+                       return ValidationResult.Error("[red]Please enter a valid Input, up to 250 characters![/]");
+                   return ValidationResult.Success();
+               }));
+
+        var back = AnsiConsole.Prompt(
+             new TextPrompt<string>("[yellow]Enter the [green]Back[/] (max 250 Chars):[/]")
+               .Validate(input =>
+               {
+                   if (string.IsNullOrWhiteSpace(input) || input.Length > 250)
+                       return ValidationResult.Error("[red]Please enter a valid Input, up to 250 characters![/]");
+                   return ValidationResult.Success();
+               }));
+
+        // If updating an existing session
+        if (flashcard != null)
+        {
+            Id = flashcard.Id;
+            solved = flashcard.Solved;
+        }
+
+        var flash = new Flashcard(Id, stack.Id,front,back, solved);
+        _log.LogInformation("Validated Flashcard input: {flash}", flash);
+
+        return flash;
+    }
+    //public Flashcard ValidateUserStudySessionInput(Stack stack, Flashcard flashcard = null)
+    //{
+    //    AnsiConsole.MarkupLine("[yellow]Please provide the Front and the Back of Flashcard.[/]");
+
+
+    //    long Id = -1;
+    //    bool solved = false;
+
+    //    var front = AnsiConsole.Prompt(
+    //         new TextPrompt<string>("[yellow]Enter the [green]Front[/] (max 250 Chars):[/]")
+    //           .Validate(input =>
+    //           {
+    //               if (string.IsNullOrWhiteSpace(input) || input.Length > 250)
+    //                   return ValidationResult.Error("[red]Please enter a valid Input, up to 250 characters![/]");
+    //               return ValidationResult.Success();
+    //           }));
+
+    //    var back = AnsiConsole.Prompt(
+    //         new TextPrompt<string>("[yellow]Enter the [green]Back[/] (max 250 Chars):[/]")
+    //           .Validate(input =>
+    //           {
+    //               if (string.IsNullOrWhiteSpace(input) || input.Length > 250)
+    //                   return ValidationResult.Error("[red]Please enter a valid Input, up to 250 characters![/]");
+    //               return ValidationResult.Success();
+    //           }));
+
+    //    // If updating an existing session
+    //    if (flashcard != null)
+    //    {
+    //        Id = flashcard.Id;
+    //        solved = flashcard.Solved;
+    //    }
+
+    //    var flash = new Flashcard(Id, stack.Id, front, back, solved);
+    //    _log.LogInformation("Validated Flashcard input: {flash}", flash);
+
+    //    return flash;
+    //}
+
+
 }

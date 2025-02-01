@@ -1,5 +1,6 @@
 ﻿using Flashcards.FunRunRushFlush.App;
 using Flashcards.FunRunRushFlush.App.Interfaces;
+using Flashcards.FunRunRushFlush.App.Screens;
 using Flashcards.FunRunRushFlush.Controller;
 using Flashcards.FunRunRushFlush.Controller.Interfaces;
 using Flashcards.FunRunRushFlush.Data;
@@ -30,12 +31,15 @@ var host = Host.CreateDefaultBuilder(args)
        services.AddSingleton<FlashcardApp>();
        services.AddScoped<IFlashcardScreen, FlashcardScreen>();
        services.AddScoped<IStackScreen, StackScreen>();
+       services.AddScoped<IStudySessionScreen, StudySessionScreen>();
+
 
        services.AddScoped<IUserInputValidationService, UserInputValidationService>();
 
        services.AddScoped<ICrudController, CrudController>();
        services.AddScoped<IFlashcardsDataAccess, FlashcardsDataAccess>();
        services.AddScoped<IStackDataAccess, StackDataAccess>();
+       services.AddScoped<IStudySessionDataAccess, StudySessionDataAccess>();
 
    })
     .ConfigureLogging(logger =>

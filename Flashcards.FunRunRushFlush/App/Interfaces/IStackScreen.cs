@@ -2,6 +2,7 @@
 {
     public interface IStackScreen
     {
+        Task RunStackSelection();
         Task RunStackView();
     }
 }

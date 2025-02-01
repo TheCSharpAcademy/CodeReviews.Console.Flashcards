@@ -4,6 +4,7 @@ namespace Flashcards.FunRunRushFlush.Services.Interfaces
 {
     public interface IUserInputValidationService
     {
-        Stack ValidateUserSessionInput(Stack? stack = null);
+        Flashcard ValidateUserFlashcardInput(Stack stack, Flashcard flashcard = null);
+        Stack ValidateUserStackInput(Stack? stack = null);
     }
 }

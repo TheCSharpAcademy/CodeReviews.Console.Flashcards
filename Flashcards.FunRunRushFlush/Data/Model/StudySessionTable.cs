@@ -2,10 +2,23 @@
 
 public class StudySession
 {
+    public StudySession() { }
+    public StudySession(long id, long stackId, string stackName, string usedFlashcards, DateTime date)
+    {
+        Id = id;
+        StackId = stackId;
+        StackName = stackName;
+        UsedFlashcards = usedFlashcards;
+        Date = date;
+    }
+
     public long Id { get; set; }
     public long StackId { get; set; }
-    public required string UsedFlashcards { get; set; }
+    public string StackName { get; set; }
+    public string UsedFlashcards { get; set; }
     public DateTime Date { get; set; }
+
+
 }
 
 

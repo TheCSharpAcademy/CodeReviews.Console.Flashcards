@@ -9,12 +9,19 @@ public class CrudController : ICrudController
 {
     private readonly IFlashcardsDataAccess _flashcard;
     private readonly IStackDataAccess _stack;
+    private readonly IStudySessionDataAccess _studySession;
+
+
     private readonly ILogger<CrudController> _log;
 
-    public CrudController(IFlashcardsDataAccess flashcard, IStackDataAccess stack, ILogger<CrudController> log)
+    public CrudController(IFlashcardsDataAccess flashcard,
+                          IStackDataAccess stack,
+                          IStudySessionDataAccess studySession,
+                          ILogger<CrudController> log)
     {
         _flashcard = flashcard;
         _stack = stack;
+        _studySession = studySession;
         _log = log;
     }
 
@@ -85,6 +92,52 @@ public class CrudController : ICrudController
         try
         {
             _flashcard.CreateFlashcard(flashcard);
+        }
+        catch (Exception ex)
+        {
+            _log.LogError(ex.Message, ex);
+        }
+    }
+    public void UpdateFlashcard(Flashcard flashcard)
+    {
+        try
+        {
+            _flashcard.UpdateFlashcard(flashcard);
+        }
+        catch (Exception ex)
+        {
+            _log.LogError(ex.Message, ex);
+        }
+    }
+    public void DeleteFlashcard(Flashcard flashcard)
+    {
+        try
+        {
+            _flashcard.DeleteFlashcard(flashcard);
+        }
+        catch (Exception ex)
+        {
+            _log.LogError(ex.Message, ex);
+        }
+    }
+
+    public List<StudySession> ShowAllStudySessions()
+    {
+        try
+        {
+            return _studySession.GetAllStudySessions();
+        }
+        catch (Exception ex)
+        {
+            _log.LogError(ex.Message, ex);
+            return new List<StudySession>();
+        }
+    }
+    public void CreateStudySession(StudySession studySession)
+    {
+        try
+        {
+             _studySession.CreateStudySession(studySession);
         }
         catch (Exception ex)
         {
