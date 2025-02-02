@@ -1,124 +1,173 @@
-﻿using cacheMe512.Flashcards.Models;
-using Dapper;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dapper;
+using cacheMe512.Flashcards.Models;
+using cacheMe512.Flashcards.DTOs;
 
-namespace cacheMe512.Flashcards.Controllers;
-
-internal class StudySessionController
+namespace cacheMe512.Flashcards.Controllers
 {
-    public IEnumerable<StudySession> GetActiveSessions()
+    internal class StudySessionController
     {
-        try
+        private readonly StackController _stackController = new();
+
+        public IEnumerable<StudySessionDTO> GetActiveSessions()
         {
-            using var connection = Database.GetConnection();
-            return connection.Query<StudySession>(
-                "SELECT Id, StackId, Date, Score FROM study_sessions WHERE Active = 1"
-            ).ToList();
-        }
-        catch (Exception ex)
-        {
-            Utilities.DisplayMessage($"Error retrieving active sessions: {ex.Message}", "red");
-            return Enumerable.Empty<StudySession>();
-        }
-    }
-
-    public StudySession GetSessionById(int sessionId)
-    {
-        try
-        {
-            using var connection = Database.GetConnection();
-            return connection.QueryFirstOrDefault<StudySession>(
-                "SELECT Id, StackId, Date, Score, TotalQuestions FROM study_sessions WHERE Id = @Id",
-                new { Id = sessionId }
-            );
-        }
-        catch (Exception ex)
-        {
-            Utilities.DisplayMessage($"Error retrieving session data: {ex.Message}", "red");
-            return null;
-        }
-    }
-
-
-    public int InsertSession(StudySession session)
-    {
-        try
-        {
-            using var connection = Database.GetConnection();
-            using var transaction = connection.BeginTransaction();
-
-            var sessionId = connection.ExecuteScalar<int>(
-                "INSERT INTO study_sessions (StackId, Date, Score, TotalQuestions, Active) " +
-                "OUTPUT INSERTED.Id VALUES (@StackId, @Date, @Score, @TotalQuestions, 1);",
-                new { session.StackId, session.Date, session.Score, TotalQuestions = 0 },
-                transaction: transaction
-            );
-
-            transaction.Commit();
-            return sessionId;
-        }
-        catch (Exception ex)
-        {
-            Utilities.DisplayMessage($"Error inserting study session: {ex.Message}", "red");
-            return -1;
-        }
-    }
-
-    public void EndSession(int sessionId)
-    {
-        try
-        {
-            using var connection = Database.GetConnection();
-            using var transaction = connection.BeginTransaction();
-
-            connection.Execute(
-                "UPDATE study_sessions SET Active = 0 WHERE Id = @Id",
-                new { Id = sessionId },
-                transaction: transaction
-            );
-
-            transaction.Commit();
-        }
-        catch (Exception ex)
-        {
-            Utilities.DisplayMessage($"Error ending study session: {ex.Message}", "red");
-        }
-    }
-
-    public void UpdateSessionScore(int sessionId, int newCorrectAnswers, int newTotalQuestions)
-    {
-        try
-        {
-            using var connection = Database.GetConnection();
-            using var transaction = connection.BeginTransaction();
-
-            var existingSession = connection.QueryFirstOrDefault<dynamic>(
-                "SELECT Score, TotalQuestions FROM study_sessions WHERE Id = @Id",
-                new { Id = sessionId },
-                transaction: transaction
-            );
-
-            if (existingSession == null)
+            try
             {
-                Utilities.DisplayMessage($"Session with ID {sessionId} not found.", "red");
-                return;
+                using var connection = Database.GetConnection();
+                using var transaction = connection.BeginTransaction();
+
+                connection.Execute(
+                    @"WITH CTE AS (
+                        SELECT Id, ROW_NUMBER() OVER (ORDER BY Position) AS NewPosition
+                        FROM study_sessions
+                        WHERE Active = 1
+                    )
+                    UPDATE study_sessions
+                    SET Position = CTE.NewPosition
+                    FROM CTE
+                    WHERE study_sessions.Id = CTE.Id;",
+                    transaction: transaction
+                );
+                transaction.Commit();
+
+                var sessions = connection.Query<StudySession>(
+                    "SELECT Id, StackId, Date, Score FROM study_sessions WHERE Active = 1 ORDER BY Position"
+                ).ToList();
+
+                return sessions.Select(session =>
+                {
+                    var stack = _stackController.GetAllStacks().FirstOrDefault(s => s.Id == session.StackId);
+                    return new StudySessionDTO(stack?.Name ?? "Unknown Stack", session.Date, session.Score);
+                });
             }
-
-            int updatedScore = existingSession.Score + newCorrectAnswers;
-            int updatedTotalQuestions = existingSession.TotalQuestions + newTotalQuestions;
-
-            connection.Execute(
-                "UPDATE study_sessions SET Score = @Score, TotalQuestions = @TotalQuestions WHERE Id = @Id",
-                new { Score = updatedScore, TotalQuestions = updatedTotalQuestions, Id = sessionId },
-                transaction: transaction
-            );
-
-            transaction.Commit();
+            catch (Exception ex)
+            {
+                Utilities.DisplayMessage($"Error retrieving active sessions: {ex.Message}", "red");
+                return Enumerable.Empty<StudySessionDTO>();
+            }
         }
-        catch (Exception ex)
+
+        public StudySessionDTO GetSessionById(int sessionId)
         {
-            Utilities.DisplayMessage($"Error updating study session score: {ex.Message}", "red");
+            try
+            {
+                using var connection = Database.GetConnection();
+                var session = connection.QueryFirstOrDefault<StudySession>(
+                    "SELECT Id, StackId, Date, Score FROM study_sessions WHERE Id = @Id",
+                    new { Id = sessionId }
+                );
+
+                if (session == null)
+                    return null;
+
+                var stack = _stackController.GetAllStacks().FirstOrDefault(s => s.Id == session.StackId);
+                return new StudySessionDTO(stack?.Name ?? "Unknown Stack", session.Date, session.Score);
+            }
+            catch (Exception ex)
+            {
+                Utilities.DisplayMessage($"Error retrieving session data: {ex.Message}", "red");
+                return null;
+            }
+        }
+
+        public int InsertSession(StudySession session)
+        {
+            try
+            {
+                using var connection = Database.GetConnection();
+                using var transaction = connection.BeginTransaction();
+
+                int nextPosition = connection.ExecuteScalar<int>(
+                    "SELECT COALESCE(MAX(Position), 0) + 1 FROM study_sessions",
+                    transaction: transaction
+                );
+
+                var sessionId = connection.ExecuteScalar<int>(
+                    "INSERT INTO study_sessions (StackId, Date, Score, TotalQuestions, Active, Position) " +
+                    "OUTPUT INSERTED.Id VALUES (@StackId, @Date, @Score, @TotalQuestions, 1, @Position);",
+                    new { session.StackId, session.Date, session.Score, session.TotalQuestions, Position = nextPosition },
+                    transaction: transaction
+                );
+
+                transaction.Commit();
+                return sessionId;
+            }
+            catch (Exception ex)
+            {
+                Utilities.DisplayMessage($"Error inserting study session: {ex.Message}", "red");
+                return -1;
+            }
+        }
+
+        public void EndSession(int sessionId)
+        {
+            try
+            {
+                using var connection = Database.GetConnection();
+                using var transaction = connection.BeginTransaction();
+
+                var session = connection.QueryFirstOrDefault<StudySession>(
+                    "SELECT Position FROM study_sessions WHERE Id = @SessionId",
+                    new { SessionId = sessionId },
+                    transaction: transaction
+                );
+
+                if (session == null)
+                {
+                    Console.WriteLine("Study session not found.");
+                    return;
+                }
+
+                connection.Execute(
+                    "UPDATE study_sessions SET Active = 0 WHERE Id = @SessionId",
+                    new { SessionId = sessionId },
+                    transaction: transaction
+                );
+
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                Utilities.DisplayMessage($"Error ending study session: {ex.Message}", "red");
+            }
+        }
+
+        public void UpdateSessionScore(int sessionId, int newCorrectAnswers, int newTotalQuestions)
+        {
+            try
+            {
+                using var connection = Database.GetConnection();
+                using var transaction = connection.BeginTransaction();
+
+                var existingSession = connection.QueryFirstOrDefault<dynamic>(
+                    "SELECT Score, TotalQuestions FROM study_sessions WHERE Id = @Id",
+                    new { Id = sessionId },
+                    transaction: transaction
+                );
+
+                if (existingSession == null)
+                {
+                    Utilities.DisplayMessage($"Session with ID {sessionId} not found.", "red");
+                    return;
+                }
+
+                int updatedScore = existingSession.Score + newCorrectAnswers;
+                int updatedTotalQuestions = existingSession.TotalQuestions + newTotalQuestions;
+
+                connection.Execute(
+                    "UPDATE study_sessions SET Score = @Score, TotalQuestions = @TotalQuestions WHERE Id = @Id",
+                    new { Score = updatedScore, TotalQuestions = updatedTotalQuestions, Id = sessionId },
+                    transaction: transaction
+                );
+
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                Utilities.DisplayMessage($"Error updating study session score: {ex.Message}", "red");
+            }
         }
     }
 }

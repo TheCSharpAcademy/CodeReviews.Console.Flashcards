@@ -1,15 +1,16 @@
 ﻿using Spectre.Console;
-using cacheMe512.Flashcards.Models;
+using cacheMe512.Flashcards.DTOs;
 using cacheMe512.Flashcards.Controllers;
+using cacheMe512.Flashcards.Models;
 
 namespace cacheMe512.Flashcards.UI
 {
     internal class FlashcardUI
     {
-        private readonly Stack _stack;
+        private readonly StackDTO _stack;
         private static readonly FlashcardController _flashcardController = new();
 
-        public FlashcardUI(Stack stack)
+        public FlashcardUI(StackDTO stack)
         {
             _stack = stack;
         }
@@ -59,12 +60,11 @@ namespace cacheMe512.Flashcards.UI
 
         private void ViewFlashcards()
         {
-            var flashcards = _flashcardController.GetFlashcardsByStackId(_stack.Id);
+            var flashcards = _flashcardController.GetFlashcardsByStackId(_stack.Position).ToList();
 
             if (!flashcards.Any())
             {
                 Utilities.DisplayMessage("No flashcards available in this stack.", "red");
-                AnsiConsole.MarkupLine("Press Any Key to Continue.");
                 Console.ReadKey();
                 return;
             }
@@ -77,14 +77,13 @@ namespace cacheMe512.Flashcards.UI
             foreach (var flashcard in flashcards)
             {
                 table.AddRow(
-                    flashcard.Id.ToString(),
+                    flashcard.Position.ToString(),
                     $"[cyan]{flashcard.Question}[/]",
                     $"[green]{flashcard.Answer}[/]"
                 );
             }
 
             AnsiConsole.Write(table);
-            AnsiConsole.MarkupLine("Press Any Key to Continue.");
             Console.ReadKey();
         }
 
@@ -93,42 +92,39 @@ namespace cacheMe512.Flashcards.UI
             string question = AnsiConsole.Ask<string>("Enter the flashcard question:");
             string answer = AnsiConsole.Ask<string>("Enter the flashcard answer:");
 
-            var newFlashcard = new Flashcard
+            var newFlashcard = new FlashcardDTO(0, question, answer, _stack.Position);
+            _flashcardController.InsertFlashcard(new Flashcard
             {
-                StackId = _stack.Id,
+                StackId = _stack.Position,
                 Question = question,
                 Answer = answer
-            };
+            });
 
-            _flashcardController.InsertFlashcard(newFlashcard);
             Utilities.DisplayMessage("Flashcard added successfully!", "green");
-            AnsiConsole.MarkupLine("Press Any Key to Continue.");
             Console.ReadKey();
         }
 
         private void DeleteFlashcard()
         {
-            var flashcards = _flashcardController.GetFlashcardsByStackId(_stack.Id);
+            var flashcards = _flashcardController.GetFlashcardsByStackId(_stack.Position).ToList();
 
             if (!flashcards.Any())
             {
                 Utilities.DisplayMessage("No flashcards available to delete.", "red");
-                AnsiConsole.MarkupLine("Press Any Key to Continue.");
                 Console.ReadKey();
                 return;
             }
 
             var selectedFlashcard = AnsiConsole.Prompt(
-                new SelectionPrompt<Flashcard>()
+                new SelectionPrompt<FlashcardDTO>()
                     .Title("[bold yellow]Select a flashcard to delete[/]")
                     .PageSize(10)
-                    .UseConverter(fc => $"{fc.Id}: {fc.Question}")
+                    .UseConverter(fc => $"{fc.Position}: {fc.Question}")
                     .AddChoices(flashcards)
             );
 
             _flashcardController.DeleteFlashcard(selectedFlashcard.Id);
             Utilities.DisplayMessage("Flashcard deleted successfully!", "red");
-            AnsiConsole.MarkupLine("Press Any Key to Continue.");
             Console.ReadKey();
         }
     }

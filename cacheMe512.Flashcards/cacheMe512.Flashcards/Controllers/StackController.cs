@@ -1,98 +1,101 @@
 ﻿using cacheMe512.Flashcards.Models;
+using cacheMe512.Flashcards.DTOs;
 using Dapper;
 
-namespace cacheMe512.Flashcards.Controllers;
-
-internal class StackController
+namespace cacheMe512.Flashcards.Controllers
 {
-    public IEnumerable<Stack> GetAllStacks()
+    internal class StackController
     {
-        try
+        private readonly FlashcardController _flashcardController = new();
+
+        public IEnumerable<StackDTO> GetAllStacks()
         {
-            using var connection = Database.GetConnection();
-
-            var stacks = connection.Query<Stack>(
-                @"SELECT Id, 
-                             Name, 
-                             CreatedDate
-                      FROM stacks").ToList();
-
-            return stacks;
-        }
-        catch (Exception ex)
-        {
-            Utilities.DisplayMessage($"Error retrieving stacks: {ex.Message}", "red");
-            return Enumerable.Empty<Stack>();
-        }
-    }
-
-    public void InsertStack(Stack stack)
-    {
-        try
-        {
-            using var connection = Database.GetConnection();
-            using var transaction = connection.BeginTransaction();
-
-            connection.Execute(
-                "INSERT INTO stacks (Name, CreatedDate) VALUES (@Name, @CreatedDate)",
-                new { Name = stack.Name, CreatedDate = stack.CreatedDate },
-                transaction: transaction);
-
-            transaction.Commit();
-        }
-        catch (Exception ex)
-        {
-            Utilities.DisplayMessage($"Error inserting session: {ex.Message}", "red");
-        }
-    }
-
-    public bool DeleteStack(int id)
-    {
-        try
-        {
-            using var connection = Database.GetConnection();
-            using var transaction = connection.BeginTransaction();
-
-            DeleteFlashcardsByStackId(id);
-
-            var recordsAffected = connection.Execute(
-                "DELETE FROM stacks WHERE Id = @Id", new {Id = id}, transaction: transaction);
-
-            if (recordsAffected > 0)
+            try
             {
+                using var connection = Database.GetConnection();
+
+                var stacks = connection.Query<Stack>(
+                    "SELECT Id, Name, Position, CreatedDate FROM stacks ORDER BY Position"
+                ).ToList();
+
+                return stacks.Select(s =>
+                {
+                    var flashcards = _flashcardController.GetFlashcardsByStackId(s.Id).ToList();
+                    return new StackDTO(s.Name, flashcards, s.Position);
+                });
+            }
+            catch (Exception ex)
+            {
+                Utilities.DisplayMessage($"Error retrieving stacks: {ex.Message}", "red");
+                return Enumerable.Empty<StackDTO>();
+            }
+        }
+
+        public void InsertStack(Stack stack)
+        {
+            try
+            {
+                using var connection = Database.GetConnection();
+                using var transaction = connection.BeginTransaction();
+
+                int nextPosition = connection.ExecuteScalar<int>(
+                    "SELECT COALESCE(MAX(Position), 0) + 1 FROM stacks",
+                    transaction: transaction
+                );
+
+                connection.Execute(
+                    "INSERT INTO stacks (Name, Position, CreatedDate) VALUES (@Name, @Position, @CreatedDate)",
+                    new { Name = stack.Name, Position = nextPosition, CreatedDate = stack.CreatedDate },
+                    transaction: transaction
+                );
+
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                Utilities.DisplayMessage($"Error inserting stack: {ex.Message}", "red");
+            }
+        }
+
+        public bool DeleteStack(int stackId)
+        {
+            try
+            {
+                using var connection = Database.GetConnection();
+                using var transaction = connection.BeginTransaction();
+
+                var stack = connection.QueryFirstOrDefault<Stack>(
+                    "SELECT Position FROM stacks WHERE Id = @StackId",
+                    new { StackId = stackId },
+                    transaction: transaction
+                );
+
+                if (stack == null)
+                {
+                    Console.WriteLine("Stack not found.");
+                    return false;
+                }
+
+                connection.Execute(
+                    "DELETE FROM stacks WHERE Id = @StackId",
+                    new { StackId = stackId },
+                    transaction: transaction
+                );
+
+                connection.Execute(
+                    "UPDATE stacks SET Position = Position - 1 WHERE Position > @DeletedPosition",
+                    new { DeletedPosition = stack.Position },
+                    transaction: transaction
+                );
+
                 transaction.Commit();
                 return true;
             }
-
-            transaction.Rollback();
-            return false;
-
-        }
-        catch (Exception ex)
-        {
-            Utilities.DisplayMessage($"Error deleting stack: {ex.Message}", "red");
-            return false;
-        }
-    }
-
-    public void DeleteFlashcardsByStackId(int stackId)
-    {
-        try
-        {
-            using var connection = Database.GetConnection();
-            using var transaction = connection.BeginTransaction();
-
-            connection.Execute(
-                "DELETE FROM flashcards WHERE StackId = @StackId",
-                new { StackId = stackId },
-                transaction: transaction
-            );
-
-            transaction.Commit();
-        }
-        catch (Exception ex)
-        {
-            Utilities.DisplayMessage($"Error deleting flashcards for stack {stackId}: {ex.Message}", "red");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting stack: {ex.Message}");
+                return false;
+            }
         }
     }
 }

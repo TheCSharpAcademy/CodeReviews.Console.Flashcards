@@ -61,18 +61,20 @@ internal static class Database
                   CREATE TABLE stacks (
                       Id INT PRIMARY KEY IDENTITY,
                       Name VARCHAR(50) NOT NULL,
+                      Position INT NOT NULL DEFAULT 0,
                       CreatedDate DATETIME NOT NULL
                   );");
 
             connection.Execute(
                 @"IF OBJECT_ID('flashcards', 'U') IS NULL
-                  CREATE TABLE flashcards (
-                      Id INT PRIMARY KEY IDENTITY,
-                      StackId INT NOT NULL,
-                      Question VARCHAR(100) NOT NULL,
-                      Answer VARCHAR(100) NOT NULL,
-                      FOREIGN KEY (StackId) REFERENCES stacks(Id) ON DELETE CASCADE
-                  );");
+              CREATE TABLE flashcards (
+                  Id INT PRIMARY KEY IDENTITY,
+                  StackId INT NOT NULL,
+                  Question VARCHAR(100) NOT NULL,
+                  Answer VARCHAR(100) NOT NULL,
+                  Position INT NOT NULL DEFAULT 0,
+                  FOREIGN KEY (StackId) REFERENCES stacks(Id) ON DELETE CASCADE
+              );");
 
             connection.Execute(
                 @"IF OBJECT_ID('study_sessions', 'U') IS NULL
@@ -82,6 +84,7 @@ internal static class Database
                       Date DATETIME NOT NULL,
                       TotalQuestions INT NOT NULL DEFAULT 0,
                       Score INT NOT NULL,
+                      Position INT NOT NULL DEFAULT 0,
                       Active INT NOT NULL,
                       FOREIGN KEY (StackId) REFERENCES stacks(Id) ON DELETE CASCADE
                   );");
