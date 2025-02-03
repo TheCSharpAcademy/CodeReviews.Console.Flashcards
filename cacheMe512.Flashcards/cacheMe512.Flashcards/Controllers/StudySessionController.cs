@@ -39,7 +39,7 @@ namespace cacheMe512.Flashcards.Controllers
                 return sessions.Select(session =>
                 {
                     var stack = _stackController.GetAllStacks().FirstOrDefault(s => s.Id == session.StackId);
-                    return new StudySessionDTO(stack?.Name ?? "Unknown Stack", session.Date, session.Score);
+                    return new StudySessionDTO(session.Id, stack?.Name ?? "Unknown Stack", session.Date, session.Score);
                 });
             }
             catch (Exception ex)
@@ -63,7 +63,7 @@ namespace cacheMe512.Flashcards.Controllers
                     return null;
 
                 var stack = _stackController.GetAllStacks().FirstOrDefault(s => s.Id == session.StackId);
-                return new StudySessionDTO(stack?.Name ?? "Unknown Stack", session.Date, session.Score);
+                return new StudySessionDTO(0, stack?.Name ?? "Unknown Stack", session.Date, session.Score);
             }
             catch (Exception ex)
             {
@@ -108,23 +108,17 @@ namespace cacheMe512.Flashcards.Controllers
                 using var connection = Database.GetConnection();
                 using var transaction = connection.BeginTransaction();
 
-                var session = connection.QueryFirstOrDefault<StudySession>(
-                    "SELECT Position FROM study_sessions WHERE Id = @SessionId",
-                    new { SessionId = sessionId },
-                    transaction: transaction
-                );
-
-                if (session == null)
-                {
-                    Console.WriteLine("Study session not found.");
-                    return;
-                }
-
-                connection.Execute(
+                int rowsAffected = connection.Execute(
                     "UPDATE study_sessions SET Active = 0 WHERE Id = @SessionId",
                     new { SessionId = sessionId },
                     transaction: transaction
                 );
+
+                if (rowsAffected == 0)
+                {
+                    Console.WriteLine($"[red]Error: No session found with ID {sessionId} or session was already ended.[/]");
+                    return;
+                }
 
                 transaction.Commit();
             }
@@ -133,6 +127,7 @@ namespace cacheMe512.Flashcards.Controllers
                 Utilities.DisplayMessage($"Error ending study session: {ex.Message}", "red");
             }
         }
+
 
         public void UpdateSessionScore(int sessionId, int newCorrectAnswers, int newTotalQuestions)
         {

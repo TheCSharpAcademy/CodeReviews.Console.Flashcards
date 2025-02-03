@@ -21,7 +21,7 @@ namespace cacheMe512.Flashcards.Controllers
                 return stacks.Select(s =>
                 {
                     var flashcards = _flashcardController.GetFlashcardsByStackId(s.Id).ToList();
-                    return new StackDTO(s.Name, flashcards, s.Position);
+                    return new StackDTO(s.Id, s.Name, flashcards, s.Position);
                 });
             }
             catch (Exception ex)

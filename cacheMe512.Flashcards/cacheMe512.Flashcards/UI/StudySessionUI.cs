@@ -70,10 +70,10 @@ namespace cacheMe512.Flashcards.UI
                     .AddChoices(stacks)
             );
 
-            var session = new StudySessionDTO(selectedStack.Name, DateTime.Now, 0);
+            var session = new StudySessionDTO(0, selectedStack.Name, DateTime.Now, 0);
             int sessionId = _sessionController.InsertSession(new StudySession
             {
-                StackId = selectedStack.Position,
+                StackId = selectedStack.Id,
                 Date = session.Date,
                 Score = session.Score,
                 TotalQuestions = 0
@@ -100,13 +100,23 @@ namespace cacheMe512.Flashcards.UI
                     .AddChoices(sessions)
             );
 
+            var activeSession = sessions.FirstOrDefault(s =>
+                s.StackName == selectedSession.StackName && s.Date == selectedSession.Date);
+
+            if (activeSession == null)
+            {
+                AnsiConsole.MarkupLine("[red]Error: Could not retrieve session ID.[/]");
+                Console.ReadKey();
+                return;
+            }
+
             var stack = _stackController.GetAllStacks().FirstOrDefault(s => s.Name == selectedSession.StackName);
             if (stack != null)
             {
-                RunStudySession(_sessionController.GetActiveSessions()
-                    .FirstOrDefault(s => s.StackName == selectedSession.StackName)?.Score ?? 0, stack);
+                RunStudySession(activeSession.Id, stack);
             }
         }
+
 
         private void EndSession()
         {
@@ -126,10 +136,16 @@ namespace cacheMe512.Flashcards.UI
                     .AddChoices(sessions)
             );
 
-            var sessionId = _sessionController.GetActiveSessions()
-                .FirstOrDefault(s => s.StackName == selectedSession.StackName)?.Score ?? 0;
+            var session = sessions.FirstOrDefault(s => s.StackName == selectedSession.StackName && s.Date == selectedSession.Date);
 
-            _sessionController.EndSession(sessionId);
+            if (session == null)
+            {
+                AnsiConsole.MarkupLine("[red]Error: Could not retrieve session ID from the selected session.[/]");
+                Console.ReadKey();
+                return;
+            }
+
+            _sessionController.EndSession(session.Id);
             AnsiConsole.MarkupLine("[green]Study session ended successfully![/]");
             Console.ReadKey();
         }
@@ -139,7 +155,7 @@ namespace cacheMe512.Flashcards.UI
             Random random = new Random();
             int correctAnswers = 0;
             int totalQuestions = 0;
-            var flashcards = _flashcardController.GetFlashcardsByStackId(stack.Position).ToList();
+            var flashcards = _flashcardController.GetFlashcardsByStackId(stack.Id).ToList();
 
             if (!flashcards.Any())
             {

@@ -60,7 +60,7 @@ namespace cacheMe512.Flashcards.UI
 
         private void ViewFlashcards()
         {
-            var flashcards = _flashcardController.GetFlashcardsByStackId(_stack.Position).ToList();
+            var flashcards = _flashcardController.GetFlashcardsByStackId(_stack.Id).ToList();
 
             if (!flashcards.Any())
             {
@@ -95,7 +95,7 @@ namespace cacheMe512.Flashcards.UI
             var newFlashcard = new FlashcardDTO(0, question, answer, _stack.Position);
             _flashcardController.InsertFlashcard(new Flashcard
             {
-                StackId = _stack.Position,
+                StackId = _stack.Id,
                 Question = question,
                 Answer = answer
             });
@@ -106,7 +106,7 @@ namespace cacheMe512.Flashcards.UI
 
         private void DeleteFlashcard()
         {
-            var flashcards = _flashcardController.GetFlashcardsByStackId(_stack.Position).ToList();
+            var flashcards = _flashcardController.GetFlashcardsByStackId(_stack.Id).ToList();
 
             if (!flashcards.Any())
             {

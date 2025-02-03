@@ -8,8 +8,9 @@ public class StackDTO
     public IReadOnlyList<FlashcardDTO> Flashcards { get; }
     public int Position { get; }
 
-    public StackDTO(string name, List<FlashcardDTO> flashcards = null, int position = 0)
+    public StackDTO(int id, string name, List<FlashcardDTO> flashcards = null, int position = 0)
     {
+        Id = id;
         Name = name;
         Flashcards = flashcards?.AsReadOnly() ?? new List<FlashcardDTO>().AsReadOnly();
         Position = position;

@@ -118,7 +118,7 @@ namespace cacheMe512.Flashcards.UI
                     return;
                 }
 
-                if (_stackController.DeleteStack(stack.Position))
+                if (_stackController.DeleteStack(stack.Id))
                 {
                     Utilities.DisplayMessage("Stack deleted successfully!", "green");
                 }
