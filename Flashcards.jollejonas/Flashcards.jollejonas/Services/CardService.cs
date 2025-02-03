@@ -1,11 +1,10 @@
-﻿using jollejonas.Flashcards.Data;
-using jollejonas.Flashcards.DTOs;
-using jollejonas.Flashcards.Models;
-using jollejonas.Flashcards.UserInputs;
-using jollejonas.Flashcards.Validation;
+﻿using Flashcards.jollejonas.Data;
+using Flashcards.jollejonas.DTOs;
+using Flashcards.jollejonas.Models;
+using Flashcards.jollejonas.UserInputs;
 using Spectre.Console;
 
-namespace jollejonas.Flashcards.Services
+namespace Flashcards.jollejonas.Services
 {
     public class CardService(DatabaseManager databaseManager)
     {
@@ -40,7 +39,7 @@ namespace jollejonas.Flashcards.Services
         public void EditCard()
         {
             Console.Clear();
-            while(true)
+            while (true)
             {
                 Console.WriteLine("Select the card stack:");
                 var cardStackService = new CardStackService(_databaseManager);
@@ -53,15 +52,23 @@ namespace jollejonas.Flashcards.Services
                 }
 
                 int stackId = cardStack.Id;
-                Console.WriteLine("Select the card ID:");
                 var card = DisplayCardsAndSelectId(stackId);
 
-                Console.WriteLine($"Current question: {card.Question}");
-                string question = UserInput.GetStringInput("Enter the new question:");
+                Console.WriteLine($"Current question: {card.Question} \n");
+                string question = UserInput.GetStringInput("Enter the new question(Leave blank if you don't want to edit):");
 
-                Console.WriteLine($"Current answer: {card.Answer}");
-                string answer = UserInput.GetStringInput("Enter the new answer:");
+                if (question == null)
+                {
+                    question = card.Question;
+                }
 
+                Console.WriteLine($"Current answer: {card.Answer} \n");
+                string answer = UserInput.GetStringInput("Enter the new answer(Leave blank if you don't want to edit):");
+
+                if (answer == null)
+                {
+                    answer = card.Answer;
+                }
 
                 Console.WriteLine("Old card: ");
                 Console.WriteLine($"Question: {card.Question} - Answer: {card.Answer}\n");
@@ -69,7 +76,7 @@ namespace jollejonas.Flashcards.Services
                 Console.WriteLine("New card:: ");
                 Console.WriteLine($"Question: {question} - Answer: {answer}\n");
 
-                if(!Confirmations("update"))
+                if (!Confirmations("update"))
                 {
                     break;
                 }
@@ -88,7 +95,7 @@ namespace jollejonas.Flashcards.Services
         public void DeleteCard()
         {
             Console.Clear();
-            while(true)
+            while (true)
             {
                 Console.WriteLine("Select the card stack:");
                 var cardStackService = new CardStackService(_databaseManager);
@@ -104,7 +111,7 @@ namespace jollejonas.Flashcards.Services
 
                 Console.WriteLine("Select the card ID:");
                 var card = DisplayCardsAndSelectId(stackId);
-                if(card == null)
+                if (card == null)
                 {
                     Console.ReadKey();
                     break;
@@ -112,7 +119,7 @@ namespace jollejonas.Flashcards.Services
                 Console.WriteLine($"You selected this card: ");
                 Console.WriteLine($"Question: {card.Question} - Answer: {card.Answer}");
 
-                if(!Confirmations("delete"))
+                if (!Confirmations("delete"))
                 {
                     break;
                 }
@@ -144,8 +151,8 @@ namespace jollejonas.Flashcards.Services
                 .Title("Select a card")
                 .PageSize(10)
                 .AddChoices(cards)
-                .UseConverter(card => $"ID: {card.Id}, Question: {card.Question}, Answer: {card.Answer}"));
-            
+                .UseConverter(card => $"ID: {card.PresentationId}, Question: {card.Question}, Answer: {card.Answer}"));
+
             return menuSelection;
         }
 

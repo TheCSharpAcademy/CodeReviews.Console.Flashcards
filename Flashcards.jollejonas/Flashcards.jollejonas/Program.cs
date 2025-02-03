@@ -1,8 +1,10 @@
-﻿using jollejonas.Flashcards.Models;
+﻿using Flashcards.jollejonas.Data;
+using Flashcards.jollejonas.Models;
+using Flashcards.jollejonas.Services;
 using Microsoft.Extensions.Configuration;
 using Spectre.Console;
-using jollejonas.Flashcards.Data;
-using jollejonas.Flashcards.Services;
+
+const string DBNAME = "Flashcards";
 
 string currentDirectory = Directory.GetCurrentDirectory();
 
@@ -14,14 +16,15 @@ var configuration = new ConfigurationBuilder()
     .AddJsonFile($"{appSettingsPath}\\appsettings.json", optional: true, reloadOnChange: true)
     .Build();
 
-string? connectionString = configuration.GetConnectionString("DefaultConnection");
+string connectionString = configuration.GetConnectionString("DefaultConnection").Replace("{DBNAME}", DBNAME) ??
+    throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 var dbManager = new DatabaseManager(connectionString);
 var cardStackService = new CardStackService(dbManager);
 var cardService = new CardService(dbManager);
 var studySessionService = new StudySessionService(dbManager);
 
-dbManager.EnsureDatabaseExists();
+dbManager.EnsureDatabaseExists(DBNAME);
 
 var mainMenuOption = new List<MainMenuOption>
     {
