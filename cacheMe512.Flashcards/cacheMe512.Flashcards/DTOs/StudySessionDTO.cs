@@ -1,5 +1,4 @@
-﻿
-namespace cacheMe512.Flashcards.DTOs;
+﻿namespace cacheMe512.Flashcards.DTOs;
 
 public class StudySessionDTO
 {

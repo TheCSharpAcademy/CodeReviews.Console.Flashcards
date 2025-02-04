@@ -18,7 +18,7 @@ internal class MainMenu
                     {
                             "Manage Stacks",
                             "Study",
-                            "View Study Session Reports",
+                            "View Study Session History",
                             "Exit"
                     })
             );
@@ -39,9 +39,9 @@ internal class MainMenu
                 var studyUI = new StudySessionUI();
                 studyUI.Show();
                 break;
-            case "View Study Session Reports":
-                //var historyUI = new StudySessionHistoryUI();
-                //historyUI.Show();
+            case "View Study Session History":
+                var historyUI = new StudySessionHistoryUI();
+                historyUI.Show();
                 break;
             case "Exit":
                 AnsiConsole.MarkupLine("[bold red]Exiting application...[/]");

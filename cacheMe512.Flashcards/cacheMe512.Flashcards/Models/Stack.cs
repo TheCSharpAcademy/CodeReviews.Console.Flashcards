@@ -1,5 +1,4 @@
-﻿
-namespace cacheMe512.Flashcards.Models;
+﻿namespace cacheMe512.Flashcards.Models;
 
 internal class Stack
 {

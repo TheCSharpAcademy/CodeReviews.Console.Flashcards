@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Dapper;
+﻿using Dapper;
 using cacheMe512.Flashcards.Models;
 using cacheMe512.Flashcards.DTOs;
 
@@ -10,6 +7,36 @@ namespace cacheMe512.Flashcards.Controllers
     internal class StudySessionController
     {
         private readonly StackController _stackController = new();
+
+        public IEnumerable<StudySessionDTO> GetAllSessions()
+        {
+            try
+            {
+                using var connection = Database.GetConnection();
+
+                var sessions = connection.Query(
+                    @"SELECT ss.Id, ss.StackId, ss.Date, ss.TotalQuestions, ss.Score, s.Name AS StackName
+              FROM study_sessions ss
+              JOIN stacks s ON ss.StackId = s.Id
+              ORDER BY ss.Date DESC, s.Name ASC, ss.Score DESC"
+                ).Select(row => new StudySessionDTO(
+                    row.Id,
+                    row.StackName,
+                    row.Date,
+                    row.TotalQuestions,
+                    row.Score
+                )).ToList();
+
+                return sessions;
+            }
+            catch (Exception ex)
+            {
+                Utilities.DisplayMessage($"Error retrieving study sessions: {ex.Message}", "red");
+                return Enumerable.Empty<StudySessionDTO>();
+            }
+        }
+
+
 
         public IEnumerable<StudySessionDTO> GetActiveSessions()
         {
