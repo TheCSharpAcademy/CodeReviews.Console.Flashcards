@@ -66,6 +66,7 @@ namespace cacheMe512.Flashcards.UI
             _stackController.InsertStack(newStack);
 
             Utilities.DisplayMessage("Stack added successfully!", "green");
+            AnsiConsole.MarkupLine("\nPress Any Key to Continue.");
             Console.ReadKey();
         }
 
@@ -75,6 +76,7 @@ namespace cacheMe512.Flashcards.UI
             if (!stacks.Any())
             {
                 AnsiConsole.MarkupLine("[red]No stacks available. Add a stack first.[/]");
+                AnsiConsole.MarkupLine("\nPress Any Key to Continue.");
                 Console.ReadKey();
                 return;
             }
@@ -97,6 +99,7 @@ namespace cacheMe512.Flashcards.UI
             if (!stacksToDelete.Any())
             {
                 Utilities.DisplayMessage("No stacks available to delete.", "red");
+                AnsiConsole.MarkupLine("\nPress Any Key to Continue.");
                 Console.ReadKey();
                 return;
             }
@@ -114,6 +117,7 @@ namespace cacheMe512.Flashcards.UI
                 if (stack == null)
                 {
                     Utilities.DisplayMessage("Stack not found.", "red");
+                    AnsiConsole.MarkupLine("\nPress Any Key to Continue.");
                     Console.ReadKey();
                     return;
                 }
@@ -132,6 +136,7 @@ namespace cacheMe512.Flashcards.UI
                 Utilities.DisplayMessage("Deletion canceled.", "yellow");
             }
 
+            AnsiConsole.MarkupLine("\nPress Any Key to Continue.");
             Console.ReadKey();
         }
 

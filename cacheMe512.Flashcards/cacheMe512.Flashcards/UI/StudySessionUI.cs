@@ -58,6 +58,7 @@ namespace cacheMe512.Flashcards.UI
             if (!stacks.Any())
             {
                 AnsiConsole.MarkupLine("[red]No stacks available. Add a stack first.[/]");
+                AnsiConsole.MarkupLine("\nPress Any Key to Continue.");
                 Console.ReadKey();
                 return;
             }
@@ -70,7 +71,7 @@ namespace cacheMe512.Flashcards.UI
                     .AddChoices(stacks)
             );
 
-            var session = new StudySessionDTO(0, selectedStack.Name, DateTime.Now, 0);
+            var session = new StudySessionDTO(0, selectedStack.Name, DateTime.Now, 0, 0);
             int sessionId = _sessionController.InsertSession(new StudySession
             {
                 StackId = selectedStack.Id,
@@ -88,6 +89,7 @@ namespace cacheMe512.Flashcards.UI
             if (!sessions.Any())
             {
                 AnsiConsole.MarkupLine("[red]No active study sessions available.[/]");
+                AnsiConsole.MarkupLine("\nPress Any Key to Continue.");
                 Console.ReadKey();
                 return;
             }
@@ -106,6 +108,7 @@ namespace cacheMe512.Flashcards.UI
             if (activeSession == null)
             {
                 AnsiConsole.MarkupLine("[red]Error: Could not retrieve session ID.[/]");
+                AnsiConsole.MarkupLine("\nPress Any Key to Continue.");
                 Console.ReadKey();
                 return;
             }
@@ -124,6 +127,7 @@ namespace cacheMe512.Flashcards.UI
             if (!sessions.Any())
             {
                 AnsiConsole.MarkupLine("[red]No active study sessions to end.[/]");
+                AnsiConsole.MarkupLine("\nPress Any Key to Continue.");
                 Console.ReadKey();
                 return;
             }
@@ -141,12 +145,19 @@ namespace cacheMe512.Flashcards.UI
             if (session == null)
             {
                 AnsiConsole.MarkupLine("[red]Error: Could not retrieve session ID from the selected session.[/]");
+                AnsiConsole.MarkupLine("\nPress Any Key to Continue.");
                 Console.ReadKey();
                 return;
             }
 
+
+            int score = session.Score;
+            int totalQuestions = session.TotalQuestions;
             _sessionController.EndSession(session.Id);
+
             AnsiConsole.MarkupLine("[green]Study session ended successfully![/]");
+            AnsiConsole.MarkupLine($"[bold yellow]Final Session Score: {score}/{totalQuestions} correct[/]");
+            AnsiConsole.MarkupLine("\nPress Any Key to Continue.");
             Console.ReadKey();
         }
 
@@ -160,6 +171,7 @@ namespace cacheMe512.Flashcards.UI
             if (!flashcards.Any())
             {
                 Utilities.DisplayMessage("No flashcards available in this stack.", "red");
+                AnsiConsole.MarkupLine("\nPress Any Key to Continue.");
                 Console.ReadKey();
                 return;
             }
@@ -192,7 +204,8 @@ namespace cacheMe512.Flashcards.UI
             _sessionController.UpdateSessionScore(sessionId, correctAnswers, totalQuestions);
 
             var updatedSession = _sessionController.GetSessionById(sessionId);
-            AnsiConsole.MarkupLine($"[bold yellow]Session Complete: {updatedSession?.Score}/{totalQuestions} correct![/]");
+            AnsiConsole.MarkupLine($"[bold yellow]Session Score: {updatedSession?.Score}/{updatedSession?.TotalQuestions} correct[/]");
+            AnsiConsole.MarkupLine("\nPress Any Key to Continue.");
             Console.ReadKey();
         }
     }

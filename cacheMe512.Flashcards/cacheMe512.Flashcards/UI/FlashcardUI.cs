@@ -65,6 +65,7 @@ namespace cacheMe512.Flashcards.UI
             if (!flashcards.Any())
             {
                 Utilities.DisplayMessage("No flashcards available in this stack.", "red");
+                AnsiConsole.MarkupLine("\nPress Any Key to Continue.");
                 Console.ReadKey();
                 return;
             }
@@ -84,6 +85,7 @@ namespace cacheMe512.Flashcards.UI
             }
 
             AnsiConsole.Write(table);
+            AnsiConsole.MarkupLine("\nPress Any Key to Continue.");
             Console.ReadKey();
         }
 
@@ -101,6 +103,7 @@ namespace cacheMe512.Flashcards.UI
             });
 
             Utilities.DisplayMessage("Flashcard added successfully!", "green");
+            AnsiConsole.MarkupLine("\nPress Any Key to Continue.");
             Console.ReadKey();
         }
 
@@ -111,6 +114,7 @@ namespace cacheMe512.Flashcards.UI
             if (!flashcards.Any())
             {
                 Utilities.DisplayMessage("No flashcards available to delete.", "red");
+                AnsiConsole.MarkupLine("\nPress Any Key to Continue.");
                 Console.ReadKey();
                 return;
             }
@@ -125,6 +129,7 @@ namespace cacheMe512.Flashcards.UI
 
             _flashcardController.DeleteFlashcard(selectedFlashcard.Id);
             Utilities.DisplayMessage("Flashcard deleted successfully!", "red");
+            AnsiConsole.MarkupLine("\nPress Any Key to Continue.");
             Console.ReadKey();
         }
     }

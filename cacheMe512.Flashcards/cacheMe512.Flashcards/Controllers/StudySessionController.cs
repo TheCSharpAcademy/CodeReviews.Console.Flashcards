@@ -33,13 +33,13 @@ namespace cacheMe512.Flashcards.Controllers
                 transaction.Commit();
 
                 var sessions = connection.Query<StudySession>(
-                    "SELECT Id, StackId, Date, Score FROM study_sessions WHERE Active = 1 ORDER BY Position"
+                    "SELECT Id, StackId, Date, TotalQuestions, Score FROM study_sessions WHERE Active = 1 ORDER BY Position"
                 ).ToList();
 
                 return sessions.Select(session =>
                 {
                     var stack = _stackController.GetAllStacks().FirstOrDefault(s => s.Id == session.StackId);
-                    return new StudySessionDTO(session.Id, stack?.Name ?? "Unknown Stack", session.Date, session.Score);
+                    return new StudySessionDTO(session.Id, stack?.Name ?? "Unknown Stack", session.Date, session.TotalQuestions, session.Score);
                 });
             }
             catch (Exception ex)
@@ -55,7 +55,7 @@ namespace cacheMe512.Flashcards.Controllers
             {
                 using var connection = Database.GetConnection();
                 var session = connection.QueryFirstOrDefault<StudySession>(
-                    "SELECT Id, StackId, Date, Score FROM study_sessions WHERE Id = @Id",
+                    "SELECT Id, StackId, Date, TotalQuestions, Score FROM study_sessions WHERE Id = @Id",
                     new { Id = sessionId }
                 );
 
@@ -63,7 +63,7 @@ namespace cacheMe512.Flashcards.Controllers
                     return null;
 
                 var stack = _stackController.GetAllStacks().FirstOrDefault(s => s.Id == session.StackId);
-                return new StudySessionDTO(0, stack?.Name ?? "Unknown Stack", session.Date, session.Score);
+                return new StudySessionDTO(0, stack?.Name ?? "Unknown Stack", session.Date, session.TotalQuestions, session.Score);
             }
             catch (Exception ex)
             {
