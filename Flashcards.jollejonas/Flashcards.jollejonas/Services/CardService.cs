@@ -50,6 +50,12 @@ namespace Flashcards.jollejonas.Services
                     Console.ReadKey();
                     break;
                 }
+                else if (cardStack.Name == "Cancel")
+                {
+                    Console.WriteLine("Operation canceled!");
+                    Console.ReadKey();
+                    break;
+                }
 
                 int stackId = cardStack.Id;
                 var card = DisplayCardsAndSelectId(stackId);

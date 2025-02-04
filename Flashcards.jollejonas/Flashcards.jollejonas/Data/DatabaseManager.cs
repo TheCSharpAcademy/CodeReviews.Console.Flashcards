@@ -448,8 +448,15 @@ public class DatabaseManager(string connectionString)
                 END
             ";
 
-        ExecuteNonQuery(query);
-        SeedData();
+        using var connection = GetConnection();
+        connection.Open();
+        using var command = new SqlCommand(query, connection);
+        var result = command.ExecuteScalar();
+
+        if (result != null && Convert.ToBoolean(result))
+        {
+            SeedData();
+        }
     }
 
     public void SeedData()

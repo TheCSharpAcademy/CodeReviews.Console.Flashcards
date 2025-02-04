@@ -104,8 +104,14 @@ public class CardStackService(DatabaseManager databaseManager)
                 Console.ReadKey();
                 break;
             }
+
             Console.WriteLine($"Current stack name: {cardStack.Name} \n");
             string name = UserInput.GetStringInput("Enter the new name of the stack(Leave blank if you don't want to edit):");
+
+            if (CheckIfStackExists(name))
+            {
+                break;
+            }
 
             if (name == null)
             {
@@ -180,6 +186,21 @@ public class CardStackService(DatabaseManager databaseManager)
         if (menuSelection == "Yes")
         {
             return true;
+        }
+        return false;
+    }
+
+    public bool CheckIfStackExists(string stackName)
+    {
+        var cardStacks = _databaseManager.GetCardStacks();
+        foreach (var stack in cardStacks)
+        {
+            if (stack.Name.ToLower() == stackName.ToLower())
+            {
+                Console.WriteLine("This stack name is already taken.");
+                Console.ReadKey();
+                return true;
+            }
         }
         return false;
     }
