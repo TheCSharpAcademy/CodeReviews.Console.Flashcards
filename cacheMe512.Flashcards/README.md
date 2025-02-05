@@ -10,23 +10,23 @@ and track their progress.
 
 ## Features
 
-- ✅ Create, edit, and delete **stacks of flashcards**
-- ✅ Start new or continue **study sessions**
-- ✅ Track session history with **scores and completion details**
-- ✅ Organized **sorting and filtering** for study sessions  
+- Create, edit, and delete **stacks of flashcards**
+- Start new or continue **study sessions**
+- Track session history with **scores and completion details**
+- Organized **sorting and filtering** for study sessions  
 
 ---
 
 ## Installation
 
-### 1️⃣ Clone the Repository
+### 1️ Clone the Repository
 
 ```sh
 git clone https://github.com/yourusername/flashcards-app.git
 cd flashcards-app
 ```
 
-### 2️⃣ Build the Project
+### 2 Build the Project
 
 Ensure you have the **.NET SDK** installed, then run:
 
@@ -34,7 +34,7 @@ Ensure you have the **.NET SDK** installed, then run:
 dotnet build
 ```
 
-### 3️⃣ Configure Database
+### 3 Configure Database
 
 The app uses a SQL database. Configure your connection in `appsettings.json`:
 
@@ -44,7 +44,7 @@ The app uses a SQL database. Configure your connection in `appsettings.json`:
 }
 ```
 
-### 4️⃣ Run the Application
+### 4️ Run the Application
 
 ```sh
 dotnet run
@@ -52,7 +52,7 @@ dotnet run
 
 ---
 
-## 🛠 Usage
+## Usage
 
 1. **Manage Stacks**: Create and organize flashcard groups  
 2. **Add Flashcards**: Add questions & answers to each stack  
