@@ -1,6 +1,6 @@
 ﻿namespace cacheMe512.Flashcards.DTOs;
 
-public class StudySessionDTO
+public class StudySessionDto
 {
     public int Id { get;}
     public string StackName { get; }
@@ -8,7 +8,7 @@ public class StudySessionDTO
     public int TotalQuestions { get; }
     public int Score { get; }
 
-    public StudySessionDTO(int id, string stackName, DateTime date, int totalQuestions, int score)
+    public StudySessionDto(int id, string stackName, DateTime date, int totalQuestions, int score)
     {
         Id = id;
         StackName = stackName;

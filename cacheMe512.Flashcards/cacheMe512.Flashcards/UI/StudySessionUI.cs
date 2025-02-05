@@ -64,14 +64,14 @@ namespace cacheMe512.Flashcards.UI
             }
 
             var selectedStack = AnsiConsole.Prompt(
-                new SelectionPrompt<StackDTO>()
+                new SelectionPrompt<StackDto>()
                     .Title("[bold yellow]Select a Stack for Studying[/]")
                     .PageSize(10)
                     .UseConverter(stack => stack.Name)
                     .AddChoices(stacks)
             );
 
-            var session = new StudySessionDTO(0, selectedStack.Name, DateTime.Now, 0, 0);
+            var session = new StudySessionDto(0, selectedStack.Name, DateTime.Now, 0, 0);
             int sessionId = _sessionController.InsertSession(new StudySession
             {
                 StackId = selectedStack.Id,
@@ -95,7 +95,7 @@ namespace cacheMe512.Flashcards.UI
             }
 
             var selectedSession = AnsiConsole.Prompt(
-                new SelectionPrompt<StudySessionDTO>()
+                new SelectionPrompt<StudySessionDto>()
                     .Title("[bold yellow]Select a Study Session to Continue[/]")
                     .PageSize(10)
                     .UseConverter(session => $"{session.StackName} - {session.Date:MM/dd/yyyy} - Score: {session.Score}")
@@ -133,7 +133,7 @@ namespace cacheMe512.Flashcards.UI
             }
 
             var selectedSession = AnsiConsole.Prompt(
-                new SelectionPrompt<StudySessionDTO>()
+                new SelectionPrompt<StudySessionDto>()
                     .Title("[bold yellow]Select a Study Session to End[/]")
                     .PageSize(10)
                     .UseConverter(session => $"{session.StackName} - {session.Date:MM/dd/yyyy} - Score: {session.Score}")
@@ -161,7 +161,7 @@ namespace cacheMe512.Flashcards.UI
             Console.ReadKey();
         }
 
-        private void RunStudySession(int sessionId, StackDTO stack)
+        private void RunStudySession(int sessionId, StackDto stack)
         {
             Random random = new Random();
             int correctAnswers = 0;

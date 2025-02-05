@@ -82,7 +82,7 @@ namespace cacheMe512.Flashcards.UI
             }
 
             var selectedStack = AnsiConsole.Prompt(
-                new SelectionPrompt<StackDTO>()
+                new SelectionPrompt<StackDto>()
                     .Title("[bold yellow]Select a Stack to Manage Flashcards[/]")
                     .PageSize(10)
                     .UseConverter(stack => $"{stack.Position}: {stack.Name}")
@@ -105,7 +105,7 @@ namespace cacheMe512.Flashcards.UI
             }
 
             var stackToDelete = AnsiConsole.Prompt(
-                new SelectionPrompt<StackDTO>()
+                new SelectionPrompt<StackDto>()
                     .Title("Select a stack to [red]delete[/]:")
                     .UseConverter(s => $"{s.Name}")
                     .AddChoices(stacksToDelete)

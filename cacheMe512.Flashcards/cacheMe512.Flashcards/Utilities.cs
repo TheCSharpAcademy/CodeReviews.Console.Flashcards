@@ -10,7 +10,7 @@ internal class Utilities
         AnsiConsole.MarkupLine($"[{color}]{message}[/]");
     }
 
-    public static bool ConfirmDeletion(StackDTO stack)
+    public static bool ConfirmDeletion(StackDto stack)
     {
         var confirm = AnsiConsole.Confirm($"Are you sure you want to delete {stack.Name}?" +
             $"\n[red]This will delete the stack and all of its associated flashcards.[/]");

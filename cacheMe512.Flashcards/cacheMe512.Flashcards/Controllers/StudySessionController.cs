@@ -8,7 +8,7 @@ namespace cacheMe512.Flashcards.Controllers
     {
         private readonly StackController _stackController = new();
 
-        public IEnumerable<StudySessionDTO> GetAllSessions()
+        public IEnumerable<StudySessionDto> GetAllSessions()
         {
             try
             {
@@ -19,7 +19,7 @@ namespace cacheMe512.Flashcards.Controllers
               FROM study_sessions ss
               JOIN stacks s ON ss.StackId = s.Id
               ORDER BY ss.Date DESC, s.Name ASC, ss.Score DESC"
-                ).Select(row => new StudySessionDTO(
+                ).Select(row => new StudySessionDto(
                     row.Id,
                     row.StackName,
                     row.Date,
@@ -32,13 +32,13 @@ namespace cacheMe512.Flashcards.Controllers
             catch (Exception ex)
             {
                 Utilities.DisplayMessage($"Error retrieving study sessions: {ex.Message}", "red");
-                return Enumerable.Empty<StudySessionDTO>();
+                return Enumerable.Empty<StudySessionDto>();
             }
         }
 
 
 
-        public IEnumerable<StudySessionDTO> GetActiveSessions()
+        public IEnumerable<StudySessionDto> GetActiveSessions()
         {
             try
             {
@@ -66,17 +66,17 @@ namespace cacheMe512.Flashcards.Controllers
                 return sessions.Select(session =>
                 {
                     var stack = _stackController.GetAllStacks().FirstOrDefault(s => s.Id == session.StackId);
-                    return new StudySessionDTO(session.Id, stack?.Name ?? "Unknown Stack", session.Date, session.TotalQuestions, session.Score);
+                    return new StudySessionDto(session.Id, stack?.Name ?? "Unknown Stack", session.Date, session.TotalQuestions, session.Score);
                 });
             }
             catch (Exception ex)
             {
                 Utilities.DisplayMessage($"Error retrieving active sessions: {ex.Message}", "red");
-                return Enumerable.Empty<StudySessionDTO>();
+                return Enumerable.Empty<StudySessionDto>();
             }
         }
 
-        public StudySessionDTO GetSessionById(int sessionId)
+        public StudySessionDto GetSessionById(int sessionId)
         {
             try
             {
@@ -90,7 +90,7 @@ namespace cacheMe512.Flashcards.Controllers
                     return null;
 
                 var stack = _stackController.GetAllStacks().FirstOrDefault(s => s.Id == session.StackId);
-                return new StudySessionDTO(0, stack?.Name ?? "Unknown Stack", session.Date, session.TotalQuestions, session.Score);
+                return new StudySessionDto(0, stack?.Name ?? "Unknown Stack", session.Date, session.TotalQuestions, session.Score);
             }
             catch (Exception ex)
             {

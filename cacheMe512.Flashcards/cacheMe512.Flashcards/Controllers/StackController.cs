@@ -8,7 +8,7 @@ namespace cacheMe512.Flashcards.Controllers
     {
         private readonly FlashcardController _flashcardController = new();
 
-        public IEnumerable<StackDTO> GetAllStacks()
+        public IEnumerable<StackDto> GetAllStacks()
         {
             try
             {
@@ -21,13 +21,13 @@ namespace cacheMe512.Flashcards.Controllers
                 return stacks.Select(s =>
                 {
                     var flashcards = _flashcardController.GetFlashcardsByStackId(s.Id).ToList();
-                    return new StackDTO(s.Id, s.Name, flashcards, s.Position);
+                    return new StackDto(s.Id, s.Name, flashcards, s.Position);
                 });
             }
             catch (Exception ex)
             {
                 Utilities.DisplayMessage($"Error retrieving stacks: {ex.Message}", "red");
-                return Enumerable.Empty<StackDTO>();
+                return Enumerable.Empty<StackDto>();
             }
         }
 

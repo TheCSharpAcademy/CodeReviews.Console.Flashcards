@@ -6,7 +6,7 @@ namespace cacheMe512.Flashcards.Controllers
 {
     internal class FlashcardController
     {
-        public IEnumerable<FlashcardDTO> GetFlashcardsByStackId(int stackId)
+        public IEnumerable<FlashcardDto> GetFlashcardsByStackId(int stackId)
         {
             try
             {
@@ -17,12 +17,12 @@ namespace cacheMe512.Flashcards.Controllers
                     new { StackId = stackId }
                 ).ToList();
 
-                return flashcards.Select(fc => new FlashcardDTO(fc.Id, fc.Question, fc.Answer, fc.Position));
+                return flashcards.Select(fc => new FlashcardDto(fc.Id, fc.Question, fc.Answer, fc.Position));
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error retrieving flashcards: {ex.Message}");
-                return Enumerable.Empty<FlashcardDTO>();
+                return Enumerable.Empty<FlashcardDto>();
             }
         }
 

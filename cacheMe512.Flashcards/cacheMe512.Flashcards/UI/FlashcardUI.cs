@@ -7,10 +7,10 @@ namespace cacheMe512.Flashcards.UI
 {
     internal class FlashcardUI
     {
-        private readonly StackDTO _stack;
+        private readonly StackDto _stack;
         private static readonly FlashcardController _flashcardController = new();
 
-        public FlashcardUI(StackDTO stack)
+        public FlashcardUI(StackDto stack)
         {
             _stack = stack;
         }
@@ -94,7 +94,6 @@ namespace cacheMe512.Flashcards.UI
             string question = AnsiConsole.Ask<string>("Enter the flashcard question:");
             string answer = AnsiConsole.Ask<string>("Enter the flashcard answer:");
 
-            var newFlashcard = new FlashcardDTO(0, question, answer, _stack.Position);
             _flashcardController.InsertFlashcard(new Flashcard
             {
                 StackId = _stack.Id,
@@ -120,7 +119,7 @@ namespace cacheMe512.Flashcards.UI
             }
 
             var selectedFlashcard = AnsiConsole.Prompt(
-                new SelectionPrompt<FlashcardDTO>()
+                new SelectionPrompt<FlashcardDto>()
                     .Title("[bold yellow]Select a flashcard to delete[/]")
                     .PageSize(10)
                     .UseConverter(fc => $"{fc.Position}: {fc.Question}")

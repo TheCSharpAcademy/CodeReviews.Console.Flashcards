@@ -1,13 +1,13 @@
 ﻿namespace cacheMe512.Flashcards.DTOs;
 
-public class FlashcardDTO
+public class FlashcardDto
 {
     public int Id { get; }
     public string Question { get; }
     public string Answer { get; }
     public int Position { get; }
 
-    public FlashcardDTO(int id, string question, string answer, int position)
+    public FlashcardDto(int id, string question, string answer, int position)
     {
         Id = id;
         Question = question;
