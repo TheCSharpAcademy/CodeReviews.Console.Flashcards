@@ -1,6 +1,8 @@
+
 # Flashcards App
 
-A simple console-based flashcards application for learning and memorization. Users can create stacks of flashcards, review them in study sessions, and track their progress.
+A simple console-based flashcards application for learning and memorization. 
+Users can create stacks of flashcards,review them in study sessions, and track their progress.
 
 ---
 
