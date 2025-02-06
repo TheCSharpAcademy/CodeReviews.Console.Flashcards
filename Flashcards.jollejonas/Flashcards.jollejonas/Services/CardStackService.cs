@@ -72,6 +72,10 @@ public class CardStackService(DatabaseManager databaseManager)
                 Console.ReadKey();
                 break;
             }
+            if (CheckIfStackExists(name))
+            {
+                break;
+            }
 
             string description = UserInput.GetStringInput("Enter the description of the stack:");
 
