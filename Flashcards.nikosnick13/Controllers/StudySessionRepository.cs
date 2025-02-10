@@ -22,10 +22,9 @@ public static class StudySessionRepository
         conn.Execute(query, session);
     }
 
-    public static List<BasicFlashcardDTO> StudySessions
+    public static List<BasicFlashcardDTO> StudySessions()
     {
-        get
-        {
+         
             using var conn = new SqlConnection(connectionString);
             conn.Open();
 
@@ -36,6 +35,5 @@ public static class StudySessionRepository
                 ORDER BY ss.Date DESC";
 
             return conn.Query<BasicFlashcardDTO>(query).AsList();
-        }
     }
 }

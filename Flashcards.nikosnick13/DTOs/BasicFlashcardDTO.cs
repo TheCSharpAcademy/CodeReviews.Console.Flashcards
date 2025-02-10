@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Flashcards.nikosnick13.DTOs;
 
-internal class BasicFlashcardDTO
+public class BasicFlashcardDTO
 {
 
     public int Id { get; set; }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Flashcards.nikosnick13.DTOs;
 
-internal class BasicStudySessionDTO
+public class BasicStudySessionDTO
 {
     public int Id { get; set; }
     public int Score { get; set; }

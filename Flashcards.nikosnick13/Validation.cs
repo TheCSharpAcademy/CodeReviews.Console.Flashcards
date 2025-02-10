@@ -46,9 +46,35 @@ namespace Flashcards.nikosnick13
 
         }
 
-        internal static int GetValidNumber(string v1, int v2, int count)
+        public static int GetValidNumber(string prompt, int minValue, int maxValue)
         {
-            throw new NotImplementedException();
+            int userInput;
+            while (true)
+            {
+                // Show the prompt and get input
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+
+                // Try parsing the input as an integer
+                if (int.TryParse(input, out userInput))
+                {
+                    // Check if the number is within the specified range
+                    if (userInput >= minValue && userInput <= maxValue)
+                    {
+                        return userInput;
+                    }
+                    else
+                    {
+                        // Inform the user that the number is out of range
+                        Console.WriteLine($"Please enter a number between {minValue} and {maxValue}.");
+                    }
+                }
+                else
+                {
+                    // Inform the user that the input is not a valid number
+                    Console.WriteLine("Invalid input. Please enter a valid number.");
+                }
+            }
         }
     }
 }
