@@ -120,6 +120,7 @@ internal class StackMenu
             if (stack == null)
             {
                 AnsiConsole.WriteLine($"Record with ID {id} doesn't exist. Please try again.");
+                ReadKey();
                 continue; 
             }
 
@@ -129,11 +130,7 @@ internal class StackMenu
             }
 
             string newName = GetStackName("Please insert the new name. Type 0 to return to the main menu.");
-            if (newName == "0")
-            {
-                ShowStackMenu();
-                return;
-            }
+         
 
             if (string.IsNullOrWhiteSpace(newName))
             {

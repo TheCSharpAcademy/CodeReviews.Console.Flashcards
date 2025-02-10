@@ -46,7 +46,9 @@ namespace Flashcards.nikosnick13
 
         }
 
-
-
+        internal static int GetValidNumber(string v1, int v2, int count)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

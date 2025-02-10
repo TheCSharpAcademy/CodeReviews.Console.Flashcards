@@ -12,12 +12,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Flashcards.nikosnick13.UI;
+using Mapster;
+
 
 namespace Flashcards.nikosnick13.Controllers;
 
 internal class FlashcardController
 {
     private string? connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+
 
     public void InsertFlashcart(BasicFlashcardDTO flashcards)
     {
@@ -64,7 +67,7 @@ internal class FlashcardController
             {
                 WriteLine("\n\nNo flashcards found.\n\n");
             }
-            ReadKey();
+            
             TableVisualisation.DisplayFlashcards(flashcards);
             ReadKey();
             return flashcards;
@@ -76,28 +79,102 @@ internal class FlashcardController
         }
     }
 
-    public Flashcard GetById(int id) {
+    public Flashcard GetFlashcardById(int id)
+    {
+        try
+        {
+            using var conn = new SqlConnection(connectionString);
+            conn.Open();
+
+            string query = "SELECT Id, Question, Answer, Stack_Id FROM Flashcards WHERE Id = @Id";
+
+            var result = conn.QueryFirstOrDefault<Flashcard>(query, new { Id = id });
+
+            if (result == null)
+            {
+                WriteLine($"No Flashcard found with ID {id}");
+            }
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            WriteLine($"Error fetching Flashcard with ID {id}: {ex.Message}");
+            return null;
+        }
+    }
+
+    public void DeleteFlashcardById(int id) {
 
         try {
             using var conn = new SqlConnection(connectionString);
 
             conn.Open();
 
-            string query = "SELECT Id FROM Flashcards WHERE Id = @id";
+            string query = @"DELETE FROM Flashcards WHERE  Id = @id ";
 
-            var result = conn.QueryFirstOrDefault<Flashcard>(query, new {id});
+            var rowsAffected = conn.Execute(query, new { id });
+
+            if (rowsAffected > 0)
+            {
+                WriteLine($"Stack with ID {id} was deleted successfully.");
+                AnsiConsole.Prompt(new TextPrompt<string>("\nPress [green]Enter[/] to continue...").AllowEmpty());
+            }
+            else
+            {
+                WriteLine($"\n\nNo record found with Id {id}. Nothing was deleted preess any key to return..\n\n");
+            }
+        }
+        catch(Exception ex) {
+
+            WriteLine("Error " + ex.Message);
+        }
+       
+    }
+
+    public void EditFlashcard(BasicFlashcardDTO basicFlashcardDTO) {
+
+        try {
+
+            using var conn = new SqlConnection(connectionString);
+
+            conn.Open();
+
+            string query = @"UPDATE Flashcards SET Question = @question, Answer = @answer,Stack_Id = @stack_id WHERE  Id = @id ";
+
+            conn.Execute(query, new
+            {
+                id = basicFlashcardDTO.Id,
+                question = basicFlashcardDTO.Question,
+                answer = basicFlashcardDTO.Answer,
+                stack_id = basicFlashcardDTO.StackId
+            });
+        } 
+        catch(Exception ex) {
+            WriteLine("Error " + ex.Message);
+        }
+            
+    }
+
+    //TODO:
+    public DetailFlashcardDTO ViewFlashcardById(int id) {
+
+        try {
+            using var conn = new SqlConnection(connectionString);
+            conn.Open();
+
+            string query = "SELECT Id, Question, Answer, Stack_Id FROM Flashcards WHERE Id = @Id";
+
+            var result = conn.QueryFirstOrDefault<DetailFlashcardDTO>(query, new { Id = id });
 
             return result;
         }
-        catch(Exception ex)
-        {
-            WriteLine($"Error fetching Stack with ID {id}: {ex.Message}");
+        catch(Exception ex){
+
+            WriteLine("Error: " + ex.Message);
             return null;
+
         }
-    } 
-
-    
-
-
+    }
 
 }

@@ -44,18 +44,14 @@ internal class FlashcardMenu
                 case FlashcardsMenuOptions.ViewAllFlashcards:
                     _flashcardController.ViewAllFlashcards();
                     break;
-
                 case FlashcardsMenuOptions.ViewFlashcard:
-                    PocessecViewOneFlashcards();
-
+                    ProcessViewOneFlashcards();
                     break;
                 case FlashcardsMenuOptions.EditFlashcard:
-                    AnsiConsole.MarkupLine("[yellow]Study mode not implemented yet![/]");
-                    ReadKey();
+                    ProcessEdit();
                     break;
                 case FlashcardsMenuOptions.DeleteFlashcard:
-                    AnsiConsole.MarkupLine("[yellow]Study mode not implemented yet![/]");
-                    ReadKey();
+                    ProcessDelete();
                     break;
                 case FlashcardsMenuOptions.ReturnToMainMenu:
                     isFlashCardMenuRunning = false;
@@ -82,8 +78,6 @@ internal class FlashcardMenu
             AnsiConsole.MarkupLine("\n[red]Stack not found![/]");
             return;
         }
-
-
 
         var QuestionInput = GetTheQuestion("\nEnter the question of the new Flashcard, or type '0' to return to the Flashcard Menu.\n");
 
@@ -132,13 +126,14 @@ internal class FlashcardMenu
         return userInputAnswer;
     }
 
-    private void PocessecViewOneFlashcards()
+    //NOT WORKING TODO: FIX 
+    private void ProcessViewOneFlashcards()
     {
 
         _flashcardController.ViewAllFlashcards();
 
 
-        AnsiConsole.WriteLine("\nPlease enter the ID of the stack you want to view (or 0 to return to the main menu).");
+        AnsiConsole.WriteLine("\nPlease enter the ID of the flashcard you want to view (or 0 to return to the main menu).");
         string? userInput = ReadLine();
 
         if (userInput == "0")
@@ -155,10 +150,104 @@ internal class FlashcardMenu
 
         int id = Int32.Parse(userInput);
 
-        
-        var flashcardDTO = _flashcardController.GetById(id);
 
-        TableVisualisation.DisplayOneFlashcard(new List<DetailFlashcardDTO> { flashcardDTO } );
+        var flashcardDTO = _flashcardController.ViewFlashcardById(id);
+
+        TableVisualisation.DisplayOneFlashcard(new List<DetailFlashcardDTO> { flashcardDTO });
+    
+    }
+
+  
+
+    private void ProcessDelete()
+    {
+
+
+        _flashcardController.ViewAllFlashcards();
+
+        AnsiConsole.WriteLine("\nPlease enter the ID of the category you want to delete (or 0 to return to the main menu).");
+        string? userInputId = ReadLine();
+
+        if (userInputId == "0")
+        {
+            ShowFlashcartMenu();
+            return;
+        }
+
+        if (!Validation.isValidInt(userInputId))
+        {
+            AnsiConsole.MarkupLine("[red]Invalid input. Please enter a valid numeric ID.[/]");
+        }
+
+        int id = Int32.Parse(userInputId);
+
+        var selectedFlashcard = _flashcardController.GetFlashcardById(id);
+
+        _flashcardController.DeleteFlashcardById(selectedFlashcard.Id);
+
+    }
+
+    private void ProcessEdit()
+    {
+        while (true) 
+        {
+            _flashcardController.ViewAllFlashcards();
+
+
+            AnsiConsole.WriteLine("\nPlease enter the ID of the category you want to edit (or 0 to return to the main menu).");
+            string? userInputId = ReadLine();
+
+            if (userInputId == "0")
+            {
+                ShowFlashcartMenu();
+                return;
+            }
+            if (!Validation.isValidInt(userInputId))
+            {
+                AnsiConsole.MarkupLine("[red]Invalid input. Please enter a valid numeric ID.[/]");
+            }
+
+            int id = Int32.Parse(userInputId);
+
+            var selectedFlashcard = _flashcardController.GetFlashcardById(id);
+
+            if (selectedFlashcard == null)
+            {
+                AnsiConsole.WriteLine($"Record with ID {id} doesn't exist. Please try again.");
+                ReadKey();
+                continue;
+            }
+
+            string newQuestion = GetTheQuestion("Please insert the new question. Type 0 to return to the main menu");
+            string newAnswer = GetTheAnswer("Please insert the new answer. Type 0 to return to the main menu");
+
+            var stacks = _stackController.ViewAllStacks();
+
+            int stackId = AnsiConsole.Prompt(new TextPrompt<int>("\nEnter the [green]ID[/] of the stack to add the flashcard:"));
+
+            var newSelectedStack = stacks.FirstOrDefault(stack => stack.Id == stackId);
+
+            if (newSelectedStack == null || !stacks.Any(s => s.Id == stackId))
+            {
+                AnsiConsole.MarkupLine("\n[red]Stack not found![/]");
+                ReadKey();
+                return;
+            }
+
+            var flashcardDto = new BasicFlashcardDTO
+            {
+                Id = selectedFlashcard.Id,
+                Question = newQuestion,
+                Answer = newAnswer,
+                StackId = newSelectedStack.Id
+
+            };
+
+            _flashcardController.EditFlashcard(flashcardDto);
+
+            AnsiConsole.MarkupLine("\n[green]Flashcard updated successfully![/]");
+        }
+       
 
     }
 }

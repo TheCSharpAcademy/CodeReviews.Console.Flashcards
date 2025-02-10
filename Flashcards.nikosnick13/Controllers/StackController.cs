@@ -171,7 +171,6 @@ internal class StackController
         }
     }
 
-
     // ViewAllStack: this method return list.Interact with flashcardsUI
     public List<DetailStackDTO> ViewAllStack()
     {

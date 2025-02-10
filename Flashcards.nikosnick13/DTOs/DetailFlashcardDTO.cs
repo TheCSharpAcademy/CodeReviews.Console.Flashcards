@@ -14,8 +14,7 @@ internal class DetailFlashcardDTO
 
     public string Answer { get; set; } = string.Empty;
 
-    public int? StackId { get; set; }
+    public int StackId { get; set; }
 
-    public string StackName { get; set; } = string.Empty; 
- 
+    //TOD: πρεπτι να δω τι αλλο μεσα μπορω να μου βγαζι στην εκτιπωση
 }

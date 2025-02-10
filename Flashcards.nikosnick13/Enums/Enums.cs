@@ -27,13 +27,17 @@ internal class Enums
     }
     public enum FlashcardsMenuOptions
     {
-
         AddFlashcards,
         ViewAllFlashcards,
         ViewFlashcard,
         EditFlashcard,
         DeleteFlashcard,
         ReturnToMainMenu
-
+    }
+    public enum StudyMenuOptions 
+    {
+        StartStudySession,
+        ViewStudySessions,
+        ReturnToMainMenu
     }
 }

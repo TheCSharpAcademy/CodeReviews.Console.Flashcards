@@ -93,4 +93,5 @@ internal class DataBaseManager
             WriteLine($"Error creating table: {ex.Message}");
         }
     }
+
 }

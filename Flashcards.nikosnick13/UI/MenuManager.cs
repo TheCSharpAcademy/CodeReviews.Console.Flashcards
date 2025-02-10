@@ -14,11 +14,13 @@ internal class MenuManager
 
     private readonly StackMenu _stackMenu;
     private readonly FlashcardMenu _flashcardMenu;
+    private readonly StudyMenu _studyMenu;
 
     public MenuManager()
     {
         _stackMenu = new StackMenu();
         _flashcardMenu = new FlashcardMenu();
+        _studyMenu = new StudyMenu();
     }
 
     public void ShowMainMenu()
@@ -46,7 +48,7 @@ internal class MenuManager
                     _flashcardMenu.ShowFlashcartMenu();
                     break;
                 case MainMenuOptions.Study:
-                    AnsiConsole.MarkupLine("[yellow]Study mode not implemented yet![/]");
+                    _studyMenu.ShowStudyMenu();
                     break;
                 case MainMenuOptions.Exit:
                     AnsiConsole.MarkupLine("[green]Goodbye![/]");

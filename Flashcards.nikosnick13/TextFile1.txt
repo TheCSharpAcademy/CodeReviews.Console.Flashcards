@@ -7,6 +7,10 @@
                       +----| stack_id (FK)  |            | score             |
                            +----------------+            +-------------------+
 
- // VIEW ALLL FLASHCARD ; 
- //
+
+
+ // Crete a study sesseons                           
+ // VIEW ONE FLASHCARD (); 
+ // TO DO VALIDATION CLASS 
+ // TO FIX ALL THE WARNINGS (9)
  //
