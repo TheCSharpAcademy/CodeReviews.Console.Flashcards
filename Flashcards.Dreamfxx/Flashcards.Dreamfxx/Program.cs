@@ -2,6 +2,7 @@
 using Flashcards.Dreamfxx.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 var serviceCollection = new ServiceCollection();
 ConfigureServices(serviceCollection);
@@ -12,19 +13,22 @@ var stacksService = serviceProvider.GetService<StacksService>();
 var flashcardsService = serviceProvider.GetService<FlashcardsService>();
 var sessionsService = serviceProvider.GetService<SessionsService>();
 
+// Příklad použití služby
+// await stacksService.SomeMethodAsync();
+
 void ConfigureServices(IServiceCollection services)
 {
     var configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json")
-    .Build();
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json")
+        .Build();
 
     services.AddSingleton<IConfiguration>(configuration);
 
     var connectionString = configuration.GetConnectionString("DefaultConnection");
     if (string.IsNullOrEmpty(connectionString))
     {
-        throw new InvalidOperationException("Your appsettings.json file does not contain valid connection string. Please read the documentation or fix your configuration.");
+        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
     }
 
     services.AddSingleton(new DatabaseManager(connectionString));
@@ -32,5 +36,5 @@ void ConfigureServices(IServiceCollection services)
     services.AddTransient<FlashcardsService>();
     services.AddTransient<SessionsService>();
 
-    services.AddLogging(configure => configure.AddConsole()); // This line is now valid
+    services.AddLogging(configure => configure.AddConsole());
 }
