@@ -90,8 +90,8 @@ public class StacksService(DatabaseManager databaseManager)
 
             _databaseManager.CreateStack(name, description);
 
-            Console.WriteLine("Stack created successfully!");
-            Console.WriteLine("Do you want to add another stack?(y/n)");
+            AnsiConsole.MarkupLine("Stack created successfully!");
+            AnsiConsole.MarkupLine("Do you want to add another stack?(y/n)");
 
             string? choice = Console.ReadLine();
 
@@ -104,23 +104,27 @@ public class StacksService(DatabaseManager databaseManager)
 
     public void EditStack()
     {
-        Console.Clear();
+        AnsiConsole.Clear();
+
         while (true)
         {
             var stack = ShowAllStacks();
+
             if (stack == null)
             {
-                Console.ReadKey();
-                break;
-            }
-            else if (stack.Name == "Cancel")
-            {
-                Console.WriteLine("Operation canceled!");
+                AnsiConsole.MarkupLine("No stacks found. Press any key to continue.");
                 Console.ReadKey();
                 break;
             }
 
-            Console.WriteLine($"Current stack name: {stack.Name} \n");
+            else if (stack.Name == "Cancel")
+            {
+                AnsiConsole.MarkupLine("Edit was canceled.");
+                Console.ReadKey();
+                break;
+            }
+
+            AnsiConsole.MarkupLine($"Current stack name: {stack.Name} \n");
             string name = GetUserInput.GetUserString("Enter the new name of the stack(Leave blank if you don't want to edit):");
 
             if (CheckIfStackExists(name))
@@ -133,7 +137,7 @@ public class StacksService(DatabaseManager databaseManager)
                 name = stack.Name;
             }
 
-            Console.WriteLine($"Current description: {stack.Description} \n");
+            AnsiConsole.MarkupLine($"Current description: {stack.Description} \n");
             string description = GetUserInput.GetUserString("Enter the new description of the stack(Leave blank if you don't want to edit):");
 
             if (description == null)
@@ -141,11 +145,11 @@ public class StacksService(DatabaseManager databaseManager)
                 description = stack.Description;
             }
 
-            Console.WriteLine("Old stack: ");
-            Console.WriteLine($"Stack name: {stack.Name} - Stack description: {stack.Description}\n");
+            AnsiConsole.MarkupLine("Old stack: ");
+            AnsiConsole.MarkupLine($"Stack name: {stack.Name} - Stack description: {stack.Description}\n");
 
-            Console.WriteLine("New stack: ");
-            Console.WriteLine($"Stack name: {name} - Stack description: {description}\n");
+            AnsiConsole.MarkupLine("New stack: ");
+            AnsiConsole.MarkupLine($"Stack name: {name} - Stack description: {description}\n");
 
             if (!ConfirmationPrompt("update"))
             {
@@ -154,8 +158,8 @@ public class StacksService(DatabaseManager databaseManager)
 
             _databaseManager.UpdateStack(name, description, stack.Id);
 
-            Console.WriteLine("Stack updated successfully!");
-            Console.WriteLine("Do you want to edit another stack?(y/n)");
+            AnsiConsole.MarkupLine("[green]Stack updated successfully![/]");
+            AnsiConsole.MarkupLine("[yellow]Do you want to edit another stack? - y/n[/]");
 
             if (Console.ReadLine().ToLower() == "n")
             {
@@ -166,10 +170,11 @@ public class StacksService(DatabaseManager databaseManager)
 
     public void DeleteStack()
     {
-        Console.Clear();
+        AnsiConsole.Clear();
+
         while (true)
         {
-            Console.WriteLine("Select the stack you want to delete:");
+            AnsiConsole.MarkupLine("Select stack that you want to delete.");
             int stackId = ShowAllStacks().Id;
 
             if (!ConfirmationPrompt("delete"))
@@ -178,8 +183,8 @@ public class StacksService(DatabaseManager databaseManager)
             }
             _databaseManager.DeleteStack(stackId);
 
-            Console.WriteLine("Stack deleted successfully!");
-            Console.WriteLine("Do you want to delete another stack?(y/n)");
+            AnsiConsole.MarkupLine("[green]Stack deleted successfully![/]");
+            AnsiConsole.MarkupLine("[yellow]Do you want to delete another stack? - y/n[/]");
 
             if (Console.ReadLine().ToLower() == "n")
             {
@@ -194,7 +199,7 @@ public class StacksService(DatabaseManager databaseManager)
 
         var menuRoute = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-            .Title($"Are you sure you want to do {operation} on this stack?")
+            .Title($"Do you really want to {operation} this stack?")
             .PageSize(5)
             .AddChoices(["Yes", "No"])
             .UseConverter(option => option));
@@ -213,7 +218,7 @@ public class StacksService(DatabaseManager databaseManager)
         {
             if (stack.Name.ToLower() == stackName.ToLower())
             {
-                Console.WriteLine("This stack name is already taken.");
+                AnsiConsole.Markup("[red]This name already belong to existing stack, choose different name.[/]\nPress any key to continue.");
                 Console.ReadKey();
                 return true;
             }

@@ -1,4 +1,5 @@
-﻿using Flashcards.Dreamfxx.Models;
+﻿using Flashcards.Dreamfxx.Dtos;
+using Flashcards.Dreamfxx.Models;
 using Microsoft.Data.SqlClient;
 
 namespace Flashcards.Dreamfxx.Data;
@@ -35,7 +36,7 @@ public class DatabaseManager(string connectionString)
         {
             var stack = new Stack
             {
-                FlashcardId = reader.GetInt32(0),
+                Id = reader.GetInt32(0),
                 Name = reader.GetString(1),
                 Description = reader.GetString(2)
             };
@@ -50,9 +51,9 @@ public class DatabaseManager(string connectionString)
         return stacks;
     }
 
-    public List<Card> GetCards()
+    public List<Flashcard> GetCards()
     {
-        var cards = new List<Card>();
+        var cards = new List<Flashcard>();
         var query = "SELECT * FROM Cards";
 
         using var connection = GetConnection();
@@ -62,12 +63,12 @@ public class DatabaseManager(string connectionString)
 
         while (reader.Read())
         {
-            var card = new Card
+            var card = new Flashcard
             {
                 Id = reader.GetInt32(0),
                 Question = reader.GetString(1),
                 Answer = reader.GetString(2),
-                CardStackId = reader.GetInt32(3)
+                StackId = reader.GetInt32(3)
             };
             cards.Add(card);
         }
@@ -191,11 +192,11 @@ public class DatabaseManager(string connectionString)
             }
         }
     }
-    public CardStackDetailsDto GetCardStackDTOs(int stackId)
+    public StackDto GetStackDtos(int stackId)
     {
-        var cardStackDetails = new CardStackDetailsDto
+        var cardStackDetails = new StackDto
         {
-            Cards = new List<CardsDto>()
+            Flashcards = new List<FlashcardDto>()
         };
 
         var query = $@"
@@ -297,7 +298,7 @@ public class DatabaseManager(string connectionString)
 
         while (reader.Read())
         {
-            var session = new StudySessionPivotDto
+            var session = new SessionPivotDto
             {
                 StackName = reader.GetString(0),
                 January = reader.IsDBNull(1) ? 0 : reader.GetInt32(1),
