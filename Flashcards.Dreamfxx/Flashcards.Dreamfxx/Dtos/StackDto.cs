@@ -1,8 +1,8 @@
-﻿namespace Flashcards.Dreamfxx.Dtos;
+﻿using Flashcards.Dreamfxx.Models;
+namespace Flashcards.Dreamfxx.Dtos;
 
 public class StackDto
 {
-    public int Id { get; set; }
-    public required string Name { get; set; }
-    public required string Description { get; set; }
+    public required string StackName { get; set; }
+    public List<Flashcard>? Flashcards { get; set; }
 }
