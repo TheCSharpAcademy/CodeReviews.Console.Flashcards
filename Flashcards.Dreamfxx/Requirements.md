@@ -43,3 +43,5 @@ This application allows users to create and study Stacks of Flashcards.
 1. Use DTOs (Data Transfer Objects) for displaying flashcard information to users
 2. Implement proper foreign key relationships in the database
 3. Ensure cascading deletes are set up correctly in the database schema
+
+Created by @DreamFXX - 2025
