@@ -5,7 +5,11 @@ public class GetUserInput
 {
     public static string GetUserString(string message)
     {
-        Console.WriteLine(message);
+
+
+
+
+        (message);
         string? result = Console.ReadLine();
         if (Validations.ValidateString(message))
         {

@@ -1,6 +1,7 @@
 ﻿using Flashcards.Dreamfxx.Dtos;
 using Flashcards.Dreamfxx.Models;
 using Microsoft.Data.SqlClient;
+using Spectre.Console;
 
 namespace Flashcards.Dreamfxx.Data;
 
@@ -45,7 +46,8 @@ public class DatabaseManager(string connectionString)
 
         if (stacks.Count == 0)
         {
-            Console.WriteLine("No stacks found");
+            AnsiConsole.MarkupLine("No stacks found. Press any key to continue.");
+            Console.ReadKey();
             return null;
         }
         return stacks;
@@ -74,7 +76,7 @@ public class DatabaseManager(string connectionString)
         }
         if (cards.Count == 0)
         {
-            Console.WriteLine("No cards found");
+            AnsiConsole.MarkupLine("No cards found");
             return null;
         }
         return cards;
@@ -194,9 +196,10 @@ public class DatabaseManager(string connectionString)
     }
     public StackDto GetStackDtos(int stackId)
     {
-        var cardStackDetails = new StackDto
+        var stackDetails = new StackDto
         {
-            Flashcards = new List<FlashcardDto>()
+            StackName = null,
+            FlashcardsDto = new List<Flashcard>() // Change the type to FlashcardDto
         };
 
         var query = $@"
@@ -219,31 +222,34 @@ public class DatabaseManager(string connectionString)
 
         while (reader.Read())
         {
-            if (cardStackDetails.CardStackName == null)
+            if (stackDetails.StackName == null)
             {
-                cardStackDetails.CardStackName = reader.GetString(0);
+                stackDetails.StackName = reader.GetString(0);
             }
-            var cards = new CardsDto
+
+            var cards = new FlashcardDto
             {
                 Id = reader.GetInt32(1),
                 PresentationId = presentationId++,
                 Question = reader.GetString(2),
                 Answer = reader.GetString(3)
             };
-            cardStackDetails.Cards.Add(cards);
+
+            stackDetails.FlashcardsDto.Add(cards);
         }
 
-        if (cardStackDetails.CardStackName == null)
+        if (stackDetails.StackName == null)
         {
-            Console.WriteLine("No cards found");
+            AnsiConsole.MarkupLine("No cards found, press any key to continue.");
+            Console.ReadKey();
             return null;
         }
-        return cardStackDetails;
+        return stackDetails;
     }
 
-    public List<StudySessionPivotDto> GetStudySessionsPerMonth(int year)
+    public List<SessionPivotDto> GetSessionsInMonth(int year)
     {
-        var studySessions = new List<StudySessionPivotDto>();
+        var studySessions = new List<SessionPivotDto>();
         string query = $@"
             WITH SessionData AS (
                 SELECT
@@ -318,9 +324,9 @@ public class DatabaseManager(string connectionString)
         }
         return studySessions;
     }
-    public List<StudySessionPivotDto> GetAverageCorrectAnswersPerStudySessionPerMonth(int year)
+    public List<SessionPivotDto> GetAverageCorrectAnswersPerStudySessionPerMonth(int year)
     {
-        var studySessions = new List<StudySessionPivotDto>();
+        var studySessions = new List<SessionPivotDto>();
         string query = $@"
             WITH SessionData AS (
                 SELECT
@@ -376,7 +382,7 @@ public class DatabaseManager(string connectionString)
 
         while (reader.Read())
         {
-            var session = new StudySessionPivotDto
+            var session = new SessionPivotDto
             {
                 StackName = reader.GetString(0),
                 January = reader.IsDBNull(1) ? 0 : reader.GetInt32(1),

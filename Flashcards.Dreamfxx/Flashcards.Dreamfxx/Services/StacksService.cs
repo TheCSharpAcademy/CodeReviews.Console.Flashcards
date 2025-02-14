@@ -52,11 +52,11 @@ public class StacksService(DatabaseManager databaseManager)
     public void GetSelectedStack()
     {
         var selectedStackId = ShowAllStacks().Id;
-        var selectedStack = _databaseManager.GetCardStackDTOs(selectedStackId);
+        var selectedStack = _databaseManager.GetStackDtos(selectedStackId);
 
-        AnsiConsole.WriteLine($"Selected stack: {selectedStack.CardStackName}");
+        AnsiConsole.WriteLine($"Selected stack: {selectedStack.StackName}");
 
-        foreach (var card in selectedStack.Cards)
+        foreach (var card in selectedStack.Flashcards)
         {
             AnsiConsole.WriteLine($"Question: {card.Question}, Answer: {card.Answer}");
         }
