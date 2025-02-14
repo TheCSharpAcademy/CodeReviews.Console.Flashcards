@@ -56,10 +56,11 @@ public class StacksService(DatabaseManager databaseManager)
 
         AnsiConsole.WriteLine($"Selected stack: {selectedStack.StackName}");
 
-        foreach (var card in selectedStack.Flashcards)
+        foreach (var card in selectedStack.FlashcardsDto)
         {
             AnsiConsole.WriteLine($"Question: {card.Question}, Answer: {card.Answer}");
         }
+        AnsiConsole.MarkupLine("[green]Press any key to continue[/]");
         Console.ReadKey();
     }
 

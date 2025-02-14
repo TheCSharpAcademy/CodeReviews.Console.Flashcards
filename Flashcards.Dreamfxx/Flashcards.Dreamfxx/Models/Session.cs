@@ -7,9 +7,9 @@ public class Session
 
     [ForeignKey("Stack")]
     public int StackId { get; set; }
-    public List<Flashcard> Cards { get; set; }
+    public List<Flashcard>? Flashcards { get; set; }
     public DateTime EndTime { get; set; }
     public int CorrectAnswers { get; set; }
     public int WrongAnswers { get; set; }
-    public Stack Stack { get; set; }
+    public Stack? Stack { get; set; }
 }

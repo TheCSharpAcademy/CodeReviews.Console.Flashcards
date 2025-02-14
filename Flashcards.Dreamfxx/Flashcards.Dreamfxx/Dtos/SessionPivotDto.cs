@@ -2,7 +2,7 @@
 public class SessionPivotDto
 {
     public int Id { get; set; }
-    public required string StackName { get; set; }
+    public string? StackName { get; set; }
     public int? January { get; set; }
     public int? February { get; set; }
     public int? March { get; set; }

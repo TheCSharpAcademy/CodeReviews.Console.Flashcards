@@ -50,7 +50,7 @@ public class DatabaseManager(string connectionString)
             Console.ReadKey();
             return null;
         }
-        return stacks;
+        return new();
     }
 
     public List<Flashcard> GetCards()
@@ -77,7 +77,7 @@ public class DatabaseManager(string connectionString)
         if (cards.Count == 0)
         {
             AnsiConsole.MarkupLine("No cards found");
-            return null;
+            return new();
         }
         return cards;
     }
@@ -199,14 +199,14 @@ public class DatabaseManager(string connectionString)
         var stackDetails = new StackDto
         {
             StackName = null,
-            FlashcardsDto = new List<Flashcard>() // Change the type to FlashcardDto
+            FlashcardsDto = new() // Change the type to FlashcardDto
         };
 
         var query = $@"
                 SELECT 
                     Stacks.Name,
                     Cards.Id,
-                    Cards.Question, 
+                    Cards.Question,
                     Cards.Answer
                 FROM Stacks
                 JOIN Cards ON Stacks.Id = Cards.StackId
@@ -448,6 +448,8 @@ public class DatabaseManager(string connectionString)
                     )
                 END
             ";
+
+        ExecuteNonQuery(query);
         SeedData();
     }
 
