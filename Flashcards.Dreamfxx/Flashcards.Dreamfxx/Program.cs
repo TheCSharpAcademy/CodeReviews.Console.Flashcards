@@ -1,40 +1,82 @@
 ﻿using Flashcards.Dreamfxx.Data;
+using Flashcards.Dreamfxx.Models;
 using Flashcards.Dreamfxx.Services;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Spectre.Console;
 
-var serviceCollection = new ServiceCollection();
-ConfigureServices(serviceCollection);
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json")
+    .Build();
 
-var serviceProvider = serviceCollection.BuildServiceProvider();
+string? connectionString = configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string was not found. Check the appsettings.json file.");
 
-var stacksService = serviceProvider.GetService<StacksService>();
-var flashcardsService = serviceProvider.GetService<FlashcardsService>();
-var sessionsService = serviceProvider.GetService<SessionsService>();
+var dbManager = new DatabaseManager(connectionString);
+var stackService = new StacksService(dbManager);
+var cardService = new FlashcardsService(dbManager);
+var sessionsService = new SessionsService(dbManager);
 
-// Příklad použití služby
-// await stacksService.SomeMethodAsync();
+dbManager.EnsureDatabaseExists("Flashcards_Data");
 
-void ConfigureServices(IServiceCollection services)
+var menuRoutes = new List<MenuRoute>
 {
-    var configuration = new ConfigurationBuilder()
-        .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("appsettings.json")
-        .Build();
+    new MenuRoute{ Id = 1, Name = "Create new stack of flashcards" },
+    new MenuRoute{ Id = 2, Name = "Edit existing stack/s" },
+    new MenuRoute{ Id = 3, Name = "Delete existing stack/s" },
 
-    services.AddSingleton<IConfiguration>(configuration);
+    new MenuRoute{ Id = 4, Name = "Create new flashcard" },
+    new MenuRoute{ Id = 5, Name = "Edit existing flashcard/s" },
+    new MenuRoute{ Id = 6, Name = "Delete existing flashcard/s" },
 
-    var connectionString = configuration.GetConnectionString("DefaultConnection");
-    if (string.IsNullOrEmpty(connectionString))
+    new MenuRoute{ Id = 7, Name = "Start a session" },
+    new MenuRoute{ Id = 8, Name = "Show study sessions in each month" },
+    new MenuRoute{ Id = 0, Name = "Exit" }
+};
+
+bool running = true;
+
+while (running)
+{
+    Console.Clear();
+
+    var menuSelection = AnsiConsole.Prompt(
+        new SelectionPrompt<MenuRoute>()
+        .Title("What you want to do?")
+        .PageSize(10)
+        .AddChoices(menuRoutes)
+        .UseConverter(option => option.Name));
+
+
+    switch (menuSelection.Id)
     {
-        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+        case 1:
+            stackService.CreateStack();
+            break;
+        case 2:
+            stackService.EditStack();
+            break;
+        case 3:
+            stackService.DeleteStack();
+            break;
+        case 4:
+            cardService.CreateCard();
+            break;
+        case 5:
+            cardService.EditCard();
+            break;
+        case 6:
+            cardService.DeleteCard();
+            break;
+        case 7:
+            sessionsService.StartSession();
+            break;
+        case 8:
+            sessionsService.ShowStudySessions();
+            break;
+        case 0:
+            running = false;
+            break;
     }
-
-    services.AddSingleton(new DatabaseManager(connectionString));
-    services.AddTransient<StacksService>();
-    services.AddTransient<FlashcardsService>();
-    services.AddTransient<SessionsService>();
-
-    services.AddLogging(configure => configure.AddConsole());
 }
+

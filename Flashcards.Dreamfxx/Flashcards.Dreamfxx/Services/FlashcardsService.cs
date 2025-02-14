@@ -1,6 +1,5 @@
 ﻿using Flashcards.Dreamfxx.Data;
 using Flashcards.Dreamfxx.Dtos;
-using Flashcards.Dreamfxx.Models;
 using Flashcards.Dreamfxx.UserInput;
 using Spectre.Console;
 
@@ -18,24 +17,25 @@ public class FlashcardsService
     {
         var stackService = new StacksService(_databaseManager);
         AnsiConsole.MarkupLine("Select the stack name:");
-        var cardStack = stackService.ShowAllStacks();
+        var stack = stackService.ShowAllStacks();
 
         Console.Clear();
 
         while (true)
         {
-            AnsiConsole.MarkupLine($"Selected stack: {cardStack.Name}\n");
-            string question = GetUserInput.GetUserString("Enter the question:");
+            AnsiConsole.MarkupLine($"Selected stack: {stack.Name}\n");
+            string? question = GetUserInput.GetUserString("Enter the question:");
 
-            string answer = GetUserInput.GetUserString("Enter the answer:");
+            string? answer = GetUserInput.GetUserString("Enter the answer:");
 
-            _databaseManager.CreateCard(question, answer, cardStack.Id);
+            _databaseManager.CreateCard(question, answer, stack.Id);
 
             AnsiConsole.MarkupLine("Card created successfully!");
             AnsiConsole.MarkupLine("Do you want to add another card? - y/n");
 
             if (Console.ReadLine() == "n")
             {
+                AnsiConsole.MarkupLine("Bye!");
                 break;
             }
             Console.Clear();
@@ -45,6 +45,7 @@ public class FlashcardsService
     public void EditCard()
     {
         Console.Clear();
+
         while (true)
         {
             AnsiConsole.MarkupLine("Select the card stack:");
@@ -66,8 +67,15 @@ public class FlashcardsService
             int stackId = stack.Id;
             var card = _databaseManager.GetCards().FirstOrDefault(c => c.Id == stackId);
 
+            if (card == null)
+            {
+                AnsiConsole.MarkupLine("No card found for the selected stack.");
+                Console.ReadKey();
+                break;
+            }
+
             AnsiConsole.MarkupLine($"Current question: {card.Question} \n");
-            string question = UserInput.GetUserInput.GetUserString("Enter the new question(Leave blank if you don't want to edit):");
+            string? question = GetUserInput.GetUserString("Enter the new question\n(Leave blank if you don't want to edit):");
 
             if (string.IsNullOrEmpty(question))
             {
@@ -75,7 +83,7 @@ public class FlashcardsService
             }
 
             AnsiConsole.MarkupLine($"Current answer: {card.Answer} \n");
-            string answer = GetUserInput.GetUserString("Enter the new answer(Leave blank if you don't want to edit):");
+            string? answer = GetUserInput.GetUserString("Enter the new answer(Leave blank if you don't want to edit):");
 
             if (string.IsNullOrEmpty(answer))
             {
@@ -88,7 +96,7 @@ public class FlashcardsService
             AnsiConsole.MarkupLine("New card: ");
             AnsiConsole.MarkupLine($"Question: {question} - Answer: {answer}\n");
 
-            if (!Confirmations("update"))
+            if (!AccepttheOperation("update"))
             {
                 break;
             }
@@ -135,7 +143,7 @@ public class FlashcardsService
             AnsiConsole.MarkupLine($"You picked this flashcard:");
             AnsiConsole.MarkupLine($"Question: {card.Question} - Answer: {card.Answer}");
 
-            if (!Confirmations("delete"))
+            if (!AccepttheOperation("delete"))
             {
                 break;
             }
@@ -152,7 +160,7 @@ public class FlashcardsService
         }
     }
 
-    public Flashcard? ShowAndSelectById(int stackId)
+    public FlashcardDto? ShowAndSelectById(int stackId)
     {
         var stack = _databaseManager.GetStackDtos(stackId);
 
@@ -171,16 +179,10 @@ public class FlashcardsService
             .AddChoices(cards)
             .UseConverter(card => $"ID: {card.PresentationId}, Question: {card.Question}, Answer: {card.Answer}"));
 
-        return new Flashcard
-        {
-            Id = menuSelection.PresentationId,
-            Question = menuSelection.Question,
-            Answer = menuSelection.Answer,
-            StackId = stackId
-        };
+        return menuSelection;
     }
 
-    public bool Confirmations(string operation)
+    public bool AccepttheOperation(string operation)
     {
         var menuSelection = AnsiConsole.Prompt(
             new SelectionPrompt<string>()

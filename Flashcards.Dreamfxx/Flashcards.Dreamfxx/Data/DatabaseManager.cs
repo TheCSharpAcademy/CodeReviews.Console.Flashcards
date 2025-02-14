@@ -48,7 +48,7 @@ public class DatabaseManager(string connectionString)
         {
             AnsiConsole.MarkupLine("No stacks found. Press any key to continue.");
             Console.ReadKey();
-            return null;
+            return new();
         }
         return new();
     }
@@ -242,7 +242,7 @@ public class DatabaseManager(string connectionString)
         {
             AnsiConsole.MarkupLine("No cards found, press any key to continue.");
             Console.ReadKey();
-            return null;
+            return new();
         }
         return stackDetails;
     }
@@ -324,7 +324,7 @@ public class DatabaseManager(string connectionString)
         }
         return studySessions;
     }
-    public List<SessionPivotDto> GetAverageCorrectAnswersPerStudySessionPerMonth(int year)
+    public List<SessionPivotDto> GetAverageCorrectAnswersInSessionInMonth(int year)
     {
         var studySessions = new List<SessionPivotDto>();
         string query = $@"

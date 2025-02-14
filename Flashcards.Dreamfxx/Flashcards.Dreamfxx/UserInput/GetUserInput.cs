@@ -4,7 +4,7 @@ using Spectre.Console;
 namespace Flashcards.Dreamfxx.UserInput;
 public class GetUserInput
 {
-    public static string GetUserString(string message)
+    public static string? GetUserString(string message)
     {
         AnsiConsole.MarkupLine(message);
         string? result = Console.ReadLine();
