@@ -45,7 +45,7 @@ public class StacksService(DatabaseManager databaseManager)
 
         foreach (var stack in stacks)
         {
-            AnsiConsole.WriteLine($"ID: {stack.Id}, Name: {stack.Name}, Name: {stack.Description}");
+            AnsiConsole.WriteLine($"ID: {stack.Id}, Route: {stack.Name}, Route: {stack.Description}");
         }
     }
 
@@ -126,7 +126,7 @@ public class StacksService(DatabaseManager databaseManager)
             }
 
             AnsiConsole.MarkupLine($"Current stack name: {stack.Name} \n");
-            string name = GetUserInput.GetUserString("Enter the new name of the stack(Leave blank if you don't want to edit):");
+            string? name = GetUserInput.GetUserString("Enter the new name of the stack(Leave blank if you don't want to edit):");
 
             if (CheckIfStackExists(name))
             {
@@ -174,7 +174,9 @@ public class StacksService(DatabaseManager databaseManager)
     {
         AnsiConsole.Clear();
 
-        while (true)
+        bool isRun = true;
+
+        while (isRun)
         {
             AnsiConsole.MarkupLine("Select stack that you want to delete.");
             int stackId = ShowAllStacks().Id;
@@ -188,8 +190,11 @@ public class StacksService(DatabaseManager databaseManager)
             AnsiConsole.MarkupLine("[green]Stack deleted successfully![/]");
             AnsiConsole.MarkupLine("[yellow]Do you want to delete another stack? - y/n[/]");
 
-            if (Console.ReadLine().ToLower() == "n")
+            string? choice = AnsiConsole.Ask<string>("Enter 'q' to exit.");
+
+            if (choice == "n")
             {
+                isRun = false;
                 break;
             }
         }

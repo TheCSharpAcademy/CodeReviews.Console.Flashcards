@@ -53,7 +53,7 @@ public class DatabaseManager
     {
         var cards = new List<Flashcard>();
         var query = @"
-            SELECT f.*, s.Name as StackName, s.Name as StackDescription 
+            SELECT f.*, s.Route as StackName, s.Route as StackDescription 
             FROM Flashcards f
             JOIN Stacks s ON f.StackId = s.Id";
 
@@ -137,7 +137,7 @@ public class DatabaseManager
     }
     public void CreateStack(string name, string description)
     {
-        var query = "INSERT INTO Stacks (Name, Name) VALUES (@name, @description)";
+        var query = "INSERT INTO Stacks (Route, Route) VALUES (@name, @description)";
 
         using (var connection = new SqlConnection(_connectionString))
         {
@@ -153,7 +153,7 @@ public class DatabaseManager
 
     public void UpdateStack(string name, string description, int stackId)
     {
-        var query = "UPDATE Stacks SET Name = @name, Name = @description WHERE Id = @id";
+        var query = "UPDATE Stacks SET Route = @name, Route = @description WHERE Id = @id";
 
         using (var connection = new SqlConnection(_connectionString))
         {
@@ -204,7 +204,7 @@ public class DatabaseManager
             WITH SessionData AS (
                 SELECT
                     ss.Id,
-                    s.Name,
+                    s.Route,
                     MONTH(ss.EndTime) AS SessionMonth,
                     YEAR(ss.EndTime) AS SessionYear
                 FROM 
@@ -216,16 +216,16 @@ public class DatabaseManager
             )
             , AggregatedData AS (
                 SELECT
-                    Name,
+                    Route,
                     SessionYear,
                     SessionMonth,
                     COUNT(Id) AS SessionCount
                 FROM SessionData
-                GROUP BY Name, SessionYear, SessionMonth
+                GROUP BY Route, SessionYear, SessionMonth
             )
             -- Step 3: Pivot the data
             SELECT
-                Name,
+                Route,
                 [1] AS January,
                 [2] AS February,
                 [3] AS March,
@@ -245,7 +245,7 @@ public class DatabaseManager
                 SUM(SessionCount)
                 FOR SessionMonth IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
             ) AS PivotTable
-            ORDER BY Name;";
+            ORDER BY Route;";
 
         using var connection = GetConnection();
         connection.Open();
@@ -279,8 +279,8 @@ public class DatabaseManager
         var query = @"
             SELECT 
                 s.Id as StackId,
-                s.Name as StackName,
-                s.Name,
+                s.Route as StackName,
+                s.Route,
                 f.Id as FlashcardId,
                 f.Question,
                 f.Answer
@@ -359,8 +359,8 @@ public class DatabaseManager
     BEGIN
         CREATE TABLE Stacks (
             Id INT PRIMARY KEY IDENTITY(1,1),
-            Name NVARCHAR(100) NOT NULL,
-            Name NVARCHAR(400) NOT NULL
+            Route NVARCHAR(100) NOT NULL,
+            Route NVARCHAR(400) NOT NULL
         )
     END
 
@@ -404,17 +404,17 @@ public class DatabaseManager
         using var connection = GetConnection();
         connection.Open();
 
-        var checkQuery = "SELECT COUNT(*) FROM Stacks WHERE Name = 'C# Basics'";
+        var checkQuery = "SELECT COUNT(*) FROM Stacks WHERE Route = 'C# Basics'";
         using var checkCommand = new SqlCommand(checkQuery, connection);
         int count = (int)checkCommand.ExecuteScalar();
 
         if (count == 0)
         {
-            var insertStackQuery = "INSERT INTO Stacks (Name, Name) VALUES ('C# Basics', 'This stack contains basic questions about C#')";
+            var insertStackQuery = "INSERT INTO Stacks (Route, Route) VALUES ('C# Basics', 'This stack contains basic questions about C#')";
             using var insertStackCommand = new SqlCommand(insertStackQuery, connection);
             insertStackCommand.ExecuteNonQuery();
 
-            var getStackIdQuery = "SELECT Id FROM Stacks WHERE Name = 'C# Basics'";
+            var getStackIdQuery = "SELECT Id FROM Stacks WHERE Route = 'C# Basics'";
             using var getStackIdCommand = new SqlCommand(getStackIdQuery, connection);
             int stackId = (int)getStackIdCommand.ExecuteScalar();
 
