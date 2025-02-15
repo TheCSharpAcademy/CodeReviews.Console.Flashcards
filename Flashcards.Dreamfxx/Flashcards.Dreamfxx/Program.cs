@@ -17,21 +17,23 @@ var stackService = new StacksService(dbManager);
 var cardService = new FlashcardsService(dbManager);
 var sessionsService = new SessionsService(dbManager);
 
-dbManager.EnsureDatabaseExists("Flashcards_Data");
+dbManager.EnsureDatabaseExists();
 
 var menuRoutes = new List<MenuRoute>
 {
-    new MenuRoute{ Id = 1, Name = "Create new stack of flashcards" },
-    new MenuRoute{ Id = 2, Name = "Edit existing stack/s" },
-    new MenuRoute{ Id = 3, Name = "Delete existing stack/s" },
+    new MenuRoute{ Id = 1, Description = "Create new stack of flashcards" },
+    new MenuRoute{ Id = 2, Description = "Edit existing stack/s" },
+    new MenuRoute{ Id = 3, Description = "Delete existing stack/s" },
 
-    new MenuRoute{ Id = 4, Name = "Create new flashcard" },
-    new MenuRoute{ Id = 5, Name = "Edit existing flashcard/s" },
-    new MenuRoute{ Id = 6, Name = "Delete existing flashcard/s" },
+    new MenuRoute{ Id = 4, Description = "Create new flashcard" },
+    new MenuRoute{ Id = 5, Description = "Edit existing flashcard/s" },
+    new MenuRoute{ Id = 6, Description = "Delete existing flashcard/s" },
 
-    new MenuRoute{ Id = 7, Name = "Start a session" },
-    new MenuRoute{ Id = 8, Name = "Show study sessions in each month" },
-    new MenuRoute{ Id = 0, Name = "Exit" }
+    new MenuRoute{ Id = 7, Description = "Start a session" },
+    new MenuRoute{ Id = 8, Description = "Show study sessions in each month" },
+
+    new MenuRoute{ Id = 9, Description = "Drop and recreate tables" },
+    new MenuRoute{ Id = 10, Description = "Exit" }
 };
 
 bool running = true;
@@ -45,7 +47,7 @@ while (running)
         .Title("What you want to do?")
         .PageSize(10)
         .AddChoices(menuRoutes)
-        .UseConverter(option => option.Name));
+        .UseConverter(option => option.Description));
 
 
     switch (menuSelection.Id)
@@ -72,10 +74,15 @@ while (running)
             sessionsService.StartSession();
             break;
         case 8:
-            sessionsService.ShowStudySessions();
+            sessionsService.ShowStudySessionsByMonth();
             break;
-        case 0:
+        case 9:
+            dbManager.DropAndRecreateTables();
+            break;
+        case 10:
+            AnsiConsole.MarkupLine("Goodbye!");
             running = false;
+            Environment.Exit(0);
             break;
     }
 }

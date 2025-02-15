@@ -45,7 +45,7 @@ public class StacksService(DatabaseManager databaseManager)
 
         foreach (var stack in stacks)
         {
-            AnsiConsole.WriteLine($"ID: {stack.Id}, Name: {stack.Name}, Description: {stack.Description}");
+            AnsiConsole.WriteLine($"ID: {stack.Id}, Description: {stack.Name}, Description: {stack.Description}");
         }
     }
 

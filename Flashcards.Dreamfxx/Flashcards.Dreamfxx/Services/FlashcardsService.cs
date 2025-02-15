@@ -57,6 +57,7 @@ public class FlashcardsService
                 Console.ReadKey();
                 break;
             }
+
             else if (stack.Name == "Cancel")
             {
                 AnsiConsole.MarkupLine("Operation canceled!");

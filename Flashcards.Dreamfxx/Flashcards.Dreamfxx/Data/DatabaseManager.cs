@@ -56,7 +56,7 @@ public class DatabaseManager(string connectionString)
     public List<Flashcard> GetCards()
     {
         var cards = new List<Flashcard>();
-        var query = "SELECT * FROM Cards";
+        var query = "SELECT * FROM Flashcards";
 
         using var connection = GetConnection();
         connection.Open();
@@ -84,7 +84,7 @@ public class DatabaseManager(string connectionString)
 
     public void UpdateCard(string question, string answer, int cardId)
     {
-        var query = "UPDATE Cards SET Question = @question, Answer = @answer WHERE Id = @id";
+        var query = "UPDATE Flashcards SET Question = @question, Answer = @answer WHERE Id = @id";
 
         using (var connection = new SqlConnection(_connectionString))
         {
@@ -101,7 +101,7 @@ public class DatabaseManager(string connectionString)
 
     public void DeleteCard(int cardId)
     {
-        var query = "DELETE FROM Cards WHERE Id = @id";
+        var query = "DELETE FROM Flashcards WHERE Id = @id";
 
         using (var connection = new SqlConnection(_connectionString))
         {
@@ -116,7 +116,7 @@ public class DatabaseManager(string connectionString)
 
     public void CreateCard(string question, string answer, int stackId)
     {
-        var query = "INSERT INTO Cards (Question, Answer, StackId) VALUES (@question, @answer, @stackId)";
+        var query = "INSERT INTO Flashcards (Question, Answer, StackId) VALUES (@question, @answer, @stackId)";
 
         using (var connection = new SqlConnection(_connectionString))
         {
@@ -204,12 +204,12 @@ public class DatabaseManager(string connectionString)
 
         var query = $@"
                 SELECT 
-                    Stacks.Name,
-                    Cards.Id,
-                    Cards.Question,
-                    Cards.Answer
+                    Stacks.Description,
+                    Flashcards.Id,
+                    Flashcards.Question,
+                    Flashcards.Answer
                 FROM Stacks
-                JOIN Cards ON Stacks.Id = Cards.StackId
+                JOIN Flashcards ON Stacks.Id = Flashcards.StackId
                 WHERE Stacks.Id = {stackId}
             ";
 
@@ -254,7 +254,7 @@ public class DatabaseManager(string connectionString)
             WITH SessionData AS (
                 SELECT
                     ss.Id,
-                    s.Name,
+                    s.Description,
                     MONTH(ss.EndTime) AS SessionMonth,
                     YEAR(ss.EndTime) AS SessionYear
                 FROM 
@@ -266,16 +266,16 @@ public class DatabaseManager(string connectionString)
             )
             , AggregatedData AS (
                 SELECT
-                    Name,
+                    Description,
                     SessionYear,
                     SessionMonth,
                     COUNT(Id) AS SessionCount
                 FROM SessionData
-                GROUP BY Name, SessionYear, SessionMonth
+                GROUP BY Description, SessionYear, SessionMonth
             )
             -- Step 3: Pivot the data
             SELECT
-                Name,
+                Description,
                 [1] AS January,
                 [2] AS February,
                 [3] AS March,
@@ -295,7 +295,7 @@ public class DatabaseManager(string connectionString)
                 SUM(SessionCount)
                 FOR SessionMonth IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
             ) AS PivotTable
-            ORDER BY Name;";
+            ORDER BY Description;";
 
         using var connection = GetConnection();
         connection.Open();
@@ -331,7 +331,7 @@ public class DatabaseManager(string connectionString)
             WITH SessionData AS (
                 SELECT
                     ss.Id,
-                    s.Name,
+                    s.Description,
                     ss.CorrectAnswers,
                     MONTH(ss.EndTime) AS SessionMonth,
                     YEAR(ss.EndTime) AS SessionYear
@@ -344,16 +344,16 @@ public class DatabaseManager(string connectionString)
             )
             , AggregatedData AS (
                 SELECT
-                    Name,
+                    Description,
                     SessionYear,
                     SessionMonth,
                     AVG(CorrectAnswers) AS AverageCorrectAnswers
                 FROM SessionData
-                GROUP BY Name, SessionYear, SessionMonth
+                GROUP BY Description, SessionYear, SessionMonth
             )
             -- Step 3: Pivot the data
             SELECT
-                Name,
+                Description,
                 [1] AS January,
                 [2] AS February,
                 [3] AS March,
@@ -373,7 +373,7 @@ public class DatabaseManager(string connectionString)
                 AVG(AverageCorrectAnswers)
                 FOR SessionMonth IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
             ) AS PivotTable
-            ORDER BY Name;";
+            ORDER BY Description;";
 
         using var connection = GetConnection();
         connection.Open();
@@ -402,14 +402,14 @@ public class DatabaseManager(string connectionString)
         }
         return studySessions;
     }
-    public void EnsureDatabaseExists(string DBNAME)
+    public void EnsureDatabaseExists()
     {
-        var query = $@"
-                IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '{DBNAME}')
-                BEGIN
-                    CREATE DATABASE {DBNAME}
-                END
-            ";
+        var query = @"
+            IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'Flashcards_Data')
+            BEGIN
+                CREATE DATABASE [Flashcards_Data]
+            END
+                    ";
 
         ExecuteNonQuery(query);
 
@@ -418,37 +418,39 @@ public class DatabaseManager(string connectionString)
     public void EnsureTablesExist()
     {
         var query = @"
-                IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Stacks')
-                BEGIN
-                    CREATE TABLE Stacks (
-                        Id INT PRIMARY KEY IDENTITY,
-                        Name NVARCHAR(100) NOT NULL,
-                        Description NVARCHAR(1000) NOT NULL
-                    )
-                END
-                IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Cards')
-                BEGIN
-                    CREATE TABLE Cards (
-                        Id INT PRIMARY KEY IDENTITY,
-                        Question NVARCHAR(1000) NOT NULL,
-                        Answer NVARCHAR(1000) UNIQUE NOT NULL,
-                        StackId INT NOT NULL,
-                        FOREIGN KEY (StackId) REFERENCES Stacks(Id) ON DELETE CASCADE
-                    )
-                END
-                IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'StudySessions')
-                BEGIN
-                    CREATE TABLE StudySessions (
-                        Id INT PRIMARY KEY IDENTITY,
-                        StackId INT NOT NULL,
-                        EndTime DATETIME NOT NULL,
-                        CorrectAnswers INT NOT NULL,
-                        WrongAnswers INT NOT NULL,
-                        FOREIGN KEY (StackId) REFERENCES Stacks(Id) ON DELETE CASCADE
-                    )
-                END
-            ";
+        IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Stacks')
+        BEGIN
+            CREATE TABLE Stacks (
+                Id INT PRIMARY KEY IDENTITY,
+                Name NVARCHAR(100) NOT NULL,
+                Description NVARCHAR(400) NOT NULL,
+            )
+        END
 
+        IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Flashcards')
+        BEGIN
+            CREATE TABLE Flashcards (
+                Id INT PRIMARY KEY IDENTITY,
+                Question NVARCHAR(1000) NOT NULL,
+                Answer NVARCHAR(450) UNIQUE NOT NULL,
+                StackId INT NOT NULL,
+                FOREIGN KEY (StackId) REFERENCES Stacks(Id) ON DELETE CASCADE
+            )
+        END
+
+        IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'StudySessions')
+        BEGIN
+            CREATE TABLE StudySessions (
+                Id INT PRIMARY KEY IDENTITY,
+                StackId INT NOT NULL,
+                EndTime DATETIME NOT NULL,
+                CorrectAnswers INT NOT NULL,
+                WrongAnswers INT NOT NULL,
+                FOREIGN KEY (StackId) REFERENCES Stacks(Id) ON DELETE CASCADE
+            )
+        END
+
+            ";
         ExecuteNonQuery(query);
         SeedData();
     }
@@ -473,7 +475,7 @@ public class DatabaseManager(string connectionString)
             int stackId = (int)getStackIdCommand.ExecuteScalar();
 
             var insertCardsQuery = @"      
-                INSERT INTO Cards (Question, Answer, StackId) VALUES 
+                INSERT INTO Flashcards (Question, Answer, StackId) VALUES 
                 ('What is the base class for all classes in C#?', 'System.Object', @stackId),
                 ('What is the keyword for creating a class in C#?', 'class', @stackId),
                 ('How do you make a class abstract?', 'Use the keyword ""abstract""', @stackId),
@@ -501,9 +503,9 @@ public class DatabaseManager(string connectionString)
                 BEGIN
                     DROP TABLE dbo.StudySessions
                 END
-                IF OBJECT_ID('dbo.Cards', 'U') IS NOT NULL
+                IF OBJECT_ID('dbo.Flashcards', 'U') IS NOT NULL
                 BEGIN
-                    DROP TABLE dbo.Cards
+                    DROP TABLE dbo.Flashcards
                 END
                 IF OBJECT_ID('dbo.Stacks', 'U') IS NOT NULL
                 BEGIN

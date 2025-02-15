@@ -49,8 +49,52 @@ public class SessionsService
         }
     }
 
-    internal void ShowStudySessions()
+    public void ShowStudySessionsByMonth()
     {
-        throw new NotImplementedException();
+        var sessions = _databaseManager.GetSessionsInMonth(DateTime.Now.Year);
+
+        if (sessions == null || !sessions.Any())
+        {
+            AnsiConsole.MarkupLine("No study sessions found.");
+            return;
+        }
+
+        var table = new Table();
+        table.AddColumn("ID");
+        table.AddColumn("Stack Description");
+        table.AddColumn("January");
+        table.AddColumn("February");
+        table.AddColumn("March");
+        table.AddColumn("April");
+        table.AddColumn("May");
+        table.AddColumn("June");
+        table.AddColumn("July");
+        table.AddColumn("August");
+        table.AddColumn("September");
+        table.AddColumn("October");
+        table.AddColumn("November");
+        table.AddColumn("December");
+
+        foreach (var session in sessions)
+        {
+            table.AddRow(
+                session.Id.ToString(),
+                session.StackName ?? "N/A",
+                session.January?.ToString() ?? "0",
+                session.February?.ToString() ?? "0",
+                session.March?.ToString() ?? "0",
+                session.April?.ToString() ?? "0",
+                session.May?.ToString() ?? "0",
+                session.June?.ToString() ?? "0",
+                session.July?.ToString() ?? "0",
+                session.August?.ToString() ?? "0",
+                session.September?.ToString() ?? "0",
+                session.October?.ToString() ?? "0",
+                session.November?.ToString() ?? "0",
+                session.December?.ToString() ?? "0"
+            );
+        }
+
+        AnsiConsole.Write(table);
     }
 }
