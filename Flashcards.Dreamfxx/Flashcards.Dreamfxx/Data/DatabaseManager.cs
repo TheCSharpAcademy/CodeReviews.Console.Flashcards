@@ -418,42 +418,42 @@ public class DatabaseManager(string connectionString)
     public void EnsureTablesExist()
     {
         var query = @"
-        IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Stacks')
-        BEGIN
-            CREATE TABLE Stacks (
-                Id INT PRIMARY KEY IDENTITY,
-                Name NVARCHAR(100) NOT NULL,
-                Description NVARCHAR(400) NOT NULL,
-            )
-        END
+    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Stacks')
+    BEGIN
+        CREATE TABLE Stacks (
+            Id INT PRIMARY KEY IDENTITY,
+            Name NVARCHAR(100) NOT NULL,
+            Description NVARCHAR(400) NOT NULL
+        )
+    END
 
-        IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Flashcards')
-        BEGIN
-            CREATE TABLE Flashcards (
-                Id INT PRIMARY KEY IDENTITY,
-                Question NVARCHAR(1000) NOT NULL,
-                Answer NVARCHAR(450) UNIQUE NOT NULL,
-                StackId INT NOT NULL,
-                FOREIGN KEY (StackId) REFERENCES Stacks(Id) ON DELETE CASCADE
-            )
-        END
+    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Flashcards')
+    BEGIN
+        CREATE TABLE Flashcards (
+            Id INT PRIMARY KEY IDENTITY,
+            Question NVARCHAR(1000) NOT NULL,
+            Answer NVARCHAR(450) UNIQUE NOT NULL,
+            StackId INT NOT NULL,
+            FOREIGN KEY (StackId) REFERENCES Stacks(Id) ON DELETE CASCADE
+        )
+    END
 
-        IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'StudySessions')
-        BEGIN
-            CREATE TABLE StudySessions (
-                Id INT PRIMARY KEY IDENTITY,
-                StackId INT NOT NULL,
-                EndTime DATETIME NOT NULL,
-                CorrectAnswers INT NOT NULL,
-                WrongAnswers INT NOT NULL,
-                FOREIGN KEY (StackId) REFERENCES Stacks(Id) ON DELETE CASCADE
-            )
-        END
-
-            ";
+    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'StudySessions')
+    BEGIN
+        CREATE TABLE StudySessions (
+            Id INT PRIMARY KEY IDENTITY,
+            StackId INT NOT NULL,
+            EndTime DATETIME NOT NULL,
+            CorrectAnswers INT NOT NULL,
+            WrongAnswers INT NOT NULL,
+            FOREIGN KEY (StackId) REFERENCES Stacks(Id) ON DELETE CASCADE
+        )
+    END
+    ";
         ExecuteNonQuery(query);
         SeedData();
     }
+
 
     public void SeedData()
     {
