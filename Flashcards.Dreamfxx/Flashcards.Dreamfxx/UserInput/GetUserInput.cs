@@ -7,7 +7,9 @@ public class GetUserInput
     public static string? GetUserString(string message)
     {
         AnsiConsole.MarkupLine(message);
+
         string? result = Console.ReadLine();
+
         if (Validations.ValidateString(message))
         {
             return result;

@@ -5,22 +5,18 @@ using Spectre.Console;
 
 namespace Flashcards.Dreamfxx.Data;
 
-public class DatabaseManager(string connectionString)
+public class DatabaseManager
 {
-    private readonly string _connectionString = connectionString;
+    private readonly string _connectionString;
+
+    public DatabaseManager(string connectionString)
+    {
+        _connectionString = connectionString;
+    }
 
     private SqlConnection GetConnection()
     {
         return new SqlConnection(_connectionString);
-    }
-
-    public void ExecuteNonQuery(string query)
-    {
-        using var connection = GetConnection();
-        connection.Open();
-
-        using var command = new SqlCommand(query, connection);
-        command.ExecuteNonQuery();
     }
 
     public List<Stack> GetStacks()
@@ -39,24 +35,27 @@ public class DatabaseManager(string connectionString)
             {
                 Id = reader.GetInt32(0),
                 Name = reader.GetString(1),
-                Description = reader.GetString(2)
+                Description = reader.GetString(2),
+                Flashcards = new List<Flashcard>()
             };
             stacks.Add(stack);
         }
 
         if (stacks.Count == 0)
         {
-            AnsiConsole.MarkupLine("No stacks found. Press any key to continue.");
+            AnsiConsole.MarkupLine("[yellow]No stacks found. Press any key to continue.[/]");
             Console.ReadKey();
-            return new();
         }
-        return new();
+        return stacks;
     }
 
     public List<Flashcard> GetCards()
     {
         var cards = new List<Flashcard>();
-        var query = "SELECT * FROM Flashcards";
+        var query = @"
+            SELECT f.*, s.Name as StackName, s.Name as StackDescription 
+            FROM Flashcards f
+            JOIN Stacks s ON f.StackId = s.Id";
 
         using var connection = GetConnection();
         connection.Open();
@@ -70,14 +69,20 @@ public class DatabaseManager(string connectionString)
                 Id = reader.GetInt32(0),
                 Question = reader.GetString(1),
                 Answer = reader.GetString(2),
-                StackId = reader.GetInt32(3)
+                StackId = reader.GetInt32(3),
+                Stack = new Stack
+                {
+                    Name = reader.GetString(4),
+                    Description = reader.GetString(5)
+                }
             };
             cards.Add(card);
         }
+
         if (cards.Count == 0)
         {
-            AnsiConsole.MarkupLine("No cards found");
-            return new();
+            AnsiConsole.MarkupLine("[yellow]No cards found. Press any key to continue.[/]");
+            Console.ReadKey();
         }
         return cards;
     }
@@ -130,10 +135,25 @@ public class DatabaseManager(string connectionString)
             }
         }
     }
+    public void CreateStack(string name, string description)
+    {
+        var query = "INSERT INTO Stacks (Name, Name) VALUES (@name, @description)";
+
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            connection.Open();
+            using (var command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@name", name);
+                command.Parameters.AddWithValue("@description", description);
+                command.ExecuteNonQuery();
+            }
+        }
+    }
 
     public void UpdateStack(string name, string description, int stackId)
     {
-        var query = "UPDATE Stacks SET Name = @name, Description = @description WHERE Id = @id";
+        var query = "UPDATE Stacks SET Name = @name, Name = @description WHERE Id = @id";
 
         using (var connection = new SqlConnection(_connectionString))
         {
@@ -162,91 +182,21 @@ public class DatabaseManager(string connectionString)
             }
         }
     }
-    public void CreateStack(string name, string description)
-    {
-        var query = "INSERT INTO Stacks (Name, Description) VALUES (@name, @description)";
-
-        using (var connection = new SqlConnection(_connectionString))
-        {
-            connection.Open();
-            using (var command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@name", name);
-                command.Parameters.AddWithValue("@description", description);
-                command.ExecuteNonQuery();
-            }
-        }
-    }
 
     public void RegisterStudySession(int stackId, int correctAnswers, int wrongAnswers)
     {
-        var query = "INSERT INTO StudySessions (StackId, EndTime, CorrectAnswers, WrongAnswers) VALUES (@stackId, GETDATE(), @correctAnswers, @wrongAnswers)";
-
-        using (var connection = new SqlConnection(_connectionString))
-        {
-            connection.Open();
-            using (var command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@stackId", stackId);
-                command.Parameters.AddWithValue("@correctAnswers", correctAnswers);
-                command.Parameters.AddWithValue("@wrongAnswers", wrongAnswers);
-                command.ExecuteNonQuery();
-            }
-        }
-    }
-    public StackDto GetStackDtos(int stackId)
-    {
-        var stackDetails = new StackDto
-        {
-            StackName = null,
-            FlashcardsDto = new() // Change the type to FlashcardDto
-        };
-
-        var query = $@"
-                SELECT 
-                    Stacks.Description,
-                    Flashcards.Id,
-                    Flashcards.Question,
-                    Flashcards.Answer
-                FROM Stacks
-                JOIN Flashcards ON Stacks.Id = Flashcards.StackId
-                WHERE Stacks.Id = {stackId}
-            ";
+        var query = @"
+            INSERT INTO StudySessions (StackId, EndTime, CorrectAnswers, WrongAnswers) 
+            VALUES (@stackId, GETDATE(), @correctAnswers, @wrongAnswers)";
 
         using var connection = GetConnection();
         connection.Open();
         using var command = new SqlCommand(query, connection);
-        using var reader = command.ExecuteReader();
-
-        int presentationId = 1;
-
-        while (reader.Read())
-        {
-            if (stackDetails.StackName == null)
-            {
-                stackDetails.StackName = reader.GetString(0);
-            }
-
-            var cards = new FlashcardDto
-            {
-                Id = reader.GetInt32(1),
-                PresentationId = presentationId++,
-                Question = reader.GetString(2),
-                Answer = reader.GetString(3)
-            };
-
-            stackDetails.FlashcardsDto.Add(cards);
-        }
-
-        if (stackDetails.StackName == null)
-        {
-            AnsiConsole.MarkupLine("No cards found, press any key to continue.");
-            Console.ReadKey();
-            return new();
-        }
-        return stackDetails;
+        command.Parameters.AddWithValue("@stackId", stackId);
+        command.Parameters.AddWithValue("@correctAnswers", correctAnswers);
+        command.Parameters.AddWithValue("@wrongAnswers", wrongAnswers);
+        command.ExecuteNonQuery();
     }
-
     public List<SessionPivotDto> GetSessionsInMonth(int year)
     {
         var studySessions = new List<SessionPivotDto>();
@@ -254,7 +204,7 @@ public class DatabaseManager(string connectionString)
             WITH SessionData AS (
                 SELECT
                     ss.Id,
-                    s.Description,
+                    s.Name,
                     MONTH(ss.EndTime) AS SessionMonth,
                     YEAR(ss.EndTime) AS SessionYear
                 FROM 
@@ -266,16 +216,16 @@ public class DatabaseManager(string connectionString)
             )
             , AggregatedData AS (
                 SELECT
-                    Description,
+                    Name,
                     SessionYear,
                     SessionMonth,
                     COUNT(Id) AS SessionCount
                 FROM SessionData
-                GROUP BY Description, SessionYear, SessionMonth
+                GROUP BY Name, SessionYear, SessionMonth
             )
             -- Step 3: Pivot the data
             SELECT
-                Description,
+                Name,
                 [1] AS January,
                 [2] AS February,
                 [3] AS March,
@@ -295,7 +245,7 @@ public class DatabaseManager(string connectionString)
                 SUM(SessionCount)
                 FOR SessionMonth IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
             ) AS PivotTable
-            ORDER BY Description;";
+            ORDER BY Name;";
 
         using var connection = GetConnection();
         connection.Open();
@@ -324,135 +274,129 @@ public class DatabaseManager(string connectionString)
         }
         return studySessions;
     }
-    public List<SessionPivotDto> GetAverageCorrectAnswersInSessionInMonth(int year)
+    public StackDto GetStackDtos(int stackId)
     {
-        var studySessions = new List<SessionPivotDto>();
-        string query = $@"
-            WITH SessionData AS (
-                SELECT
-                    ss.Id,
-                    s.Description,
-                    ss.CorrectAnswers,
-                    MONTH(ss.EndTime) AS SessionMonth,
-                    YEAR(ss.EndTime) AS SessionYear
-                FROM 
-                    StudySessions ss
-                INNER JOIN 
-                    Stacks s ON ss.StackId = s.Id
-                WHERE
-                    YEAR(ss.EndTime) = {year.ToString()}
-            )
-            , AggregatedData AS (
-                SELECT
-                    Description,
-                    SessionYear,
-                    SessionMonth,
-                    AVG(CorrectAnswers) AS AverageCorrectAnswers
-                FROM SessionData
-                GROUP BY Description, SessionYear, SessionMonth
-            )
-            -- Step 3: Pivot the data
-            SELECT
-                Description,
-                [1] AS January,
-                [2] AS February,
-                [3] AS March,
-                [4] AS April,
-                [5] AS May,
-                [6] AS June,
-                [7] AS July,
-                [8] AS August,
-                [9] AS September,
-                [10] AS October,
-                [11] AS November,
-                [12] AS December
-            FROM
-                AggregatedData
-            PIVOT
-            (
-                AVG(AverageCorrectAnswers)
-                FOR SessionMonth IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
-            ) AS PivotTable
-            ORDER BY Description;";
+        var query = @"
+            SELECT 
+                s.Id as StackId,
+                s.Name as StackName,
+                s.Name,
+                f.Id as FlashcardId,
+                f.Question,
+                f.Answer
+            FROM Stacks s
+            LEFT JOIN Flashcards f ON s.Id = f.StackId
+            WHERE s.Id = @stackId
+            ORDER BY f.Id";
 
         using var connection = GetConnection();
         connection.Open();
         using var command = new SqlCommand(query, connection);
+        command.Parameters.AddWithValue("@stackId", stackId);
         using var reader = command.ExecuteReader();
+
+        var stackDetails = new StackDto
+        {
+            StackName = null,
+            FlashcardsDto = new List<FlashcardDto>()
+        };
+
+        int presentationId = 1;
 
         while (reader.Read())
         {
-            var session = new SessionPivotDto
+            if (stackDetails.StackName == null)
             {
-                StackName = reader.GetString(0),
-                January = reader.IsDBNull(1) ? 0 : reader.GetInt32(1),
-                February = reader.IsDBNull(2) ? 0 : reader.GetInt32(2),
-                March = reader.IsDBNull(3) ? 0 : reader.GetInt32(3),
-                April = reader.IsDBNull(4) ? 0 : reader.GetInt32(4),
-                May = reader.IsDBNull(5) ? 0 : reader.GetInt32(5),
-                June = reader.IsDBNull(6) ? 0 : reader.GetInt32(6),
-                July = reader.IsDBNull(7) ? 0 : reader.GetInt32(7),
-                August = reader.IsDBNull(8) ? 0 : reader.GetInt32(8),
-                September = reader.IsDBNull(9) ? 0 : reader.GetInt32(9),
-                October = reader.IsDBNull(10) ? 0 : reader.GetInt32(10),
-                November = reader.IsDBNull(11) ? 0 : reader.GetInt32(11),
-                December = reader.IsDBNull(12) ? 0 : reader.GetInt32(12)
-            };
-            studySessions.Add(session);
+                stackDetails.StackName = reader.GetString(1);
+            }
+
+            if (!reader.IsDBNull(3))
+            {
+                var card = new FlashcardDto
+                {
+                    Id = reader.GetInt32(3),
+                    PresentationId = presentationId++,
+                    Question = reader.GetString(4),
+                    Answer = reader.GetString(5)
+                };
+                stackDetails.FlashcardsDto.Add(card);
+            }
         }
-        return studySessions;
+
+        if (stackDetails.StackName == null)
+        {
+            AnsiConsole.MarkupLine("[yellow]Stack not found, press any key to continue.[/]");
+            Console.ReadKey();
+            return new StackDto { FlashcardsDto = new List<FlashcardDto>() };
+        }
+
+        return stackDetails;
     }
+
+
+
+
     public void EnsureDatabaseExists()
     {
         var query = @"
-            IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'Flashcards_Data')
+            IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'FlashcardsDb')
             BEGIN
-                CREATE DATABASE [Flashcards_Data]
-            END
-                    ";
+                CREATE DATABASE [FlashcardsDb]
+            END";
 
-        ExecuteNonQuery(query);
+        using var connection = new SqlConnection(_connectionString);
+        connection.Open();
+        using var command = new SqlCommand(query, connection);
+        command.ExecuteNonQuery();
 
         EnsureTablesExist();
     }
+
     public void EnsureTablesExist()
     {
         var query = @"
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Stacks')
     BEGIN
         CREATE TABLE Stacks (
-            Id INT PRIMARY KEY IDENTITY,
+            Id INT PRIMARY KEY IDENTITY(1,1),
             Name NVARCHAR(100) NOT NULL,
-            Description NVARCHAR(400) NOT NULL
+            Name NVARCHAR(400) NOT NULL
         )
     END
 
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Flashcards')
     BEGIN
         CREATE TABLE Flashcards (
-            Id INT PRIMARY KEY IDENTITY,
+            Id INT PRIMARY KEY IDENTITY(1,1),
             Question NVARCHAR(1000) NOT NULL,
-            Answer NVARCHAR(450) UNIQUE NOT NULL,
+            Answer NVARCHAR(450) NOT NULL,
             StackId INT NOT NULL,
-            FOREIGN KEY (StackId) REFERENCES Stacks(Id) ON DELETE CASCADE
+            CONSTRAINT FK_Flashcards_Stacks FOREIGN KEY (StackId) 
+            REFERENCES Stacks(Id) ON DELETE CASCADE
         )
     END
 
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'StudySessions')
     BEGIN
         CREATE TABLE StudySessions (
-            Id INT PRIMARY KEY IDENTITY,
+            Id INT PRIMARY KEY IDENTITY(1,1),
             StackId INT NOT NULL,
             EndTime DATETIME NOT NULL,
             CorrectAnswers INT NOT NULL,
             WrongAnswers INT NOT NULL,
-            FOREIGN KEY (StackId) REFERENCES Stacks(Id) ON DELETE CASCADE
+            CONSTRAINT FK_StudySessions_Stacks FOREIGN KEY (StackId) 
+            REFERENCES Stacks(Id) ON DELETE CASCADE
         )
-    END
-    ";
-        ExecuteNonQuery(query);
+    END";
+
+        using var connection = new SqlConnection(_connectionString);
+        connection.Open();
+        using var command = new SqlCommand(query, connection);
+        command.ExecuteNonQuery();
+
         SeedData();
     }
+
 
 
     public void SeedData()
@@ -466,7 +410,7 @@ public class DatabaseManager(string connectionString)
 
         if (count == 0)
         {
-            var insertStackQuery = "INSERT INTO Stacks (Name, Description) VALUES ('C# Basics', 'This stack contains basic questions about C#')";
+            var insertStackQuery = "INSERT INTO Stacks (Name, Name) VALUES ('C# Basics', 'This stack contains basic questions about C#')";
             using var insertStackCommand = new SqlCommand(insertStackQuery, connection);
             insertStackCommand.ExecuteNonQuery();
 
@@ -513,7 +457,11 @@ public class DatabaseManager(string connectionString)
                 END
             ";
 
-        ExecuteNonQuery(dropQuery);
+        using var connection = new SqlConnection(_connectionString.Replace("Database=Flashcards_Data;", "FlashcardsDb"));
+        connection.Open();
+        using var command = new SqlCommand(dropQuery, connection);
+        command.ExecuteNonQuery();
+
         EnsureTablesExist();
     }
 }

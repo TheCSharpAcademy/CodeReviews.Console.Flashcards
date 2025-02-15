@@ -21,19 +21,19 @@ dbManager.EnsureDatabaseExists();
 
 var menuRoutes = new List<MenuRoute>
 {
-    new MenuRoute{ Id = 1, Description = "Create new stack of flashcards" },
-    new MenuRoute{ Id = 2, Description = "Edit existing stack/s" },
-    new MenuRoute{ Id = 3, Description = "Delete existing stack/s" },
+    new MenuRoute{ Id = 1, Name = "Create new stack of cards" },
+    new MenuRoute{ Id = 2, Name = "Edit existing stack/s" },
+    new MenuRoute{ Id = 3, Name = "Delete existing stack/s" },
 
-    new MenuRoute{ Id = 4, Description = "Create new flashcard" },
-    new MenuRoute{ Id = 5, Description = "Edit existing flashcard/s" },
-    new MenuRoute{ Id = 6, Description = "Delete existing flashcard/s" },
+    new MenuRoute{ Id = 4, Name = "Create new flashcard" },
+    new MenuRoute{ Id = 5, Name = "Edit existing flashcard/s" },
+    new MenuRoute{ Id = 6, Name = "Delete existing flashcard/s" },
 
-    new MenuRoute{ Id = 7, Description = "Start a session" },
-    new MenuRoute{ Id = 8, Description = "Show study sessions in each month" },
+    new MenuRoute{ Id = 7, Name = "Start a session" },
+    new MenuRoute{ Id = 8, Name = "Show study sessions in each month" },
 
-    new MenuRoute{ Id = 9, Description = "Drop and recreate tables" },
-    new MenuRoute{ Id = 10, Description = "Exit" }
+    new MenuRoute{ Id = 9, Name = "Drop and recreate tables" },
+    new MenuRoute{ Id = 10, Name = "Exit" }
 };
 
 bool running = true;
@@ -47,7 +47,7 @@ while (running)
         .Title("What you want to do?")
         .PageSize(10)
         .AddChoices(menuRoutes)
-        .UseConverter(option => option.Description));
+        .UseConverter(option => option.Name));
 
 
     switch (menuSelection.Id)

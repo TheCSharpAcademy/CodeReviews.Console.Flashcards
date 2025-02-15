@@ -61,7 +61,7 @@ public class SessionsService
 
         var table = new Table();
         table.AddColumn("ID");
-        table.AddColumn("Stack Description");
+        table.AddColumn("Stack Name");
         table.AddColumn("January");
         table.AddColumn("February");
         table.AddColumn("March");

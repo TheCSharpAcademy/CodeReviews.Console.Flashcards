@@ -97,7 +97,7 @@ public class FlashcardsService
             AnsiConsole.MarkupLine("New card: ");
             AnsiConsole.MarkupLine($"Question: {question} - Answer: {answer}\n");
 
-            if (!AccepttheOperation("update"))
+            if (!AcceptOperation("update"))
             {
                 break;
             }
@@ -144,7 +144,7 @@ public class FlashcardsService
             AnsiConsole.MarkupLine($"You picked this flashcard:");
             AnsiConsole.MarkupLine($"Question: {card.Question} - Answer: {card.Answer}");
 
-            if (!AccepttheOperation("delete"))
+            if (!AcceptOperation("delete"))
             {
                 break;
             }
@@ -183,7 +183,7 @@ public class FlashcardsService
         return menuSelection;
     }
 
-    public bool AccepttheOperation(string operation)
+    public bool AcceptOperation(string operation)
     {
         var menuSelection = AnsiConsole.Prompt(
             new SelectionPrompt<string>()

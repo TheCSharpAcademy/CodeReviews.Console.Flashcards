@@ -12,15 +12,15 @@ public class StacksService(DatabaseManager databaseManager)
     public Stack ShowAllStacks()
     {
         var stacks = _databaseManager.GetStacks();
-        stacks.Add(new Stack { Id = 0, Name = "Quit" });
 
-        if (stacks == null)
+        if (!stacks.Any())
         {
             AnsiConsole.WriteLine("No stacks found. Press any key to continue.");
             Console.ReadKey();
 
             return null;
         }
+        stacks.Add(new Stack { Id = 0, Name = "Go back" });
 
         var menuSelection = AnsiConsole.Prompt(
             new SelectionPrompt<Stack>()
@@ -45,7 +45,7 @@ public class StacksService(DatabaseManager databaseManager)
 
         foreach (var stack in stacks)
         {
-            AnsiConsole.WriteLine($"ID: {stack.Id}, Description: {stack.Name}, Description: {stack.Description}");
+            AnsiConsole.WriteLine($"ID: {stack.Id}, Name: {stack.Name}, Name: {stack.Description}");
         }
     }
 
@@ -75,7 +75,7 @@ public class StacksService(DatabaseManager databaseManager)
 
             string name = GetUserInput.GetUserString("Enter name of the new stack of flashcards.\n[grey]info: enter 'q' to cancel[/]\n");
 
-            if (name == "q")
+            if (name == "Go back")
             {
                 AnsiConsole.WriteLine("New stack was not created. Press any key to continue");
                 Console.ReadKey();
@@ -118,9 +118,9 @@ public class StacksService(DatabaseManager databaseManager)
                 break;
             }
 
-            else if (stack.Name == "Cancel")
+            else if (stack.Name == "Go back")
             {
-                AnsiConsole.MarkupLine("Edit was canceled.");
+                AnsiConsole.MarkupLine("Edit was canceled. Press any key to continue.");
                 Console.ReadKey();
                 break;
             }
@@ -133,7 +133,7 @@ public class StacksService(DatabaseManager databaseManager)
                 break;
             }
 
-            if (name == null)
+            if (string.IsNullOrEmpty(name))
             {
                 name = stack.Name;
             }
@@ -164,6 +164,7 @@ public class StacksService(DatabaseManager databaseManager)
 
             if (Console.ReadLine().ToLower() == "n")
             {
+
                 break;
             }
         }
