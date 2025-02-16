@@ -53,7 +53,7 @@ public class DatabaseManager
     {
         var cards = new List<Flashcard>();
         var query = @"
-            SELECT f.*, s.Route as StackName, s.Route as StackDescription 
+            SELECT f.*, s.Name as StackName, s.Description as StackDescription 
             FROM Flashcards f
             JOIN Stacks s ON f.StackId = s.Id";
 
@@ -135,9 +135,10 @@ public class DatabaseManager
             }
         }
     }
+
     public void CreateStack(string name, string description)
     {
-        var query = "INSERT INTO Stacks (Route, Route) VALUES (@name, @description)";
+        var query = "INSERT INTO Stacks (Name, Description) VALUES (@name, @description)";
 
         using (var connection = new SqlConnection(_connectionString))
         {
@@ -153,7 +154,7 @@ public class DatabaseManager
 
     public void UpdateStack(string name, string description, int stackId)
     {
-        var query = "UPDATE Stacks SET Route = @name, Route = @description WHERE Id = @id";
+        var query = "UPDATE Stacks SET Name = @name, Description = @description WHERE Id = @id";
 
         using (var connection = new SqlConnection(_connectionString))
         {
@@ -197,6 +198,7 @@ public class DatabaseManager
         command.Parameters.AddWithValue("@wrongAnswers", wrongAnswers);
         command.ExecuteNonQuery();
     }
+
     public List<SessionPivotDto> GetSessionsInMonth(int year)
     {
         var studySessions = new List<SessionPivotDto>();
@@ -204,7 +206,7 @@ public class DatabaseManager
             WITH SessionData AS (
                 SELECT
                     ss.Id,
-                    s.Route,
+                    s.Name as StackName,
                     MONTH(ss.EndTime) AS SessionMonth,
                     YEAR(ss.EndTime) AS SessionYear
                 FROM 
@@ -212,20 +214,19 @@ public class DatabaseManager
                 INNER JOIN 
                     Stacks s ON ss.StackId = s.Id
                 WHERE
-                    YEAR(ss.EndTime) = {year.ToString()}
-            )
-            , AggregatedData AS (
+                    YEAR(ss.EndTime) = @year
+            ),
+            AggregatedData AS (
                 SELECT
-                    Route,
+                    StackName,
                     SessionYear,
                     SessionMonth,
                     COUNT(Id) AS SessionCount
                 FROM SessionData
-                GROUP BY Route, SessionYear, SessionMonth
+                GROUP BY StackName, SessionYear, SessionMonth
             )
-            -- Step 3: Pivot the data
             SELECT
-                Route,
+                StackName,
                 [1] AS January,
                 [2] AS February,
                 [3] AS March,
@@ -245,11 +246,12 @@ public class DatabaseManager
                 SUM(SessionCount)
                 FOR SessionMonth IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
             ) AS PivotTable
-            ORDER BY Route;";
+            ORDER BY StackName;";
 
         using var connection = GetConnection();
         connection.Open();
         using var command = new SqlCommand(query, connection);
+        command.Parameters.AddWithValue("@year", year);
         using var reader = command.ExecuteReader();
 
         while (reader.Read())
@@ -274,13 +276,14 @@ public class DatabaseManager
         }
         return studySessions;
     }
+
     public StackDto GetStackDtos(int stackId)
     {
         var query = @"
             SELECT 
                 s.Id as StackId,
-                s.Route as StackName,
-                s.Route,
+                s.Name as StackName,
+                s.Description,
                 f.Id as FlashcardId,
                 f.Question,
                 f.Answer
@@ -333,9 +336,6 @@ public class DatabaseManager
         return stackDetails;
     }
 
-
-
-
     public void EnsureDatabaseExists()
     {
         var query = @"
@@ -359,8 +359,8 @@ public class DatabaseManager
     BEGIN
         CREATE TABLE Stacks (
             Id INT PRIMARY KEY IDENTITY(1,1),
-            Route NVARCHAR(100) NOT NULL,
-            Route NVARCHAR(400) NOT NULL
+            Name NVARCHAR(100) NOT NULL,
+            Description NVARCHAR(400) NOT NULL
         )
     END
 
@@ -397,24 +397,22 @@ public class DatabaseManager
         SeedData();
     }
 
-
-
     public void SeedData()
     {
         using var connection = GetConnection();
         connection.Open();
 
-        var checkQuery = "SELECT COUNT(*) FROM Stacks WHERE Route = 'C# Basics'";
+        var checkQuery = "SELECT COUNT(*) FROM Stacks WHERE Name = 'C# Basics'";
         using var checkCommand = new SqlCommand(checkQuery, connection);
         int count = (int)checkCommand.ExecuteScalar();
 
         if (count == 0)
         {
-            var insertStackQuery = "INSERT INTO Stacks (Route, Route) VALUES ('C# Basics', 'This stack contains basic questions about C#')";
+            var insertStackQuery = "INSERT INTO Stacks (Name, Description) VALUES ('C# Basics', 'This stack contains basic questions about C#')";
             using var insertStackCommand = new SqlCommand(insertStackQuery, connection);
             insertStackCommand.ExecuteNonQuery();
 
-            var getStackIdQuery = "SELECT Id FROM Stacks WHERE Route = 'C# Basics'";
+            var getStackIdQuery = "SELECT Id FROM Stacks WHERE Name = 'C# Basics'";
             using var getStackIdCommand = new SqlCommand(getStackIdQuery, connection);
             int stackId = (int)getStackIdCommand.ExecuteScalar();
 
@@ -422,9 +420,9 @@ public class DatabaseManager
                 INSERT INTO Flashcards (Question, Answer, StackId) VALUES 
                 ('What is the base class for all classes in C#?', 'System.Object', @stackId),
                 ('What is the keyword for creating a class in C#?', 'class', @stackId),
-                ('How do you make a class abstract?', 'Use the keyword ""abstract""', @stackId),
+                ('How do you make a class abstract?', 'Use the keyword abstract', @stackId),
                 ('What is a collection that does not allow duplicates?', 'HashSet', @stackId),
-                ('How do you create a readonly property?', 'Use the keyword ""readonly"" or ""get"" without ""set""', @stackId),
+                ('How do you create a readonly property?', 'Use the keyword readonly or get without set', @stackId),
                 ('What is the default access modifier for a class?', 'internal', @stackId),
                 ('What keyword is used to inherit from a class?', 'extends', @stackId),
                 ('How do you define a method in C#?', 'public int MyMethod()', @stackId),
@@ -436,8 +434,6 @@ public class DatabaseManager
             insertCardsCommand.Parameters.AddWithValue("@stackId", stackId);
             insertCardsCommand.ExecuteNonQuery();
         }
-
-
     }
 
     public void DropAndRecreateTables()

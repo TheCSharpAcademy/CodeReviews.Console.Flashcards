@@ -183,6 +183,7 @@ public class StacksService(DatabaseManager databaseManager)
 
             if (!ConfirmationPrompt("delete"))
             {
+                isRun = false;
                 break;
             }
             _databaseManager.DeleteStack(stackId);
@@ -190,7 +191,7 @@ public class StacksService(DatabaseManager databaseManager)
             AnsiConsole.MarkupLine("[green]Stack deleted successfully![/]");
             AnsiConsole.MarkupLine("[yellow]Do you want to delete another stack? - y/n[/]");
 
-            string? choice = AnsiConsole.Ask<string>("Enter 'q' to exit.");
+            string? choice = AnsiConsole.Ask<string>("Enter 'n' to exit.");
 
             if (choice == "n")
             {

@@ -84,7 +84,7 @@ public class FlashcardsService
             }
 
             AnsiConsole.MarkupLine($"Current answer: {card.Answer} \n");
-            string? answer = GetUserInput.GetUserString("Enter the new answer(Leave blank if you don't want to edit):");
+            string? answer = GetUserInput.GetUserString("Enter the new answer\n(Leave blank if you don't want to edit):");
 
             if (string.IsNullOrEmpty(answer))
             {
@@ -104,8 +104,8 @@ public class FlashcardsService
 
             _databaseManager.UpdateCard(question, answer, card.Id);
 
-            AnsiConsole.MarkupLine("Card updated successfully!");
-            AnsiConsole.MarkupLine("Do you want to edit another card?(y/n)");
+            AnsiConsole.MarkupLine("[green]Card updated successfully![/]");
+            AnsiConsole.MarkupLine("[yellow]Do you want to edit another card?[/] - y/n");
 
             if (Console.ReadLine() == "n")
             {
