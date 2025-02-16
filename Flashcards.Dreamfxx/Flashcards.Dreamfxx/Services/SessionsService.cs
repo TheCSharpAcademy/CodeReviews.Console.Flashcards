@@ -1,4 +1,4 @@
-﻿using Flashcards.Dreamfxx.Data;
+using Flashcards.Dreamfxx.Data;
 using Flashcards.Dreamfxx.Dtos;
 using Spectre.Console;
 
@@ -6,6 +6,7 @@ namespace Flashcards.Dreamfxx.Services;
 public class SessionsService
 {
     private readonly DatabaseManager _databaseManager;
+
     public SessionsService(DatabaseManager databaseManager)
     {
         _databaseManager = databaseManager;
@@ -37,63 +38,138 @@ public class SessionsService
 
         Console.Clear();
         AnsiConsole.MarkupLine($"[green]Selected stack: {cardStack.Name}[/]\n");
-        AnsiConsole.MarkupLine("[yellow]Press any key to start the session. For each card:[/]");
+        AnsiConsole.MarkupLine("[yellow]Instructions:[/]");
         AnsiConsole.MarkupLine("[grey]1. Question will be shown[/]");
         AnsiConsole.MarkupLine("[grey]2. Press any key to see the answer[/]");
-        AnsiConsole.MarkupLine("[grey]3. Press 'Y' if you got it right, 'N' if you got it wrong[/]\n");
-        Console.ReadKey();
+        AnsiConsole.MarkupLine("[grey]3. Press 'Y' if you got it right, 'N' if you got it wrong[/]");
+        AnsiConsole.MarkupLine("[grey]4. Press 'ESC' at any time to end the session[/]\n");
+        AnsiConsole.MarkupLine("[yellow]Press any key to start or ESC to cancel[/]");
 
+        if (Console.ReadKey(true).Key == ConsoleKey.Escape)
+        {
+            return;
+        }
+
+        var startTime = DateTime.Now;
         int correctAnswers = 0;
         int wrongAnswers = 0;
+        var totalCards = stack.FlashcardsDto.Count;
+        var difficultCards = new List<FlashcardDto>();
 
-        foreach (var card in stack.FlashcardsDto)
+        // Randomize cards
+        var randomizedCards = stack.FlashcardsDto.OrderBy(x => Random.Shared.Next()).ToList();
+
+        foreach (var card in randomizedCards)
         {
-            bool? isCorrect = ShowFlashcardAndGetResult(card);
-            if (isCorrect.HasValue)
+            var result = ShowFlashcardAndGetResult(card, totalCards);
+
+            if (!result.HasValue) // Session was cancelled
             {
-                if (isCorrect.Value) correctAnswers++;
-                else wrongAnswers++;
+                if (correctAnswers + wrongAnswers > 0) // Only save if some cards were answered
+                {
+                    SaveSessionResults(cardStack.Id, correctAnswers, wrongAnswers, startTime, difficultCards);
+                }
+                return;
+            }
+
+            if (result.Value)
+            {
+                correctAnswers++;
+            }
+            else
+            {
+                wrongAnswers++;
+                difficultCards.Add(card);
             }
         }
 
-        // Register the study session
-        _databaseManager.RegisterStudySession(cardStack.Id, correctAnswers, wrongAnswers);
+        SaveSessionResults(cardStack.Id, correctAnswers, wrongAnswers, startTime, difficultCards);
+        ShowSessionSummary(correctAnswers, wrongAnswers, startTime, difficultCards);
+    }
 
-        // Show session results
+    private void SaveSessionResults(int stackId, int correctAnswers, int wrongAnswers, DateTime startTime, List<FlashcardDto> difficultCards)
+    {
+        var duration = DateTime.Now - startTime;
+        _databaseManager.RegisterStudySession(
+            stackId,
+            Math.Max(0, correctAnswers), // Ensure non-negative
+            Math.Max(0, wrongAnswers));
+
+        // Save difficult cards for future reference
+        // This method does not exist, so we remove it
+        // if (difficultCards.Any())
+        // {
+        //     _databaseManager.SaveDifficultCards(stackId, difficultCards.Select(c => c.Id).ToList());
+        // }
+    }
+
+    private void ShowSessionSummary(int correctAnswers, int wrongAnswers, DateTime startTime, List<FlashcardDto> difficultCards)
+    {
+        var duration = DateTime.Now - startTime;
+        var totalAnswers = correctAnswers + wrongAnswers;
+        var successRate = totalAnswers == 0 ? 0 : (correctAnswers * 100.0 / totalAnswers);
+
         Console.Clear();
         AnsiConsole.MarkupLine($"[green]Session Complete![/]");
+        AnsiConsole.MarkupLine($"Duration: {duration.TotalMinutes:F1} minutes");
         AnsiConsole.MarkupLine($"Correct answers: {correctAnswers}");
         AnsiConsole.MarkupLine($"Wrong answers: {wrongAnswers}");
-        AnsiConsole.MarkupLine($"Success rate: {(correctAnswers * 100.0 / (correctAnswers + wrongAnswers)):F1}%");
+        AnsiConsole.MarkupLine($"Success rate: {successRate:F1}%");
+
+        if (difficultCards.Any())
+        {
+            AnsiConsole.MarkupLine("\n[yellow]Difficult Cards to Review:[/]");
+            foreach (var card in difficultCards)
+            {
+                AnsiConsole.MarkupLine($"[grey]Q: {card.Question}[/]");
+                AnsiConsole.MarkupLine($"[grey]A: {card.Answer}[/]\n");
+            }
+        }
+
+        AnsiConsole.MarkupLine("\n[grey]Press any key to continue[/]");
         Console.ReadKey();
     }
 
-    private bool? ShowFlashcardAndGetResult(FlashcardDto card)
+    private bool? ShowFlashcardAndGetResult(FlashcardDto card, int totalCards)
     {
         Console.Clear();
-        AnsiConsole.MarkupLine($"[yellow]Question {card.PresentationId}:[/] {card.Question}");
-        Console.ReadKey();
 
-        Console.Clear();
-        AnsiConsole.MarkupLine($"[yellow]Question {card.PresentationId}:[/] {card.Question}");
-        AnsiConsole.MarkupLine($"[green]Answer:[/] {card.Answer}");
-        AnsiConsole.MarkupLine("\n[grey]Did you get it right? - Y/N[/]");
+        // Show progress
+        AnsiConsole.MarkupLine($"\n[grey]Card {card.PresentationId} of {totalCards}[/]");
+
+        // Show question
+        AnsiConsole.MarkupLine($"\n[yellow]Question:[/]");
+        AnsiConsole.MarkupLine($"{card.Question}");
+        AnsiConsole.MarkupLine("\n[grey]Press any key to see answer, ESC to exit[/]");
+
+        if (Console.ReadKey(true).Key == ConsoleKey.Escape)
+            return null;
+
+        // Show answer without clearing the question
+        AnsiConsole.MarkupLine($"\n[green]Answer:[/]");
+        AnsiConsole.MarkupLine($"{card.Answer}");
+        AnsiConsole.MarkupLine("\n[grey]Did you get it right? (Y/N, ESC to exit)[/]");
 
         while (true)
         {
             var key = Console.ReadKey(true).Key;
             if (key == ConsoleKey.Y) return true;
             if (key == ConsoleKey.N) return false;
+            if (key == ConsoleKey.Escape) return null;
         }
     }
 
     public void ShowStudySessionsByMonth()
     {
-        var sessions = _databaseManager.GetSessionsInMonth(DateTime.Now.Year);
+        var currentYear = DateTime.Now.Year;
+        var year = AskForYear(currentYear);
+        if (year == null) return;
+
+        var sessions = _databaseManager.GetSessionsInMonth(year.Value);
 
         if (sessions == null || !sessions.Any())
         {
-            AnsiConsole.MarkupLine("[yellow]No study sessions found for this year.[/]");
+            AnsiConsole.MarkupLine($"[yellow]No study sessions found for {year}.[/]");
             Console.ReadKey();
             return;
         }
@@ -108,9 +184,48 @@ public class SessionsService
         }
 
         Console.Clear();
-        AnsiConsole.MarkupLine($"[green]Study Sessions for {DateTime.Now.Year}[/]\n");
+        AnsiConsole.MarkupLine($"[green]Study Sessions for {year}[/]\n");
         AnsiConsole.Write(table);
+
+        ShowYearSummary(sessions);
+
         Console.ReadKey();
+    }
+
+    private int? AskForYear(int currentYear)
+    {
+        var yearString = AnsiConsole.Ask<string>($"[yellow]Enter year (default: {currentYear}):[/]");
+
+        if (string.IsNullOrWhiteSpace(yearString))
+            return currentYear;
+
+        if (int.TryParse(yearString, out int year) && year > 1900 && year <= currentYear)
+            return year;
+
+        AnsiConsole.MarkupLine("[red]Invalid year. Using current year.[/]");
+        return currentYear;
+    }
+
+    private void ShowYearSummary(List<SessionPivotDto> sessions)
+    {
+        var totalSessions = sessions.Sum(s => new[]
+        {
+            s.January, s.February, s.March, s.April, s.May, s.June,
+            s.July, s.August, s.September, s.October, s.November, s.December
+        }.Sum());
+
+        var mostActiveStack = sessions.OrderByDescending(s => new[]
+        {
+            s.January, s.February, s.March, s.April, s.May, s.June,
+            s.July, s.August, s.September, s.October, s.November, s.December
+        }.Sum()).FirstOrDefault();
+
+        AnsiConsole.MarkupLine($"\n[green]Year Summary[/]");
+        AnsiConsole.MarkupLine($"Total sessions: {totalSessions}");
+        if (mostActiveStack != null)
+        {
+            AnsiConsole.MarkupLine($"Most active stack: {mostActiveStack.StackName}");
+        }
     }
 
     private Table CreateSessionsTable()
