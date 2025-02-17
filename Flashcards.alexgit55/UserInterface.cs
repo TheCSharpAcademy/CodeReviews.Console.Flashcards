@@ -19,8 +19,8 @@ internal class UserInterface
                 new SelectionPrompt<Enums.MainMenuChoices>()
                     .Title("What would you like to do?")
                     .AddChoices(
-                        Enums.MainMenuChoices.ManageStacks, 
-                        Enums.MainMenuChoices.ManageFlashcards, 
+                        Enums.MainMenuChoices.ManageStacks,
+                        Enums.MainMenuChoices.ManageFlashcards,
                         Enums.MainMenuChoices.StudySession,
                         Enums.MainMenuChoices.StudyHistory,
                         Enums.MainMenuChoices.Quit)
@@ -303,11 +303,12 @@ internal class UserInterface
 
     private static void AddFlashcard()
     {
-        Flashcard flashcard = new();
-
-        flashcard.StackId = ChooseStack("Choose a stack for the new flashcard");
-        flashcard.Question = GetQuestion();
-        flashcard.Answer = GetAnswer();
+        Flashcard flashcard = new()
+        {
+            StackId = ChooseStack("Choose a stack for the new flashcard"),
+            Question = GetQuestion(),
+            Answer = GetAnswer()
+        };
 
         var dataAccess = new DataAccess();
         dataAccess.InsertFlashcard(flashcard);
@@ -327,7 +328,7 @@ internal class UserInterface
 
         foreach (var flashcard in flashcards)
         {
-            table.AddRow(count.ToString(),flashcard.Question, flashcard.Answer);
+            table.AddRow(count.ToString(), flashcard.Question, flashcard.Answer);
             count++;
         }
 

@@ -5,8 +5,6 @@
         static void Main(string[] args)
         {
             var DataAccess = new DataAccess();
-            DataAccess.DeleteTables();
-            DataAccess.CreateTables();
 
             SeedData.SeedRecords();
 
