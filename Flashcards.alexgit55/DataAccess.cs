@@ -260,7 +260,7 @@ internal class DataAccess
 
             string deleteQuery = "DELETE FROM Flashcards WHERE Id = @Id";
 
-            int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
+            connection.Execute(deleteQuery, new { Id = id });
         }
         catch (Exception ex)
         {
