@@ -1,4 +1,4 @@
-- [] Create .config
+- [x] Create .config
 - [] Install and play with SQL server
 - [] Create stack
 - Manage stacks (choose a stack to manage)

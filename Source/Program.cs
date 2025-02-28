@@ -1,2 +1,3 @@
-﻿Console.WriteLine("Hello, World!");
-Console.ReadLine();
+﻿using vcesario.Flashcards;
+
+MainApplication.Run();
