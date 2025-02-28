@@ -1,0 +1,5 @@
+{
+    "dotnet.defaultSolution": "Flashcards.sln",
+    "csharp.debug.console": "externalTerminal",
+    "debug.console.closeOnEnd": true
+}
