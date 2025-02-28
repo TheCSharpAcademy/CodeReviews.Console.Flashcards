@@ -12,6 +12,6 @@ This application helps users create and study flashcards organized in stacks.
 - User-friendly interface
 
 ## Getting Started
-Instructions for setting up and running the application will be added soon.
+Paste your connectionString to appsettings.json file in the root directory of this project.
 
-Created on 8.2.2025 by *Dreamfxx*
+by *Dreamfxck*
