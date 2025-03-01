@@ -12,6 +12,7 @@ public static class DataService
         string? databaseName = ConfigurationManager.AppSettings.Get("databaseName");
         string? masterConnectionString = ConfigurationManager.AppSettings.Get("masterConnectionString");
 
+        Console.WriteLine("Checking database...");
         using (SqlConnection connection = new SqlConnection(masterConnectionString))
         {
             connection.Open();
@@ -32,24 +33,20 @@ public static class DataService
             }
         }
 
-        Console.ReadLine();
-
         if (!isNewDb)
         {
             return;
         }
 
-        string? dbConnectionString = ConfigurationManager.AppSettings.Get("dbConnectionString");
-
-        using (SqlConnection connection = new SqlConnection(dbConnectionString))
+        Console.WriteLine("Creating table...");
+        using (var connection = OpenConnection())
         {
             try
             {
-                connection.Open();
                 string createTableQuery = @"
                     CREATE TABLE Stacks(
                         Id INT PRIMARY KEY IDENTITY,
-                        Name VARCHAR(50)
+                        Name VARCHAR(50) UNIQUE
                     );";
 
                 connection.Execute(createTableQuery);
@@ -62,14 +59,14 @@ public static class DataService
         }
     }
 
-    // public static SqlConnection OpenConnection()
-    // {
-    //     string? connectionString = ConfigurationManager.AppSettings.Get("connectionString");
-    //     var connection = new SqlConnection(connectionString);
-    //     connection.Open();
+    public static SqlConnection OpenConnection()
+    {
+        string? dbConnectionString = ConfigurationManager.AppSettings.Get("dbConnectionString");
+        var connection = new SqlConnection(dbConnectionString);
+        connection.Open();
 
-    //     return connection;
-    // }
+        return connection;
+    }
 
     // public static void InsertSession(CodingSession session)
     // {

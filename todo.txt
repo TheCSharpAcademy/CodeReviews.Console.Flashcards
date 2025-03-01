@@ -1,6 +1,6 @@
 - [x] Create .config
 - [x] Install and play with SQL server
-- [] Create stack
+- [x] Create stack
 - Manage stacks (choose a stack to manage)
     - [] Debug: add multiple flashcards
     - [] Add flashcards (looping, enter '.' to stop)
@@ -12,6 +12,7 @@
     - [] Start session (choose a stack to study)
     - [] View past sessions (choose a stack to view)
     - [] View annual report (choose year)
+- [] Validations
 
 -------------------------------
 Requirements
