@@ -1,7 +1,6 @@
 using System.Configuration;
 using Dapper;
 using Microsoft.Data.SqlClient;
-// using Spectre.Console;
 
 namespace vcesario.Flashcards;
 
@@ -9,48 +8,68 @@ public static class DataService
 {
     public static void Initialize()
     {
-        using (var connection = OpenConnection())
-        {
-            // string sql = @"CREATE TABLE IF NOT EXISTS coding_sessions(
-            //                     start_date DATE NOT NULL,
-            //                     end_date DATE NOT NULL
-            //                 );
+        bool isNewDb = false;
+        string? databaseName = ConfigurationManager.AppSettings.Get("databaseName");
+        string? masterConnectionString = ConfigurationManager.AppSettings.Get("masterConnectionString");
 
-            //                 CREATE TABLE IF NOT EXISTS coding_goal(
-            //                     value INT NOT NULL,
-            //                     start_date DATE NOT NULL,
-            //                     due_date DATE NOT NULL
-            //                 )";
+        using (SqlConnection connection = new SqlConnection(masterConnectionString))
+        {
+            connection.Open();
+
+            string checkDbQuery = "SELECT database_id FROM sys.databases WHERE name = @DatabaseName";
+            var result = connection.QueryFirstOrDefault(checkDbQuery, new { DatabaseName = databaseName });
+
+            if (result == null)
+            {
+                string createDbQuery = $"CREATE DATABASE {databaseName}";
+                connection.Execute(createDbQuery);
+                Console.WriteLine($"Database '{databaseName}' created.");
+                isNewDb = true;
+            }
+            else
+            {
+                Console.WriteLine($"Database '{databaseName}' found.");
+            }
+        }
+
+        Console.ReadLine();
+
+        if (!isNewDb)
+        {
+            return;
+        }
+
+        string? dbConnectionString = ConfigurationManager.AppSettings.Get("dbConnectionString");
+
+        using (SqlConnection connection = new SqlConnection(dbConnectionString))
+        {
             try
             {
-                // connection.Open();
-                Console.WriteLine("Connected to SQL Server!");
+                connection.Open();
+                string createTableQuery = @"
+                    CREATE TABLE Stacks(
+                        Id INT PRIMARY KEY IDENTITY,
+                        Name VARCHAR(50)
+                    );";
 
-                string query = "SELECT Id, Name, Age FROM Users";
-                using (SqlCommand command = new SqlCommand(query, connection))
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        Console.WriteLine($"ID: {reader["Id"]}, Name: {reader["Name"]}, Age: {reader["Age"]}");
-                    }
-                }
+                connection.Execute(createTableQuery);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine($"Error: {ex.Message}");
+                Console.ReadLine();
             }
         }
     }
 
-    public static SqlConnection OpenConnection()
-    {
-        string? connectionString = ConfigurationManager.AppSettings.Get("connectionString");
-        var connection = new SqlConnection(connectionString);
-        connection.Open();
+    // public static SqlConnection OpenConnection()
+    // {
+    //     string? connectionString = ConfigurationManager.AppSettings.Get("connectionString");
+    //     var connection = new SqlConnection(connectionString);
+    //     connection.Open();
 
-        return connection;
-    }
+    //     return connection;
+    // }
 
     // public static void InsertSession(CodingSession session)
     // {
