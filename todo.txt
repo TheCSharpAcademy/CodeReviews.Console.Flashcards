@@ -6,7 +6,7 @@
     - [] Add flashcards (looping, enter '.' to stop)
     - [] Edit flashcard
     - [] Delete flashcard
-    - [] Delete stack
+    - [x] Delete stack
 - Study area
     - [] Debug: add multiple sessions over past 3 years
     - [] Start session (choose a stack to study)

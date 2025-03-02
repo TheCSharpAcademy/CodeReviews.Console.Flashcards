@@ -26,7 +26,7 @@ public static class MainApplication
 
             var chosenOption = AnsiConsole.Prompt(
                 new SelectionPrompt<MainMenuOption>()
-                .Title(ApplicationTexts.ACTION_PROMPT)
+                .Title(ApplicationTexts.PROMPT_ACTION)
                 .AddChoices(Enum.GetValues<MainMenuOption>())
             );
 

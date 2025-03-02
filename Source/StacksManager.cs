@@ -14,6 +14,7 @@ public class StacksManager
         AddDebugCards,
         Return,
     }
+    
     public void Open()
     {
         Console.Clear();
@@ -27,7 +28,7 @@ public class StacksManager
         }
 
         var prompt = new SelectionPrompt<StackObject>()
-                    .Title(ApplicationTexts.STACKSMANAGER_PROMPT)
+                    .Title(ApplicationTexts.STACKSMANAGER_PROMPT_SELECTSTACK)
                     .AddChoices(stacks)
                     .UseConverter(stackObject => stackObject.Name);
         prompt.AddChoice(new StackObject(-1, ApplicationTexts.OPTION_RETURN));
@@ -48,11 +49,17 @@ public class StacksManager
             Console.WriteLine();
             var chosenOption = AnsiConsole.Prompt(
                 new SelectionPrompt<MenuOption>()
-                .Title(ApplicationTexts.ACTION_PROMPT)
+                .Title(ApplicationTexts.PROMPT_ACTION)
                 .AddChoices(Enum.GetValues<MenuOption>()));
 
             switch (chosenOption)
             {
+                case MenuOption.DeleteStack:
+                    if (AskDeleteStack(chosenStack.Id))
+                    {
+                        goto case MenuOption.Return;
+                    }
+                    break;
                 case MenuOption.AddDebugCards:
                     AddDebugCards(chosenStack.Id);
                     break;
@@ -64,6 +71,51 @@ public class StacksManager
             }
         }
         while (!choseReturn);
+    }
+
+    private bool AskDeleteStack(int stackId)
+    {
+        var answer = AnsiConsole.Prompt(
+            new ConfirmationPrompt(ApplicationTexts.STACKSMANAGER_PROMPT_DELETESTACK)
+            {
+                DefaultValue = false
+            }
+        );
+
+        if (!answer)
+        {
+            return false;
+        }
+
+        answer = AnsiConsole.Prompt(
+            new ConfirmationPrompt(ApplicationTexts.PROMPT_REALLYDELETE)
+            {
+                DefaultValue = false
+            }
+        );
+
+        if (!answer)
+        {
+            return false;
+        }
+
+        using (var connection = DataService.OpenConnection())
+        {
+            string sql = "DELETE FROM Stacks WHERE Id = @StackId";
+            try
+            {
+                connection.Execute(sql, new { StackId = stackId });
+                Console.WriteLine(ApplicationTexts.STACKSMANAGER_LOG_STACKDELETED);
+                Console.ReadLine();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                Console.ReadLine();
+            }
+        }
+
+        return true;
     }
 
     private void AddDebugCards(int stackId)
