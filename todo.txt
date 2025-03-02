@@ -2,7 +2,7 @@
 - [x] Install and play with SQL server
 - [x] Create stack
 - Manage stacks (choose a stack to manage)
-    - [] Debug: add multiple flashcards
+    - [x] Debug: add multiple flashcards
     - [] Add flashcards (looping, enter '.' to stop)
     - [] Edit flashcard
     - [] Delete flashcard

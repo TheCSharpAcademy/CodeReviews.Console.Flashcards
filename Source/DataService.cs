@@ -6,6 +6,28 @@ namespace vcesario.Flashcards;
 
 public static class DataService
 {
+    public static void DebugDeleteDatabase()
+    {
+        string? masterConnectionString = ConfigurationManager.AppSettings.Get("masterConnectionString");
+        string? databaseName = ConfigurationManager.AppSettings.Get("databaseName");
+        using (SqlConnection connection = new SqlConnection(masterConnectionString))
+        {
+            connection.Open();
+
+            try
+            {
+            string checkDbQuery = $"DROP DATABASE {databaseName}";
+            connection.Execute(checkDbQuery);
+            Console.WriteLine("Database dropped.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+            Console.ReadLine();
+        }
+    }
+
     public static void Initialize()
     {
         bool isNewDb = false;
@@ -43,13 +65,21 @@ public static class DataService
         {
             try
             {
-                string createTableQuery = @"
+                string createTablesQuery = @"
                     CREATE TABLE Stacks(
                         Id INT PRIMARY KEY IDENTITY,
                         Name VARCHAR(50) UNIQUE
+                    );
+                    
+                    CREATE TABLE Cards(
+                        Id INT PRIMARY KEY IDENTITY,
+                        StackId INT FOREIGN KEY REFERENCES Stacks(Id)
+                            ON DELETE CASCADE,
+                        Front VARCHAR(50),
+                        Back VARCHAR(50)
                     );";
 
-                connection.Execute(createTableQuery);
+                connection.Execute(createTablesQuery);
             }
             catch (Exception ex)
             {

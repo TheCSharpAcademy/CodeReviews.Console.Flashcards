@@ -8,6 +8,7 @@ public static class MainApplication
     enum MainMenuOption
     {
         CreateNewStack,
+        ManageStacks,
         Exit,
     }
 
@@ -34,9 +35,13 @@ public static class MainApplication
                 case MainMenuOption.CreateNewStack:
                     CreateNewStack();
                     break;
+                case MainMenuOption.ManageStacks:
+                    new StacksManager().Open();
+                    break;
                 case MainMenuOption.Exit:
-                default:
                     choseExit = true;
+                    break;
+                default:
                     break;
             }
         }
