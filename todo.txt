@@ -3,16 +3,18 @@
 - [x] Create stack
 - Manage stacks (choose a stack to manage)
     - [x] Debug: add multiple flashcards
-    - [] Add flashcards (looping, enter '.' to stop)
-    - [] Edit flashcard
-    - [] Delete flashcard
+    - [x] Add flashcards (looping, enter '.' to stop)
+    - [x] Delete flashcard
     - [x] Delete stack
+    - [] Draw table
+    - [] Rename stack
 - Study area
     - [] Debug: add multiple sessions over past 3 years
     - [] Start session (choose a stack to study)
     - [] View past sessions (choose a stack to view)
     - [] View annual report (choose year)
 - [] Validations
+- [] Add cards at Stack creation screen
 
 -------------------------------
 Requirements
