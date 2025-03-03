@@ -17,7 +17,7 @@ public partial class StudyViewModel : INotifyPropertyChanged
     private string userAnswer = "";
     private bool hasNotChosenStack = true;
     private bool hasCompletedGame;
-    private bool correctCongratsBannerVisible = false;
+    private bool correctCongratsBannerVisible;
 
     public ObservableCollection<Stack> AllStacks { get; set; } = new();
     public Stack StudyStack { get; set; } = null!;

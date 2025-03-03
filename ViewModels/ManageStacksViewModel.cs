@@ -4,11 +4,10 @@ using dotnetMAUI.Flashcards.Data;
 using dotnetMAUI.Flashcards.Models;
 using dotnetMAUI.Flashcards.Views;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 
 namespace dotnetMAUI.Flashcards.ViewModels;
 
-public partial class ManageStacksViewModel : ObservableObject, INotifyPropertyChanged
+public partial class ManageStacksViewModel : ObservableObject
 {
     private readonly DbRepository _repository;
     public ObservableCollection<Stack> AllStacks { get; set; } = new();
