@@ -1,12 +1,12 @@
 # Flashcards Project
 
-First time using SQL Server instead of SQLite, intro to Entity Framework, 
-and 2nd project after inital tutorial to display using .NET MAUI. 
+  First time using SQL Server instead of SQLite, intro to Entity Framework, 
+  and 2nd project after inital tutorial to display using .NET MAUI. 
 
-This app uses linked tables to display Stacks, Flashcards, Study Sessions, 
-and let the user study a given stack. 
+  This app uses linked tables to display Stacks, Flashcards, Study Sessions, 
+  and let the user study a given stack. 
 
-## Given Requirements:
+## Given Requirements
 
 - [x] You'll need two different tables for stacks and flashcards. The tables
       should be linked by a foreign key.
@@ -114,7 +114,7 @@ and let the user study a given stack.
 
 ## Resources Used
 
-- [James Montemagno MVVM videos] (https://www.youtube.com/watch?v=sAn4RVsroF4)
+- [James Montemagno MVVM videos](https://www.youtube.com/watch?v=sAn4RVsroF4)
   
     -[and another good video](https://www.youtube.com/watch?v=AXpTeiWtbC8)
 
