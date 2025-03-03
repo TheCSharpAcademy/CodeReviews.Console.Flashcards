@@ -8,14 +8,14 @@ public class DataAccess
         .AddJsonFile("appsettings.json")
         .Build();
 
-    private string ConnectionString;
+    private string? ConnectionString;
 
     public DataAccess()
     {
         ConnectionString = configuration.GetSection("ConnectionStrings")["DefaultConnection"];
     }
 
-    public bool ConfirmConnection()
+    public bool ConfirmConnection() //Confirms the connection
     {
         try
         {
