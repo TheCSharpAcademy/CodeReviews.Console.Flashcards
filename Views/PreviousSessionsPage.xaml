@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:dotnetMAUI.Flashcards.ViewModels"
+             xmlns:models="clr-namespace:dotnetMAUI.Flashcards.Models"
+             x:Class="dotnetMAUI.Flashcards.Views.PreviousSessionsPage"
+             x:DataType="viewmodels:PreviousSessionsViewModel">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,15,20,50">
+            <Label 
+            Text="Previous Study Sessions"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" 
+            FontSize="32"/>
+
+            <Grid RowDefinitions="*"
+                  ColumnDefinitions="*,*"
+                  Padding="200,10,200,20"
+                  ColumnSpacing="20">
+                <Button Grid.Column="0" 
+                        Text="View All"
+                        Command="{Binding ViewAllSessionsCommand}"/>
+                
+                <Button Grid.Column="1" 
+                        Text="View Monthly Stats"
+                        Command="{Binding ShowStatsDisplayCommand}"/>
+            </Grid>
+
+            <VerticalStackLayout IsVisible="{Binding ChooseViewStats}"
+                                 Padding="10,0,10,20">
+
+                <Grid IsVisible="{Binding NeedToChooseYear}"
+                      RowDefinitions="*"
+                      ColumnDefinitions="*,*,*"
+                      ColumnSpacing="10"
+                      Padding="100,10,100,20">
+                    <Entry Grid.Column="0"
+                           Grid.ColumnSpan="2"
+                           Placeholder="Enter Year (yyyy)"
+                           Text="{Binding YearForStats}"/>
+                    <Button Grid.Column="2"
+                            Text="Submit"
+                            Command="{Binding SubmitYearForStatsCommand}"/>
+                </Grid>
+
+                <CollectionView ItemsSource="{Binding PivotedSessions}"
+                                IsVisible="{Binding NotNeedToChooseYear}">
+                    <CollectionView.Header>
+                        <Grid ColumnDefinitions="2*,*,*,*,*,*,*,*,*,*,*,*,*"
+                              RowDefinitions="*,*"
+                               Padding="15,15,15,20">
+                            <Label Text="Number of Sessions Per Month" Grid.Row="0" Grid.ColumnSpan="13" FontAttributes="Bold"/>
+                            <Label Text="Stack Name" Grid.Row="1" Grid.Column="0" FontAttributes="Bold"/>
+                            <Label Text="Jan" Grid.Row="1" Grid.Column="1" FontAttributes="Bold"/>
+                            <Label Text="Feb" Grid.Row="1" Grid.Column="2" FontAttributes="Bold"/>
+                            <Label Text="Mar" Grid.Row="1" Grid.Column="3" FontAttributes="Bold"/>
+                            <Label Text="Apr" Grid.Row="1" Grid.Column="4" FontAttributes="Bold"/>
+                            <Label Text="May" Grid.Row="1" Grid.Column="5" FontAttributes="Bold"/>
+                            <Label Text="Jun" Grid.Row="1" Grid.Column="6" FontAttributes="Bold"/>
+                            <Label Text="Jul" Grid.Row="1" Grid.Column="7" FontAttributes="Bold"/>
+                            <Label Text="Aug" Grid.Row="1" Grid.Column="8" FontAttributes="Bold"/>
+                            <Label Text="Sep" Grid.Row="1" Grid.Column="9" FontAttributes="Bold"/>
+                            <Label Text="Oct" Grid.Row="1" Grid.Column="10" FontAttributes="Bold"/>
+                            <Label Text="Nov" Grid.Row="1" Grid.Column="11" FontAttributes="Bold"/>
+                            <Label Text="Dec" Grid.Row="1" Grid.Column="12" FontAttributes="Bold"/>
+                        </Grid>
+                    </CollectionView.Header>
+                    
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type models:StudySessionPivotDTO}">
+                            <Grid ColumnDefinitions="2*,*,*,*,*,*,*,*,*,*,*,*,*"
+                                  Padding="15,0,15,10">
+                                <Label Text="{Binding StackName}" Grid.Column="0"/>
+                                <Label Text="{Binding MonthlyCounts[January]}" Grid.Column="1"/>
+                                <Label Text="{Binding MonthlyCounts[February]}" Grid.Column="2"/>
+                                <Label Text="{Binding MonthlyCounts[March]}" Grid.Column="3"/>
+                                <Label Text="{Binding MonthlyCounts[April]}" Grid.Column="4"/>
+                                <Label Text="{Binding MonthlyCounts[May]}" Grid.Column="5"/>
+                                <Label Text="{Binding MonthlyCounts[June]}" Grid.Column="6"/>
+                                <Label Text="{Binding MonthlyCounts[July]}" Grid.Column="7"/>
+                                <Label Text="{Binding MonthlyCounts[August]}" Grid.Column="8"/>
+                                <Label Text="{Binding MonthlyCounts[September]}" Grid.Column="9"/>
+                                <Label Text="{Binding MonthlyCounts[October]}" Grid.Column="10"/>
+                                <Label Text="{Binding MonthlyCounts[November]}" Grid.Column="11"/>
+                                <Label Text="{Binding MonthlyCounts[December]}" Grid.Column="12"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                
+            </VerticalStackLayout>
+
+
+            <VerticalStackLayout IsVisible="{Binding ChooseViewAllSessions}">
+                <Grid Padding="50,20,50,10"
+                      RowDefinitions="*,50"
+                      ColumnDefinitions="*,*,*">
+                    <Label Grid.Column="0" Text="Date Studied" FontSize="16"/>
+                    <Label Grid.Column="1" Text="Stack Studied" FontSize="16"/>
+                    <Label Grid.Column="2" Text="Score (%)" FontSize="16"/>
+                </Grid>
+
+                <CollectionView ItemsSource="{Binding AllStudySessions}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type models:StudySession}">
+                            <Grid RowDefinitions="*,25"
+                                  ColumnDefinitions="*,*,*"
+                                  Padding="50,0,50,10">
+                                <Label Grid.Column="0" Text="{Binding DateStudied, StringFormat='{}{0:MM/dd/yyyy}'}"/>
+                                <Label Grid.Column="1" Text="{Binding Stack.Name}"/>
+                                <Label Grid.Column="2" Text="{Binding Score}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+            <Button
+                Text="Back to Home"
+                Command="{Binding GoBackHomeCommand}"
+                MaximumWidthRequest="200"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

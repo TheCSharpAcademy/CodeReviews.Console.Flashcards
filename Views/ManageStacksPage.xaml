@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:dotnetMAUI.Flashcards.ViewModels"
+             xmlns:models="clr-namespace:dotnetMAUI.Flashcards.Models"
+             x:Class="dotnetMAUI.Flashcards.Views.ManageStacksPage"
+             x:DataType="viewmodels:ManageStacksViewModel">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="15,20,15,50"
+            Spacing="10">
+            <Label 
+                Text="Manage Stacks"
+                VerticalOptions="Center" 
+                HorizontalOptions="Center" 
+                FontSize="28"/>
+
+            <Grid IsVisible="{Binding IsNotCreatingStack}"
+                Padding="50,15,50,10"
+                RowDefinitions="50"
+                  ColumnDefinitions="*,*,*,*">
+                <Label Grid.Column="0" Text="Stack ID"/>
+                <Label Grid.Column="1" Text="Name"/>
+            </Grid>
+
+            <CollectionView ItemsSource="{Binding AllStacks}"
+                            IsVisible="{Binding IsNotCreatingStack}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type models:Stack}">
+                        <Grid RowDefinitions="*,50"
+                              ColumnDefinitions="*,*,*,*"
+                              Padding="50,15,50,10">
+
+                            <Label Grid.Column="0" Text="{Binding Id}" />
+                            <Label Grid.Column="1" Text="{Binding Name}"/>
+
+                            <Button Grid.Column="2" 
+                                    Text="Modify" 
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ManageStacksViewModel}}, Path=ModifyStackCommand}"
+                                    CommandParameter="{Binding Id}"/>
+                            <Button Grid.Column="3" 
+                                    Text="Delete" 
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ManageStacksViewModel}}, Path=DeleteStackCommand}"
+                                    CommandParameter="{Binding .}"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button IsVisible="{Binding IsNotCreatingStack}"
+                    Text="Add a New Stack"
+                    Command="{Binding NewStackCommand}"
+                    MaximumWidthRequest="300"/>
+
+            <VerticalStackLayout IsVisible="{Binding IsCreatingStack}"
+                                 Spacing="15">
+                <Label Text="New Stack Name:"/>
+                <Entry Placeholder="Name" Text="{Binding NewStackName}"/>
+                <Button Text="Submit"
+                        Command="{Binding SubmitNewStackCommand}"
+                        MaximumWidthRequest="200"/>
+            </VerticalStackLayout>
+
+            <Button
+                Text="Back to Home"
+                Command="{Binding GoBackHomeCommand}"
+                MaximumWidthRequest="200"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

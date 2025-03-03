@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:dotnetMAUI.Flashcards.ViewModels"
+             xmlns:models="clr-namespace:dotnetMAUI.Flashcards.Models"
+             x:Class="dotnetMAUI.Flashcards.Views.ManageFlashcardsPage"
+             x:DataType="viewmodels:ManageFlashcardsViewModel">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="10"
+            Padding="15,20,15,50">
+            
+            <Label 
+            Text="{Binding StackTitle}"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+
+            <Grid IsVisible="{Binding IsNotCreatingModifyingFlashcard}"
+                  Padding="50,0,50,10"
+                  RowDefinitions="*,10"
+                  ColumnDefinitions="*,*,*,*,*">
+                <Label Grid.Column="0" Text="ID"/>
+                <Label Grid.Column="1" Text="Front"/>
+                <Label Grid.Column="2" Text="Back"/>
+            </Grid>
+
+            <CollectionView ItemsSource="{Binding AllFlashcards}"
+                            IsVisible="{Binding IsNotCreatingModifyingFlashcard, Mode=TwoWay}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type models:FlashcardDTO}">
+                        <Grid RowDefinitions="*,15"
+                              ColumnDefinitions="*,*,*,*,*"
+                              Padding="50,10,50,10">
+                            <Label Grid.Column="0" Text="{Binding DisplayNum}"/>
+                            <Label Grid.Column="1" Text="{Binding Front}"/>
+                            <Label Grid.Column="2" Text="{Binding Back}"/>
+
+                            <Button Grid.Column="3" 
+                                    Text="Modify" 
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ManageFlashcardsViewModel}}, Path=ModifyFlashcardCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            <Button Grid.Column="4" 
+                                    Text="Delete" 
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ManageFlashcardsViewModel}}, Path=DeleteFlashcardCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button IsVisible="{Binding IsNotCreatingModifyingFlashcard}"
+                    Text="Add a New Flashcard"
+                    Command="{Binding NewFlashcardButtonCommand}"
+                    MaximumWidthRequest="300"/>
+            
+            <VerticalStackLayout
+                IsVisible="{Binding IsCreatingFlashcard}"
+                Spacing="15">
+                <Label Text="Input New Flashcard Info:"/>
+                <Entry Placeholder="Front Text"
+                       Text="{Binding NewFront}"/>
+                <Entry Placeholder="Back Text"
+                       Text="{Binding NewBack}"/>
+                <Button Text="Submit"
+                        Command="{Binding SubmitNewFlashcardInfoCommand}"/>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout
+                IsVisible="{Binding IsModifyingFlashcard}"
+                Spacing="15">
+                <Label Text="Input Updated Flashcard Info:"/>
+                <Entry Placeholder="Front Text"
+                       Text="{Binding NewFront}"/>
+                <Entry Placeholder="Back Text"
+                       Text="{Binding NewBack}"/>
+                <Button Text="Submit"
+                        Command="{Binding SubmitUpdateInfoCommand}"/>
+            </VerticalStackLayout>
+
+            <Button
+                Text="Back to Stacks"
+                Command="{Binding GoBackToStacksCommand}"
+                MaximumWidthRequest="200"/>
+            
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

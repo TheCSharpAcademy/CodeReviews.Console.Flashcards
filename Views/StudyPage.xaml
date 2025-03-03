@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:dotnetMAUI.Flashcards.ViewModels"
+             xmlns:models="clr-namespace:dotnetMAUI.Flashcards.Models"
+             x:DataType="viewmodels:StudyViewModel"
+             x:Class="dotnetMAUI.Flashcards.Views.StudyPage">
+    
+    <ScrollView>
+        <VerticalStackLayout
+        Spacing="20"
+        Padding="15,20,15,50">
+            <Label  IsVisible="{Binding HasNotChosenStack}"
+                    Text="Study"
+                    VerticalOptions="Center" 
+                    HorizontalOptions="Center" 
+                    FontSize="32"/>
+            
+            <!-- Get stack user will study -->
+            <VerticalStackLayout IsVisible="{Binding HasNotChosenStack}">
+                <Label Text="Select a Stack to Study"
+                        HorizontalOptions="Center"/>
+                <CollectionView ItemsSource="{Binding AllStacks}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type models:Stack}">
+                            <Grid RowDefinitions="*"
+                                  ColumnDefinitions="*,*"
+                                  Padding="100,20,100,10">
+
+                                <Label Grid.Column="0" Text="{Binding Name}"/>
+                                <Button Grid.Column="1" 
+                                        Text="Study"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:StudyViewModel}}, 
+                                                          Path=ChooseStackCommand}"
+                                        CommandParameter="{Binding .}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate> 
+                </CollectionView>
+            </VerticalStackLayout>
+
+            <!-- actual in-session display below -->
+            <VerticalStackLayout IsVisible="{Binding IsPlayingGame}"
+                                 Spacing="20"
+                                 Padding="100,10,100,10">
+                <Label Text="{Binding CurrentFlashcard.Front}"
+                       HorizontalOptions="Center"
+                       FontSize="30"/>
+                <Entry Placeholder="Your Answer" 
+                       Text="{Binding UserAnswer}"/>
+                <Button Text="Submit"
+                        Command="{Binding SubmitAnswerCommand}"/>
+                <Label Text="That's Correct!"
+                       FontSize="24"
+                       TextColor="Green"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       IsVisible="{Binding CorrectCongratsBannerVisible}"/>
+            </VerticalStackLayout>
+
+            <Label IsVisible="{Binding HasCompletedGame}"
+                   Text="{Binding ScoreText}"
+                   FontSize="30"
+                   HorizontalOptions="Center"/>
+            <Button
+                Text="Back to Home"
+                Command="{Binding GoBackHomeCommand}"
+                MaximumWidthRequest="200"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
