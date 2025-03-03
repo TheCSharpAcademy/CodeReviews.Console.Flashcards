@@ -72,6 +72,7 @@ This app uses linked tables to display Stacks, Flashcards, Study Sessions, and l
 ## Resources Used
 
 - [James Montemagno MVVM videos] (https://www.youtube.com/watch?v=sAn4RVsroF4)
+  
     -[and another good video](https://www.youtube.com/watch?v=AXpTeiWtbC8)
 
 - [dotnet series Intro to Entity Framework](https://www.youtube.com/watch?v=SryQxUeChMc)
