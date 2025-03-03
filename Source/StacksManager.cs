@@ -49,6 +49,9 @@ public class StacksManager
                 case MenuOption.DeleteCards:
                     PromptDeleteCards(chosenStack);
                     break;
+                case MenuOption.RenameStack:
+                    PromptRenameStack(chosenStack);
+                    break;
                 case MenuOption.DeleteStack:
                     if (PromptDeleteStack(chosenStack.Id))
                     {
@@ -278,6 +281,45 @@ public class StacksManager
             }
         }
         while (true);
+    }
+
+    private void PromptRenameStack(StackObject stack)
+    {
+        Console.Clear();
+        AnsiConsole.MarkupLine(string.Format(ApplicationTexts.STACKSMANAGER_HEADER_ADDCARD, $"[cornflowerblue]{stack.Name}[/]"));
+
+        Console.WriteLine();
+        AnsiConsole.MarkupLine($"[grey]{ApplicationTexts.STACKSMANAGER_TOOLTIP_ADDCARD}[/]");
+
+        Console.WriteLine();
+        var newName = AnsiConsole.Prompt(
+            new TextPrompt<string>(ApplicationTexts.STACKSMANAGER_PROMPT_RENAMESTACK)
+        );
+
+        if (newName.Equals("."))
+        {
+            return;
+        }
+
+        using (var connection = DataService.OpenConnection())
+        {
+            try
+            {
+                var sql = @"UPDATE Stacks SET Name=@Name WHERE Id=@Id";
+                connection.Execute(sql, new { Name = newName, Id = stack.Id });
+
+                Console.WriteLine();
+                Console.WriteLine(ApplicationTexts.STACKSMANAGER_LOG_STACKUPDATED);
+                Console.ReadLine();
+
+                stack.UpdateName(newName);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                Console.ReadLine();
+            }
+        }
     }
 
     private void PrintCardsTable(StackObject stack)

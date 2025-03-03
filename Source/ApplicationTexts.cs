@@ -26,7 +26,9 @@ public static class ApplicationTexts
     public const string STACKSMANAGER_HEADER_DELETECARD = "Delete cards: {0}";
     public const string STACKSMANAGER_LOG_STACKEMPTY = "There are no cards in this stack.";
     public const string STACKSMANAGER_PROMPT_DELETECARD = "Select a card to delete";
+    public const string STACKSMANAGER_PROMPT_RENAMESTACK = "Enter new stack name:";
     public const string STACKSMANAGER_LOG_CARDDELETED = "Card deleted.";
+    public const string STACKSMANAGER_LOG_STACKUPDATED = "Stack name updated.";
 
     public const string USERINPUT_DATETIMEERROR = "Couldn't parse DateTime. Use provided template.";
     public const string USERINPUT_DATEERROR = "Couldn't parse Date. Use provided template.";

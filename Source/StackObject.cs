@@ -13,4 +13,9 @@ public class StackObject
         m_Id = Id;
         m_Name = Name;
     }
+
+    public void UpdateName(string newName)
+    {
+        m_Name = newName;
+    }
 }
