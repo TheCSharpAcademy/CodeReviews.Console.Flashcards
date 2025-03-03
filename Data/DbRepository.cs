@@ -23,11 +23,11 @@ public class DbRepository
         return await _context.Set<StudySession>().ToListAsync();
     }
 
-    public List<FlashcardDTO> GetAllFlashcardsDisplay(int stackId)
+    public List<FlashcardDto> GetAllFlashcardsDisplay(int stackId)
     {
         return _context.Flashcards
             .Where(f => f.StackId == stackId)
-            .Select(f => new FlashcardDTO
+            .Select(f => new FlashcardDto
             {
                 Id = f.Id,
                 Front = f.Front,
@@ -69,7 +69,7 @@ public class DbRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateFlashcardAsync(FlashcardDTO flashcard)
+    public async Task UpdateFlashcardAsync(FlashcardDto flashcard)
     {
         var existingFlashcard = await _context.Flashcards.FindAsync(flashcard.Id);
         if (existingFlashcard != null)
@@ -80,7 +80,7 @@ public class DbRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteFlashcardAsync(FlashcardDTO flashcard)
+    public async Task DeleteFlashcardAsync(FlashcardDto flashcard)
     {
         var toBeDeleted = await _context.Flashcards.FindAsync(flashcard.Id);
         if (toBeDeleted != null)
@@ -100,7 +100,7 @@ public class DbRepository
         }
     }
 
-    public async Task<List<StudySessionPivotDTO>> GetPivotedStudySessionsAsync(int year)
+    public async Task<List<StudySessionPivotDto>> GetPivotedStudySessionsAsync(int year)
     {
         var studySessions = await _context.StudySessions
             .Where(s => s.DateStudied.Year == year)
@@ -115,7 +115,7 @@ public class DbRepository
 
         var pivotedTable = studySessions
             .GroupBy(s => s.Name)
-            .Select(g => new StudySessionPivotDTO
+            .Select(g => new StudySessionPivotDto
             {
                 StackName = g.Key,
                 MonthlyCounts = g.ToDictionary(x => CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Month), x => x.Count)

@@ -28,7 +28,7 @@
             <CollectionView ItemsSource="{Binding AllFlashcards}"
                             IsVisible="{Binding IsNotCreatingModifyingFlashcard, Mode=TwoWay}">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type models:FlashcardDTO}">
+                    <DataTemplate x:DataType="{x:Type models:FlashcardDto}">
                         <Grid RowDefinitions="*,15"
                               ColumnDefinitions="*,*,*,*,*"
                               Padding="50,10,50,10">

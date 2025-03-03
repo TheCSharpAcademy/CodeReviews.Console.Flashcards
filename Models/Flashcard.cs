@@ -8,7 +8,7 @@ public class Flashcard
     public int Id { get; set; }
     [ForeignKey(nameof(StackId))]
     public int StackId { get; set; }
-    public int DisplayNum { get; set; } = 0;
+    public int DisplayNum { get; set; }
     public Stack Stack { get; set; } = null!;
     public string Front { get; set; } = null!;
     public string Back { get; set; } = null!;

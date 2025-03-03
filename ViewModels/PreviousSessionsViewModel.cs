@@ -16,20 +16,24 @@ public partial class PreviousSessionsViewModel : INotifyPropertyChanged
     private bool needToChooseYear = true;
 
     public ObservableCollection<StudySession> AllStudySessions { get; set; } = new();
-    public ObservableCollection<StudySessionPivotDTO> PivotedSessions { get; set; } = new();
-    public string YearForStats {
+    public ObservableCollection<StudySessionPivotDto> PivotedSessions { get; set; } = new();
+    public string YearForStats 
+    {
         get => yearForStats;
         set {
             yearForStats = value;
             OnPropertyChanged(nameof(YearForStats));
-        } }
-    public bool ChooseViewAllSessions {
+            } 
+    }
+    public bool ChooseViewAllSessions 
+    {
         get => chooseViewallSessions;
         set {
             chooseViewallSessions = value;
             OnPropertyChanged(nameof(ChooseViewAllSessions));
             OnPropertyChanged(nameof(ChooseViewStats));
-        } }
+        } 
+    }
     public bool ChooseViewStats => !ChooseViewAllSessions;
 
     public bool NeedToChooseYear
@@ -86,7 +90,7 @@ public partial class PreviousSessionsViewModel : INotifyPropertyChanged
             NeedToChooseYear = false;
 
             var pivoted = await _repository.GetPivotedStudySessionsAsync(statsYear);
-            foreach(StudySessionPivotDTO stackData in pivoted)
+            foreach(StudySessionPivotDto stackData in pivoted)
             {
                 foreach(var month in currentDateTimeFormat.MonthNames.Where(m => !string.IsNullOrEmpty(m)))
                 {
@@ -97,7 +101,7 @@ public partial class PreviousSessionsViewModel : INotifyPropertyChanged
                 }
             }
             PivotedSessions.Clear();
-            foreach (StudySessionPivotDTO s in pivoted)
+            foreach (StudySessionPivotDto s in pivoted)
             {
                 PivotedSessions.Add(s);
             }

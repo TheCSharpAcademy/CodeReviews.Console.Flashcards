@@ -9,19 +9,19 @@ namespace dotnetMAUI.Flashcards.ViewModels;
 public partial class StudyViewModel : INotifyPropertyChanged
 {
     private readonly DbRepository _repository;
-    private List<FlashcardDTO> studyFlashcards = new();
-    private FlashcardDTO currentFlashcard = null!;
+    private List<FlashcardDto> studyFlashcards = new();
+    private FlashcardDto currentFlashcard = null!;
     private Random random = new();
     private int questionsLeft = 3;
-    private int numberCorrect = 0;
+    private int numberCorrect;
     private string userAnswer = "";
     private bool hasNotChosenStack = true;
-    private bool hasCompletedGame = false;
+    private bool hasCompletedGame;
     private bool correctCongratsBannerVisible = false;
 
     public ObservableCollection<Stack> AllStacks { get; set; } = new();
     public Stack StudyStack { get; set; } = null!;
-    public FlashcardDTO CurrentFlashcard
+    public FlashcardDto CurrentFlashcard
     {
         get => currentFlashcard;
         set

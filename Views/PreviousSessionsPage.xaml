@@ -68,7 +68,7 @@
                     </CollectionView.Header>
                     
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="{x:Type models:StudySessionPivotDTO}">
+                        <DataTemplate x:DataType="{x:Type models:StudySessionPivotDto}">
                             <Grid ColumnDefinitions="2*,*,*,*,*,*,*,*,*,*,*,*,*"
                                   Padding="15,0,15,10">
                                 <Label Text="{Binding StackName}" Grid.Column="0"/>

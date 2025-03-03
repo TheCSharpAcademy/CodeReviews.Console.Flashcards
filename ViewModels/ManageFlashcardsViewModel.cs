@@ -12,11 +12,11 @@ public partial class ManageFlashcardsViewModel : ObservableObject, IQueryAttribu
 
     public int StackId { get; private set; }
     public string StackTitle { get; private set; } = null!;
-    public ObservableCollection<FlashcardDTO> AllFlashcards { get; private set; } = new();
+    public ObservableCollection<FlashcardDto> AllFlashcards { get; private set; } = new();
 
     public string NewFront { get; set; } = null!;
     public string NewBack { get; set; } = null!;
-    public FlashcardDTO? SelectedFlashcard { get; set; }
+    public FlashcardDto? SelectedFlashcard { get; set; }
     public bool IsCreatingFlashcard { get; private set; } 
     public bool IsModifyingFlashcard { get => SelectedFlashcard != null; }
     public bool IsNotCreatingModifyingFlashcard { get => !(IsCreatingFlashcard || IsModifyingFlashcard); }
@@ -51,9 +51,9 @@ public partial class ManageFlashcardsViewModel : ObservableObject, IQueryAttribu
         int counter = 1;
 
         AllFlashcards.Clear();
-        List<FlashcardDTO> flashcards = _repository.GetAllFlashcardsDisplay(StackId);
+        List<FlashcardDto> flashcards = _repository.GetAllFlashcardsDisplay(StackId);
 
-        foreach (FlashcardDTO f in flashcards)
+        foreach (FlashcardDto f in flashcards)
         {
             f.DisplayNum = counter;
             counter++;
@@ -62,7 +62,7 @@ public partial class ManageFlashcardsViewModel : ObservableObject, IQueryAttribu
     }
 
     [RelayCommand]
-    public void ModifyFlashcard(FlashcardDTO updateSelectedFlashcard)
+    public void ModifyFlashcard(FlashcardDto updateSelectedFlashcard)
     {
         SelectedFlashcard = updateSelectedFlashcard;
         OnPropertyChanged(nameof(IsModifyingFlashcard));
@@ -91,7 +91,7 @@ public partial class ManageFlashcardsViewModel : ObservableObject, IQueryAttribu
     }
 
     [RelayCommand]
-    public async Task DeleteFlashcard(FlashcardDTO flashcardToDelete)
+    public async Task DeleteFlashcard(FlashcardDto flashcardToDelete)
     {
         await _repository.DeleteFlashcardAsync(flashcardToDelete);
         LoadFlashcards();
