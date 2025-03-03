@@ -9,6 +9,7 @@ public static class MainApplication
     {
         CreateNewStack,
         ManageStacks,
+        StudyArea,
         Exit,
     }
 
@@ -37,6 +38,9 @@ public static class MainApplication
                     break;
                 case MainMenuOption.ManageStacks:
                     new StacksManager().Open();
+                    break;
+                case MainMenuOption.StudyArea:
+                    new StudyArea().Open();
                     break;
                 case MainMenuOption.Exit:
                     choseExit = true;
@@ -67,7 +71,7 @@ public static class MainApplication
             try
             {
                 connection.Execute(sql, new { StackName = newStackName });
-                
+
                 Console.WriteLine();
                 AnsiConsole.MarkupLine(string.Format(ApplicationTexts.CREATENEWSTACK_LOG, $"[cornflowerblue]{newStackName}[/]"));
                 Console.ReadLine();

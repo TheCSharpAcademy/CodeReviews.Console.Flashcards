@@ -30,6 +30,9 @@ public static class ApplicationTexts
     public const string STACKSMANAGER_LOG_CARDDELETED = "Card deleted.";
     public const string STACKSMANAGER_LOG_STACKUPDATED = "Stack name updated.";
 
+    public const string STUDYAREA_HEADER = "Study area";
+    public const string STUDYAREA_LOG_DEBUGCREATED = "Debug sessions created.";
+
     public const string USERINPUT_DATETIMEERROR = "Couldn't parse DateTime. Use provided template.";
     public const string USERINPUT_DATEERROR = "Couldn't parse Date. Use provided template.";
     public const string USERINPUT_OLDERDATEERROR = "Cannot accept dates older than today.";

@@ -77,6 +77,14 @@ public static class DataService
                             ON DELETE CASCADE,
                         Front VARCHAR(50),
                         Back VARCHAR(50)
+                    );
+                    
+                    CREATE TABLE StudySessions(
+                        Id INT PRIMARY KEY IDENTITY,
+                        StackId INT FOREIGN KEY REFERENCES Stacks(Id)
+                            ON DELETE CASCADE,
+                        Date DATETIME2,
+                        Score INT
                     );";
 
                 connection.Execute(createTablesQuery);

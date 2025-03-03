@@ -27,7 +27,7 @@ public class StacksManager
             return;
         }
 
-        bool choseReturn = false;
+        MenuOption chosenOption;
         do
         {
             Console.Clear();
@@ -37,7 +37,7 @@ public class StacksManager
             PrintCardsTable(chosenStack);
 
             Console.WriteLine();
-            var chosenOption = AnsiConsole.Prompt(
+            chosenOption = AnsiConsole.Prompt(
                 new SelectionPrompt<MenuOption>()
                 .Title(ApplicationTexts.PROMPT_ACTION)
                 .AddChoices(Enum.GetValues<MenuOption>()));
@@ -63,13 +63,11 @@ public class StacksManager
                     AddDebugCards(chosenStack.Id);
                     break;
                 case MenuOption.Return:
-                    choseReturn = true;
-                    break;
                 default:
                     break;
             }
         }
-        while (!choseReturn);
+        while (chosenOption != MenuOption.Return);
     }
 
     private StackObject PromptStack()
