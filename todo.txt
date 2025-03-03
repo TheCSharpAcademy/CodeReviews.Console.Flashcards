@@ -7,7 +7,7 @@
     - [x] Delete flashcard
     - [x] Delete stack
     - [x] Rename stack
-    - [] Draw table
+    - [x] Draw table
 - Study area
     - [] Debug: add multiple sessions over past 3 years
     - [] Start session (choose a stack to study)

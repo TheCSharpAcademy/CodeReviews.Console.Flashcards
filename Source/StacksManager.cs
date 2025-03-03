@@ -33,6 +33,7 @@ public class StacksManager
             Console.Clear();
             AnsiConsole.MarkupLine(string.Format(ApplicationTexts.STACKSMANAGER_HEADER_SINGLE, $"[cornflowerblue]{chosenStack.Name}[/]"));
 
+            Console.WriteLine();
             PrintCardsTable(chosenStack);
 
             Console.WriteLine();
@@ -89,87 +90,6 @@ public class StacksManager
         Console.WriteLine();
         var chosenStack = AnsiConsole.Prompt(prompt);
         return chosenStack;
-    }
-
-    private bool PromptDeleteStack(int stackId)
-    {
-        var answer = AnsiConsole.Prompt(
-            new ConfirmationPrompt(ApplicationTexts.STACKSMANAGER_PROMPT_DELETESTACK)
-            {
-                DefaultValue = false
-            }
-        );
-
-        if (!answer)
-        {
-            return false;
-        }
-
-        answer = AnsiConsole.Prompt(
-            new ConfirmationPrompt(ApplicationTexts.PROMPT_REALLYDELETE)
-            {
-                DefaultValue = false
-            }
-        );
-
-        if (!answer)
-        {
-            return false;
-        }
-
-        using (var connection = DataService.OpenConnection())
-        {
-            string sql = "DELETE FROM Stacks WHERE Id = @StackId";
-            try
-            {
-                connection.Execute(sql, new { StackId = stackId });
-                Console.WriteLine(ApplicationTexts.STACKSMANAGER_LOG_STACKDELETED);
-                Console.ReadLine();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-                Console.ReadLine();
-            }
-        }
-
-        return true;
-    }
-
-    private void AddDebugCards(int stackId)
-    {
-        List<CardDTO_FrontBack> debugCards = new(){
-            new CardDTO_FrontBack("A","1"),
-            new CardDTO_FrontBack("B","2"),
-            new CardDTO_FrontBack("C","3"),
-            new CardDTO_FrontBack("D","4"),
-            new CardDTO_FrontBack("E","5"),
-            new CardDTO_FrontBack("F","6"),
-            new CardDTO_FrontBack("G","7"),
-            new CardDTO_FrontBack("H","8"),
-            new CardDTO_FrontBack("I","9"),
-            new CardDTO_FrontBack("J","10"),
-        };
-
-        using (var connection = DataService.OpenConnection())
-        {
-            try
-            {
-                foreach (var card in debugCards)
-                {
-                    string sql = "INSERT INTO Cards(StackId, Front, Back) VALUES (@StackId, @Front, @Back)";
-                    connection.Execute(sql, new { StackId = stackId, Front = card.Front, Back = card.Back });
-                }
-
-                Console.WriteLine(ApplicationTexts.STACKSMANAGER_LOG_DEBUGCREATED);
-                Console.ReadLine();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-                Console.ReadLine();
-            }
-        }
     }
 
     private void PromptAddCards(StackObject stack)
@@ -322,8 +242,125 @@ public class StacksManager
         }
     }
 
+    private bool PromptDeleteStack(int stackId)
+    {
+        var answer = AnsiConsole.Prompt(
+            new ConfirmationPrompt(ApplicationTexts.STACKSMANAGER_PROMPT_DELETESTACK)
+            {
+                DefaultValue = false
+            }
+        );
+
+        if (!answer)
+        {
+            return false;
+        }
+
+        answer = AnsiConsole.Prompt(
+            new ConfirmationPrompt(ApplicationTexts.PROMPT_REALLYDELETE)
+            {
+                DefaultValue = false
+            }
+        );
+
+        if (!answer)
+        {
+            return false;
+        }
+
+        using (var connection = DataService.OpenConnection())
+        {
+            string sql = "DELETE FROM Stacks WHERE Id = @StackId";
+            try
+            {
+                connection.Execute(sql, new { StackId = stackId });
+                Console.WriteLine(ApplicationTexts.STACKSMANAGER_LOG_STACKDELETED);
+                Console.ReadLine();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                Console.ReadLine();
+            }
+        }
+
+        return true;
+    }
+
+    private void AddDebugCards(int stackId)
+    {
+        List<CardDTO_FrontBack> debugCards = new(){
+            new CardDTO_FrontBack("A","1"),
+            new CardDTO_FrontBack("B","2"),
+            new CardDTO_FrontBack("C","3"),
+            new CardDTO_FrontBack("D","4"),
+            new CardDTO_FrontBack("E","5"),
+            new CardDTO_FrontBack("F","6"),
+            new CardDTO_FrontBack("G","7"),
+            new CardDTO_FrontBack("H","8"),
+            new CardDTO_FrontBack("I","9"),
+            new CardDTO_FrontBack("J","10"),
+        };
+
+        using (var connection = DataService.OpenConnection())
+        {
+            try
+            {
+                foreach (var card in debugCards)
+                {
+                    string sql = "INSERT INTO Cards(StackId, Front, Back) VALUES (@StackId, @Front, @Back)";
+                    connection.Execute(sql, new { StackId = stackId, Front = card.Front, Back = card.Back });
+                }
+
+                Console.WriteLine(ApplicationTexts.STACKSMANAGER_LOG_DEBUGCREATED);
+                Console.ReadLine();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                Console.ReadLine();
+            }
+        }
+    }
+
     private void PrintCardsTable(StackObject stack)
     {
-        AnsiConsole.MarkupLine("[green]TO-DO: Implement PrintCardsTable[/]");
+        List<CardDTO_FrontBack>? cards = null;
+        using (var connection = DataService.OpenConnection())
+        {
+            try
+            {
+                string sql = "SELECT Front, Back FROM Cards WHERE StackId = @StackId";
+                cards = connection.Query<CardDTO_FrontBack>(sql, new { StackId = stack.Id }).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                Console.ReadLine();
+            }
+        }
+
+        var table = new Table();
+
+        table.AddColumn(new TableColumn("[yellow]Id[/]").RightAligned());
+        table.AddColumn(new TableColumn("[yellow]Card front[/]").Centered());
+        table.AddColumn(new TableColumn("[yellow]Card back[/]").Centered());
+
+        if (cards == null || cards.Count == 0)
+        {
+            table.AddRow("---", "----------", "----------");
+        }
+        else
+        {
+            int count = 1;
+            foreach (var card in cards)
+            {
+                table.AddRow(count++.ToString(), card.Front, card.Back);
+            }
+        }
+
+        table.Border = TableBorder.Rounded;
+
+        AnsiConsole.Write(table);
     }
 }
