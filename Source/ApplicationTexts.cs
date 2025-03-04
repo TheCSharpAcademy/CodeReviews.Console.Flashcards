@@ -5,6 +5,13 @@ public static class ApplicationTexts
     public const string OPTION_RETURN = "Return";
     public const string PROMPT_ACTION = "What do you want to do?";
     public const string PROMPT_REALLYDELETE = "Are you REALLY sure?";
+    
+    public const string TABLE_DATE = "Date";
+    public const string TABLE_STACKNAME = "Stack name";
+    public const string TABLE_SCORE = "Score";
+    public const string TABLE_ID = "Id";
+    public const string TABLE_CARDFRONT = "Card front";
+    public const string TABLE_CARDBACK = "Card back";
 
     public const string CREATENEWSTACK_HEADER = "Create new stack";
     public const string CREATENEWSTACK_PROMPT = "New stack name:";
@@ -31,6 +38,13 @@ public static class ApplicationTexts
     public const string STACKSMANAGER_LOG_STACKUPDATED = "Stack name updated.";
 
     public const string STUDYAREA_HEADER = "Study area";
+    public const string STUDYAREA_HEADER_SESSION = "Study session: {0}";
+    public const string STUDYAREA_ROUND = "Round {0} / {1}";
+    public const string STUDYAREA_LOG_CORRECT = "Correct!";
+    public const string STUDYAREA_LOG_INCORRECT = "Incorrect.";
+    public const string STUDYAREA_LOG_FINALSCORE = "Final score: {0} / {1}";
+    public const string STUDYAREA_LOG_ACED = "ACED!";
+    public const string STUDYAREA_HEADER_VIEWLASTSESSIONS = "View last sessions";
     public const string STUDYAREA_LOG_DEBUGCREATED = "Debug sessions created.";
 
     public const string USERINPUT_DATETIMEERROR = "Couldn't parse DateTime. Use provided template.";

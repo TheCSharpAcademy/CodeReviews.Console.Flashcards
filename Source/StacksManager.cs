@@ -344,9 +344,9 @@ public class StacksManager
         var cards = GetCards_FrontBack(stack);
         var table = new Table();
 
-        table.AddColumn(new TableColumn("[yellow]Id[/]").RightAligned());
-        table.AddColumn(new TableColumn("[yellow]Card front[/]").Centered());
-        table.AddColumn(new TableColumn("[yellow]Card back[/]").Centered());
+        table.AddColumn(new TableColumn($"[yellow]{ApplicationTexts.TABLE_ID}[/]").RightAligned());
+        table.AddColumn(new TableColumn($"[yellow]{ApplicationTexts.TABLE_CARDFRONT}[/]").Centered());
+        table.AddColumn(new TableColumn($"[yellow]{ApplicationTexts.TABLE_CARDBACK}[/]").Centered());
 
         if (cards == null || cards.Count == 0)
         {

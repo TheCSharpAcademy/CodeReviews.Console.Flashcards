@@ -83,10 +83,10 @@ public class StudyArea()
             }
 
             Console.Clear();
-            AnsiConsole.MarkupLine(string.Format("Study session: {0}", $"[cornflowerblue]{chosenStack.Name}[/]"));
+            AnsiConsole.MarkupLine(string.Format(ApplicationTexts.STUDYAREA_HEADER_SESSION, $"[cornflowerblue]{chosenStack.Name}[/]"));
 
             Console.WriteLine();
-            Console.WriteLine(string.Format("Round {0} / {1}", currentRound, TOTAL_ROUNDS));
+            Console.WriteLine(string.Format(ApplicationTexts.STUDYAREA_ROUND, currentRound, TOTAL_ROUNDS));
             Console.WriteLine();
             AnsiConsole.MarkupLine($"[grey]{ApplicationTexts.TOOLTIP_LEAVE}[/]");
 
@@ -114,22 +114,22 @@ public class StudyArea()
             {
                 score++;
                 Console.WriteLine();
-                AnsiConsole.MarkupLine("[green]Correct![/]");
+                AnsiConsole.MarkupLine($"[green]{ApplicationTexts.STUDYAREA_LOG_CORRECT}[/]");
                 Console.ReadLine();
             }
             else
             {
                 Console.WriteLine();
-                AnsiConsole.MarkupLine("[maroon]Incorrect.[/]");
+                AnsiConsole.MarkupLine($"[maroon]{ApplicationTexts.STUDYAREA_LOG_INCORRECT}[/]");
                 Console.ReadLine();
             }
         }
         while (currentRound++ < TOTAL_ROUNDS);
 
-        Console.Write(string.Format("Final score: {0} / {1}", score, TOTAL_ROUNDS));
+        Console.Write(string.Format(ApplicationTexts.STUDYAREA_LOG_FINALSCORE, score, TOTAL_ROUNDS));
         if (score == TOTAL_ROUNDS)
         {
-            AnsiConsole.MarkupLine(" [cyan1]ACED![/]");
+            AnsiConsole.MarkupLine($" [cyan1]{ApplicationTexts.STUDYAREA_LOG_ACED}[/]");
         }
         else
         {
@@ -164,6 +164,22 @@ public class StudyArea()
 
     private void ViewLastSessions()
     {
+        List<StudySessionDTO_StackNameDateScore> sessions;
+        using (var connection = DataService.OpenConnection())
+        {
+            string sql = @"SELECT Stacks.Name AS 'StackName', Date, Score FROM StudySessions
+                            JOIN Stacks ON StudySessions.StackId = Stacks.Id
+                            ORDER BY Date DESC";
+            sessions = connection.Query<StudySessionDTO_StackNameDateScore>(sql).ToList();
+        }
+
+        Console.Clear();
+        Console.WriteLine(ApplicationTexts.STUDYAREA_HEADER_VIEWLASTSESSIONS);
+
+        Console.WriteLine();
+        PrintSessionsTable(sessions);
+
+        Console.ReadLine();
 
     }
 
@@ -223,5 +239,36 @@ public class StudyArea()
         Console.WriteLine();
         Console.WriteLine(ApplicationTexts.STUDYAREA_LOG_DEBUGCREATED);
         Console.ReadLine();
+    }
+
+    private void PrintSessionsTable(List<StudySessionDTO_StackNameDateScore> sessions)
+    {
+        var table = new Table();
+
+        table.AddColumn(new TableColumn($"[yellow]{ApplicationTexts.TABLE_DATE}[/]").Centered());
+        table.AddColumn(new TableColumn($"[yellow]{ApplicationTexts.TABLE_STACKNAME}[/]").Centered());
+        table.AddColumn(new TableColumn($"[yellow]{ApplicationTexts.TABLE_SCORE}[/]").Centered());
+
+        if (sessions == null || sessions.Count == 0)
+        {
+            table.AddRow("---", "----------", "----------");
+        }
+        else
+        {
+            foreach (var session in sessions)
+            {
+                string scoreText = $"{session.Score} / {TOTAL_ROUNDS}";
+                if (session.Score == TOTAL_ROUNDS)
+                {
+                    scoreText += " [cyan]![/]";
+                }
+                
+                table.AddRow(session.Date.ToString(), session.StackName, scoreText);
+            }
+        }
+
+        table.Border = TableBorder.Rounded;
+
+        AnsiConsole.Write(table);
     }
 }

@@ -11,7 +11,7 @@
 - Study area
     - [x] Debug: add multiple sessions over past 3 years
     - [x] Start session (choose a stack to study)
-    - [] View past sessions (choose a stack to view)
+    - [x] View past sessions
     - [] View annual report (choose year)
 - [] Validations
 - [] Add cards at Stack creation screen
