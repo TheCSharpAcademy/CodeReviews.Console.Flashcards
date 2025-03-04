@@ -70,7 +70,7 @@ public class StacksManager
         while (chosenOption != MenuOption.Return);
     }
 
-    private StackObject PromptStack()
+    public StackObject PromptStack()
     {
         List<StackObject> stacks;
         using (var connection = DataService.OpenConnection())
@@ -98,7 +98,7 @@ public class StacksManager
             AnsiConsole.MarkupLine(string.Format(ApplicationTexts.STACKSMANAGER_HEADER_ADDCARD, $"[cornflowerblue]{stack.Name}[/]"));
 
             Console.WriteLine();
-            AnsiConsole.MarkupLine($"[grey]{ApplicationTexts.STACKSMANAGER_TOOLTIP_ADDCARD}[/]");
+            AnsiConsole.MarkupLine($"[grey]{ApplicationTexts.TOOLTIP_LEAVE}[/]");
 
             Console.WriteLine();
             var cardFront = AnsiConsole.Prompt(
@@ -207,7 +207,7 @@ public class StacksManager
         AnsiConsole.MarkupLine(string.Format(ApplicationTexts.STACKSMANAGER_HEADER_ADDCARD, $"[cornflowerblue]{stack.Name}[/]"));
 
         Console.WriteLine();
-        AnsiConsole.MarkupLine($"[grey]{ApplicationTexts.STACKSMANAGER_TOOLTIP_ADDCARD}[/]");
+        AnsiConsole.MarkupLine($"[grey]{ApplicationTexts.TOOLTIP_LEAVE}[/]");
 
         Console.WriteLine();
         var newName = AnsiConsole.Prompt(
@@ -321,7 +321,7 @@ public class StacksManager
         }
     }
 
-    private void PrintCardsTable(StackObject stack)
+    public List<CardDTO_FrontBack>? GetCards_FrontBack(StackObject stack)
     {
         List<CardDTO_FrontBack>? cards = null;
         using (var connection = DataService.OpenConnection())
@@ -337,7 +337,11 @@ public class StacksManager
                 Console.ReadLine();
             }
         }
-
+        return cards;
+    }
+    private void PrintCardsTable(StackObject stack)
+    {
+        var cards = GetCards_FrontBack(stack);
         var table = new Table();
 
         table.AddColumn(new TableColumn("[yellow]Id[/]").RightAligned());

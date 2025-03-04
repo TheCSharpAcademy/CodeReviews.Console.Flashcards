@@ -18,7 +18,7 @@ public static class ApplicationTexts
     public const string STACKSMANAGER_LOG_STACKDELETED = "Stack deleted.";
 
     public const string STACKSMANAGER_HEADER_ADDCARD = "Create cards: {0}";
-    public const string STACKSMANAGER_TOOLTIP_ADDCARD = "Enter '.' to leave";
+    public const string TOOLTIP_LEAVE = "Enter '.' to leave";
     public const string STACKSMANAGER_PROMPT_ADDCARD_FRONT = "Enter new card front:";
     public const string STACKSMANAGER_PROMPT_ADDCARD_BACK = "Enter new card back:";
     public const string STACKSMANAGER_LOG_CARDADDED = "Added new card: {0}";
