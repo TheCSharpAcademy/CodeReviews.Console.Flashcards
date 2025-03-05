@@ -1,4 +1,5 @@
 using System.Globalization;
+using Dapper;
 using Spectre.Console;
 
 namespace vcesario.Flashcards;
@@ -33,27 +34,6 @@ public class UserInputValidator
         }
 
         return ValidationResult.Success();
-    }
-
-    public ValidationResult ValidateFutureDateOrReturn(string input)
-    {
-        return ValidationResult.Error("Implement");
-        // if (input.ToLower().Equals("return"))
-        // {
-        //     return ValidationResult.Success();
-        // }
-
-        // if (!DateOnly.TryParseExact(input, "dd/MM/yyyy", out DateOnly result))
-        // {
-        //     return ValidationResult.Error(ApplicationTexts.USERINPUT_DATEERROR);
-        // }
-
-        // if (result < DateUtils.Today)
-        // {
-        //     return ValidationResult.Error(ApplicationTexts.USERINPUT_OLDERDATEERROR);
-        // }
-
-        // return ValidationResult.Success();
     }
 
     public ValidationResult ValidateLongReturn(string input)
@@ -103,7 +83,16 @@ public class UserInputValidator
 
     public ValidationResult ConfirmUniqueStackName(string input)
     {
-        AnsiConsole.MarkupLine("[green]TO-DO: Implement Unique Stack Name validation[/]");
+        using (var connection = DataService.OpenConnection())
+        {
+            string sql = "SELECT Id FROM Stacks WHERE Name=@Name";
+            var result = connection.QueryFirstOrDefault(sql, new { Name = input });
+
+            if (result != null)
+            {
+                return ValidationResult.Error(ApplicationTexts.USERINPUT_EXISTINGSTACK);
+            }
+        }
         return ValidationResult.Success();
     }
 }

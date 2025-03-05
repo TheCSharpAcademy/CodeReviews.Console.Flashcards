@@ -13,8 +13,7 @@
     - [x] Start session (choose a stack to study)
     - [x] View past sessions
     - [x] View annual report (choose year)
-- [] Validations
-- [] Add cards at Stack creation screen
+- [x] Validations
 
 -------------------------------
 Requirements

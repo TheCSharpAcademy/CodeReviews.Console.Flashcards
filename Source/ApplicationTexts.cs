@@ -55,4 +55,5 @@ public static class ApplicationTexts
     public const string USERINPUT_DATEERROR = "Couldn't parse Date. Use provided template.";
     public const string USERINPUT_OLDERDATEERROR = "Cannot accept dates older than today.";
     public const string USERINPUT_LONGERROR = "Couldn't parse number.";
+    public const string USERINPUT_EXISTINGSTACK = "There's already a stack with that name.";
 }
