@@ -86,6 +86,21 @@ public class UserInputValidator
         return ValidationResult.Success();
     }
 
+    public ValidationResult ValidatePositiveIntOrPeriod(string input)
+    {
+        if (input.ToLower().Equals("."))
+        {
+            return ValidationResult.Success();
+        }
+
+        if (!uint.TryParse(input, out uint result))
+        {
+            return ValidationResult.Error(ApplicationTexts.USERINPUT_LONGERROR);
+        }
+
+        return ValidationResult.Success();
+    }
+
     public ValidationResult ConfirmUniqueStackName(string input)
     {
         AnsiConsole.MarkupLine("[green]TO-DO: Implement Unique Stack Name validation[/]");

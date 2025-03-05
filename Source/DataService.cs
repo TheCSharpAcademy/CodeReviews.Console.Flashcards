@@ -16,9 +16,9 @@ public static class DataService
 
             try
             {
-            string checkDbQuery = $"DROP DATABASE {databaseName}";
-            connection.Execute(checkDbQuery);
-            Console.WriteLine("Database dropped.");
+                string checkDbQuery = $"DROP DATABASE {databaseName}";
+                connection.Execute(checkDbQuery);
+                Console.WriteLine("Database dropped.");
             }
             catch (Exception ex)
             {
@@ -84,7 +84,7 @@ public static class DataService
                         StackId INT FOREIGN KEY REFERENCES Stacks(Id)
                             ON DELETE CASCADE,
                         Date DATETIME2,
-                        Score INT
+                        Score FLOAT(2)
                     );";
 
                 connection.Execute(createTablesQuery);

@@ -45,10 +45,14 @@ public static class ApplicationTexts
     public const string STUDYAREA_LOG_FINALSCORE = "Final score: {0} / {1}";
     public const string STUDYAREA_LOG_ACED = "ACED!";
     public const string STUDYAREA_HEADER_VIEWLASTSESSIONS = "View last sessions";
+    public const string STUDYAREA_HEADER_VIEWANNUALREPORT = "View annual report";
+    public const string STUDYAREA_PROMPT_YEAR = "Enter a year:";
+    public const string STUDYAREA_HEADER_STUDYSESSIONSPERMONTH = "STUDY SESSIONS PER MONTH";
+    public const string STUDYAREA_HEADER_AVERAGESCORE = "AVERAGE SCORE PER MONTH";
     public const string STUDYAREA_LOG_DEBUGCREATED = "Debug sessions created.";
 
     public const string USERINPUT_DATETIMEERROR = "Couldn't parse DateTime. Use provided template.";
     public const string USERINPUT_DATEERROR = "Couldn't parse Date. Use provided template.";
     public const string USERINPUT_OLDERDATEERROR = "Cannot accept dates older than today.";
-    public const string USERINPUT_LONGERROR = "Couldn't parse number. Try again.";
+    public const string USERINPUT_LONGERROR = "Couldn't parse number.";
 }

@@ -56,7 +56,7 @@ public class StacksManager
                 case MenuOption.DeleteStack:
                     if (PromptDeleteStack(chosenStack.Id))
                     {
-                        goto case MenuOption.Return;
+                        chosenOption = MenuOption.Return;
                     }
                     break;
                 case MenuOption.AddDebugCards:

@@ -12,7 +12,7 @@
     - [x] Debug: add multiple sessions over past 3 years
     - [x] Start session (choose a stack to study)
     - [x] View past sessions
-    - [] View annual report (choose year)
+    - [x] View annual report (choose year)
 - [] Validations
 - [] Add cards at Stack creation screen
 
