@@ -18,15 +18,15 @@ Console-based CRUD application that manages studying with flashcards. Developed 
 
 ## Images
 
-<!-- ![image](https://github.com/user-attachments/assets/43877317-3183-4872-8537-4758ca3d8c24)
+![image](https://github.com/user-attachments/assets/0823b2f7-9100-4dde-8ec2-b510548da131)
 
-![image](https://github.com/user-attachments/assets/0c80f961-d406-4c68-b408-e172b5433df7)
+![image](https://github.com/user-attachments/assets/e0d3d2a5-4ba5-467b-be54-3bbc4ccaf8a9)
 
-![image](https://github.com/user-attachments/assets/5b129d33-3571-408f-8493-739879652bff)
+![image](https://github.com/user-attachments/assets/78ff8f79-c064-44d9-875d-681aae2880bc)
 
-![image](https://github.com/user-attachments/assets/40488f8a-fcee-463a-84b4-b5f793633877)
+![image](https://github.com/user-attachments/assets/bb208871-f58c-4ed3-a232-88fb758e9364)
 
-![image](https://github.com/user-attachments/assets/3881e0f9-d05e-4dbb-aa49-6773de060905) -->
+![image](https://github.com/user-attachments/assets/800c520f-4a64-47d2-8e76-89ce86771b49)
 
 ## Things I learned
 
