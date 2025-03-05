@@ -1,5 +1,4 @@
 using Dapper;
-using Microsoft.Identity.Client;
 using Spectre.Console;
 
 namespace vcesario.Flashcards;
