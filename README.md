@@ -4,24 +4,17 @@ Console-based CRUD application that manages studying with flashcards. Developed 
 
 ## Features
 
-<!-- - Users can input sessions manually, or track a session live via a stopwatch.
-- Users are able to delete, edit and view all of their sessions.
-- Users can see a report that exhibits total session count, total and average coding time.
-- Incorrect input statements are gracefully handled, as to not leave users in the dark.
-- Overlapping sessions are also handled by showing users the affected sessions and giving the option to delete them or cancel operation.
-- Users can type "return" in any input field in order to cancel current operation.
-- Goals screen, where users can set a period and the amount of hours of coding to be achieved within that period.
-- SQLite database created on startup, according to .config file.
-- SQL queries are protected with parameterized queries.
+- Create, edit and delete stacks of flashcards.
+- Create study sessions to practice card front -> card back, or vice-versa.
+- Visualize all of your data in neat tables.
+- View reports that exhibit total study sessions and average score divided per month.
+- Enter '.' to return from any input field.
+- SQL Server database created on startup, according to .config file.
+- SQL queries are protected with Dapper's parameterized queries.
 - Application handles loss of database.
 - Option to fill database with random data, to facilitate testing the application.
-- Organized code that follows OOP and DRY principles.
-- All application text is organized into a static `ApplicationTexts` class to facilitate localization. -->
-
-## Application usage details
-
-<!-- - Users can only log a session previous to current time, unless using the "Track session" option.
-- Users can have multiple sessions per day. Sessions can never overlap. -->
+- Organized code that follows OOP, DRY and DTO principles.
+- All application text is organized into a static `ApplicationTexts` class to facilitate text reusability and localization.
 
 ## Images
 
@@ -37,9 +30,9 @@ Console-based CRUD application that manages studying with flashcards. Developed 
 
 ## Things I learned
 
-<!-- - How to use .config files properly
-- How to properly use database connection only when I need it
-- AnonymousType
-- Better understanding of when to use static vs non-static classes -->
+- Setting up LocalDB with SQL Server
+- How to use .config files with SQL Server
+- Pivoting
+- DTO
 
-> Project duration: 0h
+> Project duration: 14h
