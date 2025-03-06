@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Flashcards.RyanW84;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Spectre.Console;
@@ -28,7 +29,7 @@ public class DataAccess
                     $"\nConnection Status: {System.Data.ConnectionState.Open}\nPress any Key to continue:"
                 );
                 Console.ReadKey();
-                return connection.State == System.Data.ConnectionState.Open;
+                return true;
             }
         }
         catch
@@ -39,23 +40,21 @@ public class DataAccess
 
     internal void CreateTables()
     {
-        try
+        using (var connection = new SqlConnection(ConnectionString))
         {
-            using (var connection = new SqlConnection(ConnectionString))
-            {
-                connection.Open();
+            connection.Open();
 
-                string createStackTableSql =
-                    @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Stacks')
+            string createStackTableSql =
+                @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Stacks')
                     CREATE TABLE Stacks (
                         Id int IDENTITY(1,1) NOT NULL,
                         Name NVARCHAR(30) NOT NULL UNIQUE,
                         PRIMARY KEY (Id)
                     );";
-                connection.Execute(createStackTableSql);
+            connection.Execute(createStackTableSql);
 
-                string createFlashcardTableSql =
-                    @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Flashcards')
+            string createFlashcardTableSql =
+                @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Flashcards')
                     CREATE TABLE Flashcards (
                         Id int IDENTITY(1,1) NOT NULL PRIMARY KEY,
                         Question NVARCHAR(30) NOT NULL,
@@ -66,12 +65,7 @@ public class DataAccess
                             ON DELETE CASCADE 
                             ON UPDATE CASCADE
                     );";
-                connection.Execute(createFlashcardTableSql);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"There was a problem creating the tables: {ex.Message}");
+            connection.Execute(createFlashcardTableSql);
         }
     }
 
@@ -98,6 +92,7 @@ public class DataAccess
         {
             Console.WriteLine($"There was a problem in the adding section {ex.Message}");
         }
+        UserInterface.StackMenu();
     }
 
     internal void DeleteStack() { }
@@ -106,27 +101,36 @@ public class DataAccess
 
     internal IEnumerable<Stacks> GetStacks()
     {
-        using (var connection = new SqlConnection(ConnectionString))
+        try
         {
-            connection.Open();
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
 
-            string getStacksSQL = @"SELECT * FROM stacks;";
+                string getStacksSQL = @"SELECT * FROM stacks;";
 
-            var stacks = connection.Query<Stacks>(getStacksSQL);
+                var stacks = connection.Query<Stacks>(getStacksSQL);
 
-            return stacks;
+                return stacks;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error when viewing stacks: {ex.Message}");
         }
     }
 
     internal void ViewStack(IEnumerable<Stacks> stacks)
     {
+        Console.Clear();
+        Console.ReadKey();
         var table = new Table();
         table.AddColumn("Id");
         table.AddColumn("Name");
 
         foreach (var stack in stacks)
         {
-            table.AddRow(stack.Id.ToString(), stack.Name);
+            table.AddRow(stack.Id.ToString(), stack.Name.ToString());
         }
 
         AnsiConsole.Write(table);
@@ -144,15 +148,15 @@ public class DataAccess
 
     internal class Stacks
     {
-        public int Id { get; set; }
-        public string? Name { get; set; }
+        internal int Id { get; set; }
+        internal string? Name { get; set; }
     }
 
     internal class Flashcards
     {
-        int Id { get; set; }
-        string? Question { get; set; }
-        string? Answer { get; set; }
-        int StackID { get; set; }
+        internal int Id { get; set; }
+        internal string? Question { get; set; }
+        internal string? Answer { get; set; }
+        internal int StackID { get; set; }
     }
 }

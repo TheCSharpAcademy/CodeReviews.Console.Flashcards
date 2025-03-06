@@ -5,12 +5,14 @@ namespace Flashcards.RyanW84;
 internal class UserInterface
 {
     public static string? usersChoice;
-    public static bool isMenuRunning = true;
+    public static bool isMenuRunning;
 
     internal static void MainMenu()
     {
+        isMenuRunning = true;
         while (isMenuRunning)
         {
+            isMenuRunning = true;
             Console.Clear();
             var usersChoice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
@@ -24,7 +26,6 @@ internal class UserInterface
     internal static void StackMenu()
     {
         isMenuRunning = true;
-
         while (isMenuRunning)
         {
             Console.Clear();
@@ -32,9 +33,9 @@ internal class UserInterface
                 new SelectionPrompt<string>()
                     .Title("What would you like to do?")
                     .AddChoices(
-                        "Add A Stacks",
-                        "Delete a Stacks",
-                        "Update a Stacks",
+                        "Add a Stack",
+                        "Delete a Stack",
+                        "Update a Stack",
                         "View the Stacks",
                         "Exit to Main Menu"
                     )
@@ -46,7 +47,6 @@ internal class UserInterface
     internal static void FlashcardMenu()
     {
         isMenuRunning = true;
-
         while (isMenuRunning)
         {
             Console.Clear();
@@ -54,7 +54,7 @@ internal class UserInterface
                 new SelectionPrompt<string>()
                     .Title("What would you like to do?")
                     .AddChoices(
-                        "Add A Flashcard",
+                        "Add a Flashcard",
                         "Delete a Flashcard",
                         "Update a Flashcard",
                         "View the Flashcards",
@@ -79,16 +79,18 @@ internal class UserInterface
             case "Manage the Flashcards":
                 FlashcardMenu();
                 break;
-            case "Add a Stacks":
+            case "Add a Stack":
+                isMenuRunning = false;
                 DataAccess.AddStack();
                 break;
-            case "Delete a Stacks":
+            case "Delete a Stack":
                 DataAccess.DeleteStack();
                 break;
-            case "Update a Stacks":
+            case "Update a Stack":
                 DataAccess.UpdateStack();
                 break;
             case "View the Stacks":
+                isMenuRunning = false;
                 DataAccess.GetStacks();
                 break;
             case "Add a Flashcard":
