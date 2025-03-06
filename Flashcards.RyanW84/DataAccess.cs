@@ -77,6 +77,8 @@ public class DataAccess
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
+                Console.Clear();
+                Stacks stacks = new();
                 connection.Open();
 
                 Console.WriteLine("Enter the name of the stack you want to add: ");
@@ -86,6 +88,9 @@ public class DataAccess
                 string addStackSql = @"INSERT INTO Stacks (Name) VALUES (@Name);";
 
                 connection.Execute(addStackSql, new { Name = stackName });
+
+                var dataAccess = new DataAccess();
+                dataAccess.InsertRecord(stacks);
             }
         }
         catch (Exception ex)
@@ -95,35 +100,50 @@ public class DataAccess
         UserInterface.StackMenu();
     }
 
-    internal void DeleteStack() { }
+    internal void InsertRecord(Stacks stacks)
+    {
+        using (var connection = new SqlConnection(ConnectionString))
+        {
+            connection.Open();
+
+            string insertQuery =
+                @"
+INSERT INTO stacks (Name)
+VALUES (@Name)";
+
+            connection.Execute(insertQuery, new { stacks.Name }); // This highlighted an error until I added the Using Dapper line at the top.
+        }
+    }
+
+    internal void DeleteStack(int id)
+    {
+        using (var connection = new SqlConnection(ConnectionString))
+        {
+            connection.Open();
+
+            string deleteStackSql = @"DELETE FROM Stacks WHERE Id = @Id;";
+            var affectedRows = connection.Execute(deleteStackSql, new { Id = id });
+        }
+    }
 
     internal void UpdateStack() { }
 
     internal IEnumerable<Stacks> GetStacks()
     {
-        try
+        using (var connection = new SqlConnection(ConnectionString))
         {
-            using (var connection = new SqlConnection(ConnectionString))
-            {
-                connection.Open();
+            connection.Open();
 
-                string getStacksSQL = @"SELECT * FROM stacks;";
+            string getStacksSQL = @"SELECT * FROM stacks;";
 
-                var stacks = connection.Query<Stacks>(getStacksSQL);
+            var stacks = connection.Query<Stacks>(getStacksSQL);
 
-                return stacks;
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error when viewing stacks: {ex.Message}");
+            return stacks;
         }
     }
 
-    internal void ViewStack(IEnumerable<Stacks> stacks)
+    internal void ViewStacks(IEnumerable<Stacks> stacks)
     {
-        Console.Clear();
-        Console.ReadKey();
         var table = new Table();
         table.AddColumn("Id");
         table.AddColumn("Name");
@@ -134,6 +154,63 @@ public class DataAccess
         }
 
         AnsiConsole.Write(table);
+        Console.WriteLine("Press any key to return to the Stacks Menu");
+        Console.ReadKey();
+        UserInterface.StackMenu();
+    }
+
+    private static void QueryAndDisplaySingleRecord(int id)
+    {
+        var dataAccess = new DataAccess();
+        var stacks = dataAccess.GetStacks();
+
+        var table = new Table();
+        table.AddColumn("Id");
+        table.AddColumn("Name");
+
+        var record = stacks.Where(x => x.Id == id).Single();
+        {
+            table.AddRow(record.Id.ToString(), record.Name.ToString());
+        }
+        AnsiConsole.Write(table);
+    }
+
+    private static void DeleteRecord()
+    {
+        var dataAccess = new DataAccess();
+
+        var records = dataAccess.GetStacks();
+        ViewStacks(records);
+
+        var id = GetNumber("Please type the id of the habit you want to delete: ");
+        System.Console.Clear();
+        QueryAndDisplaySingleRecord(id);
+        System.Console.WriteLine();
+        if (!AnsiConsole.Confirm("\n\nHere is the record, you want to delete. Are you sure?"))
+            return;
+
+        var response = dataAccess.DeleteStack(id);
+
+        var responseMessage =
+            response < 1
+                ? $"\nRecord with the id {id} doesn't exist. Press any key to return to Main Menu"
+                : "Record deleted successfully. Press any key to return to Main Menu";
+
+        System.Console.Clear();
+        System.Console.WriteLine(responseMessage);
+        System.Console.ReadKey();
+    }
+
+    private static int GetNumber(string message)
+    {
+        string numberInput = AnsiConsole.Ask<string>(message);
+
+        if (numberInput == "0")
+            UserInterface.MainMenu();
+
+        var output = Validation.ValidateInt(numberInput, message);
+
+        return output;
     }
 
     internal void AddFlashcard() { }
