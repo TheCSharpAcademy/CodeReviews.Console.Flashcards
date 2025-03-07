@@ -111,20 +111,20 @@ public class DataAccess
 INSERT INTO stacks (Name)
 VALUES (@Name)";
 
-            connection.Execute(insertQuery, new { stacks.Name }); // This highlighted an error until I added the Using Dapper line at the top.
+            connection.Execute(insertQuery, new { stacks.Name });
         }
     }
 
-    internal void DeleteStack(int id)
-    {
-        using (var connection = new SqlConnection(ConnectionString))
-        {
-            connection.Open();
+    //internal void DeleteStack(int id)
+    //{
+    //    using (var connection = new SqlConnection(ConnectionString))
+    //    {
+    //        connection.Open();
 
-            string deleteStackSql = @"DELETE FROM Stacks WHERE Id = @Id;";
-            var affectedRows = connection.Execute(deleteStackSql, new { Id = id });
-        }
-    }
+    //        string deleteStackSql = @"DELETE FROM Stacks WHERE Id = @Id;";
+    //        var affectedRows = connection.Execute(deleteStackSql, new { Id = id });
+    //    }
+    //}
 
     internal void UpdateStack() { }
 
@@ -154,12 +154,12 @@ VALUES (@Name)";
         }
 
         AnsiConsole.Write(table);
-        Console.WriteLine("Press any key to return to the Stacks Menu");
+        Console.Write("Press any key to continue: ");
         Console.ReadKey();
-        UserInterface.StackMenu();
+        UserInterface.isMenuRunning = true;
     }
 
-    private static void QueryAndDisplaySingleRecord(int id)
+    internal static void QueryAndDisplaySingleRecord(int id)
     {
         var dataAccess = new DataAccess();
         var stacks = dataAccess.GetStacks();
@@ -168,40 +168,48 @@ VALUES (@Name)";
         table.AddColumn("Id");
         table.AddColumn("Name");
 
-        var record = stacks.Where(x => x.Id == id).Single();
+        var stack = stacks.Where(x => x.Id == id).Single();
         {
-            table.AddRow(record.Id.ToString(), record.Name.ToString());
+            table.AddRow(stack.Id.ToString(), stack.Name.ToString());
         }
         AnsiConsole.Write(table);
     }
 
-    private static void DeleteRecord()
+    internal void DeleteStack()
     {
         var dataAccess = new DataAccess();
 
-        var records = dataAccess.GetStacks();
-        ViewStacks(records);
+        var stacks = dataAccess.GetStacks();
 
-        var id = GetNumber("Please type the id of the habit you want to delete: ");
+        dataAccess.ViewStacks(stacks); // Changed to instance method call
+
+        int id = GetNumber("Please type the id of the habit you want to delete: ");
         System.Console.Clear();
         QueryAndDisplaySingleRecord(id);
         System.Console.WriteLine();
-        if (!AnsiConsole.Confirm("\n\nHere is the record, you want to delete. Are you sure?"))
-            return;
-
-        var response = dataAccess.DeleteStack(id);
 
         var responseMessage =
-            response < 1
+            id < 1
                 ? $"\nRecord with the id {id} doesn't exist. Press any key to return to Main Menu"
                 : "Record deleted successfully. Press any key to return to Main Menu";
 
         System.Console.Clear();
         System.Console.WriteLine(responseMessage);
         System.Console.ReadKey();
+
+        using (var connection = new SqlConnection(ConnectionString))
+        {
+            connection.Open();
+
+            string deleteQuery = "DELETE FROM stacks WHERE Id = @Id";
+
+            int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
+
+            Console.WriteLine($"Stack {id} Deleted");
+        }
     }
 
-    private static int GetNumber(string message)
+    internal static int GetNumber(string message)
     {
         string numberInput = AnsiConsole.Ask<string>(message);
 

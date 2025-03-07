@@ -91,8 +91,8 @@ internal class UserInterface
                 break;
             case "View the Stacks":
                 isMenuRunning = false;
-                DataAccess = new DataAccess();
-                var gotStacks = DataAccess.GetStacks();
+                var dataAccess = new DataAccess();
+                var gotStacks = dataAccess.GetStacks();
                 DataAccess.ViewStacks(gotStacks);
                 break;
             case "Add a Flashcard":
