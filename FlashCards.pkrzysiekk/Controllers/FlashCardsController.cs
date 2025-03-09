@@ -11,13 +11,18 @@ namespace FlashCards.Controllers
     public class FlashCardsController : DbController
     {
 
-        public IEnumerable<FlashCardDTO> GetAllCardsDTO()
+        public IEnumerable<FlashCardDTO> GetAllCardsDTO(StackBO stack=null)
         {
             using (var connection = new SqlConnection(connectionString))
             {
                 var sql = "SELECT Name1,Name2 FROM cards";
 
-                var cardsList = connection.Query<FlashCardDTO>(sql);
+                if (stack != null)
+                {
+                    sql = "SELECT Name1,Name2 FROM cards WHERE StackId=@Id";
+                }
+
+                var cardsList = connection.Query<FlashCardDTO>(sql,stack);
                 return cardsList;
             }
 
@@ -42,6 +47,7 @@ namespace FlashCards.Controllers
                 return stackList;
             }
         }
+
 
         public void Insert(StackBO cardStack, FlashCardBO card)
         {

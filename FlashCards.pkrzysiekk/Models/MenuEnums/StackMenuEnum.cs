@@ -7,6 +7,7 @@
         DeleteStack,
         UpdateStack,
         AddCardToStack,
+        SeeCardsInStack,
         EditCardFromStack,
         DeleteCardFromStack,
         Exit

@@ -25,6 +25,7 @@ namespace FlashCards.Views.Menus
                     StackMenuEnum.DeleteStack => "Delete Stack",
                     StackMenuEnum.UpdateStack => "Update Stack",
                     StackMenuEnum.AddCardToStack => "Add Card to stack",
+                    StackMenuEnum.SeeCardsInStack => "See cards in stack",
                     StackMenuEnum.EditCardFromStack => "Edit card from stack",
                     StackMenuEnum.DeleteCardFromStack => "Delete card from stack",
                     StackMenuEnum.Exit => "Exit",
@@ -92,6 +93,18 @@ namespace FlashCards.Views.Menus
                         AnsiConsole.MarkupLine($"[Purple]Current Stack {stackBO.Name}[/]");
                         var cardToAdd = UserInput.GetModelToAdd(_ = new FlashCardBO());
                         _cardController.Insert(stackBO, cardToAdd);
+                        break;
+                    case StackMenuEnum.SeeCardsInStack:
+                        stackListBO = _stackController.GetAllBO();
+                        if (stackListBO.Count() == 0)
+                        {
+                            AnsiConsole.MarkupLine("[White] No stacks, add one first[/]");
+                            continue;
+                        }
+                        stackBO = _stackController.GetUserSelection(stackListBO);
+                        var cardsDTO = _cardController.GetAllCardsDTO(stackBO);
+                        CardView.ShowCollection(cardsDTO);
+
                         break;
                     case StackMenuEnum.EditCardFromStack:
                         stackListBO = _stackController.GetAllBO();

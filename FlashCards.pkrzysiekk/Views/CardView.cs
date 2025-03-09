@@ -7,15 +7,18 @@ namespace FlashCards.Views
     {
         public static void ShowCollection(IEnumerable<FlashCardDTO> cardsList)
         {
+            var table = new Table();
+            table.AddColumn("Id");
+            table.AddColumn("Side 1");
+            table.AddColumn("Side 2");
+            int id=1;
             foreach (var card in cardsList)
             {
-                var table = new Table();
-                table.AddColumn(card.Name1);
-                table.AddRow(card.Name2);
-                AnsiConsole.Write(table);
+                table.AddRow($"{id++}", card.Name1, card.Name2);
             }
+            AnsiConsole.Write(table);
 
         }
-        
+
     }
 }

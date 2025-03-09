@@ -2,7 +2,7 @@
 {
     public enum FlashCardEnum
     {
-        Add_FlashCard,
+        See_Flashcards,
         Edit_FlashCard,
         Delete_FlashCard,
         Exit

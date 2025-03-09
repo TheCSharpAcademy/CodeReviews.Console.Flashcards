@@ -18,7 +18,7 @@ namespace FlashCards.Views.Menus
               .AddChoices(Enum.GetValues<FlashCardEnum>())
              .UseConverter(x => x switch
                 {
-                    FlashCardEnum.Add_FlashCard => "Add FlashCard",
+                    FlashCardEnum.See_Flashcards => "See FlashCards",
                     FlashCardEnum.Edit_FlashCard => "Edit FlashCard",
                     FlashCardEnum.Delete_FlashCard => "Delete FlashCard",
                     FlashCardEnum.Exit => "Exit",
@@ -38,7 +38,7 @@ namespace FlashCards.Views.Menus
                 AnsiConsole.Clear();
                 switch (choice)
                 {
-                    case FlashCardEnum.Add_FlashCard:
+                    case FlashCardEnum.See_Flashcards:
                         cardsListDTO = _flashCardController.GetAllCardsDTO();
                         if (cardsListDTO.Count() == 0)
                         {
