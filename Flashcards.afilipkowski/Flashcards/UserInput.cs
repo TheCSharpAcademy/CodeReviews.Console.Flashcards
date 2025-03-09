@@ -5,7 +5,7 @@ namespace Flashcards
     internal static class UserInput
     {
 
-        internal static string getStringInput(string message)
+        internal static string GetStringInput(string message)
         {
             string input;
             Console.WriteLine(message);
@@ -21,7 +21,7 @@ namespace Flashcards
             return input;
         }
 
-        internal static int getIntInput(string message="")
+        internal static int GetIntInput(string message="")
         {
             int input;
             Console.WriteLine(message);
@@ -36,24 +36,24 @@ namespace Flashcards
         {
             while (!cardStackController.StackExists(id))
             {
-                id = UserInput.getIntInput("Stack with this ID does not exist! Try again: ");
+                id = UserInput.GetIntInput("Stack with this ID does not exist! Try again: ");
             }
             return id;
         }
 
         internal static (string, string) GetFlashcardInput(bool edit = false)
         {
-            string term = UserInput.getStringInput($"Enter the{(edit ? " new" : "")} term: ");
-            string definition = UserInput.getStringInput($"Enter the{(edit ? " new" : "")} definition: ");
+            string term = UserInput.GetStringInput($"Enter the{(edit ? " new" : "")} term: ");
+            string definition = UserInput.GetStringInput($"Enter the{(edit ? " new" : "")} definition: ");
             return (term, definition);
         }
 
         internal static int GetFlashcardId(FlashcardController flashcardController, int stackId)
         {
-            int Id = UserInput.getIntInput();
+            int Id = UserInput.GetIntInput();
             while (Id > flashcardController.GetFlashcardCount(stackId))
             {
-                Id = UserInput.getIntInput("Flashcard with this ID does not exist! Try again: ");
+                Id = UserInput.GetIntInput("Flashcard with this ID does not exist! Try again: ");
             }
             return Id;
         }

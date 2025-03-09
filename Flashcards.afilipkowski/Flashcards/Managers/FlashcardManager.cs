@@ -41,7 +41,7 @@ internal class FlashcardManager
                     Console.ReadKey();
                     break;
                 case "Add flashcards":
-                    int amount = UserInput.getIntInput("Enter the amount of flashcards you want to add: ");
+                    int amount = UserInput.GetIntInput("Enter the amount of flashcards you want to add: ");
                     for (int i = 1; i <= amount; i++)
                     {
                         Console.WriteLine($"Adding flashcard number {i}: ");
@@ -106,7 +106,6 @@ internal class FlashcardManager
     internal void HandleRemoval(int stackId)
     {
         int currentCount = flashcardController.GetFlashcardCount(stackId);
-        int idsToChange = currentCount - flashcardId;
         flashcardController.DeleteFlashcard(stackId, flashcardId);
         for (int i = flashcardId + 1; i <= currentCount; i++)
         {
