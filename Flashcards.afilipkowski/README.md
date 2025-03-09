@@ -22,8 +22,8 @@ To run this app make sure you have installed:
 
 1. Clone the repository:
     ```
-    git clone https://github.com/afilipkowski/Flashcards
-    cd Flashcards/Flashcards
+    git clone https://github.com/afilipkowski/CodeReviews.Console.Flashcards
+    cd Flashcards.afilipkowski/Flashcards
     ```
 2. Build the project:
     ```
