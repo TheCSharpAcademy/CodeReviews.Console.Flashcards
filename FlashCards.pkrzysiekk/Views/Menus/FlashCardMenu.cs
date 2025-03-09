@@ -59,7 +59,7 @@ namespace FlashCards.Views.Menus
                         break;
                     case FlashCardEnum.Edit_FlashCard:
                         cardsList = _flashCardController.GetAllCardsBO();
-                        if (cardsListDTO.Count() == 0)
+                        if (cardsList.Count() == 0)
                         {
                             AnsiConsole.MarkupLine($"[White]No cards,create one first[/]");
                             continue;
