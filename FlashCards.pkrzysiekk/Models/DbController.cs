@@ -8,10 +8,7 @@ namespace FlashCards.Models
 
         protected DbController()
         {
-            connectionString= ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-
+            connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         }
-
-
     }
 }

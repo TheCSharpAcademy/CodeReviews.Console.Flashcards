@@ -12,13 +12,12 @@ namespace FlashCards.Views.Menus
         private StackController _stackController = new();
         private FlashCardsController _cardController = new();
 
-
         private StackMenuEnum GetUserChoice()
         {
             var menuChoice = AnsiConsole.Prompt(new SelectionPrompt<StackMenuEnum>()
                 .Title("[Purple]What would you want to do? [/]")
                 .AddChoices(Enum.GetValues<StackMenuEnum>())
-                .UseConverter(x=>x switch
+                .UseConverter(x => x switch
                 {
                     StackMenuEnum.AddStack => "Add Stack",
                     StackMenuEnum.SeeStack => "See Stack",
@@ -35,6 +34,7 @@ namespace FlashCards.Views.Menus
                 );
             return menuChoice;
         }
+
         public void Show()
         {
             StackBO stackBO = new StackBO();
@@ -51,6 +51,7 @@ namespace FlashCards.Views.Menus
                         stackBO = UserInput.GetModelToAdd(_ = new StackBO());
                         _stackController.Insert(stackBO);
                         break;
+
                     case StackMenuEnum.SeeStack:
                         stackListDTO = _stackController.GetAllDTO();
                         stackListBO = _stackController.GetAllBO();
@@ -61,6 +62,7 @@ namespace FlashCards.Views.Menus
                         }
                         StackView.ShowStacks(stackListDTO);
                         break;
+
                     case StackMenuEnum.DeleteStack:
                         stackListBO = _stackController.GetAllBO();
                         if (stackListBO.Count() == 0)
@@ -71,6 +73,7 @@ namespace FlashCards.Views.Menus
                         stackBO = _stackController.GetUserSelection(stackListBO);
                         _stackController.Remove(stackBO);
                         break;
+
                     case StackMenuEnum.UpdateStack:
                         stackListBO = _stackController.GetAllBO();
                         if (stackListBO.Count() == 0)
@@ -82,6 +85,7 @@ namespace FlashCards.Views.Menus
                         var newStack = UserInput.GetModelToAdd(_ = new StackBO());
                         _stackController.Update(stackBO, newStack);
                         break;
+
                     case StackMenuEnum.AddCardToStack:
                         stackListBO = _stackController.GetAllBO();
                         if (stackListBO.Count() == 0)
@@ -94,6 +98,7 @@ namespace FlashCards.Views.Menus
                         var cardToAdd = UserInput.GetModelToAdd(_ = new FlashCardBO());
                         _cardController.Insert(stackBO, cardToAdd);
                         break;
+
                     case StackMenuEnum.SeeCardsInStack:
                         stackListBO = _stackController.GetAllBO();
                         if (stackListBO.Count() == 0)
@@ -106,6 +111,7 @@ namespace FlashCards.Views.Menus
                         CardView.ShowCollection(cardsDTO);
 
                         break;
+
                     case StackMenuEnum.EditCardFromStack:
                         stackListBO = _stackController.GetAllBO();
                         if (stackListBO.Count() == 0)
@@ -121,6 +127,7 @@ namespace FlashCards.Views.Menus
                         var newCard = UserInput.GetModelToAdd(_ = new FlashCardBO());
                         _cardController.Update(cardToEdit, newCard);
                         return;
+
                     case StackMenuEnum.DeleteCardFromStack:
                         stackListBO = _stackController.GetAllBO();
                         if (stackListBO.Count() == 0)
@@ -134,11 +141,11 @@ namespace FlashCards.Views.Menus
                         var cardToDelete = _cardController.GetUserCardSelection(currStackCardsToDelete);
                         _cardController.Delete(cardToDelete);
                         break;
+
                     case StackMenuEnum.Exit:
                         return;
                 }
             }
-
         }
     }
 }

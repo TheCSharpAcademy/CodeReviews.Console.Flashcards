@@ -1,7 +1,6 @@
 ﻿using FlashCards.Models;
 using Spectre.Console;
 
-
 namespace FlashCards.Views
 {
     public static class SessionView
@@ -17,10 +16,8 @@ namespace FlashCards.Views
             foreach (var session in sessions)
             {
                 table.AddRow($"{session.Date}", $"{session.Score}", $"{session.MaxScore}");
-
             }
             AnsiConsole.Write(table);
-
         }
 
         public static void ShowStatistics(IEnumerable<SessionStatistics> statistics)

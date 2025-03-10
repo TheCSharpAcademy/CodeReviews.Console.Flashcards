@@ -1,5 +1,4 @@
-﻿
-namespace FlashCards.Models
+﻿namespace FlashCards.Models
 {
     public interface IMenu
     {

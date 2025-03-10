@@ -5,7 +5,7 @@ namespace FlashCards
 {
     internal class Program
     {
-        static void Main()
+        private static void Main()
         {
             DbInitializer initializer = new();
             MainMenu main = new();

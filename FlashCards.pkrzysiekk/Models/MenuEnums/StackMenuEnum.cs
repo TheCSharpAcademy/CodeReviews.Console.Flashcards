@@ -3,7 +3,7 @@
     public enum StackMenuEnum
     {
         AddStack,
-        SeeStack ,
+        SeeStack,
         DeleteStack,
         UpdateStack,
         AddCardToStack,

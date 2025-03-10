@@ -13,6 +13,7 @@ namespace FlashCards.Views.Menus
         private FlashCardsController _flashCardsController = new();
         private StudyController _studyController = new();
         private SessionController _sessionController = new();
+
         private StudyMenuEnum GetUserChoice()
         {
             var menuChoice = AnsiConsole.Prompt(new SelectionPrompt<StudyMenuEnum>()
@@ -29,6 +30,7 @@ namespace FlashCards.Views.Menus
                 );
             return menuChoice;
         }
+
         public void Show()
         {
             IEnumerable<StackBO> stackList = new LinkedList<StackBO>();
@@ -55,6 +57,7 @@ namespace FlashCards.Views.Menus
                         AnsiConsole.MarkupLine($"[Green]Your score is {session.Score}/{session.MaxScore}[/]");
                         _sessionController.Insert(stack, session);
                         break;
+
                     case StudyMenuEnum.Statistics:
                         var stacks = _stackController.GetAllBO();
                         if (stacks.Count() == 0)
@@ -66,11 +69,11 @@ namespace FlashCards.Views.Menus
                         var statisticsList = _sessionController.GetStatistics(selectedStack);
                         SessionView.ShowStatistics(statisticsList);
                         break;
+
                     case StudyMenuEnum.Exit:
                         return;
                 }
             }
-
         }
     }
 }

@@ -7,6 +7,5 @@
         Study,
         View_StudySessions,
         Exit
-
     }
 }

@@ -2,15 +2,14 @@
 using FlashCards.Models;
 using FlashCards.Models.FlashCards;
 using FlashCards.Models.MenuEnums;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Spectre.Console;
-
 
 namespace FlashCards.Views.Menus
 {
     public class FlashCardMenu : IMenu
     {
         private FlashCardsController _flashCardController = new();
+
         private FlashCardEnum GetUserChoice()
         {
             var menuChoice = AnsiConsole.Prompt(new SelectionPrompt<FlashCardEnum>()
@@ -28,6 +27,7 @@ namespace FlashCards.Views.Menus
               );
             return menuChoice;
         }
+
         public void Show()
         {
             while (true)
@@ -47,6 +47,7 @@ namespace FlashCards.Views.Menus
                         }
                         CardView.ShowCollection(cardsListDTO);
                         break;
+
                     case FlashCardEnum.Delete_FlashCard:
                         cardsList = _flashCardController.GetAllCardsBO();
                         if (cardsList.Count() == 0)
@@ -57,6 +58,7 @@ namespace FlashCards.Views.Menus
                         var cardToDelete = _flashCardController.GetUserCardSelection(cardsList);
                         _flashCardController.Delete(cardToDelete);
                         break;
+
                     case FlashCardEnum.Edit_FlashCard:
                         cardsList = _flashCardController.GetAllCardsBO();
                         if (cardsList.Count() == 0)
@@ -69,9 +71,9 @@ namespace FlashCards.Views.Menus
                         var newCard = UserInput.GetModelToAdd(_ = new FlashCardBO());
                         _flashCardController.Update(cardToEdit, newCard);
                         break;
+
                     case FlashCardEnum.Exit:
                         return;
-
                 }
             }
         }

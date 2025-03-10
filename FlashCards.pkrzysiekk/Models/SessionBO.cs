@@ -1,10 +1,10 @@
 ﻿namespace FlashCards.Models
 {
-   public class SessionBO
+    public class SessionBO
     {
-        int? Id { get; set; }
+        private int? Id { get; set; }
         public int Score { get; set; }
-        public int  MaxScore { get; set; }
+        public int MaxScore { get; set; }
         public DateTime Date { get; set; }
         public int StackId { get; set; }
     }

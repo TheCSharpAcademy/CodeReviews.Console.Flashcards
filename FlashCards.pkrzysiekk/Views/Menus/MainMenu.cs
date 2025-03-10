@@ -3,7 +3,6 @@ using FlashCards.Models;
 using FlashCards.Models.MenuEnums;
 using Spectre.Console;
 
-
 namespace FlashCards.Views.Menus
 {
     public class MainMenu : IMenu
@@ -13,6 +12,7 @@ namespace FlashCards.Views.Menus
         private IMenu _flashCardMenu = new FlashCardMenu();
         private IMenu _studyMenu = new StudyMenu();
         private SessionController _sessionController = new SessionController();
+
         public MainMenuEnum GetUserChoice()
         {
             var menuChoice = AnsiConsole.Prompt(new SelectionPrompt<MainMenuEnum>()
@@ -30,6 +30,7 @@ namespace FlashCards.Views.Menus
                );
             return menuChoice;
         }
+
         public void Show()
         {
             while (true)
@@ -41,12 +42,15 @@ namespace FlashCards.Views.Menus
                     case MainMenuEnum.Menage_Stacks:
                         _stackMenu.Show();
                         break;
+
                     case MainMenuEnum.Menage_FlashCards:
                         _flashCardMenu.Show();
                         break;
+
                     case MainMenuEnum.Study:
                         _studyMenu.Show();
                         break;
+
                     case MainMenuEnum.View_StudySessions:
                         var sessions = _sessionController.GetAll();
                         if (sessions.Count() == 0)
@@ -56,9 +60,9 @@ namespace FlashCards.Views.Menus
                         }
                         SessionView.ShowSessions(sessions);
                         break;
+
                     case MainMenuEnum.Exit:
                         return;
-
                 }
             }
         }
