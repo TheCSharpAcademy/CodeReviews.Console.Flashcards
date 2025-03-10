@@ -91,6 +91,12 @@ namespace FlashCards.Controllers
                 {
                     connection.Execute(sql, newStack);
                 }
+                catch (SqlException ex) when (ex.Number == 2627)
+                {
+                    AnsiConsole.MarkupLine("[Red] This stack already exists![/]");
+
+                    return;
+                }
                 catch (Exception ex)
                 {
                     AnsiConsole.MarkupLine($"[Red]{ex.Message}[/]");
@@ -99,6 +105,5 @@ namespace FlashCards.Controllers
                 AnsiConsole.MarkupLine("[Green]Succesfully Updated[/]");
             }
         }
-
     }
 }

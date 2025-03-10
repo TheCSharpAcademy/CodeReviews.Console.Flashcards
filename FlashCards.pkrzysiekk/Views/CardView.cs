@@ -9,8 +9,8 @@ namespace FlashCards.Views
         {
             var table = new Table();
             table.AddColumn("Id");
-            table.AddColumn("Side 1");
-            table.AddColumn("Side 2");
+            table.AddColumn("Front");
+            table.AddColumn("Back");
             int id=1;
             foreach (var card in cardsList)
             {
