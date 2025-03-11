@@ -4,7 +4,7 @@ namespace Flashcards.RyanW84;
 
 internal class UserInterface
 {
-    public static string? usersChoice;
+    public static string usersChoice;
     public static bool isMenuRunning;
 
     internal static void MainMenu()
@@ -90,10 +90,9 @@ internal class UserInterface
                 DataAccess.UpdateStack();
                 break;
             case "View the Stacks":
-                isMenuRunning = false;
-                var dataAccess = new DataAccess();
-                var gotStacks = dataAccess.GetStacks();
-                DataAccess.ViewStacks(gotStacks);
+                //isMenuRunning = false;
+                DataAccess.GetStacks();
+                Console.ReadKey();
                 break;
             case "Add a Flashcard":
                 DataAccess.AddFlashcard();

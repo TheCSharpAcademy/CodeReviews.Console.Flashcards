@@ -10,14 +10,14 @@ public class DataAccess
         .AddJsonFile("appsettings.json")
         .Build();
 
-    private string? ConnectionString;
+    private string ConnectionString;
 
     public DataAccess()
     {
         ConnectionString = configuration.GetSection("ConnectionStrings")["DefaultConnection"];
     }
 
-    public bool ConfirmConnection() //Confirms the connection
+    public bool ConfirmConnection()
     {
         try
         {
@@ -83,14 +83,14 @@ public class DataAccess
 
                 Console.WriteLine("Enter the name of the stack you want to add: ");
 
-                string? stackName = Console.ReadLine();
+                string stackName = Console.ReadLine();
 
                 string addStackSql = @"INSERT INTO Stacks (Name) VALUES (@Name);";
 
                 connection.Execute(addStackSql, new { Name = stackName });
 
-                var dataAccess = new DataAccess();
-                dataAccess.InsertRecord(stacks);
+                //var dataAccess = new DataAccess();
+                //dataAccess.InsertStack(stacks);
             }
         }
         catch (Exception ex)
@@ -100,33 +100,53 @@ public class DataAccess
         UserInterface.StackMenu();
     }
 
-    internal void InsertRecord(Stacks stacks)
+    internal void UpdateStack()
     {
+        //var dataAccess = new DataAccess();
+
+        var stackRecords = GetStacks();
+
+        var Id = GetNumber("\nPlease type the id of the habit you want to update: ");
+        System.Console.Clear();
+
+        var stackSelected = stackRecords.SingleOrDefault(x => x.Id == Id);
+        if (stackSelected == null)
+        {
+            System.Console.WriteLine("Record not found. Choose a valid record");
+            System.Console.ReadKey();
+            UpdateStack();
+        }
+        QueryAndDisplaySingleRecord(Id);
+
+        var name = AnsiConsole.Ask<string>("What do you want to update the Stack Name to? ");
+        while (string.IsNullOrEmpty(name))
+        {
+            name = AnsiConsole.Ask<string>("Name can't be empty. Try again:");
+        }
+
         using (var connection = new SqlConnection(ConnectionString))
         {
             connection.Open();
 
-            string insertQuery =
+            string updateQuery =
                 @"
-INSERT INTO stacks (Name)
-VALUES (@Name)";
+                UPDATE stacks SET Name =@name WHERE Id =@Id";
 
-            connection.Execute(insertQuery, new { stacks.Name });
+            connection.Execute(updateQuery, new { name, Id });
+            Console.WriteLine("Record Updated");
+
+            string name = ""; // adding more spectre integration
+            bool updateName = AnsiConsole.Confirm("\nUpdate name?");
+            if (updateName)
+            {
+                name = AnsiConsole.Ask<string>("Habit's new name:");
+                while (string.IsNullOrEmpty(name))
+                {
+                    name = AnsiConsole.Ask<string>("Habit's name can't be empty. Try again:");
+                }
+            }
         }
     }
-
-    //internal void DeleteStack(int id)
-    //{
-    //    using (var connection = new SqlConnection(ConnectionString))
-    //    {
-    //        connection.Open();
-
-    //        string deleteStackSql = @"DELETE FROM Stacks WHERE Id = @Id;";
-    //        var affectedRows = connection.Execute(deleteStackSql, new { Id = id });
-    //    }
-    //}
-
-    internal void UpdateStack() { }
 
     internal IEnumerable<Stacks> GetStacks()
     {
@@ -137,6 +157,8 @@ VALUES (@Name)";
             string getStacksSQL = @"SELECT * FROM stacks;";
 
             var stacks = connection.Query<Stacks>(getStacksSQL);
+
+            ViewStacks(stacks);
 
             return stacks;
         }
@@ -154,9 +176,6 @@ VALUES (@Name)";
         }
 
         AnsiConsole.Write(table);
-        Console.Write("Press any key to continue: ");
-        Console.ReadKey();
-        UserInterface.isMenuRunning = true;
     }
 
     internal static void QueryAndDisplaySingleRecord(int id)
@@ -177,13 +196,83 @@ VALUES (@Name)";
 
     internal void DeleteStack()
     {
-        var dataAccess = new DataAccess();
+        var stacks = GetStacks();
 
-        var stacks = dataAccess.GetStacks();
+        int id = GetNumber("Please type the ID of the Stack you want to delete: ");
+        System.Console.Clear();
+        QueryAndDisplaySingleRecord(id);
+        System.Console.WriteLine();
 
-        dataAccess.ViewStacks(stacks); // Changed to instance method call
+        var responseMessage =
+            id < 1
+                ? $"\nRecord with the id {id} doesn't exist. Press any key to return to Main Menu"
+                : "Record deleted successfully. Press any key to return to Main Menu";
 
-        int id = GetNumber("Please type the id of the habit you want to delete: ");
+        System.Console.Clear();
+        System.Console.WriteLine(responseMessage);
+        System.Console.ReadKey();
+
+        using (var connection = new SqlConnection(ConnectionString))
+        {
+            connection.Open();
+
+            var tableName = "stacks";
+
+            string deleteQuery = $@"DELETE FROM {tableName} WHERE Id = @Id";
+
+            int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
+
+            Console.WriteLine($"Rows affected: {rowsAffected} from {tableName}");
+
+            Console.WriteLine($"Stack {id} Deleted");
+        }
+    }
+
+    internal static int GetNumber(string message)
+    {
+        string numberInput = AnsiConsole.Ask<string>(message);
+
+        if (numberInput == "0")
+            UserInterface.MainMenu();
+
+        var output = Validation.ValidateInt(numberInput, message);
+
+        return output;
+    }
+
+    internal void AddFlashcard()
+    {
+        try
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                Console.Clear();
+                Flashcards flashcard = new();
+                connection.Open();
+
+                Console.WriteLine("Enter the name of the stack you want to add: ");
+
+                string question = Console.ReadLine();
+
+                string addFlashcardSql = @"INSERT INTO Flashcards (Question) VALUES (@question);";
+
+                connection.Execute(addFlashcardSql, new { Question = question });
+
+                var dataAccess = new DataAccess();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"There was a problem in the adding section {ex.Message}");
+        }
+        UserInterface.StackMenu();
+    }
+
+    internal void DeleteFlashcard()
+    {
+        var stacks = GetStacks();
+
+        int id = GetNumber("Please type the id of the Flashcard you want to delete: ");
         System.Console.Clear();
         QueryAndDisplaySingleRecord(id);
         System.Console.WriteLine();
@@ -209,22 +298,6 @@ VALUES (@Name)";
         }
     }
 
-    internal static int GetNumber(string message)
-    {
-        string numberInput = AnsiConsole.Ask<string>(message);
-
-        if (numberInput == "0")
-            UserInterface.MainMenu();
-
-        var output = Validation.ValidateInt(numberInput, message);
-
-        return output;
-    }
-
-    internal void AddFlashcard() { }
-
-    internal void DeleteFlashcard() { }
-
     internal void UpdateFlashcard() { }
 
     internal void GetFlashcards() { }
@@ -234,14 +307,14 @@ VALUES (@Name)";
     internal class Stacks
     {
         internal int Id { get; set; }
-        internal string? Name { get; set; }
+        internal string Name { get; set; }
     }
 
     internal class Flashcards
     {
         internal int Id { get; set; }
-        internal string? Question { get; set; }
-        internal string? Answer { get; set; }
+        internal string Question { get; set; }
+        internal string Answer { get; set; }
         internal int StackID { get; set; }
     }
 }
