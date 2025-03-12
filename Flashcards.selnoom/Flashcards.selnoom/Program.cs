@@ -8,6 +8,8 @@ var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .Build();
 
+DatabaseInitializer.InitializeDatabase();
+
 string connectionString = configuration.GetConnectionString("FlashcardDB");
 
 StackRepository stackRespository = new(connectionString);
