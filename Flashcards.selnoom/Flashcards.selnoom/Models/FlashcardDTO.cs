@@ -1,6 +1,6 @@
 ﻿namespace Flashcards.selnoom.Models;
 
-class FlashcardDTO
+internal class FlashcardDTO
 {
     public int DisplayFlashcardId { get; set; }
     public string Question { get; set; }

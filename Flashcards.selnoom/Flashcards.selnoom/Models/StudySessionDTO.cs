@@ -1,6 +1,6 @@
 ﻿namespace Flashcards.selnoom.Models;
 
-class StudySessionDTO
+internal class StudySessionDTO
 {
     public int StudySessionId { get; set; }
     public string StackName { get; set; }

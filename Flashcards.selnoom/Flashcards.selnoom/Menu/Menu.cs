@@ -1,9 +1,6 @@
 ﻿using Flashcards.selnoom.Data;
 using Flashcards.selnoom.Models;
 using Flashcards.selnoom.Helper;
-using Microsoft.Identity.Client;
-using System.Collections.Generic;
-using System.Collections;
 
 namespace Flashcards.selnoom.Menu;
 

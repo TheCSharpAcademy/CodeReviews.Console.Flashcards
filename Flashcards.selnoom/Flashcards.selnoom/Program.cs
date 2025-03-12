@@ -12,8 +12,6 @@ DatabaseInitializer.InitializeDatabase();
 
 string connectionString = configuration.GetConnectionString("FlashcardDB");
 
-StackRepository stackRespository = new(connectionString);
-
 ServiceCollection services = new ServiceCollection();
 services.AddTransient<StackRepository>(provider => new StackRepository(connectionString));
 services.AddTransient<FlashcardRepository>(provider => new FlashcardRepository(connectionString));
