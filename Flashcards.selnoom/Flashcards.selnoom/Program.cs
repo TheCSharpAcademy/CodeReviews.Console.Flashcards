@@ -15,6 +15,7 @@ StackRepository stackRespository = new(connectionString);
 ServiceCollection services = new ServiceCollection();
 services.AddTransient<StackRepository>(provider => new StackRepository(connectionString));
 services.AddTransient<FlashcardRepository>(provider => new FlashcardRepository(connectionString));
+services.AddTransient<StudySessionRepository>(provider => new StudySessionRepository(connectionString));
 
 services.AddTransient<Menu>();
 

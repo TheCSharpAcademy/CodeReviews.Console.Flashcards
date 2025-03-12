@@ -1,6 +1,8 @@
 ﻿using Flashcards.selnoom.Data;
 using Flashcards.selnoom.Models;
 using Flashcards.selnoom.Helper;
+using Microsoft.Identity.Client;
+using System.Collections.Generic;
 
 namespace Flashcards.selnoom.Menu;
 
@@ -8,11 +10,13 @@ internal class Menu
 {
     private readonly StackRepository _stackRepository;
     private readonly FlashcardRepository _flashcardRepository;
+    private readonly StudySessionRepository _studySessionRepository;
 
-    public Menu(StackRepository stackRepository, FlashcardRepository flashcardRepository)
+    public Menu(StackRepository stackRepository, FlashcardRepository flashcardRepository , StudySessionRepository studySessionRepository)
     {
         _stackRepository = stackRepository;
         _flashcardRepository = flashcardRepository;
+        _studySessionRepository = studySessionRepository;
     }
 
     internal void ShowMenu()
@@ -24,8 +28,10 @@ internal class Menu
                 "Please select an option:\n" +
                 "1 - Create a stack\n" +
                 "2 - View stacks\n" +
-                "3 - Update a stack\n" +
+                "3 - Update a stack and its flashcards\n" +
                 "4 - Delete a stack\n" +
+                "5 - Start a study session\n" +
+                "6 - View previous study sessions\n" +
                 "0 - Exit program\n");
 
             string userInput = Console.ReadLine();
@@ -49,6 +55,12 @@ internal class Menu
                     break;
                 case 4:
                     DeleteStackMenu();
+                    break;
+                case 5:
+                    StudySessionMenu();
+                    break;
+                case 6:
+                    ShowStudySession();
                     break;
                 default:
                     Console.WriteLine("\nSelected option does not exist. Press enter and try again.");
@@ -122,6 +134,7 @@ internal class Menu
             "0 - Return to menu");
         string userInput = Console.ReadLine();
         int validatedInput = Validation.ValidateStringToInt(userInput);
+        Console.Clear();
 
         switch (validatedInput)
         {
@@ -155,6 +168,10 @@ internal class Menu
         string prompt = "Type the Id of the stack you wish to alter or 0 to return to the menu";
 
         validatedInput = Validation.GetValidatedId(prompt, 0, list.Count);
+        if (validatedInput == 0)
+        {
+            return;
+        }
 
         Console.WriteLine("Type new stack name or 0 to return to the menu");
         string stackName = Console.ReadLine();
@@ -186,6 +203,10 @@ internal class Menu
         string prompt = "Type the Id of the stack you wish to delete or 0 to return to the menu";
 
         validatedInput = Validation.GetValidatedId(prompt, 0, list.Count);
+        if (validatedInput == 0)
+        {
+            return;
+        }
 
         int databaseStackId = list[validatedInput - 1].StackId;
 
@@ -299,6 +320,10 @@ internal class Menu
 
         string prompt = "Type the Id of the flashcard you wish to delete or 0 to return to the menu";
         int validatedFlashcardId = Validation.GetValidatedId(prompt, 0, list.Count);
+        if (validatedFlashcardId == 0)
+        {
+            return;
+        }
 
         int databaseFlashcardId = list[validatedFlashcardId - 1].StackId;
 
@@ -321,11 +346,14 @@ internal class Menu
 
         List<string> questions = list.Select(x => x.Question).ToList();
         ShowFlashcards(stackId);
-        int validatedFlashcardId = 0;
 
 
         string prompt = "Type the Id of the flashcard you wish to update or 0 to return to the menu";
-        validatedFlashcardId = Validation.GetValidatedId(prompt, 0, list.Count);
+        int validatedFlashcardId = Validation.GetValidatedId(prompt, 0, list.Count);
+        if (validatedFlashcardId == 0)
+        {
+            return;
+        }
 
         string question = Validation.GetValidatedUniqueInput(
             "Type the flashcard's question or 0 to return to the menu:",
@@ -343,5 +371,93 @@ internal class Menu
         int databaseFlashcardId = list[validatedFlashcardId - 1].StackId;
 
         _flashcardRepository.UpdateFlashcard(databaseFlashcardId, question, answer);
+    }
+
+    internal void StudySessionMenu()
+    {
+        Console.Clear();
+        var stackList = ShowStacks();
+
+        string prompt = "\nSelect a stack to study or enter 0 to return to the menu";
+        int validatedFlashcardId = Validation.GetValidatedId(prompt, 0, stackList.Count);
+        if (validatedFlashcardId == 0)
+        {
+            return;
+        }
+
+        int databaseStackId = stackList[validatedFlashcardId - 1].StackId;
+        StartStudySession(databaseStackId);
+    }
+
+    internal void StartStudySession(int stackId)
+    {
+        var flashcards = _flashcardRepository.GetFlashcardsByStack(stackId);
+        int score = 0;
+        string answer;
+        DateTime date = DateTime.Now;
+
+        Console.Clear();
+        Console.WriteLine("Starting session!");
+
+        List<FlashcardDTO> flashcardDTOs = flashcards
+        .Select((fc, index) => new FlashcardDTO
+        {
+            DisplayFlashcardId = index + 1,
+            Question = fc.Question,
+            Answer = fc.Answer
+        })
+        .ToList();
+
+        foreach (FlashcardDTO flashcard in flashcardDTOs)
+        {
+            Console.WriteLine($"{flashcard.DisplayFlashcardId}\tQuestion: {flashcard.Question}\n");
+            Console.WriteLine("Type your answer or 0 to cancel the session:");
+            answer = Console.ReadLine();
+            if (answer == "0")
+            {
+                Console.WriteLine("\nSession canceled. Press enter to continue:");
+                Console.ReadLine();
+                return;
+            }
+            
+            if (flashcard.Answer == answer)
+            {
+                score += 1;
+                Console.WriteLine("\nCorrect! Press enter to continue the session");
+                Console.ReadLine();
+            }
+            else
+            {
+                Console.WriteLine("\nIncorrect :( Press enter to continue the session");
+                Console.ReadLine();
+            }
+        }
+
+        _studySessionRepository.CreateStudySession(stackId, score, date);
+
+        Console.WriteLine($"\nSession finished. You scored {score} out of {flashcardDTOs.Count} points. Press enter to continue");
+        Console.ReadLine();
+    }
+
+    internal void ShowStudySession()
+    {
+        Console.Clear();
+        List<StudySessionDTO> sessions = _studySessionRepository.GetStudySessionDTOs();
+        if (sessions.Count > 0)
+        {
+            Console.WriteLine("Sessions:\n");
+            foreach (StudySessionDTO session in sessions)
+            {
+                Console.WriteLine($"{session.SessionDate}\tStack: {session.StackName}\tScore: {session.Score}/{session.MaxScore}");
+            }
+            Console.WriteLine("Press enter to continue.");
+            Console.ReadLine();
+        }
+        else
+        {
+            Console.WriteLine("No sessions saved yet. Press enter to continue.");
+            Console.ReadLine();
+        }
+        
     }
 }
