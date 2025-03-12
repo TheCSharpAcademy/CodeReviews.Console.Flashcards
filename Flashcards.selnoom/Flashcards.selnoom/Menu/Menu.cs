@@ -403,8 +403,8 @@ internal class Menu
         Console.Clear();
         Console.WriteLine("Starting session!");
 
-        List<FlashcardDTO> flashcardDTOs = flashcards
-        .Select((fc, index) => new FlashcardDTO
+        List<FlashcardDto> flashcardDTOs = flashcards
+        .Select((fc, index) => new FlashcardDto
         {
             DisplayFlashcardId = index + 1,
             Question = fc.Question,
@@ -412,7 +412,7 @@ internal class Menu
         })
         .ToList();
 
-        foreach (FlashcardDTO flashcard in flashcardDTOs)
+        foreach (FlashcardDto flashcard in flashcardDTOs)
         {
             Console.WriteLine($"{flashcard.DisplayFlashcardId}\tQuestion: {flashcard.Question}\n");
             Console.WriteLine("Type your answer or 0 to cancel the session:");
@@ -446,11 +446,11 @@ internal class Menu
     internal void ShowStudySession()
     {
         Console.Clear();
-        List<StudySessionDTO> sessions = _studySessionRepository.GetStudySessionDTOs();
+        List<StudySessionDto> sessions = _studySessionRepository.GetStudySessionDTOs();
         if (sessions.Count > 0)
         {
             Console.WriteLine("Sessions:\n");
-            foreach (StudySessionDTO session in sessions)
+            foreach (StudySessionDto session in sessions)
             {
                 Console.WriteLine($"{session.SessionDate}\tStack: {session.StackName}\tScore: {session.Score}/{session.MaxScore}");
             }

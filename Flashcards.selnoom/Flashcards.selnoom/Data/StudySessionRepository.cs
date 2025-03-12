@@ -54,9 +54,9 @@ class StudySessionRepository
         return studySessions;
     }
 
-    internal List<StudySessionDTO> GetStudySessionDTOs()
+    internal List<StudySessionDto> GetStudySessionDTOs()
     {
-        List<StudySessionDTO> sessionDTOs = new();
+        List<StudySessionDto> sessionDTOs = new();
         using var connection = new SqlConnection(connectionString);
         string query = @"
             SELECT 
@@ -73,7 +73,7 @@ class StudySessionRepository
         using var reader = command.ExecuteReader();
         while (reader.Read())
         {
-            StudySessionDTO session = new StudySessionDTO
+            StudySessionDto session = new StudySessionDto
             {
                 StudySessionId = reader.GetInt32(reader.GetOrdinal("StudySessionId")),
                 StackName = reader.GetString(reader.GetOrdinal("StackName")),
