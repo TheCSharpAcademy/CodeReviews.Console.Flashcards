@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using System.Collections;
+using Dapper;
 using Flashcards.RyanW84;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -6,11 +7,15 @@ using Spectre.Console;
 
 public class DataAccess
 {
+    internal string tableNameChosen = "";
+
     IConfiguration configuration = new ConfigurationBuilder()
         .AddJsonFile("appsettings.json")
         .Build();
 
     private string ConnectionString;
+
+    public IEnumerable TableChosen { get; private set; }
 
     public DataAccess()
     {
@@ -45,7 +50,7 @@ public class DataAccess
             connection.Open();
 
             string createStackTableSql =
-                @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Stacks')
+                @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE question = 'Stacks')
                     CREATE TABLE Stacks (
                         Id int IDENTITY(1,1) NOT NULL,
                         Name NVARCHAR(30) NOT NULL UNIQUE,
@@ -54,7 +59,7 @@ public class DataAccess
             connection.Execute(createStackTableSql);
 
             string createFlashcardTableSql =
-                @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Flashcards')
+                @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE question = 'Flashcards')
                     CREATE TABLE Flashcards (
                         Id int IDENTITY(1,1) NOT NULL PRIMARY KEY,
                         Question NVARCHAR(30) NOT NULL,
@@ -81,16 +86,13 @@ public class DataAccess
                 Stacks stacks = new();
                 connection.Open();
 
-                Console.WriteLine("Enter the name of the stack you want to add: ");
+                Console.WriteLine("Enter the question of the Stack you wish to add:");
 
                 string stackName = Console.ReadLine();
 
                 string addStackSql = @"INSERT INTO Stacks (Name) VALUES (@Name);";
 
                 connection.Execute(addStackSql, new { Name = stackName });
-
-                //var dataAccess = new DataAccess();
-                //dataAccess.InsertStack(stacks);
             }
         }
         catch (Exception ex)
@@ -102,77 +104,156 @@ public class DataAccess
 
     internal void UpdateStack()
     {
-        //var dataAccess = new DataAccess();
+        tableNameChosen = GetTable();
 
-        var stackRecords = GetStacks();
-
-        var Id = GetNumber("\nPlease type the id of the habit you want to update: ");
-        System.Console.Clear();
-
-        var stackSelected = stackRecords.SingleOrDefault(x => x.Id == Id);
-        if (stackSelected == null)
+        if (tableNameChosen == "Stacks")
         {
-            System.Console.WriteLine("Record not found. Choose a valid record");
-            System.Console.ReadKey();
-            UpdateStack();
-        }
-        QueryAndDisplaySingleRecord(Id);
+            var stackRecords = GetRecords().Cast<Stacks>();
 
-        var name = AnsiConsole.Ask<string>("What do you want to update the Stack Name to? ");
-        while (string.IsNullOrEmpty(name))
-        {
-            name = AnsiConsole.Ask<string>("Name can't be empty. Try again:");
-        }
+            var Id = GetNumber("\nPlease type the id of the stack you want to update: ");
+            System.Console.Clear();
 
-        using (var connection = new SqlConnection(ConnectionString))
-        {
-            connection.Open();
+            var recordSelected = stackRecords.SingleOrDefault(x => x.Id == Id);
+            if (recordSelected == null)
+            {
+                System.Console.WriteLine("Record not found. Choose a valid record");
+                System.Console.ReadKey();
+                UpdateStack();
+            }
+            QueryAndDisplaySingleRecord(Id);
 
-            string updateQuery =
-                @"
-                UPDATE stacks SET Name =@name WHERE Id =@Id";
-
-            connection.Execute(updateQuery, new { name, Id });
-            Console.WriteLine("Record Updated");
-
-            string name = ""; // adding more spectre integration
-            bool updateName = AnsiConsole.Confirm("\nUpdate name?");
+            string name = "";
+            bool updateName = AnsiConsole.Confirm("\nUpdate Stack name?");
             if (updateName)
             {
-                name = AnsiConsole.Ask<string>("Habit's new name:");
+                name = AnsiConsole.Ask<string>("New Name: ");
                 while (string.IsNullOrEmpty(name))
                 {
-                    name = AnsiConsole.Ask<string>("Habit's name can't be empty. Try again:");
+                    name = AnsiConsole.Ask<string>(
+                        $"{tableNameChosen} field: Name can't be empty. Try again:"
+                    );
                 }
+            }
+
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+
+                string updateQuery =
+                    @$"
+                UPDATE {tableNameChosen} SET Name =@question WHERE Id =@Id";
+
+                connection.Execute(updateQuery, new { name, Id });
+                Console.WriteLine("Record Updated");
+            }
+        }
+        else if (tableNameChosen == "Flashcards")
+        {
+            var flashcardRecords = GetRecords().Cast<Flashcards>();
+
+            var Id = GetNumber("\nPlease type the id of the Flashcard you want to update: ");
+            System.Console.Clear();
+
+            var recordSelected = flashcardRecords.SingleOrDefault(x => x.Id == Id);
+            if (recordSelected == null)
+            {
+                System.Console.WriteLine("Record not found. Choose a valid record");
+                System.Console.ReadKey();
+                UpdateStack();
+            }
+            QueryAndDisplaySingleRecord(Id);
+
+            string question = "";
+            bool updateQuestion = AnsiConsole.Confirm("\nUpdate question?");
+            if (updateQuestion)
+            {
+                question = AnsiConsole.Ask<string>("Update question: ");
+                while (string.IsNullOrEmpty(question))
+                {
+                    question = AnsiConsole.Ask<string>(
+                        $"{tableNameChosen} field: Question can't be empty. Try again:"
+                    );
+                }
+            }
+
+            string answer = "";
+            bool updateAnswer = AnsiConsole.Confirm("\nUpdate Answer?");
+            if (updateQuestion)
+            {
+                question = AnsiConsole.Ask<string>("Update Answer: ");
+                while (string.IsNullOrEmpty(question))
+                {
+                    question = AnsiConsole.Ask<string>(
+                        $"{tableNameChosen} field: Answer can't be empty. Try again:"
+                    );
+                }
+            }
+
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+
+                string updateQuery =
+                    @$"
+                UPDATE {tableNameChosen} SET Question =@question WHERE Id =@Id";
+
+                connection.Execute(updateQuery, new { question, Id });
+                Console.WriteLine("Record Updated");
             }
         }
     }
 
-    internal IEnumerable<Stacks> GetStacks()
+    internal IEnumerable GetRecords()
     {
         using (var connection = new SqlConnection(ConnectionString))
         {
             connection.Open();
 
-            string getStacksSQL = @"SELECT * FROM stacks;";
+            tableNameChosen = GetTable();
 
-            var stacks = connection.Query<Stacks>(getStacksSQL);
+            string getRecordsSQL = @$"SELECT * FROM {tableNameChosen};";
 
-            ViewStacks(stacks);
+            var stacks = connection.Query<Stacks>(getRecordsSQL);
+            var flashcards = connection.Query<Flashcards>(getRecordsSQL);
 
-            return stacks;
+            if (tableNameChosen == "Stacks")
+            {
+                ViewRecords((IEnumerable<IEnumerable>)stacks);
+                return stacks;
+            }
+            else if (tableNameChosen == "Flashcards")
+            {
+                ViewRecords((IEnumerable<IEnumerable>)flashcards);
+                return flashcards;
+            }
+            return TableChosen;
         }
     }
 
-    internal void ViewStacks(IEnumerable<Stacks> stacks)
+    internal string GetTable()
+    {
+        var tableNameChosen = "";
+        var tableName = AnsiConsole.Prompt(
+            new TextPrompt<bool>("Which table do you wish to choose?")
+                .AddChoice(true)
+                .AddChoice(false)
+                .WithConverter(choice => choice ? "Stacks" : "Flashcards")
+        );
+
+        tableNameChosen = tableName == true ? "Stacks" : "Flashcards";
+
+        return tableNameChosen;
+    }
+
+    internal void ViewRecords(IEnumerable<IEnumerable> TableChosen)
     {
         var table = new Table();
         table.AddColumn("Id");
         table.AddColumn("Name");
 
-        foreach (var stack in stacks)
+        foreach (var record in TableChosen)
         {
-            table.AddRow(stack.Id.ToString(), stack.Name.ToString());
+            table.AddRow(record.Id.ToString(), record.Name.ToString());
         }
 
         AnsiConsole.Write(table);
@@ -181,7 +262,7 @@ public class DataAccess
     internal static void QueryAndDisplaySingleRecord(int id)
     {
         var dataAccess = new DataAccess();
-        var stacks = dataAccess.GetStacks();
+        var stacks = dataAccess.GetRecords().Cast<Stacks>();
 
         var table = new Table();
         table.AddColumn("Id");
@@ -194,9 +275,16 @@ public class DataAccess
         AnsiConsole.Write(table);
     }
 
-    internal void DeleteStack()
+    internal void DeleteEntry()
     {
-        var stacks = GetStacks();
+        var tablename = AnsiConsole.Prompt(
+            new TextPrompt<bool>("Which table do you wish to choose?")
+                .AddChoice(true)
+                .AddChoice(false)
+                .WithConverter(choice => choice ? "Stacks" : "Flashcards")
+        );
+        Console.WriteLine();
+        var stacks = GetRecords();
 
         int id = GetNumber("Please type the ID of the Stack you want to delete: ");
         System.Console.Clear();
@@ -242,35 +330,41 @@ public class DataAccess
 
     internal void AddFlashcard()
     {
-        try
+        using (var connection = new SqlConnection(ConnectionString))
         {
-            using (var connection = new SqlConnection(ConnectionString))
+            Console.Clear();
+            Flashcards flashcard = new();
+            connection.Open();
+
+            GetRecords();
+
+            int StackChoice = GetNumber(
+                "Enter the ID of the Stack you wish to add this Flashcard to"
+            );
+
+            var question = AnsiConsole.Ask<string>(
+                "Write the question to be asked: (char limit 30)"
+            );
+            while (string.IsNullOrEmpty(question))
             {
-                Console.Clear();
-                Flashcards flashcard = new();
-                connection.Open();
-
-                Console.WriteLine("Enter the name of the stack you want to add: ");
-
-                string question = Console.ReadLine();
-
-                string addFlashcardSql = @"INSERT INTO Flashcards (Question) VALUES (@question);";
-
-                connection.Execute(addFlashcardSql, new { Question = question });
-
-                var dataAccess = new DataAccess();
+                question = AnsiConsole.Ask<string>("Question can't be empty, try again!");
             }
+
+            var answer = AnsiConsole.Ask<string>("Write the answer to the Question");
+            while (string.IsNullOrEmpty(question))
+            {
+                question = AnsiConsole.Ask<string>("Answer can't be empty, try again!");
+            }
+
+            string addFlashcardSql = @"INSERT INTO Flashcards (Question) VALUES (@question);";
+
+            connection.Execute(addFlashcardSql, new { Question = question });
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"There was a problem in the adding section {ex.Message}");
-        }
-        UserInterface.StackMenu();
     }
 
     internal void DeleteFlashcard()
     {
-        var stacks = GetStacks();
+        var flashcards = GetRecords();
 
         int id = GetNumber("Please type the id of the Flashcard you want to delete: ");
         System.Console.Clear();

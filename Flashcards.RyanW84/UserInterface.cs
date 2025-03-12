@@ -84,14 +84,14 @@ internal class UserInterface
                 DataAccess.AddStack();
                 break;
             case "Delete a Stack":
-                DataAccess.DeleteStack();
+                DataAccess.DeleteEntry();
                 break;
             case "Update a Stack":
                 DataAccess.UpdateStack();
                 break;
             case "View the Stacks":
                 //isMenuRunning = false;
-                DataAccess.GetStacks();
+                DataAccess.GetRecords();
                 Console.ReadKey();
                 break;
             case "Add a Flashcard":
