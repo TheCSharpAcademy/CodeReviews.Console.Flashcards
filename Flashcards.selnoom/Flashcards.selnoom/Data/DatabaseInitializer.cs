@@ -41,7 +41,7 @@ internal static class DatabaseInitializer
                     BEGIN
                         CREATE TABLE Stack (
                             StackId INT IDENTITY(1,1) PRIMARY KEY,
-                            StackName NVARCHAR(100) NOT NULL
+                            StackName NVARCHAR(100) NOT NULL UNIQUE
                         );
                     END";
             using (var command = new SqlCommand(createStackTable, connection))

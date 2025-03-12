@@ -3,6 +3,7 @@ using Flashcards.selnoom.Models;
 using Flashcards.selnoom.Helper;
 using Microsoft.Identity.Client;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace Flashcards.selnoom.Menu;
 
@@ -73,8 +74,11 @@ internal class Menu
     internal void ShowCreateStackMenu()
     {
         Console.Clear();
-        Console.WriteLine("Please type the name of the stack you wish to create or 0 to return to the menu");
-        string userInput = Console.ReadLine();
+        List<FlashcardStack> stacks = _stackRepository.GetStacks();
+        string userInput = Validation.GetValidatedUniqueInput(
+            "Please type the name of the stack you wish to create or 0 to return to the menu",
+            stacks.Select(x => x.StackName).ToList(),
+            "That stack name already exists");
         if (userInput == "0")
         {
             return;
@@ -157,6 +161,7 @@ internal class Menu
     {
         var list = ShowStacks();
         int validatedInput = 0;
+        List<FlashcardStack> stacks = _stackRepository.GetStacks();
 
         if (list.Count <= 0)
         {
@@ -173,8 +178,10 @@ internal class Menu
             return;
         }
 
-        Console.WriteLine("Type new stack name or 0 to return to the menu");
-        string stackName = Console.ReadLine();
+        string stackName = Validation.GetValidatedUniqueInput(
+            "Type new stack name or 0 to return to the menu",
+            stacks.Select(x => x.StackName).ToList(),
+            "That stack name already exists");
         if (stackName == "0")
         {
             return;
