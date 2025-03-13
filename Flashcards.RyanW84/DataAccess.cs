@@ -110,7 +110,7 @@ public class DataAccess
         {
             var stackRecords = GetRecords(tableNameChosen).Cast<Stacks>();
 
-            var Id = GetNumber("\nPlease type the id of the stack you want to update: ");
+            var Id = GetNumber("\nPlease type the id of the flashcard you want to update: ");
             System.Console.Clear();
 
             var recordSelected = stackRecords.SingleOrDefault(x => x.Id == Id);
@@ -120,7 +120,7 @@ public class DataAccess
                 System.Console.ReadKey();
                 UpdateRecord(tableNameChosen);
             }
-            QueryAndDisplaySingleRecord(Id);
+            QueryAndDisplaySingleRecord(Id, tableNameChosen);
 
             string name = "";
             bool updateName = AnsiConsole.Confirm("\nUpdate Stack name?");
@@ -161,7 +161,7 @@ public class DataAccess
                 System.Console.ReadKey();
                 UpdateRecord(tableNameChosen);
             }
-            QueryAndDisplaySingleRecord(Id);
+            QueryAndDisplaySingleRecord(Id, tableNameChosen);
 
             string question = "";
             bool updateQuestion = AnsiConsole.Confirm("\nUpdate question?");
@@ -215,13 +215,13 @@ public class DataAccess
         GetRecords(tableNameChosen);
     }
 
-    internal IEnumerable GetRecords(string tableNameChosen)
+    internal IEnumerable GetRecords(string tableNameChosen, string getRecordsSQL)
     {
         using (var connection = new SqlConnection(ConnectionString))
         {
             connection.Open();
 
-            string getRecordsSQL = @$"SELECT * FROM {tableNameChosen};";
+            getRecordsSQL = @$"SELECT * FROM {tableNameChosen} ;"; // working on customising
 
             var stacks = connection.Query<Stacks>(getRecordsSQL);
             var flashcards = connection.Query<Flashcards>(getRecordsSQL);
@@ -325,27 +325,50 @@ public class DataAccess
         return tableColumns.ToArray();
     }
 
-    internal void QueryAndDisplaySingleRecord(int id)
+    internal void QueryAndDisplaySingleRecord(int id, string tableNameChosen)
     {
-        tableNameChosen = "Stacks";
-        var stacks = GetRecords(tableNameChosen).Cast<Stacks>();
-
-        var table = new Table();
-        table.AddColumn("Id");
-        table.AddColumn("Name");
-
-        var stack = stacks.Where(x => x.Id == id).SingleOrDefault();
-        if (stack == null)
+        if (tableNameChosen == "Stacks")
         {
-            Console.WriteLine("Record not found.");
-            return;
+            var stacks = GetRecords(tableNameChosen).Cast<Stacks>();
+
+            var table = new Table();
+            var columns = getColumnsName();
+
+            var stack = stacks.Where(x => x.Id == id).SingleOrDefault();
+            if (stack == null)
+            {
+                Console.WriteLine("Record not found.");
+                return;
+            }
+
+            table.AddRow(stack.Id.ToString(), stack.Name);
+            AnsiConsole.Write(table);
+            {
+                table.AddRow(stack.Id.ToString(), stack.Name);
+            }
+            AnsiConsole.Write(table);
         }
-        table.AddRow(stack.Id.ToString(), stack.Name.ToString());
-        AnsiConsole.Write(table);
+        else if (tableNameChosen == "Flashcards")
         {
-            table.AddRow(stack.Id.ToString(), stack.Name.ToString());
+            //var flashcards = GetRecords(tableNameChosen).Cast<Flashcards>();
+
+            //var table = new Table();
+            //var columns = getColumnsName();
+
+            //var flashcard = flashcards.Where(x => x.Id == id).SingleOrDefault();
+            //if (flashcard == null)
+            //{
+            //    Console.WriteLine("Record not found.");
+            //    return;
+            //}
+
+            //table.AddRow(flashcard.Id.ToString(), flashcard.Name);
+            //AnsiConsole.Write(table);
+            //{
+            //    table.AddRow(flashcard.Id.ToString(), flashcard.Name);
+            //}
+            //AnsiConsole.Write(table);
         }
-        AnsiConsole.Write(table);
     }
 
     internal void DeleteStack()
@@ -357,7 +380,7 @@ public class DataAccess
 
         int id = GetNumber("Please type the ID of the Stack you want to delete: ");
         System.Console.Clear();
-        QueryAndDisplaySingleRecord(id);
+        QueryAndDisplaySingleRecord(id, tableNameChosen);
         System.Console.WriteLine();
 
         var responseMessage =
@@ -373,7 +396,7 @@ public class DataAccess
         {
             connection.Open();
 
-            var tableName = "stacks";
+            var tableName = "flashcards";
 
             string deleteQuery = $@"DELETE FROM {tableName} WHERE Id = @Id";
 
@@ -443,14 +466,16 @@ public class DataAccess
         tableNameChosen = "Flashcards";
         var flashcards = GetRecords(tableNameChosen);
 
-        int id = GetNumber("Please type the id of the Flashcard you want to delete: ");
+        int iD = GetNumber("Please type the id of the Flashcard you want to delete: ");
         System.Console.Clear();
-        QueryAndDisplaySingleRecord(id);
+        QueryAndDisplaySingleRecord(iD, tableNameChosen);
+        Console.WriteLine("Press any key to continue");
+        Console.ReadKey();
         System.Console.WriteLine();
 
         var responseMessage =
-            id < 1
-                ? $"\nRecord with the id {id} doesn't exist. Press any key to return to Main Menu"
+            iD < 1
+                ? $"\nRecord with the id {iD} doesn't exist. Press any key to return to Main Menu"
                 : "Record deleted successfully. Press any key to return to Main Menu";
 
         System.Console.Clear();
@@ -461,11 +486,11 @@ public class DataAccess
         {
             connection.Open();
 
-            string deleteQuery = "DELETE FROM stacks WHERE Id = @Id";
+            string deleteQuery = $"DELETE FROM {tableNameChosen} WHERE Id = @Id";
 
-            int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
+            int rowsAffected = connection.Execute(deleteQuery, new { Id = iD });
 
-            Console.WriteLine($"Stack {id} Deleted");
+            Console.WriteLine($"{tableNameChosen}: {iD} Deleted");
         }
     }
 

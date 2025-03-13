@@ -25,6 +25,8 @@ internal class UserInterface
 
     internal static void StackMenu()
     {
+        var dataAccess = new DataAccess();
+        dataAccess.tableNameChosen = "Stacks";
         isMenuRunning = true;
         while (isMenuRunning)
         {
@@ -46,6 +48,8 @@ internal class UserInterface
 
     internal static void FlashcardMenu()
     {
+        var dataAccess = new DataAccess();
+        dataAccess.tableNameChosen = "Flashcards";
         isMenuRunning = true;
         while (isMenuRunning)
         {
@@ -86,10 +90,10 @@ internal class UserInterface
                 DataAccess.DeleteStack();
                 break;
             case "Update a Stack":
-                DataAccess.tableNameChosen = "Stacks";
                 DataAccess.UpdateRecord(DataAccess.tableNameChosen);
                 break;
             case "View the Stacks":
+                string getRecordsSQL = @$"SELECT * FROM {DataAccess.tableNameChosen} ;";
                 DataAccess.GetStacks();
                 Console.ReadKey();
                 break;
@@ -100,7 +104,6 @@ internal class UserInterface
                 DataAccess.DeleteFlashcard();
                 break;
             case "Update a Flashcard":
-                DataAccess.tableNameChosen = "Stacks";
                 DataAccess.UpdateRecord(DataAccess.tableNameChosen);
                 break;
             case "View the Flashcards":
