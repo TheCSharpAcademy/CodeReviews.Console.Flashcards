@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Data;
+using System.Reflection;
 using Dapper;
 using Flashcards.RyanW84;
 using Microsoft.Data.SqlClient;
@@ -142,7 +143,7 @@ public class DataAccess
 
                 string updateQuery =
                     @$"
-                UPDATE {tableNameChosen} SET Name =@question WHERE Id =@Id";
+                UPDATE {tableNameChosen} SET Question =@question WHERE Id =@Id";
 
                 connection.Execute(updateQuery, new { name, Id });
                 Console.WriteLine("Record Updated");
@@ -261,9 +262,39 @@ public class DataAccess
 
         foreach (var record in records)
         {
-            table.AddRow(records.ToString());
-        }
+            PropertyInfo[] properties = record.GetType().GetProperties();
+            List<string> rowData = new List<string>();
 
+            foreach (var column in columns)
+            {
+                var property = properties.SingleOrDefault(x =>
+                    x.Name.Equals(column, StringComparison.OrdinalIgnoreCase)
+                );
+                if (property != null)
+                {
+                    rowData.Add(property.GetValue(record)?.ToString() ?? "N/A");
+                }
+                else
+                {
+                    rowData.Add("N/A");
+                }
+            }
+
+            table.AddRow(rowData.ToArray());
+        }
+        if (records is Stacks stacks)
+        {
+            table.AddRow([stacks.Id.ToString(), stacks.Name]);
+        }
+        else if (records is Flashcards flashcards)
+        {
+            table.AddRow(
+                flashcards.Id.ToString(),
+                flashcards.Question,
+                flashcards.Answer,
+                flashcards.StackID.ToString()
+            );
+        }
         AnsiConsole.Write(table);
     }
 
@@ -277,7 +308,7 @@ public class DataAccess
             {
                 connection.Open();
                 command.CommandText =
-                    $@"SELECT column_name FROM information_schema.columns WHERE table_name = '{tableNameChosen}'";
+                    $"SELECT column_name FROM information_schema.columns WHERE table_name = '{tableNameChosen}'";
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
@@ -382,14 +413,23 @@ public class DataAccess
             }
 
             var answer = AnsiConsole.Ask<string>("Write the answer to the Question");
-            while (string.IsNullOrEmpty(question))
+            while (string.IsNullOrEmpty(answer))
             {
-                question = AnsiConsole.Ask<string>("Answer can't be empty, try again!");
+                answer = AnsiConsole.Ask<string>("Answer can't be empty, try again!");
             }
 
-            string addFlashcardSql = @"INSERT INTO Flashcards (Question) VALUES (@question);";
+            string addFlashcardSql =
+                @"INSERT INTO Flashcards (Question, Answer, StackId) VALUES (@question, @answer, @StackChoice);";
 
-            connection.Execute(addFlashcardSql, new { Question = question });
+            connection.Execute(
+                addFlashcardSql,
+                new
+                {
+                    Question = question,
+                    Answer = answer,
+                    StackId = StackChoice,
+                }
+            );
         }
     }
 
@@ -429,13 +469,13 @@ public class DataAccess
 
     internal void ViewFlashcard() { }
 
-    internal class Stacks
+    public class Stacks
     {
         internal int Id { get; set; }
         internal string Name { get; set; }
     }
 
-    internal class Flashcards
+    public class Flashcards
     {
         internal int Id { get; set; }
         internal string Question { get; set; }
