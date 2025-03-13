@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Data;
 using Dapper;
 using Flashcards.RyanW84;
 using Microsoft.Data.SqlClient;
@@ -50,7 +51,7 @@ public class DataAccess
             connection.Open();
 
             string createStackTableSql =
-                @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE question = 'Stacks')
+                @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Stacks')
                     CREATE TABLE Stacks (
                         Id int IDENTITY(1,1) NOT NULL,
                         Name NVARCHAR(30) NOT NULL UNIQUE,
@@ -59,7 +60,7 @@ public class DataAccess
             connection.Execute(createStackTableSql);
 
             string createFlashcardTableSql =
-                @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE question = 'Flashcards')
+                @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Flashcards')
                     CREATE TABLE Flashcards (
                         Id int IDENTITY(1,1) NOT NULL PRIMARY KEY,
                         Question NVARCHAR(30) NOT NULL,
@@ -218,15 +219,15 @@ public class DataAccess
 
             if (tableNameChosen == "Stacks")
             {
-                ViewRecords((IEnumerable<IEnumerable>)stacks);
+                ViewRecords(stacks);
                 return stacks;
             }
             else if (tableNameChosen == "Flashcards")
             {
-                ViewRecords((IEnumerable<IEnumerable>)flashcards);
+                ViewRecords(flashcards);
                 return flashcards;
             }
-            return TableChosen;
+            return null;
         }
     }
 
@@ -245,18 +246,48 @@ public class DataAccess
         return tableNameChosen;
     }
 
-    internal void ViewRecords(IEnumerable<IEnumerable> TableChosen)
+    internal void ViewRecords<T>(IEnumerable<T> records)
     {
         var table = new Table();
-        table.AddColumn("Id");
-        table.AddColumn("Name");
 
-        foreach (var record in TableChosen)
+        var columns = getColumnsName();
+
+        var dataAccess = new DataAccess();
+
+        foreach (var column in columns)
         {
-            table.AddRow(record.Id.ToString(), record.Name.ToString());
+            table.AddColumn(column);
+        }
+
+        foreach (var record in records)
+        {
+            table.AddRow(records.ToString());
         }
 
         AnsiConsole.Write(table);
+    }
+
+    string[] getColumnsName()
+    {
+        List<string> tableColumns = new List<string>();
+
+        using (var connection = new SqlConnection(ConnectionString))
+        {
+            using (var command = connection.CreateCommand())
+            {
+                connection.Open();
+                command.CommandText =
+                    $@"SELECT column_name FROM information_schema.columns WHERE table_name = '{tableNameChosen}'";
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        tableColumns.Add(reader.GetString(0));
+                    }
+                }
+            }
+        }
+        return tableColumns.ToArray();
     }
 
     internal static void QueryAndDisplaySingleRecord(int id)
