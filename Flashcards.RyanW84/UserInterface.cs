@@ -80,18 +80,17 @@ internal class UserInterface
                 FlashcardMenu();
                 break;
             case "Add a Stack":
-                isMenuRunning = false;
                 DataAccess.AddStack();
                 break;
             case "Delete a Stack":
                 DataAccess.DeleteStack();
                 break;
             case "Update a Stack":
-                DataAccess.UpdateStack();
+                DataAccess.tableNameChosen = "Stacks";
+                DataAccess.UpdateRecord(DataAccess.tableNameChosen);
                 break;
             case "View the Stacks":
-                //isMenuRunning = false;
-                DataAccess.GetRecords();
+                DataAccess.GetStacks();
                 Console.ReadKey();
                 break;
             case "Add a Flashcard":
@@ -101,10 +100,12 @@ internal class UserInterface
                 DataAccess.DeleteFlashcard();
                 break;
             case "Update a Flashcard":
-                DataAccess.UpdateFlashcard();
+                DataAccess.tableNameChosen = "Stacks";
+                DataAccess.UpdateRecord(DataAccess.tableNameChosen);
                 break;
             case "View the Flashcards":
                 DataAccess.GetFlashcards();
+                Console.ReadKey();
                 break;
             case "Exit to Main Menu":
                 MainMenu();

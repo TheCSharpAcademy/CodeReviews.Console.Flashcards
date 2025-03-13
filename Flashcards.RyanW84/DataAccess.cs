@@ -85,7 +85,7 @@ public class DataAccess
             using (var connection = new SqlConnection(ConnectionString))
             {
                 Console.Clear();
-                Stacks stacks = new();
+
                 connection.Open();
 
                 Console.WriteLine("Enter the question of the Stack you wish to add:");
@@ -104,13 +104,11 @@ public class DataAccess
         UserInterface.StackMenu();
     }
 
-    internal void UpdateStack()
+    internal void UpdateRecord(string tableNameChosen)
     {
-        tableNameChosen = GetTable();
-
         if (tableNameChosen == "Stacks")
         {
-            var stackRecords = GetRecords().Cast<Stacks>();
+            var stackRecords = GetRecords(tableNameChosen).Cast<Stacks>();
 
             var Id = GetNumber("\nPlease type the id of the stack you want to update: ");
             System.Console.Clear();
@@ -120,7 +118,7 @@ public class DataAccess
             {
                 System.Console.WriteLine("Record not found. Choose a valid record");
                 System.Console.ReadKey();
-                UpdateStack();
+                UpdateRecord(tableNameChosen);
             }
             QueryAndDisplaySingleRecord(Id);
 
@@ -143,7 +141,7 @@ public class DataAccess
 
                 string updateQuery =
                     @$"
-                UPDATE {tableNameChosen} SET Question =@question WHERE Id =@Id";
+                UPDATE {tableNameChosen} SET Name =@name WHERE Id =@Id";
 
                 connection.Execute(updateQuery, new { name, Id });
                 Console.WriteLine("Record Updated");
@@ -151,7 +149,7 @@ public class DataAccess
         }
         else if (tableNameChosen == "Flashcards")
         {
-            var flashcardRecords = GetRecords().Cast<Flashcards>();
+            var flashcardRecords = GetRecords(tableNameChosen).Cast<Flashcards>();
 
             var Id = GetNumber("\nPlease type the id of the Flashcard you want to update: ");
             System.Console.Clear();
@@ -161,7 +159,7 @@ public class DataAccess
             {
                 System.Console.WriteLine("Record not found. Choose a valid record");
                 System.Console.ReadKey();
-                UpdateStack();
+                UpdateRecord(tableNameChosen);
             }
             QueryAndDisplaySingleRecord(Id);
 
@@ -205,13 +203,23 @@ public class DataAccess
         }
     }
 
-    internal IEnumerable GetRecords()
+    internal void ViewStacks()
+    {
+        tableNameChosen = "Stacks";
+        GetRecords(tableNameChosen);
+    }
+
+    internal void GetStacks()
+    {
+        tableNameChosen = "Stacks";
+        GetRecords(tableNameChosen);
+    }
+
+    internal IEnumerable GetRecords(string tableNameChosen)
     {
         using (var connection = new SqlConnection(ConnectionString))
         {
             connection.Open();
-
-            tableNameChosen = GetTable();
 
             string getRecordsSQL = @$"SELECT * FROM {tableNameChosen};";
 
@@ -317,16 +325,23 @@ public class DataAccess
         return tableColumns.ToArray();
     }
 
-    internal static void QueryAndDisplaySingleRecord(int id)
+    internal void QueryAndDisplaySingleRecord(int id)
     {
-        var dataAccess = new DataAccess();
-        var stacks = dataAccess.GetRecords().Cast<Stacks>();
+        tableNameChosen = "Stacks";
+        var stacks = GetRecords(tableNameChosen).Cast<Stacks>();
 
         var table = new Table();
         table.AddColumn("Id");
         table.AddColumn("Name");
 
-        var stack = stacks.Where(x => x.Id == id).Single();
+        var stack = stacks.Where(x => x.Id == id).SingleOrDefault();
+        if (stack == null)
+        {
+            Console.WriteLine("Record not found.");
+            return;
+        }
+        table.AddRow(stack.Id.ToString(), stack.Name.ToString());
+        AnsiConsole.Write(table);
         {
             table.AddRow(stack.Id.ToString(), stack.Name.ToString());
         }
@@ -335,14 +350,10 @@ public class DataAccess
 
     internal void DeleteStack()
     {
-        var tablename = AnsiConsole.Prompt(
-            new TextPrompt<bool>("Which table do you wish to choose?")
-                .AddChoice(true)
-                .AddChoice(false)
-                .WithConverter(choice => choice ? "Stacks" : "Flashcards")
-        );
+        tableNameChosen = "Stacks";
+
         Console.WriteLine();
-        var stacks = GetRecords().Cast<Stacks>();
+        var stacks = GetRecords(tableNameChosen).Cast<Stacks>();
 
         int id = GetNumber("Please type the ID of the Stack you want to delete: ");
         System.Console.Clear();
@@ -391,10 +402,10 @@ public class DataAccess
         using (var connection = new SqlConnection(ConnectionString))
         {
             Console.Clear();
-            Flashcards flashcard = new();
             connection.Open();
 
-            GetRecords().Cast<Flashcards>();
+            tableNameChosen = "Stacks";
+            GetRecords(tableNameChosen);
 
             int stackId = GetNumber("Enter the ID of the Stack you wish to add this Flashcard to");
 
@@ -429,7 +440,8 @@ public class DataAccess
 
     internal void DeleteFlashcard()
     {
-        var flashcards = GetRecords();
+        tableNameChosen = "Flashcards";
+        var flashcards = GetRecords(tableNameChosen);
 
         int id = GetNumber("Please type the id of the Flashcard you want to delete: ");
         System.Console.Clear();
@@ -461,12 +473,14 @@ public class DataAccess
 
     internal void GetFlashcards()
     {
-        GetRecords().Cast<Flashcards>();
+        tableNameChosen = "Flashcards";
+        GetRecords(tableNameChosen);
     }
 
-    internal void ViewFlashcard()
+    internal void ViewFlashcards()
     {
-        GetRecords().Cast<Flashcards>();
+        tableNameChosen = "Flashcards";
+        GetRecords(tableNameChosen);
     }
 
     internal class Stacks
