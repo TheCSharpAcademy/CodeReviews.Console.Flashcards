@@ -84,7 +84,7 @@ internal class UserInterface
                 DataAccess.AddStack();
                 break;
             case "Delete a Stack":
-                DataAccess.DeleteEntry();
+                DataAccess.DeleteStack();
                 break;
             case "Update a Stack":
                 DataAccess.UpdateStack();

@@ -333,7 +333,7 @@ public class DataAccess
         AnsiConsole.Write(table);
     }
 
-    internal void DeleteEntry()
+    internal void DeleteStack()
     {
         var tablename = AnsiConsole.Prompt(
             new TextPrompt<bool>("Which table do you wish to choose?")
@@ -342,7 +342,7 @@ public class DataAccess
                 .WithConverter(choice => choice ? "Stacks" : "Flashcards")
         );
         Console.WriteLine();
-        var stacks = GetRecords();
+        var stacks = GetRecords().Cast<Stacks>();
 
         int id = GetNumber("Please type the ID of the Stack you want to delete: ");
         System.Console.Clear();
@@ -394,11 +394,9 @@ public class DataAccess
             Flashcards flashcard = new();
             connection.Open();
 
-            GetRecords();
+            GetRecords().Cast<Flashcards>();
 
-            int StackChoice = GetNumber(
-                "Enter the ID of the Stack you wish to add this Flashcard to"
-            );
+            int stackId = GetNumber("Enter the ID of the Stack you wish to add this Flashcard to");
 
             var question = AnsiConsole.Ask<string>(
                 "Write the question to be asked: (char limit 30)"
@@ -415,7 +413,7 @@ public class DataAccess
             }
 
             string addFlashcardSql =
-                @"INSERT INTO Flashcards (Question, Answer, StackId) VALUES (@question, @answer, @StackChoice);";
+                @"INSERT INTO Flashcards (Question, Answer, StackId) VALUES (@question, @answer, @stackId);";
 
             connection.Execute(
                 addFlashcardSql,
@@ -423,7 +421,7 @@ public class DataAccess
                 {
                     Question = question,
                     Answer = answer,
-                    StackId = StackChoice,
+                    StackId = stackId,
                 }
             );
         }
@@ -461,21 +459,27 @@ public class DataAccess
 
     internal void UpdateFlashcard() { }
 
-    internal void GetFlashcards() { }
-
-    internal void ViewFlashcard() { }
-
-    public class Stacks
+    internal void GetFlashcards()
     {
-        internal int Id { get; set; }
-        internal string Name { get; set; }
+        GetRecords().Cast<Flashcards>();
     }
 
-    public class Flashcards
+    internal void ViewFlashcard()
     {
-        internal int Id { get; set; }
-        internal string Question { get; set; }
-        internal string Answer { get; set; }
-        internal int StackID { get; set; }
+        GetRecords().Cast<Flashcards>();
+    }
+
+    internal class Stacks
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    internal class Flashcards
+    {
+        public int Id { get; set; }
+        public string Question { get; set; }
+        public string Answer { get; set; }
+        public int StackID { get; set; }
     }
 }
