@@ -234,15 +234,11 @@ public class DataAccess
 
     internal string GetTable()
     {
-        var tableNameChosen = "";
-        var tableName = AnsiConsole.Prompt(
-            new TextPrompt<bool>("Which table do you wish to choose?")
-                .AddChoice(true)
-                .AddChoice(false)
-                .WithConverter(choice => choice ? "Stacks" : "Flashcards")
+        var tableNameChosen = AnsiConsole.Prompt(
+            new TextPrompt<string>("Which table do you wish to choose?")
+                .AddChoice("Stacks")
+                .AddChoice("Flashcards")
         );
-
-        tableNameChosen = tableName == true ? "Stacks" : "Flashcards";
 
         return tableNameChosen;
     }
@@ -308,7 +304,7 @@ public class DataAccess
             {
                 connection.Open();
                 command.CommandText =
-                    $"SELECT column_name FROM information_schema.columns WHERE table_name = '{tableNameChosen}'";
+                    $@"SELECT column_name FROM information_schema.columns WHERE table_name = '{tableNameChosen}'";
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
