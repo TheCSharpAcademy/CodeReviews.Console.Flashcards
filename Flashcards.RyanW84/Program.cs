@@ -2,8 +2,8 @@
 
 var DataAccess = new DataAccess();
 
-DataAccess.ConfirmConnection();
-
 DataAccess.CreateTables();
+
+SeedData.SeedRecords();
 
 UserInterface.MainMenu();

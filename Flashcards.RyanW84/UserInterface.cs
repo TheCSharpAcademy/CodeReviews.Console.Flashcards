@@ -1,122 +1,201 @@
-﻿using Spectre.Console;
+﻿using Flashcards.RyanW84.Models;
+using Spectre.Console;
+using static Flashcards.RyanW84.Enums;
 
 namespace Flashcards.RyanW84;
 
 internal class UserInterface
 {
-    public static string usersChoice;
-    public static bool isMenuRunning;
-
     internal static void MainMenu()
     {
-        isMenuRunning = true;
+        var isMenuRunning = true;
+
         while (isMenuRunning)
         {
-            isMenuRunning = true;
-            Console.Clear();
             var usersChoice = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                    .Title("What would you like to do?")
-                    .AddChoices("Study Area", "Manage the Stacks", "Manage the Flashcards", "Quit")
-            );
-            MenuSelector(usersChoice);
-        }
-    }
-
-    internal static void StackMenu()
-    {
-        var dataAccess = new DataAccess();
-        dataAccess.tableNameChosen = "Stacks";
-        isMenuRunning = true;
-        while (isMenuRunning)
-        {
-            Console.Clear();
-            usersChoice = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
+                new SelectionPrompt<MainMenuChoices>()
                     .Title("What would you like to do?")
                     .AddChoices(
-                        "Add a Stack",
-                        "Delete a Stack",
-                        "Update a Stack",
-                        "View the Stacks",
-                        "Exit to Main Menu"
+                        MainMenuChoices.ManageStacks,
+                        MainMenuChoices.ManageFlashcards,
+                        MainMenuChoices.Quit
                     )
             );
-            MenuSelector(usersChoice);
+
+            switch (usersChoice)
+            {
+                case MainMenuChoices.ManageStacks:
+                    StacksMenu();
+                    break;
+                case MainMenuChoices.ManageFlashcards:
+                    FlashcardsMenu();
+                    break;
+                case MainMenuChoices.Quit:
+                    System.Console.WriteLine("Goodbye");
+                    isMenuRunning = false;
+                    break;
+            }
         }
     }
 
-    internal static void FlashcardMenu()
+    internal static void StacksMenu()
     {
-        var dataAccess = new DataAccess();
-        dataAccess.tableNameChosen = "Flashcards";
-        isMenuRunning = true;
+        var isMenuRunning = true;
+
         while (isMenuRunning)
         {
-            Console.Clear();
-            usersChoice = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
+            var usersChoice = AnsiConsole.Prompt(
+                new SelectionPrompt<StackChoices>()
                     .Title("What would you like to do?")
                     .AddChoices(
-                        "Add a Flashcard",
-                        "Delete a Flashcard",
-                        "Update a Flashcard",
-                        "View the Flashcards",
-                        "Exit to Main Menu"
+                        StackChoices.ViewStacks,
+                        StackChoices.AddStack,
+                        StackChoices.UpdateStack,
+                        StackChoices.DeleteStack,
+                        StackChoices.ReturnToMainMenu
                     )
             );
-            MenuSelector(usersChoice);
+
+            switch (usersChoice)
+            {
+                case StackChoices.ViewStacks:
+                    ViewStacks();
+                    break;
+                case StackChoices.AddStack:
+                    AddStack();
+                    break;
+                case StackChoices.DeleteStack:
+                    DeleteStack();
+                    break;
+                case StackChoices.UpdateStack:
+                    UpdateStack();
+                    break;
+                case StackChoices.ReturnToMainMenu:
+                    isMenuRunning = false;
+                    break;
+            }
         }
     }
 
-    internal static void MenuSelector(string usersChoice)
+    private static void UpdateStack()
     {
-        var DataAccess = new DataAccess();
-        switch (usersChoice)
+        throw new NotImplementedException();
+    }
+
+    private static void DeleteStack()
+    {
+        throw new NotImplementedException();
+    }
+
+    private static void AddStack()
+    {
+        Stack stack = new();
+
+        stack.Name = AnsiConsole.Ask<string>("Insert Stack's Name.");
+
+        while (string.IsNullOrEmpty(stack.Name))
         {
-            case "Study Area":
-                DataAccess.StudyArea();
-                break;
-            case "Manage the Stacks":
-                StackMenu();
-                break;
-            case "Manage the Flashcards":
-                FlashcardMenu();
-                break;
-            case "Add a Stack":
-                DataAccess.AddStack();
-                break;
-            case "Delete a Stack":
-                DataAccess.DeleteStack();
-                break;
-            case "Update a Stack":
-                DataAccess.UpdateRecord(DataAccess.tableNameChosen);
-                break;
-            case "View the Stacks":
-                string getRecordsSQL = @$"SELECT * FROM {DataAccess.tableNameChosen} ;";
-                DataAccess.GetStacks();
-                Console.ReadKey();
-                break;
-            case "Add a Flashcard":
-                DataAccess.AddFlashcard();
-                break;
-            case "Delete a Flashcard":
-                DataAccess.DeleteFlashcard();
-                break;
-            case "Update a Flashcard":
-                DataAccess.UpdateRecord(DataAccess.tableNameChosen);
-                break;
-            case "View the Flashcards":
-                DataAccess.GetFlashcards();
-                Console.ReadKey();
-                break;
-            case "Exit to Main Menu":
-                MainMenu();
-                break;
-            case "Quit":
-                System.Console.WriteLine("Goodbye");
-                isMenuRunning = false;
-                break;
+            stack.Name = AnsiConsole.Ask<string>("Stack's name can't be empty. Try again.");
         }
+
+        var dataAccess = new DataAccess();
+        dataAccess.InsertStack(stack);
+    }
+
+    private static int ChooseStack()
+    {
+        var dataAccess = new DataAccess();
+        var stacks = dataAccess.GetAllStacks();
+
+        var stacksArray = stacks.Select(x => x.Name).ToArray();
+        var option = AnsiConsole.Prompt(
+            new SelectionPrompt<string>().Title("Choose Stack").AddChoices(stacksArray)
+        );
+
+        var stackId = stacks.Single(x => x.Name == option).Id;
+
+        return stackId;
+    }
+
+    private static void ViewStacks()
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static void FlashcardsMenu()
+    {
+        var isMenuRunning = true;
+
+        while (isMenuRunning)
+        {
+            var usersChoice = AnsiConsole.Prompt(
+                new SelectionPrompt<FlashcardChoices>()
+                    .Title("What would you like to do?")
+                    .AddChoices(
+                        FlashcardChoices.ViewFlashcards,
+                        FlashcardChoices.AddFlashcard,
+                        FlashcardChoices.UpdateFlashcard,
+                        FlashcardChoices.DeleteFlashcard,
+                        FlashcardChoices.ReturnToMainMenu
+                    )
+            );
+
+            switch (usersChoice)
+            {
+                case FlashcardChoices.ViewFlashcards:
+                    ViewFlashcards();
+                    break;
+                case FlashcardChoices.AddFlashcard:
+                    AddFlashcard();
+                    break;
+                case FlashcardChoices.DeleteFlashcard:
+                    DeleteFlashcard();
+                    break;
+                case FlashcardChoices.UpdateFlashcard:
+                    UpdateFlashcard();
+                    break;
+                case FlashcardChoices.ReturnToMainMenu:
+                    isMenuRunning = false;
+                    break;
+            }
+        }
+    }
+
+    private static void UpdateFlashcard()
+    {
+        throw new NotImplementedException();
+    }
+
+    private static void DeleteFlashcard()
+    {
+        throw new NotImplementedException();
+    }
+
+    private static void AddFlashcard()
+    {
+        Flashcard flashcard = new();
+
+        flashcard.StackId = ChooseStack();
+        flashcard.Question = AnsiConsole.Ask<string>("Insert Question.");
+
+        while (string.IsNullOrEmpty(flashcard.Question))
+        {
+            flashcard.Question = AnsiConsole.Ask<string>("Question can't be empty. Try again.");
+        }
+
+        flashcard.Answer = AnsiConsole.Ask<string>("Insert Answer.");
+
+        while (string.IsNullOrEmpty(flashcard.Answer))
+        {
+            flashcard.Answer = AnsiConsole.Ask<string>("Answer can't be empty. Try again.");
+        }
+
+        var dataAccess = new DataAccess();
+        dataAccess.InsertFlashcard(flashcard);
+    }
+
+    private static void ViewFlashcards()
+    {
+        throw new NotImplementedException();
     }
 }
