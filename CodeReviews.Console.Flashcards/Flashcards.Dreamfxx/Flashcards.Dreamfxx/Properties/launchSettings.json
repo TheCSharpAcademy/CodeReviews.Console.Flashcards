@@ -3,7 +3,7 @@
     "Flashcards.Dreamfxx": {
       "commandName": "Project",
       "sqlDebugging": true,
-      "nativeDebugging": true,
+      "nativeDebugging": false,
       "jsWebView2Debugging": false
     }
   }

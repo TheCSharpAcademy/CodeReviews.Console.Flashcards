@@ -1,5 +1,7 @@
 ﻿using Flashcards.Dreamfxx.Dtos;
 using Flashcards.Dreamfxx.Models;
+using Microsoft.Data.SqlClient;
+using Spectre.Console;
 
 namespace Flashcards.Dreamfxx.Data
 {

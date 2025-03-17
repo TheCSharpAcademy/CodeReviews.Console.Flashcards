@@ -1,7 +1,6 @@
 ﻿using Flashcards.Dreamfxx.Data;
 using Flashcards.Dreamfxx.Models;
 using Flashcards.Dreamfxx.Services;
-using Microsoft.Extensions.Configuration;
 using Spectre.Console;
 
 var configuration = new ConfigurationBuilder()
@@ -21,9 +20,9 @@ dbManager.EnsureDatabaseExists();
 
 var menuRoutes = new List<MenuRoute>
 {
-    new MenuRoute{ Id = 1, Route = "Create new stack of cards" },
-    new MenuRoute{ Id = 2, Route = "Edit existing stack/s" },
-    new MenuRoute{ Id = 3, Route = "Delete existing stack/s" },
+    new MenuRoute { Id = 1, Route = "Create new stack of cards" },
+    new MenuRoute { Id = 2, Route = "Edit existing stack/s" },
+    new MenuRoute { Id = 3, Route = "Delete existing stack/s" },
 
     new MenuRoute{ Id = 4, Route = "Create new flashcard" },
     new MenuRoute{ Id = 5, Route = "Edit existing flashcard/s" },
