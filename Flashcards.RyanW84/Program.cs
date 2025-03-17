@@ -1,8 +1,10 @@
 ﻿using Flashcards.RyanW84;
 
-var DataAccess = new DataAccess();
+var dataAccess = new DataAccess();
 
-DataAccess.CreateTables();
+dataAccess.ConfirmConnection();
+
+dataAccess.CreateTables();
 
 //SeedData.SeedRecords();
 
