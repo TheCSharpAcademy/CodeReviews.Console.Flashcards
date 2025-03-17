@@ -23,6 +23,7 @@ public class DataAccess
                     $"\nConnection Status: {System.Data.ConnectionState.Open}\nPress any Key to continue:"
                 );
                 Console.ReadKey();
+                Console.Clear();
                 return true;
             }
         }
@@ -30,7 +31,7 @@ public class DataAccess
         {
             return false;
         }
-    }
+        } //Informs the user if the connection was Successful / Unsuccessful
 
     public DataAccess()
     {
@@ -97,56 +98,6 @@ public class DataAccess
         }
     }
 
-    internal void InsertStack(Stack stack)
-    {
-        try
-        {
-            using (var connection = new SqlConnection(ConnectionString))
-            {
-                connection.Open();
-
-                string insertQuery =
-                    @"
-         INSERT INTO Stacks (Name) VALUES (@Name)";
-
-                connection.Execute(insertQuery, new { stack.Name });
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"There was a problem inserting the stack: {ex.Message}");
-        }
-    }
-
-    internal void InsertFlashcard(Flashcard flashcard)
-    {
-        try
-        {
-            using (var connection = new SqlConnection(ConnectionString))
-            {
-                connection.Open();
-
-                string insertQuery =
-                    @"
-         INSERT INTO Flashcards (Question, Answer, StackId) VALUES (@Question, @Answer, @StackId)";
-
-                connection.Execute(
-                    insertQuery,
-                    new
-                    {
-                        flashcard.Question,
-                        flashcard.Answer,
-                        flashcard.StackId,
-                    }
-                );
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"There was a problem inserting the flashcard: {ex.Message}");
-        }
-    }
-
     internal void BulkInsertRecords(List<Stack> stacks, List<Flashcard> flashcards)
     {
         SqlTransaction transaction = null; // Declare the transaction variable outside the try block
@@ -182,4 +133,133 @@ public class DataAccess
             }
         }
     }
-}
+
+    //Stack Data Access Methods
+    internal void InsertStack(Stack stack)
+        {
+        try
+            {
+            using (var connection = new SqlConnection(ConnectionString))
+                {
+                connection.Open();
+
+                string insertQuery =
+                    @"
+         INSERT INTO Stacks (Name) VALUES (@Name)";
+
+                connection.Execute(insertQuery, new { stack.Name });
+                }
+            }
+        catch (Exception ex)
+            {
+            Console.WriteLine($"There was a problem inserting the stack: {ex.Message}");
+            }
+        }
+
+    internal void DeleteStack(int id)
+        {
+        try
+            {
+            using (var connection = new SqlConnection(ConnectionString))
+                {
+                connection.Open();
+
+                string deleteQuery = "DELETE FROM stack WHERE Id = @Id";
+
+                int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
+                }
+            }
+        catch (Exception ex)
+            {
+            Console.WriteLine($"There was a problem deleting the stack: {ex.Message}");
+
+            }
+        }
+
+    internal void UpdateStack(Stack stack)
+        {
+        using (var connection = new SqlConnection(ConnectionString))
+            {
+            connection.Open();
+
+            string updateQuery = @"
+    UPDATE stacks
+    SET Name = @Name
+    WHERE Id = @Id";
+
+            connection.Execute(updateQuery, new { stack.Name, stack.Id });
+            }
+        }
+
+    //Flashcard Data Access Methods
+    internal void InsertFlashcard(Flashcard flashcard)
+        {
+        try
+            {
+            using (var connection = new SqlConnection(ConnectionString))
+                {
+                connection.Open();
+
+                string insertQuery =
+                    @"
+         INSERT INTO Flashcards (Question, Answer, StackId) VALUES (@Question, @Answer, @StackId)";
+
+                connection.Execute(
+                    insertQuery,
+                    new
+                        {
+                        flashcard.Question,
+                        flashcard.Answer,
+                        flashcard.StackId,
+                        }
+                );
+                }
+            }
+        catch (Exception ex)
+            {
+            Console.WriteLine($"There was a problem inserting the flashcard: {ex.Message}");
+            }
+        }
+    internal void DeleteFlashcard(int id)
+        {
+        try
+            {
+            using (var connection = new SqlConnection(ConnectionString))
+                {
+                connection.Open();
+
+                string deleteQuery = "DELETE FROM flashcards WHERE Id = @Id";
+
+                int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
+                }
+            }
+        catch (Exception ex)
+            {
+            Console.WriteLine($"There was a problem deleting the flashcard: {ex.Message}");
+
+            }
+        }
+    internal void UpdateFlashcard(int flashcardId, Dictionary<string, object> propertiesToUpdate)
+        {
+        using (var connection = new SqlConnection(ConnectionString))
+            {
+            connection.Open();
+
+            string updateQuery = "UPDATE flashcards SET ";
+            var parameters = new DynamicParameters();
+
+            foreach (var kvp in propertiesToUpdate)
+                {
+                updateQuery += $"{kvp.Key} = @{kvp.Key}, ";
+                parameters.Add(kvp.Key, kvp.Value);
+                }
+
+            updateQuery = updateQuery.TrimEnd(',', ' ');
+
+            updateQuery += " WHERE Id = @Id";
+            parameters.Add("Id", flashcardId);
+
+            connection.Execute(updateQuery, parameters);
+            }
+        }
+    }

@@ -4,6 +4,6 @@ var DataAccess = new DataAccess();
 
 DataAccess.CreateTables();
 
-SeedData.SeedRecords();
+//SeedData.SeedRecords();
 
 UserInterface.MainMenu();
