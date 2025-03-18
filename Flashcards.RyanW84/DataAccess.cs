@@ -1,5 +1,7 @@
 ﻿using Dapper;
+using Flashcards.RyanW84;
 using Flashcards.RyanW84.Models;
+using Flashcards.RyanW84.Models.DTO;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
@@ -67,6 +69,23 @@ public class DataAccess
                             ON UPDATE CASCADE
                     );";
                 conn.Execute(createFlashcardTableSql);
+
+                string createStudySessionTableSql =
+                    @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'StudySessions')
+     CREATE TABLE StudySessions (
+         Id int IDENTITY(1,1) NOT NULL PRIMARY KEY,
+         Questions int NOT NULL,
+         Date DateTime NOT NULL, 
+         CorrectAnswers int NOT NULL,
+         Percentage AS (CorrectAnswers * 100) / Questions PERSISTED,
+         Time TIME NOT NULL,
+         StackId int NOT NULL
+             FOREIGN KEY 
+             REFERENCES Stacks(Id)
+             ON DELETE CASCADE 
+             ON UPDATE CASCADE
+ );";
+                conn.Execute(createStudySessionTableSql);
             }
         }
         catch (Exception ex)
@@ -164,7 +183,7 @@ public class DataAccess
             {
                 connection.Open();
 
-                string deleteQuery = "DELETE FROM stack WHERE Id = @Id";
+                string deleteQuery = "DELETE FROM stacks WHERE Id = @Id";
 
                 int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
             }
@@ -200,9 +219,12 @@ public class DataAccess
             {
                 connection.Open();
 
-                string selectQuery = "SELECT * FROM flashcards WHERE Id = @stackId";
+                string selectQuery = "SELECT * FROM flashcards WHERE StackId = @stackId";
 
-                IEnumerable<Flashcard> records = connection.Query<Flashcard>(selectQuery);
+                IEnumerable<Flashcard> records = connection.Query<Flashcard>(
+                    selectQuery,
+                    new { stackId }
+                );
 
                 return records;
             }
@@ -283,6 +305,62 @@ public class DataAccess
             parameters.Add("Id", flashcardId);
 
             connection.Execute(updateQuery, parameters);
+        }
+    }
+
+    //Study Session Data Access Methods
+
+    internal void InsertStudySession(StudySession session)
+    {
+        try
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+
+                string insertQuery =
+                    @"INSERT INTO StudySessions (Questions, CorrectAnswers, StackId, Time, Date) VALUES (@Questions, @CorrectAnswers, @StackId, @Time, @Date)";
+
+                connection.Execute(
+                    insertQuery,
+                    new
+                    {
+                        session.Questions,
+                        session.CorrectAnswers,
+                        session.StackId,
+                        session.Time,
+                        session.Date,
+                    }
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"There was an issues with the Study Session: {ex.Message}");
+        }
+    }
+
+    internal List<StudySessionDTO> GetStudySessionData()
+    {
+        using (var connection = new SqlConnection(ConnectionString))
+        {
+            connection.Open();
+
+            string sql =
+                @"
+        SELECT
+        s.Name as StackName,
+        ss.Date,
+        ss.Questions,
+        ss.CorrectAnswers,
+        ss.Percentage,
+        ss.Time
+        FROM
+        StudySessions ss
+        INNER JOIN
+        Stacks s ON ss.StackId = s.Id;";
+
+            return connection.Query<StudySessionDTO>(sql).ToList();
         }
     }
 }

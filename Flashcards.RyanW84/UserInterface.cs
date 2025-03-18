@@ -7,6 +7,8 @@ namespace Flashcards.RyanW84;
 
 internal class UserInterface
 {
+    private static int stackId = 0;
+
     //Menu Methods
     private static string GetEnumDisplayName(Enum enumValue) //Enums weren't showing their display name, this fixes it
     {
@@ -27,6 +29,8 @@ internal class UserInterface
 
     internal static void MainMenu()
     {
+        Console.Clear();
+
         var isMenuRunning = true;
 
         while (isMenuRunning)
@@ -45,6 +49,12 @@ internal class UserInterface
                     break;
                 case MainMenuChoices.ManageFlashcards:
                     FlashcardsMenu();
+                    break;
+                case MainMenuChoices.StudySession:
+                    StudySession();
+                    break;
+                case MainMenuChoices.StudyHistory:
+                    ViewStudyHistory();
                     break;
                 case MainMenuChoices.Quit:
                     System.Console.WriteLine("Goodbye");
@@ -105,7 +115,8 @@ internal class UserInterface
             switch (usersChoice)
             {
                 case FlashcardChoices.ViewFlashcards:
-                    ViewFlashcards(ChooseStack("Choose the Stack"));
+                    ChooseStack("Choose the stack");
+                    ViewFlashcards(stackId);
                     break;
                 case FlashcardChoices.AddFlashcard:
                     AddFlashcard();
@@ -134,7 +145,7 @@ internal class UserInterface
             new SelectionPrompt<string>().Title("Choose Stack").AddChoices(stacksArray)
         );
 
-        var stackId = stacks.Single(x => x.Name == option).Id;
+        stackId = stacks.Single(x => x.Name == option).Id;
 
         return stackId;
     }
@@ -306,5 +317,78 @@ internal class UserInterface
 
         var dataAccess = new DataAccess();
         dataAccess.UpdateFlashcard(flashcardId, propertiesToUpdate);
+    }
+
+    internal static void StudySession()
+    {
+        var id = ChooseStack("Choose Stack to study");
+
+        var dataAccess = new DataAccess();
+        var flashcards = dataAccess.GetAllFlashcards(id);
+
+        var studySession = new StudySession();
+        studySession.Questions = flashcards.Count();
+        studySession.StackId = id;
+        studySession.Date = DateTime.Now;
+
+        var correctAnswers = 0;
+
+        Console.WriteLine("Flashcards: Study Session\n");
+
+        foreach (var flashcard in flashcards)
+        {
+            var answer = AnsiConsole.Ask<string>($"Question: {flashcard.Question}: ");
+
+            while (string.IsNullOrEmpty(answer))
+            {
+                answer = AnsiConsole.Ask<string>($"Answer can't be empty. {flashcard.Question}: ");
+            }
+
+            if (string.Equals(answer.Trim(), flashcard.Answer, StringComparison.OrdinalIgnoreCase))
+            {
+                correctAnswers++;
+                Console.WriteLine("Correct\n");
+            }
+            else
+            {
+                Console.WriteLine($"Incorrect, the answer is {flashcard.Answer}\n");
+            }
+        }
+        Console.WriteLine($"You've got {correctAnswers} out of {flashcards.Count()}");
+
+        studySession.Time = DateTime.Now - studySession.Date;
+
+        dataAccess.InsertStudySession(studySession);
+
+        Console.WriteLine("Press any key to continue");
+        Console.ReadKey();
+        Console.Clear();
+    }
+
+    internal static void ViewStudyHistory()
+    {
+        var dataAccess = new DataAccess();
+        var sessions = dataAccess.GetStudySessionData();
+
+        var table = new Table();
+
+        table.AddColumn("Date");
+        table.AddColumn("Stack");
+        table.AddColumn("Result");
+        table.AddColumn("Percentage");
+        table.AddColumn("Duration");
+
+        foreach (var session in sessions)
+        {
+            table.AddRow(
+                session.Date.ToShortDateString(),
+                session.StackName,
+                $"{session.CorrectAnswers} out of {session.Questions}",
+                $"{session.Percentage}%",
+                session.Time.ToString()
+            );
+        }
+
+        AnsiConsole.Write(table);
     }
 }
