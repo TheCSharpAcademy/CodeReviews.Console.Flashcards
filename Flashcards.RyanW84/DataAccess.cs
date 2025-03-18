@@ -50,7 +50,7 @@ public class DataAccess
                 string createStackTableSql =
                     @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Stacks')
                     CREATE TABLE Stacks (
-                        Id int IDENTITY(1,1) NOT NULL,
+                        Id INT IDENTITY(1,1) NOT NULL,
                         Name NVARCHAR(200) NOT NULL UNIQUE,
                         PRIMARY KEY (Id)
                     );";
@@ -59,10 +59,10 @@ public class DataAccess
                 string createFlashcardTableSql =
                     @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Flashcards')
                     CREATE TABLE Flashcards (
-                        Id int IDENTITY(1,1) NOT NULL PRIMARY KEY,
+                        Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
                         Question NVARCHAR(200) NOT NULL,
                         Answer NVARCHAR(200) NOT NULL,
-                        StackId int NOT NULL 
+                        StackId INT NOT NULL 
                             FOREIGN KEY 
                             REFERENCES Stacks(Id) 
                             ON DELETE CASCADE 
@@ -73,13 +73,13 @@ public class DataAccess
                 string createStudySessionTableSql =
                     @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'StudySessions')
      CREATE TABLE StudySessions (
-         Id int IDENTITY(1,1) NOT NULL PRIMARY KEY,
-         Questions int NOT NULL,
+         Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+         Questions INT NOT NULL,
          Date DateTime NOT NULL, 
          CorrectAnswers int NOT NULL,
          Percentage AS (CorrectAnswers * 100) / Questions PERSISTED,
          Time TIME NOT NULL,
-         StackId int NOT NULL
+         StackId INT NOT NULL
              FOREIGN KEY 
              REFERENCES Stacks(Id)
              ON DELETE CASCADE 
@@ -211,7 +211,7 @@ public class DataAccess
     }
 
     //Flashcard Data Access Methods
-    internal IEnumerable<Flashcard> GetAllFlashcards(int stackId)
+    internal IEnumerable<Flashcard> GetFlashcards(int stackId)
     {
         try
         {

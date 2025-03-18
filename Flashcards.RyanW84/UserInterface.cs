@@ -205,7 +205,7 @@ internal class UserInterface
     {
         var dataAccess = new DataAccess();
         IEnumerable<Flashcard> flashcards =
-            (IEnumerable<Flashcard>)dataAccess.GetAllFlashcards(stackId);
+            (IEnumerable<Flashcard>)dataAccess.GetFlashcards(stackId);
 
         var flashcardsArray = flashcards.Select(x => x.Question).ToArray();
         var option = AnsiConsole.Prompt(
@@ -221,13 +221,13 @@ internal class UserInterface
     {
         var dataAccess = new DataAccess();
         IEnumerable<Flashcard> flashcards =
-            (IEnumerable<Flashcard>)dataAccess.GetAllFlashcards(stackId);
+            (IEnumerable<Flashcard>)dataAccess.GetFlashcards(stackId);
 
         var table = new Table();
-        table.AddColumn("Id");
+        table.AddColumn("ID");
         table.AddColumn("Question");
         table.AddColumn("Answer");
-        table.AddColumn("StackId");
+        table.AddColumn("StackID");
 
         foreach (var flashcard in flashcards)
         {
@@ -324,20 +324,19 @@ internal class UserInterface
         var id = ChooseStack("Choose Stack to study");
 
         var dataAccess = new DataAccess();
-        var flashcards = dataAccess.GetAllFlashcards(id);
+        var flashcards = dataAccess.GetFlashcards(id);
 
         var studySession = new StudySession();
         studySession.Questions = flashcards.Count();
         studySession.StackId = id;
         studySession.Date = DateTime.Now;
-
         var correctAnswers = 0;
 
         Console.WriteLine("Flashcards: Study Session\n");
 
         foreach (var flashcard in flashcards)
         {
-            var answer = AnsiConsole.Ask<string>($"Question: {flashcard.Question}: ");
+            var answer = AnsiConsole.Ask<string>($"Question: {flashcard.Question}\nAnswer: ");
 
             while (string.IsNullOrEmpty(answer))
             {
@@ -351,11 +350,12 @@ internal class UserInterface
             }
             else
             {
-                Console.WriteLine($"Incorrect, the answer is {flashcard.Answer}\n");
+                Console.WriteLine($"Incorrect, the answer is: {flashcard.Answer}\n");
             }
         }
         Console.WriteLine($"You've got {correctAnswers} out of {flashcards.Count()}");
 
+        studySession.CorrectAnswers = correctAnswers;
         studySession.Time = DateTime.Now - studySession.Date;
 
         dataAccess.InsertStudySession(studySession);
