@@ -1,6 +1,6 @@
 ﻿enum MainMenuOption
 {
-    ManageStacks =1,
+    ManageStacks,
     ManageFlashCards,
     Study,
     ViewStudySessions,
@@ -9,7 +9,7 @@
 
 enum StackMenuOption
 {
-    ViewAllStacks=1,
+    ViewAllStacks,
     CreateNewStack,
     UpdateStack,
     DeleteStack,
