@@ -1,0 +1,75 @@
+<!DOCTYPE html><html><head>
+<style>
+.tree-node { margin-left: 20px; }
+.folder { cursor: pointer; }
+.collapsed .tree-node { display: none; }
+.code-details { margin-left: 40px; color: #0066cc; }
+.method { margin-left: 20px; color: #006600; }
+</style>
+<script>
+function toggle(elem) { elem.classList.toggle('collapsed'); }
+</script></head><body>
+<div class='folder' onclick='toggle(this)'>
+📁 Flashcards.RyanW84
+<div class='tree-node'>
+<div class='folder' onclick='toggle(this)'>
+📁 Models
+<div class='tree-node'>
+<div class='folder' onclick='toggle(this)'>
+📁 DTO
+<div class='tree-node'>
+📄 StudySessionDTO.cs<br>
+<div class='code-details'>🔷 Class: StudySessionDTO</div>
+</div></div>
+📄 Flashcard.cs<br>
+<div class='code-details'>🔷 Class: Flashcard</div>
+📄 Stack.cs<br>
+<div class='code-details'>🔷 Class: Stack</div>
+📄 StudySession.cs<br>
+<div class='code-details'>🔷 Class: StudySession</div>
+</div></div>
+📄 DataAccess.cs<br>
+<div class='code-details'>🔷 Class: DataAccess</div>
+<div class='method'>🔸 Method: ConfirmConnection</div>
+<div class='method'>🔸 Method: CreateTables</div>
+<div class='method'>🔸 Method: GetAllStacks</div>
+<div class='method'>🔸 Method: BulkInsertRecords</div>
+<div class='method'>🔸 Method: InsertStack</div>
+<div class='method'>🔸 Method: DeleteStack</div>
+<div class='method'>🔸 Method: UpdateStack</div>
+<div class='method'>🔸 Method: GetFlashcards</div>
+<div class='method'>🔸 Method: InsertFlashcard</div>
+<div class='method'>🔸 Method: DeleteFlashcard</div>
+<div class='method'>🔸 Method: UpdateFlashcard</div>
+<div class='method'>🔸 Method: InsertStudySession</div>
+<div class='method'>🔸 Method: GetStudySessionData</div>
+📄 Enums.cs<br>
+<div class='code-details'>🔷 Class: Enums</div>
+📄 Flashcards.RyanW84-solution-structure.md<br>
+📄 Flashcards.RyanW84-solution-structure.txt<br>
+📄 Program.cs<br>
+📄 SeedData.cs<br>
+<div class='code-details'>🔷 Class: SeedData</div>
+<div class='method'>🔸 Method: SeedRecords</div>
+📄 UserInterface.cs<br>
+<div class='code-details'>🔷 Class: UserInterface</div>
+<div class='method'>🔸 Method: GetEnumDisplayName</div>
+<div class='method'>🔸 Method: MainMenu</div>
+<div class='method'>🔸 Method: StacksMenu</div>
+<div class='method'>🔸 Method: FlashcardsMenu</div>
+<div class='method'>🔸 Method: ChooseStack</div>
+<div class='method'>🔸 Method: ViewStacks</div>
+<div class='method'>🔸 Method: AddStack</div>
+<div class='method'>🔸 Method: DeleteStack</div>
+<div class='method'>🔸 Method: UpdateStack</div>
+<div class='method'>🔸 Method: ChooseFlashcard</div>
+<div class='method'>🔸 Method: ViewFlashcards</div>
+<div class='method'>🔸 Method: AddFlashcard</div>
+<div class='method'>🔸 Method: DeleteFlashcard</div>
+<div class='method'>🔸 Method: GetQuestion</div>
+<div class='method'>🔸 Method: GetAnswer</div>
+<div class='method'>🔸 Method: UpdateFlashcard</div>
+<div class='method'>🔸 Method: StudySession</div>
+<div class='method'>🔸 Method: ViewStudyHistory</div>
+</div></div>
+</body></html>
