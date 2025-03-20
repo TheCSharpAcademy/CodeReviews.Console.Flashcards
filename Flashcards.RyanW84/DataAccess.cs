@@ -183,9 +183,9 @@ public class DataAccess
             {
                 connection.Open();
 
-                string deleteQuery = "DELETE FROM stacks WHERE Id = @Id";
-
+                string deleteQuery = @"DELETE FROM stacks WHERE Id = @Id;";
                 int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
+                Console.WriteLine($"Rows Affected: {rowsAffected}");
             }
         }
         catch (Exception ex)
@@ -361,6 +361,26 @@ public class DataAccess
         Stacks s ON ss.StackId = s.Id;";
 
             return connection.Query<StudySessionDTO>(sql).ToList();
+        }
+    }
+
+    internal List<StudySessionDTO> GetReportData(int year)
+    {
+        using (var connection = new SqlConnection(ConnectionString))
+        {
+            connection.Open();
+
+            string sqlGetReport =
+                $@"
+                SELECT 
+                    MONTH(Date) AS Month, 
+                    COUNT(*) AS SessionCount
+                FROM StudySessions
+                WHERE Date BETWEEN '{year}-01-01' AND '{year}-12-31'
+                GROUP BY MONTH(Date)
+                ORDER BY Month";
+
+            return connection.Query<StudySessionDTO>(sqlGetReport).ToList();
         }
     }
 }

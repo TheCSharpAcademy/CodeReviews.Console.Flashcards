@@ -56,6 +56,8 @@ internal class UserInterface
                 case MainMenuChoices.StudyHistory:
                     ViewStudyHistory();
                     break;
+                case MainMenuChoices.Reports:
+
                 case MainMenuChoices.Quit:
                     System.Console.WriteLine("Goodbye");
                     isMenuRunning = false;
@@ -153,12 +155,15 @@ internal class UserInterface
     private static void ViewStacks(IEnumerable<Stack> stacks)
     {
         var table = new Table();
-        table.AddColumn("ID");
+        table.AddColumn("#");
         table.AddColumn("Name");
+
+        int index = 0;
 
         foreach (var stack in stacks)
         {
-            table.AddRow(stack.Id.ToString(), stack.Name.ToString());
+            index++;
+            table.AddRow(index.ToString(), stack.Name);
         }
         AnsiConsole.Write(table);
     }
@@ -224,18 +229,21 @@ internal class UserInterface
             (IEnumerable<Flashcard>)dataAccess.GetFlashcards(stackId);
 
         var table = new Table();
-        table.AddColumn("ID");
+        table.AddColumn("#");
         table.AddColumn("Question");
         table.AddColumn("Answer");
-        table.AddColumn("StackID");
+        // I have intentionally removed stackID as users should not be shown background DB entries
+
+        int index = 0;
 
         foreach (var flashcard in flashcards)
         {
+            index++;
             table.AddRow(
-                flashcard.Id.ToString(),
+                index.ToString(),
                 flashcard.Question,
-                flashcard.Answer,
-                flashcard.StackId.ToString()
+                flashcard.Answer
+            // StackId removed
             );
         }
         AnsiConsole.Write(table);
@@ -387,6 +395,49 @@ internal class UserInterface
                 $"{session.Percentage}%",
                 session.Time.ToString()
             );
+        }
+
+        AnsiConsole.Write(table);
+    }
+
+    internal static int GetYear()
+    {
+        var year = AnsiConsole.Ask<int>("Please enter the Year to generate the report (YYYY)");
+
+        while (year >= 1000 && year <= 9999)
+        {
+            year = AnsiConsole.Ask<int>("Invalid date, try again");
+        }
+        return year;
+    }
+
+    internal static void ViewReport()
+    {
+        var dataAccess = new DataAccess();
+
+        int year = GetYear();
+
+        var reportData = dataAccess.GetReportData(year);
+
+        var table = new Table();
+
+        table.AddColumn("Stack");
+        table.AddColumn("January");
+        table.AddColumn("February");
+        table.AddColumn("March");
+        table.AddColumn("April");
+        table.AddColumn("May");
+        table.AddColumn("June");
+        table.AddColumn("July");
+        table.AddColumn("August");
+        table.AddColumn("September");
+        table.AddColumn("October");
+        table.AddColumn("November");
+        table.AddColumn("December");
+
+        foreach (var entry in reportData)
+        {
+            table.AddRow(entry.StackName, entry.Date.ToString());
         }
 
         AnsiConsole.Write(table);
