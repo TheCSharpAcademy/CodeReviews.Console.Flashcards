@@ -1,3 +1,0 @@
-# Flashcards Management
-
-## Getting Started
