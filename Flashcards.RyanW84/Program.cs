@@ -6,6 +6,6 @@ dataAccess.ConfirmConnection();
 
 dataAccess.CreateTables();
 
-//SeedData.SeedRecords();
+//Seed Data method goes here, when its needed
 
 UserInterface.MainMenu();

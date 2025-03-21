@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Flashcards.RyanW84.Models;
 using Spectre.Console;
 using static Flashcards.RyanW84.Enums;
@@ -33,6 +34,8 @@ internal class UserInterface
 
         var isMenuRunning = true;
 
+        var userInterface = new UserInterface();
+
         while (isMenuRunning)
         {
             var usersChoice = AnsiConsole.Prompt(
@@ -57,7 +60,8 @@ internal class UserInterface
                     ViewStudyHistory();
                     break;
                 case MainMenuChoices.Reports:
-
+                    userInterface.DisplayMonthlySessionCount();
+                    break;
                 case MainMenuChoices.Quit:
                     System.Console.WriteLine("Goodbye");
                     isMenuRunning = false;
@@ -166,6 +170,9 @@ internal class UserInterface
             table.AddRow(index.ToString(), stack.Name);
         }
         AnsiConsole.Write(table);
+        Console.WriteLine("Press any key to return to Main Menu");
+        Console.ReadKey();
+        Console.Clear();
     }
 
     private static void AddStack()
@@ -247,6 +254,10 @@ internal class UserInterface
             );
         }
         AnsiConsole.Write(table);
+
+        Console.WriteLine("Press any key to return to Main Menu");
+        Console.ReadKey();
+        Console.Clear();
     }
 
     private static void AddFlashcard()
@@ -271,30 +282,6 @@ internal class UserInterface
 
         var dataAccess = new DataAccess();
         dataAccess.DeleteFlashcard(flashcard);
-    }
-
-    private static string GetQuestion()
-    {
-        var question = AnsiConsole.Ask<string>("Insert Question.");
-
-        while (string.IsNullOrEmpty(question))
-        {
-            question = AnsiConsole.Ask<string>("Question can't be empty. Try again.");
-        }
-
-        return question;
-    }
-
-    private static string GetAnswer()
-    {
-        var answer = AnsiConsole.Ask<string>("Insert answer.");
-
-        while (string.IsNullOrEmpty(answer))
-        {
-            answer = AnsiConsole.Ask<string>("Answer can't be empty. Try again.");
-        }
-
-        return answer;
     }
 
     private static void UpdateFlashcard()
@@ -327,7 +314,32 @@ internal class UserInterface
         dataAccess.UpdateFlashcard(flashcardId, propertiesToUpdate);
     }
 
-    internal static void StudySession()
+    private static string GetQuestion()
+    {
+        var question = AnsiConsole.Ask<string>("Insert Question.");
+
+        while (string.IsNullOrEmpty(question))
+        {
+            question = AnsiConsole.Ask<string>("Question can't be empty. Try again.");
+        }
+
+        return question;
+    }
+
+    private static string GetAnswer()
+    {
+        var answer = AnsiConsole.Ask<string>("Insert answer.");
+
+        while (string.IsNullOrEmpty(answer))
+        {
+            answer = AnsiConsole.Ask<string>("Answer can't be empty. Try again.");
+        }
+
+        return answer;
+    }
+
+    //Study Session Methods
+    private static void StudySession()
     {
         var id = ChooseStack("Choose Stack to study");
 
@@ -373,8 +385,9 @@ internal class UserInterface
         Console.Clear();
     }
 
-    internal static void ViewStudyHistory()
+    private static void ViewStudyHistory()
     {
+        Console.Clear();
         var dataAccess = new DataAccess();
         var sessions = dataAccess.GetStudySessionData();
 
@@ -398,48 +411,50 @@ internal class UserInterface
         }
 
         AnsiConsole.Write(table);
+        Console.WriteLine("Press any key to return to Main Menu");
+        Console.ReadKey();
+        Console.Clear();
     }
 
+    //Report Methods
     internal static int GetYear()
     {
         var year = AnsiConsole.Ask<int>("Please enter the Year to generate the report (YYYY)");
 
-        while (year >= 1000 && year <= 9999)
+        while (year <= 2000 && year >= 3025)
         {
             year = AnsiConsole.Ask<int>("Invalid date, try again");
         }
         return year;
     }
 
-    internal static void ViewReport()
+    internal void DisplayMonthlySessionCount()
     {
-        var dataAccess = new DataAccess();
-
         int year = GetYear();
+        var dataAccess = new DataAccess();
+        List<Models.DTO.MonthlySessionCountDTO> reportData = dataAccess.GetReportData(year);
 
-        var reportData = dataAccess.GetReportData(year);
+        if (reportData.Count == 0)
+        {
+            AnsiConsole.MarkupLine($"[red]No study sessions found for the year {year}.[/]");
+            return;
+        }
 
         var table = new Table();
+        table.AddColumn("Month");
+        table.AddColumn("Session Count");
 
-        table.AddColumn("Stack");
-        table.AddColumn("January");
-        table.AddColumn("February");
-        table.AddColumn("March");
-        table.AddColumn("April");
-        table.AddColumn("May");
-        table.AddColumn("June");
-        table.AddColumn("July");
-        table.AddColumn("August");
-        table.AddColumn("September");
-        table.AddColumn("October");
-        table.AddColumn("November");
-        table.AddColumn("December");
-
-        foreach (var entry in reportData)
+        foreach (var session in reportData)
         {
-            table.AddRow(entry.StackName, entry.Date.ToString());
+            table.AddRow(
+                new Text(CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(session.Month)),
+                new Text(session.SessionCount.ToString())
+            );
         }
 
         AnsiConsole.Write(table);
+        Console.WriteLine("Press any key to return to Main Menu");
+        Console.ReadKey();
+        Console.Clear();
     }
 }

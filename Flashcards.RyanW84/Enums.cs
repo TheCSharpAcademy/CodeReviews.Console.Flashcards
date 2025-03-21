@@ -18,7 +18,7 @@ internal class Enums
         [Display(Name = "Study History")]
         StudyHistory,
 
-        [Display(Name = "Reports")]
+        [Display(Name = "Report: Monthly Session Count")]
         Reports,
 
         [Display(Name = "Quit")]

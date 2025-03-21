@@ -173,6 +173,9 @@ public class DataAccess
         {
             Console.WriteLine($"There was a problem inserting the stack: {ex.Message}");
         }
+        Console.WriteLine("Stack Added: Press any key to return to Main Menu");
+        Console.ReadKey();
+        Console.Clear();
     }
 
     internal void DeleteStack(int id)
@@ -192,6 +195,9 @@ public class DataAccess
         {
             Console.WriteLine($"There was a problem deleting the stack: {ex.Message}");
         }
+        Console.WriteLine("Stack Deleted: Press any key to return to Main Menu");
+        Console.ReadKey();
+        Console.Clear();
     }
 
     internal void UpdateStack(Stack stack)
@@ -208,6 +214,9 @@ public class DataAccess
 
             connection.Execute(updateQuery, new { stack.Name, stack.Id });
         }
+        Console.WriteLine("Stack Updated: Press any key to return to Main Menu");
+        Console.ReadKey();
+        Console.Clear();
     }
 
     //Flashcard Data Access Methods
@@ -263,6 +272,10 @@ public class DataAccess
         {
             Console.WriteLine($"There was a problem inserting the flashcard: {ex.Message}");
         }
+
+        Console.WriteLine("Flashcard added: Press any key to return to Main Menu");
+        Console.ReadKey();
+        Console.Clear();
     }
 
     internal void DeleteFlashcard(int id)
@@ -282,6 +295,10 @@ public class DataAccess
         {
             Console.WriteLine($"There was a problem deleting the flashcard: {ex.Message}");
         }
+
+        Console.WriteLine("Flashcard Deleted: Press any key to return to Main Menu");
+        Console.ReadKey();
+        Console.Clear();
     }
 
     internal void UpdateFlashcard(int flashcardId, Dictionary<string, object> propertiesToUpdate)
@@ -306,6 +323,9 @@ public class DataAccess
 
             connection.Execute(updateQuery, parameters);
         }
+        Console.WriteLine("Flashcard Updated: Press any key to return to Main Menu");
+        Console.ReadKey();
+        Console.Clear();
     }
 
     //Study Session Data Access Methods
@@ -364,23 +384,50 @@ public class DataAccess
         }
     }
 
-    internal List<StudySessionDTO> GetReportData(int year)
+    internal List<MonthlySessionCountDTO> GetReportData(int year)
     {
         using (var connection = new SqlConnection(ConnectionString))
         {
             connection.Open();
 
             string sqlGetReport =
-                $@"
+                @"
                 SELECT 
-                    MONTH(Date) AS Month, 
-                    COUNT(*) AS SessionCount
-                FROM StudySessions
-                WHERE Date BETWEEN '{year}-01-01' AND '{year}-12-31'
-                GROUP BY MONTH(Date)
-                ORDER BY Month";
+                    MonthNumber AS Month, 
+                    ISNULL(SessionCount, 0) AS SessionCount
+                FROM 
+                (
+                    SELECT 1 AS MonthNumber UNION ALL
+                    SELECT 2 UNION ALL
+                    SELECT 3 UNION ALL
+                    SELECT 4 UNION ALL
+                    SELECT 5 UNION ALL
+                    SELECT 6 UNION ALL
+                    SELECT 7 UNION ALL
+                    SELECT 8 UNION ALL
+                    SELECT 9 UNION ALL
+                    SELECT 10 UNION ALL
+                    SELECT 11 UNION ALL
+                    SELECT 12
+                ) AS Months
+                LEFT JOIN 
+                (
+                    SELECT 
+                        MONTH(Date) AS Month, 
+                        COUNT(*) AS SessionCount
+                    FROM StudySessions
+                    WHERE Date BETWEEN @StartDate AND @EndDate
+                    GROUP BY MONTH(Date)
+                ) AS Sessions
+                ON Months.MonthNumber = Sessions.Month
+                ORDER BY MonthNumber";
 
-            return connection.Query<StudySessionDTO>(sqlGetReport).ToList();
+            return connection
+                .Query<MonthlySessionCountDTO>(
+                    sqlGetReport,
+                    new { StartDate = $"{year}-01-01", EndDate = $"{year}-12-31" }
+                )
+                .ToList();
         }
     }
 }
