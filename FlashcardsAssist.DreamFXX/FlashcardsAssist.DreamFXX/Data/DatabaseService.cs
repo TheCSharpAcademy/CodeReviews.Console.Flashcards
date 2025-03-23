@@ -2,6 +2,7 @@
 using FlashcardsAssist.DreamFXX.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using System;
 
 namespace FlashcardsAssist.DreamFXX.Data;
 public class DatabaseService
@@ -19,7 +20,6 @@ public class DatabaseService
         {
             await connection.OpenAsync();
             
-            // Create Stacks table
             await connection.ExecuteAsync(@"
                 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Stacks]') AND type in (N'U'))
                 BEGIN
@@ -30,7 +30,6 @@ public class DatabaseService
                 END
             ");
             
-            // Create Flashcards table with foreign key to Stacks
             await connection.ExecuteAsync(@"
                 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Flashcards]') AND type in (N'U'))
                 BEGIN
@@ -44,7 +43,6 @@ public class DatabaseService
                 END
             ");
             
-            // Create StudySessions table with foreign key to Stacks
             await connection.ExecuteAsync(@"
                 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[StudySessions]') AND type in (N'U'))
                 BEGIN
@@ -104,7 +102,6 @@ public class DatabaseService
                 "WHERE s.Name = @Name " +
                 "ORDER BY f.Id", new { Name = stackName })).ToList();
 
-            // Re-number the flashcard IDs starting from 1
             var flashcardDtos = flashcards.Select((card, index) => new FlashcardDto
             {
                 Id = index + 1,
@@ -132,7 +129,6 @@ public class DatabaseService
     {
         using (var connection = new SqlConnection(_connectionString))
         {
-            // Due to ON DELETE CASCADE in the database, this will also delete related flashcards and study sessions
             await connection.ExecuteAsync("DELETE FROM Stacks WHERE Name = @Name", new { Name = stackName });
         }
     }
@@ -156,6 +152,59 @@ public class DatabaseService
                 "INNER JOIN Stacks s ON ss.StackId = s.Id " +
                 "ORDER BY ss.StudyDate DESC");
             return result.ToList();
+        }
+    }
+
+    public async Task SeedDataAsync()
+    {
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            // Create some sample stacks
+            await CreateStackAsync("Spanish Vocabulary");
+            await CreateStackAsync("Programming Terms");
+            await CreateStackAsync("World Capitals");
+
+            // Get the created stacks
+            var spanishStack = await GetStackByNameAsync("Spanish Vocabulary");
+            var programmingStack = await GetStackByNameAsync("Programming Terms");
+            var capitalsStack = await GetStackByNameAsync("World Capitals");
+
+            // Add flashcards to Spanish stack
+            await AddFlashcardAsync(spanishStack.Id, "Hola", "Hello");
+            await AddFlashcardAsync(spanishStack.Id, "Gracias", "Thank you");
+            await AddFlashcardAsync(spanishStack.Id, "Por favor", "Please");
+            await AddFlashcardAsync(spanishStack.Id, "Buenos días", "Good morning");
+            await AddFlashcardAsync(spanishStack.Id, "Adiós", "Goodbye");
+
+            // Add flashcards to Programming stack
+            await AddFlashcardAsync(programmingStack.Id, "Algorithm", "A step-by-step procedure for solving a problem");
+            await AddFlashcardAsync(programmingStack.Id, "Variable", "A container for storing data values");
+            await AddFlashcardAsync(programmingStack.Id, "Function", "A reusable block of code that performs a specific task");
+            await AddFlashcardAsync(programmingStack.Id, "Class", "A blueprint for creating objects");
+            await AddFlashcardAsync(programmingStack.Id, "API", "Application Programming Interface");
+
+            // Add flashcards to Capitals stack
+            await AddFlashcardAsync(capitalsStack.Id, "France", "Paris");
+            await AddFlashcardAsync(capitalsStack.Id, "Japan", "Tokyo");
+            await AddFlashcardAsync(capitalsStack.Id, "Brazil", "Brasília");
+            await AddFlashcardAsync(capitalsStack.Id, "Australia", "Canberra");
+            await AddFlashcardAsync(capitalsStack.Id, "Egypt", "Cairo");
+
+            // Add some sample study sessions
+            var random = new Random();
+            var today = DateTime.Now;
+            
+            // Add study sessions for the last 3 months
+            for (int i = 0; i < 90; i++)
+            {
+                var date = today.AddDays(-i);
+                if (random.Next(0, 3) == 0) // Only add sessions for some days
+                {
+                    await RecordStudySessionAsync(spanishStack.Id, date, random.Next(60, 101));
+                    await RecordStudySessionAsync(programmingStack.Id, date, random.Next(60, 101));
+                    await RecordStudySessionAsync(capitalsStack.Id, date, random.Next(60, 101));
+                }
+            }
         }
     }
 }

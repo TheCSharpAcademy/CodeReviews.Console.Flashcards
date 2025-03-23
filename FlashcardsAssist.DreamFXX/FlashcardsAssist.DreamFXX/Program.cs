@@ -1,9 +1,9 @@
-﻿using System.IO;
-using FlashcardsAssist.DreamFXX.Data;
+﻿using FlashcardsAssist.DreamFXX.Data;
 using FlashcardsAssist.DreamFXX.Services;
 using FlashcardsAssist.DreamFXX.UI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Spectre.Console;
 
 namespace FlashcardsAssist.DreamFXX;
 class Program
@@ -28,6 +28,12 @@ class Program
 
         var dbService = serviceProvider.GetRequiredService<DatabaseService>();
         await dbService.InitializeDatabaseAsync();
+        AnsiConsole.MarkupLine("[green]Database initialized successfully!\nPress any key to continue.[/]");
+        Console.ReadKey();
+
+        AnsiConsole.MarkupLine("[yellow]Seeding database with sample data...[/]");
+        await dbService.SeedDataAsync();
+        Console.WriteLine("Database seeded successfully!");
 
         var ui = serviceProvider.GetRequiredService<ConsoleUI>();
         await ui.RunAsync();
