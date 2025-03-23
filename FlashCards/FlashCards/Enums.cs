@@ -11,7 +11,7 @@ enum StackMenuOption
 {
     ViewAllStacks,
     CreateNewStack,
-    UpdateStack,
+    RenameStack,
     DeleteStack,
     ReturnToMainMenu
 }
