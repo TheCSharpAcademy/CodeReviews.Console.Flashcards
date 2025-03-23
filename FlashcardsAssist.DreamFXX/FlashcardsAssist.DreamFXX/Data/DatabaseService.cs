@@ -159,46 +159,41 @@ public class DatabaseService
     {
         using (var connection = new SqlConnection(_connectionString))
         {
-            // Create some sample stacks
+
             await CreateStackAsync("Spanish Vocabulary");
             await CreateStackAsync("Programming Terms");
             await CreateStackAsync("World Capitals");
 
-            // Get the created stacks
             var spanishStack = await GetStackByNameAsync("Spanish Vocabulary");
             var programmingStack = await GetStackByNameAsync("Programming Terms");
             var capitalsStack = await GetStackByNameAsync("World Capitals");
 
-            // Add flashcards to Spanish stack
             await AddFlashcardAsync(spanishStack.Id, "Hola", "Hello");
             await AddFlashcardAsync(spanishStack.Id, "Gracias", "Thank you");
             await AddFlashcardAsync(spanishStack.Id, "Por favor", "Please");
             await AddFlashcardAsync(spanishStack.Id, "Buenos días", "Good morning");
             await AddFlashcardAsync(spanishStack.Id, "Adiós", "Goodbye");
 
-            // Add flashcards to Programming stack
             await AddFlashcardAsync(programmingStack.Id, "Algorithm", "A step-by-step procedure for solving a problem");
             await AddFlashcardAsync(programmingStack.Id, "Variable", "A container for storing data values");
             await AddFlashcardAsync(programmingStack.Id, "Function", "A reusable block of code that performs a specific task");
             await AddFlashcardAsync(programmingStack.Id, "Class", "A blueprint for creating objects");
             await AddFlashcardAsync(programmingStack.Id, "API", "Application Programming Interface");
 
-            // Add flashcards to Capitals stack
             await AddFlashcardAsync(capitalsStack.Id, "France", "Paris");
             await AddFlashcardAsync(capitalsStack.Id, "Japan", "Tokyo");
             await AddFlashcardAsync(capitalsStack.Id, "Brazil", "Brasília");
             await AddFlashcardAsync(capitalsStack.Id, "Australia", "Canberra");
             await AddFlashcardAsync(capitalsStack.Id, "Egypt", "Cairo");
 
-            // Add some sample study sessions
             var random = new Random();
             var today = DateTime.Now;
             
-            // Add study sessions for the last 3 months
+
             for (int i = 0; i < 90; i++)
             {
                 var date = today.AddDays(-i);
-                if (random.Next(0, 3) == 0) // Only add sessions for some days
+                if (random.Next(0, 3) == 0)
                 {
                     await RecordStudySessionAsync(spanishStack.Id, date, random.Next(60, 101));
                     await RecordStudySessionAsync(programmingStack.Id, date, random.Next(60, 101));
