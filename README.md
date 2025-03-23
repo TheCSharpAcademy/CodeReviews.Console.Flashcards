@@ -72,7 +72,7 @@ Clone the repository:
 
 git clone https://github.com/RyanW84/CodeReviews.Console.Flashcards.git
 
-##Configure the application:
+## Configure the application:
 
 You can call the SeedData() method in Program.CS when running for the first time to add some example questions and answers. Once this has been done the first time, it can be commented out.
 
