@@ -7,7 +7,7 @@ Welcome to the Flashcards App!
 
 This is a .NET project designed to demonstrate using SQL Server to store and retain data, in the form of revision-style flashcards. The project also features the use of DTO'S and Pivoting a Table
 
-FLashcards is a console app using .NET and SQL
+Flashcards is a console app using .NET and SQL
 The user can add their own revision-style flashcards to help revise a variety of subjects, this is followed up with a study session and a history of the user's scores!
 
 The front end is a console app.
@@ -20,11 +20,11 @@ This application fulfils the following The C# Academy - Flashcards App requireme
 2) You'll need two different tables for stacks and flashcards. The tables should be linked by a foreign key.
 3) Stacks should have a unique name.
 4) Every flashcard needs to be part of a stack. If a stack is deleted, the same should happen with the flashcard.
-5) You should use DTOs to show the flashcards to the user without the Id of the stack it belongs to.
-6) When showing a stack to the user, the flashcard Ids should always start with 1 without gaps between them. If you have 10 cards and number 5 is deleted, the table should show Ids from 1 to 9.
+5) You should use DTOs to show the flashcards to the user without the ID of the stack it belongs to.
+6) When showing a stack to the user, the flashcard IDs should always start with 1 without gaps between them. If you have 10 cards and the number 5 is deleted, the table should show IDs from 1 to 9.
 7) After creating the flashcards functionalities, create a "Study Session" area, where the users will study the stacks. All study sessions should be stored, with date and score.
-8) The study and stack tables should be linked. If a stack is deleted, it's study sessions should be deleted.
-9) The project should contain a call to the study table so the users can see all their study sessions. This table receives insert calls upon each study session, but there shouldn't be update and delete calls to it.
+8) The study and stack tables should be linked. If a stack is deleted, its study sessions should be deleted.
+9) The project should contain a call to the study table so the users can see all their study sessions. This table receives insert calls upon each study session, but there shouldn't be updates or deleted calls to it.
 
 
 ## Challenges
@@ -33,19 +33,19 @@ This project has the following challenges:
 2) A report showing the average score per month
 
 ## Technologies
-.NET
-C# (.Net 8.0)
-SQL Server 2022
+* .NET
+* C# (.Net 8.0)
+* SQL Server 2022
 
-Nuget Packages:
-Dapper
-Spectre Console
-System Text Json
-Microsoft Data SQL Client
-Microsoft Extensions Configuration
-Microsoft Extensions Configuration Abstractions
-Microsoft Extensions Configuration Json
-Microsoft Sql Server Sever
+## Nuget Packages:
+* Dapper
+* Spectre Console
+* System Text Json
+* Microsoft Data SQL Client
+* Microsoft Extensions Configuration
+* Microsoft Extensions Configuration Abstractions
+* Microsoft Extensions Configuration Json
+* Microsoft Sql Server Sever
 
 ## What I learned from this project
 1) Appsettings configuration JSON files and where to store them
@@ -63,9 +63,9 @@ Microsoft Sql Server Sever
 The initial Database creation SQL  has been added, but a database called Flashcards does need to be added to SQL server for the query to create the necessary tables
 
 ## Prerequisites
-.NET 8 SDK.
-An IDE (code editor) like Visual Studio or Visual Studio Code.
-A database management tool (optional).
+* .NET 8 SDK
+* An IDE (code editor) like Visual Studio or Visual Studio Code.
+* A database management tool (optional).
 
 ## Installation
 Clone the repository:
