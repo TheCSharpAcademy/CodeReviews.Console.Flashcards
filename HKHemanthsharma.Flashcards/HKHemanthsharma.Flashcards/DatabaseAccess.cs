@@ -51,7 +51,6 @@ namespace Flashcards.Study
                 Console.WriteLine("general exception " + ex.Message);
             }
             connectionString = connectionString + "; Initial Catalog= stacksNflashcards;";
-            //Console.ReadLine();
         }
 
         public static async Task createTables()
@@ -159,9 +158,9 @@ namespace Flashcards.Study
                 Console.WriteLine(ex.Message);
             }
         }
-        public static List<FlashcardDTO> GetAllFlashcards()
+        public static List<FlashcardDto> GetAllFlashcards()
         {
-            List<FlashcardDTO> flashcardDTOs = new List<FlashcardDTO>();
+            List<FlashcardDto> flashcardDTOs = new List<FlashcardDto>();
             try
             {
                 string query = @"select * from flashcards";
@@ -174,7 +173,7 @@ namespace Flashcards.Study
                     int count = 1;
                     foreach (flashcard fl in flashcards)
                     {
-                        flashcardDTOs.Add(new FlashcardDTO
+                        flashcardDTOs.Add(new FlashcardDto
                         {
                             ID = count,
                             Front = fl.Front,
@@ -214,9 +213,9 @@ namespace Flashcards.Study
                 Console.WriteLine(ex.Message);
             }
         }
-        public static List<FlashcardDTO> GetAllFlashcardsofStack(string stackpicked)
+        public static List<FlashcardDto> GetAllFlashcardsofStack(string stackpicked)
         {
-            List<FlashcardDTO> flashcards = null;
+            List<FlashcardDto> flashcards = null;
             string query = "select * from flashcards where stack_name=@stackname";
             try
             {
@@ -224,7 +223,7 @@ namespace Flashcards.Study
                 {
                     conn.Open();
                     int count = 1;
-                    flashcards = conn.Query<flashcard>(query, new { stackname = stackpicked }).Select(x => new FlashcardDTO
+                    flashcards = conn.Query<flashcard>(query, new { stackname = stackpicked }).Select(x => new FlashcardDto
                     {
                         ID = count++,
                         Front = x.Front,
@@ -241,7 +240,7 @@ namespace Flashcards.Study
         }
         public static void CreateNewFlashcardforstack(string stackpicked)
         {
-            FlashcardDTO newflashcard = UserInputs.CreateNewFlashcard();
+            FlashcardDto newflashcard = UserInputs.CreateNewFlashcard();
             string query = "insert into flashcards([Front],[Back],[stack_name]) values (@front,@back,@stackname)";
             try
             {
@@ -257,7 +256,7 @@ namespace Flashcards.Study
                 Console.WriteLine(ex.Message);
             }
         }
-        public static void DeleteFlashcardforstack(string stackpicked, List<FlashcardDTO> flashcardsDTO)
+        public static void DeleteFlashcardforstack(string stackpicked, List<FlashcardDto> flashcardsDTO)
         {
             int userChoice = UserInputs.DeleteFlashcardforStack(flashcardsDTO);
             string query = "select * from flashcards where stack_name=@stackname";
@@ -269,7 +268,7 @@ namespace Flashcards.Study
                 conn.Close();
             }
         }
-        public static void EditFlashcardforstack(string stackpicked, List<FlashcardDTO> flashcardsDTO)
+        public static void EditFlashcardforstack(string stackpicked, List<FlashcardDto> flashcardsDTO)
         {
             int userChoice = UserInputs.EditFlashcardforStack(flashcardsDTO);
             string query = "select * from flashcards where stack_name=@stackname";
@@ -285,7 +284,7 @@ namespace Flashcards.Study
         public static Dictionary<string, string> QAOfStacks(string stackpicked)
         {
             Dictionary<string, string> QnA = new Dictionary<string, string>();
-            List<FlashcardDTO> cards = GetAllFlashcardsofStack(stackpicked);
+            List<FlashcardDto> cards = GetAllFlashcardsofStack(stackpicked);
             cards.ForEach(x => QnA.Add(x.Front, x.Back));
             return QnA;
         }

@@ -87,9 +87,9 @@ namespace Flashcards.Study
                                  .AddChoices(stacks));
             return stackpicked;
         }
-        public static FlashcardDTO CreateNewFlashcard()
+        public static FlashcardDto CreateNewFlashcard()
         {
-            var flashcard = new FlashcardDTO();
+            var flashcard = new FlashcardDto();
             AnsiConsole.MarkupLine("Please enter the[green] front[/] of the flashcard");
             string front = Console.ReadLine();
             AnsiConsole.MarkupLine("Please enter the[green] back[/] of the flashcard");
@@ -98,12 +98,12 @@ namespace Flashcards.Study
             flashcard.Back = back;
             return flashcard;
         }
-        public static int DeleteFlashcardforStack(List<FlashcardDTO> flashcardsDTO)
+        public static int DeleteFlashcardforStack(List<FlashcardDto> flashcardsDTO)
         {
             Table flashcardsTable = new Table();
             flashcardsTable.Title = new TableTitle("Flashcards Management Area");
             flashcardsTable.Border = TableBorder.HeavyEdge;
-            var properties = typeof(FlashcardDTO).GetProperties();
+            var properties = typeof(FlashcardDto).GetProperties();
             foreach (var prop in properties)
             {
                 flashcardsTable.AddColumn(prop.Name);
@@ -120,12 +120,12 @@ namespace Flashcards.Study
             }
             return userChoice;
         }
-        public static int EditFlashcardforStack(List<FlashcardDTO> flashcardsDTO)
+        public static int EditFlashcardforStack(List<FlashcardDto> flashcardsDTO)
         {
             Table flashcardsTable = new Table();
             flashcardsTable.Title = new TableTitle("Flashcards Management Area");
             flashcardsTable.Border = TableBorder.HeavyEdge;
-            var properties = typeof(FlashcardDTO).GetProperties();
+            var properties = typeof(FlashcardDto).GetProperties();
             foreach (var prop in properties)
             {
                 flashcardsTable.AddColumn(prop.Name);
@@ -142,13 +142,13 @@ namespace Flashcards.Study
             }
             return userChoice;
         }
-        public static FlashcardDTO GeteditedFlashcardDTO()
+        public static FlashcardDto GeteditedFlashcardDTO()
         {
             AnsiConsole.MarkupLine("Please enter the[pink3] front[/] of the flashcard");
             string front = Console.ReadLine();
             AnsiConsole.MarkupLine("Please enter the[pink3] back[/] of the flashcard");
             string back = Console.ReadLine();
-            var flashcard = new FlashcardDTO()
+            var flashcard = new FlashcardDto()
             {
                 Front = front,
                 Back = back

@@ -87,9 +87,9 @@ namespace Flashcards.Study
             Table flashcardsTable = new Table();
             flashcardsTable.Title = new TableTitle("Flashcards Management Area");
             flashcardsTable.Border = TableBorder.HeavyEdge;
-            List<FlashcardDTO> flashcards = new List<FlashcardDTO>();
+            List<FlashcardDto> flashcards = new List<FlashcardDto>();
             flashcards = DatabaseAccess.GetAllFlashcards();
-            var props = typeof(FlashcardDTO).GetProperties();
+            var props = typeof(FlashcardDto).GetProperties();
             foreach (PropertyInfo prop in props)
             {
                 flashcardsTable.AddColumn(prop.Name);
@@ -110,12 +110,12 @@ namespace Flashcards.Study
             }
 
         }
-        public static void ShowAllFlashcardsofStack(string stackpicked, List<FlashcardDTO> result)
+        public static void ShowAllFlashcardsofStack(string stackpicked, List<FlashcardDto> result)
         {
             Table flashcardtable = new Table();
             flashcardtable.Title = new TableTitle($"Flashcards of Stack {stackpicked}");
             flashcardtable.Border = TableBorder.HeavyEdge;
-            var props = typeof(FlashcardDTO).GetProperties();
+            var props = typeof(FlashcardDto).GetProperties();
             foreach (var prop in props)
             {
                 flashcardtable.AddColumn(prop.Name);
@@ -130,7 +130,7 @@ namespace Flashcards.Study
             stacktable.Border = TableBorder.HeavyEdge;
             List<string> stacks = DatabaseAccess.GetAllStacks();
             stacktable.AddColumn("StackName");
-            stacks.ForEach(x => stacktable.AddRow(x.ToString()));
+            stacks.ForEach(x => stacktable.AddRow(x));
             string stackpicked = UserInputs.PickSingleStack(stacks);
             double passpercentage = UserInputs.StudyAStack(stackpicked);
             DatabaseAccess.LogStudySession(passpercentage, stackpicked);
