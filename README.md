@@ -1,10 +1,10 @@
-<h2>Flashcards.Study</h2>
+<h1>Flashcards.Study</h1>
 
-<h3>Overview</h3>
+<h2>Overview</h2>
 
 <h5>Flashcards.Study is a console application designed to help users study using flashcards. i used spectre console for good user experience.</h5>
 
-<h3>Features</h3>
+<h2>Features</h2>
 
 Create, update, and delete flashcards
 
