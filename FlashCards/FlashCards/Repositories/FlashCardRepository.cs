@@ -12,6 +12,76 @@ namespace FlashCards
         {
             ConnectionString = connectionString;
         }
+        public bool DoesTableExist()
+        {
+            try
+            {
+                string sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'FlashCards';";
+                using var connection = new SqlConnection(ConnectionString);
+                string? result = connection.Query<string>(sql).FirstOrDefault();
+
+                return result != null;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"Database error while checking if table exists");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error while checking if table exists");
+                throw;
+            }
+
+        }
+        public void CreateTable()
+        {
+            try
+            {
+                string sql = "CREATE TABLE FlashCards(" +
+                "CardID int NOT NULL IDENTITY(1, 1) PRIMARY KEY," +
+                "StackID int NOT NULL," +
+                "FrontText varchar(50)," +
+                "BackText varchar(50)," +
+                "CONSTRAINT FK_StackID FOREIGN KEY(StackID) REFERENCES Stacks(StackID) ON DELETE CASCADE" +
+                ");";
+
+                ExecuteNonQuery(sql);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error while creating the table");
+                throw;
+            }
+
+
+        }
+        public void AutoFill(List<CardStack> stacks, List<FlashCard> flashCards)
+        {
+            try
+            {
+                string sql= "INSERT INTO [FlashCards] VALUES (@StackID, @FrontText, @BackText);";
+
+                using var connection = new SqlConnection(ConnectionString);
+
+                foreach (var card in flashCards)
+                {
+                    card.StackID = stacks.FirstOrDefault(x => x.StackName == card.StackName)!.StackID;
+                    connection.Execute(sql, card);
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"Database error while autofiling the database");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error while autofiling the database");
+                throw;
+            }
+
+        }
         public bool Insert(FlashCard entity)
         {
             try
@@ -136,7 +206,29 @@ namespace FlashCards
             }
 
         }
+        private int ExecuteNonQuery(string sqlCommand)
+        {
+            try
+            {
+                using var connection = new SqlConnection(ConnectionString);
+                var result = connection.Execute(sqlCommand);
 
-        
+                return result;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"Database error while executing the command");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error while executing the command");
+                throw;
+            }
+
+        }
+
+
+
     }
 }

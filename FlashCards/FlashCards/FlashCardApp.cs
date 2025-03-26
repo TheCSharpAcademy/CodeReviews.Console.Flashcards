@@ -1,22 +1,42 @@
-﻿using Spectre.Console;
+﻿using FlashCards.Models;
+using Spectre.Console;
+using System.Text.Json;
 
 namespace FlashCards
 {
     internal class FlashCardApp
     {
         UserInterface UserInterface { get; }
-        CardStackRepository CardStackRepository { get; }
-        FlashCardRepository FlashCardRepository { get; }
 
-        public FlashCardApp(CardStackRepository cardStackRepository, FlashCardRepository flashCardRepository, UserInterface userInterface)
+        CardStackRepositoryService CardStackRepositoryService { get; }
+        FlashCardRepositoryService FlashCardRepositoryService { get; }
+        string pathToDefaultData {  get; }
+
+        public FlashCardApp(CardStackRepositoryService cardStackService, FlashCardRepositoryService flashCardService, UserInterface userInterface, string pathToDefaultData)
         {
             UserInterface = userInterface;
-            CardStackRepository = cardStackRepository;
-            FlashCardRepository = flashCardRepository;
+            CardStackRepositoryService = cardStackService;
+            FlashCardRepositoryService = flashCardService;
+            this.pathToDefaultData  = pathToDefaultData;
         }
+        private DefaultDataObject GetDefaultData()
+        {
+            var defaultData = JsonSerializer.Deserialize<DefaultDataObject>(File.ReadAllText(pathToDefaultData));
+            return defaultData!;
+        }
+        public void PrepareApp()
+        {
+            var defaultData = GetDefaultData();
 
+            CardStackRepositoryService.PrepareRepository(defaultData.Stacks);
+            List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
+
+            FlashCardRepositoryService.PrepareRepository(stacks, defaultData.FlashCards);
+        }
         public void Run()
         {
+            PrepareApp();
+
             UserInterface.PrintApplicationHeader();
 
             MainMenuOption mainMenuOption = UserInterface.GetMainMenuSelection();
@@ -46,11 +66,10 @@ namespace FlashCards
                 case MainMenuOption.Exit:
                     return;
             }
+
         }
         private void HandleManageStacks()
         {
-            List<CardStack> stacks = CardStackRepository.GetAllRecords().ToList();
-
             StackMenuOption stackMenuOption = UserInterface.GetStackMenuSelection();
             while (stackMenuOption != StackMenuOption.ReturnToMainMenu)
             {
@@ -61,188 +80,67 @@ namespace FlashCards
         }
         private void HandleManageFlashCards()
         {
-            List<CardStack> stacks = CardStackRepository.GetAllRecords().ToList();
-            CardStack stack = UserInterface.GetStack(stacks);
+            List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
+            CardStack stack = UserInterface.StackSelection(stacks);
 
             FlashCardMenuOption flashCardMenuOption = UserInterface.GetFlashCardMenuSelection();
+
+            while (flashCardMenuOption != FlashCardMenuOption.ReturnToMainMenu)
+            {
+                ProcessFlashCardMenu(flashCardMenuOption, stack);
+                UserInterface.ClearConsole();
+                flashCardMenuOption = UserInterface.GetFlashCardMenuSelection();
+            }
+
             ProcessFlashCardMenu(flashCardMenuOption, stack);
         }
-        //###################################################################################################################### Stacks
+        
         private void ProcesStackMenu(StackMenuOption stackMenuOption) 
         {
             switch (stackMenuOption) 
             {
                 case StackMenuOption.ViewAllStacks:
-                    HandleViewAllStacks();
+                    CardStackRepositoryService.HandleViewAllStacks();
                     break;
                 case StackMenuOption.CreateNewStack:
-                    HandleCreateNewStack();
+                    CardStackRepositoryService.HandleCreateNewStack();
                     break;
                 case StackMenuOption.RenameStack:
-                    HandleRenameStack();
+                    CardStackRepositoryService.HandleRenameStack();
                     break;
                 case StackMenuOption.DeleteStack:
-                    HandleDeleteStack();
+                    CardStackRepositoryService.HandleDeleteStack();
                     break;
                 case StackMenuOption.ReturnToMainMenu:
                     return;
             }
         }
-        private void HandleViewAllStacks()
-        {
-            List<CardStack> stacks = CardStackRepository.GetAllRecords().ToList();
-            UserInterface.PrintStacks(stacks);
-            UserInterface.PrintPressAnyKeyToContinue();
-
-        }
-        private void HandleCreateNewStack()
-        {
-            string stackName = UserInterface.GetNewText("Enter new stack name: ");
-
-            bool wasActionSuccessful = CardStackRepository.Insert(new CardStack() { StackName = stackName });
-            Console.WriteLine(wasActionSuccessful ? "Stack created successfully" : "Error occured, please contact admin");
-            UserInterface.PrintPressAnyKeyToContinue();
-        }
-        private void HandleRenameStack()
-        {
-            List<CardStack> stacks = CardStackRepository.GetAllRecords().ToList();
-            CardStack stack = UserInterface.GetStack(stacks);
-
-            stack.StackName = UserInterface.GetNewText("Please enter new name: ");
-
-            bool wasActionSuccessful = CardStackRepository.Insert(stack);
-            Console.WriteLine(wasActionSuccessful ? "Stack renamed successfully" : "Error occured, please contact admin");
-            UserInterface.PrintPressAnyKeyToContinue();
-        }
-        private void HandleDeleteStack()
-        {
-            List<CardStack> stacks = CardStackRepository.GetAllRecords().ToList();
-            CardStack stack = UserInterface.GetStack(stacks);
-
-            bool wasActionSuccessful = CardStackRepository.Delete(stack);
-            Console.WriteLine(wasActionSuccessful ? "Stack deleted successfully" : "Error occured, please contact admin");
-            UserInterface.PrintPressAnyKeyToContinue();
-        }
 
 
-        //###################################################################################################################### FlashCards
-        
-        
-        
         private void ProcessFlashCardMenu(FlashCardMenuOption flashCardMenuOption, CardStack stack) 
         {
-            while(flashCardMenuOption != FlashCardMenuOption.ReturnToMainMenu)
+            switch (flashCardMenuOption)
             {
-                switch (flashCardMenuOption)
-                {
-                    case FlashCardMenuOption.ViewAllCards:
-                        HandleViewAllCards(stack);
-                        break;
-                    case FlashCardMenuOption.ViewXCards:
-                        HandleViewXCards(stack);
-                        break;
-                    case FlashCardMenuOption.CreateNewFlashCard:
-                        HandleCreateNewFlashCard(stack);
-                        break;
-                    case FlashCardMenuOption.UpdateFlashCard:
-                        HandleUpdateFlashCard(stack);
-                        break;
-                    case FlashCardMenuOption.DeleteFlashCard:
-                        HandleDeleteFlashCard(stack);
-                        break;
-                    case FlashCardMenuOption.SwitchStack:
-                        stack = HandleSwitchStack(stack);
-                        break;
-                }
-                UserInterface.ClearConsole();
-                flashCardMenuOption = UserInterface.GetFlashCardMenuSelection();
+                case FlashCardMenuOption.ViewAllCards:
+                    FlashCardRepositoryService.HandleViewAllCards(stack);
+                    break;
+                case FlashCardMenuOption.ViewXCards:
+                    FlashCardRepositoryService.HandleViewXCards(stack);
+                    break;
+                case FlashCardMenuOption.CreateNewFlashCard:
+                    FlashCardRepositoryService.HandleCreateNewFlashCard(stack);
+                    break;
+                case FlashCardMenuOption.UpdateFlashCard:
+                    FlashCardRepositoryService.HandleUpdateFlashCard(stack);
+                    break;
+                case FlashCardMenuOption.DeleteFlashCard:
+                    FlashCardRepositoryService.HandleDeleteFlashCard(stack);
+                    break;
+                case FlashCardMenuOption.SwitchStack:
+                    List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
+                    stack = FlashCardRepositoryService.HandleSwitchStack(stacks);
+                    break;
             }
-            
-        }
-        private void HandleViewAllCards(CardStack stack)
-        {
-            List<FlashCardDto> flashCards = FlashCardRepository.GetAllCardsInStack(stack).ToList();
-            Dictionary<int,int> IdMap = flashCards.Select((card, index) => new {card.CardID, newId = index+1}).ToDictionary(x => x.CardID, x=> x.newId);
-
-            List<FlashCardDto> mappedCards = flashCards.Select(card => new FlashCardDto
-            {
-                CardID = IdMap[card.CardID],
-                FrontText = card.FrontText,
-                BackText = card.BackText,
-            }
-            ).ToList();
-
-            UserInterface.PrintCards(mappedCards);
-            UserInterface.PrintPressAnyKeyToContinue();
-        }
-        private void HandleViewXCards(CardStack stack)
-        {
-            int count = UserInterface.GetCount();
-            List<FlashCardDto> flashCards = FlashCardRepository.GetXCardsInStack(stack, count).ToList();
-            UserInterface.PrintCards(flashCards);
-            UserInterface.PrintPressAnyKeyToContinue();
-        }
-        private void HandleCreateNewFlashCard(CardStack stack)
-        {
-            FlashCard card = UserInterface.GetNewCard();
-            card.StackID = stack.StackID;
-            bool wasActionSuccessful = FlashCardRepository.Insert(card);
-            Console.WriteLine(wasActionSuccessful ? "Card added successfully": "Error occured, please contact admin");
-            UserInterface.PrintPressAnyKeyToContinue();
-        }
-        private void HandleUpdateFlashCard(CardStack stack)
-        {
-            //get flash card
-
-
-            List<FlashCardDto> flashCards = FlashCardRepository.GetAllCardsInStack(stack).ToList();
-            Dictionary<int, int> IdMap = flashCards.Select((card, index) => new { card.CardID, newId = index + 1 }).ToDictionary(x => x.CardID, x => x.newId);
-
-            List<FlashCardDto> mappedCards = flashCards.Select(card => new FlashCardDto
-            {
-                CardID = IdMap[card.CardID],
-                FrontText = card.FrontText,
-                BackText = card.BackText,
-            }
-            ).ToList();
-            
-            int cardId = UserInterface.GetCardID(mappedCards);
-            //get new values
-            FlashCard card = UserInterface.GetNewCard();
-            card.CardID = IdMap.FirstOrDefault(x => x.Value == cardId).Key;
-            card.StackID = stack.StackID;
-            //insert to DB
-            bool wasActionSuccessful = FlashCardRepository.Update(card);
-            Console.WriteLine(wasActionSuccessful ? "Card updated successfully" : "Error occured, please contact admin");
-            UserInterface.PrintPressAnyKeyToContinue();
-            
-        }
-        private void HandleDeleteFlashCard(CardStack stack)
-        {
-            //get card ID
-            List<FlashCardDto> flashCards = FlashCardRepository.GetAllCardsInStack(stack).ToList();
-            Dictionary<int, int> IdMap = flashCards.Select((card, index) => new { card.CardID, newId = index + 1 }).ToDictionary(x => x.CardID, x => x.newId);
-
-            List<FlashCardDto> mappedCards = flashCards.Select(card => new FlashCardDto
-            {
-                CardID = IdMap[card.CardID],
-                FrontText = card.FrontText,
-                BackText = card.BackText,
-            }
-            ).ToList();
-            int cardId = UserInterface.GetCardID(mappedCards);
-            cardId = IdMap.FirstOrDefault(x => x.Value == cardId).Key;
-            //delete
-            bool wasActionSuccessful = FlashCardRepository.Delete(new FlashCard() { CardID = cardId });
-            Console.WriteLine(wasActionSuccessful ? "Card deleted successfully" : "Error occured, please contact admin");
-            UserInterface.PrintPressAnyKeyToContinue();
-        }
-        private CardStack HandleSwitchStack(CardStack stack)
-        {
-            List<CardStack> stacks = CardStackRepository.GetAllRecords().ToList();
-            CardStack newStack = UserInterface.GetStack(stacks);
-
-            return newStack;
         }
     }
 }

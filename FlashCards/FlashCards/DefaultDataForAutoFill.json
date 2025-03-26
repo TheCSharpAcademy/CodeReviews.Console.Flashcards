@@ -1,0 +1,84 @@
+{
+  "Stacks": [
+    { "StackName": "Czech" },
+    { "StackName": "German" },
+    { "StackName": "French" }
+  ],
+  "FlashCards": [
+    {
+      "StackName": "Czech",
+      "FrontText": "Hi",
+      "BackText": "Ahoj"
+    },
+    {
+      "StackName": "Czech",
+      "FrontText": "Bye",
+      "BackText": "Nashledanou"
+    },
+    {
+      "StackName": "Czech",
+      "FrontText": "Car",
+      "BackText": "Auto"
+    },
+    {
+      "StackName": "Czech",
+      "FrontText": "Up",
+      "BackText": "Nahoru"
+    },
+    {
+      "StackName": "Czech",
+      "FrontText": "Blue",
+      "BackText": "Blue"
+    },
+    {
+      "StackName": "German",
+      "FrontText": "Hi",
+      "BackText": "Hallo"
+    },
+    {
+      "StackName": "German",
+      "FrontText": "Bye",
+      "BackText": "Tschüss"
+    },
+    {
+      "StackName": "German",
+      "FrontText": "Car",
+      "BackText": "Auto"
+    },
+    {
+      "StackName": "German",
+      "FrontText": "Up",
+      "BackText": "Hoch"
+    },
+    {
+      "StackName": "German",
+      "FrontText": "Blue",
+      "BackText": "Blau"
+    },
+    {
+      "StackName": "French",
+      "FrontText": "Hi",
+      "BackText": "Salut"
+    },
+    {
+      "StackName": "French",
+      "FrontText": "Bye",
+      "BackText": "Au revoir"
+    },
+    {
+      "StackName": "French",
+      "FrontText": "Car",
+      "BackText": "Voiture"
+    },
+    {
+      "StackName": "French",
+      "FrontText": "Up",
+      "BackText": "En haut"
+    },
+    {
+      "StackName": "French",
+      "FrontText": "Blue",
+      "BackText": "Bleu"
+    }
+  ]
+}

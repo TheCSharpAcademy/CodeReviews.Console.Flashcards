@@ -118,7 +118,7 @@ namespace FlashCards
             AnsiConsole.Write(table);
 
         }
-        public CardStack GetStack(List<CardStack> stacks)
+        public CardStack StackSelection(List<CardStack> stacks)
         {
             var stack = AnsiConsole.Prompt(
                 new SelectionPrompt<CardStack>()
