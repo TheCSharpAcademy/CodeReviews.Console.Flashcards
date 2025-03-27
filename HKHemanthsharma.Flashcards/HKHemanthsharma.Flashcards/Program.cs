@@ -8,6 +8,7 @@ namespace Flashcards.Study
         static void Main(string[] args)
         {
             DatabaseAccess dal = new DatabaseAccess();
+            dal.Somemessage();
             DatabaseAccess.CreateDbIfNotExists();
             DatabaseAccess.CreateTables();
             bool end = false;
