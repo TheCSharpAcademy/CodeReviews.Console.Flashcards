@@ -8,8 +8,8 @@ namespace Flashcards.Study
         static void Main(string[] args)
         {
             DatabaseAccess dal = new DatabaseAccess();
-            DatabaseAccess.createDBIfNotExists();
-            DatabaseAccess.createTables();
+            DatabaseAccess.CreateDbIfNotExists();
+            DatabaseAccess.CreateTables();
             bool end = false;
             while (!end)
             {
@@ -25,7 +25,7 @@ namespace Flashcards.Study
                 table.AddRow("press 4 to View your study session report");
                 table.AddRow("press 0 to stop the program");
                 AnsiConsole.Write(table);
-                int userChoice = UserInputs.mainmenuselection();
+                int userChoice = UserInputs.Mainmenuselection();
                 if (userChoice == 0) { end = true; }
                 else
                 {

@@ -1,13 +1,7 @@
 ﻿using Flashcards.Study.Models;
 using Flashcards.Study.Models.Domain;
 using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Flashcards.Study
 {
     public class UserOutputs
@@ -102,7 +96,7 @@ namespace Flashcards.Study
                 if (userChoice == 1)
                 {
                     Console.WriteLine("Please enter the ID of the flashcard to Delete:");
-                    int id = UserInputs.deleteFlashcardMenu(flashcards.Count);
+                    int id = UserInputs.DeleteFlashcardMenu(flashcards.Count);
                     DatabaseAccess.DeleteFlashcard(id);
                     AnsiConsole.MarkupLine($"[red]The Flashcard with ID[yellow]{id}[/] is deleted successfully[/]");
                 }

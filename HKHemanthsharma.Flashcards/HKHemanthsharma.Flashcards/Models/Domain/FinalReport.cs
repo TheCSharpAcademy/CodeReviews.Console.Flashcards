@@ -4,8 +4,8 @@ namespace Flashcards.Study.Models.Domain
 {
     public class FinalReport
     {
-        public string stackname { get; set; }
-        public string sessionyear { get; set; }
+        public string StackName { get; set; }
+        public string Sessionyear { get; set; }
         public decimal January { get; set; }
         public decimal February { get; set; }
         public decimal March { get; set; }

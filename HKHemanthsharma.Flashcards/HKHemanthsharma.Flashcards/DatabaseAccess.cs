@@ -3,42 +3,33 @@ using Flashcards.Study.Models;
 using Flashcards.Study.Models.Domain;
 using Microsoft.Data.SqlClient;
 using Spectre.Console;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
-
-
 namespace Flashcards.Study
 {
     public class DatabaseAccess
     {
-        private readonly string _connectionstring = ConfigurationManager.ConnectionStrings["defaultconnection"].ConnectionString;
-        public static string connectionString { get; set; }
+        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["defaultconnection"].ConnectionString;
+        public static string ConnectionString { get; set; }
 
         public DatabaseAccess()
         {
-            connectionString = _connectionstring;
+            ConnectionString = _ConnectionString;
         }
 
-        public static void createDBIfNotExists()
+        public static void CreateDbIfNotExists()
         {
             try
             {
-                string query = @"If DB_ID('stacksNflashcards') is null
+                string query = @"If DB_ID('stacksNFlashcards') is null
                               Begin
-                               create DataBase stacksNflashcards
+                               create DataBase stacksNFlashcards
                               END;";
-                using SqlConnection conn = new SqlConnection(connectionString);
+                using SqlConnection conn = new SqlConnection(ConnectionString);
                 conn.Open();
                 int row = conn.Execute(query);
                 if (row > 0)
                 {
-                    Console.WriteLine("The dataBase stacksNflashcards is created for you");
+                    Console.WriteLine("The dataBase stacksNFlashcards is created for you");
                 }
                 conn.Close();
             }
@@ -50,21 +41,21 @@ namespace Flashcards.Study
             {
                 Console.WriteLine("general exception " + ex.Message);
             }
-            connectionString = connectionString + "; Initial Catalog= stacksNflashcards;";
+            ConnectionString = ConnectionString + "; Initial Catalog= stacksNFlashcards;";
         }
 
-        public static async Task createTables()
+        public static async Task CreateTables()
         {
-            string DBconnectionString = connectionString;
+            string DBConnectionString = ConnectionString;
             string stacksquery = @"if object_id('stacks') is null
                                  BEGIN
                                     Create Table stacks(
                                       stackname varchar(20) primary key
                                     );                                    
                                   END";
-            string flashcardsquery = @"if object_id('flashcards') is null
+            string Flashcardsquery = @"if object_id('Flashcards') is null
                                     BEGIN 
-                                        Create Table flashcards(
+                                        Create Table Flashcards(
                                               ID int primary key identity(1,1),
                                               Front varchar(100),
                                               Back Varchar(100),
@@ -82,10 +73,10 @@ namespace Flashcards.Study
                                  END";
             try
             {
-                SqlConnection conn = new SqlConnection(DBconnectionString);
+                SqlConnection conn = new SqlConnection(DBConnectionString);
                 conn.Open();
                 conn.Execute(stacksquery);
-                conn.Execute(flashcardsquery);
+                conn.Execute(Flashcardsquery);
                 conn.Execute(studysession);
                 conn.Close();
             }
@@ -105,7 +96,7 @@ namespace Flashcards.Study
             try
             {
                 string query = @"Select * from stacks";
-                SqlConnection conn = new SqlConnection(connectionString);
+                SqlConnection conn = new SqlConnection(ConnectionString);
                 conn.Open();
                 results = (conn.Query<string>(query)).ToList();
                 conn.Close();
@@ -125,7 +116,7 @@ namespace Flashcards.Study
             try
             {
                 string query = "insert into stacks([stackname]) values (@stackname)";
-                SqlConnection conn = new SqlConnection(connectionString);
+                SqlConnection conn = new SqlConnection(ConnectionString);
                 conn.Open();
                 conn.Execute(query, new { stackname = newstackname });
                 conn.Close();
@@ -144,7 +135,7 @@ namespace Flashcards.Study
             try
             {
                 string query = "Delete from stacks where stackname=@name";
-                SqlConnection conn = new SqlConnection(connectionString);
+                SqlConnection conn = new SqlConnection(ConnectionString);
                 conn.Open();
                 conn.Execute(query, new { name = stackname });
                 conn.Close();
@@ -160,20 +151,20 @@ namespace Flashcards.Study
         }
         public static List<FlashcardDto> GetAllFlashcards()
         {
-            List<FlashcardDto> flashcardDTOs = new List<FlashcardDto>();
+            List<FlashcardDto> FlashcardDTOs = new List<FlashcardDto>();
             try
             {
-                string query = @"select * from flashcards";
-                SqlConnection conn = new SqlConnection(connectionString);
+                string query = @"select * from Flashcards";
+                SqlConnection conn = new SqlConnection(ConnectionString);
                 using (conn)
                 {
                     conn.Open();
-                    List<flashcard> flashcards = conn.Query<flashcard>(query).ToList();
+                    List<Flashcard> Flashcards = conn.Query<Flashcard>(query).ToList();
                     conn.Close();
                     int count = 1;
-                    foreach (flashcard fl in flashcards)
+                    foreach (Flashcard fl in Flashcards)
                     {
-                        flashcardDTOs.Add(new FlashcardDto
+                        FlashcardDTOs.Add(new FlashcardDto
                         {
                             ID = count,
                             Front = fl.Front,
@@ -192,19 +183,19 @@ namespace Flashcards.Study
             {
                 Console.WriteLine(e.Message);
             }
-            return flashcardDTOs;
+            return FlashcardDTOs;
         }
         public static void DeleteFlashcard(int id)
         {
-            List<flashcard> flashcards;
+            List<Flashcard> Flashcards;
             try
             {
-                SqlConnection conn = new SqlConnection(connectionString);
+                SqlConnection conn = new SqlConnection(ConnectionString);
                 using (conn)
                 {
                     conn.Open();
-                    flashcards = conn.Query<flashcard>("select * from flashcards").ToList();
-                    conn.Execute("delete from flashcards where ID=@id", new { id = flashcards[id - 1].ID });
+                    Flashcards = conn.Query<Flashcard>("select * from Flashcards").ToList();
+                    conn.Execute("delete from Flashcards where ID=@id", new { id = Flashcards[id - 1].ID });
                     conn.Close();
                 }
             }
@@ -215,15 +206,15 @@ namespace Flashcards.Study
         }
         public static List<FlashcardDto> GetAllFlashcardsofStack(string stackpicked)
         {
-            List<FlashcardDto> flashcards = null;
-            string query = "select * from flashcards where stack_name=@stackname";
+            List<FlashcardDto> Flashcards = null;
+            string query = "select * from Flashcards where stack_name=@stackname";
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlConnection conn = new SqlConnection(ConnectionString))
                 {
                     conn.Open();
                     int count = 1;
-                    flashcards = conn.Query<flashcard>(query, new { stackname = stackpicked }).Select(x => new FlashcardDto
+                    Flashcards = conn.Query<Flashcard>(query, new { stackname = stackpicked }).Select(x => new FlashcardDto
                     {
                         ID = count++,
                         Front = x.Front,
@@ -236,18 +227,18 @@ namespace Flashcards.Study
             {
                 Console.WriteLine(ex.Message);
             }
-            return flashcards;
+            return Flashcards;
         }
         public static void CreateNewFlashcardforstack(string stackpicked)
         {
-            FlashcardDto newflashcard = UserInputs.CreateNewFlashcard();
-            string query = "insert into flashcards([Front],[Back],[stack_name]) values (@front,@back,@stackname)";
+            FlashcardDto newFlashcard = UserInputs.CreateNewFlashcard();
+            string query = "insert into Flashcards([Front],[Back],[stack_name]) values (@front,@back,@stackname)";
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlConnection conn = new SqlConnection(ConnectionString))
                 {
                     conn.Open();
-                    conn.Execute(query, new { front = newflashcard.Front, back = newflashcard.Back, stackname = stackpicked });
+                    conn.Execute(query, new { front = newFlashcard.Front, back = newFlashcard.Back, stackname = stackpicked });
                     conn.Close();
                 }
             }
@@ -256,29 +247,29 @@ namespace Flashcards.Study
                 Console.WriteLine(ex.Message);
             }
         }
-        public static void DeleteFlashcardforstack(string stackpicked, List<FlashcardDto> flashcardsDTO)
+        public static void DeleteFlashcardforstack(string stackpicked, List<FlashcardDto> FlashcardsDTO)
         {
-            int userChoice = UserInputs.DeleteFlashcardforStack(flashcardsDTO);
-            string query = "select * from flashcards where stack_name=@stackname";
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            int userChoice = UserInputs.DeleteFlashcardforStack(FlashcardsDTO);
+            string query = "select * from Flashcards where stack_name=@stackname";
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 conn.Open();
-                List<flashcard> flashcards = conn.Query<flashcard>(query, new { stackname = stackpicked }).ToList();
-                conn.Execute("delete from flashcards where ID=@id", new { id = flashcards[userChoice - 1].ID });
+                List<Flashcard> Flashcards = conn.Query<Flashcard>(query, new { stackname = stackpicked }).ToList();
+                conn.Execute("delete from Flashcards where ID=@id", new { id = Flashcards[userChoice - 1].ID });
                 conn.Close();
             }
         }
-        public static void EditFlashcardforstack(string stackpicked, List<FlashcardDto> flashcardsDTO)
+        public static void EditFlashcardforstack(string stackpicked, List<FlashcardDto> FlashcardsDTO)
         {
-            int userChoice = UserInputs.EditFlashcardforStack(flashcardsDTO);
-            string query = "select * from flashcards where stack_name=@stackname";
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            int userChoice = UserInputs.EditFlashcardforStack(FlashcardsDTO);
+            string query = "select * from Flashcards where stack_name=@stackname";
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 conn.Open();
-                List<flashcard> flashcards = conn.Query<flashcard>(query, new { stackname = stackpicked }).ToList();
-                var editedFlashCard = UserInputs.GeteditedFlashcardDTO();
-                string editQuery = "update flashcards set Front=@front, Back=@back where ID=@id";
-                conn.Execute(editQuery, new { front = editedFlashCard.Front, back = editedFlashCard.Back, id = flashcards[userChoice - 1].ID });
+                List<Flashcard> Flashcards = conn.Query<Flashcard>(query, new { stackname = stackpicked }).ToList();
+                var editedFlashcard = UserInputs.GeteditedFlashcardDto();
+                string editQuery = "update Flashcards set Front=@front, Back=@back where ID=@id";
+                conn.Execute(editQuery, new { front = editedFlashcard.Front, back = editedFlashcard.Back, id = Flashcards[userChoice - 1].ID });
             }
         }
         public static Dictionary<string, string> QAOfStacks(string stackpicked)
@@ -294,7 +285,7 @@ namespace Flashcards.Study
                                   (@stackname,@score)";
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlConnection conn = new SqlConnection(ConnectionString))
                 {
                     conn.Execute(insertQuery, new { stackname = stackpicked, score = userscore });
                 }
@@ -332,21 +323,21 @@ pivot(
 	  for sessionmonth in ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
 	  ) as pivotetable
 order by  sessionyear desc, StackName;";
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 conn.Open();
                 finalreportrows = conn.Query<FinalReport>(pivotQuery).ToList();
             }
             foreach (var yearrow in finalreportrows)
             {
-                if (reportdictionary.ContainsKey(yearrow.sessionyear))
+                if (reportdictionary.ContainsKey(yearrow.Sessionyear))
                 {
-                    reportdictionary[yearrow.sessionyear].Add(yearrow);
+                    reportdictionary[yearrow.Sessionyear].Add(yearrow);
                 }
                 else
                 {
-                    reportdictionary[yearrow.sessionyear] = new List<FinalReport>();
-                    reportdictionary[yearrow.sessionyear].Add(yearrow);
+                    reportdictionary[yearrow.Sessionyear] = new List<FinalReport>();
+                    reportdictionary[yearrow.Sessionyear].Add(yearrow);
                 }
             }
             foreach (var kvp in reportdictionary)
@@ -360,7 +351,7 @@ order by  sessionyear desc, StackName;";
                 }
                 foreach (var yearwiseobjects in kvp.Value)
                 {
-                    var rowValues = new List<string> { yearwiseobjects.stackname };
+                    var rowValues = new List<string> { yearwiseobjects.StackName };
 
                     // Add all month values formatted to 1 decimal place
                     rowValues.Add($"{yearwiseobjects.January:0.0}");
@@ -420,7 +411,7 @@ order by  sessionyear desc, StackName;";
 
             List<FinalReport> yearReports;
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 conn.Open();
                 yearReports = conn.Query<FinalReport>(pivotQuery, new { Year = year }).ToList();
@@ -452,9 +443,9 @@ order by  sessionyear desc, StackName;";
             }
 
             // Add rows
-            foreach (var report in yearReports.OrderBy(r => r.stackname))
+            foreach (var report in yearReports.OrderBy(r => r.StackName))
             {
-                var rowValues = new List<string> { report.stackname };
+                var rowValues = new List<string> { report.StackName };
 
                 // Add all month values formatted to 1 decimal place
                 rowValues.Add($"{report.January:0.0}");

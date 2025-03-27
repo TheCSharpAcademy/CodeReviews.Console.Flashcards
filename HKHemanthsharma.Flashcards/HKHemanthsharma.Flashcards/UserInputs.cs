@@ -1,19 +1,12 @@
 ﻿using Flashcards.Study.Models;
 using Flashcards.Study.Models.Domain;
 using Spectre.Console;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Flashcards.Study
 {
     public class UserInputs
     {
-        public static int mainmenuselection()
+        public static int Mainmenuselection()
         {
             AnsiConsole.Markup("please choose you choice between[yellow] 0 to 4[/]:\n");
             bool res1 = int.TryParse(Console.ReadLine(), out int userChoiceMenu);
@@ -66,7 +59,7 @@ namespace Flashcards.Study
             }
             return userChoice;
         }
-        public static int deleteFlashcardMenu(int total)
+        public static int DeleteFlashcardMenu(int total)
         {
             AnsiConsole.MarkupLine($"Enter the ID from 1 to {total}");
             bool res = int.TryParse(Console.ReadLine(), out int userChoice);
@@ -142,7 +135,7 @@ namespace Flashcards.Study
             }
             return userChoice;
         }
-        public static FlashcardDto GeteditedFlashcardDTO()
+        public static FlashcardDto GeteditedFlashcardDto()
         {
             AnsiConsole.MarkupLine("Please enter the[pink3] front[/] of the flashcard");
             string front = Console.ReadLine();
@@ -181,11 +174,11 @@ namespace Flashcards.Study
                 var userinp = Console.ReadLine().ToLower();
                 if (userinp == "x")
                 {
-                    result = Math.Round((double)(((double)correctcount / totalcount) * 100));
+                    result = Math.Round((((double)correctcount / totalcount) * 100));
                     return result;
                 }
             }
-            result = Math.Round((double)(((double)correctcount / totalcount) * 100));
+            result = Math.Round((((double)correctcount / totalcount) * 100));
             return result;
         }
         public static int ViewReportMenu()
