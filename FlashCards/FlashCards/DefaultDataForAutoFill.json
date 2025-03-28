@@ -80,5 +80,82 @@
       "FrontText": "Blue",
       "BackText": "Bleu"
     }
+  ],
+  "StudySessions": [
+    {
+      "StackName": "Czech",
+      "SessionDate": "2025-01-12",
+      "Score": 5
+    },
+    {
+      "StackName": "Czech",
+      "SessionDate": "2025-01-14",
+      "Score": 0
+    },
+    {
+      "StackName": "Czech",
+      "SessionDate": "2025-02-02",
+      "Score": 10
+    },
+    {
+      "StackName": "Czech",
+      "SessionDate": "2025-08-23",
+      "Score": 22
+    },
+    {
+      "StackName": "Czech",
+      "SessionDate": "2025-08-27",
+      "Score": 15
+    },
+    {
+      "StackName": "French",
+      "SessionDate": "2025-02-12",
+      "Score": 1
+    },
+    {
+      "StackName": "French",
+      "SessionDate": "2025-02-20",
+      "Score": 3
+    },
+    {
+      "StackName": "French",
+      "SessionDate": "2025-03-14",
+      "Score": 9
+    },
+    {
+      "StackName": "French",
+      "SessionDate": "2025-05-23",
+      "Score": 9
+    },
+    {
+      "StackName": "French",
+      "SessionDate": "2025-06-27",
+      "Score": 9
+    },
+    {
+      "StackName": "German",
+      "SessionDate": "2025-02-27",
+      "Score": 9
+    },
+    {
+      "StackName": "German",
+      "SessionDate": "2025-02-14",
+      "Score": 18
+    },
+    {
+      "StackName": "German",
+      "SessionDate": "2025-03-02",
+      "Score": 10
+    },
+    {
+      "StackName": "German",
+      "SessionDate": "2025-03-23",
+      "Score": 5
+    },
+    {
+      "StackName": "German",
+      "SessionDate": "2025-03-27",
+      "Score": 2
+    }
   ]
 }

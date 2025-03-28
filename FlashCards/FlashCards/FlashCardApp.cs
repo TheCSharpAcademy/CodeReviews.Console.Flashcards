@@ -10,13 +10,16 @@ namespace FlashCards
 
         CardStackRepositoryService CardStackRepositoryService { get; }
         FlashCardRepositoryService FlashCardRepositoryService { get; }
+        StudySessionRepositoryService StudySessionRepositoryService { get; }
+
         string pathToDefaultData {  get; }
 
-        public FlashCardApp(CardStackRepositoryService cardStackService, FlashCardRepositoryService flashCardService, UserInterface userInterface, string pathToDefaultData)
+        public FlashCardApp(CardStackRepositoryService cardStackService, FlashCardRepositoryService flashCardService, StudySessionRepositoryService studySessionService, UserInterface userInterface, string pathToDefaultData)
         {
             UserInterface = userInterface;
             CardStackRepositoryService = cardStackService;
             FlashCardRepositoryService = flashCardService;
+            StudySessionRepositoryService = studySessionService;
             this.pathToDefaultData  = pathToDefaultData;
         }
         private DefaultDataObject GetDefaultData()
@@ -32,6 +35,10 @@ namespace FlashCards
             List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
 
             FlashCardRepositoryService.PrepareRepository(stacks, defaultData.FlashCards);
+
+            StudySessionRepositoryService.PrepareRepository(stacks, defaultData.StudySessions);
+
+
         }
         public void Run()
         {

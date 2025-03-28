@@ -40,10 +40,9 @@ namespace FlashCards
             {
                 string sql = "CREATE TABLE FlashCards(" +
                 "CardID int NOT NULL IDENTITY(1, 1) PRIMARY KEY," +
-                "StackID int NOT NULL," +
+                "StackID int NOT NULl FOREIGN KEY(StackID) REFERENCES Stacks(StackID) ON DELETE CASCADE," +
                 "FrontText varchar(50)," +
-                "BackText varchar(50)," +
-                "CONSTRAINT FK_StackID FOREIGN KEY(StackID) REFERENCES Stacks(StackID) ON DELETE CASCADE" +
+                "BackText varchar(50)" +
                 ");";
 
                 ExecuteNonQuery(sql);
