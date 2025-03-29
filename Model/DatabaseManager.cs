@@ -5,7 +5,7 @@ using Spectre.Console;
 class DataBaseManager
 {
     static string ConnectionString = "";
-    public static async Task Start()
+    public static void Start()
     {
         var builder = new SqlConnectionStringBuilder
             {
@@ -15,29 +15,10 @@ class DataBaseManager
                 InitialCatalog = "FlashCardsProject",
                 TrustServerCertificate=true
             };
-        ConnectionString = builder.ConnectionString;
-
-        await BuildTable("stacks", new List<string>
-        {
-            "Id INTEGER PRIMARY KEY",
-            "Name TEXT"
-        });
-
-        await BuildTable("flash_cards", new List<string>
-        {
-            "Stacks_Id INTEGER NOT NULL",
-            "FOREIGN KEY (Stacks_Id) REFERENCES stacks (Id)",
-            "Id INTEGER PRIMARY KEY",
-            "Front TEXT",
-            "Back TEXT"
-        });
-
-        await InsertLog();
-
-        await GetAllLogs();        
+        ConnectionString = builder.ConnectionString;     
     }
 
-    static async Task BuildTable(string tableName, List<string> optionsList)
+    public static async Task BuildTable(string tableName, List<string> optionsList)
     {
         await HandleDatabaseOperation(async (connection) => {
             string optionsString = string.Join(",", optionsList);
@@ -51,7 +32,7 @@ class DataBaseManager
         ErrorCodes.TABLEEXISTS, $"[bold green]{tableName} table already exists[/]");
     }
 
-    static async Task InsertLog()
+    public static async Task InsertLog()
     {
         await HandleDatabaseOperation(async (connection) => {
             var sql = 
@@ -66,7 +47,7 @@ class DataBaseManager
         ErrorCodes.INSERTLOGEXISTS, "[bold red]Log already exists[/]");
     }
 
-    static async Task GetAllLogs()
+    public static async Task GetAllLogs()
     {
         await HandleDatabaseOperation(async (connection) => {
             var sql = "SELECT * FROM stacks";
