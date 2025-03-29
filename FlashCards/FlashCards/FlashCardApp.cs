@@ -65,7 +65,7 @@ namespace FlashCards
                     HandleManageFlashCards();
                     break;
                 case MainMenuOption.Study:
-                    throw new NotImplementedException();
+                    HandleStudy();
                     break;
                 case MainMenuOption.ViewStudySessions:
                     throw new NotImplementedException();
@@ -75,6 +75,16 @@ namespace FlashCards
             }
 
         }
+
+        private  void HandleStudy()
+        {
+            List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
+            CardStack stack = UserInterface.StackSelection(stacks);
+            List<FlashCardDto> cards = FlashCardRepositoryService.GetAllCardsInStack(stack);
+
+            StudySessionRepositoryService.NewStudySession(stack, cards);
+        }
+
         private void HandleManageStacks()
         {
             StackMenuOption stackMenuOption = UserInterface.GetStackMenuSelection();

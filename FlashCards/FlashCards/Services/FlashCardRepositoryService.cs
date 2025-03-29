@@ -110,5 +110,6 @@ namespace FlashCards
 
             return newStack;
         }
+        public List<FlashCardDto> GetAllCardsInStack(CardStack stack) => FlashCardRepository.GetAllCardsInStack(stack).ToList();
     }
 }
