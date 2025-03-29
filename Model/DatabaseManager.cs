@@ -5,6 +5,7 @@ using Spectre.Console;
 class DataBaseManager
 {
     static readonly int ERRORCODETABLEEXISTS = -2146232060;
+    static readonly int ERRORCODEINSERTLOGEXISTS = -2146232060;
     public static async Task Start()
     {
         var builder = new SqlConnectionStringBuilder
@@ -22,6 +23,8 @@ class DataBaseManager
 
         await BuildStacksTable(connection);
         await BuildFlashCardsTable(connection);
+
+        await InsertLog(connection);
 
         await GetAllLogs(connection);
         
@@ -69,6 +72,23 @@ class DataBaseManager
         catch (Exception e) { Console.WriteLine(e); }
     }
 
+    static async Task InsertLog(SqlConnection connection)
+    {
+        try
+        {
+            var sql = 
+            $@"INSERT INTO stacks
+            VALUES (0, 'neat')";
+
+            await using var command = new SqlCommand(sql, connection);
+            await command.ExecuteNonQueryAsync();
+
+            AnsiConsole.MarkupLine("[bold green]New log added[/]");
+        }
+        catch (SqlException e) { if (e.ErrorCode == ERRORCODEINSERTLOGEXISTS) AnsiConsole.MarkupLine("[bold red]Log already exists[/]"); }
+        catch (Exception e) { Console.WriteLine(e); }
+    }
+
     static async Task GetAllLogs(SqlConnection connection)
     {
         var sql = "SELECT * FROM stacks";
@@ -77,7 +97,7 @@ class DataBaseManager
 
         while (await reader.ReadAsync())
         {
-            Console.WriteLine("{0} {1}", reader.GetString(0), reader.GetString(1));
+            Console.WriteLine("{0} {1}", reader.GetValue(0), reader.GetValue(1));
         }
     }
 }
