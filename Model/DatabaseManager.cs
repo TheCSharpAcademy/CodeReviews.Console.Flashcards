@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Dapper;
 using Microsoft.Data.SqlClient;
 using Spectre.Console;
 
@@ -32,33 +33,32 @@ class DataBaseManager
         ErrorCodes.TABLEEXISTS, $"[bold green]{tableName} table already exists[/]");
     }
 
-    public static async Task InsertLog()
+    public static async Task InsertLog(string table, List<string> valuesList)
     {
         await HandleDatabaseOperation(async (connection) => {
+            string values = string.Join(",", valuesList);
             var sql = 
-            $@"INSERT INTO stacks
-            VALUES (0, 'neat')";
+            $@"INSERT INTO {table}
+            VALUES ({values})";
 
             await using var command = new SqlCommand(sql, connection);
             await command.ExecuteNonQueryAsync();
 
-            AnsiConsole.MarkupLine("[bold green]New log added[/]");
+            AnsiConsole.MarkupLine($"[bold green]New log added to {table}[/]");
         }, 
-        ErrorCodes.INSERTLOGEXISTS, "[bold red]Log already exists[/]");
+        ErrorCodes.INSERTLOGEXISTS, $"[bold red]Log already exists[/]");
     }
 
-    public static async Task GetAllLogs()
+    public static async Task<List<Stack>> GetAllLogs(string table)
     {
+        List<Stack> result = [];
         await HandleDatabaseOperation(async (connection) => {
-            var sql = "SELECT * FROM stacks";
-            await using var command = new SqlCommand(sql, connection);
-            await using var reader = await command.ExecuteReaderAsync();
-
-            while (await reader.ReadAsync())
-            {
-                Console.WriteLine("{0} {1}", reader.GetValue(0), reader.GetValue(1));
-            }
+            var sql = $@"SELECT * FROM {table}";
+            //await using var command = new SqlCommand(sql, connection);
+            result = (List<Stack>)await connection.QueryAsync<Stack>(sql);
         });
+
+        return result;
     }
 
     // Handles the methods that deal with the db. The passed method
