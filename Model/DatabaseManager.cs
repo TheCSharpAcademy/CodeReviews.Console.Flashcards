@@ -48,15 +48,14 @@ class DataBaseManager
 
     static async Task BuildTable(SqlConnection connection, string tableName, List<string> optionsList)
     {
-        try
-        {
+        await HandleDatabaseOperation(async () => {
             string optionsString = "";
 
             foreach(string option in optionsList)
             {
                 optionsString += option + ",";
             }
-            optionsString.TrimEnd(',');
+            optionsString = optionsString.TrimEnd(',');
 
             var sql = $@"CREATE TABLE {tableName}({optionsString})";
             
@@ -64,19 +63,13 @@ class DataBaseManager
             await command.ExecuteNonQueryAsync();
 
             AnsiConsole.MarkupLine($"[bold red]{tableName} table does not exist. Creating new table...[/]");
-        }
-        catch (SqlException e) 
-        { 
-            if (e.ErrorCode == ErrorCodes.TABLEEXISTS) 
-                AnsiConsole.MarkupLine($"[bold green]{tableName} table already exists[/]"); 
-        }
-        catch (Exception e) { Console.WriteLine(e); }
+        }, 
+        ErrorCodes.TABLEEXISTS, $"[bold green]{tableName} table already exists[/]");
     }
 
     static async Task InsertLog(SqlConnection connection)
     {
-        try
-        {
+        await HandleDatabaseOperation(async () => {
             var sql = 
             $@"INSERT INTO stacks
             VALUES (0, 'neat')";
@@ -85,9 +78,8 @@ class DataBaseManager
             await command.ExecuteNonQueryAsync();
 
             AnsiConsole.MarkupLine("[bold green]New log added[/]");
-        }
-        catch (SqlException e) { if (e.ErrorCode == ErrorCodes.INSERTLOGEXISTS) AnsiConsole.MarkupLine("[bold red]Log already exists[/]"); }
-        catch (Exception e) { Console.WriteLine(e); }
+        }, 
+        ErrorCodes.INSERTLOGEXISTS, "[bold red]Log already exists[/]");
     }
 
     static async Task GetAllLogs(SqlConnection connection)
@@ -100,5 +92,15 @@ class DataBaseManager
         {
             Console.WriteLine("{0} {1}", reader.GetValue(0), reader.GetValue(1));
         }
+    }
+
+    static async Task HandleDatabaseOperation (Func<Task> method, int errorCode, string message)
+    {
+        try
+        {
+            await method();
+        }
+        catch (SqlException e) { if (e.ErrorCode == errorCode) AnsiConsole.MarkupLine(message); }
+        catch (Exception e) { Console.WriteLine(e); } // global catch for if i missed anything
     }
 }
