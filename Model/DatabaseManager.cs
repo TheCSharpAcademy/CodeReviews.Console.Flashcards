@@ -4,11 +4,7 @@ using Spectre.Console;
 
 class DataBaseManager
 {
-    // TODO: Figure out how async works
-    // TODO: Figure out local connection var
-
-
-
+    static string ConnectionString = "";
     public static async Task Start()
     {
         var builder = new SqlConnectionStringBuilder
@@ -19,18 +15,15 @@ class DataBaseManager
                 InitialCatalog = "FlashCardsProject",
                 TrustServerCertificate=true
             };
-        var connectionString = builder.ConnectionString;
+        ConnectionString = builder.ConnectionString;
 
-        await using var connection = new SqlConnection(connectionString);
-        await connection.OpenAsync();
-
-        await BuildTable(connection, "stacks", new List<string>
+        await BuildTable("stacks", new List<string>
         {
             "Id INTEGER PRIMARY KEY",
             "Name TEXT"
         });
 
-        await BuildTable(connection, "flash_cards", new List<string>
+        await BuildTable("flash_cards", new List<string>
         {
             "Stacks_Id INTEGER NOT NULL",
             "FOREIGN KEY (Stacks_Id) REFERENCES stacks (Id)",
@@ -39,24 +32,15 @@ class DataBaseManager
             "Back TEXT"
         });
 
-        await InsertLog(connection);
+        await InsertLog();
 
-        await GetAllLogs(connection);
-        
-        await connection.CloseAsync();
+        await GetAllLogs();        
     }
 
-    static async Task BuildTable(SqlConnection connection, string tableName, List<string> optionsList)
+    static async Task BuildTable(string tableName, List<string> optionsList)
     {
-        await HandleDatabaseOperation(async () => {
-            string optionsString = "";
-
-            foreach(string option in optionsList)
-            {
-                optionsString += option + ",";
-            }
-            optionsString = optionsString.TrimEnd(',');
-
+        await HandleDatabaseOperation(async (connection) => {
+            string optionsString = string.Join(",", optionsList);
             var sql = $@"CREATE TABLE {tableName}({optionsString})";
             
             await using var command = new SqlCommand(sql, connection);
@@ -67,9 +51,9 @@ class DataBaseManager
         ErrorCodes.TABLEEXISTS, $"[bold green]{tableName} table already exists[/]");
     }
 
-    static async Task InsertLog(SqlConnection connection)
+    static async Task InsertLog()
     {
-        await HandleDatabaseOperation(async () => {
+        await HandleDatabaseOperation(async (connection) => {
             var sql = 
             $@"INSERT INTO stacks
             VALUES (0, 'neat')";
@@ -82,23 +66,32 @@ class DataBaseManager
         ErrorCodes.INSERTLOGEXISTS, "[bold red]Log already exists[/]");
     }
 
-    static async Task GetAllLogs(SqlConnection connection)
+    static async Task GetAllLogs()
     {
-        var sql = "SELECT * FROM stacks";
-        await using var command = new SqlCommand(sql, connection);
-        await using var reader = await command.ExecuteReaderAsync();
+        await HandleDatabaseOperation(async (connection) => {
+            var sql = "SELECT * FROM stacks";
+            await using var command = new SqlCommand(sql, connection);
+            await using var reader = await command.ExecuteReaderAsync();
 
-        while (await reader.ReadAsync())
-        {
-            Console.WriteLine("{0} {1}", reader.GetValue(0), reader.GetValue(1));
-        }
+            while (await reader.ReadAsync())
+            {
+                Console.WriteLine("{0} {1}", reader.GetValue(0), reader.GetValue(1));
+            }
+        });
     }
 
-    static async Task HandleDatabaseOperation (Func<Task> method, int errorCode, string message)
+    // Handles the methods that deal with the db. The passed method
+    // (or more realistically lambda function) needs an SqlConnection
+    // (made in the try statment) and will return Task, allowing it
+    // to be an async method/lambda. 
+    static async Task HandleDatabaseOperation(Func<SqlConnection, Task> method, int errorCode = default, string message = default)
     {
         try
         {
-            await method();
+            await using SqlConnection connection = new(ConnectionString);
+            await connection.OpenAsync();
+
+            await method(connection);
         }
         catch (SqlException e) { if (e.ErrorCode == errorCode) AnsiConsole.MarkupLine(message); }
         catch (Exception e) { Console.WriteLine(e); } // global catch for if i missed anything
