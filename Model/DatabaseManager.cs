@@ -4,6 +4,11 @@ using Spectre.Console;
 
 class DataBaseManager
 {
+    // TODO: Figure out how async works
+    // TODO: Figure out local connection var
+
+
+
     public static async Task Start()
     {
         var builder = new SqlConnectionStringBuilder
@@ -19,8 +24,20 @@ class DataBaseManager
         await using var connection = new SqlConnection(connectionString);
         await connection.OpenAsync();
 
-        await BuildStacksTable(connection);
-        await BuildFlashCardsTable(connection);
+        await BuildTable(connection, "stacks", new List<string>
+        {
+            "Id INTEGER PRIMARY KEY",
+            "Name TEXT"
+        });
+
+        await BuildTable(connection, "flash_cards", new List<string>
+        {
+            "Stacks_Id INTEGER NOT NULL",
+            "FOREIGN KEY (Stacks_Id) REFERENCES stacks (Id)",
+            "Id INTEGER PRIMARY KEY",
+            "Front TEXT",
+            "Back TEXT"
+        });
 
         await InsertLog(connection);
 
@@ -28,45 +45,31 @@ class DataBaseManager
         
         await connection.CloseAsync();
     }
-    static async Task BuildStacksTable(SqlConnection connection)
+
+    static async Task BuildTable(SqlConnection connection, string tableName, List<string> optionsList)
     {
         try
         {
-            var sql = 
-            $@"CREATE TABLE stacks(
-                Id INTEGER PRIMARY KEY,
-                Name TEXT
-                )";
+            string optionsString = "";
+
+            foreach(string option in optionsList)
+            {
+                optionsString += option + ",";
+            }
+            optionsString.TrimEnd(',');
+
+            var sql = $@"CREATE TABLE {tableName}({optionsString})";
             
             await using var command = new SqlCommand(sql, connection);
             await command.ExecuteNonQueryAsync();
 
-            AnsiConsole.MarkupLine("[bold red] flash_cards table did not exist. Creating new table...[/]");
+            AnsiConsole.MarkupLine($"[bold red]{tableName} table does not exist. Creating new table...[/]");
         }
-        catch (SqlException e) { if (e.ErrorCode == ErrorCodes.TABLEEXISTS) AnsiConsole.MarkupLine("[bold green]Table already exists[/]"); }
-        catch (Exception e) { Console.WriteLine(e); }
-    }
-
-    static async Task BuildFlashCardsTable(SqlConnection connection)
-    {
-        try
-        {
-            var sql = 
-            $@"CREATE TABLE flash_cards(
-                Stacks_Id INTEGER NOT NULL,
-                FOREIGN KEY (Stacks_Id)
-                    REFERENCES stacks (Id),
-                Id INTEGER PRIMARY KEY,
-                Front TEXT,
-                Back TEXT
-                )";
-            
-            await using var command = new SqlCommand(sql, connection);
-            await command.ExecuteNonQueryAsync();
-
-            AnsiConsole.MarkupLine("[bold red] flash_cards table did not exist. Creating new table...[/]");
+        catch (SqlException e) 
+        { 
+            if (e.ErrorCode == ErrorCodes.TABLEEXISTS) 
+                AnsiConsole.MarkupLine($"[bold green]{tableName} table already exists[/]"); 
         }
-        catch (SqlException e) { if (e.ErrorCode == ErrorCodes.TABLEEXISTS) AnsiConsole.MarkupLine("[bold green]Table already exists[/]"); }
         catch (Exception e) { Console.WriteLine(e); }
     }
 
