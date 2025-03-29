@@ -4,8 +4,6 @@ using Spectre.Console;
 
 class DataBaseManager
 {
-    static readonly int ERRORCODETABLEEXISTS = -2146232060;
-    static readonly int ERRORCODEINSERTLOGEXISTS = -2146232060;
     public static async Task Start()
     {
         var builder = new SqlConnectionStringBuilder
@@ -45,7 +43,7 @@ class DataBaseManager
 
             AnsiConsole.MarkupLine("[bold red] flash_cards table did not exist. Creating new table...[/]");
         }
-        catch (SqlException e) { if (e.ErrorCode == ERRORCODETABLEEXISTS) AnsiConsole.MarkupLine("[bold green]Table already exists[/]"); }
+        catch (SqlException e) { if (e.ErrorCode == ErrorCodes.TABLEEXISTS) AnsiConsole.MarkupLine("[bold green]Table already exists[/]"); }
         catch (Exception e) { Console.WriteLine(e); }
     }
 
@@ -68,7 +66,7 @@ class DataBaseManager
 
             AnsiConsole.MarkupLine("[bold red] flash_cards table did not exist. Creating new table...[/]");
         }
-        catch (SqlException e) { if (e.ErrorCode == ERRORCODETABLEEXISTS) AnsiConsole.MarkupLine("[bold green]Table already exists[/]"); }
+        catch (SqlException e) { if (e.ErrorCode == ErrorCodes.TABLEEXISTS) AnsiConsole.MarkupLine("[bold green]Table already exists[/]"); }
         catch (Exception e) { Console.WriteLine(e); }
     }
 
@@ -85,7 +83,7 @@ class DataBaseManager
 
             AnsiConsole.MarkupLine("[bold green]New log added[/]");
         }
-        catch (SqlException e) { if (e.ErrorCode == ERRORCODEINSERTLOGEXISTS) AnsiConsole.MarkupLine("[bold red]Log already exists[/]"); }
+        catch (SqlException e) { if (e.ErrorCode == ErrorCodes.INSERTLOGEXISTS) AnsiConsole.MarkupLine("[bold red]Log already exists[/]"); }
         catch (Exception e) { Console.WriteLine(e); }
     }
 
