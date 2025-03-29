@@ -23,16 +23,9 @@ class DataBaseManager
         await BuildStacksTable(connection);
         await BuildFlashCardsTable(connection);
 
-        var sql = "SELECT * FROM stacks";
-        await using var command = new SqlCommand(sql, connection);
-        command.ExecuteNonQuery();
+        await GetAllLogs(connection);
         
-        // await using var reader = await command.ExecuteReaderAsync();
-
-        // while (await reader.ReadAsync())
-        // {
-        //     Console.WriteLine("{0} {1}", reader.GetString(0), reader.GetString(1));
-        // }
+        await connection.CloseAsync();
     }
     static async Task BuildStacksTable(SqlConnection connection)
     {
@@ -45,7 +38,7 @@ class DataBaseManager
                 )";
             
             await using var command = new SqlCommand(sql, connection);
-            command.ExecuteNonQuery();
+            await command.ExecuteNonQueryAsync();
 
             AnsiConsole.MarkupLine("[bold red] flash_cards table did not exist. Creating new table...[/]");
         }
@@ -68,11 +61,23 @@ class DataBaseManager
                 )";
             
             await using var command = new SqlCommand(sql, connection);
-            command.ExecuteNonQuery();
+            await command.ExecuteNonQueryAsync();
 
             AnsiConsole.MarkupLine("[bold red] flash_cards table did not exist. Creating new table...[/]");
         }
         catch (SqlException e) { if (e.ErrorCode == ERRORCODETABLEEXISTS) AnsiConsole.MarkupLine("[bold green]Table already exists[/]"); }
         catch (Exception e) { Console.WriteLine(e); }
+    }
+
+    static async Task GetAllLogs(SqlConnection connection)
+    {
+        var sql = "SELECT * FROM stacks";
+        await using var command = new SqlCommand(sql, connection);
+        await using var reader = await command.ExecuteReaderAsync();
+
+        while (await reader.ReadAsync())
+        {
+            Console.WriteLine("{0} {1}", reader.GetString(0), reader.GetString(1));
+        }
     }
 }
