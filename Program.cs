@@ -31,6 +31,6 @@ class Program
         ]);
 
         List<Stack> results = await DataBaseManager.GetAllLogs<Stack>("stacks");
-        DisplayOther.DisplayStacks(results);
+        DisplayOther.DisplayTable(results);
     }
 }

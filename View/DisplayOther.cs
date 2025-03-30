@@ -2,26 +2,25 @@ using Spectre.Console;
 
 class DisplayOther
 {
-    public static void DisplayStacks(List<Stack> dataSet)
+    public static void DisplayTable<T>(List<T> dataSet)
     {
         var table = new Table();
 
         table.AddColumns(["Id", "Name"]);
-        foreach(Stack data in dataSet)
+        foreach(T data in dataSet)
         {
-            table.AddRow(data.Id.ToString(), data.Name);
-        }
-        AnsiConsole.Write(table);
-    }
-
-    public static void DisplayCards(List<FlashcardDTO> dataSet)
-    {
-        var table = new Table();
-
-        table.AddColumns(["Id", "Front", "Back"]);
-        foreach(FlashcardDTO data in dataSet)
-        {
-            table.AddRow(data.Id.ToString(), data.Front, data.Back);
+            switch (data)
+            {
+                case Stack stack:
+                    table.AddRow(stack.Id.ToString(), stack.Name);
+                    break;
+                case FlashcardDTO flashcard:
+                    table.AddRow(flashcard.Id.ToString(), flashcard.Front, flashcard.Back);
+                    break;
+                default:
+                    AnsiConsole.MarkupLine("[bold red]Displaying undefined type[/]");
+                    break;
+            }
         }
         AnsiConsole.Write(table);
     }
