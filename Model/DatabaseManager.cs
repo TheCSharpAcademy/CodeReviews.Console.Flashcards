@@ -55,7 +55,7 @@ class DataBaseManager<T>
         await HandleDatabaseOperation(async (connection) => {
             var sql = $@"SELECT * FROM {table}";
             //await using var command = new SqlCommand(sql, connection);
-            result = (List<T>) await connection.QueryAsync<Stack>(sql);
+            result = (List<T>) await connection.QueryAsync<T>(sql);
         });
 
         return result;
