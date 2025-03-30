@@ -24,13 +24,15 @@ class Program
             "Back TEXT"
         ]);
 
-        await DataBaseManager.InsertLog("stacks", 
-        [
-            "1", 
-            "'ababa'"
-        ]);
+        MainMenuController.Start();
 
-        List<Stack> results = await DataBaseManager.GetAllLogs<Stack>("stacks");
-        DisplayOther.DisplayTable(results);
+        // await DataBaseManager.InsertLog("stacks", 
+        // [
+        //     "1", 
+        //     "'ababa'"
+        // ]);
+
+        // List<Stack> results = await DataBaseManager.GetAllLogs<Stack>("stacks");
+        // DisplayOther.DisplayTable(results);
     }
 }
