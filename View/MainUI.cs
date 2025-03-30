@@ -2,6 +2,7 @@ using Spectre.Console;
 
 class MainUI
 {
+
     public static Enums.MainMenuOptions MainMenu()
     {
         const string ManageStacks = "Manage stacks";
@@ -59,6 +60,42 @@ class MainUI
                 return Enums.ManageStacksMenuOptions.DELETESTACK;
             case Exit:
                 return Enums.ManageStacksMenuOptions.EXIT;
+        }
+        return default;
+    }
+
+    public static Enums.ManageFlashCardsMenuOptions ManageFlashCardsMenu()
+    {
+        const string ViewAllCards = "View all cards";
+        const string ViewXCards = "View X amount of cards";
+        const string CreateCard = "Create a card";
+        const string EditCard = "Edit a card";
+        const string DeleteCard = "Delete a card";
+        const string Exit = "Exit";
+        string userInput = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("[bold green] Select option[/]")
+                .MoreChoicesText("[grey](Move up and down to reveal more fruits)[/]")
+                .AddChoices([
+                    ViewAllCards, ViewXCards, CreateCard,
+                    EditCard, DeleteCard, Exit,
+                ])
+        );
+
+        switch (userInput)
+        {
+            case ViewAllCards:
+                return Enums.ManageFlashCardsMenuOptions.VIEWALLCARDS;
+            case ViewXCards:
+                return Enums.ManageFlashCardsMenuOptions.VIEWXCARDS;
+            case CreateCard:
+                return Enums.ManageFlashCardsMenuOptions.CREATECARD;
+            case EditCard:
+                return Enums.ManageFlashCardsMenuOptions.EDITCARD;
+            case DeleteCard:
+                return Enums.ManageFlashCardsMenuOptions.DELETECARD;
+            case Exit:
+                return Enums.ManageFlashCardsMenuOptions.EXIT;
         }
         return default;
     }
