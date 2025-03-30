@@ -68,14 +68,21 @@ namespace FlashCards
                     HandleStudy();
                     break;
                 case MainMenuOption.ViewStudySessions:
-                    throw new NotImplementedException();
+                    HandleViewSessions();
+                    break;
+                case MainMenuOption.GetReport:
+                    StudySessionRepositoryService.PrintReport();
                     break;
                 case MainMenuOption.Exit:
                     return;
             }
 
         }
-
+        private void HandleViewSessions()
+        {
+            List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
+            StudySessionRepositoryService.PrintAllSessions(stacks);
+        }
         private  void HandleStudy()
         {
             List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();

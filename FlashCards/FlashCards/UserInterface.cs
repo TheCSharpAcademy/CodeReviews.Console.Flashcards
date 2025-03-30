@@ -41,6 +41,7 @@ namespace FlashCards
                     MainMenuOption.Study => "Study",
                     MainMenuOption.ViewStudySessions => "View Study Sessions",
                     MainMenuOption.Exit => "Exit",
+                    MainMenuOption.GetReport => "Get Report",
                     _ => throw new NotImplementedException("Invalid Main menu enum option")
                 }));
 

@@ -1,6 +1,8 @@
 ﻿using FlashCards.Models;
+using Spectre.Console;
 using System.Globalization;
 using System.Text.Json;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace FlashCards
 {
@@ -25,13 +27,33 @@ namespace FlashCards
             FlashCardApp app = new FlashCardApp(cardStackService, flashCardService, studySessionService,UI, pathToDefaultData);
             app.Run();
 
-            var defaultData = JsonSerializer.Deserialize<DefaultDataObject>(File.ReadAllText(pathToDefaultData));
 
-            /*string isoDate = "1994-08-23";
-            DateTime dateTime = DateTime.Parse(isoDate);
+            StudySession session = new StudySession()
+            {
+                StackName = "Czech",
+                StackId = 1,
+                SessionDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
+                Score = 15,
+            };
 
-            Console.WriteLine(dateTime.ToString())0;*/
-        }   
+            PrintResult(session, 3);
+        }
+
+        public static void PrintResult(StudySession session, int numberOfRounds)
+        {
+            var table = new Table();
+            table.AddColumns("1", "2");
+            table.HideHeaders();
+            table.AddRow("Date", session.SessionDate.ToString("yyyy-MM-dd"));
+            table.AddRow("Stack", session.StackName);
+            table.AddRow("Rounds Played", numberOfRounds.ToString());
+            table.AddRow("Score", session.Score.ToString());
+
+            AnsiConsole.Write(table);
+
+            Console.WriteLine("\nPress any key to continue or ESC to exit");
+            Console.ReadKey();
+        }
     }
 
 }

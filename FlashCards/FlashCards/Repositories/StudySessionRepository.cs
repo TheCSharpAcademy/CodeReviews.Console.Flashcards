@@ -117,7 +117,7 @@ namespace FlashCards
         {
             try
             {
-                string sqlCommand = "SELECT * FROM [StudySessions];";
+                string sqlCommand = "SELECT * FROM [StudySessions] ORDER BY [SessionDate];";
                 using var connection = new SqlConnection(ConnectionString);
                 var result = connection.Query<StudySession>(sqlCommand);
                 return result;
@@ -131,7 +131,67 @@ namespace FlashCards
             {
                 Console.WriteLine($"Unexpected error while executing the command");
             }
+            return new List<StudySession>();
+        }
+        
+        public string GetReportSqlCommand()
+        {
+            return "SELECT [1] AS January," +
+                       "[2] AS February," +
+                       "[3] AS March," +
+                       "[4] AS April," +
+                       "[5] AS May," +
+                       "[6] AS June," +
+                       "[7] AS July, " +
+                       "[8] AS August," +
+                       "[9] AS September, " +
+                       "[10] AS October," +
+                       "[11] AS November," +
+                       "[12] AS December " +
+                "FROM (" +
+                    "SELECT MONTH(SessionDate) as SessionMonth, Score " +
+                    "FROM(" +
+                        "SELECT * FROM [StudySessions] WHERE YEAR(SessionDate) = @Year" +
+                        ")[StudySessions]" +
+                        ")[StudySessions]";
+        }
+        public string GetReportPivotFunction(PivotFunction pivotFunction)
+        {
+            return pivotFunction switch
+            {
+                PivotFunction.Count => "PIVOT(" +
+                    "COUNT(Score)" +
+                    "FOR SessionMonth IN ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12])" +
+                ") AS pivot_table;",
+                PivotFunction.Average => "PIVOT(" +
+                    "AVG(Score)" +
+                    "FOR SessionMonth IN ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12])" +
+                ") AS pivot_table;",
+                PivotFunction.Sum => "PIVOT(" +
+                    "SUM(Score)" +
+                    "FOR SessionMonth IN ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12])" +
+                ") AS pivot_table;",
+               };
+        }
+        public ReportObject? GetDataPerMonthInYear(int year, PivotFunction pivotFunction)
+        {
+            string sql = GetReportSqlCommand() + GetReportPivotFunction(pivotFunction);
 
+            try
+            {
+                using var connection = new SqlConnection(ConnectionString);
+                var result = connection.QueryFirstOrDefault<ReportObject>(sql, new {Year = year});
+                return result;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"Database error while executing the command");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error while executing the command");
+            }
             return null;
         }
     }

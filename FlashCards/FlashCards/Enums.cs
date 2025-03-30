@@ -4,6 +4,7 @@
     ManageFlashCards,
     Study,
     ViewStudySessions,
+    GetReport,
     Exit,
 }
 
@@ -24,4 +25,10 @@ enum FlashCardMenuOption
     DeleteFlashCard,
     SwitchStack,
     ReturnToMainMenu
+}
+enum PivotFunction
+{
+    Average,
+    Count,
+    Sum
 }
