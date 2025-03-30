@@ -3,7 +3,7 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using Spectre.Console;
 
-class DataBaseManager
+class DataBaseManager<T>
 {
     static string ConnectionString = "";
     public static void Start()
@@ -49,13 +49,13 @@ class DataBaseManager
         ErrorCodes.INSERTLOGEXISTS, $"[bold red]Log already exists[/]");
     }
 
-    public static async Task<List<Stack>> GetAllLogs(string table)
+    public static async Task<List<T>> GetAllLogs(string table)
     {
-        List<Stack> result = [];
+        List<T> result = [];
         await HandleDatabaseOperation(async (connection) => {
             var sql = $@"SELECT * FROM {table}";
             //await using var command = new SqlCommand(sql, connection);
-            result = (List<Stack>) await connection.QueryAsync<Stack>(sql);
+            result = (List<T>) await connection.QueryAsync<Stack>(sql);
         });
 
         return result;
