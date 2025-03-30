@@ -128,21 +128,32 @@ namespace FlashCards
             Console.ReadKey();
         }
 
-        public void PrintReport() 
+        public void PrintReport(List<CardStack> stacks) 
         {
+
             int year = GetYear();
 
+            foreach(var stack in stacks)
+            {
+                PrintReportForStack(stack, year);
+            }
+            Console.ReadLine();
 
-            ReportObject? sessionCount = StudySessionRepository.GetDataPerMonthInYear(year, PivotFunction.Count);
-            ReportObject? sessionScoreSumary = StudySessionRepository.GetDataPerMonthInYear(year, PivotFunction.Sum);
-            ReportObject? sessionScoreAvg = StudySessionRepository.GetDataPerMonthInYear(year, PivotFunction.Average);
+        }
+        private void PrintReportForStack(CardStack stack, int year)
+        {
+            ReportObject? sessionCount = StudySessionRepository.GetDataPerMonthInYear(stack,year, PivotFunction.Count);
+            ReportObject? sessionScoreSumary = StudySessionRepository.GetDataPerMonthInYear(stack, year, PivotFunction.Sum);
+            ReportObject? sessionScoreAvg = StudySessionRepository.GetDataPerMonthInYear(stack, year, PivotFunction.Average);
 
-            if (sessionCount == null || sessionScoreSumary == null || sessionScoreAvg == null) {
+            if (sessionCount == null || sessionScoreSumary == null || sessionScoreAvg == null)
+            {
                 Console.WriteLine("No Data to be reported");
             }
             else
             {
                 Table table = new Table();
+                table.Title = new TableTitle($"Stack: {stack.StackName}, Year: {year}");
                 table.AddColumns("", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
                 table.AddRow(GetTableRow("Sessions", sessionCount));
                 table.AddRow(GetTableRow("Total Score", sessionScoreSumary));
@@ -152,8 +163,7 @@ namespace FlashCards
                 AnsiConsole.Write(table);
             }
 
-            Console.ReadLine();
-        
+            
         }
         private string[] GetTableRow(string text, ReportObject data)
         {

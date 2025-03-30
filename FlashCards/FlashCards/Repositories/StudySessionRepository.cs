@@ -151,7 +151,7 @@ namespace FlashCards
                 "FROM (" +
                     "SELECT MONTH(SessionDate) as SessionMonth, Score " +
                     "FROM(" +
-                        "SELECT * FROM [StudySessions] WHERE YEAR(SessionDate) = @Year" +
+                        "SELECT * FROM [StudySessions] WHERE YEAR(SessionDate) = @Year AND StackID=@StackID" +
                         ")[StudySessions]" +
                         ")[StudySessions]";
         }
@@ -173,14 +173,14 @@ namespace FlashCards
                 ") AS pivot_table;",
                };
         }
-        public ReportObject? GetDataPerMonthInYear(int year, PivotFunction pivotFunction)
+        public ReportObject? GetDataPerMonthInYear(CardStack stack, int year, PivotFunction pivotFunction)
         {
             string sql = GetReportSqlCommand() + GetReportPivotFunction(pivotFunction);
 
             try
             {
                 using var connection = new SqlConnection(ConnectionString);
-                var result = connection.QueryFirstOrDefault<ReportObject>(sql, new {Year = year});
+                var result = connection.QueryFirstOrDefault<ReportObject>(sql, new {Year = year, StackID = stack.StackID});
                 return result;
             }
             catch (SqlException sqlEx)

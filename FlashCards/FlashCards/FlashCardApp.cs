@@ -71,12 +71,17 @@ namespace FlashCards
                     HandleViewSessions();
                     break;
                 case MainMenuOption.GetReport:
-                    StudySessionRepositoryService.PrintReport();
+                    HandleGetReport();
                     break;
                 case MainMenuOption.Exit:
                     return;
             }
 
+        }
+        private void HandleGetReport()
+        {
+            List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
+            StudySessionRepositoryService.PrintReport(stacks);
         }
         private void HandleViewSessions()
         {
