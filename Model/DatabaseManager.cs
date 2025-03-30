@@ -61,6 +61,20 @@ class DataBaseManager
         return result;
     }
 
+    public static async Task UpdateLog(int id, string tableName, List<string> valuesList)
+    {
+        await HandleDatabaseOperation(async (connection) => {
+            string values = string.Join(",", valuesList);
+            var sql = $@"UPDATE {tableName} SET {values} WHERE Id = {id}";
+
+
+            await using var command = new SqlCommand(sql, connection);
+            await command.ExecuteNonQueryAsync();
+
+            AnsiConsole.MarkupLine($"[bold green]{tableName} has been updated[/]");
+        });
+    }
+
     // Handles the methods that deal with the db. The passed method
     // (or more realistically lambda function) needs an SqlConnection
     // (made in the try statment) and will return Task, allowing it
