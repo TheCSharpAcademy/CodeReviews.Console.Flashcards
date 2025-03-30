@@ -1,6 +1,6 @@
 using Spectre.Console;
 
-class MainUI
+class DisplayMenu
 {
 
     public static Enums.MainMenuOptions MainMenu()
@@ -99,4 +99,6 @@ class MainUI
         }
         return default;
     }
+
+
 }

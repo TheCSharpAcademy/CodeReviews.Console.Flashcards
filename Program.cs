@@ -32,11 +32,6 @@ class Program
         ]);
 
         List<Stack> results = await DataBaseManager<Stack>.GetAllLogs("stacks");
-
-        AnsiConsole.MarkupLine("Id\tName");
-        foreach (Stack result in results)
-        {
-            AnsiConsole.WriteLine($"{result.Id}\t{result.Name}");
-        }
+        DisplayOther.DisplayStacks(results);
     }
 }
