@@ -1,48 +1,82 @@
-﻿using FlashCards.Models;
-using Spectre.Console;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace FlashCards
 {
     internal class FlashCardApp
     {
-        UserInterface UserInterface { get; }
+        IFlashCardAppUi UserInterface { get; }
+        ICardStackService CardStackRepositoryService { get; }
+        IFlashCardService FlashCardRepositoryService { get; }
+        IStudySessionService StudySessionRepositoryService { get; }
 
-        CardStackRepositoryService CardStackRepositoryService { get; }
-        FlashCardRepositoryService FlashCardRepositoryService { get; }
-        StudySessionRepositoryService StudySessionRepositoryService { get; }
-
-        string pathToDefaultData {  get; }
-
-        public FlashCardApp(CardStackRepositoryService cardStackService, FlashCardRepositoryService flashCardService, StudySessionRepositoryService studySessionService, UserInterface userInterface, string pathToDefaultData)
+        private string PathToDefaultData {  get; }
+        private bool AutoFill { get; }
+        public FlashCardApp(ICardStackService cardStackService, IFlashCardService flashCardService, IStudySessionService studySessionService, IFlashCardAppUi userInterface, string pathToDefaultData, bool autoFill = false)
         {
             UserInterface = userInterface;
             CardStackRepositoryService = cardStackService;
             FlashCardRepositoryService = flashCardService;
             StudySessionRepositoryService = studySessionService;
-            this.pathToDefaultData  = pathToDefaultData;
+            PathToDefaultData = pathToDefaultData;
+            AutoFill = autoFill;
         }
         private DefaultDataObject GetDefaultData()
         {
-            var defaultData = JsonSerializer.Deserialize<DefaultDataObject>(File.ReadAllText(pathToDefaultData));
-            return defaultData!;
+            try
+            {
+                if (!File.Exists(PathToDefaultData))
+                {
+                    Console.WriteLine("Default data file not found.");
+                    return new DefaultDataObject(); 
+                }
+
+                var jsonData = File.ReadAllText(PathToDefaultData);
+                return JsonSerializer.Deserialize<DefaultDataObject>(jsonData) ?? new DefaultDataObject();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading default data: {ex.Message}");
+                return new DefaultDataObject();
+            }
         }
-        public void PrepareApp()
+        public bool PrepareApp()
         {
+            if (!AutoFill) { return true; }
+
             var defaultData = GetDefaultData();
 
-            CardStackRepositoryService.PrepareRepository(defaultData.Stacks);
-            List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
+            if (defaultData == null)
+            {
+                Console.WriteLine("Failed to load default data.");
+                return false;
+            }
 
-            FlashCardRepositoryService.PrepareRepository(stacks, defaultData.FlashCards);
+            if (!CardStackRepositoryService.PrepareRepository(defaultData.Stacks))
+            {
+                Console.WriteLine("Error initializing Card Stack repository.");
+                return false;
+            }
 
-            StudySessionRepositoryService.PrepareRepository(stacks, defaultData.StudySessions);
+            var stacks = CardStackRepositoryService.GetAllStacks();
 
+            if (!FlashCardRepositoryService.PrepareRepository(stacks, defaultData.FlashCards))
+            {
+                Console.WriteLine("Error initializing Flash Card repository.");
+                return false;
+            }
+
+            if (!StudySessionRepositoryService.PrepareRepository(stacks, defaultData.StudySessions))
+            {
+                Console.WriteLine("Error initializing Study Session repository.");
+                return false;
+            }
+            return true;
 
         }
         public void Run()
         {
-            PrepareApp();
+
+            if(!PrepareApp()) { return; }
 
             UserInterface.PrintApplicationHeader();
 
@@ -92,8 +126,8 @@ namespace FlashCards
         {
             List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
             CardStack stack = UserInterface.StackSelection(stacks);
-            List<FlashCardDto> cards = FlashCardRepositoryService.GetAllCardsInStack(stack);
 
+            List<FlashCardDto> cards = FlashCardRepositoryService.GetAllCardsInStack(stack) ?? new List<FlashCardDto>();
             StudySessionRepositoryService.NewStudySession(stack, cards);
         }
 
@@ -102,7 +136,7 @@ namespace FlashCards
             StackMenuOption stackMenuOption = UserInterface.GetStackMenuSelection();
             while (stackMenuOption != StackMenuOption.ReturnToMainMenu)
             {
-                ProcesStackMenu(stackMenuOption);
+                ProcessStackMenu(stackMenuOption);
                 UserInterface.ClearConsole();
                 stackMenuOption = UserInterface.GetStackMenuSelection();
             }
@@ -121,10 +155,9 @@ namespace FlashCards
                 flashCardMenuOption = UserInterface.GetFlashCardMenuSelection();
             }
 
-            ProcessFlashCardMenu(flashCardMenuOption, stack);
         }
         
-        private void ProcesStackMenu(StackMenuOption stackMenuOption) 
+        private void ProcessStackMenu(StackMenuOption stackMenuOption) 
         {
             switch (stackMenuOption) 
             {

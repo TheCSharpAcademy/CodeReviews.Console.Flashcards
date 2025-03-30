@@ -1,8 +1,4 @@
-﻿using FlashCards.Models;
-using Spectre.Console;
-using System.Globalization;
-using System.Text.Json;
-using static System.Formats.Asn1.AsnWriter;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace FlashCards
 {
@@ -10,49 +6,65 @@ namespace FlashCards
     {
         static void Main(string[] args)
         {
-            
-            string connectionString = @"Data Source=(localdb)\LOCALDB;Initial Catalog=FlashCardsProject;Integrated Security=True;Connect Timeout=5;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
-            CardStackRepository cardStackRepository = new CardStackRepository(connectionString);
-            FlashCardRepository flashCardRepository = new FlashCardRepository(connectionString);
-            StudySessionRepository studySessionRepository = new StudySessionRepository(connectionString);
 
-            UserInterface UI = new UserInterface();
+            ServiceCollection services = new ServiceCollection();
 
-            CardStackRepositoryService cardStackService = new CardStackRepositoryService(cardStackRepository, UI);
-            FlashCardRepositoryService flashCardService = new FlashCardRepositoryService(flashCardRepository, cardStackRepository, UI);
-            StudySessionRepositoryService studySessionService = new StudySessionRepositoryService(studySessionRepository);
+            SetServices(services);
 
+            var serviceProvider = services.BuildServiceProvider();
 
-            string pathToDefaultData = @"E:\Git Repos\CodeReviews.Console.Flashcards\FlashCards\FlashCards\DefaultDataForAutoFill.json";
-            FlashCardApp app = new FlashCardApp(cardStackService, flashCardService, studySessionService,UI, pathToDefaultData);
+            var app = serviceProvider.GetRequiredService<FlashCardApp>();
             app.Run();
 
 
-            StudySession session = new StudySession()
-            {
-                StackName = "Czech",
-                StackId = 1,
-                SessionDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
-                Score = 15,
-            };
+            /*ICardStackRepository cardStackRepository = new CardStackRepository(connectionString);
+            IFlashCardRepository flashCardRepository = new FlashCardRepository(connectionString);
+            IStudySessionRepository studySessionRepository = new StudySessionRepository(connectionString);
 
-            PrintResult(session, 3);
+            IFlashCardAppUi appUi = new FlashCardAppUi();
+            ICardStackServiceUi cardStackUi = new CardStackServiceUi();
+            IFlashCardServiceUi flashCardServiceUi = new FlashCardServiceUi();
+            IStudySessionServiceUi studySessionUi = new StudySessionServiceUi();
+
+            ICardStackService cardStackService = new CardStackService(cardStackRepository, cardStackUi);
+            IFlashCardService flashCardService = new FlashCardService(flashCardRepository, flashCardServiceUi);
+            IStudySessionService studySessionService = new StudySessionService(studySessionRepository, studySessionUi);
+
+
+           
+
+            FlashCardApp app = new FlashCardApp(cardStackService, flashCardService, studySessionService, appUi, pathToDefaultData, true);
+            app.Run();*/
+
         }
-
-        public static void PrintResult(StudySession session, int numberOfRounds)
+        static void SetServices(IServiceCollection services)
         {
-            var table = new Table();
-            table.AddColumns("1", "2");
-            table.HideHeaders();
-            table.AddRow("Date", session.SessionDate.ToString("yyyy-MM-dd"));
-            table.AddRow("Stack", session.StackName);
-            table.AddRow("Rounds Played", numberOfRounds.ToString());
-            table.AddRow("Score", session.Score.ToString());
+            string connectionString = @"Data Source=(localdb)\LOCALDB;Initial Catalog=FlashCardsProject;Integrated Security=True;Connect Timeout=5;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+            string pathToDefaultData = @"DefaultDataForAutoFill.json";
+            //Data Layer
+            services.AddSingleton<ICardStackRepository>(new CardStackRepository(connectionString));
+            services.AddSingleton<IFlashCardRepository>(new FlashCardRepository(connectionString));
+            services.AddSingleton<IStudySessionRepository>(new StudySessionRepository(connectionString));
 
-            AnsiConsole.Write(table);
+            // UI Services
+            services.AddSingleton<IFlashCardAppUi, FlashCardAppUi>();
+            services.AddSingleton<ICardStackServiceUi, CardStackServiceUi>();
+            services.AddSingleton<IFlashCardServiceUi, FlashCardServiceUi>();
+            services.AddSingleton<IStudySessionServiceUi, StudySessionServiceUi>();
 
-            Console.WriteLine("\nPress any key to continue or ESC to exit");
-            Console.ReadKey();
+            // Business Logic Services
+            services.AddSingleton<ICardStackService, CardStackService>();
+            services.AddSingleton<IFlashCardService, FlashCardService>();
+            services.AddSingleton<IStudySessionService, StudySessionService>();
+
+            services.AddSingleton(sp => new FlashCardApp(
+                sp.GetRequiredService<ICardStackService>(),
+                sp.GetRequiredService<IFlashCardService>(),
+                sp.GetRequiredService<IStudySessionService>(),
+                sp.GetRequiredService<IFlashCardAppUi>(),
+                pathToDefaultData,
+                autoFill: true
+            ));
         }
     }
 

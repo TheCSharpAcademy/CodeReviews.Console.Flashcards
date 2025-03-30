@@ -1,13 +1,12 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
-
+using System.ComponentModel;
 
 namespace FlashCards
 {
-    internal class StudySessionRepository
+    internal class StudySessionRepository : IStudySessionRepository
     {
 
-        
         public string ConnectionString { get; }
 
         public StudySessionRepository(string connectionString)
@@ -26,17 +25,19 @@ namespace FlashCards
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine($"Database error while checking if table exists");
+                Console.WriteLine($"Database error while checking if table exists\n");
+                Console.WriteLine(sqlEx.Message + "\n");
                 throw;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error while checking if table exists");
+                Console.WriteLine($"Unexpected error while checking if table existsn\n");
+                Console.WriteLine(ex.Message + "\n");
                 throw;
             }
 
         }
-        
+
         public void CreateTable()
         {
             try
@@ -52,16 +53,18 @@ namespace FlashCards
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine($"Database error while executing the command");
+                Console.WriteLine($"Database error while creating the table\n");
+                Console.WriteLine(sqlEx.Message + "\n");
                 throw;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error while executing the command");
+                Console.WriteLine($"Unexpected error while creating the table\n");
+                Console.WriteLine(ex.Message + "\n");
                 throw;
             }
         }
-        
+
         public void AutoFill(List<CardStack> stacks, List<StudySession> sessions)
         {
             try
@@ -70,25 +73,29 @@ namespace FlashCards
 
                 using var connection = new SqlConnection(ConnectionString);
 
+                Dictionary<string, int> stackIdToNameMap = stacks.ToDictionary(x => x.StackName, x => x.StackID);
+
                 foreach (var session in sessions)
                 {
-                    session.StackId = stacks.FirstOrDefault(x => x.StackName == session.StackName).StackID;
+                    session.StackId = stackIdToNameMap[session.StackName];
                     connection.Execute(sql, session);
                 }
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine($"Database error while autofiling the database");
+                Console.WriteLine($"Database error while auto filling the table\n");
+                Console.WriteLine(sqlEx.Message + "\n");
                 throw;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error while autofiling the database");
+                Console.WriteLine($"Unexpected error while auto filling the table\n");
+                Console.WriteLine(ex.Message + "\n");
                 throw;
             }
 
         }
-        
+
         public bool Insert(StudySession entity)
         {
 
@@ -102,18 +109,19 @@ namespace FlashCards
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine($"Database error while executing the command");
-                throw;
+                Console.WriteLine($"Database error while inserting {entity.SessionDate}|{entity.StackName}\n");
+                Console.WriteLine(sqlEx.Message + "\n");
+                return false;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error while executing the command");
-                throw;
+                Console.WriteLine($"Unexpected error while inserting {entity.SessionDate}|{entity.StackName}\n");
+                Console.WriteLine(ex.Message + "\n");
+                return false;
             }
 
         }
-        //END
-        public IEnumerable<StudySession> GetAllRecords()
+        public IEnumerable<StudySession>? GetAllRecords()
         {
             try
             {
@@ -124,17 +132,22 @@ namespace FlashCards
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine($"Database error while executing the command");
+                Console.WriteLine($"Database error while getting all records\n");
+                Console.WriteLine(sqlEx.Message + "\n");
+
+                return null;
 
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error while executing the command");
+                Console.WriteLine($"Unexpected error while getting all records\n");
+                Console.WriteLine(ex.Message + "\n");
+
+                return null;
             }
-            return new List<StudySession>();
         }
-        
-        public string GetReportSqlCommand()
+
+        private string GetReportSqlCommand()
         {
             return "SELECT [1] AS January," +
                        "[2] AS February," +
@@ -155,7 +168,7 @@ namespace FlashCards
                         ")[StudySessions]" +
                         ")[StudySessions]";
         }
-        public string GetReportPivotFunction(PivotFunction pivotFunction)
+        private string GetReportPivotFunction(PivotFunction pivotFunction)
         {
             return pivotFunction switch
             {
@@ -171,28 +184,33 @@ namespace FlashCards
                     "SUM(Score)" +
                     "FOR SessionMonth IN ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12])" +
                 ") AS pivot_table;",
-               };
+                _ => throw new InvalidEnumArgumentException("Invalid PivotFunction enum value passed to GetReportPivotFunction()")
+            };
         }
         public ReportObject? GetDataPerMonthInYear(CardStack stack, int year, PivotFunction pivotFunction)
         {
-            string sql = GetReportSqlCommand() + GetReportPivotFunction(pivotFunction);
-
             try
             {
+                string sql = GetReportSqlCommand() + GetReportPivotFunction(pivotFunction);
                 using var connection = new SqlConnection(ConnectionString);
-                var result = connection.QueryFirstOrDefault<ReportObject>(sql, new {Year = year, StackID = stack.StackID});
+                var result = connection.QueryFirstOrDefault<ReportObject>(sql, new { Year = year, StackID = stack.StackID });
                 return result;
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine($"Database error while executing the command");
+                Console.WriteLine($"Database error while getting report object for {stack.StackName}|{year}|{pivotFunction}\n");
+                Console.WriteLine(sqlEx.Message + "\n");
+
+                return null;
 
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error while executing the command");
+                Console.WriteLine($"Unexpected error while getting report object for {stack.StackName}|{year}|{pivotFunction}\n");
+                Console.WriteLine(ex.Message + "\n");
+
+                return null;
             }
-            return null;
         }
     }
 }

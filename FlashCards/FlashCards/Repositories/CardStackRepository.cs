@@ -1,15 +1,17 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
-using static Dapper.SqlMapper;
 
 namespace FlashCards
-
-
 {
-    internal class CardStackRepository : IRepository<CardStack>
+    internal class CardStackRepository : ICardStackRepository
     {
         public string ConnectionString { get; }
-        public string Table { get; } = "Stacks";
+
+        public CardStackRepository(string connectionString)
+        {
+            ConnectionString = connectionString;
+        }
+
         public bool DoesTableExist()
         {
             try
@@ -22,17 +24,19 @@ namespace FlashCards
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine($"Database error while checking if table exists");
+                Console.WriteLine($"Database error while checking if table exists\n");
+                Console.WriteLine(sqlEx.Message + "\n");
                 throw;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error while checking if table exists");
+                Console.WriteLine($"Unexpected error while checking if table existsn\n");
+                Console.WriteLine(ex.Message + "\n");
                 throw;
             }
-            
+
         }
-        public void CreateTable()
+        public bool CreateTable()
         {
             try
             {
@@ -42,20 +46,28 @@ namespace FlashCards
                 "CONSTRAINT UK_StackName UNIQUE (StackName)" +
                 ");";
 
-                ExecuteNonQuery(sql);
+                using var connection = new SqlConnection(ConnectionString);
+                var result = connection.Execute(sql);
+                return result > 0;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"Database error while creating the table\n");
+                Console.WriteLine(sqlEx.Message + "\n");
+                throw;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error while creating the table");
+                Console.WriteLine($"Unexpected error while creating the table\n");
+                Console.WriteLine(ex.Message + "\n");
                 throw;
             }
-            
 
         }
         public void AutoFill(List<CardStack> defaultData)
         {
             try
-            { 
+            {
                 string sql = "INSERT INTO [Stacks] ([StackName]) VALUES (@StackName);";
 
                 using var connection = new SqlConnection(ConnectionString);
@@ -68,20 +80,17 @@ namespace FlashCards
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine($"Database error while autofiling the database");
+                Console.WriteLine($"Database error while auto filling the table\n");
+                Console.WriteLine(sqlEx.Message + "\n");
                 throw;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error while autofiling the database");
+                Console.WriteLine($"Unexpected error while auto filling the table\n");
+                Console.WriteLine(ex.Message + "\n");
                 throw;
             }
-            
-        }
 
-        public CardStackRepository(string connectionString)
-        {
-            ConnectionString = connectionString;
         }
 
         public bool Insert(CardStack entity)
@@ -93,12 +102,12 @@ namespace FlashCards
 
                 return result > 0;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                Console.WriteLine($"Database error while inserting: {entity.StackName}");
-                Console.WriteLine("Please review all rules and try again");
-                return false;
+                Console.WriteLine($"Database error while inserting {entity.StackName}\n");
+                Console.WriteLine(ex.Message + "\n");
 
+                return false;
             }
         }
 
@@ -113,8 +122,9 @@ namespace FlashCards
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Database error while inserting: {entity.StackName}");
-                Console.WriteLine("Please review all rules and try again");
+                Console.WriteLine($"Database error while updating {entity.StackName}\n");
+                Console.WriteLine(ex.Message + "\n");
+
                 return false;
             }
         }
@@ -130,8 +140,9 @@ namespace FlashCards
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Database error ocwhile updating: {entity.StackName}");
-                Console.WriteLine("Please review all rules and try again");
+                Console.WriteLine($"Database error while deleting {entity.StackName}\n");
+                Console.WriteLine(ex.Message + "\n");
+
                 return false;
             }
         }
@@ -145,20 +156,25 @@ namespace FlashCards
                 var result = connection.Query<CardStack>(sqlCommand);
                 return result;
             }
-            catch (SqlException sqlEx) 
+            catch (SqlException sqlEx)
             {
-                Console.WriteLine($"Database error while executing the command");
-                
+                Console.WriteLine($"Database error while getting all records\n");
+                Console.WriteLine(sqlEx.Message + "\n");
+
+                return Enumerable.Empty<CardStack>();
+
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error while executing the command");
+                Console.WriteLine($"Unexpected error while getting all records\n");
+                Console.WriteLine(ex.Message + "\n");
+
+                return Enumerable.Empty<CardStack>();
             }
 
-            return null;
         }
 
-        private int ExecuteNonQuery(string sqlCommand, CardStack entity) 
+        private int ExecuteNonQuery(string sqlCommand, CardStack entity)
         {
             try
             {
@@ -167,34 +183,12 @@ namespace FlashCards
 
                 return result;
             }
-            catch (SqlException sqlEx) 
+            catch (SqlException)
             {
-                Console.WriteLine($"Database error while executing the command");
-                throw; 
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error while executing the command");
                 throw;
             }
-            
-        }
-        private int ExecuteNonQuery(string sqlCommand)
-        {
-            try
+            catch (Exception)
             {
-                using var connection = new SqlConnection(ConnectionString);
-                var result = connection.Execute(sqlCommand);
-                return result;
-            }
-            catch (SqlException sqlEx)
-            {
-                Console.WriteLine($"Database error while executing the command");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error while executing the command");
                 throw;
             }
 

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FlashCards": {
+      "commandName": "Project",
+      "workingDirectory": "E:\\Git Repos\\CodeReviews.Console.Flashcards\\FlashCards\\FlashCards"
+    }
+  }
+}

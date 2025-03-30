@@ -3,9 +3,9 @@ using Microsoft.Data.SqlClient;
 
 namespace FlashCards
 {
-    internal class FlashCardRepository: IFlashCardRepository
+    internal class FlashCardRepository : IFlashCardRepository
     {
-      
+
         public string ConnectionString { get; }
 
         public FlashCardRepository(string connectionString)
@@ -24,17 +24,19 @@ namespace FlashCards
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine($"Database error while checking if table exists");
+                Console.WriteLine($"Database error while checking if table exists\n");
+                Console.WriteLine(sqlEx.Message + "\n");
                 throw;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error while checking if table exists");
+                Console.WriteLine($"Unexpected error while checking if table existsn\n");
+                Console.WriteLine(ex.Message + "\n");
                 throw;
             }
 
         }
-        public void CreateTable()
+        public bool CreateTable()
         {
             try
             {
@@ -45,11 +47,20 @@ namespace FlashCards
                 "BackText varchar(50)" +
                 ");";
 
-                ExecuteNonQuery(sql);
+                using var connection = new SqlConnection(ConnectionString);
+                var result = connection.Execute(sql);
+                return result > 0;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"Database error while creating the table\n");
+                Console.WriteLine(sqlEx.Message + "\n");
+                throw;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error while creating the table");
+                Console.WriteLine($"Unexpected error while creating the table\n");
+                Console.WriteLine(ex.Message + "\n");
                 throw;
             }
 
@@ -59,7 +70,7 @@ namespace FlashCards
         {
             try
             {
-                string sql= "INSERT INTO [FlashCards] VALUES (@StackID, @FrontText, @BackText);";
+                string sql = "INSERT INTO [FlashCards] VALUES (@StackID, @FrontText, @BackText);";
 
                 using var connection = new SqlConnection(ConnectionString);
 
@@ -71,12 +82,14 @@ namespace FlashCards
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine($"Database error while autofiling the database");
+                Console.WriteLine($"Database error while auto filling the table\n");
+                Console.WriteLine(sqlEx.Message + "\n");
                 throw;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error while autofiling the database");
+                Console.WriteLine($"Unexpected error while auto filling the table\n");
+                Console.WriteLine(ex.Message + "\n");
                 throw;
             }
 
@@ -92,9 +105,10 @@ namespace FlashCards
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Database error while inserting flash card");
-                return false;
+                Console.WriteLine($"Database error while inserting {entity.FrontText}\n");
+                Console.WriteLine(ex.Message + "\n");
 
+                return false;
             }
         }
         public bool Update(FlashCard entity)
@@ -108,7 +122,9 @@ namespace FlashCards
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Database error while updating flash card");
+                Console.WriteLine($"Database error while updating {entity.FrontText}\n");
+                Console.WriteLine(ex.Message + "\n");
+
                 return false;
             }
         }
@@ -123,33 +139,39 @@ namespace FlashCards
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Database error ocwhile deleting flash card");
+                Console.WriteLine($"Database error while deleting {entity.FrontText}\n");
+                Console.WriteLine(ex.Message + "\n");
+
                 return false;
             }
         }
 
-        public IEnumerable<FlashCard> GetAllRecords()
+        public IEnumerable<FlashCard>? GetAllRecords()
         {
             try
             {
                 string sqlCommand = "SELECT * FROM [FlashCards];";
                 using var connection = new SqlConnection(ConnectionString);
-                var result = connection.Query<FlashCard>(sqlCommand);
+                IEnumerable<FlashCard>? result = connection.Query<FlashCard>(sqlCommand);
                 return result;
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine($"Database error while executing the command");
+                Console.WriteLine($"Database error while getting all records\n");
+                Console.WriteLine(sqlEx.Message + "\n");
+
+                return null;
 
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error while executing the command");
-            }
+                Console.WriteLine($"Unexpected error while getting all records\n");
+                Console.WriteLine(ex.Message + "\n");
 
-            return null;
+                return null;
+            }
         }
-        public IEnumerable<FlashCardDto> GetAllCardsInStack(CardStack stack)
+        public IEnumerable<FlashCardDto>? GetAllRecordsFromStack(CardStack stack)
         {
             try
             {
@@ -161,26 +183,46 @@ namespace FlashCards
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine($"Database error while executing the command");
+                Console.WriteLine($"Database error while getting all records from stack {stack.StackName}\n");
+                Console.WriteLine(sqlEx.Message + "\n");
+
+                return null;
 
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error while executing the command");
+                Console.WriteLine($"Unexpected error while getting all records from stack {stack.StackName}\n");
+                Console.WriteLine(ex.Message + "\n");
+
+                return null;
             }
 
-            return null;
-            
         }
-        public IEnumerable<FlashCardDto> GetXCardsInStack(CardStack stack, int count)
+        public IEnumerable<FlashCardDto>? GetXRecordsFromStack(CardStack stack, int count)
         {
-            string sqlCommand = "SELECT TOP (@Count) [CardID],[FrontText],[BackText] FROM [FlashCards] WHERE StackID=@StackID;";
+            try
+            {
+                string sqlCommand = "SELECT TOP (@Count) [CardID],[FrontText],[BackText] FROM [FlashCards] WHERE StackID=@StackID;";
+                using var connection = new SqlConnection(ConnectionString);
+                var result = connection.Query<FlashCardDto>(sqlCommand, new { Count = count, stackID = stack.StackID });
+                return result;
 
-            using var connection = new SqlConnection(ConnectionString);
-            
-            var result = connection.Query<FlashCardDto>(sqlCommand, new { Count = count, stackID = stack.StackID });
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"Database error while getting x records from stack {stack.StackName}\n");
+                Console.WriteLine(sqlEx.Message + "\n");
 
-            return result;
+                return null;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error while getting x records from stack {stack.StackName}\n");
+                Console.WriteLine(ex.Message + "\n");
+
+                return null;
+            }
         }
 
 
@@ -193,41 +235,15 @@ namespace FlashCards
 
                 return result;
             }
-            catch (SqlException sqlEx)
+            catch (SqlException)
             {
-                Console.WriteLine($"Database error while executing the command");
                 throw;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"Unexpected error while executing the command");
-                throw;
-            }
-
-        }
-        private int ExecuteNonQuery(string sqlCommand)
-        {
-            try
-            {
-                using var connection = new SqlConnection(ConnectionString);
-                var result = connection.Execute(sqlCommand);
-
-                return result;
-            }
-            catch (SqlException sqlEx)
-            {
-                Console.WriteLine($"Database error while executing the command");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error while executing the command");
                 throw;
             }
 
         }
-
-
-
     }
 }
