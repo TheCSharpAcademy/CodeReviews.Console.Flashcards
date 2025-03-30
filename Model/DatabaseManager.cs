@@ -3,7 +3,7 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using Spectre.Console;
 
-class DataBaseManager<T>
+class DataBaseManager
 {
     static string ConnectionString = "";
     public static void Start()
@@ -49,7 +49,7 @@ class DataBaseManager<T>
         ErrorCodes.INSERTLOGEXISTS, $"[bold red]Log already exists[/]");
     }
 
-    public static async Task<List<T>> GetAllLogs(string table)
+    public static async Task<List<T>> GetAllLogs<T>(string table)
     {
         List<T> result = [];
         await HandleDatabaseOperation(async (connection) => {

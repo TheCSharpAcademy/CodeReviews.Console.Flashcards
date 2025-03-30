@@ -7,16 +7,15 @@ class Program
     static async Task Main(string[] args)
     {
         Console.Clear();
-        DataBaseManager<Stack>.Start();
-        DataBaseManager<FlashcardDTO>.Start();
+        DataBaseManager.Start();
 
-        await DataBaseManager<Stack>.BuildTable("stacks",
+        await DataBaseManager.BuildTable("stacks",
         [
             "Id INTEGER PRIMARY KEY",
             "Name TEXT"
         ]);
 
-        await DataBaseManager<FlashcardDTO>.BuildTable("flash_cards",
+        await DataBaseManager.BuildTable("flash_cards",
         [
             "Stacks_Id INTEGER NOT NULL",
             "FOREIGN KEY (Stacks_Id) REFERENCES stacks (Id)",
@@ -25,13 +24,13 @@ class Program
             "Back TEXT"
         ]);
 
-        await DataBaseManager<Stack>.InsertLog("stacks", 
+        await DataBaseManager.InsertLog("stacks", 
         [
             "1", 
             "'ababa'"
         ]);
 
-        List<Stack> results = await DataBaseManager<Stack>.GetAllLogs("stacks");
+        List<Stack> results = await DataBaseManager.GetAllLogs<Stack>("stacks");
         DisplayOther.DisplayStacks(results);
     }
 }

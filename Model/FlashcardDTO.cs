@@ -1,14 +1,7 @@
 
-class FlashcardDTO
+class FlashcardDTO(Flashcard flashcard)
 {
-    public int Id { get; }
-    public string Front { get; } = "";
-    public string Back { get; } = "";
-
-    public FlashcardDTO(Flashcard flashcard)
-    {
-        Id = flashcard.Id;
-        Front = flashcard.Front;
-        Back = flashcard.Back;
-    }
+    public int Id { get; } = flashcard.Id;
+    public string Front { get; } = flashcard.Front;
+    public string Back { get; } = flashcard.Back;
 }
