@@ -75,6 +75,16 @@ class DataBaseManager
         });
     }
 
+    public static async Task DeleteLog(int id, string tableName)
+    {
+        await HandleDatabaseOperation(async (connection) => {
+            var sql = $@"DELETE FROM {tableName} WHERE Id = {id}";
+
+            await using var command = new SqlCommand(sql, connection);
+            await command.ExecuteNonQueryAsync();
+        });
+    }
+
     // Handles the methods that deal with the db. The passed method
     // (or more realistically lambda function) needs an SqlConnection
     // (made in the try statment) and will return Task, allowing it
