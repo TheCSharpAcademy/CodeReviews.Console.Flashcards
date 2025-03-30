@@ -2,12 +2,13 @@ using Spectre.Console;
 
 class MainUI
 {
-    const string ManageStacks = "Manage stacks";
-    const string ManageFlashCards = "Manage flash cards";
-    const string Study = "Study";
-    const string Exit = "Exit";
     public static Enums.MainMenuOptions MainMenu()
     {
+        const string ManageStacks = "Manage stacks";
+        const string ManageFlashCards = "Manage flash cards";
+        const string Study = "Study";
+        const string Exit = "Exit";
+
         string userInput = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("[bold green] Select option[/]")
@@ -32,8 +33,33 @@ class MainUI
         return default;
     }
 
-    public static Enums.ManageStacksOptions ManageStacksMenu()
+    public static Enums.ManageStacksMenuOptions ManageStacksMenu()
     {
+        const string CreateStack = "Create new stack";
+        const string RenameStack = "Rename stack";
+        const string DeleteStack = "Delete stack";
+        const string Exit = "Exit";
+        string userInput = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("[bold green] Select option[/]")
+                .MoreChoicesText("[grey](Move up and down to reveal more fruits)[/]")
+                .AddChoices([
+                    CreateStack, RenameStack, DeleteStack,
+                    Exit,
+                ])
+        );
+
+        switch (userInput)
+        {
+            case CreateStack:
+                return Enums.ManageStacksMenuOptions.CREATESTACK;
+            case RenameStack:
+                return Enums.ManageStacksMenuOptions.RENAMESTACK;
+            case DeleteStack:
+                return Enums.ManageStacksMenuOptions.DELETESTACK;
+            case Exit:
+                return Enums.ManageStacksMenuOptions.EXIT;
+        }
         return default;
     }
 }
