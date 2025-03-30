@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Spectre.Console;
