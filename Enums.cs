@@ -1,12 +1,17 @@
 
 class Enums
 {
-    enum MainMenuOptions
+    public enum MainMenuOptions
     {
         MANAGESTACKS, MANAGEFLASHCARDS, STUDY, VIEWSESSIONDATA, EXIT
     }
 
-    enum ManageStacksOptions
+    public enum ManageStacksMenuOptions
+    {
+        CREATESTACK, RENAMESTACK, DELETESTACK, EXIT
+    }
+
+    public enum ManageFlashCardsMenuOptions
     {
         VIEWALLCARDS, VIEWXCARDS, CREATECARD, EDITCARD, DELETECARD, EXIT
     }

@@ -1,7 +1,5 @@
 ﻿using Spectre.Console;
-
 namespace Flashcards;
-
 
 class Program
 {
