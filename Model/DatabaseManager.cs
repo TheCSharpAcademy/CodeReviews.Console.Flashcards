@@ -29,7 +29,7 @@ class DataBaseManager
 
             AnsiConsole.MarkupLine($"[bold red]{tableName} table does not exist. Creating new table...[/]");
         }, 
-        ErrorCodes.TABLEEXISTS, $"[bold green]{tableName} table already exists[/]");
+        ErrorCodes.TABLEEXISTS);
     }
 
     public static async Task InsertLog(string table, List<string> valuesList)
@@ -45,14 +45,14 @@ class DataBaseManager
 
             AnsiConsole.MarkupLine($"[bold green]New log added to {table}[/]");
         }, 
-        ErrorCodes.INSERTLOGEXISTS, $"[bold red]Log already exists[/]");
+        ErrorCodes.INSERTLOGEXISTS);
     }
 
-    public static async Task<List<T>> GetAllLogs<T>(string table)
+    public static async Task<List<T>> GetAllLogs<T>(string tableName)
     {
         List<T> result = [];
         await HandleDatabaseOperation(async (connection) => {
-            var sql = $@"SELECT * FROM {table}";
+            var sql = $@"SELECT * FROM {tableName}";
             //await using var command = new SqlCommand(sql, connection);
             result = (List<T>) await connection.QueryAsync<T>(sql);
         });
@@ -88,7 +88,7 @@ class DataBaseManager
     // (or more realistically lambda function) needs an SqlConnection
     // (made in the try statment) and will return Task, allowing it
     // to be an async method/lambda. 
-    static async Task HandleDatabaseOperation(Func<SqlConnection, Task> method, int errorCode = default, string message = default)
+    static async Task HandleDatabaseOperation(Func<SqlConnection, Task> method, ErrorCodes.ErrorCode errorCode = default)
     {
         try
         {
@@ -97,7 +97,11 @@ class DataBaseManager
 
             await method(connection);
         }
-        catch (SqlException e) { if (e.ErrorCode == errorCode) AnsiConsole.MarkupLine(message); }
+        catch (SqlException e) 
+        { 
+            if (e.Number == errorCode.Id) 
+                AnsiConsole.MarkupLine(e.Number + " " + errorCode.Message); 
+        }
         catch (Exception e) { Console.WriteLine(e); } // global catch for if i missed anything
     }
 }

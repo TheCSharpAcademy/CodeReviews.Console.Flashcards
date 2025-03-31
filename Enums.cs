@@ -8,11 +8,11 @@ class Enums
 
     public enum ManageStacksMenuOptions
     {
-        CREATESTACK, RENAMESTACK, DELETESTACK, EXIT
+        CREATESTACK, RENAMESTACK, DELETESTACK, BACK
     }
 
     public enum ManageFlashCardsMenuOptions
     {
-        VIEWALLCARDS, VIEWXCARDS, CREATECARD, EDITCARD, DELETECARD, EXIT
+        VIEWALLCARDS, VIEWXCARDS, CREATECARD, EDITCARD, DELETECARD, BACK
     }
 }

@@ -2,7 +2,7 @@ using Spectre.Console;
 
 class ManageFlashCardsMenuController
 {
-    public static void Start()
+    public static async Task Start()
     {
         Console.Clear();
 
@@ -20,7 +20,7 @@ class ManageFlashCardsMenuController
                 break;
             case Enums.ManageFlashCardsMenuOptions.DELETECARD:
                 break;
-            case Enums.ManageFlashCardsMenuOptions.EXIT:
+            case Enums.ManageFlashCardsMenuOptions.BACK:
                 break;
         }
     }

@@ -39,14 +39,14 @@ class DisplayMenu
         const string CreateStack = "Create new stack";
         const string RenameStack = "Rename stack";
         const string DeleteStack = "Delete stack";
-        const string Exit = "Exit";
+        const string Back = "Back";
         string userInput = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("[bold green] Select option[/]")
                 .MoreChoicesText("[grey](Move up and down to reveal more fruits)[/]")
                 .AddChoices([
                     CreateStack, RenameStack, DeleteStack,
-                    Exit,
+                    Back,
                 ])
         );
 
@@ -58,8 +58,8 @@ class DisplayMenu
                 return Enums.ManageStacksMenuOptions.RENAMESTACK;
             case DeleteStack:
                 return Enums.ManageStacksMenuOptions.DELETESTACK;
-            case Exit:
-                return Enums.ManageStacksMenuOptions.EXIT;
+            case Back:
+                return Enums.ManageStacksMenuOptions.BACK;
         }
         return default;
     }
@@ -71,14 +71,14 @@ class DisplayMenu
         const string CreateCard = "Create a card";
         const string EditCard = "Edit a card";
         const string DeleteCard = "Delete a card";
-        const string Exit = "Exit";
+        const string Back = "Back";
         string userInput = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("[bold green] Select option[/]")
                 .MoreChoicesText("[grey](Move up and down to reveal more fruits)[/]")
                 .AddChoices([
                     ViewAllCards, ViewXCards, CreateCard,
-                    EditCard, DeleteCard, Exit,
+                    EditCard, DeleteCard, Back,
                 ])
         );
 
@@ -94,8 +94,8 @@ class DisplayMenu
                 return Enums.ManageFlashCardsMenuOptions.EDITCARD;
             case DeleteCard:
                 return Enums.ManageFlashCardsMenuOptions.DELETECARD;
-            case Exit:
-                return Enums.ManageFlashCardsMenuOptions.EXIT;
+            case Back:
+                return Enums.ManageFlashCardsMenuOptions.BACK;
         }
         return default;
     }

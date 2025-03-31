@@ -2,11 +2,11 @@ using Spectre.Console;
 
 class DisplayOther
 {
-    public static void DisplayTable<T>(List<T> dataSet)
+    public static void DisplayTable<T>(List<T> dataSet, string[] header)
     {
         var table = new Table();
 
-        table.AddColumns(["Id", "Name"]);
+        table.AddColumns(header);
         foreach(T data in dataSet)
         {
             switch (data)
