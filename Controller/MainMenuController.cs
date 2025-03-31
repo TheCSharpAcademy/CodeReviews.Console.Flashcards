@@ -9,7 +9,7 @@ class MainMenuController
         while (!exit)
         {
             Console.Clear();
-            DataBaseManager.Start();
+            await DataBaseManager.StartAsync();
 
             Enums.MainMenuOptions userInput = DisplayMenu.MainMenu();
 
@@ -31,6 +31,5 @@ class MainMenuController
             AnsiConsole.Markup("[bold green]Press Enter to continue. [/]");
             Console.Read();
         }
-            
     }
 }

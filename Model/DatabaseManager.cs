@@ -5,7 +5,7 @@ using Spectre.Console;
 class DataBaseManager
 {
     static string ConnectionString = "";
-    public static void Start()
+    public static async Task StartAsync()
     {
         var builder = new SqlConnectionStringBuilder
             {
@@ -15,7 +15,22 @@ class DataBaseManager
                 InitialCatalog = "FlashCardsProject",
                 TrustServerCertificate=true
             };
-        ConnectionString = builder.ConnectionString;     
+        ConnectionString = builder.ConnectionString;
+
+        await BuildTable("stacks",
+        [
+            "Id INTEGER PRIMARY KEY",
+            "Name TEXT"
+        ]);
+
+        await BuildTable("flash_cards",
+        [
+            "Stacks_Id INTEGER NOT NULL",
+            "FOREIGN KEY (Stacks_Id) REFERENCES stacks (Id)",
+            "Id INTEGER PRIMARY KEY",
+            "Front TEXT",
+            "Back TEXT"
+        ]);
     }
 
     public static async Task BuildTable(string tableName, List<string> optionsList)
