@@ -7,5 +7,4 @@
         public DateTime SessionDate { get; set; }
         public int Score { get; set; }
     }
-
 }

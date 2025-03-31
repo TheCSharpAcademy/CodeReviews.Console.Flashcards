@@ -22,6 +22,7 @@ namespace FlashCards
         {
             string connectionString = @"Data Source=(localdb)\LOCALDB;Initial Catalog=FlashCardsProject;Integrated Security=True;Connect Timeout=5;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
             string pathToDefaultData = @"DefaultDataForAutoFill.json";
+
             //Data Layer
             services.AddSingleton<ICardStackRepository>(new CardStackRepository(connectionString));
             services.AddSingleton<IFlashCardRepository>(new FlashCardRepository(connectionString));

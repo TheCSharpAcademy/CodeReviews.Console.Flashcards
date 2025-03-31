@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace FlashCards
+﻿namespace FlashCards
 {
     internal class ReportObject
     {

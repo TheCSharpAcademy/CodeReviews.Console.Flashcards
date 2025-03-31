@@ -1,6 +1,5 @@
 ﻿namespace FlashCards
 {
-
     internal class DefaultDataObject
     {
         public List<CardStack> Stacks { get; set; } = new List<CardStack>();

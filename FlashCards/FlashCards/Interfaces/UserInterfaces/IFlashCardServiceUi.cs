@@ -12,11 +12,13 @@
         /// <param name="cards">A List of Cards from which user have to choose</param>
         /// <returns>A integer representing card in the list</returns>
         int GetCardID(List<FlashCardDto> cards);
+
         /// <summary>
         /// Gets card information from the user
         /// </summary>
         /// <returns>A new FlashCard entity based on user input</returns>
         FlashCard GetNewCard();
+
         /// <summary>
         /// Displays all cards
         /// </summary>

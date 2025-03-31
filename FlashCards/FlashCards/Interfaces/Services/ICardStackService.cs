@@ -9,6 +9,7 @@
         /// Gets the repository for interacting with card stacks.
         /// </summary>
         ICardStackRepository CardStackRepository { get; }
+
         /// <summary>
         /// Gets the user interface for interacting with card stacks.
         /// </summary>
@@ -24,14 +25,17 @@
         /// Handles the creation of a new card stack based on user input.
         /// </summary>
         void HandleCreateNewStack();
+
         /// <summary>
         /// Handles the deletion of a selected card stack.
         /// </summary>
         void HandleDeleteStack();
+
         /// <summary>
         /// Handles renaming a selected card stack.
         /// </summary>
         void HandleRenameStack();
+
         /// <summary>
         /// Displays all available card stacks.
         /// </summary>
