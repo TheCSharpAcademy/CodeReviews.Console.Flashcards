@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
-using System.ComponentModel;
 
 namespace FlashCards
 {
@@ -200,7 +199,7 @@ namespace FlashCards
                     "SUM(Score)" +
                     "FOR SessionMonth IN ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12])" +
                 ") AS pivot_table;",
-                _ => throw new InvalidEnumArgumentException("Invalid PivotFunction enum value passed to GetReportPivotFunction()")
+                _ => throw new ArgumentException("Invalid PivotFunction enum value passed to GetReportPivotFunction()")
             };
         }
 
