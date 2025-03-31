@@ -2,57 +2,46 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using Spectre.Console;
 
-class DataBaseManager
+class DataBaseManager<T>
 {
+    public static string TableName = "";
     static string ConnectionString = "";
-    public static async Task StartAsync()
+
+    public static void Start(string tableName)
     {
+        TableName = tableName;
+
         var builder = new SqlConnectionStringBuilder
-            {
-                DataSource = "localhost",
-                UserID = "sa",
-                Password = "<YourStrong@Passw0rd>",
-                InitialCatalog = "FlashCardsProject",
-                TrustServerCertificate=true
-            };
+        {
+            DataSource = "localhost",
+            UserID = "sa",
+            Password = "<YourStrong@Passw0rd>",
+            InitialCatalog = "FlashCardsProject",
+            TrustServerCertificate = true
+        };
         ConnectionString = builder.ConnectionString;
-
-        await BuildTable("stacks",
-        [
-            "Id INTEGER PRIMARY KEY",
-            "Name TEXT"
-        ]);
-
-        await BuildTable("flash_cards",
-        [
-            "Stacks_Id INTEGER NOT NULL",
-            "FOREIGN KEY (Stacks_Id) REFERENCES stacks (Id)",
-            "Id INTEGER PRIMARY KEY",
-            "Front TEXT",
-            "Back TEXT"
-        ]);
     }
 
-    public static async Task BuildTable(string tableName, List<string> optionsList)
+    public static async Task BuildTable(List<string> optionsList)
     {
         await HandleDatabaseOperation(async (connection) => {
             string optionsString = string.Join(",", optionsList);
-            var sql = $@"CREATE TABLE {tableName}({optionsString})";
+            var sql = $@"CREATE TABLE {TableName}({optionsString})";
             
             await using var command = new SqlCommand(sql, connection);
             await command.ExecuteNonQueryAsync();
         }, 
-        $"Loading {tableName}",
-        $"[bold red]{tableName} table does not exist. Creating new table...[/]"
+        $"Loading {TableName}",
+        $"[bold red]{TableName} table does not exist. Creating new table...[/]"
         );
     }
 
-    public static async Task InsertLog(string table, List<string> valuesList)
+    public static async Task InsertLog(List<string> valuesList)
     {
         await HandleDatabaseOperation(async (connection) => {
             string values = string.Join(",", valuesList);
             var sql = 
-            $@"INSERT INTO {table}
+            $@"INSERT INTO {TableName}
             VALUES ({values})";
 
             await using var command = new SqlCommand(sql, connection);
@@ -63,11 +52,11 @@ class DataBaseManager
         );
     }
 
-    public static async Task<List<T>> GetAllLogs<T>(string tableName)
+    public static async Task<List<T>> GetAllLogs()
     {
         List<T> result = [];
         await HandleDatabaseOperation(async (connection) => {
-            var sql = $@"SELECT * FROM {tableName}";
+            var sql = $@"SELECT * FROM {TableName}";
             //await using var command = new SqlCommand(sql, connection);
             result = (List<T>) await connection.QueryAsync<T>(sql);
         },
@@ -78,11 +67,11 @@ class DataBaseManager
         return result;
     }
 
-    public static async Task UpdateLog(int id, string tableName, List<string> valuesList)
+    public static async Task UpdateLog(int id, List<string> valuesList)
     {
         await HandleDatabaseOperation(async (connection) => {
             string values = string.Join(",", valuesList);
-            var sql = $@"UPDATE {tableName} SET {values} WHERE Id = {id}";
+            var sql = $@"UPDATE {TableName} SET {values} WHERE Id = {id}";
 
 
             await using var command = new SqlCommand(sql, connection);
@@ -93,10 +82,10 @@ class DataBaseManager
         );
     }
 
-    public static async Task DeleteLog(int id, string tableName)
+    public static async Task DeleteLog(int id)
     {
         await HandleDatabaseOperation(async (connection) => {
-            var sql = $@"DELETE FROM {tableName} WHERE Id = {id}";
+            var sql = $@"DELETE FROM {TableName} WHERE Id = {id}";
 
             await using var command = new SqlCommand(sql, connection);
             await command.ExecuteNonQueryAsync();

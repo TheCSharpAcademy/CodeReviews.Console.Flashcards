@@ -3,7 +3,6 @@ using Spectre.Console;
 
 class ManageStacksMenuController
 {
-    const string tableName = "stacks";
     public static async Task Start()
     {
         bool exit = false;
@@ -29,15 +28,19 @@ class ManageStacksMenuController
                     break;
             }
 
-            AnsiConsole.Markup("[bold green]Press Enter to continue. [/]");
-            Console.Read();
+            if (!exit)
+            {
+                AnsiConsole.Markup("[bold green]Press Enter to continue. [/]");
+                Console.Read();
+            }
+                
         }
             
     }
 
     static async Task CreateStack()
     {
-        await DataBaseManager.InsertLog(tableName, 
+        await DataBaseManager<Stack>.InsertLog( 
         [
             "1",
             "'GOTY'"
@@ -45,7 +48,7 @@ class ManageStacksMenuController
     }
     static async Task RenameStack()
     {
-        List<Stack> dataSet = await DataBaseManager.GetAllLogs<Stack>(tableName);
+        List<Stack> dataSet = await DataBaseManager<Stack>.GetAllLogs();
 
         DisplayOther.DisplayTable(dataSet, ["Id", "Name"]);
     }

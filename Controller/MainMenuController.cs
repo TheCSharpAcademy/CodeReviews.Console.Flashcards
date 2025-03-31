@@ -9,7 +9,24 @@ class MainMenuController
         while (!exit)
         {
             Console.Clear();
-            await DataBaseManager.StartAsync();
+
+            DataBaseManager<Stack>.Start("stacks");
+            await DataBaseManager<Stack>.BuildTable(
+            [
+                "Id INTEGER PRIMARY KEY",
+                "Name TEXT"
+            ]);
+
+            DataBaseManager<Flashcard>.Start("flash_cards");
+            await DataBaseManager<Flashcard>.BuildTable(
+            [
+                "Stacks_Id INTEGER NOT NULL",
+                "FOREIGN KEY (Stacks_Id) REFERENCES stacks (Id)",
+                "Id INTEGER PRIMARY KEY",
+                "Front TEXT",
+                "Back TEXT"
+            ]);
+
             Console.Clear();
 
             Enums.MainMenuOptions userInput = DisplayMenu.MainMenu();
@@ -29,8 +46,11 @@ class MainMenuController
                     break;
             }
 
-            AnsiConsole.Markup("[bold green]Press Enter to continue. [/]");
-            Console.Read();
+            if (!exit)
+            {
+                AnsiConsole.Markup("[bold green]Press Enter to continue. [/]");
+                Console.Read();
+            }
         }
     }
 }
