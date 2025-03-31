@@ -1,15 +1,26 @@
 ﻿namespace FlashCards
 {
+    /// <summary>
+    /// Represents a service for managing StudySession entities.
+    /// Implements IStudySessionService
+    /// </summary>
     internal class StudySessionService : IStudySessionService
     {
+        /// <inheritdoc/>
         public IStudySessionRepository StudySessionRepository { get; set; }
+        /// <inheritdoc/>
         public IStudySessionServiceUi UserInterface { get; set; }
+        /// <summary>
+        /// Intializes new object of FlashCardService class
+        /// </summary>
+        /// <param name="repository">A implementation of IStudySessionRepository for database access</param>
+        /// <param name="UI">A implementation of IStudySessionServiceUi for user interaction</param>
         public StudySessionService(IStudySessionRepository repository, IStudySessionServiceUi UI)
         {
             StudySessionRepository = repository;
             UserInterface = UI;
         }
-
+        /// <inheritdoc/>
         public bool PrepareRepository(List<CardStack> stacks, List<StudySession> defaultData)
         {
             try
@@ -29,7 +40,7 @@
 
 
         }
-
+        /// <inheritdoc/>
         public void NewStudySession(CardStack stack, List<FlashCardDto> cards)
         {
             int numberOfRounds = 0;
@@ -62,8 +73,13 @@
             InsertSession(session);
 
         }
+        /// <summary>
+        /// Insert a new session to the Database
+        /// </summary>
+        /// <param name="session">A StudySession entity to be inserted to the database</param>
         private void InsertSession(StudySession session) => StudySessionRepository.Insert(session);
 
+        /// <inheritdoc/>
         public void PrintAllSessions(List<CardStack> stacks)
         {
             var sessions = StudySessionRepository.GetAllRecords()?.ToList()
@@ -71,7 +87,7 @@
 
             UserInterface.PrintAllSessions(stacks, sessions);
         }
-
+        /// <inheritdoc/>
         public void PrintReport(List<CardStack> stacks)
         {
 

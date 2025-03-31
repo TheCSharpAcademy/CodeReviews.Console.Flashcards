@@ -2,8 +2,14 @@
 
 namespace FlashCards
 {
+    /// <summary>
+    /// Represents a user interface for FlashCardService.
+    /// Inherits from UserInterace
+    /// Implements IFlashCardServiceUi
+    /// </summary>
     internal class FlashCardServiceUi : UserInterface, IFlashCardServiceUi
     {
+        /// <inheritdoc/>
         public void PrintCards(List<FlashCardDto> cards)
         {
             var table = new Table();
@@ -16,6 +22,7 @@ namespace FlashCards
             AnsiConsole.Write(table);
 
         }
+        /// <inheritdoc/>
         public FlashCard GetNewCard()
         {
             FlashCard card = new FlashCard();
@@ -24,6 +31,7 @@ namespace FlashCards
 
             return card;
         }
+        /// <inheritdoc/>
         public int GetCardID(List<FlashCardDto> cards)
         {
             PrintCards(cards);

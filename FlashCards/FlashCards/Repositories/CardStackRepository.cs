@@ -3,15 +3,21 @@ using Microsoft.Data.SqlClient;
 
 namespace FlashCards
 {
+    /// <inheritdoc/>
     internal class CardStackRepository : ICardStackRepository
     {
+        /// <inheritdoc/>
         public string ConnectionString { get; }
 
+        /// <summary>
+        /// Initializes new instance of CardStackRepository class
+        /// </summary>
+        /// <param name="connectionString">A string representing connection string to the database</param>
         public CardStackRepository(string connectionString)
         {
             ConnectionString = connectionString;
         }
-
+        /// <inheritdoc/>
         public bool DoesTableExist()
         {
             try
@@ -36,6 +42,7 @@ namespace FlashCards
             }
 
         }
+        /// <inheritdoc/>
         public bool CreateTable()
         {
             try
@@ -64,6 +71,7 @@ namespace FlashCards
             }
 
         }
+        /// <inheritdoc/>
         public void AutoFill(List<CardStack> defaultData)
         {
             try
@@ -92,7 +100,7 @@ namespace FlashCards
             }
 
         }
-
+        /// <inheritdoc/>
         public bool Insert(CardStack entity)
         {
             try
@@ -110,7 +118,7 @@ namespace FlashCards
                 return false;
             }
         }
-
+        /// <inheritdoc/>
         public bool Update(CardStack entity)
         {
             try
@@ -128,7 +136,7 @@ namespace FlashCards
                 return false;
             }
         }
-
+        /// <inheritdoc/>
         public bool Delete(CardStack entity)
         {
             try
@@ -146,7 +154,7 @@ namespace FlashCards
                 return false;
             }
         }
-
+        /// <inheritdoc/>
         public IEnumerable<CardStack> GetAllRecords()
         {
             try
@@ -173,7 +181,12 @@ namespace FlashCards
             }
 
         }
-
+        /// <summary>
+        /// Executes non-query command against the database
+        /// </summary>
+        /// <param name="sqlCommand">A string representing SQL command</param>
+        /// <param name="entity">A CardStack entity for which command will be ran</param>
+        /// <returns>A number of rows affected</returns>
         private int ExecuteNonQuery(string sqlCommand, CardStack entity)
         {
             try

@@ -2,22 +2,39 @@
 
 namespace FlashCards
 {
+    /// <summary>
+    /// Represents a service for managing CardStack entities.
+    /// Implements ICardStackService
+    /// </summary>
     internal class CardStackService : ICardStackService
     {
+        /// <inheritdoc/>
         public ICardStackRepository CardStackRepository { get; set; }
+        /// <inheritdoc/>
         public ICardStackServiceUi UserInterface { get; set; }
 
+        /// <summary>
+        /// Intializes new object of CardStackService class
+        /// </summary>
+        /// <param name="repository">A implementation of ICardStackRepository for database access</param>
+        /// <param name="UI">A implementation of ICardStackRepository for user interaction</param>
         public CardStackService(ICardStackRepository repository, ICardStackServiceUi UI)
         {
             CardStackRepository = repository;
             UserInterface = UI;
         }
+        /// <inheritdoc/>
         public List<CardStack> GetAllStacks() => CardStackRepository.GetAllRecords().ToList();
+
+        /// <summary>
+        /// Displays information message to user that no CardStack entities were retrieved from the database
+        /// </summary>
         private void HandleEmptyStack()
         {
             Console.WriteLine("No Stacks found");
             UserInterface.PrintPressAnyKeyToContinue();
         }
+        /// <inheritdoc/>
         public bool PrepareRepository(List<CardStack> defaultData)
         {
             try
@@ -36,6 +53,7 @@ namespace FlashCards
             }
 
         }
+        /// <inheritdoc/>
         public void HandleViewAllStacks()
         {
             List<CardStack> stacks = GetAllStacks();
@@ -50,6 +68,7 @@ namespace FlashCards
             UserInterface.PrintPressAnyKeyToContinue();
 
         }
+        /// <inheritdoc/>
         public void HandleCreateNewStack()
         {
             string stackName = UserInterface.GetStringFromUser("Enter new stack name: ");
@@ -58,6 +77,7 @@ namespace FlashCards
             Console.WriteLine(wasActionSuccessful ? "Stack created successfully" : "Error occured, please contact admin");
             UserInterface.PrintPressAnyKeyToContinue();
         }
+        /// <inheritdoc/>
         public void HandleRenameStack()
         {
             List<CardStack> stacks = GetAllStacks();
@@ -75,6 +95,7 @@ namespace FlashCards
             Console.WriteLine(wasActionSuccessful ? "Stack renamed successfully" : "Error occured, please contact admin");
             UserInterface.PrintPressAnyKeyToContinue();
         }
+        /// <inheritdoc/>
         public void HandleDeleteStack()
         {
             List<CardStack> stacks = GetAllStacks();

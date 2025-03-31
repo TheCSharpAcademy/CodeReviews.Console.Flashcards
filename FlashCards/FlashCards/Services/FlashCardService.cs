@@ -1,27 +1,45 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.Reflection.Metadata.Ecma335;
-
-namespace FlashCards
+﻿namespace FlashCards
 {
+    /// <summary>
+    /// Represents a service for managing FlashCard entities.
+    /// Implements ICardStackService
+    /// </summary>
     internal class FlashCardService : IFlashCardService
     {
+        /// <inheritdoc/>
         public IFlashCardRepository FlashCardRepository { get; set; }
+        /// <inheritdoc/>
         public IFlashCardServiceUi UserInterface { get; set; }
 
+        /// <summary>
+        /// Represent list of all FlashCardDto entities
+        /// </summary>
         private List<FlashCardDto>? _flashCardDtos = null;
+        /// <summary>
+        /// Represent map for _flashCardDtos where all FlashCardDto entities are mapped from 1 
+        /// </summary>
         private Dictionary<int, int> _cardIdMap = new Dictionary<int, int>();
+        /// <summary>
+        /// Represent list of mapped FlashCardDto entities
+        /// </summary>
         private List<FlashCardDto> _mappedFlashCardDtos = new List<FlashCardDto>();
 
-        public FlashCardService(IFlashCardRepository cardRepository, IFlashCardServiceUi UI)
+        /// <summary>
+        /// Intializes new object of FlashCardService class
+        /// </summary>
+        /// <param name="repository">A implementation of IFlashCardRepository for database access</param>
+        /// <param name="UI">A implementation of IFlashCardServiceUi for user interaction</param>
+        public FlashCardService(IFlashCardRepository repository, IFlashCardServiceUi UI)
         {
-            FlashCardRepository = cardRepository;
+            FlashCardRepository = repository;
             UserInterface = UI;
         }
+        /// <inheritdoc/>
         public List<FlashCardDto>? GetAllCardsInStack(CardStack stack)
         {
             return FlashCardRepository.GetAllRecordsFromStack(stack)?.ToList();
         }
-
+        /// <inheritdoc/>
         public bool PrepareRepository(List<CardStack> stacks, List<FlashCard> flashCards)
         {
             try
@@ -40,9 +58,13 @@ namespace FlashCards
                 return false;
             }
         }
+        /// <summary>
+        /// Retrieves all FlashCards from CardStack and map them so Card ID numbers start at 1
+        /// </summary>
+        /// <param name="stack"></param>
+        /// <returns></returns>
         private bool GetAndMapFlashcards(CardStack stack)
         {
-            //nothing needs to be done if there was no entry added
 
             var result = FlashCardRepository.GetAllRecordsFromStack(stack);
 
@@ -63,6 +85,7 @@ namespace FlashCards
             return true;
 
         }
+        /// <inheritdoc/>
         public void HandleViewAllCards(CardStack stack)
         {
             if (GetAndMapFlashcards(stack))
@@ -75,6 +98,7 @@ namespace FlashCards
             }
             UserInterface.PrintPressAnyKeyToContinue();
         }
+        /// <inheritdoc/>
         public void HandleViewXCards(CardStack stack)
         {
             if (GetAndMapFlashcards(stack))
@@ -89,6 +113,7 @@ namespace FlashCards
 
             UserInterface.PrintPressAnyKeyToContinue();
         }
+        /// <inheritdoc/>
         public void HandleCreateNewFlashCard(CardStack stack)
         {
             FlashCard card = UserInterface.GetNewCard();
@@ -100,6 +125,7 @@ namespace FlashCards
             UserInterface.PrintPressAnyKeyToContinue();
 
         }
+        /// <inheritdoc/>
         public void HandleUpdateFlashCard(CardStack stack)
         {
             if (GetAndMapFlashcards(stack))
@@ -120,6 +146,7 @@ namespace FlashCards
             UserInterface.PrintPressAnyKeyToContinue();
 
         }
+        /// <inheritdoc/>
         public void HandleDeleteFlashCard(CardStack stack)
         {
             if (GetAndMapFlashcards(stack))
@@ -136,6 +163,7 @@ namespace FlashCards
 
             UserInterface.PrintPressAnyKeyToContinue();
         }
+        /// <inheritdoc/>
         public CardStack HandleSwitchStack(List<CardStack> stacks)
         {
             CardStack newStack = UserInterface.StackSelection(stacks);

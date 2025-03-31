@@ -4,15 +4,21 @@ using System.ComponentModel;
 
 namespace FlashCards
 {
+    /// <inheritdoc/>
     internal class StudySessionRepository : IStudySessionRepository
     {
-
+        /// <inheritdoc/>
         public string ConnectionString { get; }
 
+        /// <summary>
+        /// Initializes new instance of StudySessionRepository class
+        /// </summary>
+        /// <param name="connectionString">A string representing connection string to the database</param>
         public StudySessionRepository(string connectionString)
         {
             ConnectionString = connectionString;
         }
+        /// <inheritdoc/>
         public bool DoesTableExist()
         {
             try
@@ -37,7 +43,7 @@ namespace FlashCards
             }
 
         }
-
+        /// <inheritdoc/>
         public void CreateTable()
         {
             try
@@ -64,7 +70,7 @@ namespace FlashCards
                 throw;
             }
         }
-
+        /// <inheritdoc/>
         public void AutoFill(List<CardStack> stacks, List<StudySession> sessions)
         {
             try
@@ -95,7 +101,7 @@ namespace FlashCards
             }
 
         }
-
+        /// <inheritdoc/>
         public bool Insert(StudySession entity)
         {
 
@@ -121,6 +127,7 @@ namespace FlashCards
             }
 
         }
+        /// <inheritdoc/>
         public IEnumerable<StudySession>? GetAllRecords()
         {
             try
@@ -146,7 +153,10 @@ namespace FlashCards
                 return null;
             }
         }
-
+        /// <summary>
+        /// Retrieves SQL command for the report
+        /// </summary>
+        /// <returns>A string representing SQL command for the report</returns>
         private string GetReportSqlCommand()
         {
             return "SELECT [1] AS January," +
@@ -168,6 +178,11 @@ namespace FlashCards
                         ")[StudySessions]" +
                         ")[StudySessions]";
         }
+        /// <summary>
+        /// Retrieves Pivot function SQL command based on passed parameter
+        /// </summary>
+        /// <param name="pivotFunction">A Enumerable PivotFunction representing the command</param>
+        /// <returns>A string representing SQL command for the pivot function</returns>
         private string GetReportPivotFunction(PivotFunction pivotFunction)
         {
             return pivotFunction switch
@@ -187,6 +202,7 @@ namespace FlashCards
                 _ => throw new InvalidEnumArgumentException("Invalid PivotFunction enum value passed to GetReportPivotFunction()")
             };
         }
+        /// <inheritdoc/>
         public ReportObject? GetDataPerMonthInYear(CardStack stack, int year, PivotFunction pivotFunction)
         {
             try

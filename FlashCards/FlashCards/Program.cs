@@ -17,25 +17,6 @@ namespace FlashCards
             app.Run();
 
 
-            /*ICardStackRepository cardStackRepository = new CardStackRepository(connectionString);
-            IFlashCardRepository flashCardRepository = new FlashCardRepository(connectionString);
-            IStudySessionRepository studySessionRepository = new StudySessionRepository(connectionString);
-
-            IFlashCardAppUi appUi = new FlashCardAppUi();
-            ICardStackServiceUi cardStackUi = new CardStackServiceUi();
-            IFlashCardServiceUi flashCardServiceUi = new FlashCardServiceUi();
-            IStudySessionServiceUi studySessionUi = new StudySessionServiceUi();
-
-            ICardStackService cardStackService = new CardStackService(cardStackRepository, cardStackUi);
-            IFlashCardService flashCardService = new FlashCardService(flashCardRepository, flashCardServiceUi);
-            IStudySessionService studySessionService = new StudySessionService(studySessionRepository, studySessionUi);
-
-
-           
-
-            FlashCardApp app = new FlashCardApp(cardStackService, flashCardService, studySessionService, appUi, pathToDefaultData, true);
-            app.Run();*/
-
         }
         static void SetServices(IServiceCollection services)
         {

@@ -2,15 +2,44 @@
 
 namespace FlashCards
 {
+    /// <summary>
+    /// Represents the FlashCard application, handling initialization, user interaction, and main menu processing.
+    /// </summary>
     internal class FlashCardApp
     {
+        /// <summary>
+        /// Gets the user interface for the application.
+        /// </summary>
         IFlashCardAppUi UserInterface { get; }
+
+        /// <summary>
+        /// Gets the service for managing card stacks.
+        /// </summary>
         ICardStackService CardStackRepositoryService { get; }
+
+        /// <summary>
+        /// Gets the service for managing flashcards.
+        /// </summary>
         IFlashCardService FlashCardRepositoryService { get; }
+
+        /// <summary>
+        /// Gets the service for managing study sessions.
+        /// </summary>
         IStudySessionService StudySessionRepositoryService { get; }
 
-        private string PathToDefaultData {  get; }
+        /// <summary>
+        /// Gets the file path to the default data file.
+        /// </summary>
+        private string PathToDefaultData { get; }
+
+        /// <summary>
+        /// Indicates whether the application should auto-fill with default data on startup.
+        /// </summary>
         private bool AutoFill { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FlashCardApp"/> class.
+        /// </summary>
         public FlashCardApp(ICardStackService cardStackService, IFlashCardService flashCardService, IStudySessionService studySessionService, IFlashCardAppUi userInterface, string pathToDefaultData, bool autoFill = false)
         {
             UserInterface = userInterface;
@@ -20,6 +49,10 @@ namespace FlashCards
             PathToDefaultData = pathToDefaultData;
             AutoFill = autoFill;
         }
+
+        /// <summary>
+        /// Loads default data from a JSON file.
+        /// </summary>
         private DefaultDataObject GetDefaultData()
         {
             try
@@ -27,7 +60,7 @@ namespace FlashCards
                 if (!File.Exists(PathToDefaultData))
                 {
                     Console.WriteLine("Default data file not found.");
-                    return new DefaultDataObject(); 
+                    return new DefaultDataObject();
                 }
 
                 var jsonData = File.ReadAllText(PathToDefaultData);
@@ -39,17 +72,15 @@ namespace FlashCards
                 return new DefaultDataObject();
             }
         }
+
+        /// <summary>
+        /// Prepares the application by loading default data and initializing repositories.
+        /// </summary>
         public bool PrepareApp()
         {
             if (!AutoFill) { return true; }
 
             var defaultData = GetDefaultData();
-
-            if (defaultData == null)
-            {
-                Console.WriteLine("Failed to load default data.");
-                return false;
-            }
 
             if (!CardStackRepositoryService.PrepareRepository(defaultData.Stacks))
             {
@@ -71,26 +102,31 @@ namespace FlashCards
                 return false;
             }
             return true;
-
         }
+
+        /// <summary>
+        /// Runs the main loop of the application.
+        /// </summary>
         public void Run()
         {
-
-            if(!PrepareApp()) { return; }
+            if (!PrepareApp()) { return; }
 
             UserInterface.PrintApplicationHeader();
-
             MainMenuOption mainMenuOption = UserInterface.GetMainMenuSelection();
-            while(mainMenuOption != MainMenuOption.Exit)
+            while (mainMenuOption != MainMenuOption.Exit)
             {
                 ProcessMainMenu(mainMenuOption);
                 UserInterface.ClearConsole();
                 mainMenuOption = UserInterface.GetMainMenuSelection();
             }
         }
+
+        /// <summary>
+        /// Processes the selected main menu option.
+        /// </summary>
         private void ProcessMainMenu(MainMenuOption mainMenuOption)
         {
-            switch (mainMenuOption) 
+            switch (mainMenuOption)
             {
                 case MainMenuOption.ManageStacks:
                     HandleManageStacks();
@@ -107,30 +143,12 @@ namespace FlashCards
                 case MainMenuOption.GetReport:
                     HandleGetReport();
                     break;
-                case MainMenuOption.Exit:
-                    return;
             }
-
         }
-        private void HandleGetReport()
-        {
-            List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
-            StudySessionRepositoryService.PrintReport(stacks);
-        }
-        private void HandleViewSessions()
-        {
-            List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
-            StudySessionRepositoryService.PrintAllSessions(stacks);
-        }
-        private  void HandleStudy()
-        {
-            List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
-            CardStack stack = UserInterface.StackSelection(stacks);
-
-            List<FlashCardDto> cards = FlashCardRepositoryService.GetAllCardsInStack(stack) ?? new List<FlashCardDto>();
-            StudySessionRepositoryService.NewStudySession(stack, cards);
-        }
-
+        /// <summary>
+        /// Handles the management of stacks by allowing the user to select various stack-related options.
+        /// Loops until the user chooses to return to the main menu.
+        /// </summary>
         private void HandleManageStacks()
         {
             StackMenuOption stackMenuOption = UserInterface.GetStackMenuSelection();
@@ -141,6 +159,10 @@ namespace FlashCards
                 stackMenuOption = UserInterface.GetStackMenuSelection();
             }
         }
+        /// <summary>
+        /// Handles the management of flashcards in specific stack by allowing the user to select various stack-related options.
+        /// Loops until the user chooses to return to the main menu.
+        /// </summary>
         private void HandleManageFlashCards()
         {
             List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
@@ -154,9 +176,40 @@ namespace FlashCards
                 UserInterface.ClearConsole();
                 flashCardMenuOption = UserInterface.GetFlashCardMenuSelection();
             }
+        }
+        /// <summary>
+        /// Initiates new StudySession
+        /// </summary>
+        private void HandleStudy()
+        {
+            List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
+            CardStack stack = UserInterface.StackSelection(stacks);
+
+            List<FlashCardDto> cards = FlashCardRepositoryService.GetAllCardsInStack(stack) ?? new List<FlashCardDto>();
+            StudySessionRepositoryService.NewStudySession(stack, cards);
+        }
+        /// <summary>
+        /// Displays all study sessions associated with the available stacks.
+        /// </summary>
+        private void HandleViewSessions()
+        {
+            List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
+            StudySessionRepositoryService.PrintAllSessions(stacks);
+        }
+        /// <summary>
+        /// Generates and displays a study report for all available stacks.
+        /// </summary>
+        private void HandleGetReport()
+        {
+            List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
+            StudySessionRepositoryService.PrintReport(stacks);
 
         }
-        
+
+        /// <summary>
+        /// Processes the selected stack menu option and invokes the appropriate service method.
+        /// </summary>
+        /// <param name="stackMenuOption">The stack menu option selected by the user.</param>
         private void ProcessStackMenu(StackMenuOption stackMenuOption) 
         {
             switch (stackMenuOption) 
@@ -178,7 +231,11 @@ namespace FlashCards
             }
         }
 
-
+        // <summary>
+        /// Processes the selected flashcard menu option and invokes the appropriate service method.
+        /// </summary>
+        /// <param name="flashCardMenuOption">The flashcard menu option selected by the user.</param>
+        /// <param name="stack">The currently selected stack of flashcards.</param>
         private void ProcessFlashCardMenu(FlashCardMenuOption flashCardMenuOption, CardStack stack) 
         {
             switch (flashCardMenuOption)

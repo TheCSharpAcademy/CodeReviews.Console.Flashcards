@@ -3,15 +3,20 @@ using Microsoft.Data.SqlClient;
 
 namespace FlashCards
 {
+    /// <inheritdoc/>
     internal class FlashCardRepository : IFlashCardRepository
     {
-
+        /// <inheritdoc/>
         public string ConnectionString { get; }
-
+        /// <summary>
+        /// Initializes new instance of FlashCardRepository class
+        /// </summary>
+        /// <param name="connectionString">A string representing connection string to the database</param>
         public FlashCardRepository(string connectionString)
         {
             ConnectionString = connectionString;
         }
+        /// <inheritdoc/>
         public bool DoesTableExist()
         {
             try
@@ -36,6 +41,7 @@ namespace FlashCards
             }
 
         }
+        /// <inheritdoc/>
         public bool CreateTable()
         {
             try
@@ -66,6 +72,7 @@ namespace FlashCards
 
 
         }
+        /// <inheritdoc/>
         public void AutoFill(List<CardStack> stacks, List<FlashCard> flashCards)
         {
             try
@@ -94,6 +101,7 @@ namespace FlashCards
             }
 
         }
+        /// <inheritdoc/>
         public bool Insert(FlashCard entity)
         {
             try
@@ -111,6 +119,7 @@ namespace FlashCards
                 return false;
             }
         }
+        /// <inheritdoc/>
         public bool Update(FlashCard entity)
         {
             try
@@ -128,6 +137,7 @@ namespace FlashCards
                 return false;
             }
         }
+        /// <inheritdoc/>
         public bool Delete(FlashCard entity)
         {
             try
@@ -145,7 +155,7 @@ namespace FlashCards
                 return false;
             }
         }
-
+        /// <inheritdoc/>
         public IEnumerable<FlashCard>? GetAllRecords()
         {
             try
@@ -171,6 +181,7 @@ namespace FlashCards
                 return null;
             }
         }
+        /// <inheritdoc/>
         public IEnumerable<FlashCardDto>? GetAllRecordsFromStack(CardStack stack)
         {
             try
@@ -198,6 +209,7 @@ namespace FlashCards
             }
 
         }
+        /// <inheritdoc/>
         public IEnumerable<FlashCardDto>? GetXRecordsFromStack(CardStack stack, int count)
         {
             try
@@ -224,8 +236,12 @@ namespace FlashCards
                 return null;
             }
         }
-
-
+        /// <summary>
+        /// Executes non-query command against the database
+        /// </summary>
+        /// <param name="sqlCommand">A string representing SQL command</param>
+        /// <param name="entity">A FlashCard entity for which command will be ran</param>
+        /// <returns>A number of rows affected</returns>
         private int ExecuteNonQuery(string sqlCommand, FlashCard entity)
         {
             try

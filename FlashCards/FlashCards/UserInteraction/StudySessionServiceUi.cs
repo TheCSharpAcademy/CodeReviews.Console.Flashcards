@@ -1,17 +1,24 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Spectre.Console;
-using System.Reflection.Metadata.Ecma335;
 
 namespace FlashCards
 {
+    /// <summary>
+    /// Represents a user interface for StudySessionService.
+    /// Inherits from UserInterace
+    /// Implements IStudySessionServiceUi
+    /// </summary>
     internal class StudySessionServiceUi : UserInterface, IStudySessionServiceUi
     {
+        /// <inheritdoc/>
         public string DateFormat { get; } = "yyyy-MM-dd";
+        /// <inheritdoc/>
         public ConsoleKey GetKeyFromUser()
         {
             Console.WriteLine("\nPress any key to continue or ESC to exit");
             return Console.ReadKey().Key;
         }
+        /// <inheritdoc/>
         public void PrintQuestion(string stack, FlashCardDto card)
         {
             var table = new Table();
@@ -21,6 +28,7 @@ namespace FlashCards
 
             AnsiConsole.Write(table);
         }
+        /// <inheritdoc/>
         public int ValidateAnswer(FlashCardDto card, string answer)
         {
             if (answer.ToLower() == card.BackText.ToLower())
@@ -36,6 +44,7 @@ namespace FlashCards
                 return 0;
             }
         }
+        /// <inheritdoc/>
         public void PrintResult(StudySession session, int numberOfRounds)
         {
             Console.Clear();
@@ -56,6 +65,7 @@ namespace FlashCards
             Console.WriteLine("\nPress any key to continue or ESC to exit");
             Console.ReadKey();
         }
+        /// <inheritdoc/>
         public void PrintAllSessions(List<CardStack> stacks, List<StudySession> sessions)
         {
             var table = new Table();
@@ -84,6 +94,7 @@ namespace FlashCards
             Console.WriteLine("\nPress any key to continue or ESC to exit");
             Console.ReadKey();
         }
+        /// <inheritdoc/>
         public void PrintReportForStack(int year, string stackName, ReportObject sessionCount, ReportObject sessionTotalScore, ReportObject sessionScoreAvg)
         {
             Table table = new Table();
@@ -97,6 +108,12 @@ namespace FlashCards
 
             AnsiConsole.Write(table);
         }
+        /// <summary>
+        /// Returns array of string values representing row in a Table
+        /// </summary>
+        /// <param name="text">A string value representing description of the data in ReportObject</param>
+        /// <param name="data">A ReportObject containing the data</param>
+        /// <returns>A string array</returns>
         private string[] GetTableRow(string text, ReportObject data)
         {
             return [
