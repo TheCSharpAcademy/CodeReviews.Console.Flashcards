@@ -61,7 +61,7 @@ class DataBaseManager<T>
             result = (List<T>) await connection.QueryAsync<T>(sql);
         },
         $"Retrieving logs",
-        $"Logs retrieved"
+        $"[bold green]Logs retrieved[/]"
         );
 
         return result;
@@ -117,7 +117,7 @@ class DataBaseManager<T>
         catch (SqlException e) 
         { 
             if (ErrorCodes.DBCodes.TryGetValue(e.Number, out string message))
-                AnsiConsole.MarkupLine(message);
+                AnsiConsole.MarkupLine($"[bold grey]{TableName}:[/] {message}");
         }
         catch (Exception e) { Console.WriteLine(e); } // global catch for if i missed anything
     }
