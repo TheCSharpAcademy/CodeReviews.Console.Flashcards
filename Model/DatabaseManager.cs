@@ -41,10 +41,10 @@ class DataBaseManager
             
             await using var command = new SqlCommand(sql, connection);
             await command.ExecuteNonQueryAsync();
-
-            AnsiConsole.MarkupLine($"[bold red]{tableName} table does not exist. Creating new table...[/]");
         }, 
-        ErrorCodes.TABLEEXISTS);
+        $"Loading {tableName}",
+        $"[bold red]{tableName} table does not exist. Creating new table...[/]"
+        );
     }
 
     public static async Task InsertLog(string table, List<string> valuesList)
@@ -57,10 +57,10 @@ class DataBaseManager
 
             await using var command = new SqlCommand(sql, connection);
             await command.ExecuteNonQueryAsync();
-
-            AnsiConsole.MarkupLine($"[bold green]New log added to {table}[/]");
         }, 
-        ErrorCodes.INSERTLOGEXISTS);
+        $"Inserting log",
+        "[bold green]New log added to {table}[/]"
+        );
     }
 
     public static async Task<List<T>> GetAllLogs<T>(string tableName)
@@ -70,7 +70,10 @@ class DataBaseManager
             var sql = $@"SELECT * FROM {tableName}";
             //await using var command = new SqlCommand(sql, connection);
             result = (List<T>) await connection.QueryAsync<T>(sql);
-        });
+        },
+        $"Retrieving logs",
+        $"Logs retrieved"
+        );
 
         return result;
     }
@@ -84,9 +87,10 @@ class DataBaseManager
 
             await using var command = new SqlCommand(sql, connection);
             await command.ExecuteNonQueryAsync();
-
-            AnsiConsole.MarkupLine($"[bold green]{tableName} has been updated[/]");
-        });
+        },
+        $"Updating logs",
+        "[bold green]{tableName} has been updated[/]"
+        );
     }
 
     public static async Task DeleteLog(int id, string tableName)
@@ -96,26 +100,35 @@ class DataBaseManager
 
             await using var command = new SqlCommand(sql, connection);
             await command.ExecuteNonQueryAsync();
-        });
+        },
+        $"Deleting logs",
+        $"[bold green]Log Deleted[/]"
+        );
     }
 
     // Handles the methods that deal with the db. The passed method
     // (or more realistically lambda function) needs an SqlConnection
     // (made in the try statment) and will return Task, allowing it
     // to be an async method/lambda. 
-    static async Task HandleDatabaseOperation(Func<SqlConnection, Task> method, ErrorCodes.ErrorCode errorCode = default)
+    static async Task HandleDatabaseOperation(Func<SqlConnection, Task> method, 
+                                                string loadingMessage, 
+                                                string workedMessage)
     {
         try
         {
-            await using SqlConnection connection = new(ConnectionString);
-            await connection.OpenAsync();
-
-            await method(connection);
+            await AnsiConsole.Status()
+                .StartAsync(loadingMessage, async ctx => {
+                    await using SqlConnection connection = new(ConnectionString);
+                    await connection.OpenAsync();
+                    await method(connection);
+                });
+            
+            AnsiConsole.MarkupLine(workedMessage);
         }
         catch (SqlException e) 
         { 
-            if (e.Number == errorCode.Id) 
-                AnsiConsole.MarkupLine(e.Number + " " + errorCode.Message); 
+            if (ErrorCodes.DBCodes.TryGetValue(e.Number, out string message))
+                AnsiConsole.MarkupLine(message);
         }
         catch (Exception e) { Console.WriteLine(e); } // global catch for if i missed anything
     }

@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using Spectre.Console;
+
 
 class MainMenuController
 {
@@ -10,6 +10,7 @@ class MainMenuController
         {
             Console.Clear();
             await DataBaseManager.StartAsync();
+            Console.Clear();
 
             Enums.MainMenuOptions userInput = DisplayMenu.MainMenu();
 

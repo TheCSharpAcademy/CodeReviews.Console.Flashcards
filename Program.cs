@@ -7,8 +7,5 @@ class Program
     static async Task Main(string[] args)
     {
         await MainMenuController.Start();
-
-        // List<Stack> results = await DataBaseManager.GetAllLogs<Stack>("stacks");
-        // DisplayOther.DisplayTable(results);
     }
 }
