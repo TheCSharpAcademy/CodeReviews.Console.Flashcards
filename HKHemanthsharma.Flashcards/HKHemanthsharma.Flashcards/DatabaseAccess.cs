@@ -354,7 +354,7 @@ order by  sessionyear desc, StackName;";
                 }
                 foreach (var yearwiseobjects in kvp.Value)
                 {
-                    var rowValues = new List<string> { yearwiseobjects.StackName };
+                    var rowValues = new List<string> { yearwiseobjects.StackName , yearwiseobjects.Sessionyear};
 
                     // Add all month values formatted to 1 decimal place
                     rowValues.Add($"{yearwiseobjects.January:0.0}");
