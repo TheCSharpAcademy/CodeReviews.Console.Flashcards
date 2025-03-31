@@ -8,6 +8,7 @@
     {
         /// <inheritdoc/>
         public IFlashCardRepository FlashCardRepository { get; set; }
+
         /// <inheritdoc/>
         public IFlashCardServiceUi UserInterface { get; set; }
 
@@ -15,10 +16,12 @@
         /// Represent list of all FlashCardDto entities
         /// </summary>
         private List<FlashCardDto>? _flashCardDtos = null;
+
         /// <summary>
-        /// Represent map for _flashCardDtos where all FlashCardDto entities are mapped from 1 
+        /// Represent map for _flashCardDtos where all FlashCardDto entities are mapped from 1
         /// </summary>
         private Dictionary<int, int> _cardIdMap = new Dictionary<int, int>();
+
         /// <summary>
         /// Represent list of mapped FlashCardDto entities
         /// </summary>
@@ -34,11 +37,13 @@
             FlashCardRepository = repository;
             UserInterface = UI;
         }
+
         /// <inheritdoc/>
         public List<FlashCardDto>? GetAllCardsInStack(CardStack stack)
         {
             return FlashCardRepository.GetAllRecordsFromStack(stack)?.ToList();
         }
+
         /// <inheritdoc/>
         public bool PrepareRepository(List<CardStack> stacks, List<FlashCard> flashCards)
         {
@@ -58,6 +63,7 @@
                 return false;
             }
         }
+
         /// <summary>
         /// Retrieves all FlashCards from CardStack and map them so Card ID numbers start at 1
         /// </summary>
@@ -65,7 +71,6 @@
         /// <returns></returns>
         private bool GetAndMapFlashcards(CardStack stack)
         {
-
             var result = FlashCardRepository.GetAllRecordsFromStack(stack);
 
             if (result == null) { return false; }
@@ -83,8 +88,8 @@
             ).ToList();
 
             return true;
-
         }
+
         /// <inheritdoc/>
         public void HandleViewAllCards(CardStack stack)
         {
@@ -98,6 +103,7 @@
             }
             UserInterface.PrintPressAnyKeyToContinue();
         }
+
         /// <inheritdoc/>
         public void HandleViewXCards(CardStack stack)
         {
@@ -113,6 +119,7 @@
 
             UserInterface.PrintPressAnyKeyToContinue();
         }
+
         /// <inheritdoc/>
         public void HandleCreateNewFlashCard(CardStack stack)
         {
@@ -123,8 +130,8 @@
             Console.WriteLine(wasActionSuccessful ? "Card added successfully" : "Error occured, please contact admin");
 
             UserInterface.PrintPressAnyKeyToContinue();
-
         }
+
         /// <inheritdoc/>
         public void HandleUpdateFlashCard(CardStack stack)
         {
@@ -144,8 +151,8 @@
             }
 
             UserInterface.PrintPressAnyKeyToContinue();
-
         }
+
         /// <inheritdoc/>
         public void HandleDeleteFlashCard(CardStack stack)
         {
@@ -163,6 +170,7 @@
 
             UserInterface.PrintPressAnyKeyToContinue();
         }
+
         /// <inheritdoc/>
         public CardStack HandleSwitchStack(List<CardStack> stacks)
         {
@@ -170,7 +178,5 @@
 
             return newStack;
         }
-
-
     }
 }

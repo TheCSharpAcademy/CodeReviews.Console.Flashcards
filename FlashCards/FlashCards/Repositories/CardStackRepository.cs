@@ -17,6 +17,7 @@ namespace FlashCards
         {
             ConnectionString = connectionString;
         }
+
         /// <inheritdoc/>
         public bool DoesTableExist()
         {
@@ -40,8 +41,8 @@ namespace FlashCards
                 Console.WriteLine(ex.Message + "\n");
                 throw;
             }
-
         }
+
         /// <inheritdoc/>
         public bool CreateTable()
         {
@@ -69,8 +70,8 @@ namespace FlashCards
                 Console.WriteLine(ex.Message + "\n");
                 throw;
             }
-
         }
+
         /// <inheritdoc/>
         public void AutoFill(List<CardStack> defaultData)
         {
@@ -84,7 +85,6 @@ namespace FlashCards
                 {
                     connection.Execute(sql, stack);
                 }
-
             }
             catch (SqlException sqlEx)
             {
@@ -98,8 +98,8 @@ namespace FlashCards
                 Console.WriteLine(ex.Message + "\n");
                 throw;
             }
-
         }
+
         /// <inheritdoc/>
         public bool Insert(CardStack entity)
         {
@@ -118,6 +118,7 @@ namespace FlashCards
                 return false;
             }
         }
+
         /// <inheritdoc/>
         public bool Update(CardStack entity)
         {
@@ -136,6 +137,7 @@ namespace FlashCards
                 return false;
             }
         }
+
         /// <inheritdoc/>
         public bool Delete(CardStack entity)
         {
@@ -154,6 +156,7 @@ namespace FlashCards
                 return false;
             }
         }
+
         /// <inheritdoc/>
         public IEnumerable<CardStack> GetAllRecords()
         {
@@ -170,7 +173,6 @@ namespace FlashCards
                 Console.WriteLine(sqlEx.Message + "\n");
 
                 return Enumerable.Empty<CardStack>();
-
             }
             catch (Exception ex)
             {
@@ -179,8 +181,8 @@ namespace FlashCards
 
                 return Enumerable.Empty<CardStack>();
             }
-
         }
+
         /// <summary>
         /// Executes non-query command against the database
         /// </summary>
@@ -204,8 +206,6 @@ namespace FlashCards
             {
                 throw;
             }
-
         }
-
     }
 }

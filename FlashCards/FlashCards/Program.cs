@@ -4,9 +4,8 @@ namespace FlashCards
 {
     internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-
             ServiceCollection services = new ServiceCollection();
 
             SetServices(services);
@@ -15,10 +14,9 @@ namespace FlashCards
 
             var app = serviceProvider.GetRequiredService<FlashCardApp>();
             app.Run();
-
-
         }
-        static void SetServices(IServiceCollection services)
+
+        private static void SetServices(IServiceCollection services)
         {
             string connectionString = @"Data Source=(localdb)\LOCALDB;Initial Catalog=FlashCardsProject;Integrated Security=True;Connect Timeout=5;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
             string pathToDefaultData = @"DefaultDataForAutoFill.json";
@@ -49,5 +47,4 @@ namespace FlashCards
             ));
         }
     }
-
 }

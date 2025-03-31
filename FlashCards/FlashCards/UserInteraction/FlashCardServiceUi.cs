@@ -20,8 +20,8 @@ namespace FlashCards
                 table.AddRow(card.CardID.ToString(), card.FrontText, card.BackText);
             }
             AnsiConsole.Write(table);
-
         }
+
         /// <inheritdoc/>
         public FlashCard GetNewCard()
         {
@@ -31,6 +31,7 @@ namespace FlashCards
 
             return card;
         }
+
         /// <inheritdoc/>
         public int GetCardID(List<FlashCardDto> cards)
         {
@@ -43,6 +44,5 @@ namespace FlashCards
                 );
             return cardId;
         }
-
     }
 }

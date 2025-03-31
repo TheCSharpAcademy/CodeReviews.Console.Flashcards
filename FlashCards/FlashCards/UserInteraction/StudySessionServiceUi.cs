@@ -12,12 +12,14 @@ namespace FlashCards
     {
         /// <inheritdoc/>
         public string DateFormat { get; } = "yyyy-MM-dd";
+
         /// <inheritdoc/>
         public ConsoleKey GetKeyFromUser()
         {
             Console.WriteLine("\nPress any key to continue or ESC to exit");
             return Console.ReadKey().Key;
         }
+
         /// <inheritdoc/>
         public void PrintQuestion(string stack, FlashCardDto card)
         {
@@ -28,6 +30,7 @@ namespace FlashCards
 
             AnsiConsole.Write(table);
         }
+
         /// <inheritdoc/>
         public int ValidateAnswer(FlashCardDto card, string answer)
         {
@@ -44,6 +47,7 @@ namespace FlashCards
                 return 0;
             }
         }
+
         /// <inheritdoc/>
         public void PrintResult(StudySession session, int numberOfRounds)
         {
@@ -65,6 +69,7 @@ namespace FlashCards
             Console.WriteLine("\nPress any key to continue or ESC to exit");
             Console.ReadKey();
         }
+
         /// <inheritdoc/>
         public void PrintAllSessions(List<CardStack> stacks, List<StudySession> sessions)
         {
@@ -94,6 +99,7 @@ namespace FlashCards
             Console.WriteLine("\nPress any key to continue or ESC to exit");
             Console.ReadKey();
         }
+
         /// <inheritdoc/>
         public void PrintReportForStack(int year, string stackName, ReportObject sessionCount, ReportObject sessionTotalScore, ReportObject sessionScoreAvg)
         {
@@ -108,6 +114,7 @@ namespace FlashCards
 
             AnsiConsole.Write(table);
         }
+
         /// <summary>
         /// Returns array of string values representing row in a Table
         /// </summary>
@@ -132,6 +139,5 @@ namespace FlashCards
                 data.December.ToString(),
             ];
         }
-
     }
 }

@@ -8,6 +8,7 @@ namespace FlashCards
     {
         /// <inheritdoc/>
         public string ConnectionString { get; }
+
         /// <summary>
         /// Initializes new instance of FlashCardRepository class
         /// </summary>
@@ -16,6 +17,7 @@ namespace FlashCards
         {
             ConnectionString = connectionString;
         }
+
         /// <inheritdoc/>
         public bool DoesTableExist()
         {
@@ -39,8 +41,8 @@ namespace FlashCards
                 Console.WriteLine(ex.Message + "\n");
                 throw;
             }
-
         }
+
         /// <inheritdoc/>
         public bool CreateTable()
         {
@@ -69,9 +71,8 @@ namespace FlashCards
                 Console.WriteLine(ex.Message + "\n");
                 throw;
             }
-
-
         }
+
         /// <inheritdoc/>
         public void AutoFill(List<CardStack> stacks, List<FlashCard> flashCards)
         {
@@ -99,8 +100,8 @@ namespace FlashCards
                 Console.WriteLine(ex.Message + "\n");
                 throw;
             }
-
         }
+
         /// <inheritdoc/>
         public bool Insert(FlashCard entity)
         {
@@ -119,6 +120,7 @@ namespace FlashCards
                 return false;
             }
         }
+
         /// <inheritdoc/>
         public bool Update(FlashCard entity)
         {
@@ -137,6 +139,7 @@ namespace FlashCards
                 return false;
             }
         }
+
         /// <inheritdoc/>
         public bool Delete(FlashCard entity)
         {
@@ -155,6 +158,7 @@ namespace FlashCards
                 return false;
             }
         }
+
         /// <inheritdoc/>
         public IEnumerable<FlashCard>? GetAllRecords()
         {
@@ -171,7 +175,6 @@ namespace FlashCards
                 Console.WriteLine(sqlEx.Message + "\n");
 
                 return null;
-
             }
             catch (Exception ex)
             {
@@ -181,6 +184,7 @@ namespace FlashCards
                 return null;
             }
         }
+
         /// <inheritdoc/>
         public IEnumerable<FlashCardDto>? GetAllRecordsFromStack(CardStack stack)
         {
@@ -190,7 +194,6 @@ namespace FlashCards
                 using var connection = new SqlConnection(ConnectionString);
                 var result = connection.Query<FlashCardDto>(sqlCommand, stack);
                 return result;
-
             }
             catch (SqlException sqlEx)
             {
@@ -198,7 +201,6 @@ namespace FlashCards
                 Console.WriteLine(sqlEx.Message + "\n");
 
                 return null;
-
             }
             catch (Exception ex)
             {
@@ -207,8 +209,8 @@ namespace FlashCards
 
                 return null;
             }
-
         }
+
         /// <inheritdoc/>
         public IEnumerable<FlashCardDto>? GetXRecordsFromStack(CardStack stack, int count)
         {
@@ -218,7 +220,6 @@ namespace FlashCards
                 using var connection = new SqlConnection(ConnectionString);
                 var result = connection.Query<FlashCardDto>(sqlCommand, new { Count = count, stackID = stack.StackID });
                 return result;
-
             }
             catch (SqlException sqlEx)
             {
@@ -226,7 +227,6 @@ namespace FlashCards
                 Console.WriteLine(sqlEx.Message + "\n");
 
                 return null;
-
             }
             catch (Exception ex)
             {
@@ -236,6 +236,7 @@ namespace FlashCards
                 return null;
             }
         }
+
         /// <summary>
         /// Executes non-query command against the database
         /// </summary>
@@ -259,7 +260,6 @@ namespace FlashCards
             {
                 throw;
             }
-
         }
     }
 }

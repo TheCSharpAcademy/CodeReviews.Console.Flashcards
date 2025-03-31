@@ -13,24 +13,28 @@ namespace FlashCards
         /// A Regex representing valid string for the user input
         /// </summary>
         private Regex validString = new Regex("^[A-Za-z0-9]+(?: [A-Za-z0-9]+)*$");
+
         /// <inheritdoc/>
         public void ClearConsole()
         {
             Console.Clear();
             PrintApplicationHeader();
         }
+
         /// <inheritdoc/>
         public void PrintApplicationHeader()
         {
             Console.WriteLine("Welcome to Flash card application");
             Console.WriteLine(new string('-', 50));
         }
+
         /// <inheritdoc/>
         public void PrintPressAnyKeyToContinue()
         {
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
         }
+
         /// <inheritdoc/>
         public int GetNumberFromUser(string prompt)
         {
@@ -40,8 +44,8 @@ namespace FlashCards
                 );
 
             return count;
-
         }
+
         /// <inheritdoc/>
         public string GetStringFromUser(string prompt)
         {
@@ -53,6 +57,7 @@ namespace FlashCards
 
             return text;
         }
+
         /// <inheritdoc/>
         public CardStack StackSelection(List<CardStack> stacks)
         {
@@ -65,7 +70,5 @@ namespace FlashCards
                 );
             return stack;
         }
-
-
     }
 }

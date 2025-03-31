@@ -21,7 +21,6 @@ namespace FlashCards
             }
 
             AnsiConsole.Write(table);
-
         }
     }
 }

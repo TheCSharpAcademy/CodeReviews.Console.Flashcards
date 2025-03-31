@@ -13,8 +13,10 @@ namespace FlashCards
         /// Collections of enumerable values used to menuSelection
         /// </summary>
         private MainMenuOption[] _mainMenuOptions = (MainMenuOption[])Enum.GetValues(typeof(MainMenuOption));
+
         private StackMenuOption[] _stackMenuOptions = (StackMenuOption[])Enum.GetValues(typeof(StackMenuOption));
         private FlashCardMenuOption[] _flashcardMenuOptions = (FlashCardMenuOption[])Enum.GetValues(typeof(FlashCardMenuOption));
+
         /// <inheritdoc/>
         public MainMenuOption GetMainMenuSelection()
         {
@@ -35,6 +37,7 @@ namespace FlashCards
 
             return mainMenuInput;
         }
+
         /// <inheritdoc/>
         public StackMenuOption GetStackMenuSelection()
         {
@@ -54,6 +57,7 @@ namespace FlashCards
 
             return stackMenuInput;
         }
+
         /// <inheritdoc/>
         public FlashCardMenuOption GetFlashCardMenuSelection()
         {

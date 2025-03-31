@@ -10,22 +10,22 @@ namespace FlashCards
         /// <summary>
         /// Gets the user interface for the application.
         /// </summary>
-        IFlashCardAppUi UserInterface { get; }
+        private IFlashCardAppUi UserInterface { get; }
 
         /// <summary>
         /// Gets the service for managing card stacks.
         /// </summary>
-        ICardStackService CardStackRepositoryService { get; }
+        private ICardStackService CardStackRepositoryService { get; }
 
         /// <summary>
         /// Gets the service for managing flashcards.
         /// </summary>
-        IFlashCardService FlashCardRepositoryService { get; }
+        private IFlashCardService FlashCardRepositoryService { get; }
 
         /// <summary>
         /// Gets the service for managing study sessions.
         /// </summary>
-        IStudySessionService StudySessionRepositoryService { get; }
+        private IStudySessionService StudySessionRepositoryService { get; }
 
         /// <summary>
         /// Gets the file path to the default data file.
@@ -131,20 +131,25 @@ namespace FlashCards
                 case MainMenuOption.ManageStacks:
                     HandleManageStacks();
                     break;
+
                 case MainMenuOption.ManageFlashCards:
                     HandleManageFlashCards();
                     break;
+
                 case MainMenuOption.Study:
                     HandleStudy();
                     break;
+
                 case MainMenuOption.ViewStudySessions:
                     HandleViewSessions();
                     break;
+
                 case MainMenuOption.GetReport:
                     HandleGetReport();
                     break;
             }
         }
+
         /// <summary>
         /// Handles the management of stacks by allowing the user to select various stack-related options.
         /// Loops until the user chooses to return to the main menu.
@@ -159,6 +164,7 @@ namespace FlashCards
                 stackMenuOption = UserInterface.GetStackMenuSelection();
             }
         }
+
         /// <summary>
         /// Handles the management of flashcards in specific stack by allowing the user to select various stack-related options.
         /// Loops until the user chooses to return to the main menu.
@@ -177,6 +183,7 @@ namespace FlashCards
                 flashCardMenuOption = UserInterface.GetFlashCardMenuSelection();
             }
         }
+
         /// <summary>
         /// Initiates new StudySession
         /// </summary>
@@ -188,6 +195,7 @@ namespace FlashCards
             List<FlashCardDto> cards = FlashCardRepositoryService.GetAllCardsInStack(stack) ?? new List<FlashCardDto>();
             StudySessionRepositoryService.NewStudySession(stack, cards);
         }
+
         /// <summary>
         /// Displays all study sessions associated with the available stacks.
         /// </summary>
@@ -196,6 +204,7 @@ namespace FlashCards
             List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
             StudySessionRepositoryService.PrintAllSessions(stacks);
         }
+
         /// <summary>
         /// Generates and displays a study report for all available stacks.
         /// </summary>
@@ -203,29 +212,32 @@ namespace FlashCards
         {
             List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
             StudySessionRepositoryService.PrintReport(stacks);
-
         }
 
         /// <summary>
         /// Processes the selected stack menu option and invokes the appropriate service method.
         /// </summary>
         /// <param name="stackMenuOption">The stack menu option selected by the user.</param>
-        private void ProcessStackMenu(StackMenuOption stackMenuOption) 
+        private void ProcessStackMenu(StackMenuOption stackMenuOption)
         {
-            switch (stackMenuOption) 
+            switch (stackMenuOption)
             {
                 case StackMenuOption.ViewAllStacks:
                     CardStackRepositoryService.HandleViewAllStacks();
                     break;
+
                 case StackMenuOption.CreateNewStack:
                     CardStackRepositoryService.HandleCreateNewStack();
                     break;
+
                 case StackMenuOption.RenameStack:
                     CardStackRepositoryService.HandleRenameStack();
                     break;
+
                 case StackMenuOption.DeleteStack:
                     CardStackRepositoryService.HandleDeleteStack();
                     break;
+
                 case StackMenuOption.ReturnToMainMenu:
                     return;
             }
@@ -236,25 +248,30 @@ namespace FlashCards
         /// </summary>
         /// <param name="flashCardMenuOption">The flashcard menu option selected by the user.</param>
         /// <param name="stack">The currently selected stack of flashcards.</param>
-        private void ProcessFlashCardMenu(FlashCardMenuOption flashCardMenuOption, CardStack stack) 
+        private void ProcessFlashCardMenu(FlashCardMenuOption flashCardMenuOption, CardStack stack)
         {
             switch (flashCardMenuOption)
             {
                 case FlashCardMenuOption.ViewAllCards:
                     FlashCardRepositoryService.HandleViewAllCards(stack);
                     break;
+
                 case FlashCardMenuOption.ViewXCards:
                     FlashCardRepositoryService.HandleViewXCards(stack);
                     break;
+
                 case FlashCardMenuOption.CreateNewFlashCard:
                     FlashCardRepositoryService.HandleCreateNewFlashCard(stack);
                     break;
+
                 case FlashCardMenuOption.UpdateFlashCard:
                     FlashCardRepositoryService.HandleUpdateFlashCard(stack);
                     break;
+
                 case FlashCardMenuOption.DeleteFlashCard:
                     FlashCardRepositoryService.HandleDeleteFlashCard(stack);
                     break;
+
                 case FlashCardMenuOption.SwitchStack:
                     List<CardStack> stacks = CardStackRepositoryService.GetAllStacks();
                     stack = FlashCardRepositoryService.HandleSwitchStack(stacks);

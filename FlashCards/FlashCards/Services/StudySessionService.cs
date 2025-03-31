@@ -8,8 +8,10 @@
     {
         /// <inheritdoc/>
         public IStudySessionRepository StudySessionRepository { get; set; }
+
         /// <inheritdoc/>
         public IStudySessionServiceUi UserInterface { get; set; }
+
         /// <summary>
         /// Intializes new object of FlashCardService class
         /// </summary>
@@ -20,6 +22,7 @@
             StudySessionRepository = repository;
             UserInterface = UI;
         }
+
         /// <inheritdoc/>
         public bool PrepareRepository(List<CardStack> stacks, List<StudySession> defaultData)
         {
@@ -37,9 +40,8 @@
                 Console.WriteLine("Error while preparing the repository");
                 return false;
             }
-
-
         }
+
         /// <inheritdoc/>
         public void NewStudySession(CardStack stack, List<FlashCardDto> cards)
         {
@@ -57,7 +59,6 @@
                 input = UserInterface.GetStringFromUser("Your Answer: ");
                 score += UserInterface.ValidateAnswer(card, input);
                 numberOfRounds++;
-
             } while (UserInterface.GetKeyFromUser() != ConsoleKey.Escape);
 
             StudySession session = new StudySession()
@@ -71,8 +72,8 @@
             UserInterface.PrintResult(session, numberOfRounds);
 
             InsertSession(session);
-
         }
+
         /// <summary>
         /// Insert a new session to the Database
         /// </summary>
@@ -87,10 +88,10 @@
 
             UserInterface.PrintAllSessions(stacks, sessions);
         }
+
         /// <inheritdoc/>
         public void PrintReport(List<CardStack> stacks)
         {
-
             int year = UserInterface.GetNumberFromUser("Enter year for the report");
 
             foreach (var stack in stacks)
@@ -105,7 +106,6 @@
                 UserInterface.PrintReportForStack(year, stack.StackName, sessionCount, sessionTotalScore, sessionScoreAvg);
             }
             Console.ReadLine();
-
         }
     }
 }

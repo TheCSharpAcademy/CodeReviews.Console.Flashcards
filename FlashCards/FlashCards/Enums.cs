@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// Represents menu choices in the Main menu
 /// </summary>
-enum MainMenuOption
+internal enum MainMenuOption
 {
     ManageStacks,
     ManageFlashCards,
@@ -10,10 +10,11 @@ enum MainMenuOption
     GetReport,
     Exit,
 }
+
 /// <summary>
 /// Represents menu choices in the stack menu
 /// </summary>
-enum StackMenuOption
+internal enum StackMenuOption
 {
     ViewAllStacks,
     CreateNewStack,
@@ -21,10 +22,11 @@ enum StackMenuOption
     DeleteStack,
     ReturnToMainMenu
 }
+
 /// <summary>
 /// Represents menu choices in the flash card menu
 /// </summary>
-enum FlashCardMenuOption
+internal enum FlashCardMenuOption
 {
     ViewAllCards,
     ViewXCards,
@@ -34,10 +36,11 @@ enum FlashCardMenuOption
     SwitchStack,
     ReturnToMainMenu
 }
+
 /// <summary>
 /// Represents pivot functions for report function
 /// </summary>
-enum PivotFunction
+internal enum PivotFunction
 {
     Average,
     Count,

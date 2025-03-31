@@ -18,6 +18,7 @@ namespace FlashCards
         {
             ConnectionString = connectionString;
         }
+
         /// <inheritdoc/>
         public bool DoesTableExist()
         {
@@ -41,8 +42,8 @@ namespace FlashCards
                 Console.WriteLine(ex.Message + "\n");
                 throw;
             }
-
         }
+
         /// <inheritdoc/>
         public void CreateTable()
         {
@@ -55,7 +56,6 @@ namespace FlashCards
                 ");";
                 using var connection = new SqlConnection(ConnectionString);
                 connection.Execute(sql);
-
             }
             catch (SqlException sqlEx)
             {
@@ -70,6 +70,7 @@ namespace FlashCards
                 throw;
             }
         }
+
         /// <inheritdoc/>
         public void AutoFill(List<CardStack> stacks, List<StudySession> sessions)
         {
@@ -99,12 +100,11 @@ namespace FlashCards
                 Console.WriteLine(ex.Message + "\n");
                 throw;
             }
-
         }
+
         /// <inheritdoc/>
         public bool Insert(StudySession entity)
         {
-
             try
             {
                 string sql = "INSERT INTO [StudySessions] VALUES (@StackID, @SessionDate, @Score);";
@@ -125,8 +125,8 @@ namespace FlashCards
                 Console.WriteLine(ex.Message + "\n");
                 return false;
             }
-
         }
+
         /// <inheritdoc/>
         public IEnumerable<StudySession>? GetAllRecords()
         {
@@ -143,7 +143,6 @@ namespace FlashCards
                 Console.WriteLine(sqlEx.Message + "\n");
 
                 return null;
-
             }
             catch (Exception ex)
             {
@@ -153,6 +152,7 @@ namespace FlashCards
                 return null;
             }
         }
+
         /// <summary>
         /// Retrieves SQL command for the report
         /// </summary>
@@ -178,6 +178,7 @@ namespace FlashCards
                         ")[StudySessions]" +
                         ")[StudySessions]";
         }
+
         /// <summary>
         /// Retrieves Pivot function SQL command based on passed parameter
         /// </summary>
@@ -202,6 +203,7 @@ namespace FlashCards
                 _ => throw new InvalidEnumArgumentException("Invalid PivotFunction enum value passed to GetReportPivotFunction()")
             };
         }
+
         /// <inheritdoc/>
         public ReportObject? GetDataPerMonthInYear(CardStack stack, int year, PivotFunction pivotFunction)
         {
@@ -218,7 +220,6 @@ namespace FlashCards
                 Console.WriteLine(sqlEx.Message + "\n");
 
                 return null;
-
             }
             catch (Exception ex)
             {

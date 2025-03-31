@@ -10,6 +10,7 @@ namespace FlashCards
     {
         /// <inheritdoc/>
         public ICardStackRepository CardStackRepository { get; set; }
+
         /// <inheritdoc/>
         public ICardStackServiceUi UserInterface { get; set; }
 
@@ -23,6 +24,7 @@ namespace FlashCards
             CardStackRepository = repository;
             UserInterface = UI;
         }
+
         /// <inheritdoc/>
         public List<CardStack> GetAllStacks() => CardStackRepository.GetAllRecords().ToList();
 
@@ -34,6 +36,7 @@ namespace FlashCards
             Console.WriteLine("No Stacks found");
             UserInterface.PrintPressAnyKeyToContinue();
         }
+
         /// <inheritdoc/>
         public bool PrepareRepository(List<CardStack> defaultData)
         {
@@ -51,8 +54,8 @@ namespace FlashCards
                 Console.WriteLine("Error while preparing the repository");
                 return false;
             }
-
         }
+
         /// <inheritdoc/>
         public void HandleViewAllStacks()
         {
@@ -66,8 +69,8 @@ namespace FlashCards
 
             UserInterface.PrintStacks(stacks);
             UserInterface.PrintPressAnyKeyToContinue();
-
         }
+
         /// <inheritdoc/>
         public void HandleCreateNewStack()
         {
@@ -77,6 +80,7 @@ namespace FlashCards
             Console.WriteLine(wasActionSuccessful ? "Stack created successfully" : "Error occured, please contact admin");
             UserInterface.PrintPressAnyKeyToContinue();
         }
+
         /// <inheritdoc/>
         public void HandleRenameStack()
         {
@@ -95,6 +99,7 @@ namespace FlashCards
             Console.WriteLine(wasActionSuccessful ? "Stack renamed successfully" : "Error occured, please contact admin");
             UserInterface.PrintPressAnyKeyToContinue();
         }
+
         /// <inheritdoc/>
         public void HandleDeleteStack()
         {
