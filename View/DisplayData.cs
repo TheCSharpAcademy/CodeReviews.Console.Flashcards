@@ -4,52 +4,63 @@ using Spectre.Console;
 
 class DisplayData
 {
-    public static string Selection<T>(List<T> dataSet)
+    public static Stack Selection(List<Stack> dataSet)
     {
-        var prompt = new SelectionPrompt<string>()
+        var prompt = new SelectionPrompt<Stack>()
             .Title("[bold green]Select[/]")
             .PageSize(10)
             .MoreChoicesText("[grey](Move up and down to reveal more data)[/]");
-
-        foreach(T data in dataSet)
+        
+        foreach (var data in dataSet)
         {
-            switch (data)
-            {
-                case Stack stack:
-                    prompt.AddChoice(stack.Name);
-                    break;
-                case FlashcardDTO flashcard:
-                    prompt.AddChoice(flashcard.Front + " " + flashcard.Back);
-                    break;
-                default:
-                    AnsiConsole.MarkupLine("[bold red]Displaying undefined type[/]");
-                    break;
-            }
+            prompt.AddChoice(data);
         }
+
+        prompt.Converter = data => $"{data.Id} {data.Name}";
 
         return AnsiConsole.Prompt(prompt);
     }
 
-    public static void Table<T>(List<T> dataSet, string[] header)
+    public static FlashcardDTO Selection(List<FlashcardDTO> dataSet)
+    {
+        var prompt = new SelectionPrompt<FlashcardDTO>()
+            .Title("[bold green]Select[/]")
+            .PageSize(10)
+            .MoreChoicesText("[grey](Move up and down to reveal more data)[/]");
+        
+        foreach (var data in dataSet)
+        {
+            prompt.AddChoice(data);
+        }
+
+        prompt.Converter = data => $"{data.Id} {data.Front} {data.Back}";
+
+        return AnsiConsole.Prompt(prompt);
+    }
+
+    public static void Table(List<Stack> dataSet)
     {
         var table = new Table();
 
-        table.AddColumns(header);
-        foreach(T data in dataSet)
+        table.AddColumns(["Id", "Name"]);
+        foreach(Stack data in dataSet)
         {
-            switch (data)
-            {
-                case Stack stack:
-                    table.AddRow(stack.Id.ToString(), stack.Name);
-                    break;
-                case FlashcardDTO flashcard:
-                    table.AddRow(flashcard.Id.ToString(), flashcard.Front, flashcard.Back);
-                    break;
-                default:
-                    AnsiConsole.MarkupLine("[bold red]Displaying undefined type[/]");
-                    break;
-            }
+            table.AddRow(data.Id.ToString(), data.Name);
         }
         AnsiConsole.Write(table);
     }
+
+    public static void Table(List<FlashcardDTO> dataSet, string[] header)
+    {
+        var table = new Table();
+
+        table.AddColumns(["Id", "Front", "Back"]);
+        foreach(FlashcardDTO data in dataSet)
+        {
+            table.AddRow(data.Id.ToString(), data.Front, data.Back);
+        }
+        AnsiConsole.Write(table);
+    }
+
+    
 }

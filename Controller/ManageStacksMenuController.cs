@@ -51,8 +51,6 @@ class ManageStacksMenuController
         List<Stack> dataSet = await DataBaseManager<Stack>.GetAllLogs();
 
         DisplayData.Selection(dataSet);
-
-        
     }
     static async Task DeleteStack(){}
 }
