@@ -10,24 +10,12 @@ class MainMenuController
         {
             Console.Clear();
 
-            DataBaseManager<Stack>.Start("stacks");
-            await DataBaseManager<Stack>.BuildTable(
-            [
-                "Id INTEGER PRIMARY KEY",
-                "Name TEXT"
-            ]);
-
-            DataBaseManager<Flashcard>.Start("flash_cards");
-            await DataBaseManager<Flashcard>.BuildTable(
-            [
-                "Stacks_Id INTEGER NOT NULL",
-                "FOREIGN KEY (Stacks_Id) REFERENCES stacks (Id)",
-                "Id INTEGER PRIMARY KEY",
-                "Front TEXT",
-                "Back TEXT"
-            ]);
-
-            Console.Clear();
+            AnsiConsole.Write(
+                new FigletText("Flashcards Program")
+                    .Centered()
+                    .Color(Color.Blue)
+            );
+            await BuildTables();
 
             Enums.MainMenuOptions userInput = DisplayMenu.MainMenu();
 
@@ -52,5 +40,24 @@ class MainMenuController
                 Console.Read();
             }
         }
+    }
+    static async Task BuildTables()
+    {
+        DataBaseManager<Stack>.Start("stacks");
+        await DataBaseManager<Stack>.BuildTable(
+        [
+            "Id INTEGER IDENTITY(1,1) PRIMARY KEY",
+            "Name TEXT"
+        ]);
+
+        DataBaseManager<Flashcard>.Start("flash_cards");
+        await DataBaseManager<Flashcard>.BuildTable(
+        [
+            "Stacks_Id INTEGER NOT NULL",
+            "FOREIGN KEY (Stacks_Id) REFERENCES stacks (Id)",
+            "Id INTEGER PRIMARY KEY",
+            "Front TEXT",
+            "Back TEXT"
+        ]);
     }
 }

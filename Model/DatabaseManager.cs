@@ -48,7 +48,7 @@ class DataBaseManager<T>
             await command.ExecuteNonQueryAsync();
         }, 
         $"Inserting log",
-        "[bold green]New log added to {table}[/]"
+        $"[bold green]New log added to {TableName}[/]"
         );
     }
 
@@ -78,7 +78,7 @@ class DataBaseManager<T>
             await command.ExecuteNonQueryAsync();
         },
         $"Updating logs",
-        "[bold green]{tableName} has been updated[/]"
+        $"[bold green]{TableName} has been updated[/]"
         );
     }
 
@@ -118,6 +118,8 @@ class DataBaseManager<T>
         { 
             if (ErrorCodes.DBCodes.TryGetValue(e.Number, out string message))
                 AnsiConsole.MarkupLine($"[bold grey]{TableName}:[/] {message}");
+            else
+                Console.WriteLine(e);
         }
         catch (Exception e) { Console.WriteLine(e); } // global catch for if i missed anything
     }

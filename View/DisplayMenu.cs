@@ -42,7 +42,7 @@ class DisplayMenu
         const string Back = "Back";
         string userInput = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-                .Title("[bold green] Select option[/]")
+                .Title("")
                 .MoreChoicesText("[grey](Move up and down to reveal more fruits)[/]")
                 .AddChoices([
                     CreateStack, RenameStack, DeleteStack,

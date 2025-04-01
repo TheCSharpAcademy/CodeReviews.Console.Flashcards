@@ -10,6 +10,9 @@ class ManageStacksMenuController
         while (!exit)
         {
             Console.Clear();
+            List<Stack> dataSet = await DataBaseManager<Stack>.GetAllLogs();
+            DisplayData.Table(dataSet);
+
             Enums.ManageStacksMenuOptions userInput = DisplayMenu.ManageStacksMenu();
 
             switch (userInput)
@@ -33,24 +36,37 @@ class ManageStacksMenuController
                 AnsiConsole.Markup("[bold green]Press Enter to continue. [/]");
                 Console.Read();
             }
-                
         }
             
     }
 
     static async Task CreateStack()
     {
+        string name = GetInput.StackName();
+
         await DataBaseManager<Stack>.InsertLog( 
         [
-            "1",
-            "'GOTY'"
+            "'" + name + "'"
         ]);
     }
     static async Task RenameStack()
     {
+        AnsiConsole.MarkupLine("[bold gray]Renameing stack[/]");
         List<Stack> dataSet = await DataBaseManager<Stack>.GetAllLogs();
+        Stack userStack = DisplayData.Selection(dataSet);
 
-        DisplayData.Selection(dataSet);
+        string newName = GetInput.StackName();
+
+        await DataBaseManager<Stack>.UpdateLog(userStack.Id, [
+            "Name = '" + newName + "'"
+        ]);
     }
-    static async Task DeleteStack(){}
+    static async Task DeleteStack()
+    {
+        AnsiConsole.MarkupLine("[bold gray]Deleting stack[/]");
+        List<Stack> dataSet = await DataBaseManager<Stack>.GetAllLogs();
+        Stack userStack = DisplayData.Selection(dataSet);
+
+        await DataBaseManager<Stack>.DeleteLog(userStack.Id);
+    }
 }
