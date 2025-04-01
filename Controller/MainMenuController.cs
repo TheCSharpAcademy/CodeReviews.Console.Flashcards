@@ -31,6 +31,13 @@ class MainMenuController
                     break;
                 case Enums.MainMenuOptions.EXIT:
                     exit = true;
+
+                    Console.Clear();
+                    AnsiConsole.Write(
+                        new FigletText("Goodbye! \n:)")
+                            .Centered()
+                            .Color(Color.Red)
+                    );
                     break;
             }
 
@@ -60,4 +67,5 @@ class MainMenuController
             "Back TEXT"
         ]);
     }
+
 }

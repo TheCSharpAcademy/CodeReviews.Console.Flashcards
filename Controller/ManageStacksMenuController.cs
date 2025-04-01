@@ -53,7 +53,7 @@ class ManageStacksMenuController
     {
         AnsiConsole.MarkupLine("[bold gray]Renameing stack[/]");
         List<Stack> dataSet = await DataBaseManager<Stack>.GetAllLogs();
-        Stack userStack = DisplayData.Selection(dataSet);
+        Stack userStack = GetInput.Selection(dataSet);
 
         string newName = GetInput.StackName();
 
@@ -65,7 +65,7 @@ class ManageStacksMenuController
     {
         AnsiConsole.MarkupLine("[bold gray]Deleting stack[/]");
         List<Stack> dataSet = await DataBaseManager<Stack>.GetAllLogs();
-        Stack userStack = DisplayData.Selection(dataSet);
+        Stack userStack = GetInput.Selection(dataSet);
 
         await DataBaseManager<Stack>.DeleteLog(userStack.Id);
     }
