@@ -4,18 +4,17 @@ using Spectre.Console;
 class ManageFlashCardsMenuController
 {
     static Stack currentStack = default;
-    static LinkedList<FlashcardDTO> flashcards = [];
+    static List<FlashcardDTO> flashcards = [];
     public static async Task Start()
     {
         bool exit = false;
-
-        Console.Clear();
         List<Stack> stackSet = await DataBaseManager<Stack>.GetLogs();
+        Console.Clear();
         currentStack = GetInput.Selection(stackSet);
         while (!exit)
         {
-            flashcards = await GetCardsAsLinkedList();
             Console.Clear();
+            flashcards = await GetCards();
 
             exit = await HandleUserInput();
 
@@ -28,33 +27,44 @@ class ManageFlashCardsMenuController
         }
     }
     
-    private static async Task<LinkedList<FlashcardDTO>> GetCardsAsLinkedList()
+    private static async Task<List<FlashcardDTO>> GetCards()
     {
-        LinkedList<FlashcardDTO> flashcards = [];
+        List<FlashcardDTO> flashcards = [];
         string query = "WHERE Stacks_Id = " + currentStack.Id;
         List<Flashcard> flashCardSet = await DataBaseManager<Flashcard>.GetLogs(query);
 
         foreach (var card in flashCardSet)
         {
-            flashcards.AddLast(new FlashcardDTO(card));
+            flashcards.Add(new FlashcardDTO(card));
         }
 
         return flashcards;
     }
 
-    private static void ViewCards(int amount = 100)
+    private static async Task ViewCards(int amount = -1)
     {
+        string query = "WHERE Stacks_Id = " + currentStack.Id;
+        if (amount != -1)
+            query += "ORDER BY Id OFFSET 0 ROWS FETCH FIRST " + amount + " ROWS ONLY";
+
+        List<Flashcard> flashCardSet = await DataBaseManager<Flashcard>.GetLogs(query);
         List<FlashcardDTO> flashcardDTOs = [];
 
-        if (flashcards.Count != 0)
-            for (LinkedListNode<FlashcardDTO> current = flashcards.First;
-                current != null && (current.Value.Id < amount);
-                current = current.Next)
-            {
-                flashcardDTOs.Add(current.Value);
-            }
-
+        foreach (var card in flashCardSet)
+        {
+            flashcardDTOs.Add(new FlashcardDTO(card));
+        }
         DisplayData.Table(flashcardDTOs, currentStack.Name);
+    }
+
+    private static async Task ViewAllCards()
+    {
+        await ViewCards();
+    }
+
+    private static async Task ViewXCards()
+    {
+        await ViewCards(GetInput.AmountOfCards());
     }
 
     private static async Task CreateCard()
@@ -69,14 +79,29 @@ class ManageFlashCardsMenuController
         ]);
     }
 
-    private static void EditCard()
+    private static async Task EditCard()
     {
-        throw new NotImplementedException();
+        FlashcardDTO flashcard = GetInput.Selection(flashcards);
+        GetInput.FlashcardSides(out string front, out string back, flashcard.Front, flashcard.Back);
+
+        await DataBaseManager<Flashcard>.UpdateLog(
+            "Id = " + flashcard.Id.ToString(),
+            [
+                "Front = '" + front + "'",
+                "Back = '" + back + "'",
+            ]
+        );
     }
 
-    private static void DeleteCard()
+    private static async Task DeleteCard()
     {
-        throw new NotImplementedException();
+        FlashcardDTO flashcard = GetInput.Selection(flashcards);
+
+        await DataBaseManager<Flashcard>.DeleteLog(flashcard.Id);
+        await DataBaseManager<Flashcard>.UpdateLog(
+            "Id in (SELECT Id FROM flash_cards WHERE Id > "+ flashcard.Id.ToString() + ")",
+            ["Id = Id - 1"]
+        );
     }
 
 
@@ -86,19 +111,19 @@ class ManageFlashCardsMenuController
         switch (userInput)
         {
             case Enums.ManageFlashCardsMenuOptions.VIEWALLCARDS:
-                ViewCards();
+                await ViewAllCards();
                 break;
             case Enums.ManageFlashCardsMenuOptions.VIEWXCARDS:
-                ViewCards(10);
+                await ViewXCards();
                 break;
             case Enums.ManageFlashCardsMenuOptions.CREATECARD:
                 await CreateCard();
                 break;
             case Enums.ManageFlashCardsMenuOptions.EDITCARD:
-                EditCard();
+                await EditCard();
                 break;
             case Enums.ManageFlashCardsMenuOptions.DELETECARD:
-                DeleteCard();
+                await DeleteCard();
                 break;
             case Enums.ManageFlashCardsMenuOptions.BACK:
                 return true;

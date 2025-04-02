@@ -60,9 +60,9 @@ class DataBaseManager<T>
         await HandleDatabaseOperation(async (connection) => {
             string sql = "";
             if (query == "")
-                sql = $@"SELECT * FROM {TableName}";
+                sql = $@"SELECT * FROM {TableName} ORDER BY Id";
             else
-                sql = $@"SELECT * FROM {TableName} {query}";
+                sql = $@"SELECT * FROM {TableName} {query} ORDER BY Id";
             result = (List<T>) await connection.QueryAsync<T>(sql);
         },
         $"Retrieving logs",
@@ -72,11 +72,11 @@ class DataBaseManager<T>
         return result;
     }
 
-    public static async Task UpdateLog(int id, List<string> valuesList)
+    public static async Task UpdateLog(string query, List<string> valuesList)
     {
         await HandleDatabaseOperation(async (connection) => {
             string values = string.Join(",", valuesList);
-            var sql = $@"UPDATE {TableName} SET {values} WHERE Id = {id}";
+            var sql = $@"UPDATE {TableName} SET {values} WHERE {query}";
 
 
             await using var command = new SqlCommand(sql, connection);

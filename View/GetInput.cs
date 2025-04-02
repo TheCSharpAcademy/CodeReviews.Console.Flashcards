@@ -39,9 +39,30 @@ class GetInput
         return AnsiConsole.Prompt(new TextPrompt<string>("[bold green]New name for Stack: [/]"));
     }
 
-    public static void FlashcardSides(out string front, out string back)
+    public static void FlashcardSides(out string front, out string back, 
+                                    string currentFront = "", string currentBack = "")
     {
-        front = AnsiConsole.Prompt(new TextPrompt<string>("[bold green]Front of card: [/]"));
-        back = AnsiConsole.Prompt(new TextPrompt<string>("[bold green]Back of card: [/]"));
+        TextPrompt<string> frontPrompt = new TextPrompt<string>("[bold green]Front of card: [/]");
+        TextPrompt<string> backPrompt = new TextPrompt<string>("[bold green]Back of card: [/]");
+
+        if (currentFront != "")
+            frontPrompt.DefaultValue(currentFront);
+        if (currentBack != "")
+            backPrompt.DefaultValue(currentBack);
+
+        front = AnsiConsole.Prompt(frontPrompt);
+        back = AnsiConsole.Prompt(backPrompt);
+    }
+
+    public static int AmountOfCards()
+    {
+        var number = AnsiConsole.Prompt(
+            new TextPrompt<int>("Enter amount of cards")
+            .Validate((n) =>
+            {
+                if (n < 0) return ValidationResult.Error("Cannot be under 0");
+                return ValidationResult.Success();
+            }));
+        return number;
     }
 }

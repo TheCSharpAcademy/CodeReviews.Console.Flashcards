@@ -57,9 +57,11 @@ class ManageStacksMenuController
 
         string newName = GetInput.StackName();
 
-        await DataBaseManager<Stack>.UpdateLog(userStack.Id, [
-            "Name = '" + newName + "'"
-        ]);
+        await DataBaseManager<Stack>.UpdateLog(
+            "Id = " + userStack.Id.ToString(), 
+            [
+                "Name = '" + newName + "'"
+            ]);
     }
     static async Task DeleteStack()
     {
