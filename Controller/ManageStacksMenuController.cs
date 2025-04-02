@@ -10,7 +10,7 @@ class ManageStacksMenuController
         while (!exit)
         {
             Console.Clear();
-            List<Stack> dataSet = await DataBaseManager<Stack>.GetAllLogs();
+            List<Stack> dataSet = await DataBaseManager<Stack>.GetLogs();
             DisplayData.Table(dataSet);
 
             Enums.ManageStacksMenuOptions userInput = DisplayMenu.ManageStacksMenu();
@@ -52,7 +52,7 @@ class ManageStacksMenuController
     static async Task RenameStack()
     {
         AnsiConsole.MarkupLine("[bold gray]Renameing stack[/]");
-        List<Stack> dataSet = await DataBaseManager<Stack>.GetAllLogs();
+        List<Stack> dataSet = await DataBaseManager<Stack>.GetLogs();
         Stack userStack = GetInput.Selection(dataSet);
 
         string newName = GetInput.StackName();
@@ -64,7 +64,7 @@ class ManageStacksMenuController
     static async Task DeleteStack()
     {
         AnsiConsole.MarkupLine("[bold gray]Deleting stack[/]");
-        List<Stack> dataSet = await DataBaseManager<Stack>.GetAllLogs();
+        List<Stack> dataSet = await DataBaseManager<Stack>.GetLogs();
         Stack userStack = GetInput.Selection(dataSet);
 
         await DataBaseManager<Stack>.DeleteLog(userStack.Id);

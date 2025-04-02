@@ -17,29 +17,7 @@ class MainMenuController
             );
             await BuildTables();
 
-            Enums.MainMenuOptions userInput = DisplayMenu.MainMenu();
-
-            switch (userInput)
-            {
-                case Enums.MainMenuOptions.MANAGESTACKS:
-                    await ManageStacksMenuController.Start();
-                    break;
-                case Enums.MainMenuOptions.MANAGEFLASHCARDS:
-                    await ManageFlashCardsMenuController.Start();
-                    break;
-                case Enums.MainMenuOptions.STUDY:
-                    break;
-                case Enums.MainMenuOptions.EXIT:
-                    exit = true;
-
-                    Console.Clear();
-                    AnsiConsole.Write(
-                        new FigletText("Goodbye! \n:)")
-                            .Centered()
-                            .Color(Color.Red)
-                    );
-                    break;
-            }
+            exit = await HandleUserInput();
 
             if (!exit)
             {
@@ -48,7 +26,7 @@ class MainMenuController
             }
         }
     }
-    static async Task BuildTables()
+    public static async Task BuildTables() // public just for debug purposes
     {
         DataBaseManager<Stack>.Start("stacks");
         await DataBaseManager<Stack>.BuildTable(
@@ -62,10 +40,34 @@ class MainMenuController
         [
             "Stacks_Id INTEGER NOT NULL",
             "FOREIGN KEY (Stacks_Id) REFERENCES stacks (Id)",
-            "Id INTEGER PRIMARY KEY",
+            "Id INTEGER",
             "Front TEXT",
             "Back TEXT"
         ]);
     }
 
+    private static async Task<bool> HandleUserInput()
+    {
+        Enums.MainMenuOptions userInput = DisplayMenu.MainMenu();
+        switch (userInput)
+        {
+            case Enums.MainMenuOptions.MANAGESTACKS:
+                await ManageStacksMenuController.Start();
+                break;
+            case Enums.MainMenuOptions.MANAGEFLASHCARDS:
+                await ManageFlashCardsMenuController.Start();
+                break;
+            case Enums.MainMenuOptions.STUDY:
+                break;
+            case Enums.MainMenuOptions.EXIT:
+                Console.Clear();
+                AnsiConsole.Write(
+                    new FigletText("Goodbye! \n:)")
+                        .Centered()
+                        .Color(Color.Red)
+                );
+                return true;
+        }
+        return false;
+    }
 }

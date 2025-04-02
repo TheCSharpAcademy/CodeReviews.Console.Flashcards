@@ -52,12 +52,15 @@ class DataBaseManager<T>
         );
     }
 
-    public static async Task<List<T>> GetAllLogs()
+    public static async Task<List<T>> GetLogs(string query = "")
     {
         List<T> result = [];
         await HandleDatabaseOperation(async (connection) => {
-            var sql = $@"SELECT * FROM {TableName}";
-            //await using var command = new SqlCommand(sql, connection);
+            string sql = "";
+            if (query == "")
+                sql = $@"SELECT * FROM {TableName}";
+            else
+                sql = $@"SELECT * FROM {TableName} {query}";
             result = (List<T>) await connection.QueryAsync<T>(sql);
         },
         $"Retrieving logs",
