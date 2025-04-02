@@ -62,7 +62,7 @@ class DataBaseManager<T>
             if (query == "")
                 sql = $@"SELECT * FROM {TableName} ORDER BY Id";
             else
-                sql = $@"SELECT * FROM {TableName} {query} ORDER BY Id";
+                sql = $@"SELECT * FROM {TableName} {query}";
             result = (List<T>) await connection.QueryAsync<T>(sql);
         },
         $"Retrieving logs",

@@ -67,7 +67,6 @@ class DisplayMenu
     public static Enums.ManageFlashCardsMenuOptions ManageFlashCardsMenu()
     {
         const string ViewAllCards = "View all cards";
-        const string ViewXCards = "View X amount of cards";
         const string CreateCard = "Create a card";
         const string EditCard = "Edit a card";
         const string DeleteCard = "Delete a card";
@@ -77,7 +76,7 @@ class DisplayMenu
                 .Title("[bold green] Select option[/]")
                 .MoreChoicesText("[grey](Move up and down to reveal more fruits)[/]")
                 .AddChoices([
-                    ViewAllCards, ViewXCards, CreateCard,
+                    ViewAllCards, CreateCard,
                     EditCard, DeleteCard, Back,
                 ])
         );
@@ -86,8 +85,6 @@ class DisplayMenu
         {
             case ViewAllCards:
                 return Enums.ManageFlashCardsMenuOptions.VIEWALLCARDS;
-            case ViewXCards:
-                return Enums.ManageFlashCardsMenuOptions.VIEWXCARDS;
             case CreateCard:
                 return Enums.ManageFlashCardsMenuOptions.CREATECARD;
             case EditCard:

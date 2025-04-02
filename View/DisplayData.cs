@@ -5,23 +5,6 @@ using Spectre.Console;
 class DisplayData
 {
 
-    public static void Table(List<Stack> dataSet, string title = "")
-    {
-        var table = new Table();
-
-        table.Title(title);
-        table.AddColumns(["Id", "Name"]);
-
-        if (dataSet != null)
-        {
-            foreach(Stack data in dataSet)
-            {
-                table.AddRow(data.Id.ToString(), data.Name);
-            }
-        }
-        AnsiConsole.Write(table);
-    }
-
     public static void Table(List<FlashcardDTO> dataSet, string title = "")
     {
         var table = new Table();
@@ -38,6 +21,23 @@ class DisplayData
             }
         }
         
+        AnsiConsole.Write(table);
+    }
+
+    public static void Table(List<Stack> dataSet, string title = "")
+    {
+        var table = new Table();
+
+        table.Title(title);
+        table.AddColumns([ "Name"]);
+
+        if (dataSet != null)
+        {
+            foreach(Stack data in dataSet)
+            {
+                table.AddRow(data.Name);
+            }
+        }
         AnsiConsole.Write(table);
     }
 

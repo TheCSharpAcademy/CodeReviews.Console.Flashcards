@@ -15,6 +15,7 @@ class ManageFlashCardsMenuController
         {
             Console.Clear();
             flashcards = await GetCards();
+            await ViewCards(10);
 
             exit = await HandleUserInput();
 
@@ -43,28 +44,12 @@ class ManageFlashCardsMenuController
 
     private static async Task ViewCards(int amount = -1)
     {
-        string query = "WHERE Stacks_Id = " + currentStack.Id;
-        if (amount != -1)
-            query += "ORDER BY Id OFFSET 0 ROWS FETCH FIRST " + amount + " ROWS ONLY";
-
-        List<Flashcard> flashCardSet = await DataBaseManager<Flashcard>.GetLogs(query);
-        List<FlashcardDTO> flashcardDTOs = [];
-
-        foreach (var card in flashCardSet)
-        {
-            flashcardDTOs.Add(new FlashcardDTO(card));
-        }
-        DisplayData.Table(flashcardDTOs, currentStack.Name);
+        DisplayData.Table(flashcards.Take(amount).ToList(), currentStack.Name);
     }
 
     private static async Task ViewAllCards()
     {
         await ViewCards();
-    }
-
-    private static async Task ViewXCards()
-    {
-        await ViewCards(GetInput.AmountOfCards());
     }
 
     private static async Task CreateCard()
@@ -112,9 +97,6 @@ class ManageFlashCardsMenuController
         {
             case Enums.ManageFlashCardsMenuOptions.VIEWALLCARDS:
                 await ViewAllCards();
-                break;
-            case Enums.ManageFlashCardsMenuOptions.VIEWXCARDS:
-                await ViewXCards();
                 break;
             case Enums.ManageFlashCardsMenuOptions.CREATECARD:
                 await CreateCard();
