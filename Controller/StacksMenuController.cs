@@ -1,43 +1,33 @@
 using System.Threading.Tasks;
 using Spectre.Console;
 
-class ManageStacksMenuController
+class StacksMenuController : MenuController
 {
-    public static async Task Start()
+    // Display all stacks to user
+    protected override async Task MainAsync()
     {
-        bool exit = false;
+        List<Stack> dataSet = await DataBaseManager<Stack>.GetLogs();
+        DisplayData.Table(dataSet);
+    }
 
-        while (!exit)
+    protected override async Task<bool> HandleMenuAsync()
+    {
+        Enums.ManageStacksMenuOptions userInput = DisplayMenu.StacksMenu();
+        switch (userInput)
         {
-            Console.Clear();
-            List<Stack> dataSet = await DataBaseManager<Stack>.GetLogs();
-            DisplayData.Table(dataSet);
-
-            Enums.ManageStacksMenuOptions userInput = DisplayMenu.ManageStacksMenu();
-
-            switch (userInput)
-            {
-                case Enums.ManageStacksMenuOptions.CREATESTACK:
-                    await CreateStack();
-                    break;
-                case Enums.ManageStacksMenuOptions.RENAMESTACK:
-                    await RenameStack();
-                    break;
-                case Enums.ManageStacksMenuOptions.DELETESTACK:
-                    await DeleteStack();
-                    break;
-                case Enums.ManageStacksMenuOptions.BACK:
-                    exit = true;
-                    break;
-            }
-
-            if (!exit)
-            {
-                AnsiConsole.Markup("[bold green]Press Enter to continue. [/]");
-                Console.Read();
-            }
+            case Enums.ManageStacksMenuOptions.CREATESTACK:
+                await CreateStack();
+                break;
+            case Enums.ManageStacksMenuOptions.RENAMESTACK:
+                await RenameStack();
+                break;
+            case Enums.ManageStacksMenuOptions.DELETESTACK:
+                await DeleteStack();
+                break;
+            case Enums.ManageStacksMenuOptions.BACK:
+                return true;
         }
-            
+        return false;
     }
 
     static async Task CreateStack()

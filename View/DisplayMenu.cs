@@ -34,7 +34,7 @@ class DisplayMenu
         return default;
     }
 
-    public static Enums.ManageStacksMenuOptions ManageStacksMenu()
+    public static Enums.ManageStacksMenuOptions StacksMenu()
     {
         const string CreateStack = "Create new stack";
         const string RenameStack = "Rename stack";
@@ -64,7 +64,7 @@ class DisplayMenu
         return default;
     }
 
-    public static Enums.ManageFlashCardsMenuOptions ManageFlashCardsMenu()
+    public static Enums.ManageFlashCardsMenuOptions FlashCardsMenu()
     {
         const string ViewAllCards = "View all cards";
         const string CreateCard = "Create a card";

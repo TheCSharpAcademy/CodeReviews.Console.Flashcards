@@ -1,31 +1,47 @@
 using System.Threading.Tasks;
 using Spectre.Console;
 
-class ManageFlashCardsMenuController
+class FlashCardsMenuController : MenuController
 {
     static Stack currentStack = default;
     static List<FlashcardDTO> flashcards = [];
-    public static async Task Start()
+
+    // Prompts user for stack to edit flashcards in
+    protected override async Task OnReady()
     {
-        bool exit = false;
         List<Stack> stackSet = await DataBaseManager<Stack>.GetLogs();
-        Console.Clear();
         currentStack = GetInput.Selection(stackSet);
-        while (!exit)
+        Console.Clear();
+    }
+
+    // Shows first 10 cards to user
+    protected override async Task MainAsync()
+    {
+        flashcards = await GetCards();
+        ViewCards(10);
+    }
+
+    protected override async Task<bool> HandleMenuAsync()
+    {
+        Enums.ManageFlashCardsMenuOptions userInput = DisplayMenu.FlashCardsMenu();
+        switch (userInput)
         {
-            Console.Clear();
-            flashcards = await GetCards();
-            await ViewCards(10);
-
-            exit = await HandleUserInput();
-
-            if (!exit)
-            {
-                AnsiConsole.Markup("[bold green]Press Enter to continue. [/]");
-                Console.Read();
-            }
-
+            case Enums.ManageFlashCardsMenuOptions.VIEWALLCARDS:
+                ViewAllCards();
+                break;
+            case Enums.ManageFlashCardsMenuOptions.CREATECARD:
+                await CreateCard();
+                break;
+            case Enums.ManageFlashCardsMenuOptions.EDITCARD:
+                await EditCard();
+                break;
+            case Enums.ManageFlashCardsMenuOptions.DELETECARD:
+                await DeleteCard();
+                break;
+            case Enums.ManageFlashCardsMenuOptions.BACK:
+                return true;
         }
+        return false;
     }
     
     private static async Task<List<FlashcardDTO>> GetCards()
@@ -42,14 +58,14 @@ class ManageFlashCardsMenuController
         return flashcards;
     }
 
-    private static async Task ViewCards(int amount = -1)
+    private static void ViewCards(int amount = -1)
     {
         DisplayData.Table(flashcards.Take(amount).ToList(), currentStack.Name);
     }
 
-    private static async Task ViewAllCards()
+    private static void ViewAllCards()
     {
-        await ViewCards();
+        ViewCards();
     }
 
     private static async Task CreateCard()
@@ -87,30 +103,5 @@ class ManageFlashCardsMenuController
             "Id in (SELECT Id FROM flash_cards WHERE Id > "+ flashcard.Id.ToString() + ")",
             ["Id = Id - 1"]
         );
-    }
-
-
-    private static async Task<bool> HandleUserInput()
-    {
-        Enums.ManageFlashCardsMenuOptions userInput = DisplayMenu.ManageFlashCardsMenu();
-        switch (userInput)
-        {
-            case Enums.ManageFlashCardsMenuOptions.VIEWALLCARDS:
-                await ViewAllCards();
-                break;
-            case Enums.ManageFlashCardsMenuOptions.CREATECARD:
-                await CreateCard();
-                break;
-            case Enums.ManageFlashCardsMenuOptions.EDITCARD:
-                await EditCard();
-                break;
-            case Enums.ManageFlashCardsMenuOptions.DELETECARD:
-                await DeleteCard();
-                break;
-            case Enums.ManageFlashCardsMenuOptions.BACK:
-                return true;
-        }
-
-        return false;
     }
 }

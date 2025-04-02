@@ -3,10 +3,10 @@ namespace Flashcards;
 
 class Program
 {
-    static readonly int ERRORCODETABLEEXISTS = -2146232060;
     static async Task Main(string[] args)
     {
-        await MainMenuController.Start();
+        MainMenuController mainMenuController = new();
+        await mainMenuController.StartAsync();
 
         // await MainMenuController.BuildTables();
         // Console.Clear();

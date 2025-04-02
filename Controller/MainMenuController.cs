@@ -1,30 +1,43 @@
 using Spectre.Console;
 
 
-class MainMenuController
+class MainMenuController : MenuController
 {
-    public static async Task Start()
+    protected override async Task MainAsync()
     {
-        bool exit = false;
-        while (!exit)
+        AnsiConsole.Write(
+            new FigletText("Flashcards Program")
+                .Centered()
+                .Color(Color.Blue)
+        );
+        await BuildTables();
+    }
+
+    protected override async Task<bool> HandleMenuAsync()
+    {
+        Enums.MainMenuOptions userInput = DisplayMenu.MainMenu();
+        switch (userInput)
         {
-            Console.Clear();
-
-            AnsiConsole.Write(
-                new FigletText("Flashcards Program")
-                    .Centered()
-                    .Color(Color.Blue)
-            );
-            await BuildTables();
-
-            exit = await HandleUserInput();
-
-            if (!exit)
-            {
-                AnsiConsole.Markup("[bold green]Press Enter to continue. [/]");
-                Console.Read();
-            }
+            case Enums.MainMenuOptions.MANAGESTACKS:
+                StacksMenuController stacksMenuController = new();
+                await stacksMenuController.StartAsync();
+                break;
+            case Enums.MainMenuOptions.MANAGEFLASHCARDS:
+                FlashCardsMenuController flashCardsMenuController = new();
+                await flashCardsMenuController.StartAsync();
+                break;
+            case Enums.MainMenuOptions.STUDY:
+                break;
+            case Enums.MainMenuOptions.EXIT:
+                Console.Clear();
+                AnsiConsole.Write(
+                    new FigletText("Goodbye! \n:)")
+                        .Centered()
+                        .Color(Color.Red)
+                );
+                return true;
         }
+        return false;
     }
     public static async Task BuildTables() // public just for debug purposes
     {
@@ -44,30 +57,5 @@ class MainMenuController
             "Front TEXT",
             "Back TEXT"
         ]);
-    }
-
-    private static async Task<bool> HandleUserInput()
-    {
-        Enums.MainMenuOptions userInput = DisplayMenu.MainMenu();
-        switch (userInput)
-        {
-            case Enums.MainMenuOptions.MANAGESTACKS:
-                await ManageStacksMenuController.Start();
-                break;
-            case Enums.MainMenuOptions.MANAGEFLASHCARDS:
-                await ManageFlashCardsMenuController.Start();
-                break;
-            case Enums.MainMenuOptions.STUDY:
-                break;
-            case Enums.MainMenuOptions.EXIT:
-                Console.Clear();
-                AnsiConsole.Write(
-                    new FigletText("Goodbye! \n:)")
-                        .Centered()
-                        .Color(Color.Red)
-                );
-                return true;
-        }
-        return false;
     }
 }
