@@ -58,7 +58,7 @@ class FlashCardsMenuController : MenuController
         return flashcards;
     }
 
-    private static void ViewCards(int amount = -1)
+    private static void ViewCards(int amount = 100)
     {
         DisplayData.Table(flashcards.Take(amount).ToList(), currentStack.Name);
     }

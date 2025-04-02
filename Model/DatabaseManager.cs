@@ -59,10 +59,7 @@ class DataBaseManager<T>
         List<T> result = [];
         await HandleDatabaseOperation(async (connection) => {
             string sql = "";
-            if (query == "")
-                sql = $@"SELECT * FROM {TableName} ORDER BY Id";
-            else
-                sql = $@"SELECT * FROM {TableName} {query}";
+            sql = $@"SELECT * FROM {TableName} {query} ORDER BY Id";
             result = (List<T>) await connection.QueryAsync<T>(sql);
         },
         $"Retrieving logs",
