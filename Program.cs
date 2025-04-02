@@ -6,12 +6,11 @@ class Program
     static readonly int ERRORCODETABLEEXISTS = -2146232060;
     static async Task Main(string[] args)
     {
-        await MainMenuController.Start();
-        // await MainMenuController.BuildTables();
-        // Console.Clear();
-        // List<Stack> stackSet = await DataBaseManager<Stack>.GetLogs();
-        // ManageFlashCardsMenuController.currentStack = GetInput.Selection(stackSet);
+        // await MainMenuController.Start();
 
-        // await ManageFlashCardsMenuController.ViewCardsAsync();
+        await MainMenuController.BuildTables();
+        Console.Clear();
+
+        await ManageFlashCardsMenuController.Start();
     }
 }

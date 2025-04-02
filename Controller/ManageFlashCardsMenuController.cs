@@ -4,6 +4,7 @@ using Spectre.Console;
 class ManageFlashCardsMenuController
 {
     static Stack currentStack = default;
+    static LinkedList<FlashcardDTO> flashcards = [];
     public static async Task Start()
     {
         bool exit = false;
@@ -11,6 +12,7 @@ class ManageFlashCardsMenuController
         Console.Clear();
         List<Stack> stackSet = await DataBaseManager<Stack>.GetLogs();
         currentStack = GetInput.Selection(stackSet);
+        flashcards = await GetCardsAsLinkedList();
         while (!exit)
         {
             Console.Clear();
@@ -25,20 +27,32 @@ class ManageFlashCardsMenuController
 
         }
     }
-
-    private static async Task ViewCardsAsync(int amount = -1)
+    
+    private static async Task<LinkedList<FlashcardDTO>> GetCardsAsLinkedList()
     {
+        LinkedList<FlashcardDTO> flashcards = [];
         string query = "WHERE Stacks_Id = " + currentStack.Id;
-        if (amount != -1)
-            query += "ORDER BY Id DESC OFFSET 0 ROWS FETCH FIRST " + amount + " ROWS ONLY";
-
         List<Flashcard> flashCardSet = await DataBaseManager<Flashcard>.GetLogs(query);
-        List<FlashcardDTO> flashcardDTOs = [];
 
         foreach (var card in flashCardSet)
         {
-            flashcardDTOs.Add(new FlashcardDTO(card));
+            flashcards.AddLast(new FlashcardDTO(card));
         }
+
+        return flashcards;
+    }
+
+    private static void ViewCards(int amount = 100)
+    {
+        List<FlashcardDTO> flashcardDTOs = [];
+
+        for (LinkedListNode<FlashcardDTO> current = flashcards.First;
+            current.Next != null && (current.Value.Id < amount);
+            current = current.Next)
+        {
+            flashcardDTOs.Add(current.Value);
+        }
+
         DisplayData.Table(flashcardDTOs, currentStack.Name);
     }
 
@@ -65,10 +79,10 @@ class ManageFlashCardsMenuController
         switch (userInput)
         {
             case Enums.ManageFlashCardsMenuOptions.VIEWALLCARDS:
-                await ViewCardsAsync();
+                ViewCards();
                 break;
             case Enums.ManageFlashCardsMenuOptions.VIEWXCARDS:
-                await ViewCardsAsync(10);
+                ViewCards(10);
                 break;
             case Enums.ManageFlashCardsMenuOptions.CREATECARD:
                 await CreateCard();
