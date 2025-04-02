@@ -36,6 +36,8 @@ class DataBaseManager<T>
         );
     }
 
+    // For flash cards: Stack_Id, Id, Front, Back
+    // For stacks: Id, Name
     public static async Task InsertLog(List<string> valuesList)
     {
         await HandleDatabaseOperation(async (connection) => {

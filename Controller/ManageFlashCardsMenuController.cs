@@ -12,9 +12,9 @@ class ManageFlashCardsMenuController
         Console.Clear();
         List<Stack> stackSet = await DataBaseManager<Stack>.GetLogs();
         currentStack = GetInput.Selection(stackSet);
-        flashcards = await GetCardsAsLinkedList();
         while (!exit)
         {
+            flashcards = await GetCardsAsLinkedList();
             Console.Clear();
 
             exit = await HandleUserInput();
@@ -46,20 +46,27 @@ class ManageFlashCardsMenuController
     {
         List<FlashcardDTO> flashcardDTOs = [];
 
-        for (LinkedListNode<FlashcardDTO> current = flashcards.First;
-            current.Next != null && (current.Value.Id < amount);
-            current = current.Next)
-        {
-            flashcardDTOs.Add(current.Value);
-        }
+        if (flashcards.Count != 0)
+            for (LinkedListNode<FlashcardDTO> current = flashcards.First;
+                current != null && (current.Value.Id < amount);
+                current = current.Next)
+            {
+                flashcardDTOs.Add(current.Value);
+            }
 
         DisplayData.Table(flashcardDTOs, currentStack.Name);
     }
 
     private static async Task CreateCard()
-    {
-        throw new NotImplementedException();
-        //await DataBaseManager<Flashcard>.InsertLog();
+    {        
+        GetInput.FlashcardSides(out string front, out string back);
+        
+        await DataBaseManager<Flashcard>.InsertLog([
+            currentStack.Id.ToString(),
+            (flashcards.Count + 1).ToString(),
+            "'" + front + "'",
+            "'" + back + "'"
+        ]);
     }
 
     private static void EditCard()

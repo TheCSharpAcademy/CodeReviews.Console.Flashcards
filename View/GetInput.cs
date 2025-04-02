@@ -38,4 +38,10 @@ class GetInput
     {
         return AnsiConsole.Prompt(new TextPrompt<string>("[bold green]New name for Stack: [/]"));
     }
+
+    public static void FlashcardSides(out string front, out string back)
+    {
+        front = AnsiConsole.Prompt(new TextPrompt<string>("[bold green]Front of card: [/]"));
+        back = AnsiConsole.Prompt(new TextPrompt<string>("[bold green]Back of card: [/]"));
+    }
 }
