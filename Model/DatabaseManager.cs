@@ -83,7 +83,7 @@ class DataBaseManager<T>
             await command.ExecuteNonQueryAsync();
         },
         $"Updating logs",
-        $"[bold green]{TableName} has been updated[/]"
+        $"[bold green]Table has been updated[/]"
         );
     }
 
@@ -117,12 +117,12 @@ class DataBaseManager<T>
                     await method(connection);
                 });
             
-            AnsiConsole.MarkupLine(workedMessage);
+            AnsiConsole.MarkupLine($"[bold grey]{TableName}:[/]" + workedMessage);
         }
         catch (SqlException e) 
         { 
             if (ErrorCodes.DBCodes.TryGetValue(e.Number, out string message))
-                AnsiConsole.MarkupLine($"[bold grey]{TableName}:[/] {message}");
+                AnsiConsole.MarkupLine($"[bold grey]{TableName}:[/]" + message);
             else
                 Console.WriteLine(e);
         }

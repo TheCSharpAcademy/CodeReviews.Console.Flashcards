@@ -52,11 +52,15 @@ class ManageStacksMenuController
     static async Task RenameStack()
     {
         AnsiConsole.MarkupLine("[bold gray]Renameing stack[/]");
+
+        // User selects stack
         List<Stack> dataSet = await DataBaseManager<Stack>.GetLogs();
         Stack userStack = GetInput.Selection(dataSet);
 
+        // User inputs new name
         string newName = GetInput.StackName();
 
+        // Update stack
         await DataBaseManager<Stack>.UpdateLog(
             "Id = " + userStack.Id.ToString(), 
             [
@@ -66,9 +70,19 @@ class ManageStacksMenuController
     static async Task DeleteStack()
     {
         AnsiConsole.MarkupLine("[bold gray]Deleting stack[/]");
+
+        // User selects stack
         List<Stack> dataSet = await DataBaseManager<Stack>.GetLogs();
         Stack userStack = GetInput.Selection(dataSet);
 
+        // Deleting flash cards
+        List<Flashcard> flashcards = await DataBaseManager<Flashcard>.GetLogs();
+        foreach (var card in flashcards)
+        {
+            await DataBaseManager<Flashcard>.DeleteLog(card.Id);
+        }
+
+        // Deleting now empty stack
         await DataBaseManager<Stack>.DeleteLog(userStack.Id);
     }
 }
