@@ -36,7 +36,7 @@ class StacksMenuController : MenuController
 
         await DataBaseManager<Stack>.InsertLog( 
         [
-            "'" + name + "'"
+            $" '{name}' "
         ]);
     }
     static async Task RenameStack()
@@ -54,7 +54,7 @@ class StacksMenuController : MenuController
         await DataBaseManager<Stack>.UpdateLog(
             "Id = " + userStack.Id.ToString(), 
             [
-                "Name = '" + newName + "'"
+                $"Name = '{newName}'"
             ]);
     }
     static async Task DeleteStack()

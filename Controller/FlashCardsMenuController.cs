@@ -47,7 +47,7 @@ class FlashCardsMenuController : MenuController
     private static async Task<List<FlashcardDTO>> GetCards()
     {
         List<FlashcardDTO> flashcards = [];
-        string query = "WHERE Stacks_Id = " + currentStack.Id;
+        string query = "Stacks_Id = " + currentStack.Id;
         List<Flashcard> flashCardSet = await DataBaseManager<Flashcard>.GetLogs(query);
 
         foreach (var card in flashCardSet)
@@ -75,8 +75,8 @@ class FlashCardsMenuController : MenuController
         await DataBaseManager<Flashcard>.InsertLog([
             currentStack.Id.ToString(),
             (flashcards.Count + 1).ToString(),
-            "'" + front + "'",
-            "'" + back + "'"
+            $" '{front}' ",
+            $" '{back}' "
         ]);
     }
 
@@ -88,8 +88,8 @@ class FlashCardsMenuController : MenuController
         await DataBaseManager<Flashcard>.UpdateLog(
             "Id = " + flashcard.Id.ToString(),
             [
-                "Front = '" + front + "'",
-                "Back = '" + back + "'",
+                $"Front = '{front}'",
+                $"Back = '{back}'"
             ]
         );
     }

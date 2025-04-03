@@ -13,7 +13,7 @@ class GetInput
             prompt.AddChoice(data);
         }
 
-        prompt.Converter = data => $"{data.Id} {data.Name}";
+        prompt.Converter = data => $"{data.Name}";
 
         return AnsiConsole.Prompt(prompt);
     }

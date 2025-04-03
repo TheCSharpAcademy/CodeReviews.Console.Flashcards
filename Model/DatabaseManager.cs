@@ -42,9 +42,7 @@ class DataBaseManager<T>
     {
         await HandleDatabaseOperation(async (connection) => {
             string values = string.Join(",", valuesList);
-            var sql = 
-            $@"INSERT INTO {TableName}
-            VALUES ({values})";
+            var sql = "INSERT INTO " + TableName + " VALUES ("+ values +")";
 
             await using var command = new SqlCommand(sql, connection);
             await command.ExecuteNonQueryAsync();
@@ -57,9 +55,10 @@ class DataBaseManager<T>
     public static async Task<List<T>> GetLogs(string query = "")
     {
         List<T> result = [];
+        if (query != "")
+            query = " WHERE " + query;
         await HandleDatabaseOperation(async (connection) => {
-            string sql = "";
-            sql = $@"SELECT * FROM {TableName} {query} ORDER BY Id";
+            string sql = "SELECT * FROM " + TableName + query +" ORDER BY Id";
             result = (List<T>) await connection.QueryAsync<T>(sql);
         },
         $"Retrieving logs",
@@ -74,7 +73,6 @@ class DataBaseManager<T>
         await HandleDatabaseOperation(async (connection) => {
             string values = string.Join(",", valuesList);
             var sql = $@"UPDATE {TableName} SET {values} WHERE {query}";
-
 
             await using var command = new SqlCommand(sql, connection);
             await command.ExecuteNonQueryAsync();
