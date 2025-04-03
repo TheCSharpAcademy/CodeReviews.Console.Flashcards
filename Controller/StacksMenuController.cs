@@ -3,11 +3,14 @@ using Spectre.Console;
 
 class StacksMenuController : MenuController
 {
-    // Display all stacks to user
+
+    static List<Stack> stacks = [];
+
+    // Get all stacks and display all stacks to user
     protected override async Task MainAsync()
     {
-        List<Stack> dataSet = await DataBaseManager<Stack>.GetLogs();
-        DisplayData.Table(dataSet);
+        stacks = await DataBaseManager<Stack>.GetLogs();
+        DisplayData.Table(stacks);
     }
 
     protected override async Task<bool> HandleMenuAsync()
@@ -32,7 +35,7 @@ class StacksMenuController : MenuController
 
     static async Task CreateStack()
     {
-        string name = GetInput.StackName();
+        string name = GetInput.StackName(stacks);
 
         await DataBaseManager<Stack>.InsertLog( 
         [
@@ -44,11 +47,10 @@ class StacksMenuController : MenuController
         AnsiConsole.MarkupLine("[bold gray]Renameing stack[/]");
 
         // User selects stack
-        List<Stack> dataSet = await DataBaseManager<Stack>.GetLogs();
-        Stack userStack = GetInput.Selection(dataSet);
+        Stack userStack = GetInput.Selection(stacks);
 
         // User inputs new name
-        string newName = GetInput.StackName();
+        string newName = GetInput.StackName(stacks);
 
         // Update stack
         await DataBaseManager<Stack>.UpdateLog(
@@ -62,8 +64,7 @@ class StacksMenuController : MenuController
         AnsiConsole.MarkupLine("[bold gray]Deleting stack[/]");
 
         // User selects stack
-        List<Stack> dataSet = await DataBaseManager<Stack>.GetLogs();
-        Stack userStack = GetInput.Selection(dataSet);
+        Stack userStack = GetInput.Selection(stacks);
 
         // Deleting flash cards
         List<Flashcard> flashcards = await DataBaseManager<Flashcard>.GetLogs();

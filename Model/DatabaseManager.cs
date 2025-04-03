@@ -24,10 +24,10 @@ class DataBaseManager<T>
 
     public static async Task BuildTable(List<string> optionsList)
     {
+        string optionsString = string.Join(",", optionsList);
+        var sql = $@"CREATE TABLE {TableName}({optionsString})";
+
         await HandleDatabaseOperation(async (connection) => {
-            string optionsString = string.Join(",", optionsList);
-            var sql = $@"CREATE TABLE {TableName}({optionsString})";
-            
             await using var command = new SqlCommand(sql, connection);
             await command.ExecuteNonQueryAsync();
         }, 
@@ -40,10 +40,10 @@ class DataBaseManager<T>
     // For stacks: Id, Name
     public static async Task InsertLog(List<string> valuesList)
     {
-        await HandleDatabaseOperation(async (connection) => {
-            string values = string.Join(",", valuesList);
-            var sql = "INSERT INTO " + TableName + " VALUES ("+ values +")";
+        string values = string.Join(",", valuesList);
+        var sql = "INSERT INTO " + TableName + " VALUES ("+ values +")";
 
+        await HandleDatabaseOperation(async (connection) => {
             await using var command = new SqlCommand(sql, connection);
             await command.ExecuteNonQueryAsync();
         }, 
@@ -57,8 +57,9 @@ class DataBaseManager<T>
         List<T> result = [];
         if (query != "")
             query = " WHERE " + query;
+        string sql = "SELECT * FROM " + TableName + query +" ORDER BY Id";
+        
         await HandleDatabaseOperation(async (connection) => {
-            string sql = "SELECT * FROM " + TableName + query +" ORDER BY Id";
             result = (List<T>) await connection.QueryAsync<T>(sql);
         },
         $"Retrieving logs",
@@ -70,10 +71,10 @@ class DataBaseManager<T>
 
     public static async Task UpdateLog(string query, List<string> valuesList)
     {
-        await HandleDatabaseOperation(async (connection) => {
-            string values = string.Join(",", valuesList);
-            var sql = $@"UPDATE {TableName} SET {values} WHERE {query}";
+        string values = string.Join(",", valuesList);
+        var sql = $@"UPDATE {TableName} SET {values} WHERE {query}";
 
+        await HandleDatabaseOperation(async (connection) => {
             await using var command = new SqlCommand(sql, connection);
             await command.ExecuteNonQueryAsync();
         },
@@ -84,9 +85,9 @@ class DataBaseManager<T>
 
     public static async Task DeleteLog(int id)
     {
+        var sql = $@"DELETE FROM {TableName} WHERE Id = {id}";
+        
         await HandleDatabaseOperation(async (connection) => {
-            var sql = $@"DELETE FROM {TableName} WHERE Id = {id}";
-
             await using var command = new SqlCommand(sql, connection);
             await command.ExecuteNonQueryAsync();
         },

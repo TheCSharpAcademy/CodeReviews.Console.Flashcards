@@ -34,9 +34,17 @@ class GetInput
 
         return AnsiConsole.Prompt(prompt);
     }
-    public static string StackName()
+    public static string StackName(List<Stack> stacks)
     {
-        return AnsiConsole.Prompt(new TextPrompt<string>("[bold green]New name for Stack: [/]"));
+        return AnsiConsole.Prompt(
+            new TextPrompt<string>("[bold green]New name for Stack: [/]")
+                .Validate(name => {
+                    foreach (Stack stack in stacks)
+                        if (stack.Name == name)
+                            return ValidationResult.Error("[bold red]Must be unique name[/]");
+                    return ValidationResult.Success();
+                })
+        );
     }
 
     public static void FlashcardSides(out string front, out string back, 

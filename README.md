@@ -1,6 +1,6 @@
 # Requirements
-- [ ] This is an application where the users will create Stacks of Flashcards.
-- [ ] You'll need two different tables for stacks and flashcards. The tables should be linked by a foreign key.
+- [x] This is an application where the users will create Stacks of Flashcards.
+- [x] You'll need two different tables for stacks and flashcards. The tables should be linked by a foreign key.
 - [ ] Stacks should have an unique name.
 - [ ] Every flashcard needs to be part of a stack. If a stack is deleted, the same should happen with the flashcard.
 - [ ] You should use DTOs to show the flashcards to the user without the Id of the stack it belongs to.
