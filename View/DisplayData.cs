@@ -41,5 +41,9 @@ class DisplayData
         AnsiConsole.Write(table);
     }
 
-    
+    public static void CardForStudy(FlashcardDTO flashcard)
+    {
+        Panel panel = new(flashcard.Front);
+        AnsiConsole.Write(panel);
+    }
 }

@@ -39,7 +39,7 @@ class StacksMenuController : MenuController
 
         await DataBaseManager<Stack>.InsertLog( 
         [
-            $" '{name}' "
+            name
         ]);
     }
     static async Task RenameStack()

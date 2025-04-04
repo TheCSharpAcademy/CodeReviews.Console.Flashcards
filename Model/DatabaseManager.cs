@@ -38,10 +38,12 @@ class DataBaseManager<T>
 
     // For flash cards: Stack_Id, Id, Front, Back
     // For stacks: Id, Name
-    public static async Task InsertLog(List<string> valuesList)
+    public static async Task InsertLog(params object[] valuesInput)
     {
-        string values = string.Join(",", valuesList);
-        var sql = "INSERT INTO " + TableName + " VALUES ("+ values +")";
+        List<string> parsedValuesList = ParseValues(valuesInput);
+        string valuesString = string.Join(",", parsedValuesList);
+
+        var sql = "INSERT INTO " + TableName + " VALUES ("+ valuesString +")";
 
         await HandleDatabaseOperation(async (connection) => {
             await using var command = new SqlCommand(sql, connection);
@@ -50,6 +52,25 @@ class DataBaseManager<T>
         $"Inserting log",
         $"[bold green]New log added to {TableName}[/]"
         );
+    }
+
+    static List<string> ParseValues(params object[] valuesInput)
+    {
+        List<string> parsedValuesList = [];
+        foreach (var value in valuesInput)
+        {
+            switch (value)
+            {
+                case int Int:
+                    parsedValuesList.Add(Int.ToString());
+                    break;
+                case string Str:
+                    parsedValuesList.Add("'" + Str + "'");
+                    break;
+            }
+        }
+
+        return parsedValuesList;
     }
 
     public static async Task<List<T>> GetLogs(string query = "")

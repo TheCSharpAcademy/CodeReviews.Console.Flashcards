@@ -34,6 +34,7 @@ class GetInput
 
         return AnsiConsole.Prompt(prompt);
     }
+    
     public static string StackName(List<Stack> stacks)
     {
         return AnsiConsole.Prompt(
@@ -72,5 +73,17 @@ class GetInput
                 return ValidationResult.Success();
             }));
         return number;
+    }
+
+    public static bool? StudyAnswer(string answer)
+    {
+        string userInput = AnsiConsole.Prompt(
+            new TextPrompt<string>("Input your answer or press Enter to exit")
+                .AllowEmpty()
+        );
+
+        if (userInput == "")
+            return null;
+        return userInput.Equals(answer);
     }
 }

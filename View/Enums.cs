@@ -3,7 +3,7 @@ class Enums
 {
     public enum MainMenuOptions
     {
-        MANAGESTACKS, MANAGEFLASHCARDS, STUDY, VIEWSESSIONDATA, EXIT
+        MANAGESTACKS, MANAGEFLASHCARDS, STUDY, VIEWSTUDYDATA, EXIT
     }
 
     public enum ManageStacksMenuOptions

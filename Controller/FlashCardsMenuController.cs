@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-using Spectre.Console;
 
 class FlashCardsMenuController : MenuController
 {
@@ -73,10 +71,10 @@ class FlashCardsMenuController : MenuController
         GetInput.FlashcardSides(out string front, out string back);
         
         await DataBaseManager<Flashcard>.InsertLog([
-            currentStack.Id.ToString(),
-            (flashcards.Count + 1).ToString(),
-            $" '{front}' ",
-            $" '{back}' "
+            currentStack.Id,
+            (flashcards.Count + 1),
+            front,
+            back
         ]);
     }
 

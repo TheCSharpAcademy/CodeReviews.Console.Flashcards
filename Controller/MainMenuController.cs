@@ -27,6 +27,10 @@ class MainMenuController : MenuController
                 await flashCardsMenuController.StartAsync();
                 break;
             case Enums.MainMenuOptions.STUDY:
+                StudyController studyController = new();
+                await studyController.Start();
+                break;
+            case Enums.MainMenuOptions.VIEWSTUDYDATA:
                 break;
             case Enums.MainMenuOptions.EXIT:
                 Console.Clear();
@@ -56,6 +60,14 @@ class MainMenuController : MenuController
             "Id INTEGER",
             "Front TEXT",
             "Back TEXT"
+        ]);
+
+        DataBaseManager<StudySession>.Start("study_sessions");
+        await DataBaseManager<StudySession>.BuildTable([
+            "Stacks_Id INTEGER NOT NULL",
+            "FOREIGN KEY (Stacks_Id) REFERENCES stacks (Id)",
+            "Date TEXT",
+            "Score INTEGER"
         ]);
     }
 }

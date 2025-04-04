@@ -2,12 +2,13 @@ using Spectre.Console;
 
 class DisplayMenu
 {
-
+    
     public static Enums.MainMenuOptions MainMenu()
     {
         const string ManageStacks = "Manage stacks";
         const string ManageFlashCards = "Manage flash cards";
         const string Study = "Study";
+        const string ViewStudyData = "View Study Data";
         const string Exit = "Exit";
 
         string userInput = AnsiConsole.Prompt(
@@ -16,7 +17,7 @@ class DisplayMenu
                 .MoreChoicesText("[grey](Move up and down to reveal more fruits)[/]")
                 .AddChoices([
                     ManageStacks, ManageFlashCards, Study,
-                    Exit,
+                    ViewStudyData, Exit,
                 ])
         );
 
@@ -28,6 +29,8 @@ class DisplayMenu
                 return Enums.MainMenuOptions.MANAGEFLASHCARDS;
             case Study:
                 return Enums.MainMenuOptions.STUDY;
+            case ViewStudyData:
+                return Enums.MainMenuOptions.VIEWSTUDYDATA;
             case Exit:
                 return Enums.MainMenuOptions.EXIT;
         }

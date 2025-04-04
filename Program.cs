@@ -7,10 +7,5 @@ class Program
     {
         MainMenuController mainMenuController = new();
         await mainMenuController.StartAsync();
-
-        // await MainMenuController.BuildTables();
-        // Console.Clear();
-
-        // await ManageFlashCardsMenuController.Start();
     }
 }
