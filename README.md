@@ -1,4 +1,3 @@
-# This is an application where the users will create Stacks of Flashcards.
 
 - [x] You'll need two different tables for stacks and flashcards. The tables
 should be linked by a foreign key.
