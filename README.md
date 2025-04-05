@@ -1,4 +1,4 @@
-
+# Requirements
 - [x] You'll need two different tables for stacks and flashcards. The tables
 should be linked by a foreign key.
 - [x] Stacks should have an unique name.
