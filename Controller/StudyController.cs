@@ -10,7 +10,7 @@ class StudyController
     public async Task StartAsync()
     {
         stack = await SetStack();
-        List<FlashcardDTO> flashcards = await GetFlashCards(stack);
+        List<FlashcardDTO> flashcards = await GetFlashCards();
         int? score = 0;
 
         Console.Clear();
@@ -51,7 +51,7 @@ class StudyController
         return GetInput.Selection(stackSet);
     }
 
-    async Task<List<FlashcardDTO>> GetFlashCards(Stack currentStack)
+    async Task<List<FlashcardDTO>> GetFlashCards()
     {
         List<Flashcard> flashCardSet = await flashcardsDatabaseManager.GetLogs(stack);
         List<FlashcardDTO> flashcards = [];

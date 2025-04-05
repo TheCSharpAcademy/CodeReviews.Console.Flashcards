@@ -42,6 +42,8 @@ abstract class DataBaseManager
         );
     }
 
+    // Technically useless now since funcs are now virtual instead of 
+    // abstract, but may be needed for potential future implementations
     protected static T? ValidateDataType<T>(Data data)
     {
         switch (data)

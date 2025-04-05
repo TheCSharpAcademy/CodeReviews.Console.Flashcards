@@ -3,7 +3,7 @@ namespace Flashcards;
 
 class Program
 {
-    static async Task Main(string[] args)
+    static async Task Main()
     {
         MainMenuController mainMenuController = new();
         await mainMenuController.StartAsync();

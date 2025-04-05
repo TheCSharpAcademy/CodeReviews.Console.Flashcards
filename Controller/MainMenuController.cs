@@ -5,13 +5,14 @@ class MainMenuController : MenuController
 {
     protected override async Task MainAsync()
     {
-        DataBaseManager.Start();
         AnsiConsole.Write(
             new FigletText("Flashcards Program")
                 .Centered()
                 .Color(Color.Blue)
         );
-        await BuildTables();
+
+        DataBaseManager.Start(); // Connects to sql server
+        await BuildTables(); // 
     }
 
     protected override async Task<bool> HandleMenuAsync()
