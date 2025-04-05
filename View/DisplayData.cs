@@ -5,7 +5,7 @@ using Spectre.Console;
 class DisplayData
 {
 
-    public static void Table(List<FlashcardDTO> dataSet, string title = "")
+    public static void Table(List<FlashcardDto> dataSet, string title = "")
     {
         var table = new Table();
 
@@ -15,7 +15,7 @@ class DisplayData
 
         if (dataSet != null)
         {
-            foreach(FlashcardDTO data in dataSet)
+            foreach(FlashcardDto data in dataSet)
             {
                 table.AddRow(data.Id.ToString(), data.Front, data.Back);
             }
@@ -58,7 +58,7 @@ class DisplayData
         AnsiConsole.Write(table);
     }
 
-    public static void CardForStudy(FlashcardDTO flashcard)
+    public static void CardForStudy(FlashcardDto flashcard)
     {
         Panel panel = new(flashcard.Front);
         AnsiConsole.Write(panel);

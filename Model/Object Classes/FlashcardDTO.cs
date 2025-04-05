@@ -1,5 +1,5 @@
 
-class FlashcardDTO(Flashcard flashcard)
+class FlashcardDto(Flashcard flashcard)
 {
     public int Id { get; } = flashcard.Id;
     public string Front { get; } = flashcard.Front;

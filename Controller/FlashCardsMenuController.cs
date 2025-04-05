@@ -4,7 +4,7 @@ class FlashCardsMenuController : MenuController
     static StacksDatabaseManager stacksDatabaseManager = new();
     static FlashcardsDatabaseManager flashcardsDatabaseManager = new();
     static Stack currentStack = default;
-    static List<FlashcardDTO> flashcards = [];
+    static List<FlashcardDto> flashcards = [];
 
     // Prompts user for stack to edit flashcards in
     protected override async Task OnReady()
@@ -44,14 +44,14 @@ class FlashCardsMenuController : MenuController
         return false;
     }
     
-    private static async Task<List<FlashcardDTO>> GetCards()
+    private static async Task<List<FlashcardDto>> GetCards()
     {
-        List<FlashcardDTO> flashcards = [];
+        List<FlashcardDto> flashcards = [];
         List<Flashcard> flashCardSet = await flashcardsDatabaseManager.GetLogs(currentStack);
 
         foreach (var card in flashCardSet)
         {
-            flashcards.Add(new FlashcardDTO(card));
+            flashcards.Add(new FlashcardDto(card));
         }
 
         return flashcards;
@@ -81,7 +81,7 @@ class FlashCardsMenuController : MenuController
 
     private static async Task EditCard()
     {
-        FlashcardDTO flashcard = GetInput.Selection(flashcards);
+        FlashcardDto flashcard = GetInput.Selection(flashcards);
         GetInput.FlashcardSides(out string front, out string back, flashcard.Front, flashcard.Back);
 
         await flashcardsDatabaseManager.UpdateLog(new Flashcard(
@@ -94,7 +94,7 @@ class FlashCardsMenuController : MenuController
 
     private static async Task DeleteCard()
     {
-        FlashcardDTO flashcard = GetInput.Selection(flashcards);
+        FlashcardDto flashcard = GetInput.Selection(flashcards);
 
         await flashcardsDatabaseManager.DeleteLog(flashcard.Id);
         await flashcardsDatabaseManager.UpdateIds(flashcard.Id);

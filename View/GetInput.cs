@@ -18,9 +18,9 @@ class GetInput
         return AnsiConsole.Prompt(prompt);
     }
 
-    public static FlashcardDTO Selection(List<FlashcardDTO> dataSet)
+    public static FlashcardDto Selection(List<FlashcardDto> dataSet)
     {
-        var prompt = new SelectionPrompt<FlashcardDTO>()
+        var prompt = new SelectionPrompt<FlashcardDto>()
             .Title("[bold green]Select[/]")
             .PageSize(10)
             .MoreChoicesText("[grey](Move up and down to reveal more data)[/]");

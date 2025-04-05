@@ -10,7 +10,7 @@ class StudyController
     public async Task StartAsync()
     {
         stack = await SetStack();
-        List<FlashcardDTO> flashcards = await GetFlashCards();
+        List<FlashcardDto> flashcards = await GetFlashCards();
         int? score = 0;
 
         Console.Clear();
@@ -51,18 +51,18 @@ class StudyController
         return GetInput.Selection(stackSet);
     }
 
-    async Task<List<FlashcardDTO>> GetFlashCards()
+    async Task<List<FlashcardDto>> GetFlashCards()
     {
         List<Flashcard> flashCardSet = await flashcardsDatabaseManager.GetLogs(stack);
-        List<FlashcardDTO> flashcards = [];
+        List<FlashcardDto> flashcards = [];
         foreach (var card in flashCardSet)
-            flashcards.Add(new FlashcardDTO(card));
+            flashcards.Add(new FlashcardDto(card));
         
         return flashcards;
     }
 
     // Shuffle function i found on the internet
-    void Shuffle(List<FlashcardDTO> list)
+    void Shuffle(List<FlashcardDto> list)
     {
         Random rng = new();
         int n = list.Count;  
