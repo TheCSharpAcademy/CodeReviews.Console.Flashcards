@@ -5,6 +5,7 @@ class MainMenuController : MenuController
 {
     protected override async Task MainAsync()
     {
+        DataBaseManager.Start();
         AnsiConsole.Write(
             new FigletText("Flashcards Program")
                 .Centered()
@@ -28,9 +29,11 @@ class MainMenuController : MenuController
                 break;
             case Enums.MainMenuOptions.STUDY:
                 StudyController studyController = new();
-                await studyController.Start();
+                await studyController.StartAsync();
                 break;
             case Enums.MainMenuOptions.VIEWSTUDYDATA:
+                ViewStudyDataController viewStudyDataController = new();
+                await viewStudyDataController.StartAsync();
                 break;
             case Enums.MainMenuOptions.EXIT:
                 Console.Clear();
@@ -45,29 +48,13 @@ class MainMenuController : MenuController
     }
     public static async Task BuildTables() // public just for debug purposes
     {
-        DataBaseManager<Stack>.Start("stacks");
-        await DataBaseManager<Stack>.BuildTable(
-        [
-            "Id INTEGER IDENTITY(1,1) PRIMARY KEY",
-            "Name TEXT"
-        ]);
+        StacksDatabaseManager stacksDatabaseManager = new();
+        await stacksDatabaseManager.BuildTable();
 
-        DataBaseManager<Flashcard>.Start("flash_cards");
-        await DataBaseManager<Flashcard>.BuildTable(
-        [
-            "Stacks_Id INTEGER NOT NULL",
-            "FOREIGN KEY (Stacks_Id) REFERENCES stacks (Id)",
-            "Id INTEGER",
-            "Front TEXT",
-            "Back TEXT"
-        ]);
+        FlashcardsDatabaseManager flashcardsDatabaseManager = new();
+        await flashcardsDatabaseManager.BuildTable();
 
-        DataBaseManager<StudySession>.Start("study_sessions");
-        await DataBaseManager<StudySession>.BuildTable([
-            "Stacks_Id INTEGER NOT NULL",
-            "FOREIGN KEY (Stacks_Id) REFERENCES stacks (Id)",
-            "Date TEXT",
-            "Score INTEGER"
-        ]);
+        StudySessionDatabaseManager studySessionDatabaseManager = new();
+        await studySessionDatabaseManager.BuildTable();
     }
 }

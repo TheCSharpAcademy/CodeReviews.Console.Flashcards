@@ -41,6 +41,23 @@ class DisplayData
         AnsiConsole.Write(table);
     }
 
+    public static void Table(List<StudySession> dataSet, string title = "")
+    {
+        var table = new Table();
+
+        table.Title(title);
+        table.AddColumns(["Date", "Score"]);
+
+        if (dataSet != null)
+        {
+            foreach(StudySession data in dataSet)
+            {
+                table.AddRow(data.Date.ToString(), data.Score.ToString());
+            }
+        }
+        AnsiConsole.Write(table);
+    }
+
     public static void CardForStudy(FlashcardDTO flashcard)
     {
         Panel panel = new(flashcard.Front);

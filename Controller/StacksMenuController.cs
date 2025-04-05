@@ -3,13 +3,15 @@ using Spectre.Console;
 
 class StacksMenuController : MenuController
 {
-
     static List<Stack> stacks = [];
+    static StacksDatabaseManager stacksDatabaseManager = new();
+    static FlashcardsDatabaseManager flashcardsDatabaseManager = new();
+    static StudySessionDatabaseManager studySessionDatabaseManager = new();
 
     // Get all stacks and display all stacks to user
     protected override async Task MainAsync()
     {
-        stacks = await DataBaseManager<Stack>.GetLogs();
+        stacks = await stacksDatabaseManager.GetLogs();
         DisplayData.Table(stacks);
     }
 
@@ -37,10 +39,7 @@ class StacksMenuController : MenuController
     {
         string name = GetInput.StackName(stacks);
 
-        await DataBaseManager<Stack>.InsertLog( 
-        [
-            name
-        ]);
+        await stacksDatabaseManager.InsertLog(new Stack(default, name));
     }
     static async Task RenameStack()
     {
@@ -53,11 +52,7 @@ class StacksMenuController : MenuController
         string newName = GetInput.StackName(stacks);
 
         // Update stack
-        await DataBaseManager<Stack>.UpdateLog(
-            "Id = " + userStack.Id.ToString(), 
-            [
-                $"Name = '{newName}'"
-            ]);
+        await stacksDatabaseManager.UpdateLog(new Stack(userStack.Id, newName));
     }
     static async Task DeleteStack()
     {
@@ -67,13 +62,20 @@ class StacksMenuController : MenuController
         Stack userStack = GetInput.Selection(stacks);
 
         // Deleting flash cards
-        List<Flashcard> flashcards = await DataBaseManager<Flashcard>.GetLogs();
+        List<Flashcard> flashcards = await flashcardsDatabaseManager.GetLogs(userStack);
         foreach (var card in flashcards)
         {
-            await DataBaseManager<Flashcard>.DeleteLog(card.Id);
+            await flashcardsDatabaseManager.DeleteLog(card.Id);
+        }
+
+        // Deleting study sessions
+        List<StudySession> studySessions = await studySessionDatabaseManager.GetLogs(userStack);
+        foreach (var session in studySessions)
+        {
+            await studySessionDatabaseManager.DeleteLog(session.Id);
         }
 
         // Deleting now empty stack
-        await DataBaseManager<Stack>.DeleteLog(userStack.Id);
+        await stacksDatabaseManager.DeleteLog(userStack.Id);
     }
 }

@@ -1,13 +1,15 @@
 
 class FlashCardsMenuController : MenuController
 {
+    static StacksDatabaseManager stacksDatabaseManager = new();
+    static FlashcardsDatabaseManager flashcardsDatabaseManager = new();
     static Stack currentStack = default;
     static List<FlashcardDTO> flashcards = [];
 
     // Prompts user for stack to edit flashcards in
     protected override async Task OnReady()
     {
-        List<Stack> stackSet = await DataBaseManager<Stack>.GetLogs();
+        List<Stack> stackSet = await stacksDatabaseManager.GetLogs();
         currentStack = GetInput.Selection(stackSet);
         Console.Clear();
     }
@@ -45,8 +47,7 @@ class FlashCardsMenuController : MenuController
     private static async Task<List<FlashcardDTO>> GetCards()
     {
         List<FlashcardDTO> flashcards = [];
-        string query = "Stacks_Id = " + currentStack.Id;
-        List<Flashcard> flashCardSet = await DataBaseManager<Flashcard>.GetLogs(query);
+        List<Flashcard> flashCardSet = await flashcardsDatabaseManager.GetLogs(currentStack);
 
         foreach (var card in flashCardSet)
         {
@@ -70,12 +71,12 @@ class FlashCardsMenuController : MenuController
     {        
         GetInput.FlashcardSides(out string front, out string back);
         
-        await DataBaseManager<Flashcard>.InsertLog([
+        await flashcardsDatabaseManager.InsertLog(new Flashcard(
             currentStack.Id,
-            (flashcards.Count + 1),
+            flashcards.Count + 1,
             front,
             back
-        ]);
+        ));
     }
 
     private static async Task EditCard()
@@ -83,23 +84,19 @@ class FlashCardsMenuController : MenuController
         FlashcardDTO flashcard = GetInput.Selection(flashcards);
         GetInput.FlashcardSides(out string front, out string back, flashcard.Front, flashcard.Back);
 
-        await DataBaseManager<Flashcard>.UpdateLog(
-            "Id = " + flashcard.Id.ToString(),
-            [
-                $"Front = '{front}'",
-                $"Back = '{back}'"
-            ]
-        );
+        await flashcardsDatabaseManager.UpdateLog(new Flashcard(
+            currentStack.Id,
+            flashcard.Id,
+            front,
+            back
+        ));
     }
 
     private static async Task DeleteCard()
     {
         FlashcardDTO flashcard = GetInput.Selection(flashcards);
 
-        await DataBaseManager<Flashcard>.DeleteLog(flashcard.Id);
-        await DataBaseManager<Flashcard>.UpdateLog(
-            "Id in (SELECT Id FROM flash_cards WHERE Id > "+ flashcard.Id.ToString() + ")",
-            ["Id = Id - 1"]
-        );
+        await flashcardsDatabaseManager.DeleteLog(flashcard.Id);
+        await flashcardsDatabaseManager.UpdateIds(flashcard.Id);
     }
 }

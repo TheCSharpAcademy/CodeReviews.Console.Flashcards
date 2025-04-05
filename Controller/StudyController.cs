@@ -3,10 +3,13 @@ using Spectre.Console;
 
 class StudyController
 {
-    
-    public async Task Start()
+    StacksDatabaseManager stacksDatabaseManager = new();
+    FlashcardsDatabaseManager flashcardsDatabaseManager = new();
+    StudySessionDatabaseManager studySessionDatabaseManager = new();
+    Stack stack = default;
+    public async Task StartAsync()
     {
-        Stack stack = await SetStack();
+        stack = await SetStack();
         List<FlashcardDTO> flashcards = await GetFlashCards(stack);
         int? score = 0;
 
@@ -31,11 +34,12 @@ class StudyController
         {
             AnsiConsole.MarkupLine($"[bold green]{score}/{flashcards.Count} answered correctly[/]");
             // insert new log
-            await DataBaseManager<StudySession>.InsertLog(
+            await studySessionDatabaseManager.InsertLog(new StudySession(
                 stack.Id,
+                default,
                 DateTime.Now.ToString(),
-                score
-            );
+                (int)score
+            ));
             AnsiConsole.MarkupLine("[bold grey]Press Enter to continue[/]");
             Console.Read();
         } // else does not insert (user exited early)
@@ -43,14 +47,13 @@ class StudyController
 
     async Task<Stack> SetStack()
     {
-        List<Stack> stackSet = await DataBaseManager<Stack>.GetLogs();
+        List<Stack> stackSet = await stacksDatabaseManager.GetLogs();
         return GetInput.Selection(stackSet);
     }
 
     async Task<List<FlashcardDTO>> GetFlashCards(Stack currentStack)
     {
-        string query = "Stacks_Id = " + currentStack.Id;
-        List<Flashcard> flashCardSet = await DataBaseManager<Flashcard>.GetLogs(query);
+        List<Flashcard> flashCardSet = await flashcardsDatabaseManager.GetLogs(stack);
         List<FlashcardDTO> flashcards = [];
         foreach (var card in flashCardSet)
             flashcards.Add(new FlashcardDTO(card));
@@ -58,6 +61,7 @@ class StudyController
         return flashcards;
     }
 
+    // Shuffle function i found on the internet
     void Shuffle(List<FlashcardDTO> list)
     {
         Random rng = new();
