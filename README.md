@@ -1,6 +1,6 @@
 # Flashcards App
-
-Interactive application using spectre console and ms sql
+The **Flashcards App** is an interactive console application
+designed to help you create, manage, and study various topics efficiently.
 
 ## Given Requirements
 
