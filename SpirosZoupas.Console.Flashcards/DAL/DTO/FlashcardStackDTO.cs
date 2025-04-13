@@ -1,4 +1,4 @@
-﻿namespace SpirosZoupas.Console.Flashcards.DAL.DTO
+﻿namespace Flashcards.DAL.DTO
 {
     public class FlashcardStackDTO
     {

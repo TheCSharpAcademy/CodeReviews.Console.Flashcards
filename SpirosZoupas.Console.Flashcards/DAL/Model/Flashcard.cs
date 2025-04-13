@@ -1,4 +1,4 @@
-﻿namespace SpirosZoupas.Console.Flashcards.DAL.Model
+﻿namespace Flashcards.DAL.Model
 {
     public class Flashcard
     {
