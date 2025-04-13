@@ -1,4 +1,4 @@
-namespace Flashcards.KamilKolanowski.Data;
+namespace Flashcards.KamilKolanowski.Models;
 
 internal class Cards
 {
