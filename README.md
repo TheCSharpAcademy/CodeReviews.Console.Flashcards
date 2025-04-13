@@ -1,5 +1,7 @@
 # Flashcards App
 
+Interactive application using spectre console and ms sql
+
 ## Given Requirements
 
 - This is an application where the users will create Stacks of
