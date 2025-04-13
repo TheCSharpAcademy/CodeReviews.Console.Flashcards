@@ -1,8 +1,5 @@
 # Flashcards App
 
-- Console based CRUD application to create and study flashcards
-- Developed using C# and MSSQL
-
 ## Given Requirements
 
 - This is an application where the users will create Stacks of
