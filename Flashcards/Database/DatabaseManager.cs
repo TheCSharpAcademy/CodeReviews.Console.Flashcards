@@ -268,9 +268,9 @@ namespace Flashcards.Database
             }
         }
 
-        public static List<FlashcardDTO> GetFlashcards(int specificStack = -1)
+        public static List<FlashcardDto> GetFlashcards(int specificStack = -1)
         {
-            List<FlashcardDTO> flashcards = new();
+            List<FlashcardDto> flashcards = new();
             string dbConnectionString = connectionString + ";Database=" + databaseName + ";Trusted_Connection=True;";
 
             using (var connection = new SqlConnection(dbConnectionString))
@@ -290,7 +290,7 @@ namespace Flashcards.Database
 
                 while (reader.Read())
                 {
-                    FlashcardDTO flashcard = new FlashcardDTO
+                    FlashcardDto flashcard = new FlashcardDto
                     {
                         FlashcardId = reader.GetInt32(reader.GetOrdinal("FlashcardId")),
                         Question = reader.GetString(reader.GetOrdinal("Question")),
@@ -322,9 +322,9 @@ namespace Flashcards.Database
             }
         }
 
-        public static List<StudySessionDTO> GetStudySessions(int specificStack = -1)
+        public static List<StudySessionDto> GetStudySessions(int specificStack = -1)
         {
-            List<StudySessionDTO> studySessions = new();
+            List<StudySessionDto> studySessions = new();
             string dbConnectionString = connectionString + ";Database=" + databaseName + ";Trusted_Connection=True;";
 
             using (var connection = new SqlConnection(dbConnectionString))
@@ -344,7 +344,7 @@ namespace Flashcards.Database
 
                 while (reader.Read())
                 {
-                    StudySessionDTO studySession = new StudySessionDTO
+                    StudySessionDto studySession = new StudySessionDto
                     {
                         StudySessionId = reader.GetInt32(reader.GetOrdinal("StudyID")),
                         StackName = reader.GetString(reader.GetOrdinal("StackName")),

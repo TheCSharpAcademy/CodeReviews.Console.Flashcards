@@ -1,6 +1,6 @@
 ﻿namespace Flashcards.Object_Classes
 {
-    public class FlashcardDTO
+    public class FlashcardDto
     {
         public int FlashcardId { get; set; }
         public string Question { get; set; }

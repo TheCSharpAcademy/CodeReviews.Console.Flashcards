@@ -27,9 +27,9 @@ namespace Flashcards.Database
                 stackID = InputValidation.GetQuantity("Enter the ID of the Flashcard Stack you want to study, or type 0 to return to the Main Menu.");
             }
             string stackName = DatabaseManager.GetStackName(stackID);
-            List<FlashcardDTO> flashcards = DatabaseManager.GetFlashcards(stackID);
+            List<FlashcardDto> flashcards = DatabaseManager.GetFlashcards(stackID);
             rng = new Random();
-            List<FlashcardDTO> shuffledCards = flashcards.OrderBy(a => rng.Next()).ToList();
+            List<FlashcardDto> shuffledCards = flashcards.OrderBy(a => rng.Next()).ToList();
 
             if (shuffledCards.Count == 0)
             {
@@ -48,11 +48,11 @@ namespace Flashcards.Database
             DatabaseManager.CreateStudySession(score, shuffledCards.Count, stackID, stackName, startTime, duration);
         }
 
-        public static int PlayStudySession(List<FlashcardDTO> shuffledCards)
+        public static int PlayStudySession(List<FlashcardDto> shuffledCards)
         {
             string answer = "";
             int score = 0;
-            foreach(FlashcardDTO card in shuffledCards)
+            foreach(FlashcardDto card in shuffledCards)
             {
                 Console.WriteLine($"Question: {card.Question}");
                 Console.Write("Answer: ");
@@ -106,7 +106,7 @@ namespace Flashcards.Database
                 Console.WriteLine("Please provide a valid Study Session ID.");
                 studyID = InputValidation.GetQuantity("Enter the ID of the Study Session you wish to view, type -1 to view all Study Sessions \n or type 0 to return to the Main Menu.");
             }
-            List<StudySessionDTO> studySessions = DatabaseManager.GetStudySessions(studyID);
+            List<StudySessionDto> studySessions = DatabaseManager.GetStudySessions(studyID);
             Console.WriteLine("----------------------------------------------\n");
             foreach (var session in studySessions)
             {

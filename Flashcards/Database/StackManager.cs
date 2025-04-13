@@ -94,7 +94,7 @@ namespace Flashcards.Database
                 Console.WriteLine("----------------------------------------------\n");
                 if(DatabaseValidator.DoesValueExist(System.Configuration.ConfigurationManager.AppSettings.Get("FlashcardTable"),"StackID", stack.StackId) == true) 
                 {
-                    List<FlashcardDTO> flashcards = DatabaseManager.GetFlashcards(stack.StackId);
+                    List<FlashcardDto> flashcards = DatabaseManager.GetFlashcards(stack.StackId);
                     Console.WriteLine("Flashcards\n");
                     int index = 1; //We want them to be in order
                     foreach (var card in flashcards)

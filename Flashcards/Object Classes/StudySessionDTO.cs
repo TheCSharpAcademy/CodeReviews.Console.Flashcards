@@ -1,6 +1,6 @@
 ﻿namespace Flashcards.Object_Classes
 {
-    public class StudySessionDTO
+    public class StudySessionDto
     {
         public int StudySessionId { get; set; }
         public string StackName { get; set; }

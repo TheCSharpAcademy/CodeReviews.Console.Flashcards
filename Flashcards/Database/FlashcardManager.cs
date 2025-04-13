@@ -110,7 +110,7 @@ namespace Flashcards.Database
                 Console.WriteLine("Please provide a valid Flashcard ID.");
                 flashcardID = InputValidation.GetQuantity("Enter the ID of the Flashcard you wish to view, type -1 to view all Flashcards \n or type 0 to return to the Main Menu.");
             }
-            List<FlashcardDTO> flashcards = DatabaseManager.GetFlashcards(flashcardID);
+            List<FlashcardDto> flashcards = DatabaseManager.GetFlashcards(flashcardID);
             Console.WriteLine("----------------------------------------------\n");
             foreach (var card in flashcards)
             {
@@ -121,7 +121,7 @@ namespace Flashcards.Database
 
         public static void ViewAllFlashcards()
         {
-            List<FlashcardDTO> flashcards = DatabaseManager.GetFlashcards();
+            List<FlashcardDto> flashcards = DatabaseManager.GetFlashcards();
 
             Console.WriteLine("----------------------------------------------\n");
             foreach (var card in flashcards)
