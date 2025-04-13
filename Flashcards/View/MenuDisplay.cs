@@ -1,5 +1,4 @@
 ﻿using Spectre.Console;
-using System;
 namespace Flashcards.View
 {
     public static class MenuDisplay
