@@ -31,7 +31,7 @@
 
 ## Features
 
-- MSSQL database connection		
+- MSSQL database connection
 - The program uses a MSSQL db conneciton to store and read information.
 - If no database exists, or the correct table does not exist, they will
   be created when the program starts.
