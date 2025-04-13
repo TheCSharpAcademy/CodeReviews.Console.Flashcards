@@ -14,7 +14,7 @@ public class ReportingService
     public ReportingService(DatabaseService dbService, IConfiguration configuration)
     {
         _dbService = dbService;
-        _connectionString = configuration.GetConnectionString("DefaultConnection");
+        _connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidExpressionException("Connection string not found.");
     }
 
     public async Task ViewSessionsPerMonthReportAsync()

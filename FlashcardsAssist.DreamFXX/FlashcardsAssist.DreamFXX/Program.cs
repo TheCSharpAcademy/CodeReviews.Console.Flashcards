@@ -6,9 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
 namespace FlashcardsAssist.DreamFXX;
-class Program
+static class Program
 {
-    static async Task Main(string[] args)
+    static async Task Main()
     {
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())

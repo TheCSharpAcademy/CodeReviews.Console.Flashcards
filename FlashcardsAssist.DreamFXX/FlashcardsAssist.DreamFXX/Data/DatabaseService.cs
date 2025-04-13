@@ -3,58 +3,67 @@ using FlashcardsAssist.DreamFXX.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Data;
 
 namespace FlashcardsAssist.DreamFXX.Data;
 public class DatabaseService
 {
     private readonly string _connectionString;
+
     
     public DatabaseService(IConfiguration configuration)
     {
-        _connectionString = configuration.GetConnectionString("DefaultConnection");
+        _connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidExpressionException("Connection string not found.");
     }
 
     public async Task InitializeDatabaseAsync()
     {
-        using (var connection = new SqlConnection(_connectionString))
+        try
         {
-            await connection.OpenAsync();
-            
-            await connection.ExecuteAsync(@"
-                IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Stacks]') AND type in (N'U'))
-                BEGIN
-                    CREATE TABLE [dbo].[Stacks] (
-                        [Id] INT IDENTITY(1,1) PRIMARY KEY,
-                        [Name] NVARCHAR(100) NOT NULL UNIQUE
-                    )
-                END
-            ");
-            
-            await connection.ExecuteAsync(@"
-                IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Flashcards]') AND type in (N'U'))
-                BEGIN
-                    CREATE TABLE [dbo].[Flashcards] (
-                        [Id] INT IDENTITY(1,1) PRIMARY KEY,
-                        [StackId] INT NOT NULL,
-                        [Front] NVARCHAR(500) NOT NULL,
-                        [Back] NVARCHAR(500) NOT NULL,
-                        CONSTRAINT [FK_Flashcards_Stacks] FOREIGN KEY ([StackId]) REFERENCES [dbo].[Stacks] ([Id]) ON DELETE CASCADE
-                    )
-                END
-            ");
-            
-            await connection.ExecuteAsync(@"
-                IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[StudySessions]') AND type in (N'U'))
-                BEGIN
-                    CREATE TABLE [dbo].[StudySessions] (
-                        [Id] INT IDENTITY(1,1) PRIMARY KEY,
-                        [StackId] INT NOT NULL,
-                        [StudyDate] DATETIME NOT NULL,
-                        [Score] INT NOT NULL,
-                        CONSTRAINT [FK_StudySessions_Stacks] FOREIGN KEY ([StackId]) REFERENCES [dbo].[Stacks] ([Id]) ON DELETE CASCADE
-                    )
-                END
-            ");
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                await connection.ExecuteAsync(@"
+                    IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Stacks]') AND type in (N'U'))
+                    BEGIN
+                        CREATE TABLE [dbo].[Stacks] (
+                            [Id] INT IDENTITY(1,1) PRIMARY KEY,
+                            [Name] NVARCHAR(100) NOT NULL UNIQUE
+                        )
+                    END
+                ");
+
+                await connection.ExecuteAsync(@"
+                    IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Flashcards]') AND type in (N'U'))
+                    BEGIN
+                        CREATE TABLE [dbo].[Flashcards] (
+                            [Id] INT IDENTITY(1,1) PRIMARY KEY,
+                            [StackId] INT NOT NULL,
+                            [Front] NVARCHAR(500) NOT NULL,
+                            [Back] NVARCHAR(500) NOT NULL,
+                            CONSTRAINT [FK_Flashcards_Stacks] FOREIGN KEY ([StackId]) REFERENCES [dbo].[Stacks] ([Id]) ON DELETE CASCADE
+                        )
+                    END
+                ");
+
+                await connection.ExecuteAsync(@"
+                    IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[StudySessions]') AND type in (N'U'))
+                    BEGIN
+                        CREATE TABLE [dbo].[StudySessions] (
+                            [Id] INT IDENTITY(1,1) PRIMARY KEY,
+                            [StackId] INT NOT NULL,
+                            [StudyDate] DATETIME NOT NULL,
+                            [Score] INT NOT NULL,
+                            CONSTRAINT [FK_StudySessions_Stacks] FOREIGN KEY ([StackId]) REFERENCES [dbo].[Stacks] ([Id]) ON DELETE CASCADE
+                        )
+                    END
+                ");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while initializing the database: {ex.Message}");
         }
     }
 
