@@ -1,10 +1,20 @@
-﻿using Spectre.Console;
+﻿using Flashcards.DAL.Model;
+using Flashcards.DAL;
+using Spectre.Console;
 using System;
+using Flashcards.DAL.DTO;
 
 namespace Flashcards
 {
     public class UserInput
     {
+        private readonly Controller _controller;
+
+        public UserInput(Controller controller)
+        {
+            _controller = controller;
+        }
+
         public void GetUserInput()
         {
             Console.Clear();
@@ -85,16 +95,7 @@ namespace Flashcards
                     GetFlashcardById();
                     break;
                 case "5":
-                    GetAllFlashcards();
-                    break;
-                case "6":
-                    GetAllFlashcardsByDateRange();
-                    break;
-                case "7":
-                    GetTotalDurationByDateRange();
-                    break;
-                case "8":
-                    GetAverageDurationByDateRange();
+                    //GetAllFlashcards();
                     break;
                 default:
                     Console.WriteLine("Invalid command!");
@@ -111,20 +112,18 @@ namespace Flashcards
             AnsiConsole.MarkupLine("[italic hotpink3_1 on black]2) Delete Stack[/]");
             AnsiConsole.MarkupLine("[italic hotpink3_1 on black]3) Update Stack[/]");
             AnsiConsole.MarkupLine("[italic hotpink3_1 on black]4) Get a specific Stack[/]");
-            AnsiConsole.MarkupLine("[italic hotpink3_1 on black]5) Get all Stack[/]");
-            AnsiConsole.MarkupLine("[italic hotpink3_1 on black]6) Find out how many hours do you need to complete a Stack.[/]");
+            AnsiConsole.MarkupLine("[italic hotpink3_1 on black]5) Get all Stacks[/]");
 
             string input = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                 .Title("[italic hotpink3_1 on black]Please type one of the following values only:[/]")
                 .AddChoices([
-                    "0",
+                        "0",
                         "1",
                         "2",
                         "3",
                         "4",
-                        "5",
-                        "6"
+                        "5"
                 ]));
 
             switch (input)
@@ -132,14 +131,19 @@ namespace Flashcards
                 case "0":
                     break;
                 case "1":
+                    CreateStack();
                     break;
                 case "2":
+                    DeleteStack();
                     break;
                 case "3":
+                    UpdateStack();
                     break;
                 case "4":
+                    // GetStackByName();
                     break;
                 case "5":
+                    // GetAllStacks();
                     break;
                 case "6":
                     break;
@@ -152,74 +156,122 @@ namespace Flashcards
         private void CreateFlashcard()
         {
             AnsiConsole.MarkupLine("[darkcyan]Please enter the front side text of your flashcard:[/]");
-            DateTime startDateTime = _validation.GetValidatedDateTimeValue();
+            string front = Console.ReadLine();
             AnsiConsole.MarkupLine("[darkcyan]Please enter the back side text of your flashcard:[/]");
-            DateTime endDateTime = _validation.GetValidatedDateTimeValue();
+            string back = Console.ReadLine();
             AnsiConsole.MarkupLine("[darkcyan]Please enter the stack name to which this flashcard will belong.[/]");
-            double flashcard = _validation.GetValidatedDouble();
+            string stackName = Console.ReadLine();
 
-            if (_controller.CreateFlashcard(startDateTime, endDateTime, flashcard))
+            if (_controller.CreateFlashcard(front, back ,stackName))
                 AnsiConsole.MarkupLine("[white on green]Flashcard created.[/]");
             else
                 AnsiConsole.MarkupLine("[white on red]Something went wrong, unable to create flashcard.[/]");
         }
 
+        private void CreateFlashcard(string stackName)
+        {
+            AnsiConsole.MarkupLine("[darkcyan]Please enter the front side text of your flashcard:[/]");
+            string front = Console.ReadLine();
+            AnsiConsole.MarkupLine("[darkcyan]Please enter the back side text of your flashcard:[/]");
+            string back = Console.ReadLine();
+
+            if (_controller.CreateFlashcard(front, back, stackName))
+                AnsiConsole.MarkupLine("[white on green]Flashcard created.[/]");
+            else
+                AnsiConsole.MarkupLine("[white on red]Something went wrong, unable to create flashcard.[/]");
+        }
+
+        private void CreateStack()
+        {
+            AnsiConsole.MarkupLine("[darkcyan]Please enter the name of your stack:[/]");
+            string name = Console.ReadLine();
+
+            if (_controller.CreateStack("Stack"))
+            {
+                AnsiConsole.MarkupLine("[white on green]Stack created.[/]");
+                
+                string input = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                    .Title("[white on green]Would you like to add a flashcard to this empty stack?[/]")
+                    .AddChoices([
+                        "Yes",
+                        "No"
+                    ]));
+
+                if (input == "Yes") CreateFlashcard(name);
+            }
+            else
+                AnsiConsole.MarkupLine("[white on red]Something went wrong, unable to create stack.[/]");
+        }
+
         private void DeleteFlashcard()
         {
             AnsiConsole.MarkupLine("[darkcyan]Please enter the ID of the flashcard you would like to delete[/]");
-            Flashcard existingFlashcard = _validation.GetExistingFlashcard();
+            int id = Convert.ToInt32(Console.ReadLine);
+            // Flashcard existingFlashcard = _validation.GetExistingFlashcard(); DONT MAKE THIS A MODEL JUST A BOOL
 
-            if (_controller.Delete(existingFlashcard))
+            if (_controller.DeleteFlashcard(id))
                 AnsiConsole.MarkupLine("[white on green]Flashcard deleted.[/]");
             else
                 AnsiConsole.MarkupLine("[white on red]Something went wrong, unable to delete flashcard.[/]");
         }
 
+        private void DeleteStack()
+        {
+            AnsiConsole.MarkupLine("[darkcyan]Please enter the name of the stack you would like to delete[/]");
+            string name = Console.ReadLine();
+            // Flashcard existingFlashcard = _validation.GetExistingFlashcard(); DONT MAKE THIS A MODEL JUST A BOOL
+
+            if (_controller.DeleteStack(name))
+                AnsiConsole.MarkupLine("[white on green]Stack deleted.[/]");
+            else
+                AnsiConsole.MarkupLine("[white on red]Something went wrong, unable to delete stack.[/]");
+        }
+
         private void UpdateFlashcard()
         {
             AnsiConsole.MarkupLine("[darkcyan]Please enter the ID of the flashcard you would like to update[/]");
-            Flashcard existingFlashcard = _validation.GetExistingFlashcard();
+            // Flashcard existingFlashcard = _validation.GetExistingFlashcard();
+            int id = Convert.ToInt32(Console.ReadLine());
 
-            AnsiConsole.MarkupLine("[darkcyan]Please enter updated StartDateTime[/]");
-            DateTime startDateTime = _validation.GetValidatedDateTimeValue();
-            AnsiConsole.MarkupLine("[darkcyan]Please enter updated EndDateTime[/]");
-            DateTime endDateTime = _validation.GetValidatedDateTimeValue();
-            AnsiConsole.MarkupLine("[darkcyan]Please enter updated Target Duration[/]");
-            double targetDuration = _validation.GetValidatedDouble();
+            AnsiConsole.MarkupLine("[darkcyan]Please enter the front side text of your flashcard:[/]");
+            string front = Console.ReadLine();
+            AnsiConsole.MarkupLine("[darkcyan]Please enter the back side text of your flashcard:[/]");
+            string back = Console.ReadLine();
+            AnsiConsole.MarkupLine("[darkcyan]Please enter the stack name to which this flashcard will belong.[/]");
+            string stackName = Console.ReadLine();
 
-            if (_controller.UpdateFlashcard(existingFlashcard, startDateTime, endDateTime, targetDuration))
+            if (_controller.UpdateFlashcard(front, back, stackName))
                 AnsiConsole.MarkupLine("[white on green]Flashcard updated.[/]");
             else
                 AnsiConsole.MarkupLine("[white on red]Something went wrong, unable to update flashcard.[/]");
         }
 
+        private void UpdateStack()
+        {
+            AnsiConsole.MarkupLine("[darkcyan]Please enter the name of the stack you would like to update[/]");
+            // Flashcard existingFlashcard = _validation.GetExistingFlashcard();
+            string name = Console.ReadLine();
+
+            AnsiConsole.MarkupLine("[darkcyan]Please enter the new name of the stack:[/]");
+            string updatedName = Console.ReadLine();
+
+            if (_controller.UpdateStack(updatedName))
+                AnsiConsole.MarkupLine("[white on green]Stack updated.[/]");
+            else
+                AnsiConsole.MarkupLine("[white on red]Something went wrong, unable to update stack.[/]");
+        }
+
         private void GetFlashcardById()
         {
             AnsiConsole.MarkupLine("[darkcyan]Please enter the ID of the flashcard you would like to find.[/]");
-            int id = _validation.GetValidatedInteger();
+            int id = Convert.ToInt32(Console.ReadLine());
 
-            Flashcard flashcard = _controller.GetById<Flashcard>(id, "flashcard");
+            FlashcardStackDTO flashcard = _controller.GetFlashCardByID(id);
             if (flashcard != null)
-                AnsiConsole.MarkupLine($"[white on green]Flashcard with ID of {flashcard.Id} begins at: {flashcard.StartDateTime} and ends at: {flashcard.EndDateTime}. The target duration of the flashcard is {flashcard.TargetDuration} hours.[/]");
+                AnsiConsole.MarkupLine($"[white on green]Flashcard with ID of {flashcard.ID} \n\n Front text: {flashcard.Front} \n\n Back text: {flashcard.Back}[/]");
             else
-                AnsiConsole.MarkupLine($"[white on red]Coding session with ID of {id} does not exist.[/]");
-        }
-
-        private void GetAllFlashcards()
-        {
-            AnsiConsole.MarkupLine("[bold springgreen2]Please find below a list of all your coding sessions.[/]");
-            List<CodingSession> codingSessions = _controller.GetAll<CodingSession>("codingSession");
-            if (codingSessions != null)
-            {
-                foreach (CodingSession c in codingSessions)
-                {
-                    AnsiConsole.MarkupLine($"[springgreen2]ID: {c.Id} - You had a coding session of {c.Duration:0.##} hours from {c.StartDateTime} to {c.EndDateTime}[/]");
-                }
-            }
-            else
-            {
-                AnsiConsole.MarkupLine("[white on red]No coding sessions found![/]");
-            }
+                AnsiConsole.MarkupLine($"[white on red]Flashcard with ID of {id} does not exist.[/]");
         }
     }
 }

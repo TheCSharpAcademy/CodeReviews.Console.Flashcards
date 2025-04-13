@@ -97,6 +97,7 @@ namespace Flashcards.DAL
 
             string sql = $@"
             SELECT
+                Flashcard.ID,
                 Flashcard.Front,
                 Flashcard.Back,
                 Stack.Name AS StackName
@@ -137,6 +138,28 @@ namespace Flashcards.DAL
                 Name = flashCards.First().StackName,
                 FlashCards = flashCards
             };
+        }
+
+        public int GetStackIDByName(string name)
+        {
+            int id;
+            var parameters = new { Name = name };
+            string sql = $@"
+            SELECT
+                Stack.ID
+            FROM
+                Stack
+            WHERE
+                Stack.Name = @Name";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                id = connection.ExecuteScalar<int>(sql);
+                connection.Close();
+            }
+
+            return id;
         }
 
         public List<FlashcardStackDTO> GetAllFlashcards()
