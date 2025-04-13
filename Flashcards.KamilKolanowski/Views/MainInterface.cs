@@ -1,3 +1,4 @@
+using Flashcards.KamilKolanowski.Data;
 using Flashcards.KamilKolanowski.Enums;
 using Spectre.Console;
 
@@ -7,6 +8,8 @@ internal class MainInterface
 {
     internal static void Start()
     {
+        DatabaseManager _databaseManager = new();
+        
         while (true)
         {
             Console.Clear();
@@ -21,7 +24,10 @@ internal class MainInterface
             switch (selectedOption)
             {
                 case Options.MenuOptions.MFlashcards:
-                    Console.WriteLine("Managing Flashcards...");
+                    foreach (var row in _databaseManager.ReadTable<Cards>("Cards"))
+                    {
+                        Console.WriteLine($"FlashcardId: {row.FlashcardId} | FlashcardTitle: {row.FlashcardTitle} | FlashcardContent: {row.FlashcardContent}");
+                    }
                     Console.ReadKey();
                     break;
                 case Options.MenuOptions.MStacks:
@@ -42,5 +48,4 @@ internal class MainInterface
             }
         }
     }
-
 }
