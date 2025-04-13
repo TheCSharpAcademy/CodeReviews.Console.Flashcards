@@ -1,8 +1,10 @@
 # FlashCards
+
 - Console based CRUD application to create and study flashcards
 - Developed using C# and MSSQL
 
-# Given Requirements:
+## Given Requirements:
+
 - This is an application where the users will create Stacks of
   Flashcards.
 - We should use Spectre.Console to print tables and collect inputs.
@@ -27,10 +29,9 @@
 - This table receives insert calls upon each study session, but there
   shouldn't be update and delete calls to it.
 
-# Features
+## Features
 
-* MSSQL database connection
-		
+- MSSQL database connection		
 - The program uses a MSSQL db conneciton to store and read information.
 - If no database exists, or the correct table does not exist, they will
   be created when the program starts.
