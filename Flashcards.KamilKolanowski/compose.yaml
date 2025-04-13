@@ -1,0 +1,47 @@
+﻿version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      SA_PASSWORD: dockerStrongPwd123
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./Data/DatabaseFiles:/scripts
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1433"]
+      interval: 30s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    command: >
+      /bin/bash -c "
+      echo 'Starting SQL Server...';
+      /opt/mssql/bin/sqlservr & 
+      echo 'Waiting for SQL Server to start...';
+      sleep 60 && 
+      echo 'Running SQL script to create database and tables...';
+      /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P dockerStrongPwd123 -i /scripts/CreateObjects.sql &&
+      tail -f /dev/null
+      "
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flashcards-app
+    depends_on:
+      - sqlserver
+    environment:
+      ConnectionStrings__DatabaseConnection: Server=sqlserver,1433;Database=CodingTracker;User=sa;Password=dockerStrongPwd123
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
