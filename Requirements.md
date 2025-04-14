@@ -1,6 +1,6 @@
 # Introduction
 
-<p>After the first two projects, you should be somewhat comfortable with how things work in C#. It’s time to make things slightly more complex. You’ll be using SQL Server for the first time. We could continue using SQLite, as it does everything needed for most small applications, but SQL Server is heavily used in the industry and the sooner we get familiar with it, the better.</p>
+After the first two projects, you should be somewhat comfortable with how things work in C#. It’s time to make things slightly more complex. You’ll be using SQL Server for the first time. We could continue using SQLite, as it does everything needed for most small applications, but SQL Server is heavily used in the industry and the sooner we get familiar with it, the better.</p>
 
 This time the database will be a little more complex as well. We will have two tables linked by a foreign key. And for the first time we will be working with DTOs (Data Transfer Objects), which will help us use the same object in different ways.
 

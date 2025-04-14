@@ -9,7 +9,7 @@
                 "build",
                 "${workspaceFolder}/FlashcardsAssist.DreamFXX.csproj",
                 "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+                "/consoleloggerparameters: ;ForceNoAlign"
             ],
             "problemMatcher": "$msCompile"
         },
