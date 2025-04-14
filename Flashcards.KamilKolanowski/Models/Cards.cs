@@ -2,9 +2,9 @@ namespace Flashcards.KamilKolanowski.Models;
 
 internal class Cards
 {
-    internal int FlashcardId { get; set; }
-    internal int StackId { get; set; }
-    internal string FlashcardTitle { get; set; } = string.Empty;
-    internal string FlashcardContent { get; set; } = string.Empty;
-    internal DateTime DateCreated { get; set; }
+    public int FlashcardId { get; }
+    public int StackId { get; set; }
+    public string FlashcardTitle { get; set; } = string.Empty;
+    public string FlashcardContent { get; set; } = string.Empty;
+    public DateTime DateCreated { get; }
 }

@@ -31,12 +31,16 @@ internal class DatabaseManager
 
     internal void WriteTable<T>(string tableName, T obj)
     {
-        //TBD
         Connection.Open();
-        string colList = obj is Stacks ? "StackName, Description" : "StackId, FlashcardTitle, FlashcardContent";
         
-        string query = @$"INSERT INTO Flashcards.TCSA.{tableName} ({colList})
-                          VALUES ({0})";
+        var properties = typeof(T).GetProperties()
+            .Where(p => p.Name != "FlashcardId" && p.Name != "DateCreated");
+        
+        var columns = string.Join(", ", properties.Select(c => c.Name));
+        var values = string.Join(", ", properties.Select(v => $"@{v.Name}"));
+
+        string query =  @$"INSERT INTO Flashcards.TCSA.{tableName} ({columns})
+                           VALUES ({values});";
         
         Connection.Execute(query, obj);
     }

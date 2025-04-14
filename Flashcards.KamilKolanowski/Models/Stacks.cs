@@ -1,9 +1,9 @@
 namespace Flashcards.KamilKolanowski.Data;
 
-internal class Stacks
+internal class Stacks ()
 {
-    private int StackId { get; set; }
-    private string StackName { get; set; } = string.Empty;
-    private string Description { get; set; } = string.Empty;
-    private DateTime DateCreated { get; set; }
+    public int StackId { get; }
+    public string StackName { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public DateTime DateCreated { get; set; }
 }
