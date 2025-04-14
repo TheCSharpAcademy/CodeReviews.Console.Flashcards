@@ -1,6 +1,7 @@
 # Flashcards App
-The **Flashcards App** is an interactive console application
-designed to help you create, manage, and study various topics efficiently.
+
+- The **Flashcards App** is an interactive console application
+  designed to help you create, manage, and study various topics efficiently.
 
 ## Given Requirements
 
