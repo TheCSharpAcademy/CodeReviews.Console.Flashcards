@@ -40,31 +40,23 @@ public class ReportingService
                     s.Name
                 ORDER BY 
                     s.Name
-            ", connection);
+                    ", connection);
 
             using var reader = await cmd.ExecuteReaderAsync();
             var dt = new DataTable();
             dt.Load(reader);
 
-            var table = new Table()
-                .Title("[yellow]Sessions per Month per Stack[/]")
-                .AddColumn(new TableColumn("Stack Name").LeftAligned());
-
-            // Add month columns
             string[] months = new string[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-            for (int i = 0; i < 12; i++)
-            {
-                table.AddColumn(new TableColumn(months[i]).Centered());
-            }
+            var table = CreateReportTable("Sessions per Month per Stack", months);
 
             // Add data rows
             foreach (DataRow row in dt.Rows)
             {
-                var rowData = new List<string> { row["StackName"].ToString() };
+                var rowData = new List<string> { row["StackName"]?.ToString() ?? string.Empty };
                 
                 for (int i = 1; i <= 12; i++)
                 {
-                    var value = row[i] == DBNull.Value ? "0" : row[i].ToString();
+                    var value = row[i] == DBNull.Value ? "0" : row[i]?.ToString() ?? "0";
                     rowData.Add(value);
                 }
                 
@@ -104,16 +96,8 @@ public class ReportingService
             var dt = new DataTable();
             dt.Load(reader);
 
-            var table = new Table()
-                .Title("[yellow]Average Score per Month per Stack[/]")
-                .AddColumn(new TableColumn("Stack Name").LeftAligned());
-
-            // Add month columns
             string[] months = new string[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-            for (int i = 0; i < 12; i++)
-            {
-                table.AddColumn(new TableColumn(months[i]).Centered());
-            }
+            var table = CreateReportTable("Average Score per Month per Stack", months);
 
             // Add data rows
             foreach (DataRow row in dt.Rows)
@@ -132,4 +116,14 @@ public class ReportingService
             AnsiConsole.Write(table);
         }
     }
-} 
+
+    private Table CreateReportTable(string title, string[] months)
+    {
+        var table = new Table().Title($"[yellow]{title}[/]").AddColumn(new TableColumn("Stack Name").LeftAligned());
+        foreach (var month in months)
+        {
+            table.AddColumn(new TableColumn(month).Centered());
+        }
+        return table;
+    }
+}

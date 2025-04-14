@@ -16,12 +16,25 @@ public class FlashcardsService
 
     public async Task AddFlashcardAsync()
     {
+        var front = AnsiConsole.Ask<string>("[yellow]Enter the front of the flashcard:[/]");
+        if (string.IsNullOrWhiteSpace(front))
+        {
+            AnsiConsole.MarkupLine("[red]Front of the flashcard cannot be empty.[/]");
+            return;
+        }
+
+        var back = AnsiConsole.Ask<string>("[yellow]Enter the back of the flashcard:[/]");
+        if (string.IsNullOrWhiteSpace(back))
+        {
+            AnsiConsole.MarkupLine("[red]Back of the flashcard cannot be empty.[/]");
+            return;
+        }
+
         var stack = await _stacksService.SelectStackAsync();
         if (stack == null) return;
 
-        var front = AnsiConsole.Ask<string>("[yellow]Enter the front of the flashcard:[/]");
-        var back = AnsiConsole.Ask<string>("[yellow]Enter the back of the flashcard:[/]");
-
+        front = AnsiConsole.Ask<string>("[yellow]Enter the front of the flashcard:[/]");
+        back = AnsiConsole.Ask<string>("[yellow]Enter the back of the flashcard:[/]");
         try
         {
             await _dbService.AddFlashcardAsync(stack.Id, front, back);
@@ -29,7 +42,7 @@ public class FlashcardsService
         }
         catch (Exception ex)
         {
-            AnsiConsole.MarkupLine($"[red]Error adding flashcard: {ex.Message}[/]");
+            AnsiConsole.MarkupLine($"[red]Error with adding a flashcard: {ex.Message}[/]");
         }
     }
 
@@ -39,7 +52,6 @@ public class FlashcardsService
         if (stack == null) return;
 
         var flashcards = await _dbService.GetFlashcardsForStackAsync(stack.Name);
-        
         if (!flashcards.Any())
         {
             AnsiConsole.MarkupLine($"[yellow]No flashcards found in stack '{stack.Name}'.[/]");
