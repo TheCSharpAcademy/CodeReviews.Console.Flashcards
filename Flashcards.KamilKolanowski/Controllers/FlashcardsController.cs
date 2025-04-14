@@ -1,18 +1,26 @@
 using Flashcards.KamilKolanowski.Data;
 using Flashcards.KamilKolanowski.Models;
+using Flashcards.KamilKolanowski.Handlers;
 using Spectre.Console;
 
-namespace Flashcards.KamilKolanowski.Services;
+namespace Flashcards.KamilKolanowski.Controllers;
 
 internal class FlashcardsController
 {
-
     internal static void AddFlashcard(DatabaseManager databaseManager)
     {
         var stacks = databaseManager.ReadTable<Stacks>("Stacks").Select(s => (s.StackId, s.StackName)).ToList();
         var newCard = UserInputHandler.CreateFlashcard(stacks);
         
         databaseManager.WriteTable("Cards", newCard);
+    }
+
+    internal static void EditFlashcard(DatabaseManager databaseManager)
+    {
+        
+        // var flashcards = databaseManager.ReadTable<Cards>("Cards").Select(c => c.FlashcardTitle).ToList();
+        var flashcards = new Cards();
+        databaseManager.UpdateTable("Cards", flashcards,"FlashcardTitle", 1,1, "TestingTitle");
     }
     internal static void ViewFlashcardsTable(DatabaseManager databaseManager)
     {

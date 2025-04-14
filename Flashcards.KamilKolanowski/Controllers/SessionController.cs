@@ -1,8 +1,9 @@
+using Flashcards.KamilKolanowski.Controllers;
 using Flashcards.KamilKolanowski.Data;
 using Flashcards.KamilKolanowski.Enums;
 using Spectre.Console;
 
-namespace Flashcards.KamilKolanowski.Services;
+namespace Flashcards.KamilKolanowski.Controllers;
 
 internal class SessionController
 {

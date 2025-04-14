@@ -39,8 +39,19 @@ internal class DatabaseManager
         var columns = string.Join(", ", properties.Select(c => c.Name));
         var values = string.Join(", ", properties.Select(v => $"@{v.Name}"));
 
-        string query =  @$"INSERT INTO Flashcards.TCSA.{tableName} ({columns})
+        var query =  @$"INSERT INTO Flashcards.TCSA.{tableName} ({columns})
                            VALUES ({values});";
+        
+        Connection.Execute(query, obj);
+    }
+
+    internal void UpdateTable<T>(string tableName, T obj, string columnToUpdate, int columnId, int rowId, string newValue)
+    {
+        Connection.Open();
+        
+        var query = @$"UPDATE Flashcards.TCSA.{tableName}
+                       SET {columnToUpdate} = @{newValue}
+                       WHERE {columnId} = @{rowId}";
         
         Connection.Execute(query, obj);
     }

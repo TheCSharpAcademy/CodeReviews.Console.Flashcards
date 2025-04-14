@@ -1,6 +1,5 @@
-using Flashcards.KamilKolanowski.Data;
 using Flashcards.KamilKolanowski.Enums;
-using Flashcards.KamilKolanowski.Services;
+using Flashcards.KamilKolanowski.Controllers;
 using Spectre.Console;
 
 namespace Flashcards.KamilKolanowski.Views;
