@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Data.SqlClient;
 using Dapper;
+using Flashcards.KamilKolanowski.Models;
 
 namespace Flashcards.KamilKolanowski.Data;
 
@@ -13,7 +14,7 @@ internal class DatabaseManager
     {
         var config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("appsettings.json")
             .Build();
         
         _connectionString = config.GetConnectionString("DatabaseConnection");
@@ -21,12 +22,79 @@ internal class DatabaseManager
     
     private SqlConnection Connection => new(_connectionString);
 
-    internal List<T> ReadTable<T>(string tableName)
+
+    internal List<Cards> ReadCards(string stackName)
     {
         Connection.Open();
         
-        string query = $"SELECT * FROM Flashcards.TCSA.{tableName}";
-        return Connection.Query<T>(query).ToList();
+        string query = $@"SELECT 
+                            c.StackId,
+                            c.FlashcardTitle,
+                            c.FlashcardContent
+                        FROM
+                            Flashcards.TCSA.Cards AS c
+                            INNER JOIN Flashcards.TCSA.Stacks AS s
+                                ON s.StackId = c.StackId
+                        WHERE
+                            s.StackName = '{stackName}'";
+
+        return Connection.Query<Cards>(query).ToList();
+    }
+
+    internal void UpdateCards(string stackName, string flashcardTitle, string columnToUpdate, string newValue)
+    {
+        Connection.Open();
+
+        string query;
+        if (columnToUpdate == "StackName")
+        {
+            query = $@"
+            UPDATE c
+                SET c.StackId = (
+                    SELECT s2.StackId
+                    FROM Flashcards.TCSA.Stacks s2
+                    WHERE s2.StackName = '{newValue}'
+                )
+                FROM Flashcards.TCSA.Cards c
+                INNER JOIN Flashcards.TCSA.Stacks s
+                    ON s.StackId = c.StackId
+                WHERE s.StackName = '{stackName}'
+                    AND c.FlashcardTitle = '{flashcardTitle}'";
+        }
+        else
+        {
+            query = $@"UPDATE c   
+                          SET {columnToUpdate} = '{newValue}'
+                          FROM Flashcards.TCSA.Cards c
+                            INNER JOIN Flashcards.TCSA.Stacks s
+                                    ON s.StackId = c.StackId 
+                          WHERE s.StackName = '{stackName}'
+                            AND c.FlashcardTitle = '{flashcardTitle}'";
+        }
+        
+        
+        Connection.Execute(query);
+    }
+
+    internal void DeleteCards(string stackName, string flashcardTitle)
+    {
+        Connection.Open();
+        string query;
+        
+        query = @$"DELETE c 
+                    FROM Flashcards.TCSA.Cards c 
+                    INNER JOIN Flashcards.TCSA.Stacks s ON s.StackId = c.StackId    
+                    WHERE s.StackName = '{stackName}'
+                      AND c.FlashcardTitle = '{flashcardTitle}'";
+        
+        Connection.Execute(query);
+    }
+    internal List<Stacks> ReadStacks()
+    {
+        Connection.Open();
+        
+        string query = $"SELECT StackId, StackName FROM Flashcards.TCSA.Stacks";
+        return Connection.Query<Stacks>(query).ToList();
     }
 
     internal void WriteTable<T>(string tableName, T obj)

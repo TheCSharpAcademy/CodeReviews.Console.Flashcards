@@ -23,11 +23,11 @@ internal class SessionController
             case Options.DBOptions.AddRow:
                 FlashcardsController.AddFlashcard(databaseManager);
                 break;
-            case Options.DBOptions.DeleteRow:
-                Console.WriteLine("Deleting Flashcard");
-                break;
             case Options.DBOptions.UpdateRow:
-                Console.WriteLine("Updating Flashcard");
+                FlashcardsController.EditFlashcard(databaseManager);
+                break;
+            case Options.DBOptions.DeleteRow:
+                FlashcardsController.DeleteFlashcard(databaseManager);
                 break;
             case Options.DBOptions.ViewRows:
                 FlashcardsController.ViewFlashcardsTable(databaseManager);

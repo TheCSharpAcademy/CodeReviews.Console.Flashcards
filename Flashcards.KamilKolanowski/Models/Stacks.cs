@@ -4,6 +4,5 @@ internal class Stacks ()
 {
     public int StackId { get; }
     public string StackName { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
     public DateTime DateCreated { get; set; }
 }

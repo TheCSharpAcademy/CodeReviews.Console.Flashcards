@@ -31,7 +31,7 @@ internal class Options
     internal static Dictionary<DBOptions, string> FlashcardsOptionDisplay { get; } = new Dictionary<DBOptions, string>()
     {
         [DBOptions.AddRow] = "Add new Flashcard",
-        [DBOptions.UpdateRow] = "Update Flashcard",
+        [DBOptions.UpdateRow] = "Edit Flashcard",
         [DBOptions.DeleteRow] = "Delete Flashcard",
         [DBOptions.ViewRows] = "View Flashcard"
     };
@@ -39,7 +39,7 @@ internal class Options
     internal static Dictionary<DBOptions, string> StacksOptionDisplay { get; } = new Dictionary<DBOptions, string>()
     {
         [DBOptions.AddRow] = "Add new Stack",
-        [DBOptions.UpdateRow] = "Update Stack",
+        [DBOptions.UpdateRow] = "Edit Stack",
         [DBOptions.DeleteRow] = "Delete Stack",
         [DBOptions.ViewRows] = "View Stack"
     };
