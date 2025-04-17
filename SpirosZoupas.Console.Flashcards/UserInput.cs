@@ -96,7 +96,7 @@ namespace Flashcards
                     GetFlashcardById();
                     break;
                 case "5":
-                    //GetAllFlashcards();
+                    GetAllFlashcards();
                     break;
                 default:
                     Console.WriteLine("Invalid command!");
@@ -208,10 +208,10 @@ namespace Flashcards
         private void DeleteFlashcard()
         {
             AnsiConsole.MarkupLine("[darkcyan]Please enter the ID of the flashcard you would like to delete[/]");
-            int id = Convert.ToInt32(Console.ReadLine);
+            string id = Console.ReadLine();
             // Flashcard existingFlashcard = _validation.GetExistingFlashcard(); DONT MAKE THIS A MODEL JUST A BOOL
 
-            if (_controller.DeleteFlashcard(id))
+            if (_controller.DeleteFlashcard(Convert.ToInt32(id)))
                 AnsiConsole.MarkupLine("[white on green]Flashcard deleted.[/]");
             else
                 AnsiConsole.MarkupLine("[white on red]Something went wrong, unable to delete flashcard.[/]");
@@ -242,7 +242,7 @@ namespace Flashcards
             AnsiConsole.MarkupLine("[darkcyan]Please enter the stack name to which this flashcard will belong.[/]");
             string stackName = Console.ReadLine();
 
-            if (_controller.UpdateFlashcard(front, back, stackName))
+            if (_controller.UpdateFlashcard(id, front, back, stackName))
                 AnsiConsole.MarkupLine("[white on green]Flashcard updated.[/]");
             else
                 AnsiConsole.MarkupLine("[white on red]Something went wrong, unable to update flashcard.[/]");
@@ -270,7 +270,7 @@ namespace Flashcards
 
             FlashcardStackDTO flashcard = _controller.GetFlashCardByID(id);
             if (flashcard != null)
-                AnsiConsole.MarkupLine($"[white on green]Flashcard with ID of {flashcard.ID} \n\n Front text: {flashcard.Front} \n\n Back text: {flashcard.Back}[/]");
+                AnsiConsole.MarkupLine($"[white on green]Flashcard with ID of {flashcard.ID} \n Front text: {flashcard.Front} \n Back text: {flashcard.Back} \n Stack: {flashcard.StackName}[/]");
             else
                 AnsiConsole.MarkupLine($"[white on red]Flashcard with ID of {id} does not exist.[/]");
         }
@@ -287,6 +287,15 @@ namespace Flashcards
         //    else
         //        AnsiConsole.MarkupLine($"[white on red]Flashcard with ID of {id} does not exist.[/]");
         //}
+
+        private void GetAllFlashcards()
+        {
+            List<FlashcardStackDTO> flashcards = _controller.GetAllFlashcards();
+            foreach (FlashcardStackDTO flashcard in flashcards)
+            {
+                AnsiConsole.MarkupLine($"[white on green]Flashcard with ID of {flashcard.ID} \n Front text: {flashcard.Front} \n Back text: {flashcard.Back} \n Stack: {flashcard.StackName}[/]");
+            }
+        }
 
         private void GetAllStacks()
         {

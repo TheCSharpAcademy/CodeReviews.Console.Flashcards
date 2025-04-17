@@ -14,13 +14,13 @@ namespace Flashcards.DAL
         }
 
         public bool CreateFlashcard(string front, string back, string stackName) => 
-            _repository.Insert("Flashcard", GetFlashcardObject(front,back, stackName));
+            _repository.Insert("Flashcard", GetFlashcardObjectForCreate(front,back, stackName));
 
         public bool CreateStack(string name) =>
             _repository.Insert("Stack", GetStackObject(name));
 
-        public bool UpdateFlashcard(string front, string back, string stackName) => 
-            _repository.Update("Flashcard", GetFlashcardObject(front, back, stackName));
+        public bool UpdateFlashcard(int id, string front, string back, string stackName) => 
+            _repository.Update("Flashcard", GetFlashcardObjectForUpdate(id, front, back, stackName));
 
         public bool UpdateStack(string currentName, string updatedName) =>
             _repository.Update("Stack", GetStackObject(currentName, updatedName));
@@ -34,12 +34,24 @@ namespace Flashcards.DAL
         public FlashcardStackDTO GetFlashCardByID(int id) =>
             _repository.GetFlashcardByID(id);
 
+        public List<FlashcardStackDTO> GetAllFlashcards() =>
+            _repository.GetAllFlashcards();
+
         public List<StackDTO> GetAllStacks() =>
             _repository.GetAllStacks();
 
-        private Flashcard GetFlashcardObject(string front, string back, string stackName) =>
+        private Flashcard GetFlashcardObjectForCreate(string front, string back, string stackName) =>
             new Flashcard
             {
+                Front = front,
+                Back = back,
+                StackID = _repository.GetStackIDByName(stackName)
+            };
+
+        private Flashcard GetFlashcardObjectForUpdate(int id, string front, string back, string stackName) =>
+            new Flashcard
+            {
+                ID = id,
                 Front = front,
                 Back = back,
                 StackID = _repository.GetStackIDByName(stackName)
