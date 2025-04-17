@@ -26,6 +26,7 @@ namespace Flashcards.DAL
         {
             var properties = typeof(T)
                 .GetProperties()
+                .Where(p => p.Name != "ID")
                 .ToList();
 
             var columnNames = string.Join(", ", properties.Select(p => p.Name));
@@ -155,7 +156,7 @@ namespace Flashcards.DAL
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                id = connection.ExecuteScalar<int>(sql);
+                id = connection.ExecuteScalar<int>(sql, parameters);
                 connection.Close();
             }
 
@@ -186,36 +187,55 @@ namespace Flashcards.DAL
 
         public List<StackDTO> GetAllStacks()
         {
-            List<FlashcardStackDTO> flashCards = new List<FlashcardStackDTO>();
             List<StackDTO> stacks = new List<StackDTO>();
             string sql = $@"
             SELECT
-                Flashcard.Front,
-                Flashcard.Back,
-                Stack.Name AS StackName
+                Stack.Name
             FROM
-                Flashcard INNER JOIN
-                Stack ON Stack.ID = Flashcard.StackID";
+                Stack";
 
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                flashCards = connection.Query<FlashcardStackDTO>(sql).ToList();
+                stacks = connection.Query<StackDTO>(sql).ToList();
                 connection.Close();
-            }
-
-            List<FlashcardStackDTO> flashCardsInStack = new List<FlashcardStackDTO>();
-            foreach (var fc in flashCards)
-            {
-                if (stacks.Where(s => s.Name == fc.StackName).IsNullOrEmpty())
-                {
-                    stacks.Add(new StackDTO { Name = fc.StackName, FlashCards = new List<FlashcardStackDTO>() });
-                }
-
-                stacks.Where(s => s.Name == fc.StackName).ToList().ForEach(s => s.FlashCards.Add(fc));
             }
 
             return stacks;
         }
+
+        //public List<StackDTO> GetAllStacks()
+        //{
+        //    List<FlashcardStackDTO> flashCards = new List<FlashcardStackDTO>();
+        //    List<StackDTO> stacks = new List<StackDTO>();
+        //    string sql = $@"
+        //    SELECT
+        //        Flashcard.Front,
+        //        Flashcard.Back,
+        //        Stack.Name AS StackName
+        //    FROM
+        //        Flashcard INNER JOIN
+        //        Stack ON Stack.ID = Flashcard.StackID";
+
+        //    using (var connection = new SqlConnection(connectionString))
+        //    {
+        //        connection.Open();
+        //        flashCards = connection.Query<FlashcardStackDTO>(sql).ToList();
+        //        connection.Close();
+        //    }
+
+        //    List<FlashcardStackDTO> flashCardsInStack = new List<FlashcardStackDTO>();
+        //    foreach (var fc in flashCards)
+        //    {
+        //        if (stacks.Where(s => s.Name == fc.StackName).IsNullOrEmpty())
+        //        {
+        //            stacks.Add(new StackDTO { Name = fc.StackName, FlashCards = new List<FlashcardStackDTO>() });
+        //        }
+
+        //        stacks.Where(s => s.Name == fc.StackName).ToList().ForEach(s => s.FlashCards.Add(fc));
+        //    }
+
+        //    return stacks;
+        //}
     }
 }

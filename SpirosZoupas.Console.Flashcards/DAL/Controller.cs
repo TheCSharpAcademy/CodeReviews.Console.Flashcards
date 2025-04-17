@@ -22,8 +22,8 @@ namespace Flashcards.DAL
         public bool UpdateFlashcard(string front, string back, string stackName) => 
             _repository.Update("Flashcard", GetFlashcardObject(front, back, stackName));
 
-        public bool UpdateStack(string name) =>
-            _repository.Update("Stack", GetStackObject(name));
+        public bool UpdateStack(string currentName, string updatedName) =>
+            _repository.Update("Stack", GetStackObject(currentName, updatedName));
 
         public bool DeleteFlashcard(int id) =>
             _repository.Delete("Flashcard", id);
@@ -31,10 +31,11 @@ namespace Flashcards.DAL
         public bool DeleteStack(string name) =>
             _repository.Delete("Stack", _repository.GetStackIDByName(name));
 
-        public FlashcardStackDTO GetFlashCardByID(int id)
-        {
+        public FlashcardStackDTO GetFlashCardByID(int id) =>
+            _repository.GetFlashcardByID(id);
 
-        }
+        public List<StackDTO> GetAllStacks() =>
+            _repository.GetAllStacks();
 
         private Flashcard GetFlashcardObject(string front, string back, string stackName) =>
             new Flashcard
@@ -48,6 +49,13 @@ namespace Flashcards.DAL
             new Stack
             {
                 Name = name
+            };
+
+        private Stack GetStackObject(string currentName, string updatedName) =>
+            new Stack
+            {
+                ID = _repository.GetStackIDByName(currentName),
+                Name = updatedName
             };
     }
 }

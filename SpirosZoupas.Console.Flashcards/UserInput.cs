@@ -3,6 +3,7 @@ using Flashcards.DAL;
 using Spectre.Console;
 using System;
 using Flashcards.DAL.DTO;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Flashcards
 {
@@ -140,10 +141,10 @@ namespace Flashcards
                     UpdateStack();
                     break;
                 case "4":
-                    // GetStackByName();
+                    //GetStackByName();
                     break;
                 case "5":
-                    // GetAllStacks();
+                    GetAllStacks();
                     break;
                 case "6":
                     break;
@@ -186,7 +187,7 @@ namespace Flashcards
             AnsiConsole.MarkupLine("[darkcyan]Please enter the name of your stack:[/]");
             string name = Console.ReadLine();
 
-            if (_controller.CreateStack("Stack"))
+            if (_controller.CreateStack(name))
             {
                 AnsiConsole.MarkupLine("[white on green]Stack created.[/]");
                 
@@ -251,12 +252,12 @@ namespace Flashcards
         {
             AnsiConsole.MarkupLine("[darkcyan]Please enter the name of the stack you would like to update[/]");
             // Flashcard existingFlashcard = _validation.GetExistingFlashcard();
-            string name = Console.ReadLine();
+            string currentName = Console.ReadLine();
 
             AnsiConsole.MarkupLine("[darkcyan]Please enter the new name of the stack:[/]");
             string updatedName = Console.ReadLine();
 
-            if (_controller.UpdateStack(updatedName))
+            if (_controller.UpdateStack(currentName, updatedName))
                 AnsiConsole.MarkupLine("[white on green]Stack updated.[/]");
             else
                 AnsiConsole.MarkupLine("[white on red]Something went wrong, unable to update stack.[/]");
@@ -272,6 +273,33 @@ namespace Flashcards
                 AnsiConsole.MarkupLine($"[white on green]Flashcard with ID of {flashcard.ID} \n\n Front text: {flashcard.Front} \n\n Back text: {flashcard.Back}[/]");
             else
                 AnsiConsole.MarkupLine($"[white on red]Flashcard with ID of {id} does not exist.[/]");
+        }
+
+        //TODO: will show flashcards of stack, otherwise there's no point
+        //private void GetStackByName()
+        //{
+        //    AnsiConsole.MarkupLine("[darkcyan]Please enter the name of the stack you would like to find.[/]");
+        //    string name = Console.ReadLine();
+
+        //    StackDTO stack = _controller.GetStackByName(name);
+        //    if (stack != null)
+        //        AnsiConsole.MarkupLine($"[white on green]Stack \"{stack.Name}\" has x amount of flashcards]");
+        //    else
+        //        AnsiConsole.MarkupLine($"[white on red]Flashcard with ID of {id} does not exist.[/]");
+        //}
+
+        private void GetAllStacks()
+        {
+            List<StackDTO> stacks = _controller.GetAllStacks();
+            if (!stacks.IsNullOrEmpty())
+            {
+                foreach (StackDTO stack in stacks)
+                {
+                    AnsiConsole.MarkupLine($"[white on green]Stack \"{stack.Name}\"[/]");
+                }
+            }
+            else
+                AnsiConsole.MarkupLine($"[white on red]No stacks found![/]");
         }
     }
 }
