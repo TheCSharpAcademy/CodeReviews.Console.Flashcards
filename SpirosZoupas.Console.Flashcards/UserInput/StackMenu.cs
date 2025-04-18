@@ -2,6 +2,7 @@
 using Flashcards.DAL;
 using Microsoft.IdentityModel.Tokens;
 using Spectre.Console;
+using Flashcards.DAL.Model;
 
 namespace Flashcards.UserInput
 {
@@ -111,6 +112,15 @@ namespace Flashcards.UserInput
         private void GetStackByName()
         {
             string name = _validation.GetExistingStackName("[darkcyan]Please enter the name of the stack you would like to inspect[/]");
+            List<FlashcardStackDTO> stack = _controller.GetStackByName(name);
+            if (stack != null)
+            {
+                AnsiConsole.MarkupLine($"[white on green]Stack '{stack[0].StackName}' has the following flashcards:[/]");
+                foreach (FlashcardStackDTO flashcard in stack)
+                {
+                    AnsiConsole.MarkupLine($"[white on green]Flashcard {flashcard.ID}: \n Front text: {flashcard.Front} \n Back text: {flashcard.Back}[/]");
+                }
+            }
         }
 
         private void GetAllStacks()
@@ -120,7 +130,7 @@ namespace Flashcards.UserInput
             {
                 foreach (StackDTO stack in stacks)
                 {
-                    AnsiConsole.MarkupLine($"[white on green]Stack \"{stack.Name}\"[/]");
+                    AnsiConsole.MarkupLine($"[white on green]Stack '{stack.Name}'[/]");
                 }
             }
             else

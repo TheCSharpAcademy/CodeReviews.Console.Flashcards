@@ -112,12 +112,13 @@ namespace Flashcards.DAL
             return ExecuteQuerySingle<FlashcardStackDTO>(sql, parameters);
         }
 
-        public StackDTO GetStackByName(string name)
+        public List<FlashcardStackDTO> GetStackByName(string name)
         {
             List<FlashcardStackDTO> flashCards = new List<FlashcardStackDTO>();
             var parameters = new { Name = name };
             string sql = $@"
             SELECT
+                ROW_NUMBER() OVER (ORDER BY Flashcard.Front) AS ID,
                 Flashcard.Front,
                 Flashcard.Back,
                 Stack.Name AS StackName
@@ -130,15 +131,11 @@ namespace Flashcards.DAL
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                flashCards = connection.Query<FlashcardStackDTO>(sql).ToList();
+                flashCards = connection.Query<FlashcardStackDTO>(sql, parameters).ToList();
                 connection.Close();
             }
 
-            return new StackDTO
-            {
-                Name = flashCards.First().StackName,
-                FlashCards = flashCards
-            };
+            return flashCards;
         }
 
         public int GetStackIDByName(string name)
@@ -168,6 +165,7 @@ namespace Flashcards.DAL
             List<FlashcardStackDTO> flashCards = new List<FlashcardStackDTO>();
             string sql = $@"
             SELECT
+                Flashcard.ID,
                 Flashcard.Front,
                 Flashcard.Back,
                 Stack.Name AS StackName

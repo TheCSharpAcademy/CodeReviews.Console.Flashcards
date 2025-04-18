@@ -34,7 +34,7 @@ namespace Flashcards.DAL
         public FlashcardStackDTO GetFlashCardByID(int id) =>
             _repository.GetFlashcardByID(id);
 
-        public StackDTO GetStackByName(string name) =>
+        public List<FlashcardStackDTO> GetStackByName(string name) =>
             _repository.GetStackByName(name);
 
         public List<FlashcardStackDTO> GetAllFlashcards() =>
