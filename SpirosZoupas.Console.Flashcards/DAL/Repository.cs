@@ -203,6 +203,28 @@ namespace Flashcards.DAL
             return stacks;
         }
 
+        public List<StudySessionDTO> GetAllStudySessions()
+        {
+            List<StudySessionDTO> studySessions = new List<StudySessionDTO>();
+            string sql = @$"SELECT
+                StudySession.ID,
+	            StudySession.Date,
+	            StudySession.Score,
+	            Stack.Name AS StackName
+            FROM
+	            StudySession INNER JOIN
+	            Stack ON Stack.ID = StudySession.StackID";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                studySessions = connection.Query<StudySessionDTO>(sql).ToList();
+                connection.Close();
+            }
+
+            return studySessions;
+        }
+
         public bool StackNameExists(string name)
         {
             int count;

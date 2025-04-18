@@ -19,6 +19,9 @@ namespace Flashcards.DAL
         public bool CreateStack(string name) =>
             _repository.Insert("Stack", GetStackObject(name));
 
+        public bool CreateStudySession(DateTime date, int score, string stackName) =>
+            _repository.Insert("StudySession", new StudySession { Date = date, Score = score, StackID = _repository.GetStackIDByName(stackName) });
+
         public bool UpdateFlashcard(int id, string front, string back, string stackName) => 
             _repository.Update("Flashcard", GetFlashcardObjectForUpdate(id, front, back, stackName));
 
@@ -42,6 +45,9 @@ namespace Flashcards.DAL
 
         public List<StackDTO> GetAllStacks() =>
             _repository.GetAllStacks();
+
+        public List<StudySessionDTO> GetAllStudySessions() =>
+            _repository.GetAllStudySessions();
 
         public bool StackNameExists(string name) =>
             _repository.StackNameExists(name);

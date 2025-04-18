@@ -1,9 +1,5 @@
-﻿using Flashcards.DAL.Model;
-using Flashcards.DAL;
+﻿using Flashcards.DAL;
 using Spectre.Console;
-using System;
-using Flashcards.DAL.DTO;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Flashcards.UserInput
 {
@@ -11,11 +7,13 @@ namespace Flashcards.UserInput
     {
         private readonly FlashcardMenu flashcardMenu;
         private readonly StackMenu stackMenu;
+        private readonly StudySessionMenu studySessionMenu;
 
         public UserInput(Controller controller, Validation validation)
         {
             flashcardMenu = new FlashcardMenu(controller, validation);
             stackMenu = new StackMenu(controller, validation, flashcardMenu);
+            studySessionMenu = new StudySessionMenu(controller, validation);
         }
 
         public void GetMainMenu()
@@ -30,7 +28,7 @@ namespace Flashcards.UserInput
                 AnsiConsole.MarkupLine("[italic hotpink3_1 on black]0) Exit Application[/]");
                 AnsiConsole.MarkupLine("[italic hotpink3_1 on black]1) Flashcards[/]");
                 AnsiConsole.MarkupLine("[italic hotpink3_1 on black]2) Stacks[/]");
-                AnsiConsole.MarkupLine("[italic hotpink3_1 on black]3) Sessions (WIP)[/]");
+                AnsiConsole.MarkupLine("[italic hotpink3_1 on black]3) Study Sessions[/]");
                 string input = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                     .Title("[italic hotpink3_1 on black]Please type one of the following values only:[/]")
@@ -53,6 +51,7 @@ namespace Flashcards.UserInput
                         stackMenu.GetStackMenu();
                         break;
                     case "3":
+                        studySessionMenu.GetStudySessionMenu();
                         break;
                 }
             }
