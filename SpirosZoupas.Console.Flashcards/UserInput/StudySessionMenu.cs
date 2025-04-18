@@ -1,6 +1,5 @@
 ﻿using Flashcards.DAL;
 using Flashcards.DAL.DTO;
-using Flashcards.DAL.Model;
 using Microsoft.IdentityModel.Tokens;
 using Spectre.Console;
 

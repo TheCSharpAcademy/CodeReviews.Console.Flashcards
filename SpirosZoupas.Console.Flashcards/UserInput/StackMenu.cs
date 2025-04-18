@@ -7,11 +7,8 @@ namespace Flashcards.UserInput
 {
     public class StackMenu : BaseMenu
     {
-        private readonly FlashcardMenu _flashcardMenu;
-
-        public StackMenu(Controller controller, Validation validation, FlashcardMenu flashcardMenu) : base(controller, validation)
+        public StackMenu(Controller controller, Validation validation) : base(controller, validation)
         {
-            _flashcardMenu = flashcardMenu;
         }
 
         public void GetStackMenu()
@@ -80,10 +77,23 @@ namespace Flashcards.UserInput
                         "No"
                     ]));
 
-                if (input == "Yes") _flashcardMenu.CreateFlashcard(name);
+                if (input == "Yes") CreateFlashcard(name);
             }
             else
                 AnsiConsole.MarkupLine("[white on red]Something went wrong, unable to create stack.[/]");
+        }
+
+        private void CreateFlashcard(string stackName)
+        {
+            AnsiConsole.MarkupLine("[darkcyan]Please enter the front side text of your flashcard:[/]");
+            string front = Console.ReadLine();
+            AnsiConsole.MarkupLine("[darkcyan]Please enter the back side text of your flashcard:[/]");
+            string back = Console.ReadLine();
+
+            if (_controller.CreateFlashcard(front, back, stackName))
+                AnsiConsole.MarkupLine("[white on green]Flashcard created.[/]");
+            else
+                AnsiConsole.MarkupLine("[white on red]Something went wrong, unable to create flashcard.[/]");
         }
 
         private void DeleteStack()

@@ -1,8 +1,5 @@
 ﻿using Flashcards.DAL;
-using Flashcards.DAL.DTO;
-using Flashcards.DAL.Model;
 using Spectre.Console;
-using System.Globalization;
 
 namespace Flashcards
 {
@@ -51,14 +48,6 @@ namespace Flashcards
                 }));
 
             return name;
-        }
-
-        public int GetValidatedInteger(string message)
-        {
-            int number = AnsiConsole.Prompt(
-                new TextPrompt<int>(message));
-
-            return number;
         }
 
         public int GetValidYear()

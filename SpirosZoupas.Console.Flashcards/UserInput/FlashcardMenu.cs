@@ -1,6 +1,5 @@
 ﻿using Flashcards.DAL;
 using Flashcards.DAL.DTO;
-using Flashcards.DAL.Model;
 using Spectre.Console;
 
 namespace Flashcards.UserInput
@@ -66,19 +65,6 @@ namespace Flashcards.UserInput
             AnsiConsole.MarkupLine("[darkcyan]Please enter the back side text of your flashcard:[/]");
             string back = Console.ReadLine();
             string stackName = _validation.GetExistingStackName("[darkcyan]Please enter the stack name to which this flashcard will belong.[/]");
-
-            if (_controller.CreateFlashcard(front, back, stackName))
-                AnsiConsole.MarkupLine("[white on green]Flashcard created.[/]");
-            else
-                AnsiConsole.MarkupLine("[white on red]Something went wrong, unable to create flashcard.[/]");
-        }
-
-        public void CreateFlashcard(string stackName)
-        {
-            AnsiConsole.MarkupLine("[darkcyan]Please enter the front side text of your flashcard:[/]");
-            string front = Console.ReadLine();
-            AnsiConsole.MarkupLine("[darkcyan]Please enter the back side text of your flashcard:[/]");
-            string back = Console.ReadLine();
 
             if (_controller.CreateFlashcard(front, back, stackName))
                 AnsiConsole.MarkupLine("[white on green]Flashcard created.[/]");
