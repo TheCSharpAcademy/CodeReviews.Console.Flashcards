@@ -1,5 +1,5 @@
-﻿using Flashcards;
-using Flashcards.DAL;
+﻿using Flashcards.DAL;
+using Flashcards.UserInput;
 
 Repository repository = new Repository();
 Controller controller = new Controller(repository);
