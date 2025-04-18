@@ -21,11 +21,13 @@ GO
 
 CREATE TABLE Flashcards.TCSA.Cards (
    FlashcardId INT PRIMARY KEY IDENTITY(1,1),
-   StackId INT NOT NULL FOREIGN KEY REFERENCES Flashcards.TCSA.Stacks(StackId),
+   StackId INT NOT NULL,
    FlashcardTitle VARCHAR(100) NOT NULL,
    FlashcardContent VARCHAR(500) NOT NULL,
-   DateCreated DATETIME2(7) NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+   DateCreated DATETIME2(7) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   CONSTRAINT fk_del_stack_id FOREIGN KEY (StackId)
+       REFERENCES Flashcards.TCSA.Stacks (StackId)
+       ON DELETE CASCADE);
 GO
 
 ALTER TABLE Flashcards.TCSA.Stacks

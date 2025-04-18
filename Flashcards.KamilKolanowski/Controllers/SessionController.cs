@@ -34,4 +34,32 @@ internal class SessionController
                 break;
         };
     }
+
+    internal static void ManageStacks()
+    {
+        DatabaseManager databaseManager = new();
+
+        var stacksChoice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .AddChoices(Options.StacksOptionDisplay.Values));
+        
+        var selectedStacksChoice = Options.StacksOptionDisplay
+            .FirstOrDefault(x => x.Value == stacksChoice).Key;
+
+        switch (selectedStacksChoice)
+        {
+            case Options.DBOptions.AddRow:
+                // StacksController.AddStack(databaseManager);
+                break;
+            case Options.DBOptions.UpdateRow:
+                // StacksController.EditStack(databaseManager);
+                break;
+            case Options.DBOptions.DeleteRow:
+                // StacksController.DeleteStack(databaseManager);
+                break;
+            case Options.DBOptions.ViewRows:
+                StacksController.ViewStacksTable(databaseManager);
+                break;
+        }
+    }
 }

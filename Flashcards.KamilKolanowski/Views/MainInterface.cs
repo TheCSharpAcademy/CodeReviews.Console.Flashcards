@@ -25,7 +25,7 @@ internal class MainInterface
                     SessionController.ManageFlashcards();
                     break;
                 case Options.MenuOptions.MStacks:
-                    Console.WriteLine("Managing Stacks...");
+                    SessionController.ManageStacks();
                     Console.ReadKey();
                     break;
                 case Options.MenuOptions.StudySession:

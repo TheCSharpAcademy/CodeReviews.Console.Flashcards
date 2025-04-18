@@ -5,9 +5,9 @@ namespace Flashcards.KamilKolanowski.Handlers;
 
 internal static class UserInputHandler
 {
-    internal static Cards CreateFlashcard(List<(int, string)> stacks)
+    internal static CreateCardDto CreateFlashcard(List<(int, string)> stacks)
     {
-        var stackNames = stacks.Select(x => x.Item2).ToList();
+        var stackNames = stacks.Select(s => s.Item2).ToList();
 
         if (stackNames.Any())
         {
@@ -24,14 +24,14 @@ internal static class UserInputHandler
             var flashcardContent = AnsiConsole.Prompt(
                 new TextPrompt<string>("Provide content for the flashcard: "));
 
-            return new Cards { 
+            return new CreateCardDto() { 
                 StackId = stackId, 
                 FlashcardTitle = flashcardTitle, 
                 FlashcardContent = flashcardContent
             };
         }
 
-        Console.WriteLine(@"There's no Stack created.
+        AnsiConsole.MarkupLine(@"There's no Stack created.
                           Please create Stack first.");
         return null;
     }
