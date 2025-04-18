@@ -121,11 +121,11 @@ namespace Flashcards.UserInput
         private void GetStackByName()
         {
             string name = _validation.GetExistingStackName("[darkcyan]Please enter the name of the stack you would like to inspect[/]");
-            List<FlashcardStackDTO> stack = _controller.GetStackByName(name);
+            List<FlashcardStackDto> stack = _controller.GetStackByName(name);
             if (!stack.IsNullOrEmpty())
             {
                 AnsiConsole.MarkupLine($"[white on green]Stack '{stack[0].StackName}' has the following flashcards:[/]");
-                foreach (FlashcardStackDTO flashcard in stack)
+                foreach (FlashcardStackDto flashcard in stack)
                 {
                     AnsiConsole.MarkupLine($"[white on green]Flashcard {flashcard.ID}: \n Front text: {flashcard.Front} \n Back text: {flashcard.Back}[/]");
                 }
@@ -134,15 +134,15 @@ namespace Flashcards.UserInput
 
         private void GetAllStacks()
         {
-            List<StackDTO> stacks = _controller.GetAllStacks();
+            List<StackDto> stacks = _controller.GetAllStacks();
             if (!stacks.IsNullOrEmpty())
             {
-                foreach (StackDTO stack in stacks)
+                foreach (StackDto stack in stacks)
                 {
                     if (!stack.Flashcards.IsNullOrEmpty()) 
                     {
                         AnsiConsole.MarkupLine($"[white on green]Stack '{stack.Name}' has the following flashcards:[/]");
-                        foreach (FlashcardStackDTO flashcard in stack.Flashcards)
+                        foreach (FlashcardStackDto flashcard in stack.Flashcards)
                         {
                             AnsiConsole.MarkupLine($"[white on green]Flashcard {flashcard.ID}: \n Front text: {flashcard.Front} \n Back text: {flashcard.Back}[/]");
                         }

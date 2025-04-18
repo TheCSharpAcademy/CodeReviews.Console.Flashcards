@@ -91,7 +91,7 @@ namespace Flashcards.DAL
             return result;
         }
 
-        public FlashcardStackDTO GetFlashcardByID(int id)
+        public FlashcardStackDto GetFlashcardByID(int id)
         {
             var parameters = new { Id = id };
 
@@ -108,12 +108,12 @@ namespace Flashcards.DAL
                 Flashcard.ID = @ID";
 
 
-            return ExecuteQuerySingle<FlashcardStackDTO>(sql, parameters);
+            return ExecuteQuerySingle<FlashcardStackDto>(sql, parameters);
         }
 
-        public List<FlashcardStackDTO> GetStackByName(string name)
+        public List<FlashcardStackDto> GetStackByName(string name)
         {
-            List<FlashcardStackDTO> flashCards = new List<FlashcardStackDTO>();
+            List<FlashcardStackDto> flashCards = new List<FlashcardStackDto>();
             var parameters = new { Name = name };
             string sql = $@"
             SELECT
@@ -130,7 +130,7 @@ namespace Flashcards.DAL
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                flashCards = connection.Query<FlashcardStackDTO>(sql, parameters).ToList();
+                flashCards = connection.Query<FlashcardStackDto>(sql, parameters).ToList();
                 connection.Close();
             }
 
@@ -159,9 +159,9 @@ namespace Flashcards.DAL
             return id;
         }
 
-        public List<FlashcardStackDTO> GetAllFlashcards()
+        public List<FlashcardStackDto> GetAllFlashcards()
         {
-            List<FlashcardStackDTO> flashCards = new List<FlashcardStackDTO>();
+            List<FlashcardStackDto> flashCards = new List<FlashcardStackDto>();
             string sql = $@"
             SELECT
                 Flashcard.ID,
@@ -175,26 +175,26 @@ namespace Flashcards.DAL
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                flashCards = connection.Query<FlashcardStackDTO>(sql).ToList();
+                flashCards = connection.Query<FlashcardStackDto>(sql).ToList();
                 connection.Close();
             }
 
             return flashCards;
         }
 
-        public List<StackDTO> GetAllStacks()
+        public List<StackDto> GetAllStacks()
         {
-            List<StackDTO> stacks = new List<StackDTO>();
+            List<StackDto> stacks = new List<StackDto>();
             string sql = "SELECT Stack.Name FROM Stack";
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                stacks = connection.Query<StackDTO>(sql).ToList();
+                stacks = connection.Query<StackDto>(sql).ToList();
                 connection.Close();
             }
 
-            List<FlashcardStackDTO> flashcards = GetAllFlashcards();
-            foreach (FlashcardStackDTO flashcard in flashcards)
+            List<FlashcardStackDto> flashcards = GetAllFlashcards();
+            foreach (FlashcardStackDto flashcard in flashcards)
             {
                 stacks.Where(s => s.Name == flashcard.StackName).ToList().ForEach(s => s.Flashcards.Add(flashcard));
             }
@@ -202,9 +202,9 @@ namespace Flashcards.DAL
             return stacks;
         }
 
-        public List<StudySessionDTO> GetAllStudySessions()
+        public List<StudySessionDto> GetAllStudySessions()
         {
-            List<StudySessionDTO> studySessions = new List<StudySessionDTO>();
+            List<StudySessionDto> studySessions = new List<StudySessionDto>();
             string sql = @$"SELECT
                 StudySession.ID,
 	            StudySession.Date,
@@ -217,16 +217,16 @@ namespace Flashcards.DAL
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                studySessions = connection.Query<StudySessionDTO>(sql).ToList();
+                studySessions = connection.Query<StudySessionDto>(sql).ToList();
                 connection.Close();
             }
 
             return studySessions;
         }
 
-        public List<StudySessionPerMonthDTO> GetStudySessionsPerMonthPerStack(int year)
+        public List<StudySessionPerMonthDto> GetStudySessionsPerMonthPerStack(int year)
         {
-            List<StudySessionPerMonthDTO> studySessions = new List<StudySessionPerMonthDTO>();
+            List<StudySessionPerMonthDto> studySessions = new List<StudySessionPerMonthDto>();
             var parameters = new { Year = year };
             string sql = @"SELECT *
                 FROM (
@@ -247,16 +247,16 @@ namespace Flashcards.DAL
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                studySessions = connection.Query<StudySessionPerMonthDTO>(sql, parameters).ToList();
+                studySessions = connection.Query<StudySessionPerMonthDto>(sql, parameters).ToList();
                 connection.Close();
             }
 
             return studySessions;
         }
 
-        public List<StudySessionPerMonthDTO> GetAverageScoreOfStudySessionsPerMonthPerStack(int year)
+        public List<StudySessionPerMonthDto> GetAverageScoreOfStudySessionsPerMonthPerStack(int year)
         {
-            List<StudySessionPerMonthDTO> studySessions = new List<StudySessionPerMonthDTO>();
+            List<StudySessionPerMonthDto> studySessions = new List<StudySessionPerMonthDto>();
             var parameters = new { Year = year };
             string sql = @"SELECT *
                 FROM (
@@ -277,7 +277,7 @@ namespace Flashcards.DAL
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                studySessions = connection.Query<StudySessionPerMonthDTO>(sql, parameters).ToList();
+                studySessions = connection.Query<StudySessionPerMonthDto>(sql, parameters).ToList();
                 connection.Close();
             }
 

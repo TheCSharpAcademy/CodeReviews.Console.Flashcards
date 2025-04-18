@@ -102,7 +102,7 @@ namespace Flashcards.UserInput
         {
             int id = _validation.GetExistingFlashcardID("[darkcyan]Please enter the ID of the flashcard you would like to find.[/]");
 
-            FlashcardStackDTO flashcard = _controller.GetFlashCardByID(id);
+            FlashcardStackDto flashcard = _controller.GetFlashCardByID(id);
 
             if (flashcard != null)
                 AnsiConsole.MarkupLine($"[white on green]Flashcard with ID of {flashcard.ID} \n Front text: {flashcard.Front} \n Back text: {flashcard.Back} \n Stack: {flashcard.StackName}[/]");
@@ -112,8 +112,8 @@ namespace Flashcards.UserInput
 
         private void GetAllFlashcards()
         {
-            List<FlashcardStackDTO> flashcards = _controller.GetAllFlashcards();
-            foreach (FlashcardStackDTO flashcard in flashcards)
+            List<FlashcardStackDto> flashcards = _controller.GetAllFlashcards();
+            foreach (FlashcardStackDto flashcard in flashcards)
             {
                 AnsiConsole.MarkupLine($"[white on green]Flashcard with ID of {flashcard.ID} \n Front text: {flashcard.Front} \n Back text: {flashcard.Back} \n Stack: {flashcard.StackName}[/]");
             }

@@ -1,6 +1,6 @@
 ﻿namespace Flashcards.DAL.DTO
 {
-    public class StudySessionDTO
+    public class StudySessionDto
     {
         public int ID { get; set; }
         public DateTime Date { get; set; }

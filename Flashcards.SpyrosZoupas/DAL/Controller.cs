@@ -33,25 +33,25 @@ namespace Flashcards.DAL
         public bool DeleteStack(string name) =>
             _repository.Delete("Stack", _repository.GetStackIDByName(name));
 
-        public FlashcardStackDTO GetFlashCardByID(int id) =>
+        public FlashcardStackDto GetFlashCardByID(int id) =>
             _repository.GetFlashcardByID(id);
 
-        public List<FlashcardStackDTO> GetStackByName(string name) =>
+        public List<FlashcardStackDto> GetStackByName(string name) =>
             _repository.GetStackByName(name);
 
-        public List<FlashcardStackDTO> GetAllFlashcards() =>
+        public List<FlashcardStackDto> GetAllFlashcards() =>
             _repository.GetAllFlashcards();
 
-        public List<StackDTO> GetAllStacks() =>
+        public List<StackDto> GetAllStacks() =>
             _repository.GetAllStacks();
 
-        public List<StudySessionDTO> GetAllStudySessions() =>
+        public List<StudySessionDto> GetAllStudySessions() =>
             _repository.GetAllStudySessions();
 
-        public List<StudySessionPerMonthDTO> GetStudySessionsPerMonthPerStack(int year) =>
+        public List<StudySessionPerMonthDto> GetStudySessionsPerMonthPerStack(int year) =>
             _repository.GetStudySessionsPerMonthPerStack(year);
 
-        public List<StudySessionPerMonthDTO> GetAverageScoreOfStudySessionsPerMonthPerStack(int year) =>
+        public List<StudySessionPerMonthDto> GetAverageScoreOfStudySessionsPerMonthPerStack(int year) =>
             _repository.GetAverageScoreOfStudySessionsPerMonthPerStack(year);
 
         public bool StackNameExists(string name) =>

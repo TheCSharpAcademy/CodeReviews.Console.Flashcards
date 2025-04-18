@@ -57,12 +57,12 @@ namespace Flashcards.UserInput
         private void StudyStack()
         {
             string name = _validation.GetExistingStackName("[darkcyan]Please enter the name of the stack you would like to study[/]");
-            List<FlashcardStackDTO> stack = _controller.GetStackByName(name);
+            List<FlashcardStackDto> stack = _controller.GetStackByName(name);
             int score = 0;
             if (!stack.IsNullOrEmpty())
             {
                 AnsiConsole.MarkupLine($"[white on green]{stack[0].StackName}:[/]");
-                foreach (FlashcardStackDTO flashcard in stack)
+                foreach (FlashcardStackDto flashcard in stack)
                 {
                     AnsiConsole.MarkupLine($"[white on green]Flashcard {flashcard.ID}: \n Front text (question): {flashcard.Front}[/]");
                     string answer = AnsiConsole.Ask<string>("[darkcyan]What's the answer?[/]");
@@ -86,10 +86,10 @@ namespace Flashcards.UserInput
 
         private void GetAllStudySessions()
         {
-            List<StudySessionDTO> studySessions = _controller.GetAllStudySessions();
+            List<StudySessionDto> studySessions = _controller.GetAllStudySessions();
             if (!studySessions.IsNullOrEmpty())
             {
-                foreach (StudySessionDTO studySession in studySessions)
+                foreach (StudySessionDto studySession in studySessions)
                 {
                     AnsiConsole.MarkupLine($"[white on green]Study session with ID of {studySession.ID} with score of {studySession.Score} took place at {studySession.Date.ToString("dd-MM-yyyy")} and belongs to stack '{studySession.StackName}'[/]");
                 }
@@ -101,13 +101,13 @@ namespace Flashcards.UserInput
         private void GetStudySessionsPerMonthPerStack()
         {
             int year = _validation.GetValidYear();
-            List<StudySessionPerMonthDTO> studySessions = _controller.GetStudySessionsPerMonthPerStack(year);
+            List<StudySessionPerMonthDto> studySessions = _controller.GetStudySessionsPerMonthPerStack(year);
             if (!studySessions.IsNullOrEmpty())
             {
                 AnsiConsole.MarkupLine($"[green]Number of Study Sessions per month for year {year}[/]");
-                AnsiConsole.MarkupLine($@"[green]| {nameof(StudySessionPerMonthDTO.StackName)} | {nameof(StudySessionPerMonthDTO.January)} | {nameof(StudySessionPerMonthDTO.February)} | {nameof(StudySessionPerMonthDTO.March)} | {nameof(StudySessionPerMonthDTO.April)} | {nameof(StudySessionPerMonthDTO.May)} | {nameof(StudySessionPerMonthDTO.June)} | {nameof(StudySessionPerMonthDTO.July)} | {nameof(StudySessionPerMonthDTO.August)} | {nameof(StudySessionPerMonthDTO.September)} | {nameof(StudySessionPerMonthDTO.October)} | {nameof(StudySessionPerMonthDTO.November)} | {nameof(StudySessionPerMonthDTO.December)}[/]");
+                AnsiConsole.MarkupLine($@"[green]| {nameof(StudySessionPerMonthDto.StackName)} | {nameof(StudySessionPerMonthDto.January)} | {nameof(StudySessionPerMonthDto.February)} | {nameof(StudySessionPerMonthDto.March)} | {nameof(StudySessionPerMonthDto.April)} | {nameof(StudySessionPerMonthDto.May)} | {nameof(StudySessionPerMonthDto.June)} | {nameof(StudySessionPerMonthDto.July)} | {nameof(StudySessionPerMonthDto.August)} | {nameof(StudySessionPerMonthDto.September)} | {nameof(StudySessionPerMonthDto.October)} | {nameof(StudySessionPerMonthDto.November)} | {nameof(StudySessionPerMonthDto.December)}[/]");
                 AnsiConsole.MarkupLine("-------------------------------------------------------------------------------------------------------------");
-                foreach (StudySessionPerMonthDTO studySession in studySessions)
+                foreach (StudySessionPerMonthDto studySession in studySessions)
                 {
                     AnsiConsole.MarkupLine($@"[green]| {studySession.StackName} | {studySession.January} | {studySession.February} | {studySession.March} | {studySession.April} | {studySession.May} | {studySession.June} | {studySession.July} | {studySession.August} | {studySession.September} | {studySession.October} | {studySession.November} | {studySession.December} |[/]");
                     AnsiConsole.MarkupLine("-------------------------------------------------------------------------------------------------------------");
@@ -120,13 +120,13 @@ namespace Flashcards.UserInput
         private void GetAverageScoreOfStudySessionsPerMonthPerStack()
         {
             int year = _validation.GetValidYear();
-            List<StudySessionPerMonthDTO> studySessions = _controller.GetAverageScoreOfStudySessionsPerMonthPerStack(year);
+            List<StudySessionPerMonthDto> studySessions = _controller.GetAverageScoreOfStudySessionsPerMonthPerStack(year);
             if (!studySessions.IsNullOrEmpty())
             {
                 AnsiConsole.MarkupLine($"[green]Average Score of Study Sessions per month for year {year}[/]");
-                AnsiConsole.MarkupLine($@"[green]| {nameof(StudySessionPerMonthDTO.StackName)} | {nameof(StudySessionPerMonthDTO.January)} | {nameof(StudySessionPerMonthDTO.February)} | {nameof(StudySessionPerMonthDTO.March)} | {nameof(StudySessionPerMonthDTO.April)} | {nameof(StudySessionPerMonthDTO.May)} | {nameof(StudySessionPerMonthDTO.June)} | {nameof(StudySessionPerMonthDTO.July)} | {nameof(StudySessionPerMonthDTO.August)} | {nameof(StudySessionPerMonthDTO.September)} | {nameof(StudySessionPerMonthDTO.October)} | {nameof(StudySessionPerMonthDTO.November)} | {nameof(StudySessionPerMonthDTO.December)}[/]");
+                AnsiConsole.MarkupLine($@"[green]| {nameof(StudySessionPerMonthDto.StackName)} | {nameof(StudySessionPerMonthDto.January)} | {nameof(StudySessionPerMonthDto.February)} | {nameof(StudySessionPerMonthDto.March)} | {nameof(StudySessionPerMonthDto.April)} | {nameof(StudySessionPerMonthDto.May)} | {nameof(StudySessionPerMonthDto.June)} | {nameof(StudySessionPerMonthDto.July)} | {nameof(StudySessionPerMonthDto.August)} | {nameof(StudySessionPerMonthDto.September)} | {nameof(StudySessionPerMonthDto.October)} | {nameof(StudySessionPerMonthDto.November)} | {nameof(StudySessionPerMonthDto.December)}[/]");
                 AnsiConsole.MarkupLine("[green]------------------------------------------------------------------------------------------------------------------[/]");
-                foreach (StudySessionPerMonthDTO studySession in studySessions)
+                foreach (StudySessionPerMonthDto studySession in studySessions)
                 {
                     AnsiConsole.MarkupLine($@"[green]| {studySession.StackName} | {studySession.January} | {studySession.February} | {studySession.March} | {studySession.April} | {studySession.May} | {studySession.June} | {studySession.July} | {studySession.August} | {studySession.September} | {studySession.October} | {studySession.November} | {studySession.December} |[/]");
                     AnsiConsole.MarkupLine("[green]--------------------------------------------------------------------------------------------------------------[/]");

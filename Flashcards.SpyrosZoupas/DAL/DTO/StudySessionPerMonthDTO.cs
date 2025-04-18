@@ -1,6 +1,6 @@
 ﻿namespace Flashcards.DAL.DTO
 {
-    public class StudySessionPerMonthDTO
+    public class StudySessionPerMonthDto
     {
         public string StackName { get; set; }
         public double January { get; set; }
