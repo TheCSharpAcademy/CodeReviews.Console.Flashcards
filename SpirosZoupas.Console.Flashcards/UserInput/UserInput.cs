@@ -12,7 +12,7 @@ namespace Flashcards.UserInput
         public UserInput(Controller controller, Validation validation)
         {
             flashcardMenu = new FlashcardMenu(controller, validation);
-            stackMenu = new StackMenu(controller, validation, flashcardMenu);
+            stackMenu = new StackMenu(controller, validation);
             studySessionMenu = new StudySessionMenu(controller, validation);
         }
 

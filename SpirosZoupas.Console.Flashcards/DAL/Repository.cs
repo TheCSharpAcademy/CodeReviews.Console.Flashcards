@@ -227,7 +227,7 @@ namespace Flashcards.DAL
         public List<StudySessionPerMonthDTO> GetStudySessionsPerMonthPerStack(int year)
         {
             List<StudySessionPerMonthDTO> studySessions = new List<StudySessionPerMonthDTO>();
-            var parameters = new { Year = "2025" };
+            var parameters = new { Year = year };
             string sql = @"SELECT *
                 FROM (
                     SELECT 
@@ -257,7 +257,7 @@ namespace Flashcards.DAL
         public List<StudySessionPerMonthDTO> GetAverageScoreOfStudySessionsPerMonthPerStack(int year)
         {
             List<StudySessionPerMonthDTO> studySessions = new List<StudySessionPerMonthDTO>();
-            var parameters = new { Year = "2025" };
+            var parameters = new { Year = year };
             string sql = @"SELECT *
                 FROM (
                     SELECT 
@@ -269,7 +269,7 @@ namespace Flashcards.DAL
 	                WHERE YEAR([Date]) = @Year
                 ) AS SourceTable
                 PIVOT (
-                    SUM(Score)
+                    AVG(Score)
                     FOR Months IN ([January], [February], [March], [April], [May], [June],
                                    [July], [August], [September], [October], [November], [December])
                 ) AS PivotTable;";
