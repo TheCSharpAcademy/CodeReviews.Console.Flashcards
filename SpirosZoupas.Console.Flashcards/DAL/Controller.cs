@@ -46,6 +46,9 @@ namespace Flashcards.DAL
         public bool StackNameExists(string name) =>
             _repository.StackNameExists(name);
 
+        public bool FlashcardIDExists(int id) =>
+            _repository.FlashcardIDExists(id);
+
         private Flashcard GetFlashcardObjectForCreate(string front, string back, string stackName) =>
             new Flashcard
             {

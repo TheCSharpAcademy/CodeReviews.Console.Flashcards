@@ -251,5 +251,19 @@ namespace Flashcards.DAL
 
             return count > 0;
         }
+
+        public bool FlashcardIDExists(int id)
+        {
+            int count;
+            string sql = "SELECT COUNT(1) FROM Flashcard WHERE ID = @ID";
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                count = connection.ExecuteScalar<int>(sql, new { ID = id });
+                connection.Close();
+            }
+
+            return count > 0;
+        }
     }
 }

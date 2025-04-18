@@ -14,51 +14,24 @@ namespace Flashcards
             _controller = controller;
         }
 
-        //public Flashcard GetExistingFlashcard(int id)
-        //{
-        //    Flashcard existingFlashcard = _controller.GetFlashCardByID(id);
-        //    while (existingFlashcard == null)
-        //    {
-        //        AnsiConsole.MarkupLine($"[white on red]Flashcard with ID of {id} does not exist.[/]");
-        //        id = GetValidatedInteger("[darkcyan]Please enter ID of a flashcard that exists.[/]");
-        //        existingFlashcard = _controller.GetFlashCardByID(id);
-        //    }
+        public int GetExistingFlashcardID(string message)
+        {
+            int id = AnsiConsole.Prompt(
+                new TextPrompt<int>(message)
+                .Validate((n) => _controller.FlashcardIDExists(n) switch
+                {
+                    true => ValidationResult.Success(),
+                    false => ValidationResult.Error("[white on red]Flashcard with that ID does not exist.[/]")
+                }));
 
-        //    return existingFlashcard;
-        //}
-
-        //public StackDTO GetExistingStack(string name)
-        //{
-        //    StackDTO existingStack = _controller.GetStackByName(name);
-        //    while (existingStack == null)
-        //    {
-        //        AnsiConsole.MarkupLine($"[white on red]Stack '{name}' does not exist.[/]");
-        //        name = Console.ReadLine();
-        //        existingStack = _controller.GetStackByName(name);
-        //    }
-
-        //    return existingStack;
-        //}
-
-        //public Goal GetExistingGoal()
-        //{
-        //    int id = GetValidatedInteger();
-        //    Goal existingCodingSession = _controller.GetById<Goal>(id, "goal");
-        //    while (existingCodingSession == null)
-        //    {
-        //        AnsiConsole.MarkupLine($"[white on red]Goal with ID of {id} does not exist.[/]");
-        //        id = GetValidatedInteger();
-        //        existingCodingSession = _controller.GetById<Goal>(id, "goal");
-        //    }
-
-        //    return existingCodingSession;
-        //}
+            return id;
+        }
 
         public string GetExistingStackName(string message)
         {
             string name = AnsiConsole.Prompt(
                 new TextPrompt<string>(message)
-                .Validate((n) => _controller.StackNameExists(n) switch
+                .Validate((s) => _controller.StackNameExists(s) switch
                 {
                     true => ValidationResult.Success(),
                     false => ValidationResult.Error("[white on red]Stack with that name does not exist.[/]")

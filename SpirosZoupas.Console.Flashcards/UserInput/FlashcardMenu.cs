@@ -88,8 +88,7 @@ namespace Flashcards.UserInput
 
         private void DeleteFlashcard()
         {
-            int id = _validation.GetValidatedInteger("[darkcyan]Please enter the ID of the flashcard you would like to delete[/]");
-            //Flashcard existingFlashcard = _validation.GetExistingFlashcard(id);
+            int id = _validation.GetExistingFlashcardID("[darkcyan]Please enter the ID of the flashcard you would like to delete[/]");
 
             if (_controller.DeleteFlashcard(id))
                 AnsiConsole.MarkupLine($"[white on green]Flashcard with ID of {id} deleted.[/]");
@@ -99,14 +98,13 @@ namespace Flashcards.UserInput
 
         private void UpdateFlashcard()
         {
-            int id = _validation.GetValidatedInteger("[darkcyan]Please enter the ID of the flashcard you would like to update[/]");
+            int id = _validation.GetExistingFlashcardID("[darkcyan]Please enter the ID of the flashcard you would like to update[/]");
 
             AnsiConsole.MarkupLine("[darkcyan]Please enter the front side text of your flashcard:[/]");
             string front = Console.ReadLine();
             AnsiConsole.MarkupLine("[darkcyan]Please enter the back side text of your flashcard:[/]");
             string back = Console.ReadLine();
-            AnsiConsole.MarkupLine("[darkcyan]Please enter the stack name to which this flashcard will belong.[/]");
-            string stackName = Console.ReadLine();
+            string stackName = _validation.GetExistingStackName("[darkcyan]Please enter the stack name to which this flashcard will belong.[/]");
 
             if (_controller.UpdateFlashcard(id, front, back, stackName))
                 AnsiConsole.MarkupLine("[white on green]Flashcard updated.[/]");
@@ -116,9 +114,10 @@ namespace Flashcards.UserInput
 
         private void GetFlashcardById()
         {
-            int id = _validation.GetValidatedInteger("[darkcyan]Please enter the ID of the flashcard you would like to find.[/]");
+            int id = _validation.GetExistingFlashcardID("[darkcyan]Please enter the ID of the flashcard you would like to find.[/]");
 
             FlashcardStackDTO flashcard = _controller.GetFlashCardByID(id);
+
             if (flashcard != null)
                 AnsiConsole.MarkupLine($"[white on green]Flashcard with ID of {flashcard.ID} \n Front text: {flashcard.Front} \n Back text: {flashcard.Back} \n Stack: {flashcard.StackName}[/]");
             else
