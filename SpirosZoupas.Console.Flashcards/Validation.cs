@@ -61,35 +61,17 @@ namespace Flashcards
             return number;
         }
 
-        public double GetValidatedDouble()
+        public int GetValidYear()
         {
-            double number = AnsiConsole.Prompt(
-                new TextPrompt<double>(string.Empty));
-
-            return number;
-        }
-
-        public DateTime GetValidatedDateTimeValue()
-        {
-            string dateTime = AnsiConsole.Prompt(
-                new TextPrompt<string>(string.Empty)
+            int year = AnsiConsole.Prompt(
+                new TextPrompt<int>("[darkcyan]Please input a valid year[/]")
                 .Validate(input =>
                 {
-                    return DateTime.TryParseExact(input, "dd-MM-yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out _)
-                        ? ValidationResult.Success()
-                        : DateTime.TryParseExact(input, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out _) 
-                        ? ValidationResult.Success() 
-                        : ValidationResult.Error($"[white on red]Invalid format. Please enter any DateTime values in dd-MM-yyyy HH:mm:ss foramt. Example: 20-01-2025 13:00:00.[/]");
+                    return input > 999 && input < 9999;
                 }));
 
-            if (DateTime.TryParseExact(dateTime, "dd-MM-yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
-            {
-                return result;
-            }
-
-            result = DateTime.ParseExact(dateTime, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None);
-            AnsiConsole.MarkupLine("[yellow3_1]Time of DateTime value not set; Defaulting to 00:00:00.[/]");
-            return result.Date;
+            return year;
         }
+
     }
 }

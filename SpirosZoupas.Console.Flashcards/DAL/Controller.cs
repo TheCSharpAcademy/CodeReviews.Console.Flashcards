@@ -1,6 +1,5 @@
 ﻿using Flashcards.DAL.DTO;
 using Flashcards.DAL.Model;
-using System.Runtime.InteropServices;
 
 namespace Flashcards.DAL
 {
@@ -48,6 +47,9 @@ namespace Flashcards.DAL
 
         public List<StudySessionDTO> GetAllStudySessions() =>
             _repository.GetAllStudySessions();
+
+        public List<StudySessionPerMonthDTO> GetStudySessionsPerMonthPerStack(int year) =>
+            _repository.GetStudySessionsPerMonthPerStack(year);
 
         public bool StackNameExists(string name) =>
             _repository.StackNameExists(name);

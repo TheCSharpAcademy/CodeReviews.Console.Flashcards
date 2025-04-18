@@ -2,7 +2,6 @@
 using Flashcards.DAL;
 using Microsoft.IdentityModel.Tokens;
 using Spectre.Console;
-using Flashcards.DAL.Model;
 
 namespace Flashcards.UserInput
 {

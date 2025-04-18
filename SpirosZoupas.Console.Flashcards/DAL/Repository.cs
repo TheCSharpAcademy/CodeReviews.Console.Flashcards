@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using Flashcards.DAL.DTO;
 using Microsoft.Data.SqlClient;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Flashcards.DAL
 {
@@ -219,6 +218,36 @@ namespace Flashcards.DAL
             {
                 connection.Open();
                 studySessions = connection.Query<StudySessionDTO>(sql).ToList();
+                connection.Close();
+            }
+
+            return studySessions;
+        }
+
+        public List<StudySessionPerMonthDTO> GetStudySessionsPerMonthPerStack(int year)
+        {
+            List<StudySessionPerMonthDTO> studySessions = new List<StudySessionPerMonthDTO>();
+            var parameters = new { Year = "2025" };
+            string sql = @"SELECT *
+                FROM (
+                    SELECT 
+                        DATENAME(MONTH, [Date]) AS Months,
+                        Score,
+                        Stack.Name AS StackName
+                    FROM StudySession 
+                    INNER JOIN Stack ON Stack.ID = StudySession.StackID
+	                WHERE YEAR([Date]) = @Year
+                ) AS SourceTable
+                PIVOT (
+                    COUNT(Score)
+                    FOR Months IN ([January], [February], [March], [April], [May], [June],
+                                   [July], [August], [September], [October], [November], [December])
+                ) AS PivotTable;";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                studySessions = connection.Query<StudySessionPerMonthDTO>(sql, parameters).ToList();
                 connection.Close();
             }
 
