@@ -186,12 +186,7 @@ namespace Flashcards.DAL
         public List<StackDTO> GetAllStacks()
         {
             List<StackDTO> stacks = new List<StackDTO>();
-            string sql = $@"
-            SELECT
-                Stack.Name
-            FROM
-                Stack";
-
+            string sql = "SELECT Stack.Name FROM Stack";
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -199,42 +194,14 @@ namespace Flashcards.DAL
                 connection.Close();
             }
 
+            List<FlashcardStackDTO> flashcards = GetAllFlashcards();
+            foreach (FlashcardStackDTO flashcard in flashcards)
+            {
+                stacks.Where(s => s.Name == flashcard.StackName).ToList().ForEach(s => s.Flashcards.Add(flashcard));
+            }
+
             return stacks;
         }
-
-        //public List<StackDTO> GetAllStacks()
-        //{
-        //    List<FlashcardStackDTO> flashCards = new List<FlashcardStackDTO>();
-        //    List<StackDTO> stacks = new List<StackDTO>();
-        //    string sql = $@"
-        //    SELECT
-        //        Flashcard.Front,
-        //        Flashcard.Back,
-        //        Stack.Name AS StackName
-        //    FROM
-        //        Flashcard INNER JOIN
-        //        Stack ON Stack.ID = Flashcard.StackID";
-
-        //    using (var connection = new SqlConnection(connectionString))
-        //    {
-        //        connection.Open();
-        //        flashCards = connection.Query<FlashcardStackDTO>(sql).ToList();
-        //        connection.Close();
-        //    }
-
-        //    List<FlashcardStackDTO> flashCardsInStack = new List<FlashcardStackDTO>();
-        //    foreach (var fc in flashCards)
-        //    {
-        //        if (stacks.Where(s => s.Name == fc.StackName).IsNullOrEmpty())
-        //        {
-        //            stacks.Add(new StackDTO { Name = fc.StackName, FlashCards = new List<FlashcardStackDTO>() });
-        //        }
-
-        //        stacks.Where(s => s.Name == fc.StackName).ToList().ForEach(s => s.FlashCards.Add(fc));
-        //    }
-
-        //    return stacks;
-        //}
 
         public bool StackNameExists(string name)
         {

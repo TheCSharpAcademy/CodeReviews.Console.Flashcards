@@ -124,19 +124,6 @@ namespace Flashcards.UserInput
                 AnsiConsole.MarkupLine($"[white on red]Flashcard with ID of {id} does not exist.[/]");
         }
 
-        //TODO: will show flashcards of stack, otherwise there's no point
-        //private void GetStackByName()
-        //{
-        //    AnsiConsole.MarkupLine("[darkcyan]Please enter the name of the stack you would like to find.[/]");
-        //    string name = Console.ReadLine();
-
-        //    StackDTO stack = _controller.GetStackByName(name);
-        //    if (stack != null)
-        //        AnsiConsole.MarkupLine($"[white on green]Stack \"{stack.Name}\" has x amount of flashcards]");
-        //    else
-        //        AnsiConsole.MarkupLine($"[white on red]Flashcard with ID of {id} does not exist.[/]");
-        //}
-
         private void GetAllFlashcards()
         {
             List<FlashcardStackDTO> flashcards = _controller.GetAllFlashcards();
