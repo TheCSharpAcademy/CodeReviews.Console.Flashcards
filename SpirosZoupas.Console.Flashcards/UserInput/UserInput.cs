@@ -9,18 +9,16 @@ namespace Flashcards.UserInput
 {
     public class UserInput
     {
-        private readonly Controller _controller;
         private readonly FlashcardMenu flashcardMenu;
         private readonly StackMenu stackMenu;
 
-        public UserInput(Controller controller)
+        public UserInput(Controller controller, Validation validation)
         {
-            _controller = controller;
-            flashcardMenu = new FlashcardMenu(_controller);
-            stackMenu = new StackMenu(_controller, flashcardMenu);
+            flashcardMenu = new FlashcardMenu(controller, validation);
+            stackMenu = new StackMenu(controller, validation, flashcardMenu);
         }
 
-        public void GetUserInput()
+        public void GetMainMenu()
         {
             Console.Clear();
             AnsiConsole.MarkupLine("[bold purple on black]Welcome to the Flashcards application![/]");

@@ -5,14 +5,12 @@ using Spectre.Console;
 
 namespace Flashcards.UserInput
 {
-    public class StackMenu
+    public class StackMenu : BaseMenu
     {
-        private readonly Controller _controller;
         private readonly FlashcardMenu _flashcardMenu;
 
-        public StackMenu(Controller controller, FlashcardMenu flashcardMenu)
+        public StackMenu(Controller controller, Validation validation, FlashcardMenu flashcardMenu) : base(controller, validation)
         {
-            _controller = controller;
             _flashcardMenu = flashcardMenu;
         }
 
@@ -53,7 +51,7 @@ namespace Flashcards.UserInput
                     UpdateStack();
                     break;
                 case "4":
-                    //GetStackByName();
+                    GetStackByName();
                     break;
                 case "5":
                     GetAllStacks();
@@ -68,8 +66,7 @@ namespace Flashcards.UserInput
 
         private void CreateStack()
         {
-            AnsiConsole.MarkupLine("[darkcyan]Please enter the name of your stack:[/]");
-            string name = Console.ReadLine();
+            string name = _validation.GetUniqueStackName("[darkcyan]Please enter name of the stack you would like to create:[/]");
 
             if (_controller.CreateStack(name))
             {
@@ -91,9 +88,7 @@ namespace Flashcards.UserInput
 
         private void DeleteStack()
         {
-            AnsiConsole.MarkupLine("[darkcyan]Please enter the name of the stack you would like to delete[/]");
-            string name = Console.ReadLine();
-            // Flashcard existingFlashcard = _validation.GetExistingFlashcard(); DONT MAKE THIS A MODEL JUST A BOOL
+            string name = _validation.GetExistingStackName("[darkcyan]Please enter the name of the stack you would like to delete[/]");
 
             if (_controller.DeleteStack(name))
                 AnsiConsole.MarkupLine("[white on green]Stack deleted.[/]");
@@ -103,17 +98,19 @@ namespace Flashcards.UserInput
 
         private void UpdateStack()
         {
-            AnsiConsole.MarkupLine("[darkcyan]Please enter the name of the stack you would like to update[/]");
-            // Flashcard existingFlashcard = _validation.GetExistingFlashcard();
-            string currentName = Console.ReadLine();
+            string currentName = _validation.GetExistingStackName("[darkcyan]Please enter the name of the stack you would like to update[/]");
 
-            AnsiConsole.MarkupLine("[darkcyan]Please enter the new name of the stack:[/]");
-            string updatedName = Console.ReadLine();
+            string updatedName = _validation.GetUniqueStackName("[darkcyan]Please enter the new name of the stack:[/]");
 
             if (_controller.UpdateStack(currentName, updatedName))
                 AnsiConsole.MarkupLine("[white on green]Stack updated.[/]");
             else
                 AnsiConsole.MarkupLine("[white on red]Something went wrong, unable to update stack.[/]");
+        }
+
+        private void GetStackByName()
+        {
+            string name = _validation.GetExistingStackName("[darkcyan]Please enter the name of the stack you would like to inspect[/]");
         }
 
         private void GetAllStacks()

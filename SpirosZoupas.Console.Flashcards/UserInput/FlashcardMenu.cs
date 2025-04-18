@@ -1,16 +1,14 @@
 ﻿using Flashcards.DAL;
 using Flashcards.DAL.DTO;
+using Flashcards.DAL.Model;
 using Spectre.Console;
 
 namespace Flashcards.UserInput
 {
-    public class FlashcardMenu
+    public class FlashcardMenu : BaseMenu
     {
-        private readonly Controller _controller;
-
-        public FlashcardMenu(Controller controller)
+        public FlashcardMenu(Controller controller, Validation validation) : base(controller, validation)
         {
-            _controller = controller;
         }
 
         public void GetFlashcardMenu()
@@ -67,8 +65,7 @@ namespace Flashcards.UserInput
             string front = Console.ReadLine();
             AnsiConsole.MarkupLine("[darkcyan]Please enter the back side text of your flashcard:[/]");
             string back = Console.ReadLine();
-            AnsiConsole.MarkupLine("[darkcyan]Please enter the stack name to which this flashcard will belong.[/]");
-            string stackName = Console.ReadLine();
+            string stackName = _validation.GetExistingStackName("[darkcyan]Please enter the stack name to which this flashcard will belong.[/]");
 
             if (_controller.CreateFlashcard(front, back, stackName))
                 AnsiConsole.MarkupLine("[white on green]Flashcard created.[/]");
@@ -91,21 +88,18 @@ namespace Flashcards.UserInput
 
         private void DeleteFlashcard()
         {
-            AnsiConsole.MarkupLine("[darkcyan]Please enter the ID of the flashcard you would like to delete[/]");
-            string id = Console.ReadLine();
-            // Flashcard existingFlashcard = _validation.GetExistingFlashcard(); DONT MAKE THIS A MODEL JUST A BOOL
+            int id = _validation.GetValidatedInteger("[darkcyan]Please enter the ID of the flashcard you would like to delete[/]");
+            //Flashcard existingFlashcard = _validation.GetExistingFlashcard(id);
 
-            if (_controller.DeleteFlashcard(Convert.ToInt32(id)))
-                AnsiConsole.MarkupLine("[white on green]Flashcard deleted.[/]");
+            if (_controller.DeleteFlashcard(id))
+                AnsiConsole.MarkupLine($"[white on green]Flashcard with ID of {id} deleted.[/]");
             else
                 AnsiConsole.MarkupLine("[white on red]Something went wrong, unable to delete flashcard.[/]");
         }
 
         private void UpdateFlashcard()
         {
-            AnsiConsole.MarkupLine("[darkcyan]Please enter the ID of the flashcard you would like to update[/]");
-            // Flashcard existingFlashcard = _validation.GetExistingFlashcard();
-            int id = Convert.ToInt32(Console.ReadLine());
+            int id = _validation.GetValidatedInteger("[darkcyan]Please enter the ID of the flashcard you would like to update[/]");
 
             AnsiConsole.MarkupLine("[darkcyan]Please enter the front side text of your flashcard:[/]");
             string front = Console.ReadLine();
@@ -122,8 +116,7 @@ namespace Flashcards.UserInput
 
         private void GetFlashcardById()
         {
-            AnsiConsole.MarkupLine("[darkcyan]Please enter the ID of the flashcard you would like to find.[/]");
-            int id = Convert.ToInt32(Console.ReadLine());
+            int id = _validation.GetValidatedInteger("[darkcyan]Please enter the ID of the flashcard you would like to find.[/]");
 
             FlashcardStackDTO flashcard = _controller.GetFlashCardByID(id);
             if (flashcard != null)
