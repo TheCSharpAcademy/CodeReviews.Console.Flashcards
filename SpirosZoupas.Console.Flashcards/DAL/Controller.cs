@@ -51,6 +51,9 @@ namespace Flashcards.DAL
         public List<StudySessionPerMonthDTO> GetStudySessionsPerMonthPerStack(int year) =>
             _repository.GetStudySessionsPerMonthPerStack(year);
 
+        public List<StudySessionPerMonthDTO> GetAverageScoreOfStudySessionsPerMonthPerStack(int year) =>
+            _repository.GetAverageScoreOfStudySessionsPerMonthPerStack(year);
+
         public bool StackNameExists(string name) =>
             _repository.StackNameExists(name);
 

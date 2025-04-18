@@ -120,7 +120,21 @@ namespace Flashcards.UserInput
 
         private void GetAverageScoreOfStudySessionsPerMonthPerStack()
         {
-            throw new NotImplementedException();
+            int year = _validation.GetValidYear();
+            List<StudySessionPerMonthDTO> studySessions = _controller.GetAverageScoreOfStudySessionsPerMonthPerStack(year);
+            if (!studySessions.IsNullOrEmpty())
+            {
+                AnsiConsole.MarkupLine($"[green]Average Score of Study Sessions per month for year {year}[/]");
+                AnsiConsole.MarkupLine($@"[green]| {nameof(StudySessionPerMonthDTO.StackName)} | {nameof(StudySessionPerMonthDTO.January)} | {nameof(StudySessionPerMonthDTO.February)} | {nameof(StudySessionPerMonthDTO.March)} | {nameof(StudySessionPerMonthDTO.April)} | {nameof(StudySessionPerMonthDTO.May)} | {nameof(StudySessionPerMonthDTO.June)} | {nameof(StudySessionPerMonthDTO.July)} | {nameof(StudySessionPerMonthDTO.August)} | {nameof(StudySessionPerMonthDTO.September)} | {nameof(StudySessionPerMonthDTO.October)} | {nameof(StudySessionPerMonthDTO.November)} | {nameof(StudySessionPerMonthDTO.December)}[/]");
+                AnsiConsole.MarkupLine("[green]------------------------------------------------------------------------------------------------------------------[/]");
+                foreach (StudySessionPerMonthDTO studySession in studySessions)
+                {
+                    AnsiConsole.MarkupLine($@"[green]| {studySession.StackName} | {studySession.January} | {studySession.February} | {studySession.March} | {studySession.April} | {studySession.May} | {studySession.June} | {studySession.July} | {studySession.August} | {studySession.September} | {studySession.October} | {studySession.November} | {studySession.December} |[/]");
+                    AnsiConsole.MarkupLine("[green]--------------------------------------------------------------------------------------------------------------[/]");
+                }
+            }
+            else
+                AnsiConsole.MarkupLine($"[white on red]No study sessions found![/]");
         }
     }
 }

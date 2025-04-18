@@ -254,6 +254,36 @@ namespace Flashcards.DAL
             return studySessions;
         }
 
+        public List<StudySessionPerMonthDTO> GetAverageScoreOfStudySessionsPerMonthPerStack(int year)
+        {
+            List<StudySessionPerMonthDTO> studySessions = new List<StudySessionPerMonthDTO>();
+            var parameters = new { Year = "2025" };
+            string sql = @"SELECT *
+                FROM (
+                    SELECT 
+                        DATENAME(MONTH, [Date]) AS Months,
+                        Score,
+                        Stack.Name AS StackName
+                    FROM StudySession 
+                    INNER JOIN Stack ON Stack.ID = StudySession.StackID
+	                WHERE YEAR([Date]) = @Year
+                ) AS SourceTable
+                PIVOT (
+                    SUM(Score)
+                    FOR Months IN ([January], [February], [March], [April], [May], [June],
+                                   [July], [August], [September], [October], [November], [December])
+                ) AS PivotTable;";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                studySessions = connection.Query<StudySessionPerMonthDTO>(sql, parameters).ToList();
+                connection.Close();
+            }
+
+            return studySessions;
+        }
+
         public bool StackNameExists(string name)
         {
             int count;
@@ -281,5 +311,6 @@ namespace Flashcards.DAL
 
             return count > 0;
         }
+
     }
 }
