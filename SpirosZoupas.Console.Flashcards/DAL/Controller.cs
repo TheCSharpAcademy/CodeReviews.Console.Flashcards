@@ -34,11 +34,17 @@ namespace Flashcards.DAL
         public FlashcardStackDTO GetFlashCardByID(int id) =>
             _repository.GetFlashcardByID(id);
 
+        public StackDTO GetStackByName(string name) =>
+            _repository.GetStackByName(name);
+
         public List<FlashcardStackDTO> GetAllFlashcards() =>
             _repository.GetAllFlashcards();
 
         public List<StackDTO> GetAllStacks() =>
             _repository.GetAllStacks();
+
+        public bool StackNameExists(string name) =>
+            _repository.StackNameExists(name);
 
         private Flashcard GetFlashcardObjectForCreate(string front, string back, string stackName) =>
             new Flashcard

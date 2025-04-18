@@ -1,7 +1,9 @@
-﻿using Flashcards.DAL;
+﻿using Flashcards;
+using Flashcards.DAL;
 using Flashcards.UserInput;
 
 Repository repository = new Repository();
 Controller controller = new Controller(repository);
-UserInput userInput = new UserInput(controller);
-userInput.GetUserInput();
+Validation validation = new Validation(controller);
+UserInput userInput = new UserInput(controller, validation);
+userInput.GetMainMenu();

@@ -237,5 +237,19 @@ namespace Flashcards.DAL
 
         //    return stacks;
         //}
+
+        public bool StackNameExists(string name)
+        {
+            int count;
+            string sql = "SELECT COUNT(1) FROM Stack WHERE Name = @Name";
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                count = connection.ExecuteScalar<int>(sql, new { Name = name });
+                connection.Close();
+            }
+
+            return count > 0;
+        }
     }
 }
