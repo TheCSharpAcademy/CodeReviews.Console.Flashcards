@@ -26,7 +26,6 @@ internal class MainInterface
                     break;
                 case Options.MenuOptions.MStacks:
                     SessionController.ManageStacks();
-                    Console.ReadKey();
                     break;
                 case Options.MenuOptions.StudySession:
                     Console.WriteLine("Starting Study Session...");

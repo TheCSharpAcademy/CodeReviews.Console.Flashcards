@@ -1,7 +1,7 @@
 using Flashcards.KamilKolanowski.Data;
 using Flashcards.KamilKolanowski.Models;
 using Flashcards.KamilKolanowski.Handlers;
-using Microsoft.IdentityModel.Tokens;
+using Flashcards.KamilKolanowski.Helpers;
 using Spectre.Console;
 
 namespace Flashcards.KamilKolanowski.Controllers;
@@ -16,26 +16,21 @@ internal class FlashcardsController
                                                             .ToList();
         
         var newCard = UserInputHandler.CreateFlashcard(stacks);
+        VerifyIfFlashcardExists(databaseManager, newCard.StackId, newCard.FlashcardTitle);
         
-        var createCardDto = new CreateCardDto()
-        {
-            StackId = newCard.StackId,
-            FlashcardTitle = newCard.FlashcardTitle,
-            FlashcardContent = newCard.FlashcardContent
-        };
-
-        VerifyIfFlashcardExists(databaseManager, newCard.StackId, createCardDto.FlashcardTitle);
-        
-        databaseManager.AddCard(createCardDto);
-        
+        databaseManager.AddCard(newCard);
     }
 
     internal static void EditFlashcard(DatabaseManager databaseManager)
     {
         var updateCardDto = new UpdateCardDto();
         
-        updateCardDto.StackId = GetStackChoice(databaseManager);
-        updateCardDto.FlashcardTitle = GetFlashcardChoice(databaseManager, updateCardDto.StackId);
+        updateCardDto.StackId = StackChoice.GetStackChoice(databaseManager);
+                                                
+        var (flashcardId, flashcardTitle) = GetFlashcardChoice(databaseManager, updateCardDto.StackId);
+        updateCardDto.FlashcardId = flashcardId;
+        updateCardDto.FlashcardTitle = flashcardTitle;
+        
 
         if (string.IsNullOrEmpty(updateCardDto.FlashcardTitle))
         {
@@ -52,7 +47,7 @@ internal class FlashcardsController
         {
             AnsiConsole.MarkupLine("You're choosing new Stack for this flashcard.");
 
-            updateCardDto.NewValue = GetStackChoice(databaseManager).ToString();
+            updateCardDto.NewValue = StackChoice.GetStackChoice(databaseManager).ToString();
             databaseManager.UpdateCards(updateCardDto);
         }
 
@@ -69,10 +64,10 @@ internal class FlashcardsController
 
     internal static void DeleteFlashcard(DatabaseManager databaseManager)
     {
-        var stackChoice = GetStackChoice(databaseManager);
-        var flashcardChoice = GetFlashcardChoice(databaseManager, stackChoice);
+        var stackChoice = StackChoice.GetStackChoice(databaseManager);
+        var flashcardChoice = GetFlashcardChoice(databaseManager, stackChoice).FlashcardId;
 
-        if (flashcardChoice.IsNullOrEmpty())
+        if (flashcardChoice == 0)
         {
             return;
         }
@@ -82,7 +77,7 @@ internal class FlashcardsController
     }
     internal static void ViewFlashcardsTable(DatabaseManager databaseManager)
     {
-        var stackChoice = GetStackChoice(databaseManager);
+        var stackChoice = StackChoice.GetStackChoice(databaseManager);
         var cardDtos = GetFlashcardDtosForStack(databaseManager, stackChoice);
         var table = BuildFlashcardsTable(cardDtos);
         
@@ -92,41 +87,31 @@ internal class FlashcardsController
         Console.ReadKey();
     }
 
-    private static int GetStackChoice(DatabaseManager databaseManager)
-    {
-        var stacks = databaseManager.ReadStacks()
-            .Select(s => (s.StackId, s.StackName))
-            .ToList();
-        
-        var stackNames = stacks.Select(x => x.Item2).ToList();
-        
-        var stackChoice = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title("Choose the Stack from the list")
-                .AddChoices(stackNames));
-        
-        return stacks.First(x => x.Item2 == stackChoice).Item1;
-    }
+    
 
-    private static string GetFlashcardChoice(DatabaseManager databaseManager, int stackChoice)
+    private static (int FlashcardId, string FlashcardTitle) GetFlashcardChoice(DatabaseManager databaseManager, int stackChoice)
     {
-        var flashcardTitle = GetFlashcardDtosForStack(databaseManager, stackChoice).Select(x => x.FlashcardTitle).ToList();
+        var flashcards = GetFlashcardDtosForStack(databaseManager, stackChoice)
+                                                            .Select(x => (x.FlashcardId, x.FlashcardTitle))
+                                                            .ToList();
         
-        if (!flashcardTitle.Any())
+        var flashcardTitles = flashcards.Select(x => x.FlashcardTitle).ToList();
+        
+        if (!flashcards.Any())
         {
             AnsiConsole.MarkupLine("[yellow3_1]There are no flashcards for this stack.[/]");
             AnsiConsole.MarkupLine("Press any key to go back to the main menu.");
             Console.ReadKey();
-            return "";
+            return (0, null);
         }
         
         var flashcardChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("Choose the flashcard from the list")
-                .AddChoices(flashcardTitle));
-
-        return flashcardChoice;
-
+                .AddChoices(flashcardTitles));
+        
+        var selected = flashcards.First(x => x.FlashcardTitle == flashcardChoice);
+        return (selected.FlashcardId, selected.FlashcardTitle);
     }
     
     private static List<CardDto> GetFlashcardDtosForStack(DatabaseManager databaseManager, int stackChoice)
@@ -135,6 +120,7 @@ internal class FlashcardsController
 
         return flashcards.Select(card => new CardDto    
         {
+            FlashcardId = card.FlashcardId,
             FlashcardTitle = card.FlashcardTitle,
             FlashcardContent = card.FlashcardContent
         }).ToList();

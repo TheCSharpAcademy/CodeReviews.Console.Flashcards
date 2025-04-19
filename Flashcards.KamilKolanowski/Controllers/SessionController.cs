@@ -49,13 +49,14 @@ internal class SessionController
         switch (selectedStacksChoice)
         {
             case Options.DBOptions.AddRow:
-                // StacksController.AddStack(databaseManager);
+                StacksController.AddNewStack(databaseManager);
                 break;
             case Options.DBOptions.UpdateRow:
-                // StacksController.EditStack(databaseManager);
+                StacksController.EditStack(databaseManager);
                 break;
             case Options.DBOptions.DeleteRow:
                 // StacksController.DeleteStack(databaseManager);
+                Console.WriteLine("Delete Stack");
                 break;
             case Options.DBOptions.ViewRows:
                 StacksController.ViewStacksTable(databaseManager);

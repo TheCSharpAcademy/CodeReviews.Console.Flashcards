@@ -28,6 +28,7 @@ internal class DatabaseManager
         Connection.Open();
         
         string query = $@"SELECT 
+                            c.FlashcardId,
                             c.FlashcardTitle,
                             c.FlashcardContent
                         FROM
@@ -50,13 +51,13 @@ internal class DatabaseManager
                 SET c.StackId = (
                     SELECT s2.StackId
                     FROM Flashcards.TCSA.Stacks s2
-                    WHERE s2.StackName = @NewValue
+                    WHERE s2.StackId = @NewValue
                 )
                 FROM Flashcards.TCSA.Cards c
                 INNER JOIN Flashcards.TCSA.Stacks s
                     ON s.StackId = c.StackId
-                WHERE s.StackName = @StackId
-                    AND c.FlashcardTitle = @FlashcardTitle";
+                WHERE s.StackId = @StackId
+                    AND c.FlashcardId = @FlashcardId";
         }
         else
         {
@@ -66,18 +67,18 @@ internal class DatabaseManager
                             INNER JOIN Flashcards.TCSA.Stacks s
                                     ON s.StackId = c.StackId 
                           WHERE s.StackId = @StackId
-                            AND c.FlashcardTitle = @FlashcardTitle";
+                            AND c.FlashcardId = @FlashcardId";
         }
         
         Connection.Execute(query, new
         {
             updateCardDto.StackId,
-            updateCardDto.FlashcardTitle,
+            updateCardDto.FlashcardId, 
             updateCardDto.NewValue
         });
     }
 
-    internal void DeleteCards(int stackId, string flashcardTitle)
+    internal void DeleteCards(int stackId, int flashcardId)
     {
         Connection.Open();
         
@@ -85,7 +86,7 @@ internal class DatabaseManager
                     FROM Flashcards.TCSA.Cards c 
                     INNER JOIN Flashcards.TCSA.Stacks s ON s.StackId = c.StackId    
                     WHERE s.StackId = {stackId}
-                      AND c.FlashcardTitle = '{flashcardTitle}'";
+                      AND c.FlashcardId = '{flashcardId}'";
         
         Connection.Execute(query);
     }
@@ -94,7 +95,7 @@ internal class DatabaseManager
     {
         Connection.Open();
         
-        var query =  @$"INSERT INTO Flashcards.TCSA.Cards (StackId, FlashcardTitle, FlashcardContent)
+        string query =  @$"INSERT INTO Flashcards.TCSA.Cards (StackId, FlashcardTitle, FlashcardContent)
                            VALUES (@StackId, @FlashcardTitle, @FlashcardContent);";
         
         Connection.Execute(query, new { createCardDto.StackId, createCardDto.FlashcardTitle, createCardDto.FlashcardContent });
@@ -104,7 +105,28 @@ internal class DatabaseManager
     {
         Connection.Open();
         
-        string query = $"SELECT StackId, StackName FROM Flashcards.TCSA.Stacks";
+        string query = $"SELECT StackId, StackName, Description FROM Flashcards.TCSA.Stacks";
         return Connection.Query<StacksDto>(query).ToList();
+    }
+
+    internal void AddStack(CreateStackDto createStackDto)
+    {
+        Connection.Open();
+
+        string query = @$"INSERT INTO Flashcards.TCSA.Stacks (StackName, Description) 
+                            VALUES (@StackName, @Description);";
+        
+        Connection.Execute(query, new { createStackDto.StackName, createStackDto.Description });
+    }
+
+    internal void UpdateStack(UpdateStackDto updateStackDto)
+    {
+        Connection.Open();
+
+        string query = $@"UPDATE Flashcards.TCSA.Stacks
+                          SET {updateStackDto.ColumnToUpdate} = @NewValue
+                          WHERE StackId = @StackId";
+        
+        Connection.Execute(query, new { updateStackDto.StackId, updateStackDto.NewValue });
     }
 }

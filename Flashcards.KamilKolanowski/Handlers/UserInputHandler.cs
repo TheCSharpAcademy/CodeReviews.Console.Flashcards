@@ -35,4 +35,21 @@ internal static class UserInputHandler
                           Please create Stack first.");
         return null;
     }
+
+    internal static CreateStackDto CreateStack()
+    {
+        var newStackName = AnsiConsole.Prompt(
+            new TextPrompt<string>("Provide title for the new stack: "));
+        
+        var newDescription = AnsiConsole.Prompt(
+            new TextPrompt<string>("Provide description for the new stack: "));
+        
+        return new CreateStackDto()
+        {
+            StackName = newStackName,
+            Description = newDescription
+        };
+
+        
+    }
 }
