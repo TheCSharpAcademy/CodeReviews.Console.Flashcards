@@ -12,22 +12,31 @@ public class StacksController
     internal static void AddNewStack(DatabaseManager databaseManager)
     {
         var newStack = UserInputHandler.CreateStack();
-        // var stack = databaseManager.ReadStacks().FirstOrDefault(s => s.StackId == stackId); FIX THE BUGS here
-        
-        VerifyIfStackExists(null, newStack.StackName, "added");
+        var stackNames = databaseManager.ReadStacks().Select(s => s.StackName);
+
+        if (!VerifyIfStackExists(stackNames, newStack.StackName))
+        {
+            Console.Clear();
+            AnsiConsole.MarkupLine("[red]Stack already exists[/]");
+            AnsiConsole.MarkupLine("Press any key to go back to Main Menu");
+            Console.ReadKey();
+            return;
+        }
+
         databaseManager.AddStack(newStack);
+        InformUserWithStatus("added");
     }
     
     internal static void EditStack(DatabaseManager databaseManager)
     {
         var updateStackDto = new UpdateStackDto();
-    
+
         var stackId = StackChoice.GetStackChoice(databaseManager);
         var stack = databaseManager.ReadStacks().FirstOrDefault(s => s.StackId == stackId);
 
         if (stack == null)
             return;
-    
+
         updateStackDto.StackId = stack.StackId;
         updateStackDto.StackName = stack.StackName;
 
@@ -35,17 +44,45 @@ public class StacksController
             new SelectionPrompt<string>()
                 .Title("Choose the column to edit")
                 .AddChoices("StackName", "Description"));
-        
+
         updateStackDto.NewValue = AnsiConsole.Prompt(
             new TextPrompt<string>($"Provide new value for {updateStackDto.ColumnToUpdate}: "));
 
-        if (VerifyIfStackExists(stack.StackName, updateStackDto.NewValue, "updated"))
+        if (updateStackDto.ColumnToUpdate == "StackName")
         {
-            return; // Task updated successfully even after it checks that exists
-        }
-        databaseManager.UpdateStack(updateStackDto);
+            if (updateStackDto.NewValue.Equals(stack.StackName, StringComparison.OrdinalIgnoreCase))
+            {
+                Console.Clear();
+                AnsiConsole.MarkupLine("[red]Stack already exists[/]");
+                AnsiConsole.MarkupLine("Press any key to go back to Main Menu");
+                Console.ReadKey();
+                return;
+            }
 
-        InformUserWithStatus("updated");
+            var existingNames = databaseManager
+                .ReadStacks()
+                .Where(s => s.StackId != stackId)
+                .Select(s => s.StackName);
+
+            if (!VerifyIfStackExists(existingNames, updateStackDto.NewValue))
+            {
+                Console.Clear();
+                AnsiConsole.MarkupLine("[red]Stack already exists[/]");
+                AnsiConsole.MarkupLine("Press any key to go back to Main Menu");
+                Console.ReadKey();
+                return;
+            }
+        }
+
+        databaseManager.UpdateStack(updateStackDto);
+    }
+
+    internal static void DeleteStack(DatabaseManager databaseManager)
+    {
+        var stackChoice = StackChoice.GetStackChoice(databaseManager);
+        
+        databaseManager.DeleteStack(stackChoice);
+        InformUserWithStatus("deleted");
     }
     
     internal static void ViewStacksTable(DatabaseManager databaseManager)
@@ -69,7 +106,6 @@ public class StacksController
             StackName = stack.StackName,
             Description = stack.Description
         }).ToList();
-
     }
     
     private static Table BuildStackTable(List<StacksDto> stackDtos)
@@ -103,20 +139,9 @@ public class StacksController
         return stacksTable;
     }
     
-    private static bool VerifyIfStackExists(string oldStack, string newStack, string operation)
+    private static bool VerifyIfStackExists(IEnumerable<string> existingStacks, string newStack)
     {
-        if (oldStack.ToLower().Equals(newStack.ToLower()))
-        {
-            Console.Clear();
-            AnsiConsole.MarkupLine("[red]Stack already exists[/]");
-            AnsiConsole.MarkupLine("Press any key to go back to Main Menu");
-            Console.ReadKey();
-            
-            return false;
-        }
-        InformUserWithStatus(operation);
-        return true;
-
+        return !existingStacks.Any(s => s != null && s.Equals(newStack, StringComparison.OrdinalIgnoreCase));
     }
     
     private static void InformUserWithStatus(string option)

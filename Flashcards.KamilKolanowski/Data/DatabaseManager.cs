@@ -129,4 +129,12 @@ internal class DatabaseManager
         
         Connection.Execute(query, new { updateStackDto.StackId, updateStackDto.NewValue });
     }
+
+    internal void DeleteStack(int stackId)
+    {
+        Connection.Open();
+        
+        string query = $@"DELETE FROM Flashcards.TCSA.Stacks WHERE StackId = @StackId";
+        Connection.Execute(query, new { StackId = stackId });
+    }
 }

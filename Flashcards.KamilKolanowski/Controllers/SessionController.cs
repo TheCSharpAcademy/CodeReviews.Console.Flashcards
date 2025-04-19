@@ -55,8 +55,7 @@ internal class SessionController
                 StacksController.EditStack(databaseManager);
                 break;
             case Options.DBOptions.DeleteRow:
-                // StacksController.DeleteStack(databaseManager);
-                Console.WriteLine("Delete Stack");
+                StacksController.DeleteStack(databaseManager);
                 break;
             case Options.DBOptions.ViewRows:
                 StacksController.ViewStacksTable(databaseManager);

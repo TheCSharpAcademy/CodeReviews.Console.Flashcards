@@ -87,8 +87,6 @@ internal class FlashcardsController
         Console.ReadKey();
     }
 
-    
-
     private static (int FlashcardId, string FlashcardTitle) GetFlashcardChoice(DatabaseManager databaseManager, int stackChoice)
     {
         var flashcards = GetFlashcardDtosForStack(databaseManager, stackChoice)
