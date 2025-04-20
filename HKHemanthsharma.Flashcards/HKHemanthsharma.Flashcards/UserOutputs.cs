@@ -1,5 +1,4 @@
 ﻿using Flashcards.Study.Models;
-using Flashcards.Study.Models.Domain;
 using Spectre.Console;
 using System.Reflection;
 namespace Flashcards.Study
@@ -23,7 +22,7 @@ namespace Flashcards.Study
                 {
                     Console.WriteLine("Please enter the name of the stack to enter");
                     string newstackname = Console.ReadLine();
-                    var exists = stacks.FirstOrDefault(x => x == newstackname);
+                    var exists = DatabaseAccess.GetAllStacks().FirstOrDefault(x => x == newstackname);
                     if (exists == null)
                     {
                         DatabaseAccess.InsertNewStack(newstackname);
@@ -36,46 +35,62 @@ namespace Flashcards.Study
                 }
                 else if (userChoice == 2)
                 {
-                    Console.WriteLine("Please enter the name of the stack to delete:");
-                    string name = Console.ReadLine();
-                    DatabaseAccess.DeleteStack(name);
-                    AnsiConsole.MarkupLine($"[red]The Stack [yellow]{name}[/] is  successfully[/]");
+                    if (DatabaseAccess.GetAllStacks().Count > 0)
+                    {
+                        Console.WriteLine("Please enter the name of the stack to delete:");
+                        string name = Console.ReadLine();
+                        DatabaseAccess.DeleteStack(name);
+                        AnsiConsole.MarkupLine($"[red]The Stack [yellow]{name}[/] is  successfully Deleted[/]");
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine("[yellow] There are no stacks currently to Delete! [/]");
+                    }
                 }
                 else if (userChoice == 3)
                 {
-                    var stackpicked = UserInputs.PickSingleStack(stacks);
-                    int singlestackchoice = UserInputs.ManageSingleStack(stackpicked);
-                    while (singlestackchoice != 0)
+                    if (DatabaseAccess.GetAllStacks().Count >0)
                     {
-                        switch (singlestackchoice)
+                        var stackpicked = UserInputs.PickSingleStack(stacks);
+                        int singlestackchoice = UserInputs.ManageSingleStack(stackpicked);
+                        while (singlestackchoice != 0)
                         {
-                            case 1:
-                                stackpicked = UserInputs.PickSingleStack(stacks);
-                                break;
-                            case 2:
-                                var result = DatabaseAccess.GetAllFlashcardsofStack(stackpicked);
-                                ShowAllFlashcardsofStack(stackpicked, result);
-                                break;
-                            case 3:
-                                DatabaseAccess.CreateNewFlashcardforstack(stackpicked);
-                                ShowAllFlashcardsofStack(stackpicked, DatabaseAccess.GetAllFlashcardsofStack(stackpicked));
-                                break;
-                            case 4:
-                                DatabaseAccess.DeleteFlashcardforstack(stackpicked, DatabaseAccess.GetAllFlashcardsofStack(stackpicked));
-                                break;
-                            case 5:
-                                DatabaseAccess.EditFlashcardforstack(stackpicked, DatabaseAccess.GetAllFlashcardsofStack(stackpicked));
-                                break;
-                            default:
-                                continue;
-                                break;
+                            switch (singlestackchoice)
+                            {
+                                case 1:
+                                    stackpicked = UserInputs.PickSingleStack(stacks);
+                                    break;
+                                case 2:
+                                    var result = DatabaseAccess.GetAllFlashcardsofStack(stackpicked);
+                                    ShowAllFlashcardsofStack(stackpicked, result);
+                                    break;
+                                case 3:
+                                    DatabaseAccess.CreateNewFlashcardforstack(stackpicked);
+                                    ShowAllFlashcardsofStack(stackpicked, DatabaseAccess.GetAllFlashcardsofStack(stackpicked));
+                                    break;
+                                case 4:
+                                    DatabaseAccess.DeleteFlashcardforstack(stackpicked, DatabaseAccess.GetAllFlashcardsofStack(stackpicked));
+                                    break;
+                                case 5:
+                                    DatabaseAccess.EditFlashcardforstack(stackpicked, DatabaseAccess.GetAllFlashcardsofStack(stackpicked));
+                                    break;
+                                default:
+                                    continue;
+                                    break;
+                            }
+                            singlestackchoice = UserInputs.ManageSingleStack(stackpicked);
                         }
-                        singlestackchoice = UserInputs.ManageSingleStack(stackpicked);
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine("[yellow] There are no stacks currently to enter please insert a stack to explore! [/]");
                     }
                 }
                 userChoice = UserInputs.ManageStacksMenu();
             }
+
         }
+
         public static void ManageFlashcards()
         {
             Table flashcardsTable = new Table();
@@ -95,12 +110,19 @@ namespace Flashcards.Study
             {
                 if (userChoice == 1)
                 {
-                    Console.WriteLine("Please enter the ID of the flashcard to Delete:");
-                    int id = UserInputs.DeleteFlashcardMenu(flashcards.Count);
-                    DatabaseAccess.DeleteFlashcard(id);
-                    AnsiConsole.MarkupLine($"[red]The Flashcard with ID[yellow]{id}[/] is deleted successfully[/]");
+                    if (DatabaseAccess.GetAllFlashcards().Count > 0)
+                    {
+                        Console.WriteLine("Please enter the ID of the flashcard to Delete:");
+                        int id = UserInputs.DeleteFlashcardMenu(flashcards.Count);
+                        DatabaseAccess.DeleteFlashcard(id);
+                        AnsiConsole.MarkupLine($"[red]The Flashcard with ID[yellow]{id}[/] is deleted successfully[/]");
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine("[yellow] Currently there are no flashcards to Delete! please enter '0' to go to MainMenu[/]");
+                    }
                 }
-                userChoice = UserInputs.ManageStacksMenu();
+                userChoice = UserInputs.ManageFlashcardsMenu();
             }
 
         }
@@ -140,6 +162,9 @@ namespace Flashcards.Study
                 case 2:
                     int year = UserInputs.GetYear();
                     DatabaseAccess.GetYearReport(year);
+                    break;
+                case 3:
+                    DatabaseAccess.ViewAllStudySessions();
                     break;
             }
         }

@@ -1,5 +1,4 @@
 ﻿using Flashcards.Study.Models;
-using Flashcards.Study.Models.Domain;
 using Spectre.Console;
 using System.Globalization;
 namespace Flashcards.Study
@@ -183,11 +182,11 @@ namespace Flashcards.Study
         }
         public static int ViewReportMenu()
         {
-            AnsiConsole.MarkupLine("Please enter '1' to view Report for all the years:\n enter '2' to view report for specific year:");
+            AnsiConsole.MarkupLine("Please enter '1' to view Report for all the years:\n enter '2' to view report for specific year:\n enter 3 to view all the study sessions:");
             bool res = int.TryParse(Console.ReadLine(), out int userInput);
-            while (!res || (userInput < 1 || userInput > 2))
+            while (!res || (userInput < 1 || userInput > 3))
             {
-                AnsiConsole.MarkupLine("[Red] Wrong Choice[/] Please enter an integer between 1 and 2:");
+                AnsiConsole.MarkupLine("[Red] Wrong Choice[/] Please enter an integer between 1 and 3:");
                 res = int.TryParse(Console.ReadLine(), out userInput);
             }
             return userInput;

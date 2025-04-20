@@ -7,7 +7,7 @@ namespace Flashcards.Study.Models.Domain
         public int ID { get; set; }
         public string Front { get; set; }
         public string Back { get; set; }
-        public string stack_name { get; set; }
+        public string StackName { get; set; }
 
     }
 }

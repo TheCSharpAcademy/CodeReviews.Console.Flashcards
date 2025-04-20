@@ -47,9 +47,7 @@ namespace Flashcards.Study
                     }
                 }
                 Console.ReadLine();
-
             }
-
         }
     }
 }

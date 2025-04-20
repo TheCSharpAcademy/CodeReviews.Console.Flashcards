@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Flashcards.Study.Models;
 using Flashcards.Study.Models.Domain;
+using HKHemanthsharma.Flashcards.Models.Domain;
 using Microsoft.Data.SqlClient;
 using Spectre.Console;
 namespace Flashcards.Study
@@ -25,8 +26,8 @@ namespace Flashcards.Study
             try
             {
                 string query = @"If DB_ID('stacksNFlashcards') is null
-                              Begin
-                               create DataBase stacksNFlashcards
+                              BEGIN
+                               CREATE DATABASE stacksNFlashcards
                               END;";
                 using SqlConnection conn = new SqlConnection(ConnectionString);
                 conn.Open();
@@ -53,27 +54,27 @@ namespace Flashcards.Study
             string DBConnectionString = ConnectionString;
             string stacksquery = @"if object_id('stacks') is null
                                  BEGIN
-                                    Create Table stacks(
+                                    CREATE TABLE stacks(
                                       stackname varchar(20) primary key
                                     );                                    
                                   END";
             string Flashcardsquery = @"if object_id('Flashcards') is null
                                     BEGIN 
-                                        Create Table Flashcards(
+                                        CREATE TABLE Flashcards(
                                               ID int primary key identity(1,1),
                                               Front varchar(100),
                                               Back Varchar(100),
-                                              stack_name varchar(20),
-                                              Foreign key(stack_name) references stacks(stackname) ON DELETE CASCADE);
+                                              StackName varchar(20),
+                                              Foreign key(StackName) references stacks(stackname) ON DELETE CASCADE);
                                     END";
             string studysession = @"if object_id('studysessions') is null
                                  BEGIN
-                                      create table studysessions(
+                                      CREATE TABLE studysessions(
                                                SessionId int PRIMARY key identity(1,1),
                                                StackName varchar(20),
-                                               score float,
-                                               DateOfSession date Default convert(date,GetDate())
-                                                               );
+                                               Score float,
+                                               DateOfSession date Default convert(date,GetDate()),
+                                               FOREIGN KEY(StackName) references stacks(stackname) ON DELETE CASCADE);
                                  END";
             try
             {
@@ -120,7 +121,6 @@ namespace Flashcards.Study
             {
                 string query = "insert into stacks([stackname]) values (@stackname)";
                 SqlConnection conn = new SqlConnection(ConnectionString);
-                conn.Open();
                 conn.Execute(query, new { stackname = newstackname });
                 conn.Close();
             }
@@ -139,7 +139,6 @@ namespace Flashcards.Study
             {
                 string query = "Delete from stacks where stackname=@name";
                 SqlConnection conn = new SqlConnection(ConnectionString);
-                conn.Open();
                 conn.Execute(query, new { name = stackname });
                 conn.Close();
             }
@@ -161,9 +160,7 @@ namespace Flashcards.Study
                 SqlConnection conn = new SqlConnection(ConnectionString);
                 using (conn)
                 {
-                    conn.Open();
                     List<Flashcard> Flashcards = conn.Query<Flashcard>(query).ToList();
-                    conn.Close();
                     int count = 1;
                     foreach (Flashcard fl in Flashcards)
                     {
@@ -354,7 +351,7 @@ order by  sessionyear desc, StackName;";
                 }
                 foreach (var yearwiseobjects in kvp.Value)
                 {
-                    var rowValues = new List<string> { yearwiseobjects.StackName , yearwiseobjects.Sessionyear};
+                    var rowValues = new List<string> { yearwiseobjects.StackName, yearwiseobjects.Sessionyear };
 
                     // Add all month values formatted to 1 decimal place
                     rowValues.Add($"{yearwiseobjects.January:0.0}");
@@ -469,5 +466,30 @@ order by  sessionyear desc, StackName;";
 
             AnsiConsole.Write(reportTable);
         }
+        public static void ViewAllStudySessions()
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConnectionString))
+                {
+                    string studysessionQuery = "select * from studysessions";
+                    List<StudySessionDto> sessions = conn.Query<StudySessionDto>(studysessionQuery).ToList();
+                    Table sessionsTable = new Table();
+                    sessionsTable.Title = new TableTitle("Study Sessions");
+                    var props = typeof(StudySessionDto).GetProperties();
+                    foreach (var property in props)
+                    {
+                        sessionsTable.AddColumn(property.ToString());
+                    }
+                    sessions.ForEach(x => sessionsTable.AddRow(Markup.Escape(x.StackName.ToString()), Markup.Escape(x.Score.ToString()), Markup.Escape(x.DateOfSession.ToString())));
+                    AnsiConsole.Write(sessionsTable);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
     }
 }
+
