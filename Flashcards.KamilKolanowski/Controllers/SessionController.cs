@@ -1,11 +1,12 @@
 using Flashcards.KamilKolanowski.Controllers;
 using Flashcards.KamilKolanowski.Data;
 using Flashcards.KamilKolanowski.Enums;
+using Flashcards.KamilKolanowski.Helpers;
 using Spectre.Console;
 
 namespace Flashcards.KamilKolanowski.Controllers;
 
-internal class SessionController
+internal static class SessionController
 {
     internal static void ManageFlashcards()
     {
@@ -60,6 +61,22 @@ internal class SessionController
             case Options.DBOptions.ViewRows:
                 StacksController.ViewStacksTable(databaseManager);
                 break;
+        }
+    }
+
+    internal static void ManageStudySession(string studyChoice)
+    {
+        DatabaseManager databaseManager = new();
+        
+        if (studyChoice == "study")
+        {
+            StudySession.Study(databaseManager);
+        }
+        
+        else if (studyChoice == "view")
+        {
+            StudySession.ViewStudySessions(databaseManager);
+            Console.ReadKey();
         }
     }
 }

@@ -7,7 +7,7 @@ using Spectre.Console;
 
 namespace Flashcards.KamilKolanowski.Controllers;
 
-public class StacksController
+internal static class StacksController
 {
     internal static void AddNewStack(DatabaseManager databaseManager)
     {
@@ -141,7 +141,7 @@ public class StacksController
     
     private static bool VerifyIfStackExists(IEnumerable<string> existingStacks, string newStack)
     {
-        return !existingStacks.Any(s => s != null && s.Equals(newStack, StringComparison.OrdinalIgnoreCase));
+        return !existingStacks.Any(s => s.Equals(newStack, StringComparison.OrdinalIgnoreCase));
     }
     
     private static void InformUserWithStatus(string option)

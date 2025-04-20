@@ -6,7 +6,7 @@ using Spectre.Console;
 
 namespace Flashcards.KamilKolanowski.Controllers;
 
-internal class FlashcardsController
+internal static class FlashcardsController
 {
     internal static void AddFlashcard(DatabaseManager databaseManager)
     {
@@ -112,7 +112,7 @@ internal class FlashcardsController
         return (selected.FlashcardId, selected.FlashcardTitle);
     }
     
-    private static List<CardDto> GetFlashcardDtosForStack(DatabaseManager databaseManager, int stackChoice)
+    internal static List<CardDto> GetFlashcardDtosForStack(DatabaseManager databaseManager, int stackChoice)
     {
         var flashcards = databaseManager.ReadCards(stackChoice);
 

@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Data.SqlClient;
 using Dapper;
+using Flashcards.KamilKolanowski.Dtos.StudySessions;
 using Flashcards.KamilKolanowski.Models;
 
 namespace Flashcards.KamilKolanowski.Data;
@@ -136,5 +137,28 @@ internal class DatabaseManager
         
         string query = $@"DELETE FROM Flashcards.TCSA.Stacks WHERE StackId = @StackId";
         Connection.Execute(query, new { StackId = stackId });
+    }
+
+    internal List<StudySessionDto> ReadStudySessions(int stackId)
+    {
+        Connection.Open();
+        
+        string query = $@"SELECT 
+                            StudySessionId, StackId, StackName, 
+                            StartTime, EndTime, Score
+                        FROM Flashcards.TCSA.StudySessions 
+                        WHERE StackId = @StackId";
+        
+        return Connection.Query<StudySessionDto>(query, new { StackId = stackId }).ToList();
+    }
+    
+    internal List<StudySessionAggregatedDto> ReadStudySessionsAggregated()
+    {
+        Connection.Open();
+        
+        string query = $@"SELECT StackName, StudySessionId, StackId, StackName, January, February, March, April, May, June, July, August,
+                           September, October, November, December FROM StudySessions";
+        
+        return Connection.Query<StudySessionAggregatedDto>(query).ToList();
     }
 }

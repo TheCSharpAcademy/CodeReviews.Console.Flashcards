@@ -28,12 +28,10 @@ internal class MainInterface
                     SessionController.ManageStacks();
                     break;
                 case Options.MenuOptions.StudySession:
-                    Console.WriteLine("Starting Study Session...");
-                    Console.ReadKey();
+                    SessionController.ManageStudySession("study");
                     break;
                 case Options.MenuOptions.ViewStudySessions:
-                    Console.WriteLine("Viewing Study Sessions...");
-                    Console.ReadKey();
+                    SessionController.ManageStudySession("view");
                     break;
                 case Options.MenuOptions.Exit:
                     Environment.Exit(0);
