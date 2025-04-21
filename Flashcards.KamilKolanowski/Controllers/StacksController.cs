@@ -26,7 +26,7 @@ internal static class StacksController
         databaseManager.AddStack(newStack);
         InformUserWithStatus("added");
     }
-    
+
     internal static void EditStack(DatabaseManager databaseManager)
     {
         var updateStackDto = new UpdateStackDto();
@@ -43,10 +43,12 @@ internal static class StacksController
         updateStackDto.ColumnToUpdate = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("Choose the column to edit")
-                .AddChoices("StackName", "Description"));
+                .AddChoices("StackName", "Description")
+        );
 
         updateStackDto.NewValue = AnsiConsole.Prompt(
-            new TextPrompt<string>($"Provide new value for {updateStackDto.ColumnToUpdate}: "));
+            new TextPrompt<string>($"Provide new value for {updateStackDto.ColumnToUpdate}: ")
+        );
 
         if (updateStackDto.ColumnToUpdate == "StackName")
         {
@@ -80,18 +82,18 @@ internal static class StacksController
     internal static void DeleteStack(DatabaseManager databaseManager)
     {
         var stackChoice = StackChoice.GetStackChoice(databaseManager);
-        
+
         databaseManager.DeleteStack(stackChoice);
         InformUserWithStatus("deleted");
     }
-    
+
     internal static void ViewStacksTable(DatabaseManager databaseManager)
     {
         var stacksTable = GetStacksDtoTable(databaseManager);
         var table = BuildStackTable(stacksTable);
-        
+
         AnsiConsole.Write(table);
-        
+
         AnsiConsole.MarkupLine("Press any key to go back to the main menu.");
         Console.ReadKey();
     }
@@ -99,27 +101,29 @@ internal static class StacksController
     private static List<StacksDto> GetStacksDtoTable(DatabaseManager databaseManager)
     {
         var stacks = databaseManager.ReadStacks();
-        
-        return stacks.Select(stack => new StacksDto    
-        {
-            StackId = stack.StackId,
-            StackName = stack.StackName,
-            Description = stack.Description
-        }).ToList();
+
+        return stacks
+            .Select(stack => new StacksDto
+            {
+                StackId = stack.StackId,
+                StackName = stack.StackName,
+                Description = stack.Description,
+            })
+            .ToList();
     }
-    
+
     private static Table BuildStackTable(List<StacksDto> stackDtos)
     {
         var stacksTable = new Table();
-        
+
         stacksTable.Title("[bold yellow]Stacks[/]");
         stacksTable.Border(TableBorder.Rounded);
         stacksTable.BorderColor(Color.HotPink3);
-        
+
         stacksTable.AddColumn("[darkorange3_1]Stack Id[/]");
         stacksTable.AddColumn("[darkorange3_1]Stack Name[/]");
         stacksTable.AddColumn("[darkorange3_1]Stack Description[/]");
-        
+
         var idx = 1;
         foreach (var stack in stackDtos)
         {
@@ -130,24 +134,26 @@ internal static class StacksController
             );
             idx++;
         }
-    
+
         foreach (var column in stacksTable.Columns)
         {
             column.Centered();
         }
-        
+
         return stacksTable;
     }
-    
+
     private static bool VerifyIfStackExists(IEnumerable<string> existingStacks, string newStack)
     {
         return !existingStacks.Any(s => s.Equals(newStack, StringComparison.OrdinalIgnoreCase));
     }
-    
+
     private static void InformUserWithStatus(string option)
     {
         Console.Clear();
-        AnsiConsole.MarkupLine($"[springgreen2_1]Stack {option} successfully.[/] \nPress any key to go back to Main Menu.");
+        AnsiConsole.MarkupLine(
+            $"[springgreen2_1]Stack {option} successfully.[/] \nPress any key to go back to Main Menu."
+        );
         Console.ReadKey();
     }
 }

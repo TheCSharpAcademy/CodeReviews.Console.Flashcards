@@ -11,13 +11,14 @@ internal static class SessionController
     internal static void ManageFlashcards()
     {
         DatabaseManager databaseManager = new();
-        
+
         var flashcardsChoice = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .AddChoices(Options.FlashcardsOptionDisplay.Values));
-        
-        var selectedFlashcardChoice = Options.FlashcardsOptionDisplay
-            .FirstOrDefault(x => x.Value == flashcardsChoice).Key;
+            new SelectionPrompt<string>().AddChoices(Options.FlashcardsOptionDisplay.Values)
+        );
+
+        var selectedFlashcardChoice = Options
+            .FlashcardsOptionDisplay.FirstOrDefault(x => x.Value == flashcardsChoice)
+            .Key;
 
         switch (selectedFlashcardChoice)
         {
@@ -33,7 +34,8 @@ internal static class SessionController
             case Options.DBOptions.ViewRows:
                 FlashcardsController.ViewFlashcardsTable(databaseManager);
                 break;
-        };
+        }
+        ;
     }
 
     internal static void ManageStacks()
@@ -41,11 +43,12 @@ internal static class SessionController
         DatabaseManager databaseManager = new();
 
         var stacksChoice = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .AddChoices(Options.StacksOptionDisplay.Values));
-        
-        var selectedStacksChoice = Options.StacksOptionDisplay
-            .FirstOrDefault(x => x.Value == stacksChoice).Key;
+            new SelectionPrompt<string>().AddChoices(Options.StacksOptionDisplay.Values)
+        );
+
+        var selectedStacksChoice = Options
+            .StacksOptionDisplay.FirstOrDefault(x => x.Value == stacksChoice)
+            .Key;
 
         switch (selectedStacksChoice)
         {
@@ -67,16 +70,14 @@ internal static class SessionController
     internal static void ManageStudySession(string studyChoice)
     {
         DatabaseManager databaseManager = new();
-        
+
         if (studyChoice == "study")
         {
-            StudySession.Study(databaseManager);
+            StudySession.StartStudy(databaseManager);
         }
-        
         else if (studyChoice == "view")
         {
             StudySession.ViewStudySessions(databaseManager);
-            Console.ReadKey();
         }
     }
 }

@@ -42,36 +42,11 @@ CREATE TABLE Flashcards.TCSA.StudySessions (
            ON DELETE CASCADE);
 GO
 
-CREATE TABLE Flashcards.TCSA.StudySessionsAggregated (
-     StudySessionId INT PRIMARY KEY IDENTITY(1, 1),
-     StackId INT NOT NULL,
-     StackName VARCHAR(100) NOT NULL,
-     January INT NULL DEFAULT 0,
-     February INT NULL DEFAULT 0,
-     March INT NULL DEFAULT 0,
-     April INT NULL DEFAULT 0,
-     May INT NULL DEFAULT 0,
-     June INT NULL DEFAULT 0,
-     July INT NULL DEFAULT 0,
-     August INT NULL DEFAULT 0,
-     September INT NULL DEFAULT 0,
-     October INT NULL DEFAULT 0,
-     November INT NULL DEFAULT 0,
-     December INT NULL DEFAULT 0,
-     CONSTRAINT fk_del_stack_study_agg_id FOREIGN KEY (StackId)
-         REFERENCES Flashcards.TCSA.Stacks (StackId)
-         ON DELETE CASCADE);
-GO
-
 ALTER TABLE Flashcards.TCSA.Stacks
     REBUILD PARTITION = ALL WITH (DATA_COMPRESSION = PAGE);
 GO
 
 ALTER TABLE Flashcards.TCSA.Cards
-    REBUILD PARTITION = ALL WITH (DATA_COMPRESSION = PAGE);
-GO
-
-ALTER TABLE Flashcards.TCSA.StudySessionsAggregated
     REBUILD PARTITION = ALL WITH (DATA_COMPRESSION = PAGE);
 GO
 

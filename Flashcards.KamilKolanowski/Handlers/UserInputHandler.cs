@@ -1,3 +1,4 @@
+using Flashcards.KamilKolanowski.Dtos.StudySessions;
 using Flashcards.KamilKolanowski.Models;
 using Spectre.Console;
 
@@ -14,42 +15,62 @@ internal static class UserInputHandler
             var stackChoice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("Choose the Stack to assign from the list:")
-                    .AddChoices(stackNames));
-            
+                    .AddChoices(stackNames)
+            );
+
             var stackId = stacks.First(x => x.Item2 == stackChoice).Item1;
 
             var flashcardTitle = AnsiConsole.Prompt(
-                new TextPrompt<string>("Provide title for the flashcard: "));
+                new TextPrompt<string>("Provide title for the flashcard: ")
+            );
 
             var flashcardContent = AnsiConsole.Prompt(
-                new TextPrompt<string>("Provide content for the flashcard: "));
+                new TextPrompt<string>("Provide content for the flashcard: ")
+            );
 
-            return new CreateCardDto() { 
-                StackId = stackId, 
-                FlashcardTitle = flashcardTitle, 
-                FlashcardContent = flashcardContent
+            return new CreateCardDto()
+            {
+                StackId = stackId,
+                FlashcardTitle = flashcardTitle,
+                FlashcardContent = flashcardContent,
             };
         }
 
-        AnsiConsole.MarkupLine(@"There's no Stack created.
-                          Please create Stack first.");
+        AnsiConsole.MarkupLine(
+            @"There's no Stack created.
+                          Please create Stack first."
+        );
         return null;
     }
 
     internal static CreateStackDto CreateStack()
     {
         var newStackName = AnsiConsole.Prompt(
-            new TextPrompt<string>("Provide title for the new stack: "));
-        
-        var newDescription = AnsiConsole.Prompt(
-            new TextPrompt<string>("Provide description for the new stack: "));
-        
-        return new CreateStackDto()
-        {
-            StackName = newStackName,
-            Description = newDescription
-        };
+            new TextPrompt<string>("Provide title for the new stack: ")
+        );
 
-        
+        var newDescription = AnsiConsole.Prompt(
+            new TextPrompt<string>("Provide description for the new stack: ")
+        );
+
+        return new CreateStackDto() { StackName = newStackName, Description = newDescription };
+    }
+
+    internal static StudySessionDto CreateStudySession(
+        int stackId,
+        string stackName,
+        DateTime startTime,
+        DateTime endTime,
+        int score
+    )
+    {
+        return new StudySessionDto()
+        {
+            StackId = stackId,
+            StackName = stackName,
+            StartTime = startTime,
+            EndTime = endTime,
+            Score = score,
+        };
     }
 }

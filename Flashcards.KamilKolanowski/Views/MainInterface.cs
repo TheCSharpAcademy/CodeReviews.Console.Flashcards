@@ -1,5 +1,5 @@
-using Flashcards.KamilKolanowski.Enums;
 using Flashcards.KamilKolanowski.Controllers;
+using Flashcards.KamilKolanowski.Enums;
 using Spectre.Console;
 
 namespace Flashcards.KamilKolanowski.Views;
@@ -13,11 +13,12 @@ internal class MainInterface
             Console.Clear();
 
             var menuChoice = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                    .AddChoices(Options.MenuOptionsDisplay.Values));
+                new SelectionPrompt<string>().AddChoices(Options.MenuOptionsDisplay.Values)
+            );
 
-            var selectedOption = Options.MenuOptionsDisplay
-                .FirstOrDefault(x => x.Value == menuChoice).Key;
+            var selectedOption = Options
+                .MenuOptionsDisplay.FirstOrDefault(x => x.Value == menuChoice)
+                .Key;
 
             switch (selectedOption)
             {

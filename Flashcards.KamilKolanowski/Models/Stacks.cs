@@ -1,6 +1,6 @@
 namespace Flashcards.KamilKolanowski.Data;
 
-internal class Stacks ()
+internal class Stacks()
 {
     public int StackId { get; }
     public string StackName { get; set; } = string.Empty;
