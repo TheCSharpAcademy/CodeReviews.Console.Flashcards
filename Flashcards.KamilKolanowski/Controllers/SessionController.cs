@@ -33,7 +33,8 @@ internal class SessionController
             case Options.DBOptions.ViewRows:
                 flashcardsController.ViewFlashcardsTable(databaseManager);
                 break;
-        };
+        }
+        ;
     }
 
     internal void ManageStacks()

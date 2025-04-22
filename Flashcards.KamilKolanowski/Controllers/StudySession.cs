@@ -195,7 +195,7 @@ internal class StudySession
             })
             .ToList();
     }
-    
+
     private StudySessionDto CreateStudySession(
         int stackId,
         string stackName,
@@ -257,7 +257,7 @@ internal class StudySession
         var title =
             aggregationType == "count"
                 ? "[bold yellow]Study Sessions per Month[/]"
-                : "[bold yellow]Average Score per Month[/]";
+                : "[bold yellow]Average Score per Month (%)[/]";
 
         studySessionsTable.Title(title);
         studySessionsTable.Border(TableBorder.Rounded);

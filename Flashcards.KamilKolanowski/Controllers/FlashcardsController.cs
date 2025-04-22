@@ -12,20 +12,20 @@ internal class FlashcardsController
     {
         UserInputHandler userInputHandler = new();
         var stacks = databaseManager.ReadStacks().Select(s => (s.StackId, s.StackName)).ToList();
-
         var newCard = userInputHandler.CreateFlashcard(stacks);
-        // VerifyIfFlashcardExists(databaseManager, newCard.StackId, newCard.FlashcardTitle);
-        //
-        // if (!VerifyIfFlashcardExists(stackNames, newStack.StackName))
-        // {
-        //     Console.Clear();
-        //     AnsiConsole.MarkupLine("[red]Stack already exists[/]");
-        //     AnsiConsole.MarkupLine("Press any key to go back to Main Menu");
-        //     Console.ReadKey();
-        //     return;
-        // }
+        var flashcards = databaseManager.ReadCards(newCard.StackId).ToList();
+
+        if (VerifyIfFlashcardExists(flashcards, newCard.FlashcardTitle))
+        {
+            Console.Clear();
+            AnsiConsole.MarkupLine("[red]Flashcard already exists[/]");
+            AnsiConsole.MarkupLine("Press any key to go back to Main Menu");
+            Console.ReadKey();
+            return;
+        }
 
         databaseManager.AddCard(newCard);
+        InformUserWithStatus("added");
     }
 
     internal void EditFlashcard(DatabaseManager databaseManager)
@@ -33,6 +33,7 @@ internal class FlashcardsController
         var updateCardDto = new UpdateCardDto();
 
         updateCardDto.StackId = StackChoice.GetStackChoice(databaseManager);
+        var flashcards = databaseManager.ReadCards(updateCardDto.StackId).ToList();
 
         var (flashcardId, flashcardTitle) = GetFlashcardChoice(
             databaseManager,
@@ -55,19 +56,49 @@ internal class FlashcardsController
         if (updateCardDto.ColumnToUpdate == "StackName")
         {
             AnsiConsole.MarkupLine("You're choosing new Stack for this flashcard.");
-
             updateCardDto.NewValue = StackChoice.GetStackChoice(databaseManager).ToString();
-            databaseManager.UpdateCards(updateCardDto);
         }
         else
         {
             updateCardDto.NewValue = AnsiConsole.Prompt(
                 new TextPrompt<string>($"Provide new value for {updateCardDto.ColumnToUpdate}: ")
             );
-
-            databaseManager.UpdateCards(updateCardDto);
         }
 
+        if (
+            updateCardDto.ColumnToUpdate == "FlashcardTitle"
+            || updateCardDto.ColumnToUpdate == "StackName"
+        )
+        {
+            var newStackId =
+                updateCardDto.ColumnToUpdate == "StackName"
+                    ? int.Parse(updateCardDto.NewValue)
+                    : updateCardDto.StackId;
+
+            var newTitle =
+                updateCardDto.ColumnToUpdate == "FlashcardTitle"
+                    ? updateCardDto.NewValue
+                    : updateCardDto.FlashcardTitle;
+
+            var flashcardsInTargetStack = databaseManager.ReadCards(newStackId).ToList();
+
+            if (
+                VerifyIfFlashcardExists(
+                    flashcardsInTargetStack,
+                    newTitle,
+                    updateCardDto.FlashcardId
+                )
+            )
+            {
+                Console.Clear();
+                AnsiConsole.MarkupLine("[red]A flashcard with this title already exists![/]");
+                AnsiConsole.MarkupLine("Press any key to go back to Main Menu.");
+                Console.ReadKey();
+                return;
+            }
+        }
+
+        databaseManager.UpdateCards(updateCardDto);
         InformUserWithStatus("updated");
     }
 
@@ -174,35 +205,17 @@ internal class FlashcardsController
         return flashcardsTable;
     }
 
-    // Fix issue with not verifying if flashcard exists for Adding/Updating
-    
-    // private bool VerifyIfFlashcardExists(IEnumerable<string> existingFlashcards, string newFlashcard)
-    // {
-    //     return !existingFlashcards.Any(s => s.Equals(newFlashcard, StringComparison.OrdinalIgnoreCase));
-    // }
-    
-    // private void VerifyIfFlashcardExists(
-    //     DatabaseManager databaseManager,
-    //     int stackChoice,
-    //     string newFlashcardTitle
-    // )
-    // {
-    //     var flashcards = databaseManager.ReadCards(stackChoice);
-    //
-    //     if (
-    //         flashcards.Select(x => x.FlashcardTitle.ToLower()).Contains(newFlashcardTitle.ToLower())
-    //     )
-    //     {
-    //         Console.Clear();
-    //         AnsiConsole.MarkupLine("[red]Flashcard already exists[/]");
-    //         AnsiConsole.MarkupLine("Press any key to go back to Main Menu");
-    //         Console.ReadKey();
-    //     }
-    //     else
-    //     {
-    //         InformUserWithStatus("added");
-    //     }
-    // }
+    private bool VerifyIfFlashcardExists(
+        IList<CardDto> existingFlashcards,
+        string newFlashcardTitle,
+        int? excludeId = null
+    )
+    {
+        return existingFlashcards.Any(c =>
+            c.FlashcardTitle.Equals(newFlashcardTitle, StringComparison.OrdinalIgnoreCase)
+            && (!excludeId.HasValue || c.FlashcardId != excludeId.Value)
+        );
+    }
 
     private void InformUserWithStatus(string option)
     {

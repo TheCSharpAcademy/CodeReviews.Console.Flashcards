@@ -55,5 +55,4 @@ internal class UserInputHandler
 
         return new CreateStackDto() { StackName = newStackName, Description = newDescription };
     }
-    
 }
