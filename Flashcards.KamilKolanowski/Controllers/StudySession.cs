@@ -84,7 +84,6 @@ internal class StudySession
                         );
                         return ValidationResult.Success();
                     }
-                    ;
                     return ValidationResult.Success();
                 }
             )

@@ -33,7 +33,6 @@ internal class FlashcardsController
         var updateCardDto = new UpdateCardDto();
 
         updateCardDto.StackId = StackChoice.GetStackChoice(databaseManager);
-        var flashcards = databaseManager.ReadCards(updateCardDto.StackId).ToList();
 
         var (flashcardId, flashcardTitle) = GetFlashcardChoice(
             databaseManager,

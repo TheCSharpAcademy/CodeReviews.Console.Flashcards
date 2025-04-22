@@ -1,4 +1,3 @@
-using System.Collections;
 using Flashcards.KamilKolanowski.Data;
 using Flashcards.KamilKolanowski.Handlers;
 using Flashcards.KamilKolanowski.Helpers;

@@ -34,7 +34,6 @@ internal class SessionController
                 flashcardsController.ViewFlashcardsTable(databaseManager);
                 break;
         }
-        ;
     }
 
     internal void ManageStacks()
