@@ -1,16 +1,15 @@
-using Flashcards.KamilKolanowski.Controllers;
 using Flashcards.KamilKolanowski.Data;
 using Flashcards.KamilKolanowski.Enums;
-using Flashcards.KamilKolanowski.Helpers;
 using Spectre.Console;
 
 namespace Flashcards.KamilKolanowski.Controllers;
 
-internal static class SessionController
+internal class SessionController
 {
-    internal static void ManageFlashcards()
+    internal void ManageFlashcards()
     {
         DatabaseManager databaseManager = new();
+        FlashcardsController flashcardsController = new();
 
         var flashcardsChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>().AddChoices(Options.FlashcardsOptionDisplay.Values)
@@ -23,24 +22,24 @@ internal static class SessionController
         switch (selectedFlashcardChoice)
         {
             case Options.DBOptions.AddRow:
-                FlashcardsController.AddFlashcard(databaseManager);
+                flashcardsController.AddFlashcard(databaseManager);
                 break;
             case Options.DBOptions.UpdateRow:
-                FlashcardsController.EditFlashcard(databaseManager);
+                flashcardsController.EditFlashcard(databaseManager);
                 break;
             case Options.DBOptions.DeleteRow:
-                FlashcardsController.DeleteFlashcard(databaseManager);
+                flashcardsController.DeleteFlashcard(databaseManager);
                 break;
             case Options.DBOptions.ViewRows:
-                FlashcardsController.ViewFlashcardsTable(databaseManager);
+                flashcardsController.ViewFlashcardsTable(databaseManager);
                 break;
-        }
-        ;
+        };
     }
 
-    internal static void ManageStacks()
+    internal void ManageStacks()
     {
         DatabaseManager databaseManager = new();
+        StacksController stacksController = new();
 
         var stacksChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>().AddChoices(Options.StacksOptionDisplay.Values)
@@ -53,31 +52,32 @@ internal static class SessionController
         switch (selectedStacksChoice)
         {
             case Options.DBOptions.AddRow:
-                StacksController.AddNewStack(databaseManager);
+                stacksController.AddNewStack(databaseManager);
                 break;
             case Options.DBOptions.UpdateRow:
-                StacksController.EditStack(databaseManager);
+                stacksController.EditStack(databaseManager);
                 break;
             case Options.DBOptions.DeleteRow:
-                StacksController.DeleteStack(databaseManager);
+                stacksController.DeleteStack(databaseManager);
                 break;
             case Options.DBOptions.ViewRows:
-                StacksController.ViewStacksTable(databaseManager);
+                stacksController.ViewStacksTable(databaseManager);
                 break;
         }
     }
 
-    internal static void ManageStudySession(string studyChoice)
+    internal void ManageStudySession(string studyChoice)
     {
         DatabaseManager databaseManager = new();
+        StudySession studySession = new();
 
         if (studyChoice == "study")
         {
-            StudySession.StartStudy(databaseManager);
+            studySession.StartStudy(databaseManager);
         }
         else if (studyChoice == "view")
         {
-            StudySession.ViewStudySessions(databaseManager);
+            studySession.ViewStudySessions(databaseManager);
         }
     }
 }

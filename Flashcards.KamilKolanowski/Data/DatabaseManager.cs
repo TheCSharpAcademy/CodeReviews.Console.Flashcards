@@ -23,7 +23,7 @@ internal class DatabaseManager
 
     private SqlConnection Connection => new(_connectionString);
 
-    internal List<CardDto> ReadCards(int stackChoice)
+    internal IList<CardDto> ReadCards(int stackChoice)
     {
         Connection.Open();
 
@@ -117,7 +117,7 @@ internal class DatabaseManager
         );
     }
 
-    internal List<StacksDto> ReadStacks()
+    internal IList<StacksDto> ReadStacks()
     {
         Connection.Open();
 

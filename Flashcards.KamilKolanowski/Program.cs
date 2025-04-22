@@ -6,6 +6,7 @@ public class Program
 {
     static void Main(string[] args)
     {
-        MainInterface.Start();
+        MainInterface mainInterface = new();
+        mainInterface.Start();
     }
 }

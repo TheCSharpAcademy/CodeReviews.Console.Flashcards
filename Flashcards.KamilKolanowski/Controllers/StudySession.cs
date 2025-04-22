@@ -1,7 +1,6 @@
 using Flashcards.KamilKolanowski.Data;
 using Flashcards.KamilKolanowski.Dtos.StudySessions;
 using Flashcards.KamilKolanowski.Enums;
-using Flashcards.KamilKolanowski.Handlers;
 using Flashcards.KamilKolanowski.Helpers;
 using Flashcards.KamilKolanowski.Models;
 using Spectre.Console;
@@ -10,13 +9,12 @@ namespace Flashcards.KamilKolanowski.Controllers;
 
 internal class StudySession
 {
-    private static int _points;
-    private static List<CardDto> _cards = new List<CardDto>();
-    private static readonly Random Rnd = new();
-    private static DateTime _startTime;
-    private static DateTime _endTime;
+    private int _points;
+    private readonly Random Rnd = new();
+    private DateTime _startTime;
+    private DateTime _endTime;
 
-    internal static void ViewStudySessions(DatabaseManager databaseManager)
+    internal void ViewStudySessions(DatabaseManager databaseManager)
     {
         var stackChoice = StackChoice.GetStackChoice(databaseManager);
 
@@ -45,15 +43,16 @@ internal class StudySession
         Console.ReadKey();
     }
 
-    internal static void StartStudy(DatabaseManager databaseManager)
+    internal void StartStudy(DatabaseManager databaseManager)
     {
+        FlashcardsController flashcardsController = new();
         var selectedStackChoice = StackChoice.GetStackChoice(databaseManager);
         var stackName = databaseManager
             .ReadStacks()
             .FirstOrDefault(s => s.StackId == selectedStackChoice)
             ?.StackName;
 
-        var cards = FlashcardsController.GetFlashcardDtosForStack(
+        var cards = flashcardsController.GetFlashcardDtosForStack(
             databaseManager,
             selectedStackChoice
         );
@@ -100,7 +99,7 @@ internal class StudySession
         _endTime = DateTime.Now;
 
         var score = (_points * 100) / studySession;
-        var session = UserInputHandler.CreateStudySession(
+        var session = CreateStudySession(
             selectedStackChoice,
             stackName,
             _startTime,
@@ -110,7 +109,7 @@ internal class StudySession
         databaseManager.AddStudySession(session);
     }
 
-    private static int ProcessStudySession(List<int> listOfRandomIndexes, List<CardDto> cards)
+    private int ProcessStudySession(IList<int> listOfRandomIndexes, IList<CardDto> cards)
     {
         _points = 0;
         for (var i = 0; i < listOfRandomIndexes.Count; i++)
@@ -135,7 +134,7 @@ internal class StudySession
         return listOfRandomIndexes.Count;
     }
 
-    private static List<int> GetRandomFlashcards(int amount, List<CardDto> cards)
+    private IList<int> GetRandomFlashcards(int amount, IList<CardDto> cards)
     {
         var indexes = new HashSet<int>();
 
@@ -147,7 +146,7 @@ internal class StudySession
         return indexes.ToList();
     }
 
-    private static List<StudySessionDto> GetStudySessionsDtosForStack(
+    private IList<StudySessionDto> GetStudySessionsDtosForStack(
         DatabaseManager databaseManager,
         int stackChoice
     )
@@ -165,7 +164,7 @@ internal class StudySession
             .ToList();
     }
 
-    private static List<StudySessionAggregatedDto> GetStudySessionsAggregatedDtosForStack(
+    private IList<StudySessionAggregatedDto> GetStudySessionsAggregatedDtosForStack(
         DatabaseManager databaseManager,
         int stackChoice,
         string aggregationType
@@ -196,8 +195,26 @@ internal class StudySession
             })
             .ToList();
     }
+    
+    private StudySessionDto CreateStudySession(
+        int stackId,
+        string stackName,
+        DateTime startTime,
+        DateTime endTime,
+        int score
+    )
+    {
+        return new StudySessionDto()
+        {
+            StackId = stackId,
+            StackName = stackName,
+            StartTime = startTime,
+            EndTime = endTime,
+            Score = score,
+        };
+    }
 
-    private static void BuildStudySessionTable(DatabaseManager databaseManager, int stackChoice)
+    private void BuildStudySessionTable(DatabaseManager databaseManager, int stackChoice)
     {
         var studySessionDtos = GetStudySessionsDtosForStack(databaseManager, stackChoice);
         var studySessionsTable = new Table();
@@ -224,7 +241,7 @@ internal class StudySession
         AnsiConsole.Write(studySessionsTable);
     }
 
-    private static void BuildStudySessionsTablePerMonth(
+    private void BuildStudySessionsTablePerMonth(
         DatabaseManager databaseManager,
         int stackChoice,
         string aggregationType
@@ -289,7 +306,7 @@ internal class StudySession
         AnsiConsole.Write(studySessionsTable);
     }
 
-    private static void ShowResult()
+    private void ShowResult()
     {
         AnsiConsole.MarkupLine($"[blueviolet]You scored {_points} point(s)![/]");
         AnsiConsole.MarkupLine("Press any key to go back to the Main Menu.");

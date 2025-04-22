@@ -6,19 +6,29 @@ using Spectre.Console;
 
 namespace Flashcards.KamilKolanowski.Controllers;
 
-internal static class FlashcardsController
+internal class FlashcardsController
 {
-    internal static void AddFlashcard(DatabaseManager databaseManager)
+    internal void AddFlashcard(DatabaseManager databaseManager)
     {
+        UserInputHandler userInputHandler = new();
         var stacks = databaseManager.ReadStacks().Select(s => (s.StackId, s.StackName)).ToList();
 
-        var newCard = UserInputHandler.CreateFlashcard(stacks);
-        VerifyIfFlashcardExists(databaseManager, newCard.StackId, newCard.FlashcardTitle);
+        var newCard = userInputHandler.CreateFlashcard(stacks);
+        // VerifyIfFlashcardExists(databaseManager, newCard.StackId, newCard.FlashcardTitle);
+        //
+        // if (!VerifyIfFlashcardExists(stackNames, newStack.StackName))
+        // {
+        //     Console.Clear();
+        //     AnsiConsole.MarkupLine("[red]Stack already exists[/]");
+        //     AnsiConsole.MarkupLine("Press any key to go back to Main Menu");
+        //     Console.ReadKey();
+        //     return;
+        // }
 
         databaseManager.AddCard(newCard);
     }
 
-    internal static void EditFlashcard(DatabaseManager databaseManager)
+    internal void EditFlashcard(DatabaseManager databaseManager)
     {
         var updateCardDto = new UpdateCardDto();
 
@@ -61,7 +71,7 @@ internal static class FlashcardsController
         InformUserWithStatus("updated");
     }
 
-    internal static void DeleteFlashcard(DatabaseManager databaseManager)
+    internal void DeleteFlashcard(DatabaseManager databaseManager)
     {
         var stackChoice = StackChoice.GetStackChoice(databaseManager);
         var flashcardChoice = GetFlashcardChoice(databaseManager, stackChoice).FlashcardId;
@@ -75,7 +85,7 @@ internal static class FlashcardsController
         InformUserWithStatus("deleted");
     }
 
-    internal static void ViewFlashcardsTable(DatabaseManager databaseManager)
+    internal void ViewFlashcardsTable(DatabaseManager databaseManager)
     {
         var stackChoice = StackChoice.GetStackChoice(databaseManager);
         var cardDtos = GetFlashcardDtosForStack(databaseManager, stackChoice);
@@ -87,7 +97,7 @@ internal static class FlashcardsController
         Console.ReadKey();
     }
 
-    private static (int FlashcardId, string FlashcardTitle) GetFlashcardChoice(
+    private (int FlashcardId, string FlashcardTitle) GetFlashcardChoice(
         DatabaseManager databaseManager,
         int stackChoice
     )
@@ -116,7 +126,7 @@ internal static class FlashcardsController
         return (selected.FlashcardId, selected.FlashcardTitle);
     }
 
-    internal static List<CardDto> GetFlashcardDtosForStack(
+    internal IList<CardDto> GetFlashcardDtosForStack(
         DatabaseManager databaseManager,
         int stackChoice
     )
@@ -133,7 +143,7 @@ internal static class FlashcardsController
             .ToList();
     }
 
-    private static Table BuildFlashcardsTable(List<CardDto> cardDtos)
+    private Table BuildFlashcardsTable(IList<CardDto> cardDtos)
     {
         var flashcardsTable = new Table();
 
@@ -164,30 +174,37 @@ internal static class FlashcardsController
         return flashcardsTable;
     }
 
-    private static void VerifyIfFlashcardExists(
-        DatabaseManager databaseManager,
-        int stackChoice,
-        string newFlashcardTitle
-    )
-    {
-        var flashcards = databaseManager.ReadCards(stackChoice);
+    // Fix issue with not verifying if flashcard exists for Adding/Updating
+    
+    // private bool VerifyIfFlashcardExists(IEnumerable<string> existingFlashcards, string newFlashcard)
+    // {
+    //     return !existingFlashcards.Any(s => s.Equals(newFlashcard, StringComparison.OrdinalIgnoreCase));
+    // }
+    
+    // private void VerifyIfFlashcardExists(
+    //     DatabaseManager databaseManager,
+    //     int stackChoice,
+    //     string newFlashcardTitle
+    // )
+    // {
+    //     var flashcards = databaseManager.ReadCards(stackChoice);
+    //
+    //     if (
+    //         flashcards.Select(x => x.FlashcardTitle.ToLower()).Contains(newFlashcardTitle.ToLower())
+    //     )
+    //     {
+    //         Console.Clear();
+    //         AnsiConsole.MarkupLine("[red]Flashcard already exists[/]");
+    //         AnsiConsole.MarkupLine("Press any key to go back to Main Menu");
+    //         Console.ReadKey();
+    //     }
+    //     else
+    //     {
+    //         InformUserWithStatus("added");
+    //     }
+    // }
 
-        if (
-            flashcards.Select(x => x.FlashcardTitle.ToLower()).Contains(newFlashcardTitle.ToLower())
-        )
-        {
-            Console.Clear();
-            AnsiConsole.MarkupLine("[red]Flashcard already exists[/]");
-            AnsiConsole.MarkupLine("Press any key to go back to Main Menu");
-            Console.ReadKey();
-        }
-        else
-        {
-            InformUserWithStatus("added");
-        }
-    }
-
-    private static void InformUserWithStatus(string option)
+    private void InformUserWithStatus(string option)
     {
         Console.Clear();
         AnsiConsole.MarkupLine(

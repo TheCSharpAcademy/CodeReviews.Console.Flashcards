@@ -4,9 +4,9 @@ using Spectre.Console;
 
 namespace Flashcards.KamilKolanowski.Handlers;
 
-internal static class UserInputHandler
+internal class UserInputHandler
 {
-    internal static CreateCardDto CreateFlashcard(List<(int, string)> stacks)
+    internal CreateCardDto CreateFlashcard(List<(int, string)> stacks)
     {
         var stackNames = stacks.Select(s => s.Item2).ToList();
 
@@ -43,7 +43,7 @@ internal static class UserInputHandler
         return null;
     }
 
-    internal static CreateStackDto CreateStack()
+    internal CreateStackDto CreateStack()
     {
         var newStackName = AnsiConsole.Prompt(
             new TextPrompt<string>("Provide title for the new stack: ")
@@ -55,22 +55,5 @@ internal static class UserInputHandler
 
         return new CreateStackDto() { StackName = newStackName, Description = newDescription };
     }
-
-    internal static StudySessionDto CreateStudySession(
-        int stackId,
-        string stackName,
-        DateTime startTime,
-        DateTime endTime,
-        int score
-    )
-    {
-        return new StudySessionDto()
-        {
-            StackId = stackId,
-            StackName = stackName,
-            StartTime = startTime,
-            EndTime = endTime,
-            Score = score,
-        };
-    }
+    
 }

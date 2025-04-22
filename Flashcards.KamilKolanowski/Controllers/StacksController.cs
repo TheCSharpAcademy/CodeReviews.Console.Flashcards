@@ -7,11 +7,12 @@ using Spectre.Console;
 
 namespace Flashcards.KamilKolanowski.Controllers;
 
-internal static class StacksController
+internal class StacksController
 {
-    internal static void AddNewStack(DatabaseManager databaseManager)
+    internal void AddNewStack(DatabaseManager databaseManager)
     {
-        var newStack = UserInputHandler.CreateStack();
+        UserInputHandler userInputHandler = new();
+        var newStack = userInputHandler.CreateStack();
         var stackNames = databaseManager.ReadStacks().Select(s => s.StackName);
 
         if (!VerifyIfStackExists(stackNames, newStack.StackName))
@@ -27,7 +28,7 @@ internal static class StacksController
         InformUserWithStatus("added");
     }
 
-    internal static void EditStack(DatabaseManager databaseManager)
+    internal void EditStack(DatabaseManager databaseManager)
     {
         var updateStackDto = new UpdateStackDto();
 
@@ -79,7 +80,7 @@ internal static class StacksController
         databaseManager.UpdateStack(updateStackDto);
     }
 
-    internal static void DeleteStack(DatabaseManager databaseManager)
+    internal void DeleteStack(DatabaseManager databaseManager)
     {
         var stackChoice = StackChoice.GetStackChoice(databaseManager);
 
@@ -87,7 +88,7 @@ internal static class StacksController
         InformUserWithStatus("deleted");
     }
 
-    internal static void ViewStacksTable(DatabaseManager databaseManager)
+    internal void ViewStacksTable(DatabaseManager databaseManager)
     {
         var stacksTable = GetStacksDtoTable(databaseManager);
         var table = BuildStackTable(stacksTable);
@@ -98,7 +99,7 @@ internal static class StacksController
         Console.ReadKey();
     }
 
-    private static List<StacksDto> GetStacksDtoTable(DatabaseManager databaseManager)
+    private IList<StacksDto> GetStacksDtoTable(DatabaseManager databaseManager)
     {
         var stacks = databaseManager.ReadStacks();
 
@@ -112,7 +113,7 @@ internal static class StacksController
             .ToList();
     }
 
-    private static Table BuildStackTable(List<StacksDto> stackDtos)
+    private Table BuildStackTable(IList<StacksDto> stackDtos)
     {
         var stacksTable = new Table();
 
@@ -143,12 +144,12 @@ internal static class StacksController
         return stacksTable;
     }
 
-    private static bool VerifyIfStackExists(IEnumerable<string> existingStacks, string newStack)
+    private bool VerifyIfStackExists(IEnumerable<string> existingStacks, string newStack)
     {
         return !existingStacks.Any(s => s.Equals(newStack, StringComparison.OrdinalIgnoreCase));
     }
 
-    private static void InformUserWithStatus(string option)
+    private void InformUserWithStatus(string option)
     {
         Console.Clear();
         AnsiConsole.MarkupLine(
