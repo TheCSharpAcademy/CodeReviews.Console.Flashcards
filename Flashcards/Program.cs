@@ -71,9 +71,8 @@ do
                 case "Return to Main Menu":
                     break;
                 case "View Flashcards":
-                    var (stack, stackIndex) = Display.PrintStackSelectionMenu("View Flashcards", "Select the stack of the flashcards you want to view...");
+                    var (stack, _) = Display.PrintStackSelectionMenu("View Flashcards", "Select the stack of the flashcards you want to view...");
                     int stackId = stack.Id;
-                    //int stackIndexPlusOne = stackIndex + 1;
                     Display.PrintAllFlashcardsForStack("View Flashcards", stackId);
                     UI.ReturnToMainMenu();
                     break;

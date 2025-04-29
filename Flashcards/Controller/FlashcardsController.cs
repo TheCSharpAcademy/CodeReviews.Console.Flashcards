@@ -9,7 +9,7 @@ namespace Flashcards.Controller
     {
         public static void AddFlashcard()
         {
-            var (stack, index) = Display.PrintStackSelectionMenu("Add Flashcard", "Select the stack you want to add a flashcard to...");
+            var (stack, _) = Display.PrintStackSelectionMenu("Add Flashcard", "Select the stack you want to add a flashcard to...");
 
             int stackId = stack.Id;
 
@@ -42,7 +42,7 @@ namespace Flashcards.Controller
 
         public static void EditFlashcard()
         {
-            var (stack, stackIndex) = Display.PrintStackSelectionMenu("Edit Flashcard", "Select the stack of the flashcard you want to edit...");
+            var (stack, _) = Display.PrintStackSelectionMenu("Edit Flashcard", "Select the stack of the flashcard you want to edit...");
 
             int stackId = stack.Id;
 
@@ -103,7 +103,7 @@ namespace Flashcards.Controller
 
         public static void DeleteFlashcard()
         {
-            var (stack, stackIndex) = Display.PrintStackSelectionMenu("Delete Flashcard", "Select the stack of the flashcard you want to delete...");
+            var (stack, _) = Display.PrintStackSelectionMenu("Delete Flashcard", "Select the stack of the flashcard you want to delete...");
 
             int stackId = stack.Id;
 

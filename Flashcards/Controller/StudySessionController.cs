@@ -8,11 +8,9 @@ namespace Flashcards.Controller
     {
         public static void Study()
         {
-            var (stack, stackIndex) = Display.PrintStackSelectionMenu("Study", "Select the stack of flashcards you want to study...");
+            var (stack, _) = Display.PrintStackSelectionMenu("Study", "Select the stack of flashcards you want to study...");
 
             int stackId = stack.Id;
-
-            int stackIndexPlusOne = stackIndex + 1;
 
             AnsiConsole.Write(new Markup($"\n[dodgerblue1]Stack:[/] [white]{stack.Name}[/]\n"));
 
