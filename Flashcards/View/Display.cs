@@ -108,7 +108,7 @@ namespace Flashcards.View
             return (selectedStack.Stack, selectedStack.Index);
         }
 
-        public static (FlashcardDTO Flashcard, int Index) PrintFlashcardSelectionMenu(string heading, string title, int stackId)
+        public static (FlashcardDto Flashcard, int Index) PrintFlashcardSelectionMenu(string heading, string title, int stackId)
         {
             Console.Clear();
 

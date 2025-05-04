@@ -54,7 +54,6 @@ namespace Flashcards.Model
                     {
                         command.Parameters.AddWithValue("@StackName", stackName);
                         var id = command.ExecuteScalar();
-                        Console.WriteLine($"Inserted Stack: {stackName} with ID: {id}");
                     }
                 }
             }

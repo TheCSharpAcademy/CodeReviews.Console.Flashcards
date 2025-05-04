@@ -47,32 +47,40 @@ namespace Flashcards.Model
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                string insertFlashcardsQuery = "INSERT INTO Flashcards (Question, Answer, Id) VALUES (@Question, @Answer, @Id);";
+                string insertFlashcardsQuery = "INSERT INTO Flashcards (Question, Answer, StackId) VALUES (@Question, @Answer, @StackId);";
 
-                var flashcards = new List<(string Question, string Answer, int Id)>
+                var flashcards = new List<(string Question, string Answer, int StackId)>
                 {
-                    ("What is 2 + 2?", "4", 1),
+                    ("2 + 2", "4", 1),
+                    ("5 * 4", "20", 1),
+                    ("30 / 2", "15", 1),
+                    ("57 - 12", "45", 1),
                     ("What is the chemical symbol for water?", "H20", 2),
-                    ("Who was the first president of the USA?", "George Washington", 3)
+                    ("How many bones are in the adult human body?", "206", 2),
+                    ("What force pulls objects toward Earth?", "gravity", 2),
+                    ("What is the process by which plants make their food?", "photosynthesis", 2),
+                    ("Who was the first president of the USA?", "George Washington", 3),
+                    ("In what year did World War II end?", "1945", 3),
+                    ("In what year did the Berlin Wall fall?", "1989", 3),
+                    ("Who painted the Mona Lisa?", "Leonardo da Vinci", 3)
                 };
 
-                foreach (var (Question, Answer, Id) in flashcards)
+                foreach (var (Question, Answer, StackId) in flashcards)
                 {
                     using (SqlCommand command = new SqlCommand(insertFlashcardsQuery, connection))
                     {
                         command.Parameters.AddWithValue("@Question", Question);
                         command.Parameters.AddWithValue("@Answer", Answer);
-                        command.Parameters.AddWithValue("@Id", Id);
+                        command.Parameters.AddWithValue("@StackId", StackId);
                         command.ExecuteNonQuery();
-                        Console.WriteLine($"Inserted Flashcard: {Question} for StackId: {Id}");
                     }
                 }
             }
         }
 
-        public List<FlashcardDTO> GetAllFlashcardsForStack(int stackId)
+        public List<FlashcardDto> GetAllFlashcardsForStack(int stackId)
         {
-            var flashcards = new List<FlashcardDTO>();
+            var flashcards = new List<FlashcardDto>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -87,10 +95,9 @@ namespace Flashcards.Model
                     {
                         while (reader.Read())
                         {
-                            var flashcard = new FlashcardDTO
+                            var flashcard = new FlashcardDto
                             {
                                 FlashcardId = reader.GetInt32(0),
-                                //StackId = reader.GetInt32(1),
                                 Question = reader.GetString(1),
                                 Answer = reader.GetString(2)
                             };

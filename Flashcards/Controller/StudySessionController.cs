@@ -38,7 +38,7 @@ namespace Flashcards.Controller
                     randomIndex = random.Next(flashcards.Count);
                 } while (shownIndices.Contains(randomIndex));
 
-                FlashcardDTO flashcard = flashcards[randomIndex];
+                FlashcardDto flashcard = flashcards[randomIndex];
 
                 Console.WriteLine($"\n\t{flashcard.Question}\n");
 
