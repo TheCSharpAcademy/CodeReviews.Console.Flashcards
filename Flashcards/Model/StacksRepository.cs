@@ -53,7 +53,7 @@ namespace Flashcards.Model
                     using (SqlCommand command = new SqlCommand(insertStacksQuery, connection))
                     {
                         command.Parameters.AddWithValue("@StackName", stackName);
-                        var id = command.ExecuteScalar();
+                        command.ExecuteScalar();
                     }
                 }
             }
