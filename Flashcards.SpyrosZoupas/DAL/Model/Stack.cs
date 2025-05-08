@@ -1,8 +1,7 @@
-﻿namespace Flashcards.DAL.Model
+﻿namespace Flashcards.DAL.Model;
+
+public class Stack
 {
-    public class Stack
-    {
-        public int ID { get; set; }
-        public string Name { get; set; }
-    }
+    public int ID { get; set; }
+    public string Name { get; set; }
 }
