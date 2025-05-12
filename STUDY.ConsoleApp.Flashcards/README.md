@@ -1,5 +1,6 @@
-This is a simple console-based flashcards application developed as part of The C# Academy's learning projects.
+# Flashcards Console App
 
+This is a simple console-based flashcards application developed as part of The C# Academy's learning projects. It serves as a practical exercise to reinforce fundamental C# programming concepts.
 ## Overview
 
 The Flashcards Console App allows users to create, view, and manage flashcards directly from the command line with an interactive better looking UI. It's designed to help learners practice and memorize information effectively.
