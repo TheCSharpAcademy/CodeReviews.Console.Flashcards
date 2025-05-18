@@ -10,20 +10,25 @@ using Dapper;
 
 namespace Flashcards.Data
 {
-    public static class DbInitializer
+    public class DbInitializer
     {
-        private static readonly string? _connectionString;
+        private readonly string? _connectionString;
 
-        static DbInitializer()
+        public DbInitializer(IConfiguration config)
         {
-            _connectionString = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build()
-                .GetConnectionString("defaultConnection");
+            _connectionString = config.GetConnectionString("defaultConnection");
         }
 
-        public static void CreateDefaultTables()
+        public void CreateDefaultTables()
         {
+            var createDbQuery =
+                @"
+                IF NOT EXISTS (SELECT name from sys.databases WHERE name = 'Flashcards')
+                BEGIN
+                    CREATE DATABASE [Flashcards];
+                END
+                ";
+
             var sqlQueryStacks =
                 @"
                 IF NOT EXISTS(SELECT * FROM sysobjects WHERE name = 'Stacks' AND xtype = 'U')
@@ -63,13 +68,12 @@ namespace Flashcards.Data
                 END
                 ";
 
-            IDbConnection dbConnection = new SqlConnection(_connectionString);
-            dbConnection.Open();
+            using IDbConnection dbConnection = new SqlConnection(_connectionString);
+            dbConnection.Execute(createDbQuery);
             dbConnection.Execute(sqlQueryStacks);
             dbConnection.Execute(sqlQueryFlashCards);
             dbConnection.Execute(sqlQueryStudySessions);
             dbConnection.Close();
-            dbConnection.Dispose();
         }
     }
 }

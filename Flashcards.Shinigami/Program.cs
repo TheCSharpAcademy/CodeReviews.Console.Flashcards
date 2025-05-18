@@ -26,17 +26,15 @@ namespace Flashcards
             services.AddSingleton<IStudySessionRepository, StudySessionRepository>();
 
             services.AddSingleton<UI>();
+            services.AddSingleton<DbInitializer>();
 
             var serviceProvider = services.BuildServiceProvider();
 
-            DbInitializer.CreateDefaultTables();
-
-            //DbInitializer.Initialize(configuration.GetConnectionString("defaultConnection"));
+            var dbInitializer = serviceProvider.GetRequiredService<DbInitializer>();
+            dbInitializer.CreateDefaultTables();
 
             var mainmenu = serviceProvider.GetRequiredService<UI>();
-
             mainmenu.Start();
-            
         }
     }
 }
