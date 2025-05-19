@@ -1,36 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Flashcards.glaxxie.Controllers;
+﻿using Flashcards.glaxxie.Controllers;
 using Flashcards.glaxxie.Enums;
-using Microsoft.Data.SqlClient;
 using Flashcards.glaxxie.Prompts;
 using Spectre.Console;
-using Microsoft.IdentityModel.Tokens;
 using Flashcards.glaxxie.DTO;
+using Flashcards.glaxxie.Viewer;
+using Flashcards.glaxxie.DataSeeder;
 
 namespace Flashcards.glaxxie.Display;
 
 internal class Menu
 {
-    //private readonly SqlConnection _connection = DatabaseController.GetConnection();
-
     internal static void MainMenu()
     { 
-        //Console.Clear();
         Headliner("MAIN MENU", "dim");
         var choice = General.SelectionInput<MainMenuOption>();
         Console.Clear();
         switch (choice)
         {
             case MainMenuOption.Practice:
-                //SessionMenu();
-                var pstack = Stack.Selection("Choose a stack to practice");
+                StackViewer? pstack;
+                do
+                {
+                    Console.Clear();
+                    pstack = Stack.Selection("Choose a stack to practice");
+                    if (pstack != null)
+                        PracticeUI.Practice(pstack);
+                } while (pstack != null);
                 break;
             case MainMenuOption.ReView:
-                var rstack = Stack.Selection("Choose a stack to review");
+                StackViewer? rstack;
+                do
+                {
+                    Console.Clear();
+                    rstack = Stack.Selection("Choose a stack to review");
+                    if (rstack != null)
+                        ReviewUI.Review(rstack);
+
+                } while (rstack != null);
                 break;
             case MainMenuOption.ManageStacks:
                 StackMenu();
@@ -57,7 +63,7 @@ internal class Menu
         {
             case ActionOption.Add:
                 var newStack = Stack.InsertPrompt();
-                if (!newStack.Name.IsNullOrEmpty())
+                if (newStack != null)
                     StackController.Insert(newStack);
                 break;
             case ActionOption.Update:
@@ -66,58 +72,62 @@ internal class Menu
                     StackController.Update(uStack);
                 break;
             case ActionOption.Delete:
-                var dStack = Stack.DeletePrompt();
-                if (dStack >= 1)
-                    StackController.Delete(dStack);
+                var stackId = Stack.DeletePrompt();
+                if (stackId >= 1)
+                    StackController.Delete(stackId);
                 break;
             default:
                 Console.WriteLine("Back to main menu");
                 back = Menus.Main;
                 break;
         }
-        // there is way to work the rule here to make it cleaner
         BackToMenu(back);
     }
 
     internal static void CardMenu()
     {
         Headliner("CARD MANAGEMENT", "dim");
-        Menus back = Menus.Card;
         var choice = General.SelectionInput<ActionOption>();
-        
-        switch (choice)
+        if (choice == ActionOption.Back)
         {
-            case ActionOption.Add:
-                //var newCard =  Card.InsertPrompt();
-                //if (newCard != null)
-                //    CardController.Insert(newCard);
-                CardCreation? newCard;
-                int counter = 0;
-                do
-                {
-                    newCard = Card.InsertPrompt();
-                    if (newCard != null)
-                        CardController.Insert(newCard);
-                        counter++;
-                }
-                while (newCard != null);
-                break;
-            case ActionOption.Update:
-                var update = Card.UpdatePrompt();
-                if (update != null)
-                    CardController.Update(update);
-                break;
-            case ActionOption.Delete:
-                var cardIds = Card.DeletePrompt();
-                if (cardIds.Count() > 0)
-                    CardController.Delete(cardIds);
-                break;
-            default:
-                Console.WriteLine("Back to main menu");
-                back = Menus.Main;
-                break;
+            BackToMenu(Menus.Main);
         }
-        BackToMenu(back);
+
+        var stack = Stack.Selection("Choose a stack");
+        if (stack != null)
+        {
+            switch (choice)
+            {
+                case ActionOption.Add:
+                    Console.WriteLine("Leave either side blank to cancel\n");
+                    CardCreation? newCard;
+                    int counter = 0;
+                    do
+                    {
+                        newCard = Card.InsertPrompt(stack);
+                        if (newCard != null)
+                        {
+                            CardController.Insert(newCard);
+                            Console.WriteLine();
+                            counter++;
+                        }
+                        AnsiConsole.MarkupLine($" * Added [bold]{counter}[/] new {(counter == 1 ? "card" : "cards")} to {stack.Name}\n");
+                    }
+                    while (newCard != null);
+                    break;
+                case ActionOption.Update:
+                    var update = Card.UpdatePrompt(stack);
+                    if (update != null)
+                        CardController.Update(update);
+                    break;
+                case ActionOption.Delete:
+                    var cardIds = Card.DeletePrompt(stack);
+                    if (cardIds.Any())
+                        CardController.Delete(cardIds);
+                    break;
+            }
+        }
+        BackToMenu(Menus.Card);
     }
 
     private static void SettingMenu()
@@ -128,14 +138,15 @@ internal class Menu
         switch (choice)
         {
             case Settings.Report:
-                //SessionMenu();
-                //var pstack = Stack.Selection("Choose a stack to practice");
+                var year = General.SelectionInputInt("Pick a year", SessionController.GetYears());
+                ReportUI.Display(year);
                 break;
-            case Settings.SeedData:
-                //var rstack = Stack.Selection("Choose a stack to review");
+            case Settings.Data:
+                Seeder.GenerateData();
                 break;
-            case Settings.WIPE:
-                //StackMenu();
+            case Settings.Styles:
+                Console.WriteLine("THIS IS WIP. COME BACK LATER");
+                Console.ReadKey();
                 break;
             default:
                 Console.WriteLine("Back to main menu");
@@ -170,9 +181,9 @@ internal class Menu
         }
     }
 
-    internal static void ClearDisplay()
+    internal static void ClearDisplay(string msg = "Press any key to continue...")
     {
-        Console.WriteLine("press any key to continue");
+        AnsiConsole.MarkupLine($"[dim]{msg}[/]");
         Console.ReadKey();
         Console.WriteLine("\x1b[3J");
         Console.Clear();
@@ -187,5 +198,4 @@ internal class Menu
         rule.LeftJustified();
         AnsiConsole.Write(rule);
     }
-
 }

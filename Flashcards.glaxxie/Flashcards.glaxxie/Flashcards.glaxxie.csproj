@@ -8,10 +8,34 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="bakup\**" />
+    <EmbeddedResource Remove="bakup\**" />
+    <None Remove="bakup\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Data\seeder_data.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Data\seeder_data.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.4" />
     <PackageReference Include="Spectre.Console" Version="0.50.0" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

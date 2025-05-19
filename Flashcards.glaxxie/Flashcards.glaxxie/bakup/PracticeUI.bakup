@@ -1,0 +1,96 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Flashcards.glaxxie.Controllers;
+using Flashcards.glaxxie.Display;
+using Flashcards.glaxxie.DTO;
+using Flashcards.glaxxie.Utilities;
+using static Flashcards.glaxxie.Utilities.StylesHelper;
+using Spectre.Console;
+
+namespace Flashcards.glaxxie.Viewer;
+
+internal class PracticeUI
+{
+    internal static void Practice(StackViewer stack)
+    {
+        CardDrawer drawer = new();
+        
+        var cards = CardController.GetCardsFromStack(stack.StackId);
+        int count = 0;
+        bool quit = false;
+        while (count < cards.Count && !quit) // if the count is past 
+        {
+            Console.Clear();
+            CardDisplay card = new(Seq: count + 1, StackName: stack.Name, Front: cards[count].Front, Back: cards[count].Back);
+            drawer.Draw(card);
+            var prompt = AnsiConsole.Prompt(new TextPrompt<string>("Your answer:").PromptStyle("green"));
+            if (prompt.Equals("quit", StringComparison.InvariantCultureIgnoreCase))
+            {
+                quit = true;
+            }
+            //var key = Console.ReadKey();
+            //quit = key.KeyChar == 'q';
+            count++;
+            Console.Clear();
+            drawer.Draw(card, true);
+            Console.ReadKey();
+        }
+    }
+}
+
+internal class CardDrawer
+{
+    private CardStyleDTO CardStyle { get; }
+
+    internal CardDrawer()
+    {
+        var layout = AppSettings.CardLayout;
+        CardStyle = AppSettings.StyleGetter(layout);
+    }
+
+    internal void Draw(CardDisplay card, bool showBack = false)
+    {
+        var grid = showBack ? DrawBack(card) : DrawFront(card);
+        AnsiConsole.Write(grid);
+    }
+
+    internal Grid DrawFront(CardDisplay card)
+    {
+        var panel = new Panel(
+            new Markup($"{card.Front}"))
+        {
+            Header = new PanelHeader(Styled(card.StackName, "bold cyan")).Centered(),
+            Padding = CardStyle.Padding,
+            Border = BoxBorder.Rounded, // this might come from setting
+        };
+        var grid = new Grid();
+        grid.AddColumn(new GridColumn().Width(35));
+        grid.AddRow(panel);
+        return grid;
+    }
+
+    internal Grid DrawBack(CardDisplay card)
+    {
+        var panel = new Panel(new Markup(PadBackInfo(card)))
+        {
+            Header = new PanelHeader(Styled(card.StackName, "dim cyan")).Centered(),
+            //Padding = CardStyle.Padding,
+            Border = BoxBorder.Rounded, // this might come from setting
+        };
+        var grid = new Grid();
+        grid.AddColumn(new GridColumn().Width(35));
+        grid.AddRow(panel);
+        return grid;
+    }
+
+    private static string PadBackInfo(CardDisplay card)
+    {
+        var width = (card.Front.Length - card.Back.Length) / 2;
+        return new string(' ', width) + card.Back + new string(' ', width);
+    }
+
+}
+

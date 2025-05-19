@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Flashcards.glaxxie.Controllers;
+﻿using Flashcards.glaxxie.Controllers;
 using Flashcards.glaxxie.DTO;
 using Microsoft.IdentityModel.Tokens;
 using Spectre.Console;
@@ -26,47 +21,34 @@ internal class Card
         return AnsiConsole.Prompt(prompt);
     }
 
-    internal static CardCreation? InsertPrompt()
+    internal static CardCreation? InsertPrompt(StackViewer stack)
     {
-        // adding card action should be in a loop. which mean move the stack picking outside in menu
-        // maybe change the stack /card selection process to return null
-        var stack = Stack.Selection("Pick a pack");
-        if (stack.StackId == -1) return null;
-        Console.WriteLine("Leave either part blank to cancel");
         var question = AnsiConsole.Prompt(
-            new TextPrompt<string>("[[Front side]] \n>> question:").AllowEmpty());
-
+            new TextPrompt<string>("[[Front]] Question:").AllowEmpty());
         var response = AnsiConsole.Prompt(
-            new TextPrompt<string>("[[Back side]] \n>> response:").AllowEmpty());
+            new TextPrompt<string>("[[Back]] Response:").AllowEmpty());
 
         if (question.IsNullOrEmpty() || response.IsNullOrEmpty()) return null;
         return new CardCreation(StackId: stack.StackId, Front: question, Back: response);
     }
 
-    internal static CardViewer? UpdatePrompt()
+    internal static CardViewer? UpdatePrompt(StackViewer stack)
     {
-        var stack = Stack.Selection("Choose a stack");
-        if (stack.StackId == -1 || stack.Count == 0) return null;
-
         var cardPicked = Selection(CardController.GetCardsFromStack(stack.StackId), $"Pick a card from {stack.Name} to update");
-        if (cardPicked.StackId == -1) return null;
+        if (cardPicked == null) return null;
 
         Console.WriteLine("Leave either part blank to cancel");
         var question = AnsiConsole.Prompt(
-            new TextPrompt<string>("[[Front side]] \n>> question:").AllowEmpty());
+            new TextPrompt<string>("[[Front]] Question:").AllowEmpty());
         var response = AnsiConsole.Prompt(
-            new TextPrompt<string>("[[Back side]] \n>> response:").AllowEmpty());
+            new TextPrompt<string>("[[Back]] Response:").AllowEmpty());
         if (question.IsNullOrEmpty() || response.IsNullOrEmpty()) return null;
 
         return new CardViewer(CardId:  cardPicked.CardId, StackId: stack.StackId, Front: question, Back: response);
     }
 
-    internal static IEnumerable<int> DeletePrompt()
+    internal static IEnumerable<int> DeletePrompt(StackViewer stack)
     {
-        var stack = Stack.Selection("Pick a pack");
-        if (stack.StackId == -1) return [];
-        //Console.WriteLine("Pick the card(s) to be deleted or choose nothing to cancel");
-        // multi selection, but how to handle going back
         var cards = AnsiConsole.Prompt(
             new MultiSelectionPrompt<CardViewer>()
                 .Title("Pick card(s) to be deleted")
@@ -74,7 +56,7 @@ internal class Card
                 .PageSize(20)
                 .MoreChoicesText("Move up or down to reveal more cards")
                 .InstructionsText(
-                    "[grey](Press [blue]<space>[/] to toggle a fruit, " +
+                    "[grey](Press [blue]<space>[/] to toggle a card, " +
                     "[green]<enter>[/] to accept)[/]")
                 .AddChoices(CardController.GetCardsFromStack(stack.StackId))
             );

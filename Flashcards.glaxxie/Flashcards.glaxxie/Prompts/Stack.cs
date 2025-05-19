@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using Flashcards.glaxxie.Controllers;
+﻿using Flashcards.glaxxie.Controllers;
 using Flashcards.glaxxie.DTO;
 using Spectre.Console;
 
@@ -12,7 +6,7 @@ namespace Flashcards.glaxxie.Prompts;
 
 internal class Stack
 {
-    internal static StackViewer Selection(string title, bool additionOption = false)
+    internal static StackViewer? Selection(string title, bool additionOption = false)
     {
         var prompt =  new SelectionPrompt<StackViewer>()
                 .Title($"[[{title}]]")
@@ -23,21 +17,34 @@ internal class Stack
         if (additionOption)
             prompt.AddChoice(new StackViewer(StackId: 0, Name: "Add new stack", Count: 0));
         prompt.AddChoice(new StackViewer(StackId: -1, Name: "Back", Count: -1));
-        return AnsiConsole.Prompt(prompt);
+        var stack = AnsiConsole.Prompt(prompt);
+        return stack.StackId == -1 ? null : stack;
     }
 
-    internal static StackCreation InsertPrompt()
+    internal static StackCreation? InsertPrompt()
     {
         var name = AnsiConsole.Prompt(
-            new TextPrompt<string>("[[Adding new stack]] \n>> Name (leave it blank to cancel):").AllowEmpty());
-        // need to make sure this doesnt exist yet
-        return new StackCreation(Name: name);
+            new TextPrompt<string>("[[Adding new stack]] \n>> Name (leave it blank to cancel):")
+                .AllowEmpty()
+                .Validate(n =>
+                {
+                    if (string.IsNullOrWhiteSpace(n))
+                        return ValidationResult.Success();
+                    return StackController.StackExists(n)
+                        ? ValidationResult.Error("[red]Stack name already exists![/]")
+                        : ValidationResult.Success();
+                }));
+
+        if (string.IsNullOrWhiteSpace(name))
+            return null;
+
+        return new StackCreation(Name: name.Trim());
     }
 
     internal static StackModification? UpdatePrompt()
     {
-        StackViewer stack = Selection("Pick a stack to update the name");
-        if (stack.StackId == -1) return null;
+        StackViewer? stack = Selection("Pick a stack to update the name");
+        if (stack == null) return null;
         string name = AnsiConsole.Prompt(
             new TextPrompt<string>("[[Update stack's name]] \n>> Name (leave blank to cancel)")
                 .DefaultValue(stack.Name)
@@ -48,9 +55,6 @@ internal class Stack
 
     internal static int DeletePrompt()
     {
-        StackViewer stack = Selection("Pick a stack to delete");
-        return stack.StackId;
+        return Selection("Pick a stack to delete")?.StackId ?? -1;
     }
-
-    // always remember to list the stack name at top to know the dur dirct
 }

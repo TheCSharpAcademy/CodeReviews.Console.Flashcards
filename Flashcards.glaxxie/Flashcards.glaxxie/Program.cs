@@ -1,11 +1,9 @@
 ﻿using Flashcards.glaxxie.Controllers;
 using Flashcards.glaxxie.Display;
-using Microsoft.Data.SqlClient;
 
 Console.CursorVisible = false;
+DatabaseController.Setup();
 
-//TitleScreen.Show(); // turn on later when program finish
-Console.Clear();
 while (true)
 {
     Menu.MainMenu();

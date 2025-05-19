@@ -1,101 +1,83 @@
-﻿using System.Xml;
-using Flashcards.glaxxie.Utilities;
+﻿using Flashcards.glaxxie.Utilities;
 using Microsoft.Data.SqlClient;
 
 namespace Flashcards.glaxxie.Controllers;
 
 internal static class Tables
 {
-    internal static readonly string Sessions = AppConfiguration.Instance.SessionsTable;
-    internal static readonly string Stacks = AppConfiguration.Instance.StacksTable;
-    internal static readonly string Cards = AppConfiguration.Instance.CardsTable;
+    internal static readonly string Sessions = AppSettings.SessionsTable;
+    internal static readonly string Stacks = AppSettings.StacksTable;
+    internal static readonly string Cards = AppSettings.CardsTable;
 }
 
-internal sealed class DatabaseController
+internal static class DatabaseController
 {
-    private static DatabaseController? _instance;
-    internal static DatabaseController Instance
+    internal static void Setup()
     {
-        get
-        {
-            _instance ??= new DatabaseController();
-            return _instance;
-        }
+        SetupDatabase();
+        SetupTables();
     }
 
-    internal static SqlConnection GetConnection () => new(AppConfiguration.Instance.ConnectionString);
-    private DatabaseController()
+    internal static SqlConnection GetConnection(string? connStr = null) =>
+        new(string.IsNullOrWhiteSpace(connStr) ? AppSettings.DefaultConnectionString : connStr);
+
+    private static void SetupDatabase()
     {
-        SetupTables();
+        var cmd = @"
+            IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = 'FlashcardsDb')
+            BEGIN
+                CREATE DATABASE FlashcardsDb
+            END";
+        ExecuteCommand(AppSettings.MasterConnectionString, cmd);
     }
 
     private static void SetupTables()
     {
         string[] initCmds = [
-            $@"IF OBJECT_ID('dbo.{Tables.Stacks}', 'U') IS NULL
+            $@"IF NOT EXISTS (SELECT name FROM sys.tables WHERE name = '{Tables.Stacks}')
             BEGIN
-                CREATE TABLE dbo.{Tables.Stacks} (
+                CREATE TABLE {Tables.Stacks} (
                     stack_id INT PRIMARY KEY IDENTITY(1,1),
                     stack_name NVARCHAR(100) UNIQUE
             )
             END
             ",
 
-            $@"IF OBJECT_ID('dbo.{Tables.Cards}', 'U') IS NULL
+            $@"IF NOT EXISTS (SELECT name FROM sys.tables WHERE name = '{Tables.Cards}')
             BEGIN
-                CREATE TABLE dbo.{Tables.Cards} (
+                CREATE TABLE {Tables.Cards} (
                     card_id INT PRIMARY KEY IDENTITY(1,1),
-                    front NVARCHAR(MAX),
-                    back NVARCHAR(MAX),
+                    front NVARCHAR(255) UNIQUE,
+                    back NVARCHAR(255),
                     stack_id INT,
-                    FOREIGN KEY (stack_id) REFERENCES dbo.{Tables.Stacks}(stack_id)
+                    FOREIGN KEY (stack_id) REFERENCES {Tables.Stacks}(stack_id) ON DELETE CASCADE
                 )
             END",
 
-            $@"IF OBJECT_ID('dbo.{Tables.Sessions}', 'U') IS NULL
+            $@"IF NOT EXISTS (SELECT name FROM sys.tables WHERE name = '{Tables.Sessions}')
             BEGIN
-                CREATE TABLE dbo.{Tables.Sessions} (
+                CREATE TABLE {Tables.Sessions} (
                     session_id INT PRIMARY KEY IDENTITY(1,1),
                     date DATETIME,
                     score INT,
+                    cards INT,
                     stack_id INT,
-                    FOREIGN KEY (stack_id) REFERENCES dbo.{Tables.Stacks}(stack_id)
+                    FOREIGN KEY (stack_id) REFERENCES {Tables.Stacks}(stack_id) ON DELETE CASCADE
                 )
             END"
 
            ];
-        ExecuteCommand(initCmds);
+        ExecuteCommand(AppSettings.DefaultConnectionString, initCmds);
     }
 
-    internal static void ExecuteCommand(IEnumerable<string> command)
+    internal static void ExecuteCommand(string connStr, params string[] commands)
     {
-        using var conn = GetConnection();
+        using var conn = GetConnection(connStr);
         conn.Open();
-        foreach (var cmd in command)
+        foreach (var cmd in commands)
         {
             SqlCommand query = new(cmd, conn);
             query.ExecuteNonQuery();
         }
     }
 }
-
-
-           //@$"CREATE TABLE IF NOT EXISTS {Tables.Stacks} (
-           //         stack_id INTEGER PRIMARY KEY AUTOINCREMENT,
-           //         stack_name TEXT UNIQUE
-           //         )",
-
-
-           // @$"CREATE TABLE IF NOT EXISTS {Tables.Cards} (
-           //         card_id INTEGER PRIMARY KEY AUTOINCREMENT,
-           //         front TEXT,
-           //         back TEXT,
-           //         FOREIGN KEY (stack_id) REFERENCES {Tables.Stacks}(stack_id)
-           //         )",
-
-           // @$"CREATE TABLE IF NOT EXISTS {Tables.Sessions} (
-           //         session_id INTEGER PRIMARY KEY AUTOINCREMENT,
-           //         date TEXT,
-           //         score INT,
-           //         FOREIGN KEY (stack_id) REFERENCES {Tables.Stacks}(stack_id)
-           //         )"

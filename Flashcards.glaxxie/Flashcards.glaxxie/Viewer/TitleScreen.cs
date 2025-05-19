@@ -1,5 +1,5 @@
 ﻿using Spectre.Console;
-
+using static Flashcards.glaxxie.Utilities.StylesHelper;
 namespace Flashcards.glaxxie.Display;
 
 internal class TitleScreen
@@ -16,12 +16,13 @@ internal class TitleScreen
             ";
 
         var reversed = title.Replace('>', '<');
-        AnsiConsole.MarkupLine($"[bold slowblink red]{title}[/]");
-        AnsiConsole.MarkupLine($"[bold grey] Press any key to start[/]".PadLeft(65,' '));
+        AnsiConsole.MarkupLine(Styled(title, "bold slowblink red"));
+        AnsiConsole.MarkupLine(Styled("Press any key to start", "bold grey").PadLeft(65, ' '));
         Console.ReadKey();
         Console.Clear();
-        AnsiConsole.MarkupLine($"[bold blue]{reversed}[/]");
+        AnsiConsole.MarkupLine(Styled(reversed, "bold blue"));
 
         Thread.Sleep( 1200 );
+        Console.Clear();
     }
 }

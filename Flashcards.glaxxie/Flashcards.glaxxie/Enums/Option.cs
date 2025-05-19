@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Flashcards.glaxxie.Enums;
+﻿namespace Flashcards.glaxxie.Enums;
 
 internal enum MainMenuOption
 {
@@ -34,8 +28,8 @@ internal enum ViewFilter
 internal enum Settings
 {
     Report,
-    SeedData,
-    WIPE,
+    Data,
+    Styles,
     Back
 }
 
@@ -45,4 +39,21 @@ internal enum Menus
     Stack,
     Card,
     Setting
+}
+
+internal enum DataSettings
+{
+    Seed,
+    ClearAllCards,
+    ClearAllSessions,
+    RESET,
+    Back
+}
+
+internal enum StudyOptions
+{
+    Standard,
+    Blitz,
+    Mixer,
+    Back
 }
