@@ -60,7 +60,7 @@ internal class PracticeUI
 
 internal class CardDrawer
 {
-    private CardStyleDTO CardStyle { get; }
+    private CardStyleDto CardStyle { get; }
 
     internal CardDrawer()
     {

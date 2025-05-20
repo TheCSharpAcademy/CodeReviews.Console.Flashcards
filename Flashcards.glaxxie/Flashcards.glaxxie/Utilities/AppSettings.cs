@@ -15,11 +15,11 @@ internal sealed class AppSettings
                 .Build();
     }
 
-    internal static CardStyleDTO StyleGetter(string style) =>
+    internal static CardStyleDto StyleGetter(string style) =>
         style switch
         {
-            "Vertical" => _config.GetSection("AppSettings:Card:Style:Vertical").Get<CardStyleFromConfig>()!.ToCardStyleDTO(),
-            _ => _config.GetSection("AppSettings:Card:Style:Horizontal").Get<CardStyleFromConfig>()!.ToCardStyleDTO()
+            "Vertical" => _config.GetSection("AppSettings:Card:Style:Vertical").Get<CardStyleFromConfig>()!.ToCardStyleDto(),
+            _ => _config.GetSection("AppSettings:Card:Style:Horizontal").Get<CardStyleFromConfig>()!.ToCardStyleDto()
         };
     
     internal static string MasterConnectionString => _config.GetConnectionString("Master")!;
