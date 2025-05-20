@@ -1,4 +1,4 @@
-﻿
+
 # 📌 Overview
 
 **Flashcards Console App** is fast, interactive flashcard study tool
@@ -17,7 +17,6 @@ Inspired by C# Academy [Flashcards Project](https://thecsharpacademy.com/project
 - **Data Seeder:** Randomized data for stacks, cards and sessions.
 For the purpose of testing out the app.
 - **Report:** An overview of past study sessions.
-
 
 ## ▶️ Usage
 
