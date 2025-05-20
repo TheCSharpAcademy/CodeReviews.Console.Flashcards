@@ -22,7 +22,6 @@ For the purpose of testing out the app.
 
 Run the app and navigate the menus with arrow keys or prompts with keyboard.
 
-
 ## 🛠️ Technologies Used / Learned
 
 - **C#**(.NET 9)
@@ -33,11 +32,9 @@ to create beautiful console app.
 - **JsonConfig:** for app configurations.
 - **DTO:** record data type.
 
-
 ## 🎥 Preview
 
 ![Review window](Assets/flashcardsReview.png)
-
 
 ## 🚧 WIP
 
