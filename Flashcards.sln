@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flashcards", "Flashcards\Flashcards.csproj", "{2B534F74-F6F8-48CF-8F76-DB6D78DC6FF1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2B534F74-F6F8-48CF-8F76-DB6D78DC6FF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B534F74-F6F8-48CF-8F76-DB6D78DC6FF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B534F74-F6F8-48CF-8F76-DB6D78DC6FF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B534F74-F6F8-48CF-8F76-DB6D78DC6FF1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
