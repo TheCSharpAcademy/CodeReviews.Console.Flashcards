@@ -168,19 +168,4 @@ public class Menu
             }
         }
     }
-
-    internal void ReportsMenu()
-    {
-        var isMenuRunning = true;
-        while (isMenuRunning)
-        {
-            var userChoice = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                    .Title("What would you like to do?")
-                    .AddChoices(
-                        "Report 1",
-                        "Report 2",
-                        "Report 3"));
-        }
-    }
 }

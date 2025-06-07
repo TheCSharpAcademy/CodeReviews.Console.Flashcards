@@ -87,7 +87,6 @@ public class DataConnection
             string insertQuery = "INSERT INTO Categories (Name) VALUES (@Name)";
 
             connection.Execute(insertQuery, new { Name = category.Name });
-            ;
         }
     }
 
@@ -231,7 +230,7 @@ public class DataConnection
         }
     }
 
-    internal List<StudySessionDTO> GetStudySessions()
+    internal List<StudySessionDto> GetStudySessions()
     {
         using (var connection = new SqlConnection(ConnectionString))
         {
@@ -250,7 +249,7 @@ public class DataConnection
                 INNER JOIN
                     Categories category ON studySession.CategoryId = category.Id;";
 
-            return connection.Query<StudySessionDTO>(selectQuery).ToList();
+            return connection.Query<StudySessionDto>(selectQuery).ToList();
         }
     }
 

@@ -1,6 +1,6 @@
 ﻿namespace Flashcards.DTOs;
 
-public class StudySessionDTO
+public class StudySessionDto
 {
     public string CategoryName { get; set; }
     public DateTime Date { get; set; }
