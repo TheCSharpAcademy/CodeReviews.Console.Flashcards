@@ -10,7 +10,7 @@ namespace Flashcards
     {
         DatabaseManager dbManager = new();
 
-        internal List<FlashcardDTO> GiveStackFlashcards(string name)
+        internal List<FlashcardDto> GiveStackFlashcards(string name)
         {
             //Retrieve the ID of the Stack Name
 
@@ -22,13 +22,13 @@ namespace Flashcards
             {
                 var results = connection.Query<Flashcard>(command);
 
-                List<FlashcardDTO> flashcardDTOs = new();
+                List<FlashcardDto> flashcardDTOs = new();
 
                 int dtoID = 1;
                 //Convert into DTO
                 foreach (var result in results)
                 {
-                    flashcardDTOs.Add(DTOMapper.toFlashcardDTO(result, dtoID));
+                    flashcardDTOs.Add(DtoMapper.ToFlashcardDto(result, dtoID));
                     dtoID++;
                 }
 
@@ -36,9 +36,9 @@ namespace Flashcards
             }
         }
 
-        internal void EditFlashcard(int id, List<FlashcardDTO> flashcards, EditType editType, string updateValue)
+        internal void EditFlashcard(int id, List<FlashcardDto> flashcards, EditType editType, string updateValue)
         {
-            int originalID = DTOMapper.FlashcardIDMap[id];
+            int originalID = DtoMapper.FlashcardIDMap[id];
 
             using (var connection = new SqlConnection(dbManager.connectionStringWithDB))
             {
@@ -53,9 +53,9 @@ namespace Flashcards
 
         }
 
-        internal void DeleteFlashcard(int id, List<FlashcardDTO> flashcards)
+        internal void DeleteFlashcard(int id, List<FlashcardDto> flashcards)
         {
-            int originalID = DTOMapper.FlashcardIDMap[id];
+            int originalID = DtoMapper.FlashcardIDMap[id];
 
             using (var connection = new SqlConnection(dbManager.connectionStringWithDB))
             {

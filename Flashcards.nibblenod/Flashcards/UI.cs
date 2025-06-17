@@ -7,7 +7,7 @@ namespace Flashcards
     internal static class UI
     {
 
-        internal static string StackSelector(List<StackDTO> dtoResults)
+        internal static string StackSelector(List<stackDto> dtoResults)
         {
 
             ShowStacks(dtoResults);
@@ -31,7 +31,7 @@ namespace Flashcards
 
         }
 
-        internal static int FlashcardSelector(List<FlashcardDTO> dtoResults)
+        internal static int FlashcardSelector(List<FlashcardDto> dtoResults)
         {
             ShowFlashcards(dtoResults);
 
@@ -45,7 +45,7 @@ namespace Flashcards
             return id;
         }
 
-        internal static void ShowStacks(List<StackDTO> stacks)
+        internal static void ShowStacks(List<stackDto> stacks)
         {
             Table table = new Table();
             table.ShowRowSeparators();
@@ -67,7 +67,7 @@ namespace Flashcards
             return userAnswer;
 
         }
-        internal static void ShowStudyFlashcard(FlashcardDTO flashcard)
+        internal static void ShowStudyFlashcard(FlashcardDto flashcard)
         {
             Table table = new();
             table.Title("Flashcard");
@@ -78,7 +78,7 @@ namespace Flashcards
 
             AnsiConsole.Write(table);
         }
-        internal static void ShowStudySessions(List<StudySessionDTO> studySessions)
+        internal static void ShowStudySessions(List<StudySessionDto> studySessions)
         {
             Table table = new();
             table.ShowRowSeparators();
@@ -95,7 +95,7 @@ namespace Flashcards
 
             AnsiConsole.Write(table);
         }
-        internal static void ShowFlashcards(List<FlashcardDTO> flashcards, int numberOfFlashcards = -1)
+        internal static void ShowFlashcards(List<FlashcardDto> flashcards, int numberOfFlashcards = -1)
         {
             Table table = new Table();
             table.ShowRowSeparators();

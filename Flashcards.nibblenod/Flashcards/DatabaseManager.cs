@@ -7,7 +7,7 @@ namespace Flashcards
     {
         string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("connectionString");
         internal string connectionStringWithDB = System.Configuration.ConfigurationManager.AppSettings.Get("connectionStringWithDB");
-        internal void createDB(string dbName)
+        internal void CreateDb(string dbName)
         {
             using (var connection = new SqlConnection(connectionString))
             {
@@ -17,14 +17,13 @@ namespace Flashcards
                     END
                                     ";
 
-                //object[] parameters = { new { dbName = dbName } };
 
                 connection.Execute(command);
 
             }
         }
 
-        internal void createTables()
+        internal void CreateTables()
         {
             using (var connection = new SqlConnection(connectionStringWithDB))
             {

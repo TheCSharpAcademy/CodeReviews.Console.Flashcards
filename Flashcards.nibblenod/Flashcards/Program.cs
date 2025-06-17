@@ -3,8 +3,8 @@
 DatabaseManager dbManager = new();
 MainMenu mainMenu = new();
 
-dbManager.createDB("FlashcardsProject");
-dbManager.createTables();
+dbManager.CreateDb("FlashcardsProject");
+dbManager.CreateTables();
 
 mainMenu.PrintMenu();
 

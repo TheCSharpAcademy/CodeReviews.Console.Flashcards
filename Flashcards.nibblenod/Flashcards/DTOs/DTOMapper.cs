@@ -2,7 +2,7 @@
 
 namespace Flashcards.DTOs
 {
-    internal static class DTOMapper
+    internal static class DtoMapper
     {
         private static Dictionary<int, int> _FlashcardIDMap = new Dictionary<int, int>();
         private static Dictionary<int, int> _StackIDMap = new Dictionary<int, int>();
@@ -21,28 +21,28 @@ namespace Flashcards.DTOs
             get { return _StackIDMap; }
         }
 
-        internal static StudySessionDTO toStudySessionDTO(StudySession studySession, int dtoID)
+        internal static StudySessionDto ToStudySessionDto(StudySession studySession, int dtoID)
         {
             int originalID = studySession.ID;
 
             _SessionIDMap[dtoID] = originalID;
-            return new StudySessionDTO { ID = dtoID, SessionDate = studySession.SessionDate, StackName = studySession.StackName, Score = studySession.Score };
+            return new StudySessionDto { ID = dtoID, SessionDate = studySession.SessionDate, StackName = studySession.StackName, Score = studySession.Score };
         }
 
-        internal static StackDTO toStackDTO(StackModel stack, int dtoID)
+        internal static stackDto ToStackDto(StackModel stack, int dtoID)
         {
             int originalID = stack.Id;
 
             _StackIDMap[dtoID] = originalID;
-            return new StackDTO { ID = dtoID, Name = stack.Name };
+            return new stackDto { ID = dtoID, Name = stack.Name };
         }
 
-        internal static FlashcardDTO toFlashcardDTO(Flashcard flashcard, int dtoID)
+        internal static FlashcardDto ToFlashcardDto(Flashcard flashcard, int dtoID)
         {
             int originalID = Convert.ToInt32(flashcard.ID);
 
             _FlashcardIDMap[dtoID] = originalID;
-            return new FlashcardDTO { ID = dtoID, Front = flashcard.Front, Back = flashcard.Back };
+            return new FlashcardDto { ID = dtoID, Front = flashcard.Front, Back = flashcard.Back };
         }
 
 

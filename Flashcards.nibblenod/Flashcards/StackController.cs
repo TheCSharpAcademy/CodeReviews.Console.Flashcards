@@ -31,7 +31,7 @@ namespace Flashcards
         {
             using (var connection = new SqlConnection(dbManager.connectionStringWithDB))
             {
-                int originalID = DTOMapper.StackIDMap[id];
+                int originalID = DtoMapper.StackIDMap[id];
                 var sql = $"UPDATE Stacks SET NAME = '{stackName}' where ID = {originalID}";
 
                 try
@@ -52,7 +52,7 @@ namespace Flashcards
         {
             using (var connection = new SqlConnection(dbManager.connectionStringWithDB))
             {
-                int originalID = DTOMapper.StackIDMap[id];
+                int originalID = DtoMapper.StackIDMap[id];
                 var sql = $"DELETE FROM Stacks WHERE ID = {originalID}";
 
                 try
@@ -68,7 +68,7 @@ namespace Flashcards
 
             }
         }
-        internal List<StackDTO> GiveStacks()
+        internal List<stackDto> GiveStacks()
         {
             using (var connection = new SqlConnection(dbManager.connectionStringWithDB))
             {
@@ -78,12 +78,12 @@ namespace Flashcards
                 var results = connection.Query<StackModel>(sql).ToList();
 
                 //Converting List of StackModel Objects to StackDTO Objects.
-                List<StackDTO> dtoResults = new List<StackDTO>();
+                List<stackDto> dtoResults = new List<stackDto>();
 
                 int dtoID = 1;
                 foreach (var result in results)
                 {
-                    StackDTO stackDTO = DTOMapper.toStackDTO(result, dtoID);
+                    stackDto stackDTO = DtoMapper.ToStackDto(result, dtoID);
                     dtoID++;
                     dtoResults.Add(stackDTO);
                 }

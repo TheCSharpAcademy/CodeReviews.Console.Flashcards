@@ -7,7 +7,7 @@ namespace Flashcards
 {
     internal abstract class Menu
     {
-        protected bool exitApp = false;
+        protected bool exitApp;
         protected StackController stackController = new();
         protected FlashcardController flashcardController = new();
         protected StudySessionController studySessionController = new();
@@ -32,7 +32,7 @@ namespace Flashcards
                         exitApp = true;
                         break;
                     case MainMenuOptions.Flashcards:
-                        List<StackDTO> stackResults = stackController.GiveStacks();
+                        List<stackDto> stackResults = stackController.GiveStacks();
                         if (stackResults.IsNullOrEmpty())
                         {
                             AnsiConsole.Markup("No stacks found!");
@@ -60,7 +60,7 @@ namespace Flashcards
                         StudyHandler(stackName, dtoID);
                         break;
                     case MainMenuOptions.View_Study_Session_Data:
-                        List<StudySessionDTO> studySessions = studySessionController.GetStudySessions();
+                        List<StudySessionDto> studySessions = studySessionController.GetStudySessions();
                         UI.ShowStudySessions(studySessions);
                         Console.ReadLine();
                         break;
@@ -73,7 +73,7 @@ namespace Flashcards
         private void StudyHandler(string stackName, int dtoID)
         {
             Random random = new Random();
-            List<FlashcardDTO> flashcardDTOs = flashcardController.GiveStackFlashcards(stackName);
+            List<FlashcardDto> flashcardDTOs = flashcardController.GiveStackFlashcards(stackName);
             if (flashcardDTOs.Count == 0)
             {
                 AnsiConsole.Markup("No flashcards to study!");
@@ -150,7 +150,7 @@ namespace Flashcards
                         break;
 
                     case FlashcardManagementOptions.Current_Stack:
-                        List<StackDTO> stackResults = stackController.GiveStacks();
+                        List<stackDto> stackResults = stackController.GiveStacks();
                         if (stackResults.Count == 0)
                         {
                             AnsiConsole.Markup("No stacks found!");
@@ -163,7 +163,7 @@ namespace Flashcards
 
                     case FlashcardManagementOptions.View_Flashcards:
 
-                        List<FlashcardDTO> flashcards = flashcardController.GiveStackFlashcards(stackName);
+                        List<FlashcardDto> flashcards = flashcardController.GiveStackFlashcards(stackName);
                         UI.ShowFlashcards(flashcards);
                         if (flashcards.Count == 0)
                         {
@@ -176,7 +176,7 @@ namespace Flashcards
 
                         break;
                     case FlashcardManagementOptions.Delete_Flashcard:
-                        List<FlashcardDTO> flashcardResults = flashcardController.GiveStackFlashcards(stackName);
+                        List<FlashcardDto> flashcardResults = flashcardController.GiveStackFlashcards(stackName);
                         if (flashcardResults.Count == 0)
                         {
                             AnsiConsole.Markup("No flashcards found!");
@@ -192,7 +192,7 @@ namespace Flashcards
 
                     case FlashcardManagementOptions.View_X_Number_Of_Cards:
                         int numberOfFlashcards = AnsiConsole.Prompt(new TextPrompt<int>("Enter the number of flashcards you want to see: "));
-                        List<FlashcardDTO> flashcardDTOs = flashcardController.GiveStackFlashcards(stackName);
+                        List<FlashcardDto> flashcardDTOs = flashcardController.GiveStackFlashcards(stackName);
                         if (flashcardDTOs.Count == 0)
                         {
                             AnsiConsole.Markup("No flashcards found!");
@@ -205,7 +205,7 @@ namespace Flashcards
                         break;
 
                     case FlashcardManagementOptions.Edit_Flashcard:
-                        List<FlashcardDTO> flashCardResults = flashcardController.GiveStackFlashcards(stackName);
+                        List<FlashcardDto> flashCardResults = flashcardController.GiveStackFlashcards(stackName);
                         if (flashCardResults.Count == 0)
                         {
                             AnsiConsole.Markup("No flashcards found!");
@@ -252,7 +252,7 @@ namespace Flashcards
                 switch (userSelection)
                 {
                     case StackManagementOptions.View:
-                        List<StackDTO> stackDTOs = stackController.GiveStacks();
+                        List<stackDto> stackDTOs = stackController.GiveStacks();
                         if (stackDTOs.Count == 0)
                         {
                             AnsiConsole.Markup("No stacks found!");

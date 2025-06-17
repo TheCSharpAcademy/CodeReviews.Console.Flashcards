@@ -1,6 +1,6 @@
 ﻿namespace Flashcards.DTOs
 {
-    internal class StudySessionDTO
+    internal class StudySessionDto
     {
         public int ID { get; set; }
         public DateTime SessionDate { get; set; }

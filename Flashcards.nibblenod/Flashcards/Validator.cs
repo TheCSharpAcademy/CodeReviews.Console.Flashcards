@@ -4,7 +4,7 @@ namespace Flashcards
 {
     internal class Validator
     {
-        internal static bool StackValidator(string name, List<StackDTO> stacks)
+        internal static bool StackValidator(string name, List<stackDto> stacks)
         {
             if (stacks.Exists(stack => stack.Name == name))
             {
@@ -24,7 +24,7 @@ namespace Flashcards
             else return false;
         }
 
-        internal static bool FlashcardValidator(int id, List<FlashcardDTO> flashcards)
+        internal static bool FlashcardValidator(int id, List<FlashcardDto> flashcards)
         {
             if (id >= 1 && id <= flashcards.Count())
             {
