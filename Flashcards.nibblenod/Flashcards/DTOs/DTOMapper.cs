@@ -29,12 +29,12 @@ namespace Flashcards.DTOs
             return new StudySessionDto { ID = dtoID, SessionDate = studySession.SessionDate, StackName = studySession.StackName, Score = studySession.Score };
         }
 
-        internal static stackDto ToStackDto(StackModel stack, int dtoID)
+        internal static StackDto ToStackDto(StackModel stack, int dtoID)
         {
             int originalID = stack.Id;
 
             _StackIDMap[dtoID] = originalID;
-            return new stackDto { ID = dtoID, Name = stack.Name };
+            return new StackDto { ID = dtoID, Name = stack.Name };
         }
 
         internal static FlashcardDto ToFlashcardDto(Flashcard flashcard, int dtoID)

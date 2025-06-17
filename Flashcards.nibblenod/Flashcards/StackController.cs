@@ -68,7 +68,7 @@ namespace Flashcards
 
             }
         }
-        internal List<stackDto> GiveStacks()
+        internal List<StackDto> GiveStacks()
         {
             using (var connection = new SqlConnection(dbManager.connectionStringWithDB))
             {
@@ -78,12 +78,12 @@ namespace Flashcards
                 var results = connection.Query<StackModel>(sql).ToList();
 
                 //Converting List of StackModel Objects to StackDTO Objects.
-                List<stackDto> dtoResults = new List<stackDto>();
+                List<StackDto> dtoResults = new List<StackDto>();
 
                 int dtoID = 1;
                 foreach (var result in results)
                 {
-                    stackDto stackDTO = DtoMapper.ToStackDto(result, dtoID);
+                    StackDto stackDTO = DtoMapper.ToStackDto(result, dtoID);
                     dtoID++;
                     dtoResults.Add(stackDTO);
                 }

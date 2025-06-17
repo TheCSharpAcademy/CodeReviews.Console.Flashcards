@@ -7,7 +7,7 @@ namespace Flashcards
     internal static class UI
     {
 
-        internal static string StackSelector(List<stackDto> dtoResults)
+        internal static string StackSelector(List<StackDto> dtoResults)
         {
 
             ShowStacks(dtoResults);
@@ -45,7 +45,7 @@ namespace Flashcards
             return id;
         }
 
-        internal static void ShowStacks(List<stackDto> stacks)
+        internal static void ShowStacks(List<StackDto> stacks)
         {
             Table table = new Table();
             table.ShowRowSeparators();

@@ -32,7 +32,7 @@ namespace Flashcards
                         exitApp = true;
                         break;
                     case MainMenuOptions.Flashcards:
-                        List<stackDto> stackResults = stackController.GiveStacks();
+                        List<StackDto> stackResults = stackController.GiveStacks();
                         if (stackResults.IsNullOrEmpty())
                         {
                             AnsiConsole.Markup("No stacks found!");
@@ -150,7 +150,7 @@ namespace Flashcards
                         break;
 
                     case FlashcardManagementOptions.Current_Stack:
-                        List<stackDto> stackResults = stackController.GiveStacks();
+                        List<StackDto> stackResults = stackController.GiveStacks();
                         if (stackResults.Count == 0)
                         {
                             AnsiConsole.Markup("No stacks found!");
@@ -252,7 +252,7 @@ namespace Flashcards
                 switch (userSelection)
                 {
                     case StackManagementOptions.View:
-                        List<stackDto> stackDTOs = stackController.GiveStacks();
+                        List<StackDto> stackDTOs = stackController.GiveStacks();
                         if (stackDTOs.Count == 0)
                         {
                             AnsiConsole.Markup("No stacks found!");

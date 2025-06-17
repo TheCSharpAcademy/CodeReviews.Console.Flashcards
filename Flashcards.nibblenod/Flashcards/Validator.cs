@@ -4,7 +4,7 @@ namespace Flashcards
 {
     internal class Validator
     {
-        internal static bool StackValidator(string name, List<stackDto> stacks)
+        internal static bool StackValidator(string name, List<StackDto> stacks)
         {
             if (stacks.Exists(stack => stack.Name == name))
             {
@@ -17,7 +17,7 @@ namespace Flashcards
 
         internal static bool AnswerValidator(string userAnswer, string back)
         {
-            if (userAnswer == back)
+            if (userAnswer.ToLower().Trim() == back.ToLower().Trim())
             {
                 return true;
             }
