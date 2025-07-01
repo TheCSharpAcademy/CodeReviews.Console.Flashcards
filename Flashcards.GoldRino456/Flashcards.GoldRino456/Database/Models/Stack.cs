@@ -1,8 +1,6 @@
-﻿namespace Flashcards.GoldRino456.Database.Models
+﻿namespace Flashcards.GoldRino456.Database.Models;
+internal class Stack
 {
-    internal class Stack
-    {
-        public int StackId {  get; set; }
-        public string? StackName { get; set; }
-    }
+    public int StackId {  get; set; }
+    public string? StackName { get; set; }
 }

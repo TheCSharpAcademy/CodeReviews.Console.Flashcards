@@ -1,10 +1,8 @@
-﻿namespace Flashcards.GoldRino456.Database.Models
+﻿namespace Flashcards.GoldRino456.Database.Models;
+internal class StudySession
 {
-    internal class StudySession
-    {
-        public int SessionId { get; set; }
-        public int StackId { get; set; }
-        public DateTime SessionDate { get; set; }
-        public int Score { get; set; }
-    }
+    public int SessionId { get; set; }
+    public int StackId { get; set; }
+    public DateTime SessionDate { get; set; }
+    public int Score { get; set; }
 }

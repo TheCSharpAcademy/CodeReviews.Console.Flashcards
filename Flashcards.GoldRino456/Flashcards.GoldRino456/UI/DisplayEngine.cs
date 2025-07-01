@@ -2,11 +2,10 @@
 using Spectre.Console;
 using Utilities.GoldRino456;
 
-namespace Flashcards.GoldRino456.UI
+namespace Flashcards.GoldRino456.UI;
+internal static class DisplayEngine
 {
-    internal static class DisplayEngine
-    {
-        #region Universal Display Methods
+    #region Universal Display Methods
 
         public static void DisplayErrorToUser(string error)
         {
@@ -26,7 +25,7 @@ namespace Flashcards.GoldRino456.UI
 
         #endregion
 
-        #region Menu Display Methods
+    #region Menu Display Methods
 
         public static MenuOptions DisplayMainMenu()
         {
@@ -57,7 +56,7 @@ namespace Flashcards.GoldRino456.UI
 
         #endregion
 
-        #region Stack Display Methods
+    #region Stack Display Methods
         public static void PromptUserForStackInfo(Stack stack, List<string> stackNames)
         {
             while (true)
@@ -92,7 +91,7 @@ namespace Flashcards.GoldRino456.UI
 
         #endregion
 
-        #region Flashcard Display Methods
+    #region Flashcard Display Methods
 
         public static void PromptUserForFlashcardInfo(Flashcard flashcard, List<Stack> stackList)
         {
@@ -163,7 +162,7 @@ namespace Flashcards.GoldRino456.UI
 
         #endregion
 
-        #region Study Session Display Methods
+    #region Study Session Display Methods
 
         public static void DisplayFinalScore(int score, int totalPossiblePoints)
         {
@@ -187,5 +186,4 @@ namespace Flashcards.GoldRino456.UI
 
 
         #endregion
-    }
 }
