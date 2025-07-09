@@ -1,4 +1,4 @@
-namespace Database;
+namespace DotNETConsole.Flashcards.Database;
 using Microsoft.Data.SqlClient;
 
 public class DbContext
