@@ -1,4 +1,4 @@
-namespace Database;
+namespace DotNETConsole.Flashcards.Database;
 using Microsoft.Data.SqlClient;
 
 public class Migaration
@@ -10,7 +10,7 @@ public class Migaration
         // Stack Table.
         string categoryTableQuery = @"IF OBJECT_ID('dbo.stacks', 'U') IS NULL
            CREATE TABLE dbo.stacks (
-               ID INT PRIMARY KEY,
+               ID INT IDENTITY(1,1) PRIMARY KEY,
                NAME VARCHAR(50) UNIQUE
            );";
 
@@ -25,7 +25,7 @@ public class Migaration
         // FlashCard Table.
         string flashCardTableQuery = @"IF OBJECT_ID('dbo.flashcards', 'U') IS NULL
                 CREATE TABLE flashcards(
-                    ID INT PRIMARY KEY,
+                    ID INT IDENTITY(1,1) PRIMARY KEY,
                     Question TEXT,
                     Answer VARCHAR(300),
                     STACK_ID INT,
@@ -43,7 +43,7 @@ public class Migaration
         // Study Session Table.
         string studySessionQuery = @"IF OBJECT_ID('dbo.studylogs', 'U') IS NULL
                         CREATE TABLE studylogs(
-                            ID INT PRIMARY KEY,
+                            ID INT IDENTITY(1,1) PRIMARY KEY,
                             LOGDATE DATETIME DEFAULT GETDATE(),
                             SCORE INT DEFAULT 0,
                             STACK_ID INT,
