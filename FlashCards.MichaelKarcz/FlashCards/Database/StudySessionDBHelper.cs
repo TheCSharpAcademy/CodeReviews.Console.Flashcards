@@ -12,34 +12,34 @@ namespace FlashCards.Database
 
         internal static bool CheckForRecords()
         {
-            SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
+            SqlConnection conn = GeneralDBHelper.CreateSqlConnection(CONNECTION_STRING);
             string sql = @"SELECT TOP (1) * FROM StudySessions";
-            List<StudySessionDTO> returnedRecords = conn.Query<StudySessionDTO>(sql).ToList();
+            List<StudySessionDto> returnedRecords = conn.Query<StudySessionDto>(sql).ToList();
 
             return returnedRecords.Count > 0;
         }
 
-        internal static List<StudySessionDTO> GetAllStudySessions()
+        internal static List<StudySessionDto> GetAllStudySessions()
         {
-            SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
+            SqlConnection conn = GeneralDBHelper.CreateSqlConnection(CONNECTION_STRING);
             string sql = @"SELECT * FROM StudySessions ORDER BY DeckId, SessionDate";
-            List<StudySessionDTO> returnedRecords = conn.Query<StudySessionDTO>(sql).ToList();
+            List<StudySessionDto> returnedRecords = conn.Query<StudySessionDto>(sql).ToList();
 
             return returnedRecords;
         }
 
-        internal static List<StudySessionDTO> GetAllStudySessionsOfDeck(Deck deck)
+        internal static List<StudySessionDto> GetAllStudySessionsOfDeck(Deck deck)
         {
-            SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
+            SqlConnection conn = GeneralDBHelper.CreateSqlConnection(CONNECTION_STRING);
             string sql = @"SELECT * FROM StudySessions WHERE DeckId = @DeckId ORDER BY SessionDate";
-            List<StudySessionDTO> returnedRecords = conn.Query<StudySessionDTO>(sql, new {DeckId = deck.Id}).ToList();
+            List<StudySessionDto> returnedRecords = conn.Query<StudySessionDto>(sql, new {DeckId = deck.Id}).ToList();
 
             return returnedRecords;
         }
 
         internal static bool InsertStudySession(StudySession studySession)
         {
-            SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
+            SqlConnection conn = GeneralDBHelper.CreateSqlConnection(CONNECTION_STRING);
             string sql = @"INSERT INTO StudySessions (Score, CardsStudied, SessionDate, DeckId, DeckName) VALUES (@Score, @CardsStudied, @SessionDate, @DeckId, @DeckName)";
             int rowsAffected = conn.Execute(sql, new { Score = studySession.Score, CardsStudied = studySession.CardsStudied, SessionDate = studySession.SessionDate, DeckId = studySession.DeckId, DeckName = studySession.DeckName});
 
@@ -48,7 +48,7 @@ namespace FlashCards.Database
 
         internal static bool UpdateStudySessionById(int id, StudySession studySession)
         {
-            SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
+            SqlConnection conn = GeneralDBHelper.CreateSqlConnection(CONNECTION_STRING);
             string sql = @"UPDATE StudySessions
                             SET Score = @Score, SessionDate = @SessionDate, DeckId = @DeckId, DeckName = @DeckName
                             WHERE Id = @Id";
@@ -59,7 +59,7 @@ namespace FlashCards.Database
 
         internal static bool DeleteStudySessionById(int id)
         {
-            SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
+            SqlConnection conn = GeneralDBHelper.CreateSqlConnection(CONNECTION_STRING);
             string sql = @"DELETE FROM StudySessions WHERE Id = @Id";
             int rowsAffected = conn.Execute(sql, new { Id = id });
 
@@ -68,7 +68,7 @@ namespace FlashCards.Database
 
         internal static bool DeleteAllStudySessionsOfDeck(int deckId)
         {
-            SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
+            SqlConnection conn = GeneralDBHelper.CreateSqlConnection(CONNECTION_STRING);
             string sql = @"DELETE FROM StudySessions WHERE DeckId = @DeckId";
             int rowsAffected = conn.Execute(sql, new { DeckId = deckId });
 

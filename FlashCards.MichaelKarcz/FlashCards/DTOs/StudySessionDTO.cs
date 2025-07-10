@@ -1,6 +1,6 @@
 ﻿namespace FlashCards.DTOs
 {
-    internal class StudySessionDTO
+    internal class StudySessionDto
     {
         internal int Id { get; set; }
         internal int DeckId { get; set; }
@@ -9,12 +9,12 @@
         internal int Score { get; set; }
         internal int CardsStudied { get; set; }
 
-        internal StudySessionDTO() 
+        internal StudySessionDto() 
         {
             DeckName = string.Empty;
         }
 
-        internal StudySessionDTO(int id, int deckId, string deckName, DateTime sessionDate, int score, int cardsStudied)
+        internal StudySessionDto(int id, int deckId, string deckName, DateTime sessionDate, int score, int cardsStudied)
         {
             Id = id;
             DeckId = deckId;

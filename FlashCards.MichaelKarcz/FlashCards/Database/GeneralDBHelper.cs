@@ -29,10 +29,8 @@ namespace FlashCards.Database
             return initializationSuccessful;
         }
 
-        internal static SqlConnection CreateSQLConnection(string connectionString)
+        internal static SqlConnection CreateSqlConnection(string connectionString)
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-
             try
             {
                 SqlConnection conn = new SqlConnection(connectionString);
@@ -51,7 +49,7 @@ namespace FlashCards.Database
         private static void CreateDatabase()
         {
             string connectionString = ConfigurationManager.AppSettings.Get("masterConnectionString");
-            using SqlConnection connection = CreateSQLConnection(connectionString);
+            using SqlConnection connection = CreateSqlConnection(connectionString);
 
             string sql = @"IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'Flashcards')
                                 BEGIN

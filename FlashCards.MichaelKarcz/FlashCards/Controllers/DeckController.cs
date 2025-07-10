@@ -77,7 +77,7 @@ namespace FlashCards.Controllers
         internal static void ShowAllCardsInDeck()
         {
             Deck deck = SelectADeck("Which deck would you like to view?");
-            List<FlashcardDTO> flashcards = FlashcardDBHelper.GetAllFlashcardsInDeck(deck.Id);
+            List<FlashcardDto> flashcards = FlashcardDBHelper.GetAllFlashcardsInDeck(deck.Id);
             FlashcardController.DisplayFlashcardsInDeck(deck, flashcards);
         }
 
@@ -104,10 +104,10 @@ namespace FlashCards.Controllers
         {
             Deck deck = SelectADeck("Which deck would you like to remove cards from?");
 
-            List<FlashcardDTO> flashcards = FlashcardDBHelper.GetAllFlashcardsInDeck(deck.Id);
+            List<FlashcardDto> flashcards = FlashcardDBHelper.GetAllFlashcardsInDeck(deck.Id);
 
-            List<FlashcardDTO> selectedFlashcards = AnsiConsole.Prompt(
-                new MultiSelectionPrompt<FlashcardDTO>()
+            List<FlashcardDto> selectedFlashcards = AnsiConsole.Prompt(
+                new MultiSelectionPrompt<FlashcardDto>()
                     .Title("Which flashcards would you like to remove?")
                     .NotRequired()
                     .PageSize(10)
@@ -118,7 +118,7 @@ namespace FlashCards.Controllers
                     .AddChoices(flashcards.ToArray())
                     );
 
-            foreach(FlashcardDTO flashcard in selectedFlashcards)
+            foreach(FlashcardDto flashcard in selectedFlashcards)
             {
                 FlashcardDBHelper.DeleteFlashcardById(flashcard.Id);
             }

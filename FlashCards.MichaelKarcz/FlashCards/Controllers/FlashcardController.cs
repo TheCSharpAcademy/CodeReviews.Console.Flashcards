@@ -52,7 +52,7 @@ namespace FlashCards.Controllers
         {
             if (!FlashcardDBHelper.CheckForRecords()) return;
 
-            List<FlashcardDTO> flashcards = FlashcardDBHelper.GetAllFlashcards();
+            List<FlashcardDto> flashcards = FlashcardDBHelper.GetAllFlashcards();
             List<Deck> decks = DeckDBHelper.GetAllDecks();
 
             AnsiConsole.WriteLine("\n~All Flashcards~");
@@ -60,7 +60,7 @@ namespace FlashCards.Controllers
             table.AddColumn(new TableColumn("Deck Name").Centered().NoWrap());
             table.AddColumn(new TableColumn("Front of Card").Centered().NoWrap());
             table.AddColumn(new TableColumn("Back of Card").Centered().NoWrap());
-            foreach (FlashcardDTO flashcard in flashcards)
+            foreach (FlashcardDto flashcard in flashcards)
             {
                 Deck deck = decks.First(d => d.Id == flashcard.DeckId);
                 table.AddRow(deck.Name, flashcard.Front, flashcard.Back);
@@ -72,7 +72,7 @@ namespace FlashCards.Controllers
             AnsiConsole.WriteLine();
         }
         
-        internal static void DisplayFlashcardsInDeck(Deck deck, List<FlashcardDTO> flashcards)
+        internal static void DisplayFlashcardsInDeck(Deck deck, List<FlashcardDto> flashcards)
         {
             int tempId = 1;
             AnsiConsole.WriteLine($"\n~{deck.Name}~");
@@ -80,7 +80,7 @@ namespace FlashCards.Controllers
             table.AddColumn(new TableColumn("Id").Centered().NoWrap());
             table.AddColumn(new TableColumn("Front of Card").Centered().NoWrap());
             table.AddColumn(new TableColumn("Back of Card").Centered().NoWrap());
-            foreach (FlashcardDTO flashcard in flashcards)
+            foreach (FlashcardDto flashcard in flashcards)
             {
                 table.AddRow(tempId.ToString(), flashcard.Front, flashcard.Back);
                 tempId++;
@@ -92,12 +92,12 @@ namespace FlashCards.Controllers
             AnsiConsole.WriteLine();
         }
 
-        internal static FlashcardDTO SelectAFlashcard()
+        internal static FlashcardDto SelectAFlashcard()
         {
-            List<FlashcardDTO> allFlashcards = FlashcardDBHelper.GetAllFlashcards();
+            List<FlashcardDto> allFlashcards = FlashcardDBHelper.GetAllFlashcards();
 
-            FlashcardDTO selectedFlashcard = AnsiConsole.Prompt(
-                new SelectionPrompt<FlashcardDTO>()
+            FlashcardDto selectedFlashcard = AnsiConsole.Prompt(
+                new SelectionPrompt<FlashcardDto>()
                     .Title("Select a flashcard:")
                     .PageSize(10)
                     .MoreChoicesText("[grey](Move up and down to reveal more flashcards)[/]")
@@ -128,7 +128,7 @@ namespace FlashCards.Controllers
 
         internal static void EditAFlashcard()
         {
-            FlashcardDTO flashcard = SelectAFlashcard();
+            FlashcardDto flashcard = SelectAFlashcard();
 
             AnsiConsole.Clear();
             flashcard.Front = AnsiConsole.Prompt(new TextPrompt<string>("Enter the front text of the flashcard: "));

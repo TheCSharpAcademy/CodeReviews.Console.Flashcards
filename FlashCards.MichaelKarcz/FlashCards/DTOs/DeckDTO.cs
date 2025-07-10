@@ -1,17 +1,17 @@
 ﻿namespace FlashCards.DTOs
 {
-    internal class DeckDTO
+    internal class DeckDto
     {
         internal int Id { get; set; }
         internal string Name { get; set; }
 
 
-        internal DeckDTO()
+        internal DeckDto()
         {
             Name = string.Empty;
         }
 
-        internal DeckDTO(int id, string name)
+        internal DeckDto(int id, string name)
         {
             Id = id;
             Name = name;

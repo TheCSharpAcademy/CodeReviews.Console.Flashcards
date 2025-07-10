@@ -67,7 +67,7 @@ namespace FlashCards.Controllers
 
         internal static void StudyDeck(Deck deck)
         {
-            List<FlashcardDTO> flashcards = FlashcardDBHelper.GetAllFlashcardsInDeck(deck.Id);
+            List<FlashcardDto> flashcards = FlashcardDBHelper.GetAllFlashcardsInDeck(deck.Id);
 
             if (flashcards.Count == 0)
             {
@@ -80,8 +80,8 @@ namespace FlashCards.Controllers
             if (numberOfCardsToStudy == 0) return; // "return to previous menu option
 
             // Shuffle the stack to get random flashcards every time
-            Span<FlashcardDTO> flashcardSpan = CollectionsMarshal.AsSpan(flashcards);
-            Random.Shared.Shuffle<FlashcardDTO>(flashcardSpan); // this call shuffles the related list. Feel free to use list flashcards again
+            Span<FlashcardDto> flashcardSpan = CollectionsMarshal.AsSpan(flashcards);
+            Random.Shared.Shuffle<FlashcardDto>(flashcardSpan); // this call shuffles the related list. Feel free to use list flashcards again
 
             int correctAnswers = 0;
             for (int i = 0; i < numberOfCardsToStudy; i++)
@@ -115,7 +115,7 @@ Score: {studySession.Score} / {studySession.CardsStudied}");
 
         internal static void ShowPreviousStudySessions()
         {
-            List<StudySessionDTO> sessions = StudySessionDBHelper.GetAllStudySessions();
+            List<StudySessionDto> sessions = StudySessionDBHelper.GetAllStudySessions();
 
             if (sessions.Count == 0)
             {
@@ -128,7 +128,7 @@ Score: {studySession.Score} / {studySession.CardsStudied}");
             table.AddColumn(new TableColumn("Date").Centered().NoWrap());
             table.AddColumn(new TableColumn("Deck").Centered().NoWrap());
             table.AddColumn(new TableColumn("Score").Centered().NoWrap());
-            foreach (StudySessionDTO ss in sessions)
+            foreach (StudySessionDto ss in sessions)
             {
                 table.AddRow(ss.SessionDate.ToString("MM-dd-yyyy hh:mm tt"), ss.DeckName, $"{ss.Score.ToString()}/{ss.CardsStudied}");
             }
@@ -141,7 +141,7 @@ Score: {studySession.Score} / {studySession.CardsStudied}");
 
         internal static void ShowPreviousStudySessionsOfSingleDeck(Deck deck)
         {
-            List<StudySessionDTO> sessions = StudySessionDBHelper.GetAllStudySessionsOfDeck(deck);
+            List<StudySessionDto> sessions = StudySessionDBHelper.GetAllStudySessionsOfDeck(deck);
 
             if (sessions.Count == 0)
             {
@@ -154,7 +154,7 @@ Score: {studySession.Score} / {studySession.CardsStudied}");
             table.AddColumn(new TableColumn("Date").Centered().NoWrap());
             table.AddColumn(new TableColumn("Deck").Centered().NoWrap());
             table.AddColumn(new TableColumn("Score").Centered().NoWrap());
-            foreach (StudySessionDTO ss in sessions)
+            foreach (StudySessionDto ss in sessions)
             {
                 table.AddRow(ss.SessionDate.ToString(), ss.DeckName, ss.Score.ToString());
             }
@@ -167,7 +167,7 @@ Score: {studySession.Score} / {studySession.CardsStudied}");
 
         internal static void DeleteAStudySession(Deck deck)
         {
-            List<StudySessionDTO> studySessions = StudySessionDBHelper.GetAllStudySessionsOfDeck(deck);
+            List<StudySessionDto> studySessions = StudySessionDBHelper.GetAllStudySessionsOfDeck(deck);
 
             if (studySessions.Count == 0)
             {
@@ -175,8 +175,8 @@ Score: {studySession.Score} / {studySession.CardsStudied}");
                 return;
             }
 
-            StudySessionDTO selectedSession = AnsiConsole.Prompt(
-                new SelectionPrompt<StudySessionDTO>()
+            StudySessionDto selectedSession = AnsiConsole.Prompt(
+                new SelectionPrompt<StudySessionDto>()
                     .Title("Select a study session:")
                     .PageSize(10)
                     .MoreChoicesText("[grey](Move up and down to reveal more study sessions)[/]")
@@ -209,7 +209,7 @@ Score: {studySession.Score} / {studySession.CardsStudied}");
             return numberOfCardsToStudy;
         }
 
-        internal static bool PromptCard(FlashcardDTO flashcard)
+        internal static bool PromptCard(FlashcardDto flashcard)
         {
             string response = AnsiConsole.Ask<string>($"What is the answer to this card?\n\n{flashcard.Front}\n");
 
