@@ -29,6 +29,22 @@ namespace FlashCards.Database
             return returnedRecords;
         }
 
+        internal static List<string> GetAllDeckNames()
+        {
+            SqlConnection conn = GeneralDBHelper.CreateSqlConnection(CONNECTION_STRING);
+            string sql = @"SELECT Name FROM Decks";
+            List<Deck> returnedRecords = conn.Query<Deck>(sql).ToList();
+
+            List<string> deckNames = new List<string>();
+
+            foreach (Deck d in returnedRecords)
+            {
+                deckNames.Add(d.Name);
+            }
+
+            return deckNames;
+        }
+
         internal static int InsertDeck(Deck deck)
         {
             SqlConnection conn = GeneralDBHelper.CreateSqlConnection(CONNECTION_STRING);

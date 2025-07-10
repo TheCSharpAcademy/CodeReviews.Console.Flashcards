@@ -1,6 +1,7 @@
 ﻿using FlashCards.Database;
 using FlashCards.DTOs;
 using FlashCards.Models;
+using Microsoft.IdentityModel.Tokens;
 using Spectre.Console;
 
 namespace FlashCards.Controllers
@@ -68,7 +69,13 @@ namespace FlashCards.Controllers
             Deck deck = new Deck();
 
             deck.Name = AnsiConsole.Prompt(new TextPrompt<string>("What is the name of this deck?"));
-
+            
+            while(!CheckIfDeckNameIsUnique(deck.Name))
+            {
+                AnsiConsole.WriteLine("That deck name already exists. Please enter a unique name for this deck.\n");
+                deck.Name = AnsiConsole.Prompt(new TextPrompt<string>("What is the name of this deck?"));
+            }
+            
             int deckId = DeckDBHelper.InsertDeck(deck);
 
             AddCardsToDeck(deckId);
@@ -162,6 +169,16 @@ namespace FlashCards.Controllers
                         .AddChoices(decks.ToArray()));
 
             return selectedDeck;
+        }
+
+        internal static bool CheckIfDeckNameIsUnique(string name)
+        {
+            List<string> deckNames = DeckDBHelper.GetAllDeckNames();
+            
+            if (deckNames.IsNullOrEmpty()) return true;
+            if (deckNames.Contains(name)) return false;
+
+            return true;
         }
     }
 }
