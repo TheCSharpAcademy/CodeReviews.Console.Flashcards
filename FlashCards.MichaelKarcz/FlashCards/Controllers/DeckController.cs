@@ -84,15 +84,19 @@ internal static class DeckController
     internal static void ShowAllCardsInDeck()
     {
         Deck deck = SelectADeck("Which deck would you like to view?");
-        List<FlashcardDto> flashcards = FlashcardDBHelper.GetAllFlashcardsInDeck(deck.Id);
-        FlashcardController.DisplayFlashcardsInDeck(deck, flashcards);
+
+        if (deck != null)
+        {
+            List<FlashcardDto> flashcards = FlashcardDBHelper.GetAllFlashcardsInDeck(deck.Id);
+            FlashcardController.DisplayFlashcardsInDeck(deck, flashcards);
+        }
     }
 
     internal static void AddCardsToDeck()
     {
         Deck deck = SelectADeck("Which deck would you like to add cards to?");
 
-        AddCardsToDeck(deck.Id);
+        if (deck != null) AddCardsToDeck(deck.Id);
     }
 
     internal static void AddCardsToDeck(int id)
@@ -111,56 +115,68 @@ internal static class DeckController
     {
         Deck deck = SelectADeck("Which deck would you like to remove cards from?");
 
-        List<FlashcardDto> flashcards = FlashcardDBHelper.GetAllFlashcardsInDeck(deck.Id);
-
-        List<FlashcardDto> selectedFlashcards = AnsiConsole.Prompt(
-            new MultiSelectionPrompt<FlashcardDto>()
-                .Title("Which flashcards would you like to remove?")
-                .NotRequired()
-                .PageSize(10)
-                .MoreChoicesText("[grey](Move up and down to reveal more flashcards)[/]")
-                .InstructionsText(
-                    "[grey](Press [blue]<space>[/] to select a flashcard, " +
-                    "[green]<enter>[/] to accept)[/]")
-                .AddChoices(flashcards.ToArray())
-                );
-
-        foreach(FlashcardDto flashcard in selectedFlashcards)
+        if (deck != null)
         {
-            FlashcardDBHelper.DeleteFlashcardById(flashcard.Id);
-        }
+            List<FlashcardDto> flashcards = FlashcardDBHelper.GetAllFlashcardsInDeck(deck.Id);
 
-        AnsiConsole.WriteLine("\nThe flashcards have been deleted.\n");
+            List<FlashcardDto> selectedFlashcards = AnsiConsole.Prompt(
+                new MultiSelectionPrompt<FlashcardDto>()
+                    .Title("Which flashcards would you like to remove?")
+                    .NotRequired()
+                    .PageSize(10)
+                    .MoreChoicesText("[grey](Move up and down to reveal more flashcards)[/]")
+                    .InstructionsText(
+                        "[grey](Press [blue]<space>[/] to select a flashcard, " +
+                        "[green]<enter>[/] to accept)[/]")
+                    .AddChoices(flashcards.ToArray())
+                    );
+
+            foreach(FlashcardDto flashcard in selectedFlashcards)
+            {
+                FlashcardDBHelper.DeleteFlashcardById(flashcard.Id);
+            }
+
+            AnsiConsole.WriteLine("\nThe flashcards have been deleted.\n");
+        }
     }
 
     internal static void DeleteADeck()
     {
         Deck deck = SelectADeck("Which deck would you like to delete?");
 
-        bool confirmDelete = AnsiConsole.Prompt(
-            new TextPrompt<bool>("Are you sure you'd like to delete this deck? This will delete all associated flashcards and study sessions as well.")
-            .AddChoice(true)
-            .AddChoice(false)
-            .DefaultValue(false)
-            .WithConverter(choice => choice ? "yes" : "no"));
-
-        if(confirmDelete)
+        if (deck != null)
         {
-            FlashcardDBHelper.DeleteAllFlashcardsInDeck(deck.Id);
-            StudySessionDBHelper.DeleteAllStudySessionsOfDeck(deck.Id);
-            DeckDBHelper.DeleteDeckById(deck.Id);
+            bool confirmDelete = AnsiConsole.Prompt(
+                new TextPrompt<bool>("Are you sure you'd like to delete this deck? This will delete all associated flashcards and study sessions as well.")
+                .AddChoice(true)
+                .AddChoice(false)
+                .DefaultValue(false)
+                .WithConverter(choice => choice ? "yes" : "no"));
 
-            AnsiConsole.WriteLine("\nThe deck and all related records have been deleted successfully.");
-        }
-        else
-        {
-            AnsiConsole.WriteLine("\nThe deck and related records were not deleted.");
+            if(confirmDelete)
+            {
+                FlashcardDBHelper.DeleteAllFlashcardsInDeck(deck.Id);
+                StudySessionDBHelper.DeleteAllStudySessionsOfDeck(deck.Id);
+                DeckDBHelper.DeleteDeckById(deck.Id);
+
+                AnsiConsole.WriteLine("\nThe deck and all related records have been deleted successfully.");
+            }
+            else
+            {
+                AnsiConsole.WriteLine("\nThe deck and related records were not deleted.");
+            }
         }
     }
 
-    internal static Deck SelectADeck(string prompt)
+    internal static Deck? SelectADeck(string prompt)
     {
         List<Deck> decks = DeckDBHelper.GetAllDecks();
+
+        if (decks.Count == 0)
+        {
+            AnsiConsole.WriteLine("\nThere are no decks in the database.\n");
+            return null;
+        }
 
         Deck selectedDeck = AnsiConsole.Prompt(
                     new SelectionPrompt<Deck>()

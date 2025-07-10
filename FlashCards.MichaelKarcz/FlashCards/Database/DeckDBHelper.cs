@@ -7,11 +7,9 @@ using System.Configuration;
 namespace FlashCards.Database;
 internal static class DeckDBHelper
 {
-    private static string CONNECTION_STRING = ConfigurationManager.AppSettings.Get("flashcardsConnectionString");
-
     internal static bool CheckForRecords()
     {
-        SqlConnection conn = GeneralDBHelper.CreateSqlConnection(CONNECTION_STRING);
+        SqlConnection conn = GeneralDBHelper.CreateSqlConnection(GeneralDBHelper.ConnectionString);
         string sql = @"SELECT TOP (1) * FROM Decks";
 
         List<DeckDto> returnedRecords = conn.Query<DeckDto>(sql).ToList();
@@ -21,7 +19,7 @@ internal static class DeckDBHelper
 
     internal static List<Deck> GetAllDecks()
     {
-        SqlConnection conn = GeneralDBHelper.CreateSqlConnection(CONNECTION_STRING);
+        SqlConnection conn = GeneralDBHelper.CreateSqlConnection(GeneralDBHelper.ConnectionString);
         string sql = @"SELECT * FROM Decks";
         List<Deck> returnedRecords = conn.Query<Deck>(sql).ToList();
 
@@ -30,7 +28,7 @@ internal static class DeckDBHelper
 
     internal static List<string> GetAllDeckNames()
     {
-        SqlConnection conn = GeneralDBHelper.CreateSqlConnection(CONNECTION_STRING);
+        SqlConnection conn = GeneralDBHelper.CreateSqlConnection(GeneralDBHelper.ConnectionString);
         string sql = @"SELECT Name FROM Decks";
         List<Deck> returnedRecords = conn.Query<Deck>(sql).ToList();
 
@@ -46,7 +44,7 @@ internal static class DeckDBHelper
 
     internal static int InsertDeck(Deck deck)
     {
-        SqlConnection conn = GeneralDBHelper.CreateSqlConnection(CONNECTION_STRING);
+        SqlConnection conn = GeneralDBHelper.CreateSqlConnection(GeneralDBHelper.ConnectionString);
         string sql = @"INSERT INTO Decks (Name) VALUES (@Name);
                             SELECT CAST(SCOPE_IDENTITY() as int)";
         int newId = conn.QuerySingle<int>(sql, new { Name = deck.Name });
@@ -56,7 +54,7 @@ internal static class DeckDBHelper
 
     internal static bool UpdateDeckById(int id, Deck deck)
     {
-        SqlConnection conn = GeneralDBHelper.CreateSqlConnection(CONNECTION_STRING);
+        SqlConnection conn = GeneralDBHelper.CreateSqlConnection(GeneralDBHelper.ConnectionString);
         string sql = @"UPDATE Decks
                             SET Name = @Name
                             WHERE Id = @Id";
@@ -67,7 +65,7 @@ internal static class DeckDBHelper
 
     internal static bool DeleteDeckById(int id)
     {
-        SqlConnection conn = GeneralDBHelper.CreateSqlConnection(CONNECTION_STRING);
+        SqlConnection conn = GeneralDBHelper.CreateSqlConnection(GeneralDBHelper.ConnectionString);
         string sql = @"DELETE FROM Decks WHERE Id = @Id";
         int rowsAffected = conn.Execute(sql, new { Id = id });
 

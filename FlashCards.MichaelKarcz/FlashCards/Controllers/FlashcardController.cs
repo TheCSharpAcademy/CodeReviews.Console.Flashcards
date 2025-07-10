@@ -91,9 +91,15 @@ internal static class FlashcardController
         AnsiConsole.WriteLine();
     }
 
-    internal static FlashcardDto SelectAFlashcard()
+    internal static FlashcardDto? SelectAFlashcard()
     {
         List<FlashcardDto> allFlashcards = FlashcardDBHelper.GetAllFlashcards();
+
+        if (allFlashcards.Count == 0)
+        {
+            AnsiConsole.WriteLine("\nThere were no flashcards to be found.\n");
+            return null;
+        }
 
         FlashcardDto selectedFlashcard = AnsiConsole.Prompt(
             new SelectionPrompt<FlashcardDto>()
@@ -129,16 +135,19 @@ internal static class FlashcardController
     {
         FlashcardDto flashcard = SelectAFlashcard();
 
-        AnsiConsole.Clear();
-        flashcard.Front = AnsiConsole.Prompt(new TextPrompt<string>("Enter the front text of the flashcard: "));
-        flashcard.Back = AnsiConsole.Prompt(new TextPrompt<string>("Enter the back text of the flashcard: "));
+        if (flashcard == null)
+        {
+            AnsiConsole.Clear();
+            flashcard.Front = AnsiConsole.Prompt(new TextPrompt<string>("Enter the front text of the flashcard: "));
+            flashcard.Back = AnsiConsole.Prompt(new TextPrompt<string>("Enter the back text of the flashcard: "));
 
-        FlashcardDBHelper.UpdateFlashcardById(flashcard.Id, new Flashcard {
-            Front = flashcard.Front,
-            Back = flashcard.Back,
-            DeckId = flashcard.DeckId
-        });
+            FlashcardDBHelper.UpdateFlashcardById(flashcard.Id, new Flashcard {
+                Front = flashcard.Front,
+                Back = flashcard.Back,
+                DeckId = flashcard.DeckId
+            });
 
-        AnsiConsole.WriteLine("\nThe flashcard has been edited.\n");
+            AnsiConsole.WriteLine("\nThe flashcard has been edited.\n");
+        }
     }
 }

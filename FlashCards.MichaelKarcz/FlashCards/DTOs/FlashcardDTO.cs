@@ -18,7 +18,6 @@ internal class FlashcardDto
         Front = front;
         Back = back;
         DeckId = deckId;
-
     }
 
     public override string ToString()

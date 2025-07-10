@@ -6,6 +6,17 @@ using Spectre.Console;
 namespace FlashCards.Database;
 internal static class GeneralDBHelper
 {
+    private static readonly string _masterServerName = ConfigurationManager.AppSettings.Get("masterServer");
+    private static readonly string _masterDatabaseName = ConfigurationManager.AppSettings.Get("masterDatabase");
+    private static readonly string _masterTrustedConnection = ConfigurationManager.AppSettings.Get("masterTrustedConnection");
+    private static readonly string _serverName = ConfigurationManager.AppSettings.Get("server");
+    private static readonly string _databaseName = ConfigurationManager.AppSettings.Get("database");
+    private static readonly string _trustedConnection = ConfigurationManager.AppSettings.Get("trustedConnection");
+    
+    private static readonly string _masterConnectionString = $"Server={_masterServerName};Database={_masterDatabaseName};Trusted_Connection={_masterTrustedConnection};";
+    
+    internal static readonly string ConnectionString = $"Server={_serverName};Database={_databaseName};Trusted_Connection={_trustedConnection};";
+
     internal static bool InitializeDatabase()
     {
         bool initializationSuccessful = false;
@@ -47,12 +58,11 @@ internal static class GeneralDBHelper
 
     private static void CreateDatabase()
     {
-        string connectionString = ConfigurationManager.AppSettings.Get("masterConnectionString");
-        using SqlConnection connection = CreateSqlConnection(connectionString);
+        using SqlConnection connection = CreateSqlConnection(_masterConnectionString);
 
-        string sql = @"IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'Flashcards')
+        string sql = @$"IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '{_databaseName}')
                                 BEGIN
-                                    CREATE DATABASE [Flashcards]
+                                    CREATE DATABASE [{_databaseName}] 
                                 END
                                ";
         connection.Execute(sql);
@@ -60,8 +70,7 @@ internal static class GeneralDBHelper
 
     private static void CreateTables()
     {
-        string connectionString = ConfigurationManager.AppSettings.Get("flashcardsConnectionString");
-        using SqlConnection connection = new SqlConnection(connectionString);
+        using SqlConnection connection = new SqlConnection(ConnectionString);
         string sql = @"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Decks' AND xtype='U')
                                 BEGIN
                                     CREATE TABLE Decks (
