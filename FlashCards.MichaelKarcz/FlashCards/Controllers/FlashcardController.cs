@@ -49,7 +49,11 @@ internal static class FlashcardController
 
     internal static void ShowAllFlashcardsAsTable()
     {
-        if (!FlashcardDBHelper.CheckForRecords()) return;
+        if (!FlashcardDBHelper.CheckForRecords())
+        {
+            AnsiConsole.WriteLine("\nThere were no flashcards to be found.\n");
+            return;
+        }
 
         List<FlashcardDto> flashcards = FlashcardDBHelper.GetAllFlashcards();
         List<Deck> decks = DeckDBHelper.GetAllDecks();
@@ -135,7 +139,7 @@ internal static class FlashcardController
     {
         FlashcardDto flashcard = SelectAFlashcard();
 
-        if (flashcard == null)
+        if (flashcard != null)
         {
             AnsiConsole.Clear();
             flashcard.Front = AnsiConsole.Prompt(new TextPrompt<string>("Enter the front text of the flashcard: "));

@@ -119,6 +119,12 @@ internal static class DeckController
         {
             List<FlashcardDto> flashcards = FlashcardDBHelper.GetAllFlashcardsInDeck(deck.Id);
 
+            if (flashcards.Count == 0)
+            {
+                AnsiConsole.WriteLine("\nThere are no flashcards in that deck.\n");
+                return;
+            }
+
             List<FlashcardDto> selectedFlashcards = AnsiConsole.Prompt(
                 new MultiSelectionPrompt<FlashcardDto>()
                     .Title("Which flashcards would you like to remove?")
