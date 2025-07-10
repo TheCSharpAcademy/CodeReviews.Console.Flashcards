@@ -3,67 +3,66 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using Spectre.Console;
 
-namespace FlashCards.Database
+namespace FlashCards.Database;
+internal static class GeneralDBHelper
 {
-    internal static class GeneralDBHelper
+    internal static bool InitializeDatabase()
     {
-        internal static bool InitializeDatabase()
+        bool initializationSuccessful = false;
+
+        try
         {
-            bool initializationSuccessful = false;
+            CreateDatabase();
+            CreateTables();
 
-            try
-            {
-                CreateDatabase();
-                CreateTables();
+            initializationSuccessful = true;
 
-                initializationSuccessful = true;
-
-            }
-            catch (SqlException ex)
-            {
-                
-                AnsiConsole.WriteLine($"\n\nAn error has occurred while initializing the database. Error message: {ex.Message}\n\n");
-                initializationSuccessful = false;
-            }
-
-            return initializationSuccessful;
+        }
+        catch (SqlException ex)
+        {
+            
+            AnsiConsole.WriteLine($"\n\nAn error has occurred while initializing the database. Error message: {ex.Message}\n\n");
+            initializationSuccessful = false;
         }
 
-        internal static SqlConnection CreateSqlConnection(string connectionString)
+        return initializationSuccessful;
+    }
+
+    internal static SqlConnection CreateSqlConnection(string connectionString)
+    {
+        try
         {
-            try
-            {
-                SqlConnection conn = new SqlConnection(connectionString);
-                return conn;
-            }
-            catch (SqlException ex)
-            {
-                AnsiConsole.WriteLine($"An error occurred creating the SQL Connection. Error message: {ex.ToString()}");
-                throw;
-            }
+            SqlConnection conn = new SqlConnection(connectionString);
+            return conn;
         }
-
-
-        #region private methods
-
-        private static void CreateDatabase()
+        catch (SqlException ex)
         {
-            string connectionString = ConfigurationManager.AppSettings.Get("masterConnectionString");
-            using SqlConnection connection = CreateSqlConnection(connectionString);
+            AnsiConsole.WriteLine($"An error occurred creating the SQL Connection. Error message: {ex.ToString()}");
+            throw;
+        }
+    }
 
-            string sql = @"IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'Flashcards')
+
+    #region private methods
+
+    private static void CreateDatabase()
+    {
+        string connectionString = ConfigurationManager.AppSettings.Get("masterConnectionString");
+        using SqlConnection connection = CreateSqlConnection(connectionString);
+
+        string sql = @"IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'Flashcards')
                                 BEGIN
                                     CREATE DATABASE [Flashcards]
                                 END
                                ";
-            connection.Execute(sql);
-        }
+        connection.Execute(sql);
+    }
 
-        private static void CreateTables()
-        {
-            string connectionString = ConfigurationManager.AppSettings.Get("flashcardsConnectionString");
-            using SqlConnection connection = new SqlConnection(connectionString);
-            string sql = @"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Decks' AND xtype='U')
+    private static void CreateTables()
+    {
+        string connectionString = ConfigurationManager.AppSettings.Get("flashcardsConnectionString");
+        using SqlConnection connection = new SqlConnection(connectionString);
+        string sql = @"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Decks' AND xtype='U')
                                 BEGIN
                                     CREATE TABLE Decks (
                                         Id INT PRIMARY KEY IDENTITY (1,1),
@@ -93,9 +92,8 @@ namespace FlashCards.Database
                                     );
                                 END
                                ";
-            connection.Execute(sql);
-        }
-
-        #endregion private methods
+        connection.Execute(sql);
     }
+
+    #endregion private methods
 }
