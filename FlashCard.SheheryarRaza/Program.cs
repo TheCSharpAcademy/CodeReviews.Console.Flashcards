@@ -4,10 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using FlashCard.SheheryarRaza.DataBase;
 using FlashCard.SheheryarRaza.Entities;
 using FlashCard.SheheryarRaza.Managers;
-using System;
-using System.IO;
-using Spectre.Console;
-using System.Linq;
 
 namespace FlashCard.SheheryarRaza
 {

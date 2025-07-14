@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using System.IO;
 using FlashCard.SheheryarRaza.DataBase;
 
 namespace FlashCard.SheheryarRaza

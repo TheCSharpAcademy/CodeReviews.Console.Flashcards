@@ -140,7 +140,7 @@ namespace FlashCard.SheheryarRaza.Managers
                     }
 
                     var flashcardDtos = flashcards
-                        .Select((fc, index) => new Flashcard_DTO
+                        .Select((fc, index) => new FlashcardDTO
                         {
                             DisplayId = index + 1,
                             Question = fc.Question,

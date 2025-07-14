@@ -1,5 +1,4 @@
-﻿using System;
-using Spectre.Console;
+﻿using Spectre.Console;
 
 namespace FlashCard.SheheryarRaza
 {

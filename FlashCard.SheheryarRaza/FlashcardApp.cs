@@ -1,9 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using FlashCard.SheheryarRaza.Managers;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using Spectre.Console; // Add this using directive for ConsoleColor
+﻿using FlashCard.SheheryarRaza.Managers;
 
 namespace FlashCard.SheheryarRaza
 {

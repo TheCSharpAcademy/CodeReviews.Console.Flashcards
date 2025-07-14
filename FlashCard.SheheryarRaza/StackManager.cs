@@ -1,10 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using FlashCard.SheheryarRaza.DataBase;
 using FlashCard.SheheryarRaza.Entities;
-using System;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace FlashCard.SheheryarRaza.Managers
 {

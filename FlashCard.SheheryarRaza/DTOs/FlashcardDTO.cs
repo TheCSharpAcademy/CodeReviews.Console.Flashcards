@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FlashCard.SheheryarRaza.DTOs
 {
-    public class Flashcard_DTO
+    public class FlashcardDTO
     {
         public int DisplayId { get; set; }
         public string Question { get; set; } = string.Empty;

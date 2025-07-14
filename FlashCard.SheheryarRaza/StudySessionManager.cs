@@ -2,11 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using FlashCard.SheheryarRaza.DataBase;
 using FlashCard.SheheryarRaza.Entities;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using FlashCard.SheheryarRaza.Managers;
-using Spectre.Console;
 
 namespace FlashCard.SheheryarRaza.Managers
 {
