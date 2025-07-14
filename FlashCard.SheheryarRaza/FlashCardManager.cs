@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using FlashCard.SheheryarRaza.DataBase;
+﻿using FlashCard.SheheryarRaza.DataBase;
 using FlashCard.SheheryarRaza.DTOs;
 using FlashCard.SheheryarRaza.Entities;
-using FlashCard.SheheryarRaza.Managers; // To access StackManager
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
