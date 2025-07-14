@@ -18,7 +18,7 @@ public class CardController
 
         using (var connection = _dbContext.DBConnection())
         {
-            string query = @"SELECT f.ID, f.Question, s.Name AS Stack
+            string query = @"SELECT f.ID, f.Question, f.Answer, s.Name AS Stack
                                  FROM flashcards f
                                  JOIN stacks s ON f.STACK_ID = s.ID";
             cards = connection.Query<CardViewDto>(query).ToList();
