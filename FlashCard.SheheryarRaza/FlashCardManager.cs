@@ -136,7 +136,7 @@ namespace FlashCard.SheheryarRaza.Managers
                     }
 
                     var flashcardDtos = flashcards
-                        .Select((fc, index) => new FlashcardDTO
+                        .Select((fc, index) => new FlashcardDto
                         {
                             DisplayId = index + 1,
                             Question = fc.Question,
