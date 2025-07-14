@@ -10,7 +10,7 @@ using Models;
 public class StackController
 {
     private DbContext _dbContext = new DbContext();
-    private UserViews userViews = new UserViews();
+    private UserViews _userViews = new UserViews();
 
     public List<Stack> GetStacks()
     {
@@ -47,7 +47,7 @@ public class StackController
             try
             {
                 connection.Execute(query, value);
-                userViews.Tost($"{name} stack created successfully.", "success");
+                _userViews.Tost($"{name} stack created successfully.", "success");
             }
             catch (Exception ex)
             {
@@ -57,7 +57,7 @@ public class StackController
                 }
                 else
                 {
-                    userViews.Tost($"An error occurred: {ex.Message}", "error");
+                    _userViews.Tost($"An error occurred: {ex.Message}", "error");
                 }
             }
         }
@@ -72,17 +72,17 @@ public class StackController
             try
             {
                 connection.Execute(query, value);
-                userViews.Tost($"[[{stack.Name} -> {name}]] updated!.", "success");
+                _userViews.Tost($"[[{stack.Name} -> {name}]] updated!.", "success");
             }
             catch (Exception ex)
             {
                 if (ex is SqlException)
                 {
-                    userViews.Tost("A stack with this name already exists.", "error");
+                    _userViews.Tost("A stack with this name already exists.", "error");
                 }
                 else
                 {
-                    userViews.Tost($"An error occurred: {ex.Message}", "error");
+                    _userViews.Tost($"An error occurred: {ex.Message}", "error");
                 }
             }
         }
@@ -97,7 +97,7 @@ public class StackController
             try
             {
                 connection.Execute(query, queryParams);
-                userViews.Tost($"{stack.Name} deleted successfully.", "success");
+                _userViews.Tost($"{stack.Name} deleted successfully.", "success");
             }
             catch (Exception ex)
             {
@@ -107,7 +107,7 @@ public class StackController
                 }
                 else
                 {
-                    userViews.Tost($"An error occurred: {ex.Message}", "error");
+                    _userViews.Tost($"An error occurred: {ex.Message}", "error");
                 }
             }
         }

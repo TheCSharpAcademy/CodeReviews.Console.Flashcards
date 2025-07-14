@@ -8,7 +8,7 @@ public class Program
         // Load Env
         DotNetEnv.Env.Load();
         var db = new DbContext();
-        var migration = new Migaration();
+        var migration = new Migration();
         migration.Up();
         var menu = new MenuController();
         menu.MainMenu();

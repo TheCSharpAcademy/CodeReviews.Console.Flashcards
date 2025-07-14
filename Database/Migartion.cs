@@ -1,7 +1,7 @@
 namespace DotNETConsole.Flashcards.Database;
 using Microsoft.Data.SqlClient;
 
-public class Migaration
+public class Migration
 {
     private DbContext _dbContext = new DbContext();
 
@@ -11,7 +11,8 @@ public class Migaration
         string categoryTableQuery = @"IF OBJECT_ID('dbo.stacks', 'U') IS NULL
            CREATE TABLE dbo.stacks (
                ID INT IDENTITY(1,1) PRIMARY KEY,
-               NAME VARCHAR(50) UNIQUE
+               NAME VARCHAR(50) UNIQUE,
+               CreatedAt DATETIME DEFAULT GETDATE(),
            );";
 
         using (var connection = _dbContext.DBConnection())
@@ -28,6 +29,7 @@ public class Migaration
                     ID INT IDENTITY(1,1) PRIMARY KEY,
                     Question TEXT,
                     Answer VARCHAR(300),
+                    CreatedAt DATETIME DEFAULT GETDATE(),
                     STACK_ID INT,
                     FOREIGN KEY (STACK_ID) REFERENCES stacks(ID) ON DELETE CASCADE
                 );";
@@ -44,8 +46,8 @@ public class Migaration
         string studySessionQuery = @"IF OBJECT_ID('dbo.studylogs', 'U') IS NULL
                         CREATE TABLE studylogs(
                             ID INT IDENTITY(1,1) PRIMARY KEY,
-                            LOGDATE DATETIME DEFAULT GETDATE(),
-                            SCORE INT DEFAULT 0,
+                            LogDate DATETIME DEFAULT GETDATE(),
+                            Score INT DEFAULT 0,
                             STACK_ID INT,
                             FOREIGN KEY (STACK_ID) REFERENCES stacks(ID) ON DELETE CASCADE
                         );";
@@ -96,5 +98,12 @@ public class Migaration
             command.ExecuteNonQuery();
             Console.WriteLine("stacks table dropped");
         }
+    }
+
+    public void Reset()
+    {
+        this.Down();
+        this.Up();
+        Console.WriteLine("Database Reseted");
     }
 }
