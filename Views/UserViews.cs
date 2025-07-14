@@ -2,6 +2,7 @@ namespace DotNETConsole.Flashcards.Views;
 
 using Spectre.Console;
 using DTO;
+using Helper;
 
 public class UserViews()
 {
@@ -32,6 +33,44 @@ public class UserViews()
         AnsiConsole.Write(table);
     }
 
+    public void PrintSessionTable(List<SessionDto> sessions)
+    {
+        var table = new Table();
+        table.AddColumns(new[] { "No", "Stack", "Date", "Score" });
+        int i = 1;
+        foreach (SessionDto session in sessions)
+        {
+            table.AddRow($"{i}", $"{session.Stack}", $"{session.LogDate.ToLocalTime().Date}", $"{session.Score}");
+            i++;
+        }
+        AnsiConsole.Write(table);
+    }
+
+    public int CheckKnowledge(List<CardViewDto> cards, string stack)
+    {
+        int score = 0;
+        int count = 1;
+        UserInput input = new UserInput();
+        UserViews view = new UserViews();
+        foreach (CardViewDto card in cards)
+        {
+            Console.Clear();
+            this.ContentSummary($"{stack} - Q({count}/{cards.Count}) - Score:{score}");
+            AnsiConsole.WriteLine(card.Question);
+            string ans = input.UserAnswer();
+            if (String.Equals(ans.ToLower(), card.Answer.ToLower()))
+            {
+                score += 1;
+                input.ContinueInput("Correct!!!");
+            }
+            else
+            {
+                input.ContinueInput($"Wrong correct answer is: {card.Answer}");
+            }
+            count++;
+        }
+        return score;
+    }
 
     public void Tost(string message, string type = "default")
     {

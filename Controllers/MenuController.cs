@@ -5,13 +5,14 @@ using DTO;
 using UI;
 using Views;
 using Helper;
-using Models;
+using Database;
 
 public class MenuController
 {
     static bool Running { get; set; }
     private StackController _stackController = new StackController();
     private CardController _cardController = new CardController();
+    private StudySessionController _studySessionController = new StudySessionController();
 
     public MenuController()
     {
@@ -30,6 +31,39 @@ public class MenuController
             switch (userChoice)
             {
                 case MainUI.StartStudySession:
+                    var selectedStackForSession = userInput.SelectSingleStack();
+                    if (selectedStackForSession is not null)
+                    {
+                        List<CardViewDto> stackCards = _cardController.GetAllCardsView();
+                        if (stackCards.Count == 0)
+                        {
+                            userViews.Tost("No Card Found !!", "info");
+                            userInput.ContinueInput();
+                        }
+                        else
+                        {
+                            int sessionId = _studySessionController.AddSession(selectedStackForSession.ID);
+                            int score = userViews.CheckKnowledge(stackCards, selectedStackForSession.Name);
+                            _studySessionController.UpdateScore(sessionId, score);
+                        }
+                    }
+                    else
+                    {
+
+                        userInput.ContinueInput();
+                    }
+                    break;
+                case MainUI.ViewSessionLog:
+                    List<SessionDto> sessionLogs = _studySessionController.GetAllSession();
+                    if (sessionLogs.Count == 0)
+                    {
+                        userViews.Tost("No log found !!", "info");
+                    }
+                    else
+                    {
+                        userViews.PrintSessionTable(sessionLogs);
+                    }
+                    userInput.ContinueInput();
                     break;
                 case MainUI.ViewStack:
                     List<StackViewDto> stackViews = _stackController.GetStacksView();
@@ -121,9 +155,23 @@ public class MenuController
                     var selectedStackForNewCard = userInput.SelectSingleStack();
                     if (selectedStackForNewCard is not null)
                     {
-                        _cardController.CreateNewCard(selectedStackForNewCard);
+                        int numberOfCard = userInput.GetNumberOfCard();
+                        for (int i = 0; i < numberOfCard; i++)
+                        {
+                            _cardController.CreateNewCard(selectedStackForNewCard);
+                        }
                     }
                     userInput.ContinueInput();
+                    break;
+                case MainUI.Reset:
+                    string confimation = userInput.DeleteConfimation();
+                    if (confimation == "yes")
+                    {
+                        var migration = new Migration();
+                        migration.Reset();
+                        userInput.ContinueInput("Database Reseted!!!");
+                    }
+                    Console.Clear();
                     break;
                 case MainUI.Exit:
                     Running = false;

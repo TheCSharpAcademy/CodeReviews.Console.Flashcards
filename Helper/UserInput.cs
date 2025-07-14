@@ -21,7 +21,7 @@ public class UserInput
         }
         var stack = AnsiConsole.Prompt(
             new SelectionPrompt<Stack>()
-                .Title("Select habit:")
+                .Title("Select stack:")
                 .PageSize(10)
                 .AddChoices(stacks));
         return stack;
@@ -66,19 +66,56 @@ public class UserInput
                          >= 5 => ValidationResult.Success()
                      }));
         string answer = AnsiConsole.Prompt(
-                     new TextPrompt<string>("Answer: ").Validate((input) => input.Trim().Length switch
+                     new TextPrompt<string>("Answer(Single Word): ").Validate((input) => input.Trim().Split(' ').Length switch
                      {
-                         < 1 => ValidationResult.Error("Can not be Blank."),
-                         >= 1 => ValidationResult.Success()
+                         0 => ValidationResult.Error("Can not be Blank."),
+                         1 => ValidationResult.Success(),
+                         _ => ValidationResult.Error("Answer should be in single word.")
                      }));
-        return (question, answer);
+        return (question, answer.Trim());
+    }
+
+    public string UserAnswer()
+    {
+        string answer = AnsiConsole.Prompt(
+                             new TextPrompt<string>("Answer(Single Word): ").Validate((input) => input.Trim().Split(' ').Length switch
+                             {
+                                 0 => ValidationResult.Error("Can not be Blank."),
+                                 1 => ValidationResult.Success(),
+                                 _ => ValidationResult.Error("Answer should be in single word.")
+                             }));
+        return answer;
+    }
+
+    public int GetNumberOfCard()
+    {
+        int answer = AnsiConsole.Prompt(
+                             new TextPrompt<int>("How many card do you want to insert: ").Validate((input) => input switch
+                             {
+                                 <= 0 => ValidationResult.Error("Can not be zero or negative."),
+                                 >= 1 => ValidationResult.Success(),
+                             }));
+        return answer;
+    }
+
+    public string DeleteConfimation()
+    {
+        while (true)
+        {
+            string option = AnsiConsole.Ask<string>("[bold red]Do you want to reset database? (yes/no): [/]");
+
+            if (option.Trim().Length != 0 && (option.ToLower() == "yes" || option.ToLower() == "no"))
+            {
+                return option;
+            }
+        }
     }
 
     public bool ContinueInput(string? extraMessage = null)
     {
         if (extraMessage != null)
         {
-            AnsiConsole.MarkupLineInterpolated($"\n[blue]{extraMessage}...[/]");
+            AnsiConsole.MarkupLineInterpolated($"\n[blue]{extraMessage}[/]");
         }
         AnsiConsole.MarkupLine("[green]Press ESC to continue...[/]");
         while (true)
