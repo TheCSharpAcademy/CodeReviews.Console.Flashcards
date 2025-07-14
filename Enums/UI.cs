@@ -6,10 +6,11 @@ public enum MainUI
     ViewSessionLog,
     CreateStack,
     ViewStack,
-    ViewCards,
     AddCards,
+    ViewCards,
     ModifyStack,
     ModifyCard,
+    Reset,
     Exit
 }
 
