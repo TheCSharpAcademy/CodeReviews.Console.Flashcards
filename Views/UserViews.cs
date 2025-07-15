@@ -51,7 +51,6 @@ public class UserViews()
         int score = 0;
         int count = 1;
         UserInput input = new UserInput();
-        UserViews view = new UserViews();
         foreach (CardViewDto card in cards)
         {
             Console.Clear();
