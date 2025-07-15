@@ -1,6 +1,4 @@
-# MEMORY
-
-## *- retain your memory using flashcard...*
+## *Memory- retain your memory using flashcard...*
 
 ---------------
 ![Main UI](Public/MainUI.png)
