@@ -31,13 +31,14 @@
   - Study Log
     ![Study Log](Public/LogView.png)
 
-
 ### Uses
 
 - #### Clone Repo
+
   `git clone https://github.com/devjunaeid/DotNETConsole.Flashcards.git`
 
 - #### Go to the project folder and restore
+
     `dotnet restore`
 
 - #### Create a `.env` file in the root folder
@@ -45,9 +46,11 @@
 - #### Set `DB_CONNECTION_STRING` to the `.env` file
 
 - #### Build
+
     `dotnet build`
 
 - #### Run
+
     `dotnet run`
 
 **Note(optional):** If you have already build an old version of this app, use `Reset`
