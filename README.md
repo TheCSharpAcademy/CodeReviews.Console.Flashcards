@@ -1,18 +1,20 @@
 # MEMORY
-#### *- retain your memory using flashcard...*
+
+## *- retain your memory using flashcard...*
 
 ---------------
 ![Main UI](Public/MainUI.png)
 
 ### Tech
+
 - .NET(v8.0).
 - MSSQL.
 - [Dapper](https://www.learndapper.com).
 - [DotNetEnv](https://www.nuget.org/packages/DotNetEnv/1.2.0)
 - [Spectre.Console](https://spectreconsole.net)
 
-
 ### Features
+
 - Keyboard Based Navigation.
   ![Main UI](Public/MainUI.png)
 - Easier selection based Inputs & Logging.
@@ -32,7 +34,7 @@
 
 ### Uses
 
-- #### Clone Repo.
+- #### Clone Repo
   `git clone https://github.com/devjunaeid/DotNETConsole.Flashcards.git`
 
 - #### Go to the project folder and restore
